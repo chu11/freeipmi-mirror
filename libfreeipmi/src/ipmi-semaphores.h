@@ -36,11 +36,11 @@ extern "C" {
 #include <sys/ipc.h>
 #include <sys/sem.h>
 
-#define IPMI_OUTOFBAND_PROJ_ID    0x01
 #define IPMI_INBAND_PROJ_ID       0x02
+#define IPMI_INBAND_DEBUG_PROJ_ID 0x03
 
-#define IPMI_OUTOFBAND_IPCKEY()  ftok (IPMI_IPCKEY, IPMI_OUTOFBAND_PROJ_ID)
 #define IPMI_INBAND_IPCKEY()  ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)
+#define IPMI_INBAND_DEBUG_IPCKEY() ftok (IPMI_DEBUG_IPCKEY, IPMI_INBAND_DEBUG_PROJ_ID)
 
 #define IPMI_MUTEX_LOCK(semid)                                      \
 do {								    \
@@ -95,7 +95,7 @@ extern struct sembuf mutex_unlock_buf_interruptible;
 extern struct sembuf mutex_lock_buf;
 extern struct sembuf mutex_unlock_buf;
 
-int ipmi_mutex_init (key_t key);
+int ipmi_mutex_init (void);
 
 
 #ifdef __cplusplus

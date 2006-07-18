@@ -61,6 +61,7 @@ libfreeipmi_la_CFLAGS = \
 	-I$(srcdir)/../../common/src \
 	-Wall \
 	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
+	-DIPMI_DEBUG_IPCKEY=\"$(top_builddir)/libfreeipmi/src/ipmi-semaphores.h\" \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 

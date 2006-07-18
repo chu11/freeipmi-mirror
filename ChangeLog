@@ -42,6 +42,20 @@
 	* fish/src/scm-procedures.c, fish/src/extensions.c: Remove
 	remaining ipmi-sel related code.
 
+	* libfreeipmi/src/ipmi-semaphores.h: Remove out of band keys. 
+
+	* libfreeipmi/src/ipmi-semaphores.h,
+	libfreeipmi/src/ipmi-semaphores.c (ipmi_mutex_init): Calculate key
+	internally, not through passed in key.
+
+	* libfreeipmi/src/ipmi-kcs-api.c (ipmi_kcs_ctx_create),
+	libfreeipmi/src/ipmi-ssif-api.c (ipmi_ssif_ctx_create): Adjust for
+	ipmi_mutex_init change.
+
+	* libfreeipmi/src/Makefile.am, libfreeipmi/src/ipmi-semaphores.c
+	(ipmi_mutex_init): Workaround lack of ipckey file when doing debug
+	work out of the build directory.
+
 2006-07-18  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-locate-dmidecode.c (dmi_table): initialize

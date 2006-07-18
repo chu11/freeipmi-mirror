@@ -40,14 +40,25 @@ struct sembuf mutex_unlock_buf = {0,  1, SEM_UNDO};
 
 /* Initialize Mutex and return semid */
 int
-ipmi_mutex_init (key_t key)
+ipmi_mutex_init (void)
 {
   int semid;
-
-  ERR (key != -1);
+  key_t key;
 
   /* Allocate Mutex */
+  key = IPMI_INBAND_IPCKEY();
   semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600);
+#ifndef NDEBUG
+  if (semid == -1 && errno == ENOENT)
+    {
+      /* When doing development out of the source code tree, the
+       * IPCKEY file may not yet exist, so we do a hack to get it to
+       * work.  This is only when we work in debug mode.
+       */
+      key = IPMI_INBAND_DEBUG_IPCKEY();
+      semid = semget (key, 1, IPC_CREAT | IPC_EXCL | 0600);
+    }
+#endif /* NDEBUG */
   if (semid == -1)
     {
       if (errno == EEXIST) /* You are not the first one */

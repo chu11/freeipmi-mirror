@@ -356,7 +356,7 @@ ipmi_ssif_ctx_create(void)
   ctx->i2c_fd = -1;
   ctx->io_init = 0;
 
-  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0));
+  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));
 
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return ctx;
