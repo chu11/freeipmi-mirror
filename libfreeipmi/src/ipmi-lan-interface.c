@@ -1763,79 +1763,6 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
   return (retval);
 }
 
-static int8_t 
-ipmi_lan_cmd_raw_send (ipmi_device_t *dev, 
-		       fiid_obj_t obj_cmd_rq, 
-		       fiid_template_t tmpl_cmd_rq)
-{
-  if (!dev || !obj_cmd_rq || !tmpl_cmd_rq)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  memset (dev->io.outofband.rq.obj_hdr_rmcp, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr)));
-  memset (dev->io.outofband.rq.obj_hdr_session, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_session_ptr)));
-  memset (dev->io.outofband.rq.obj_msg_hdr, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
-  memset (dev->io.outofband.rq.obj_msg_trlr, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
-  
-  memset (dev->io.outofband.rs.obj_hdr_rmcp, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)));
-  memset (dev->io.outofband.rs.obj_hdr_session, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)));
-  memset (dev->io.outofband.rs.obj_msg_hdr, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)));
-  memset (dev->io.outofband.rs.obj_msg_trlr, 
-	  0, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
-  
-  {
-    uint8_t *pkt;
-    uint32_t pkt_len;
-    int status = 0;
-    
-    pkt_len = _ipmi_lan_pkt_rq_size2 (dev, tmpl_cmd_rq);
-    pkt = alloca (pkt_len);
-    ERR (pkt);
-    memset (pkt, 0, pkt_len);
-    
-    ERR (fill_hdr_rmcp_ipmi (dev->io.outofband.rq.obj_hdr_rmcp) != -1);
-    ERR (fill_lan_msg_hdr2 (dev) != -1);
-    ERR (fill_lan_msg_trlr2 (dev, 
-			     obj_cmd_rq, 
-			     tmpl_cmd_rq) != -1);
-    ERR (fill_hdr_session2 (dev, 
-			    obj_cmd_rq, 
-			    tmpl_cmd_rq) != -1);
-    ERR (assemble_ipmi_lan_pkt2 (dev, 
-				 obj_cmd_rq, 
-				 tmpl_cmd_rq, 
-				 pkt, 
-				 pkt_len) != -1);
-    
-    dev->io.outofband.session_seq_num++;
-    IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
-    
-    status = ipmi_lan_sendto (dev->io.outofband.local_sockfd, pkt, pkt_len, 0, 
-			      &(dev->io.outofband.remote_host), 
-			      dev->io.outofband.remote_host_len);
-    ERR (status != -1);
-  }
-  
-  return (0);
-}
-
 int8_t 
 ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
 		   uint8_t *buf_rq, 
@@ -1843,8 +1770,25 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 		   uint8_t *buf_rs, 
 		   size_t *buf_rs_len)
 {
-  size_t buf_rs_len_in;
-
+  fiid_obj_t obj_cmd_rq = NULL;
+  size_t obj_cmd_rq_len = 0;
+  fiid_field_t *tmpl_var_cmd_rq = NULL;
+  
+  fiid_obj_t obj_cmd_rs = NULL;
+  size_t obj_cmd_rs_len = 0; 
+  fiid_field_t *tmpl_var_cmd_rs = NULL;
+  
+  int bytes_received;
+  int8_t retval = -1;
+  uint64_t val = 0;
+  
+  fiid_template_t local_tmpl_hdr_cmd = 
+    {
+      {2, "lun"},
+      {6, "net_fn"},
+      {0, ""}
+    };
+  
   if (!(dev && 
 	dev->io.outofband.local_sockfd && 
 	buf_rq && 
@@ -1857,133 +1801,84 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  buf_rs_len_in = *buf_rs_len;
-  *buf_rs_len = 0;
+  FIID_OBJ_GET ((fiid_obj_t) buf_rq, local_tmpl_hdr_cmd, (uint8_t *)"lun", &val);
+  dev->lun = val;
+  FIID_OBJ_GET ((fiid_obj_t) buf_rq, local_tmpl_hdr_cmd, (uint8_t *)"net_fn", &val);
+  dev->net_fn = val;
+  
+  obj_cmd_rq = (fiid_obj_t) (buf_rq + 1);
+  obj_cmd_rq_len = buf_rq_len - 1;
+  tmpl_var_cmd_rq = fiid_template_make ((obj_cmd_rq_len * 8), 
+					(uint8_t *) "COMMAND_RQ_DATA");
+  obj_cmd_rs = (fiid_obj_t) (buf_rs + 1);
+  obj_cmd_rs_len = *buf_rs_len - 1;
+  tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), 
+					(uint8_t *) "COMMAND_RS_DATA");
   
   {
-    uint64_t val = 0;
+    int status = 0;
+    int retry = 0;
     
-    fiid_template_t tmpl_hdr_cmd = 
+    for (retry = 0; retry < dev->io.outofband.packet_retry_max; retry++)
       {
-	{2, "lun"},
-	{6, "net_fn"},
-	{0, ""}
-      };
+	if (ipmi_lan_cmd_send (dev, 
+			       obj_cmd_rq, 
+			       tmpl_var_cmd_rq) == -1)
+	  {
+	    retval = -1;
+	    break;
+	  }
+	
+	status = ipmi_lan_cmd_receive (dev, 
+				       obj_cmd_rs, 
+				       tmpl_var_cmd_rs);
+	
+	if (status == -1)
+	  {
+	    retval = -1;
+	    break;
+	  }
+	
+	if (status != 0)
+	  {
+	    bytes_received = status;
+	    retval = 0;
+	    break;
+	  }
+	
+	dev->io.outofband.session_seq_num++;
+	IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
+      }
     
-    FIID_OBJ_GET ((fiid_obj_t) buf_rq, tmpl_hdr_cmd, (uint8_t *)"lun", &val);
-    dev->lun = val;
-    FIID_OBJ_GET ((fiid_obj_t) buf_rq, tmpl_hdr_cmd, (uint8_t *)"net_fn", &val);
-    dev->net_fn = val;
+    if (retry >= dev->io.outofband.packet_retry_max)
+      {
+	errno = ETIMEDOUT;
+	retval = -1;
+      }
+    
+    dev->io.outofband.session_seq_num++;
+    IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
   }
   
-  {
-    fiid_obj_t obj_cmd_rq = NULL;
-    size_t obj_cmd_rq_len = 0;
-    fiid_field_t *tmpl_var_cmd_rq = NULL;
-    int8_t retval = 0;
-    
-    obj_cmd_rq = (fiid_obj_t) (buf_rq + 1);
-    obj_cmd_rq_len = buf_rq_len - 1;
-    
-    tmpl_var_cmd_rq = fiid_template_make ((obj_cmd_rq_len * 8), (uint8_t *)"COMMAND_RQ_DATA");
-    retval = ipmi_lan_cmd_raw_send (dev, 
-				    obj_cmd_rq, 
-				    tmpl_var_cmd_rq);
-    fiid_template_free (tmpl_var_cmd_rq);
-    
-    ERR (retval == 0);
-  }
+  fiid_template_free (tmpl_var_cmd_rq);
+  fiid_template_free (tmpl_var_cmd_rs);
   
-  {
-    fiid_obj_t obj_cmd_rs = NULL;
-    size_t obj_cmd_rs_len = 0; 
-    fiid_field_t *tmpl_var_cmd_rs = NULL;
-    
-    struct sockaddr_in from;
-    socklen_t fromlen = 0;
-    
-    uint8_t *pkt = NULL;
-    uint32_t pkt_max_size = 1024;
-    int32_t pkt_len;
-    int32_t bytes_received;
-    int32_t pkt_hdrs_size;
-    
-    pkt_hdrs_size = 
-      (fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)) + 
-       fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)) + 
-       fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) + 
-       fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
-    
-    pkt_len = 1024 - pkt_hdrs_size - 1;
-    ERR (pkt_len <= pkt_max_size);
-    
-    pkt = alloca (pkt_max_size);
-    ERR (pkt);
-    memset (pkt, 0, pkt_max_size);
-    bytes_received = ipmi_lan_recvfrom (dev->io.outofband.local_sockfd, 
-					pkt, 
-					pkt_max_size, 
-					0, 
-					(struct sockaddr *) &from, 
-					&fromlen);
-    ERR (bytes_received >= pkt_hdrs_size);
-    
-    obj_cmd_rs_len = (bytes_received - pkt_hdrs_size);
-
-    if ((buf_rs_len_in - 1) < obj_cmd_rs_len)
-      {
-        errno = EINVAL;
-        return (-1);
-      }
-
-    tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), "COMMAND_RS_DATA");
-    obj_cmd_rs = (fiid_obj_t) (buf_rs + 1);
-    
-    if (unassemble_ipmi_lan_pkt2 (dev, 
-				  pkt, 
-				  bytes_received, 
-				  obj_cmd_rs, 
-				  tmpl_var_cmd_rs) == -1)
-      {
-	fiid_template_free (tmpl_var_cmd_rs);
-	return (-1);
-      }
-    
-    if (ipmi_lan_validate_checksum (dev, 
-				    obj_cmd_rs, 
-				    tmpl_var_cmd_rs) != 0)
-      {
-	fiid_template_free (tmpl_var_cmd_rs);
-	return (-1);
-      }
-    
-    fiid_template_free (tmpl_var_cmd_rs);
-    
+  if (retval != -1)
     {
-      uint64_t val = 0;
-      
-      fiid_template_t tmpl_hdr_cmd = 
-	{
-	  {2, "lun"},
-	  {6, "net_fn"},
-	  {0, ""}
-	};
-      
       FIID_OBJ_GET (dev->io.outofband.rs.obj_msg_hdr, 
 		    *(dev->io.outofband.rs.tmpl_msg_hdr_ptr), 
 		    (uint8_t *)"rq_lun", &val);
-      FIID_OBJ_SET ((fiid_obj_t) buf_rs, tmpl_hdr_cmd, (uint8_t *)"lun", val);
+      FIID_OBJ_SET ((fiid_obj_t) buf_rs, local_tmpl_hdr_cmd, (uint8_t *)"lun", val);
       
       FIID_OBJ_GET (dev->io.outofband.rs.obj_msg_hdr, 
 		    *(dev->io.outofband.rs.tmpl_msg_hdr_ptr), 
 		    (uint8_t *)"net_fn", &val);
-      FIID_OBJ_SET ((fiid_obj_t) buf_rs, tmpl_hdr_cmd, (uint8_t *)"net_fn", val);
+      FIID_OBJ_SET ((fiid_obj_t) buf_rs, local_tmpl_hdr_cmd, (uint8_t *)"net_fn", val);
       
-      *buf_rs_len = obj_cmd_rs_len + 1;
+      *buf_rs_len = bytes_received + 1;
     }
-  }
   
-  return (0);
+  return retval;
 }
 
 int8_t 
