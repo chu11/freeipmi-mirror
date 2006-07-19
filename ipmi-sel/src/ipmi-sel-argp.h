@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.h,v 1.2 2006-07-05 12:37:29 balamurugan Exp $ 
+   $Id: ipmi-sel-argp.h,v 1.3 2006-07-19 16:08:49 chu11 Exp $ 
    
    ipmi-sel-argp.h - System Event Logger utility.
    
@@ -29,7 +29,7 @@ enum argp_option_keys
     DELETE_KEY = 'd', 
     DELETE_ALL_KEY = 'c', 
     HEX_DUMP_KEY = 'x', 
-    DELETE_RANGE_KEY = 'r'
+    DELETE_RANGE_KEY = 'R'
   };
 
 struct arguments
