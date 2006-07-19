@@ -1,5 +1,5 @@
 /* 
-   ipmi-sensor-event-messages.h - IPMI Sensor Event Messages
+   ipmi-sensor-and-event-code-tables.h - IPMI Sensor And Event Code Tables
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#ifndef _IPMI_SENSOR_EVENT_MESSAGES_H
-#define _IPMI_SENSOR_EVENT_MESSAGES_H
+#ifndef _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
+#define _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
 
 #include <stdint.h>
 

@@ -50,7 +50,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sol-cmds.c \
 	ipmi-sdr-record-types.c \
 	ipmi-sel-record-types.c \
-	ipmi-sensor-event-messages.c \
+	ipmi-sensor-and-event-code-tables.c \
 	ipmi-sensor-utils.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt

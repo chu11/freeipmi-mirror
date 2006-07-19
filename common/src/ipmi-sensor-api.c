@@ -1046,7 +1046,7 @@ get_sensor_reading (ipmi_device_t *dev,
 			    "sensor_state", 
 			    &val);
       sensor_reading->event_message_list = 
-	ipmi_get_generic_event_message_list (event_reading_type_code, val);
+	ipmi_get_threshold_message_list (val);
       
       rv = 0;
       break;
@@ -1280,6 +1280,52 @@ ipmi_get_sensor_group (int sensor_type)
   if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
     return ipmi_oem_sensor_type;
 
+  return NULL;
+}
+
+char **
+ipmi_get_threshold_message_list (uint8_t sensor_state)
+{
+  char **event_message_list = NULL;
+  char *message_list[16];
+  char buf[1024];
+  int indx = 0;
+  uint16_t offset;
+  uint16_t bit; 
+  int i;
+  
+  for (offset = 0; offset < 16; offset++)
+    {
+      bit = pow (2, offset);
+      if (sensor_state & bit)
+	{
+	  if (ipmi_get_threshold_message (offset,
+                                          buf,
+                                          1024) < 0)
+            continue;
+
+	  message_list[indx] = strdup(buf);
+	  if (!message_list[indx])
+	    goto cleanup;
+	  else
+	    indx++;
+	  
+	}
+    }
+  
+  if (indx)
+    {
+      event_message_list = (char **) malloc (sizeof (char *) * (indx + 1));
+      for (offset = 0; offset < indx; offset++)
+	event_message_list[offset] = message_list[offset];
+      event_message_list[indx] = NULL;
+    }
+  
+  return event_message_list;
+
+ cleanup:
+  for (i = 0; i < indx; i++)
+    free(message_list[indx]);
   return NULL;
 }
 

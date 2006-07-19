@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.15 2006-04-19 16:39:00 chu11 Exp $
+## $Id: Makefile.am,v 1.16 2006-07-19 23:49:28 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -52,7 +52,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sol-cmds.h \
 	freeipmi/ipmi-sdr-record-types.h \
 	freeipmi/ipmi-sel-record-types.h \
-	freeipmi/ipmi-sensor-event-messages.h \
+	freeipmi/ipmi-sensor-and-event-code-tables.h \
 	freeipmi/ipmi-sensor-utils.h \
 	freeipmi/udm/udm.h \
 	freeipmi/udm/ipmi-udm.h \

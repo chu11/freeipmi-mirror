@@ -72,7 +72,7 @@ extern "C" {
 #include <freeipmi/ipmi-sol-cmds.h>
 #include <freeipmi/ipmi-sdr-record-types.h>
 #include <freeipmi/ipmi-sel-record-types.h>
-#include <freeipmi/ipmi-sensor-event-messages.h>
+#include <freeipmi/ipmi-sensor-and-event-code-tables.h>
 #include <freeipmi/ipmi-sensor-utils.h>
 
 #ifdef __cplusplus

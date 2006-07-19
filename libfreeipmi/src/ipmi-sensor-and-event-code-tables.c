@@ -31,7 +31,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-sensor-event-messages.h"
+#include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/fiid.h"
 
 #include "err-wrappers.h"

@@ -108,6 +108,8 @@ extern fiid_template_t tmpl_cmd_set_sensor_type_rs;
 extern fiid_template_t tmpl_cmd_get_sensor_type_rq;
 extern fiid_template_t tmpl_cmd_get_sensor_type_rs;
 
+int ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen);
+
 int8_t fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);

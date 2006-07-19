@@ -228,6 +228,8 @@ int ipmi_sensor_classify (uint8_t event_reading_type_code);
 
 const char *ipmi_get_sensor_group (int sensor_type);
 
+char ** ipmi_get_threshold_message_list (uint8_t sensor_state);
+
 char **ipmi_get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t sensor_state);
 char **ipmi_get_event_message_list (int sensor_type_code, uint16_t sensor_state);
 
