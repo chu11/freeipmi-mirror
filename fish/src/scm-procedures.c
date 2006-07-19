@@ -1277,15 +1277,15 @@ ex_ipmi_open (SCM scm_arg_list)
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (4));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    args.common.packet_retry_timeout = 0;
+    args.common.session_timeout = 0;
   else 
-    args.common.packet_retry_timeout = gh_scm2int (scm_value);
-  
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (5));
+    args.common.session_timeout = gh_scm2int (scm_value);
+
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (4));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    args.common.packet_retry_max = 0;
+    args.common.retry_timeout = 0;
   else 
-    args.common.packet_retry_max = gh_scm2int (scm_value);
+    args.common.retry_timeout = gh_scm2int (scm_value);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (6));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)

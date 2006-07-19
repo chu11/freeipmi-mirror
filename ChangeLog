@@ -56,6 +56,29 @@
 	(ipmi_mutex_init): Workaround lack of ipckey file when doing debug
 	work out of the build directory.
 
+	Remove packet_retry from UDM lan.  Replace with session timeout (bug #17102).
+
+	* common/src/argp-common.h, common/src/argp-common.c
+	(common_parse_opt, init_common_cmd_args): Remove support for
+	packet retry, support session timeout.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband): Adjust for
+	use with session timeout.  Adjust udm device_t structure for use.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_session_timed_out, _calculate_timeout): New functions.
+	
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_cmd_send, _ipmi_lan_cmd_recv, ipmi_lan_cmd,
+	ipmi_lan_cmd_raw): Add support for session timeout.
+	
+	* bmc-config/src/bmc-config.c (ipmi_core_init),
+	bmc-info/src/bmc-info.c (main), fish/src/ipmi-wrapper.c
+	(fi_ipmi_open), fish/src/scm-procedures.c (ex_ipmi_open),
+	ipmi-raw/src/ipmi-raw.c (main), ipmi-sel/src/ipmi-sel.c (main):
+	Adjust for change in ipmi_open_outofband.
+
 2006-07-18  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-locate-dmidecode.c (dmi_table): initialize

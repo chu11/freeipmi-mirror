@@ -29,8 +29,8 @@ enum argp_common_option_keys
     NO_PROBING_KEY = 130, 
     DRIVER_ADDRESS_KEY = 131, 
     DRIVER_DEVICE_KEY = 132, 
-    PACKET_RETRY_TIMEOUT_KEY = 133, 
-    PACKET_RETRY_MAX_KEY = 134, 
+    RETRY_TIMEOUT_KEY = 133, 
+    SESSION_TIMEOUT_KEY = 134,
     REGISTER_SPACING_KEY = 'r',
     HOSTNAME_KEY = 'h', 
     USERNAME_KEY = 'u', 
@@ -49,28 +49,28 @@ enum argp_common_option_keys
      "Use this DRIVERADDR address instead of probed one.", 2}, 	           \
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
      "Use this DEVICE for IPMI driver.", 3},                               \
-    {"register-spacing", REGISTER_SPACING_KEY, "REGISTERSPACING", 0,              \
+    {"register-spacing", REGISTER_SPACING_KEY, "REGISTERSPACING", 0,       \
      "Use this REGISTERSPACING instead of probed one"}
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                      \
-    {"packet-retry-timeout", PACKET_RETRY_TIMEOUT_KEY, "TIMEOUT", 0,       \
-     "Use TIMEOUT milliseconds when reading LAN packets.", 4}, 	           \
-    {"packet-retry-max", PACKET_RETRY_MAX_KEY, "COUNT", 0,                 \
-     "Use COUNT retries when reading LAN packets.", 5},  \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			   \
-     "Connect to IPMIHOST.", 6},					   \
+     "Connect to IPMIHOST.", 4},					   \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			   \
-     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 7},  \
+     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 5},  \
     {"password",       PASSWORD_KEY, "PASSWORD", 0, 			   \
-     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 8}   \
+     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 6},  \
+    {"retry-timeout", RETRY_TIMEOUT_KEY, "RETRY_TIMEOUT", 0,               \
+     "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 7},  \
+    {"session-timeout", SESSION_TIMEOUT_KEY, "SESSION_TIMEOUT", 0,         \
+     "Use SESSION_TIMEOUT milliseconds before ending a session.", 8}
 
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
-    {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 			   \
+    {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 		   \
      "Use AUTHTYPE instead of NONE.  "				           \
      "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 9}	           \
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL                                      \
-    {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 		   \
+    {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 10}     
 
@@ -87,8 +87,8 @@ struct common_cmd_args
   unsigned int driver_address;
   char *driver_device;
   unsigned int register_spacing;
-  int packet_retry_timeout;
-  int packet_retry_max;
+  unsigned int session_timeout;
+  unsigned int retry_timeout;
   char *host;
   char *username;
   char *password;
