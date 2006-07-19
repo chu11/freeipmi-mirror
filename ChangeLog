@@ -21,7 +21,7 @@
 	New function.
 
 	* common/src/ipmi-sensor-api.c (get_sensor_reading): Use new
-	function to output appropriate thresholds.
+	function to output appropriate threshold strings.
 
 2006-07-19  A Balamurugan  <bala@zresearch.com>
 
