@@ -60,7 +60,6 @@ ipmi_locate (ipmi_interface_type_t type)
 	return (pinfo);
     }
 
-  pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
   return (NULL);
 }
 

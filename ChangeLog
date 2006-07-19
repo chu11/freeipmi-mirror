@@ -1,5 +1,10 @@
 2006-07-20  A Balamurugan  <bala@zresearch.com>
 
+	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): fixed bug of NULL
+	pointer operation.
+
+2006-07-20  A Balamurugan  <bala@zresearch.com>
+
 	* libfreeipmi/src/ipmi-locate-dmidecode.c
 	(ipmi_locate_dmidecode_get_dev_info): fixed bug of invalid handle
 	of return value.
