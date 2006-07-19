@@ -463,17 +463,19 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type)
     {
       if ((memcmp (buf + fp, "_SM_", 4) == 0) && (fp <= 0xFFE0))
 	{
-	  if (smbios_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
+	  if (smbios_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info) == 0)
 	    {
 	      found++;
+	      break;
 	    }
 	  fp += 16;
 	}
       else if (memcmp (buf + fp, "_DMI_", 5) == 0)
 	{
-	  if (legacy_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info))
+	  if (legacy_decode (buf + fp, DEFAULT_MEM_DEV, type, &locate_info) == 0)
 	    {
 	      found++;
+	      break;
 	    }
 	}
     }
