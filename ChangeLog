@@ -12,6 +12,21 @@
 	(sensors-display-verbose-full-record),
 	fish/extensions/sensors-very-verbose-display.scm
 	(sensors-display-very-verbose-full-record): Fix output bug.
+
+	Remove ipmi-sel API common lib .
+
+	* common/src/ipmi-sel-api.h, common/src/ipmi-sel-api.c: Remove files.
+
+	* ipmi-sel/src/ipmi-sel-wrappers.h,
+	ipmi-sel/src/ipmi-sel-wrappers.c: Merge in code for ipmi-sel API
+	appropriately.
+	
+	* common/src/Makefile.am, ipmi-sel/src/Makefile.am: Adjust appropriately.
+
+	* fish/src/Makefile.am, fish/src/common.h,
+	fish/src/ipmi-wrappers.h, fish/src/ipmi-wrappers.c,
+	bmc-config/src/bmc-common.h, bmc-config/src/bmc-ipmi-wrapper.h:
+	Adjust appropriately.
 	
 2006-07-19  Albert Chu <chu11@llnl.gov>
 

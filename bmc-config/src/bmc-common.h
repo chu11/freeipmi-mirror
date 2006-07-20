@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-common.h,v 1.1 2006-07-06 17:44:23 balamurugan Exp $ 
+   $Id: bmc-common.h,v 1.2 2006-07-20 23:02:00 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -59,7 +59,6 @@
 
 #include "argp-common.h"
 #include "ipmi-common.h"
-#include "ipmi-sel-api.h"
 #include "ipmi-sensor-api.h"
 
 #include "xmalloc.h"

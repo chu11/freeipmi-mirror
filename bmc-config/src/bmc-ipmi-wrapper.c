@@ -25,7 +25,6 @@ static int8_t serial_channel_number;
 static uint8_t sol_channel_number_initialized = false;
 static int8_t sol_channel_number;
 
-
 ipmi_device_t *global_dev;
 
 ipmi_device_t *

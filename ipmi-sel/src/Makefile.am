@@ -3,7 +3,6 @@ ipmi_sel_SOURCES=ipmi-sel-argp.c ipmi-sel-wrapper.c ipmi-sel.c
  
 ipmi_sel_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libipmicommon.la \
-		 ../../common/src/libsel.la \
 		 ../../common/src/libsensor.la \
 		 ../../libfreeipmi/src/libfreeipmi.la
  

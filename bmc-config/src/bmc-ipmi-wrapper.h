@@ -30,7 +30,6 @@ typedef struct channel_info
 } channel_info;
 
 ipmi_device_t *fi_get_ipmi_device ();
-sel_descriptor_t *fi_get_seld ();
 
 int fi_ipmi_open (struct arguments *args);
 int fi_ipmi_close ();

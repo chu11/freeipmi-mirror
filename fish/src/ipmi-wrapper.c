@@ -20,8 +20,6 @@
 static ipmi_device_t dev;
 static int dev_opened = false;
 
-static sel_descriptor_t seld;
-
 uint8_t channel_info_list_initialized = false;
 channel_info channel_info_list[8];
 
@@ -39,12 +37,6 @@ ipmi_device_t *
 fi_get_ipmi_device ()
 {
   return &dev;
-}
-
-sel_descriptor_t *
-fi_get_seld ()
-{
-  return &seld;
 }
 
 int 

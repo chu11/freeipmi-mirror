@@ -5,7 +5,6 @@ fish_SOURCES=fish.c xmalloc.c fi-utils.c interpreter.c \
 
 fish_LDADD = ../../common/src/libbitops.la \
 	     ../../common/src/libipmicommon.la \
-	     ../../common/src/libsel.la \
 	     ../../common/src/libsensor.la \
 	     ../../libfreeipmi/src/libfreeipmi.la \
 	     $(GUILE_LDFLAGS) $(READLINE_LIBS)
@@ -24,9 +23,6 @@ AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libipmicommon.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libsel.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libsensor.la: force-dependency-check

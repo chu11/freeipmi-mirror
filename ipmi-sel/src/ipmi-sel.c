@@ -46,12 +46,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #endif /* !TIME_WITH_SYS_TIME */
 #include <argp.h>
 
-#include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
-
 #include "argp-common.h"
 #include "ipmi-common.h"
-#include "ipmi-sel-api.h"
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-wrapper.h"
 
@@ -67,7 +63,7 @@ display_sel_info (ipmi_device_t *dev)
   
   memset (&sel_info, 0, sizeof (local_sel_info_t));
   
-  if (get_local_sel_info (dev, &sel_info) != 0)
+  if (get_sel_info (dev, &sel_info) != 0)
     {
       fprintf (stderr, "%s: unable to get SEL information\n", 
 	       program_invocation_short_name);
@@ -119,10 +115,10 @@ display_sel_records (ipmi_device_t *dev)
        record_id = next_record_id)
     {
       memset (&sel_rec, 0, sizeof (sel_record_t));
-      if (get_local_sel_record (dev, 
-				record_id, 
-				&sel_rec, 
-				&next_record_id) != 0)
+      if (get_sel_record (dev, 
+                          record_id, 
+                          &sel_rec, 
+                          &next_record_id) != 0)
 	{
 	  fprintf (stderr, "%s: unable to get SEL record\n", 
 		   program_invocation_short_name);
@@ -165,11 +161,11 @@ hex_display_sel_records (ipmi_device_t *dev, FILE *stream)
        record_id = next_record_id)
     {
       memset (record_data, 0, record_data_len);
-      if (get_local_sel_record_raw (dev, 
-				    record_id, 
-				    record_data, 
-				    record_data_len, 
-				    &next_record_id) != 0)
+      if (get_sel_record_raw (dev, 
+                              record_id, 
+                              record_data, 
+                              record_data_len, 
+                              &next_record_id) != 0)
 	{
 	  fprintf (stderr, "%s: unable to get SEL record\n", 
 		   program_invocation_short_name);
@@ -253,8 +249,7 @@ run_cmd_args (ipmi_device_t *dev, struct arguments *args)
 	{
 	  int rval;
 	  
-	  rval = delete_local_sel_entry (dev, 
-					 args->delete_record_list[i]);
+	  rval = delete_sel_entry (dev, args->delete_record_list[i]);
 	  if (rval != 0)
 	    {
 	      fprintf (stderr, "deletion of record ID %d failed\n", 
@@ -280,7 +275,7 @@ run_cmd_args (ipmi_device_t *dev, struct arguments *args)
       
       for (i = args->delete_range1; i <= args->delete_range2; i++)
 	{
-	  delete_local_sel_entry (dev, i);
+	  delete_sel_entry (dev, i);
 	}
       
       return retval;
