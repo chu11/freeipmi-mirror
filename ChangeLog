@@ -2,6 +2,9 @@
 
 	* common/src/ipmi-sensor-api.c, common/src/ipmi-sel-api.c,
 	ipmi-sel/src/ipmi-sel-wrapper.c: Fix compile bugs.
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c (ipmi_get_threshold_message):
+	Fix backwards logic bug.
 	
 2006-07-19  Albert Chu <chu11@llnl.gov>
 

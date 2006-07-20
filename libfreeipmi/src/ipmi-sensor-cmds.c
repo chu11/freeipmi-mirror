@@ -740,7 +740,7 @@ ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
   int rv;
 
   ERR_EINVAL(buf && buflen);
-  ERR_EINVAL(offset > threshold_comparison_status_desc_max);
+  ERR_EINVAL((offset <= threshold_comparison_status_desc_max));
 
   rv = snprintf(buf, buflen, threshold_comparison_status_desc[offset]);
   /* -1 to account for '\0' */
