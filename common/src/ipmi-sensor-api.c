@@ -41,7 +41,7 @@
 #include "freeipmi/ipmi-sdr-record-types.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
 #include "freeipmi/ipmi-sensor-cmds.h"
-#include "freeipmi/ipmi-sensor-event-messages.h"
+#include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/ipmi-sensor-types-spec.h"
 #include "freeipmi/ipmi-sensor-utils.h"
 #include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"

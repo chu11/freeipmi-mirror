@@ -30,7 +30,7 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sel-cmds.h"
 #include "freeipmi/ipmi-sel-record-types.h"
-#include "freeipmi/ipmi-sensor-event-messages.h"
+#include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/udm/ipmi-sel-cmds-udm.h"
 
 #include "err-wrappers.h"

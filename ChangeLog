@@ -1,7 +1,7 @@
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
-	* common/src/ipmi-sensor-api.c, common/src/ipmi-sel-api.c : Fix
-	compile bugs.
+	* common/src/ipmi-sensor-api.c, common/src/ipmi-sel-api.c,
+	ipmi-sel/src/ipmi-sel-wrapper.c: Fix compile bugs.
 	
 2006-07-19  Albert Chu <chu11@llnl.gov>
 
