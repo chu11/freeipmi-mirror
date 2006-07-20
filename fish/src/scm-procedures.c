@@ -19,8 +19,6 @@
 
 #include "common.h"
 
-#define SEL_HEX_RECORD_SIZE 128
-
 /*
   SCM
   ex_set_some_thing_x (SCM scm_some_thing)

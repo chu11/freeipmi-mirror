@@ -13,6 +13,8 @@
 	fish/extensions/sensors-very-verbose-display.scm
 	(sensors-display-very-verbose-full-record): Fix output bug.
 
+	* fish/src/scm-procedures.h: Remove lingering sel code.
+	
 	Remove ipmi-sel API common lib .
 
 	* common/src/ipmi-sel-api.h, common/src/ipmi-sel-api.c: Remove files.
@@ -27,7 +29,7 @@
 	fish/src/ipmi-wrappers.h, fish/src/ipmi-wrappers.c,
 	bmc-config/src/bmc-common.h, bmc-config/src/bmc-ipmi-wrapper.h:
 	Adjust appropriately.
-	
+
 2006-07-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-sensor-event-messages.h:

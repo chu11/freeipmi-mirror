@@ -40,18 +40,6 @@ SCM ex_get_script_command_line ();
 SCM ex_sensors_cache_get_current_group ();
 SCM ex_sensors_get_group_list ();
 
-SCM ex_sel_get_first_entry ();
-SCM ex_sel_get_next_entry ();
-SCM ex_sel_get_first_entry_raw ();
-SCM ex_sel_get_next_entry_raw ();
-SCM ex_sel_get_first_entry_hex ();
-SCM ex_sel_get_next_entry_hex ();
-SCM ex_sel_get_info ();
-SCM ex_sel_get_info_binary ();
-SCM ex_sel_delete_entry (SCM scm_record_id);
-SCM ex_sel_clear ();
-SCM ex_sel_get_clear_status ();
-
 SCM ex_get_sensors_errno ();
 
 /***
