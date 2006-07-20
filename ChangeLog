@@ -5,6 +5,13 @@
 
 	* libfreeipmi/src/ipmi-sensor-cmds.c (ipmi_get_threshold_message):
 	Fix backwards logic bug.
+
+	* fish/extensions/sensors-simple-display.scm
+	(sensors-display-simple-full-record),
+	fish/extensions/sensors-verbose-display.scm
+	(sensors-display-verbose-full-record),
+	fish/extensions/sensors-very-verbose-display.scm
+	(sensors-display-very-verbose-full-record): Fix output bug.
 	
 2006-07-19  Albert Chu <chu11@llnl.gov>
 

@@ -65,42 +65,44 @@
     (format #t "Event/Reading Type Code: ~ah~%" (get-hex-string event-reading-type))
     (format #t "Slave Address/System Software ID: ~ah~%" 
 	    (get-hex-string slave-system-software-id))
-    (format #t "B: ~d~%" b)
-    (format #t "M: ~d~%" m)
-    (format #t "R Exponent: ~d~%" r_exponent)
-    (format #t "B Exponent: ~d~%" b_exponent)
-    (format #t "Linear: ~d~%" linear)
-    (format #t "Analog Data Format: ~d~%" analog-data-format)
-    (if is-lower-critical
-	(format #t "Lower Critical Threshold: ~f ~a~%" lower-critical unit-string)
-	(format #t "Lower Critical Threshold: ~a~%" "NA"))
-    (if is-upper-critical
-	(format #t "Upper Critical Threshold: ~f ~a~%" upper-critical unit-string)
-	(format #t "Upper Critical Threshold: ~a~%" "NA"))
-    (if is-lower-non-critical
-	(format #t "Lower Non-Critical Threshold: ~f ~a~%" lower-non-critical unit-string)
-	(format #t "Lower Non-Critical Threshold: ~a~%" "NA"))
-    (if is-upper-non-critical
-	(format #t "Upper Non-Critical Threshold: ~f ~a~%" upper-non-critical unit-string)
-	(format #t "Upper Non-Critical Threshold: ~a~%" "NA"))
-    (if is-lower-non-recoverable
-	(format #t "Lower Non-Recoverable Threshold: ~f ~a~%" 
-		lower-non-recoverable unit-string)
-	(format #t "Lower Non-Recoverable Threshold: ~a~%" "NA"))
-    (if is-upper-non-recoverable
-	(format #t "Upper Non-Recoverable Threshold: ~f ~a~%" 
-		upper-non-recoverable unit-string)
-	(format #t "Upper Non-Recoverable Threshold: ~a~%" "NA"))
-    (format #t "Sensor Min. Reading: ~f ~a~%" sensor-min-reading unit-string)
-    (format #t "Sensor Max. Reading: ~f ~a~%" sensor-max-reading unit-string)
-    (format #t "Normal Min.: ~f ~a~%" normal-min unit-string)
-    (format #t "Normal Max.: ~f ~a~%" normal-max unit-string)
-    (format #t "Nominal reading: ~f ~a~%" nominal-reading unit-string)
-    (format #t "Negative Hysteresis: ~d~%" negative-hysteresis)
-    (format #t "Positive Hysteresis: ~d~%" positive-hysteresis)
-    (if (boolean? sensor-reading)
-	(format #t "Sensor Reading: ~a~%" "NA")
-	(format #t "Sensor Reading: ~f ~a~%" current-reading unit-string))
+    (if (= event-reading-type 1)
+	(begin
+	  (format #t "B: ~d~%" b)
+	  (format #t "M: ~d~%" m)
+	  (format #t "R Exponent: ~d~%" r_exponent)
+	  (format #t "B Exponent: ~d~%" b_exponent)
+	  (format #t "Linear: ~d~%" linear)
+	  (format #t "Analog Data Format: ~d~%" analog-data-format)
+	  (if is-lower-critical
+	      (format #t "Lower Critical Threshold: ~f ~a~%" lower-critical unit-string)
+	      (format #t "Lower Critical Threshold: ~a~%" "NA"))
+	  (if is-upper-critical
+	      (format #t "Upper Critical Threshold: ~f ~a~%" upper-critical unit-string)
+	      (format #t "Upper Critical Threshold: ~a~%" "NA"))
+	  (if is-lower-non-critical
+	      (format #t "Lower Non-Critical Threshold: ~f ~a~%" lower-non-critical unit-string)
+	      (format #t "Lower Non-Critical Threshold: ~a~%" "NA"))
+	  (if is-upper-non-critical
+	      (format #t "Upper Non-Critical Threshold: ~f ~a~%" upper-non-critical unit-string)
+	      (format #t "Upper Non-Critical Threshold: ~a~%" "NA"))
+	  (if is-lower-non-recoverable
+	      (format #t "Lower Non-Recoverable Threshold: ~f ~a~%" 
+		      lower-non-recoverable unit-string)
+	      (format #t "Lower Non-Recoverable Threshold: ~a~%" "NA"))
+	  (if is-upper-non-recoverable
+	      (format #t "Upper Non-Recoverable Threshold: ~f ~a~%" 
+		      upper-non-recoverable unit-string)
+	      (format #t "Upper Non-Recoverable Threshold: ~a~%" "NA"))
+	  (format #t "Sensor Min. Reading: ~f ~a~%" sensor-min-reading unit-string)
+	  (format #t "Sensor Max. Reading: ~f ~a~%" sensor-max-reading unit-string)
+	  (format #t "Normal Min.: ~f ~a~%" normal-min unit-string)
+	  (format #t "Normal Max.: ~f ~a~%" normal-max unit-string)
+	  (format #t "Nominal reading: ~f ~a~%" nominal-reading unit-string)
+	  (format #t "Negative Hysteresis: ~d~%" negative-hysteresis)
+	  (format #t "Positive Hysteresis: ~d~%" positive-hysteresis)
+	  (if (boolean? sensor-reading)
+	      (format #t "Sensor Reading: ~a~%" "NA")
+	      (format #t "Sensor Reading: ~f ~a~%" current-reading unit-string))))
     (if (boolean? sensor-reading)
 	(format #t "Sensor Status: [~a]~%~%" "Unknown")
 	(if (null? event-message-list)
