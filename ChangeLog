@@ -86,6 +86,14 @@
 	* bmc-config/src/bmc-sol-conf-section.c
 	(character_accumulate_interval_validate): Fix range check.
 
+	* Globally support keyvalue flags.
+
+	* bmc-config/src/bmc-checkout.c (bmc_checkout_file): Use flags to
+	automatically comment out certain keys.
+
+	* bmc-config/src/bmc-user-sections.c (password20_checkout): Ensure
+	Password20 is a reasonable checkoutable value.
+
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm

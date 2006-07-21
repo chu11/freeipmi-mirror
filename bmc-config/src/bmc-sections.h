@@ -40,6 +40,7 @@ struct keyvalue {
   struct keyvalue *next;
   const char *key;
   const char *desc;
+  unsigned int flags;
   char *value;
 
   /* checkout procedure fills the value into kv->value as printable string */
@@ -112,23 +113,24 @@ struct section * bmc_misc_section_get (struct arguments *args);
   }                                 \
 } while (0)
 
-#define add_keyvalue(_sect, _key, _doc, _o, _i, _d, _v) do { \
-  struct keyvalue *_new ;                                    \
-  _new = (void *) calloc (1, sizeof (*_new));                \
-  _new->key = _key;                                          \
-  _new->desc = _doc;                                         \
-  _new->commit = _i;                                         \
-  _new->checkout = _o;                                       \
-  _new->diff = _d;                                           \
-  _new->validate = _v;                                       \
-  if (_sect->keyvalues) {                                    \
-    struct keyvalue *trav = _sect->keyvalues;                \
-    while (trav->next)                                       \
-      trav = trav->next;                                     \
-    trav->next = _new;                                       \
-  } else {                                                   \
-    _sect->keyvalues = _new;                                 \
-  }                                                          \
+#define add_keyvalue(_sect, _key, _doc, _f, _o, _i, _d, _v) do { \
+  struct keyvalue *_new ;                                        \
+  _new = (void *) calloc (1, sizeof (*_new));                    \
+  _new->key = _key;                                              \
+  _new->desc = _doc;                                             \
+  _new->flags = _f;                                              \
+  _new->commit = _i;                                             \
+  _new->checkout = _o;                                           \
+  _new->diff = _d;                                               \
+  _new->validate = _v;                                           \
+  if (_sect->keyvalues) {                                        \
+    struct keyvalue *trav = _sect->keyvalues;                    \
+    while (trav->next)                                           \
+      trav = trav->next;                                         \
+    trav->next = _new;                                           \
+  } else {                                                       \
+    _sect->keyvalues = _new;                                     \
+  }                                                              \
 } while (0)
 
 #endif /* _BMC_SECTIONS_H_ */

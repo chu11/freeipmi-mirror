@@ -111,18 +111,22 @@ bmc_checkout_file (struct arguments *arguments,
 		   kv->key,
 		   arguments->dev.comp_code);
       } else {
+	int key_len = 0;
+
 	fprintf (fp, "\t## %s\n", kv->desc);
 
 	/* beauty comes at a cost */
-	int key_len = 0;
-	key_len = fprintf (fp, "\t%s",
-			   kv->key);
+        if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
+          key_len = fprintf(fp, "\t## %s", kv->key);
+        else
+          key_len = fprintf (fp, "\t%s", kv->key);
+
 	while (key_len <= 45) {
 	  fprintf (fp, " ");
 	  key_len++;
 	}
-	fprintf (fp, "%s\n", 
-		 kv->value);
+
+	fprintf (fp, "%s\n", kv->value);
       }
       kv = kv->next;
     }

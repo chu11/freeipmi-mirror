@@ -298,10 +298,18 @@ password20_checkout (const struct arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
+  /* achu: password can't be checked out, but we should make sure IPMI
+   * 2.0 exists on the system.
+   */
   if (kv->value)
     free (kv->value);
-  kv->value = strdup ("");
 
+  if (check_bmc_user_password20 ((ipmi_device_t *)&args->dev,
+                                 1,
+                                 "foobar") < 0) 
+    return -1;
+
+  kv->value = strdup ("");
   return 0;
 }
 
@@ -1583,6 +1591,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Username",
 		"Give Username",
+                0,
 		username_checkout,
 		username_commit,
 		username_diff,
@@ -1591,6 +1600,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Enable_User",
 		"Possible values: Yes/No or blank to not set",
+                0,
 		enable_user_checkout,
 		enable_user_commit,
 		enable_user_diff,
@@ -1599,6 +1609,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Clear_Password",
 		"Possible values: Yes/No",
+                0,
 		clear_password_checkout,
 		clear_password_commit,
 		clear_password_diff,
@@ -1607,6 +1618,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Password",
 		"Give password or blank to clear. MAX 16 chars.",
+                BMC_CHECKOUT_KEY_COMMENTED_OUT,
 		password_checkout,
 		password_commit,
 		password_diff,
@@ -1615,6 +1627,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Password20",
 		"Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
+                BMC_CHECKOUT_KEY_COMMENTED_OUT,
 		password20_checkout,
 		password20_commit,
 		password20_diff,
@@ -1623,6 +1636,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Enable_IPMI_Msgs",
 		"Possible values: Yes/No",
+                0,
 		lan_enable_ipmi_msgs_checkout,
 		lan_enable_ipmi_msgs_commit,
 		lan_enable_ipmi_msgs_diff,
@@ -1631,6 +1645,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Enable_Link_Auth",
 		"Possible values: Yes/No",
+                0,
 		lan_enable_link_auth_checkout,
 		lan_enable_link_auth_commit,
 		lan_enable_link_auth_diff,
@@ -1639,6 +1654,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Enable_Restricted_to_Callback",
 		"Possible values: Yes/No",
+                0,
 		lan_enable_restricted_to_callback_checkout,
 		lan_enable_restricted_to_callback_commit,
 		lan_enable_restricted_to_callback_diff,
@@ -1647,6 +1663,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Privilege_Limit",
 		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                0,
 		lan_privilege_limit_checkout,
 		lan_privilege_limit_commit,
 		lan_privilege_limit_diff,
@@ -1655,6 +1672,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Session_Limit",
 		"Possible values: 0-255, 0 is unlimited",
+                0,
 		lan_session_limit_checkout,
 		lan_session_limit_commit,
 		lan_session_limit_diff,
@@ -1663,6 +1681,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"SOL_Payload_Access",
 		"Possible values: Yes/No",
+                0,
 		sol_payload_access_checkout,
 		sol_payload_access_commit,
 		sol_payload_access_diff,
@@ -1671,6 +1690,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Enable_IPMI_Msgs",
 		"Possible values: Yes/No",
+                0,
 		serial_enable_ipmi_msgs_checkout,
 		serial_enable_ipmi_msgs_commit,
 		serial_enable_ipmi_msgs_diff,
@@ -1679,6 +1699,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Enable_Link_Auth",
 		"Possible values: Yes/No",
+                0,
 		serial_enable_link_auth_checkout,
 		serial_enable_link_auth_commit,
 		serial_enable_link_auth_diff,
@@ -1687,6 +1708,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Enable_Restricted_to_Callback",
 		"Possible values: Yes/No",
+                0,
 		serial_enable_restricted_to_callback_checkout,
 		serial_enable_restricted_to_callback_commit,
 		serial_enable_restricted_to_callback_diff,
@@ -1695,6 +1717,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Privilege_Limit",
 		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                0,
 		serial_privilege_limit_checkout,
 		serial_privilege_limit_commit,
 		serial_privilege_limit_diff,
@@ -1703,6 +1726,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Session_Limit",
 		"Possible values: 0-255, 0 is unlimited",
+                0,
 		serial_session_limit_checkout,
 		serial_session_limit_commit,
 		serial_session_limit_diff,
