@@ -141,15 +141,6 @@ ex_ipmi_ping (SCM scm_host, SCM scm_timeout)
 }
 
 SCM 
-ex_cmd_get_device_id_display (void)
-{
-  if (display_get_device_id () == 0)
-    return (SCM_BOOL_T);
-  
-  return (SCM_BOOL_F);
-}
-
-SCM 
 ex_get_script_command_line ()
 {
   SCM scm_arg_list;

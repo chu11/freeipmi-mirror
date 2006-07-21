@@ -18,7 +18,40 @@
 	ipmi_device_t as an argument.
 
 	* bmc-config/src: Adjust remaining code appropriately.
-	
+
+	Cleanup fish by removing dead code.
+
+	* fish/src/ipmi-wrapper.h, fish/src/ipmi-wrapper.c
+	(get_lan_channel_number_known, get_serial_channel_number_known,
+	display_get_device_id, display_channel_info,
+	get_channel_info_list): Remove functions.
+
+	* fish/extensions/bmc-info.scm, fish/extensions/bmc-config.scm,
+	fish/extensions/bc-user-section.scm,
+	fish/extensions/bc-common.scm,
+	fish/extensions/bc-lan-conf-auth-section.scm,
+	fish/extensions/bc-lan-conf-misc-section.scm,
+	fish/extensions/bc-lan-conf-section.scm,
+	fish/extensions/bc-lan-conf-security-keys-section.scm,
+	fish/extensions/bc-lan-serial-channel-section.scm,
+	fish/extensions/bc-misc-section.scm,
+	fish/extensions/bc-pef-conf-section.scm,
+	fish/extensions/bc-rmcpplus-conf-privilege-section.scm,
+	fish/extensions/bc-section.scm,
+	fish/extensions/bc-serial-conf-section.scm,
+	fish/extensions/bc-sol-conf-section.scm,
+	fish/extensions/sel.scm: Removed files.
+
+	* fish/extensions/Makefile.am: Adjust appropriately.
+
+	* fish/src/scm-procedures.h, fish/src/scm-procedures.c
+	(ex_cmd_get_device_id_display): Remove functions.
+
+	* fish/src/extension.c (install_new_procedures): Remove
+	appropriately scheme hooks.
+
+	* fish/bmc-config.conf.5.in: Remove file.
+
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm
