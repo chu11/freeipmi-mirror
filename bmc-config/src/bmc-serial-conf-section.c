@@ -8,9 +8,9 @@ static char *
 connect_mode_string (uint8_t mode)
 {
   switch (mode) {
-  case 0:
+  case IPMI_CONNECT_MODE_MODEM:
     return "Modem_Connect";
-  case 1:
+  case IPMI_CONNECT_MODE_DIRECT:
     return "Direct_Connect";
   }
   return "";
@@ -20,9 +20,9 @@ static int
 connect_mode_number (const  char *string)
 {
   if (same (string, "Modem_Connect"))
-    return 0;
+    return IPMI_CONNECT_MODE_MODEM;
   if (same (string, "Direct_Connect"))
-    return 1;
+    return IPMI_CONNECT_MODE_DIRECT;
 
   return -1;
 }

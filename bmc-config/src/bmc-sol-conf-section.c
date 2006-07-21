@@ -502,6 +502,9 @@ character_accumulate_interval_validate (const struct arguments *args,
   if (*endptr)
     return 1;
 
+  if (num < 0 || num > 255)
+    return 1;
+
   return 0;
 }
 

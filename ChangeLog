@@ -79,6 +79,13 @@
 	tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs
 	template bug.
 
+	BMC-Config fixes galore
+
+	* Globally use libfreeipmi/include definitions, not hardcoded values.
+
+	* bmc-config/src/bmc-sol-conf-section.c
+	(character_accumulate_interval_validate): Fix range check.
+
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm

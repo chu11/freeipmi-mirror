@@ -11,15 +11,15 @@ rmcpplus_priv_number (const char *value)
   if (same (value, "unused"))
     return 0;
   if (same (value, "callback"))
-    return 1;
+    return IPMI_PRIVILEGE_LEVEL_CALLBACK;
   if (same (value, "user"))
-    return 2;
+    return IPMI_PRIVILEGE_LEVEL_USER;
   if (same (value, "operator"))
-    return 3;
+    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
   if (same (value, "administrator"))
-    return 4;
+    return IPMI_PRIVILEGE_LEVEL_ADMIN;
   if (same (value, "oem_proprietary"))
-    return 5;
+    return IPMI_PRIVILEGE_LEVEL_OEM;
   return -1;
 }
 
@@ -29,15 +29,15 @@ rmcpplus_priv_string (int value)
   switch (value) {
   case 0:
     return "Unused";
-  case 1:
+  case IPMI_PRIVILEGE_LEVEL_CALLBACK:
     return "Callback";
-  case 2:
+  case IPMI_PRIVILEGE_LEVEL_USER:
     return "User";
-  case 3:
+  case IPMI_PRIVILEGE_LEVEL_OPERATOR:
     return "Operator";
-  case 4:
+  case IPMI_PRIVILEGE_LEVEL_ADMIN:
     return "Administrator";
-  case 5:
+  case IPMI_PRIVILEGE_LEVEL_OEM:
     return "OEM_Proprietary";
   }
   return "";

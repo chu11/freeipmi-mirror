@@ -8,13 +8,13 @@ static char *
 channel_access_mode_string (uint8_t mode)
 {
   switch (mode) {
-  case 0:
+  case IPMI_MESSAGING_ACCESS_MODE_DISABLED:
     return "Disabled";
-  case 1:
+  case IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY:
     return "Pre_Boot_Only";
-  case 2:
+  case IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE:
     return "Always_Available";
-  case 3:
+  case IPMI_MESSAGING_ACCESS_MODE_SHARED:
     return "Shared";
   }
   return "";
@@ -24,13 +24,13 @@ static int
 channel_access_mode (const char *string)
 {
   if (same (string, "disabled"))
-    return 0;
+    return IPMI_MESSAGING_ACCESS_MODE_DISABLED;
   if (same (string, "pre_boot_only"))
-    return 1;
+    return IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY;
   if (same (string, "always_available"))
-    return 2;
+    return IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE;
   if (same (string, "shared"))
-    return 3;
+    return IPMI_MESSAGING_ACCESS_MODE_SHARED;
   return -1;
 }
 
@@ -38,17 +38,17 @@ static char *
 get_privilege_limit_string (uint8_t limit)
 {
   switch (limit) {
-  case 1:
+  case IPMI_PRIVILEGE_LEVEL_CALLBACK:
     return "Callback";
-  case 2:
+  case IPMI_PRIVILEGE_LEVEL_USER:
     return "User";
-  case 3:
+  case IPMI_PRIVILEGE_LEVEL_OPERATOR:
     return "Operator";
-  case 4:
+  case IPMI_PRIVILEGE_LEVEL_ADMIN:
     return "Administrator";
-  case 5:
+  case IPMI_PRIVILEGE_LEVEL_OEM:
     return "OEM_Proprietary";
-  case 0xf:
+  case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
     return "NO_Access";
   }
   return "";
@@ -58,17 +58,17 @@ static uint8_t
 get_privilege_limit_number (const char *value)
 {
   if (same (value, "callback"))
-    return 1;
+    return IPMI_PRIVILEGE_LEVEL_CALLBACK;
   if (same (value, "user"))
-    return 2;
+    return IPMI_PRIVILEGE_LEVEL_USER;
   if (same (value, "operator"))
-    return 3;
+    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
   if (same (value, "administrator"))
-    return 4;
+    return IPMI_PRIVILEGE_LEVEL_ADMIN;
   if (same (value, "oem_proprietary"))
-    return 5;
+    return IPMI_PRIVILEGE_LEVEL_OEM;
   if (same (value, "no_access"))
-    return 0xf;
+    return IPMI_PRIVILEGE_LEVEL_NO_ACCESS;
   return 0;
 }
 

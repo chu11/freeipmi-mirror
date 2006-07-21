@@ -10,15 +10,15 @@ static int
 ip_address_source_number (const char *source)
 {
   if (same (source, "unspecified"))
-    return 0;
+    return IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED;
   if (same (source, "static"))
-    return 1;
+    return IPMI_IP_ADDRESS_SOURCE_STATIC;
   if (same (source, "use_dhcp"))
-    return 2;
+    return IPMI_IP_ADDRESS_SOURCE_DHCP;
   if (same (source, "use_bios"))
-    return 3;
+    return IPMI_IP_ADDRESS_SOURCE_BIOS;
   if (same (source, "use_others"))
-    return 4;
+    return IPMI_IP_ADDRESS_SOURCE_OTHER;
   return -1;
 }
 
@@ -26,15 +26,15 @@ static char *
 ip_address_source_string (uint8_t source)
 {
   switch (source) {
-  case 0:
+  case IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED:
     return "Unspecified";
-  case 1:
+  case IPMI_IP_ADDRESS_SOURCE_STATIC:
     return "Static";
-  case 2:
+  case IPMI_IP_ADDRESS_SOURCE_DHCP:
     return "Use_DHCP";
-  case 3:
+  case IPMI_IP_ADDRESS_SOURCE_BIOS:
     return "Use_BIOS";
-  case 4:
+  case IPMI_IP_ADDRESS_SOURCE_OTHER:
     return "Use_Others";
   }
   return "";

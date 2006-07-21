@@ -10,11 +10,11 @@ k_r_checkout (const struct arguments *args,
 	      struct keyvalue *kv)
 {
   int ret;
-  uint8_t k_r[21];
+  uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
 
   memset (k_r, 0, 21);
   ret = get_k_r ((ipmi_device_t *) &args->dev,
-		 (uint8_t *)k_r, 20);
+		 (uint8_t *)k_r, IPMI_MAX_K_R_LENGTH);
 
   if (ret != 0)
     return -1;
@@ -22,7 +22,7 @@ k_r_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  k_r[21] = 0;
+  k_r[IPMI_MAX_K_R_LENGTH] = '\0';
   kv->value = strdup ((char *)k_r);
 
   return 0;
@@ -44,11 +44,11 @@ k_r_diff (const struct arguments *args,
 	  const struct keyvalue *kv)
 {
   int ret;
-  uint8_t k_r[21];
+  uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
 
   memset (k_r, 0, 21);
   ret = get_k_r ((ipmi_device_t *) &args->dev,
-		 k_r, 20);
+		 k_r, IPMI_MAX_K_R_LENGTH);
 
   if (ret != 0)
     return -1;
@@ -70,7 +70,7 @@ k_r_validate (const struct arguments *args,
 	      const struct section *sect,
 	      const char *value)
 {
-  return (value && strlen (value) <= 20) ? 0 : 1;
+  return (value && strlen (value) <= IPMI_MAX_K_R_LENGTH) ? 0 : 1;
 }
 
 
@@ -82,11 +82,11 @@ k_g_checkout (const struct arguments *args,
 	      struct keyvalue *kv)
 {
   int ret;
-  uint8_t k_g[21];
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH + 1];
 
-  memset (k_g, 0, 21);
+  memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
   ret = get_k_g ((ipmi_device_t *) &args->dev,
-		 k_g, 20);
+		 k_g, IPMI_MAX_K_G_LENGTH);
 
   if (ret != 0)
     return -1;
@@ -94,7 +94,7 @@ k_g_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  k_g[21] = 0;
+  k_g[IPMI_MAX_K_G_LENGTH] = '\0';
   kv->value = strdup ((char *)k_g);
 
   return 0;
@@ -116,11 +116,11 @@ k_g_diff (const struct arguments *args,
 	  const struct keyvalue *kv)
 {
   int ret;
-  uint8_t k_g[21];
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH + 1];
 
-  memset (k_g, 0, 21);
+  memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
   ret = get_k_g ((ipmi_device_t *) &args->dev,
-		 k_g, 20);
+		 k_g, IPMI_MAX_K_G_LENGTH);
 
   if (ret != 0)
     return -1;
@@ -142,7 +142,7 @@ k_g_validate (const struct arguments *args,
 	      const struct section *sect,
 	      const char *value)
 {
-  return (value && strlen (value) <= 20) ? 0 : 1;
+  return (value && strlen (value) <= IPMI_MAX_K_G_LENGTH) ? 0 : 1;
 }
 
 struct section *

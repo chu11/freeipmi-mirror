@@ -8,11 +8,11 @@ static int
 power_restore_policy_number (const char *string)
 {
   if (same (string, "off_state_ac_apply"))
-    return 0;
+    return IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS;
   if (same (string, "restore_state_ac_apply"))
-    return 1;
+    return IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE;
   if (same (string, "on_state_ac_apply"))
-    return 2;
+    return IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS;
   return -1;
 }
 
@@ -20,11 +20,11 @@ static char *
 power_restore_policy_string (uint8_t value)
 {
   switch (value) {
-  case 0:
+  case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS:
     return "OFF_State_AC_Apply";
-  case 1:
+  case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE:
     return "Restore_State_AC_Apply";
-  case 2:
+  case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
     return "ON_State_AC_Apply";
   }
   return "";
