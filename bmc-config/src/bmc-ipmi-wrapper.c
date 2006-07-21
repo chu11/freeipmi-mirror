@@ -25,21 +25,13 @@ static int8_t serial_channel_number;
 static uint8_t sol_channel_number_initialized = false;
 static int8_t sol_channel_number;
 
-ipmi_device_t *global_dev;
-
-ipmi_device_t *
-fi_get_ipmi_device ()
-{
-  return global_dev;
-}
-
 int8_t 
-get_lan_channel_number ()
+get_lan_channel_number (ipmi_device_t *dev)
 {
   if (lan_channel_number_initialized)
     return lan_channel_number;
   
-  lan_channel_number = ipmi_get_channel_number (fi_get_ipmi_device (), 
+  lan_channel_number = ipmi_get_channel_number (dev, 
 						IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
 
   if (!(lan_channel_number < 0))
@@ -48,12 +40,12 @@ get_lan_channel_number ()
 }
 
 int8_t 
-get_serial_channel_number ()
+get_serial_channel_number (ipmi_device_t *dev)
 {
   if (serial_channel_number_initialized)
     return serial_channel_number;
   
-  serial_channel_number = ipmi_get_channel_number (fi_get_ipmi_device (), 
+  serial_channel_number = ipmi_get_channel_number (dev, 
 						   IPMI_CHANNEL_MEDIUM_TYPE_RS232);
   if (!(serial_channel_number < 0))
     serial_channel_number_initialized = true;
@@ -61,7 +53,7 @@ get_serial_channel_number ()
 }
 
 int8_t 
-get_sol_channel_number ()
+get_sol_channel_number (ipmi_device_t *dev)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -72,14 +64,14 @@ get_sol_channel_number ()
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (fi_get_ipmi_device (),
-								     get_lan_channel_number (),
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (dev,
+								     get_lan_channel_number (dev),
 								     IPMI_GET_SOL_PARAMETER,
 								     SET_SELECTOR,
 								     BLOCK_SELECTOR,
 								     obj_cmd_rs) != 0)
     {
-      sol_channel_number = get_lan_channel_number ();
+      sol_channel_number = get_lan_channel_number (dev);
       sol_channel_number_initialized = true;
       goto cleanup;
     }
@@ -88,7 +80,7 @@ get_sol_channel_number ()
 		   "payload_channel",
 		   &val) < 0)
     {
-      sol_channel_number = get_lan_channel_number ();
+      sol_channel_number = get_lan_channel_number (dev);
       sol_channel_number_initialized = true;
       goto cleanup;
     }
@@ -99,16 +91,4 @@ get_sol_channel_number ()
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return sol_channel_number;
-}
-
-uint8_t 
-get_lan_channel_number_known ()
-{
-  return 7;
-}
-
-uint8_t 
-get_serial_channel_number_known ()
-{
-  return 1;
 }

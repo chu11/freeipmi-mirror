@@ -232,7 +232,7 @@ set_bmc_user_lan_channel_access (ipmi_device_t *dev,
 				 uint8_t lan_session_limit)
 {
   return set_bmc_user_access (dev, 
-			      get_lan_channel_number (), 
+			      get_lan_channel_number (dev), 
 			      lan_user_ipmi_messaging, 
 			      lan_user_link_authentication, 
 			      lan_user_restricted_to_callback, 
@@ -269,7 +269,7 @@ set_bmc_user_payload_access (ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_user_payload_access (dev, 
-                                        get_lan_channel_number (),
+                                        get_lan_channel_number (dev),
                                         userid, 
                                         operation,
                                         standard_payload_1,
@@ -307,7 +307,7 @@ set_bmc_user_serial_channel_access (ipmi_device_t *dev,
 				    uint8_t serial_session_limit)
 {
   return set_bmc_user_access (dev, 
-			      get_serial_channel_number (), 
+			      get_serial_channel_number (dev), 
 			      serial_user_ipmi_messaging, 
 			      serial_user_link_authentication, 
 			      serial_user_restricted_to_callback, 
@@ -325,7 +325,7 @@ set_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 				     uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
-				 get_lan_channel_number (), 
+				 get_lan_channel_number (dev), 
 				 1, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -343,7 +343,7 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 					 uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
-				 get_lan_channel_number (), 
+				 get_lan_channel_number (dev), 
 				 0, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -363,7 +363,7 @@ set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (dev, 
-								   get_lan_channel_number (), 
+								   get_lan_channel_number (dev), 
 								   ip_address_source, 
 								   obj_cmd_rs) != 0)
     goto cleanup;
@@ -390,7 +390,7 @@ set_bmc_lan_conf_ip_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_ip_address (dev, 
-							    get_lan_channel_number (), 
+							    get_lan_channel_number (dev), 
 							    ip_address_val, 
 							    obj_cmd_rs) != 0)
     goto cleanup;
@@ -417,7 +417,7 @@ set_bmc_lan_conf_mac_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_mac_address (dev, 
-							     get_lan_channel_number (), 
+							     get_lan_channel_number (dev), 
 							     mac_address_val, 
 							     obj_cmd_rs) != 0)
     goto cleanup;
@@ -444,7 +444,7 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (dev, 
-							     get_lan_channel_number (), 
+							     get_lan_channel_number (dev), 
 							     subnet_mask_val, 
 							     obj_cmd_rs) != 0)
     goto cleanup;
@@ -471,7 +471,7 @@ set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (dev, 
-									 get_lan_channel_number (), 
+									 get_lan_channel_number (dev), 
 									 ip_address_val, 
 									 obj_cmd_rs) != 0)
     goto cleanup;
@@ -498,7 +498,7 @@ set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (dev, 
-									     get_lan_channel_number (), 
+									     get_lan_channel_number (dev), 
 									     mac_address_val, 
 									     obj_cmd_rs) != 0)
     goto cleanup;
@@ -525,7 +525,7 @@ set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (dev, 
-									get_lan_channel_number (), 
+									get_lan_channel_number (dev), 
 									ip_address_val, 
 									obj_cmd_rs) != 0)
     goto cleanup;
@@ -552,7 +552,7 @@ set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (dev, 
-									    get_lan_channel_number (), 
+									    get_lan_channel_number (dev), 
 									    mac_address_val, 
 									    obj_cmd_rs) != 0)
     goto cleanup;
@@ -576,7 +576,7 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (dev, 
-							 get_lan_channel_number (), 
+							 get_lan_channel_number (dev), 
                                                          vlan_id,
 							 vlan_id_enable, 
 							 obj_cmd_rs) != 0)
@@ -600,7 +600,7 @@ set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (dev, 
-							       get_lan_channel_number (), 
+							       get_lan_channel_number (dev), 
 							       vlan_priority, 
 							       obj_cmd_rs) != 0)
     goto cleanup;
@@ -796,7 +796,7 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 
   if (_fill_lan_set_authentication_type_enables (obj_cmd_rq,
 						 l_tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq,
-						 get_lan_channel_number (), 
+						 get_lan_channel_number (dev), 
 						 callback_level,
 						 user_level,
 						 operator_level,
@@ -835,7 +835,7 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (dev, 
-									   get_lan_channel_number (), 
+									   get_lan_channel_number (dev), 
 									   bmc_generated_gratuitous_arps, 
 									   bmc_generated_arp_responses, 
 									   obj_cmd_rs) != 0)
@@ -860,7 +860,7 @@ set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (dev, 
-									 get_lan_channel_number (), 
+									 get_lan_channel_number (dev), 
 									 gratuitous_arp_interval, 
 									 obj_cmd_rs) != 0)
     goto cleanup;
@@ -881,7 +881,7 @@ set_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 					uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
-				 get_serial_channel_number (), 
+				 get_serial_channel_number (dev), 
 				 1, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -899,7 +899,7 @@ set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 					    uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
-				 get_serial_channel_number (), 
+				 get_serial_channel_number (dev), 
 				 0, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -922,7 +922,7 @@ set_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_serial_modem_configuration_connection_mode (dev, 
-							       get_serial_channel_number (), 
+							       get_serial_channel_number (dev), 
 							       basic_mode,
 							       ppp_mode,
 							       terminal_mode,
@@ -948,7 +948,7 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (dev, 
-								      get_serial_channel_number (), 
+								      get_serial_channel_number (dev), 
 								      page_blackout_interval, 
 								      obj_cmd_rs) != 0)
     goto cleanup;
@@ -971,7 +971,7 @@ set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_serial_modem_configuration_call_retry_interval (dev, 
-								   get_serial_channel_number (), 
+								   get_serial_channel_number (dev), 
 								   call_retry_interval, 
 								   obj_cmd_rs) != 0)
     goto cleanup;
@@ -996,7 +996,7 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (dev, 
-									    get_serial_channel_number (), 
+									    get_serial_channel_number (dev), 
 									    dtr_hangup, 
 									    flow_control, 
 									    bit_rate, 
@@ -1147,7 +1147,7 @@ set_sol_sol_enable(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (dev, 
-							    get_sol_channel_number (),
+							    get_sol_channel_number (dev),
 							    sol_enable, 
 							    obj_cmd_rs) != 0)
     goto cleanup;
@@ -1172,7 +1172,7 @@ set_sol_sol_authentication(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (dev, 
-								    get_sol_channel_number (),
+								    get_sol_channel_number (dev),
 								    sol_privilege_level,
 								    force_sol_payload_authentication,
 								    force_sol_payload_encryption,
@@ -1198,7 +1198,7 @@ set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-												  get_sol_channel_number (),
+												  get_sol_channel_number (dev),
 												  character_accumulate_interval,
 												  character_send_threshold,
 												  obj_cmd_rs) != 0)
@@ -1223,7 +1223,7 @@ set_sol_sol_retry(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (dev, 
-							   get_sol_channel_number (),
+							   get_sol_channel_number (dev),
 							   retry_count,
 							   retry_interval,
 							   obj_cmd_rs) != 0)
@@ -1247,7 +1247,7 @@ set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-									   get_sol_channel_number (),
+									   get_sol_channel_number (dev),
 									   bit_rate,
 									   obj_cmd_rs) != 0)
     goto cleanup;
@@ -1270,7 +1270,7 @@ set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-								       get_sol_channel_number (),
+								       get_sol_channel_number (dev),
 								       bit_rate,
 								       obj_cmd_rs) != 0)
     goto cleanup;
@@ -1293,7 +1293,7 @@ set_sol_sol_payload_port_number(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (dev, 
-									 get_sol_channel_number (),
+									 get_sol_channel_number (dev),
                                                                          port_number,
 									 obj_cmd_rs) != 0)
     goto cleanup;
@@ -1320,7 +1320,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
 	goto cleanup;
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (dev, 
-												   get_lan_channel_number (), 
+												   get_lan_channel_number (dev), 
 												   IPMI_GET_LAN_PARAMETER, 
 												   SET_SELECTOR, 
 												   BLOCK_SELECTOR, 
@@ -1343,7 +1343,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
 	goto cleanup;
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (dev, 
-											     get_lan_channel_number (), 
+											     get_lan_channel_number (dev), 
 											     IPMI_GET_LAN_PARAMETER, 
 											     SET_SELECTOR, 
 											     BLOCK_SELECTOR, 
@@ -1402,7 +1402,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
 	goto cleanup;
 
       if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (dev, 
-												      get_lan_channel_number (), 
+												      get_lan_channel_number (dev), 
 												      IPMI_GET_LAN_PARAMETER, 
 												      SET_SELECTOR, 
 												      BLOCK_SELECTOR, 
@@ -1500,7 +1500,7 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
 	}
 
       if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(dev,
-												     get_lan_channel_number(),
+												     get_lan_channel_number(dev),
 												     privs[0],
 												     privs[1],
 												     privs[2],
@@ -1545,7 +1545,7 @@ set_k_r(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (), 
+                                          get_lan_channel_number (dev), 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
 					  k_r,
@@ -1572,7 +1572,7 @@ set_k_g(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (), 
+                                          get_lan_channel_number (dev), 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
 					  k_g,
@@ -1599,7 +1599,7 @@ get_bmc_max_users (ipmi_device_t *dev, uint8_t *max_users)
     return -1;
 
   if (ipmi_cmd_get_user_access (dev, 
-				get_lan_channel_number (), 
+				get_lan_channel_number (dev), 
 				1, 
 				obj_cmd_rs) != 0) {
     fiid_obj_destroy (obj_cmd_rs);
@@ -1762,7 +1762,7 @@ get_bmc_user_lan_channel_access (ipmi_device_t *dev,
 {
   return get_bmc_user_access (dev, 
 			      userid, 
-			      get_lan_channel_number (), 
+			      get_lan_channel_number (dev), 
 			      user_ipmi_messaging, 
 			      user_link_authentication, 
 			      user_restricted_to_callback, 
@@ -1797,7 +1797,7 @@ get_bmc_user_payload_access (ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_get_user_payload_access (dev, 
-                                        get_lan_channel_number (),
+                                        get_lan_channel_number (dev),
                                         userid, 
                                         obj_cmd_rs) != 0)
     goto cleanup;
@@ -1925,7 +1925,7 @@ get_bmc_user_serial_channel_access (ipmi_device_t *dev,
 {
   return get_bmc_user_access (dev, 
 			      userid, 
-			      get_serial_channel_number (), 
+			      get_serial_channel_number (dev), 
 			      user_ipmi_messaging, 
 			      user_link_authentication, 
 			      user_restricted_to_callback, 
@@ -1942,7 +1942,7 @@ get_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 				     uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
-				 get_lan_channel_number (), 
+				 get_lan_channel_number (dev), 
 				 1, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -1960,7 +1960,7 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 					 uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
-				 get_lan_channel_number (), 
+				 get_lan_channel_number (dev), 
 				 0, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -1981,7 +1981,7 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (dev, 
-								   get_lan_channel_number (), 
+								   get_lan_channel_number (dev), 
 								   IPMI_GET_LAN_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
@@ -2011,7 +2011,7 @@ get_bmc_lan_conf_ip_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_ip_address (dev, 
-							    get_lan_channel_number (), 
+							    get_lan_channel_number (dev), 
 							    IPMI_GET_LAN_PARAMETER, 
 							    SET_SELECTOR, 
 							    BLOCK_SELECTOR, 
@@ -2049,7 +2049,7 @@ get_bmc_lan_conf_mac_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_mac_address (dev, 
-							     get_lan_channel_number (), 
+							     get_lan_channel_number (dev), 
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
@@ -2089,7 +2089,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (dev, 
-							     get_lan_channel_number (), 
+							     get_lan_channel_number (dev), 
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
@@ -2127,7 +2127,7 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (dev, 
-									 get_lan_channel_number (), 
+									 get_lan_channel_number (dev), 
 									 IPMI_GET_LAN_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -2165,7 +2165,7 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (dev, 
-									     get_lan_channel_number (), 
+									     get_lan_channel_number (dev), 
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
@@ -2205,7 +2205,7 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (dev, 
-									get_lan_channel_number (), 
+									get_lan_channel_number (dev), 
 									IPMI_GET_LAN_PARAMETER, 
 									SET_SELECTOR, 
 									BLOCK_SELECTOR, 
@@ -2243,7 +2243,7 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (dev, 
-									    get_lan_channel_number (), 
+									    get_lan_channel_number (dev), 
 									    IPMI_GET_LAN_PARAMETER, 
 									    SET_SELECTOR, 
 									    BLOCK_SELECTOR, 
@@ -2284,7 +2284,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (dev, 
-							 get_lan_channel_number (), 
+							 get_lan_channel_number (dev), 
 							 IPMI_GET_LAN_PARAMETER, 
 							 SET_SELECTOR, 
 							 BLOCK_SELECTOR, 
@@ -2319,7 +2319,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (dev, 
-							       get_lan_channel_number (), 
+							       get_lan_channel_number (dev), 
 							       IPMI_GET_LAN_PARAMETER, 
 							       SET_SELECTOR, 
 							       BLOCK_SELECTOR, 
@@ -2349,7 +2349,7 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (dev, 
-									     get_lan_channel_number (), 
+									     get_lan_channel_number (dev), 
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
@@ -2476,7 +2476,7 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (dev, 
-									   get_lan_channel_number (), 
+									   get_lan_channel_number (dev), 
 									   IPMI_GET_LAN_PARAMETER, 
 									   SET_SELECTOR, 
 									   BLOCK_SELECTOR, 
@@ -2510,7 +2510,7 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (dev, 
-									 get_lan_channel_number (), 
+									 get_lan_channel_number (dev), 
 									 IPMI_GET_LAN_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -2537,7 +2537,7 @@ get_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 					uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
-				 get_serial_channel_number (), 
+				 get_serial_channel_number (dev), 
 				 1, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -2555,7 +2555,7 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 					    uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
-				 get_serial_channel_number (), 
+				 get_serial_channel_number (dev), 
 				 0, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -2579,7 +2579,7 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_serial_modem_configuration_connection_mode (dev, 
-							       get_serial_channel_number (), 
+							       get_serial_channel_number (dev), 
 							       IPMI_GET_SERIAL_MODEM_PARAMETER, 
 							       SET_SELECTOR, 
 							       BLOCK_SELECTOR, 
@@ -2621,7 +2621,7 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (dev, 
-								      get_serial_channel_number (), 
+								      get_serial_channel_number (dev), 
 								      IPMI_GET_SERIAL_MODEM_PARAMETER, 
 								      SET_SELECTOR, 
 								      BLOCK_SELECTOR, 
@@ -2651,7 +2651,7 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval (dev, 
-								   get_serial_channel_number (), 
+								   get_serial_channel_number (dev), 
 								   IPMI_GET_SERIAL_MODEM_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
@@ -2683,7 +2683,7 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (dev, 
-									    get_serial_channel_number (), 
+									    get_serial_channel_number (dev), 
 									    IPMI_GET_SERIAL_MODEM_PARAMETER, 
 									    SET_SELECTOR, 
 									    BLOCK_SELECTOR, 
@@ -2902,7 +2902,7 @@ get_sol_sol_enable (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (dev, 
-							    get_sol_channel_number (), 
+							    get_sol_channel_number (dev), 
 							    IPMI_GET_SOL_PARAMETER, 
 							    SET_SELECTOR, 
 							    BLOCK_SELECTOR, 
@@ -2934,7 +2934,7 @@ get_sol_sol_authentication (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (dev, 
-								    get_sol_channel_number (), 
+								    get_sol_channel_number (dev), 
 								    IPMI_GET_SOL_PARAMETER, 
 								    SET_SELECTOR, 
 								    BLOCK_SELECTOR, 
@@ -2973,7 +2973,7 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-												  get_sol_channel_number (), 
+												  get_sol_channel_number (dev), 
 												  IPMI_GET_SOL_PARAMETER, 
 												  SET_SELECTOR, 
 												  BLOCK_SELECTOR, 
@@ -3008,7 +3008,7 @@ get_sol_sol_retry (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (dev, 
-							   get_sol_channel_number (), 
+							   get_sol_channel_number (dev), 
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
@@ -3042,7 +3042,7 @@ get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-							   get_sol_channel_number (), 
+							   get_sol_channel_number (dev), 
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
@@ -3072,7 +3072,7 @@ get_sol_sol_volatile_bit_rate (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-								       get_sol_channel_number (), 
+								       get_sol_channel_number (dev), 
 								       IPMI_GET_SOL_PARAMETER, 
 								       SET_SELECTOR, 
 								       BLOCK_SELECTOR, 
@@ -3102,7 +3102,7 @@ get_sol_sol_payload_port_number (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (dev, 
-									 get_sol_channel_number (), 
+									 get_sol_channel_number (dev), 
 									 IPMI_GET_SOL_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -3166,7 +3166,7 @@ get_k_r(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (), 
+                                          get_lan_channel_number (dev), 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                                           NULL,
@@ -3202,7 +3202,7 @@ get_k_g(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (), 
+                                          get_lan_channel_number (dev), 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                                           NULL,

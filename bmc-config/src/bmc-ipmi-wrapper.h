@@ -22,29 +22,8 @@
 #include "bmc-common.h"
 #include "bmc-types.h"
 
-typedef struct channel_info 
-{
-  uint8_t channel_number;
-  uint8_t medium_type;
-  uint8_t protocol_type;
-} channel_info;
-
-ipmi_device_t *fi_get_ipmi_device ();
-
-int fi_ipmi_open (struct arguments *args);
-int fi_ipmi_close ();
-
-char *get_sdr_cache_filename ();
-
-channel_info *get_channel_info_list ();
-int8_t get_lan_channel_number ();
-int8_t get_serial_channel_number ();
-int8_t get_sol_channel_number ();
-uint8_t get_lan_channel_number_known ();
-uint8_t get_serial_channel_number_known ();
-
-int display_get_device_id ();
-
-int ipmi_ping (char *host, unsigned int sock_timeout);
+int8_t get_lan_channel_number (ipmi_device_t *dev);
+int8_t get_serial_channel_number (ipmi_device_t *dev);
+int8_t get_sol_channel_number (ipmi_device_t *dev);
 
 #endif

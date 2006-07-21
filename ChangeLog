@@ -1,3 +1,24 @@
+2006-07-21  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config.c (main): Close ipmi.
+
+	* bmc-config/src/: Globally alter calls to "fi_" functions, since
+	fish is no longer used.  
+
+	* bmc-config/src/bmc-ipmi-wrapper.h,
+	bmc-config/src/bmc-ipmi-wrapper.c (fi_get_ipmi_device,
+	fi_ipmi_open, fi_ipmi_close, get_channel_info_list,
+	get_sdr_cache_filename, get_lan_channel_number_known,
+	get_serial_channel_number_known, display_get_device_id,
+	ipmi_ping): Remove functions and related structs.
+
+	* bmc-config/src/bmc-ipmi-wrapper.h,
+	bmc-config/src/bmc-ipmi-wrapper.c (get_lan_channel_number,
+	get_serial_channel_number, get_sol_channel_number): Take
+	ipmi_device_t as an argument.
+
+	* bmc-config/src: Adjust remaining code appropriately.
+	
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm

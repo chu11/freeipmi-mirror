@@ -82,8 +82,6 @@
 
 #include "ipmi-common.h"
 
-extern ipmi_device_t *global_dev;
-
 static int
 ipmi_core_init (char *progname, struct arguments *args)
 {
@@ -157,7 +155,6 @@ ipmi_core_init (char *progname, struct arguments *args)
     }
   }
 
-  global_dev = &args->dev;
   return 0;
 }
 
@@ -224,5 +221,7 @@ main (int argc, char *argv[])
     ret = bmc_diff (&arguments, sections);
     break;
   }
+  
+  ipmi_close(&arguments.dev);
   return (ret);
 }
