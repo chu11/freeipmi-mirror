@@ -98,10 +98,6 @@ static char args_doc[] = "";
 
 /* The options we understand. */
 static struct argp_option options[] = {
-  {"verbose",   'v', 0, 0,  "Produce verbose output" },
-  {"quiet",     'q', 0, 0,  "Do not produce any output" },
-  {"silent",    's', 0, OPTION_ALIAS },
-
   /* bmc-config should have a default privilege of ADMIN 
    * so we cannot use ARGP_COMMON_OPTIONS
    */
@@ -110,19 +106,26 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_AUTHTYPE,
   {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,
    "Use this PRIVILEGE-LEVEL instead of ADMIN.  "
-   "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 10},
+   "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 11},
 
   {"checkout", 'o', 0, 0, 
-   "Action is to GET the BMC configuration"},
+   "Action is to GET the BMC configuration", 12},
   {"commit", 'i', 0, 0, 
-   "Action is to UPDATE the BMC configuration"},
+   "Action is to UPDATE the BMC configuration", 13},
   {"diff", 'd', 0, 0, 
-   "Action is to SHOW THE DIFFERENCES with BMC"},
+   "Action is to SHOW THE DIFFERENCES with BMC", 14},
 
   {"filename", 'f', "FILENAME", 0, 
-   "use FILENAME in checkout, commit or diff"},
+   "use FILENAME in checkout, commit or diff", 15},
   {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in commit or diff"},
+   "use KEY-PAIR in commit or diff", 16},
+
+  {"verbose",   'v', 0, 0,  "Produce verbose output", 17},
+  {"quiet",     'q', 0, 0,  "Do not produce any output", 18 },
+  {"silent",    's', 0, OPTION_ALIAS },
+#ifndef NDEBUG
+  {"debug",     'd', 0, 0,  "Print debug output",19 },
+#endif /* NDEBUG */
 
   { 0, }
 };

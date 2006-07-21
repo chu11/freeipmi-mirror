@@ -50,29 +50,29 @@ enum argp_common_option_keys
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
      "Use this DEVICE for IPMI driver.", 3},                               \
     {"register-spacing", REGISTER_SPACING_KEY, "REGISTERSPACING", 0,       \
-     "Use this REGISTERSPACING instead of probed one"}
+     "Use this REGISTERSPACING instead of probed one", 4}
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                      \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			   \
-     "Connect to IPMIHOST.", 4},					   \
+     "Connect to IPMIHOST.", 5},					   \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			   \
-     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 5},  \
+     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 6},  \
     {"password",       PASSWORD_KEY, "PASSWORD", 0, 			   \
-     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 6},  \
+     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 7},  \
     {"retry-timeout", RETRY_TIMEOUT_KEY, "RETRY_TIMEOUT", 0,               \
-     "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 7},  \
+     "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 8},  \
     {"session-timeout", SESSION_TIMEOUT_KEY, "SESSION_TIMEOUT", 0,         \
-     "Use SESSION_TIMEOUT milliseconds before ending a session.", 8}
+     "Use SESSION_TIMEOUT milliseconds before ending a session.", 9}
 
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
     {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 		   \
      "Use AUTHTYPE instead of NONE.  "				           \
-     "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 9}	           \
+     "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 10}	           \
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL                                      \
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
-     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 10}     
+     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 11}     
 
 #define ARGP_COMMON_OPTIONS                                                \
        ARGP_COMMON_OPTIONS_INBAND,                                         \
