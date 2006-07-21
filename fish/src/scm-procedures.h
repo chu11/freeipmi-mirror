@@ -253,9 +253,6 @@ SCM ex_get_sdr_repository_info ();
 SCM ex_ipmi_open (SCM scm_arg_list);
 SCM ex_ipmi_close ();
 
-/* bmc info exports */
-SCM ex_cmd_get_device_id_display (void);
-
 /* pef exports */
 SCM ex_get_pef_info ();
 

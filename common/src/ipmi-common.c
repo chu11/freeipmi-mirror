@@ -48,49 +48,6 @@ ipmi_is_root ()
   return 0;
 }
 
-void 
-ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s)
-{
-  char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
-  uint64_t cmd;
-  int32_t len;
-  int8_t rv;
-
-  if (!fiid_obj_valid(obj_cmd))
-    return;
-  
-  if ((rv = fiid_obj_field_lookup (obj_cmd, "cmd")) < 0)
-    return;
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return;
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
-    return;
-
-  if (!len)
-    {
-      errno = EINVAL;
-      return;
-    }
-
-  if (ipmi_strerror_cmd_r (obj_cmd, netfn, errmsg, IPMI_ERR_STR_MAX_LEN) < 0)
-    return;
-  
-  if (fiid_obj_get(obj_cmd, "cmd", &cmd) < 0)
-    return;
-
-  fprintf (stderr, 
-	   "%s%s" "ipmi command %02Xh: %s\n", 
-	   (s ? s : ""), 
-	   (s ? ": " : ""), 
-           (uint8_t)cmd,
-	   errmsg);
-}
-
 static int
 _write(int fd, void *buf, size_t n)
 {

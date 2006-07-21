@@ -1018,9 +1018,7 @@ ex_get_sdr_repository_info ()
 
   if (ipmi_cmd_get_sdr_repository_info (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, 
-                  (fi_get_ipmi_device ())->net_fn,
-                  "ipmi_cmd_get_sdr_repository_info2()");
+      perror ("ipmi_cmd_get_sdr_repository_info()");
       goto cleanup;
     }
   
@@ -1072,161 +1070,6 @@ ex_get_sdr_repository_info ()
   
   fiid_obj_destroy(cmd_rs);
   return (scm_repository_info_list);
-
- cleanup:
-  if (cmd_rs)
-    fiid_obj_destroy(cmd_rs);
-  return (SCM_EOL);
-}
-
-SCM 
-ex_get_bmc_info ()
-{
-  SCM scm_bmc_info_list = SCM_EOL;
-  
-  fiid_obj_t cmd_rs = NULL;
-  uint64_t val = 0;
-  
-  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
-    goto cleanup;
-
-  if (ipmi_cmd_get_device_id (fi_get_ipmi_device (), cmd_rs) != 0)
-    {
-      ipmi_error (cmd_rs, 
-                  (fi_get_ipmi_device ())->net_fn,
-                  "ipmi_cmd_get_device_id()");
-      goto cleanup;
-    }
-  
-  if (fiid_obj_get (cmd_rs, "device_id", &val) < 0)
-    goto cleanup;
-
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("dev_id"), 
-				       gh_long2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "device_revision.revision", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("dev_revision"), 
-				       gh_long2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "device_revision.sdr_support", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sdr_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  {
-    char version_string[17];
-    uint64_t major, minor;
-    
-    if (fiid_obj_get (cmd_rs, "firmware_revision1.major_revision", &major) < 0)
-      goto cleanup;
-
-    if (fiid_obj_get (cmd_rs, "firmware_revision2.minor_revision", &minor) < 0)
-      goto cleanup;
-
-    snprintf (version_string, 17, 
-	      "%d.%d", 
-	      (int) major, (int) minor);
-    scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-					 gh_str02scm ("firmware_revision"), 
-					 gh_str02scm (version_string));
-  }
-  
-  if (fiid_obj_get (cmd_rs, "firmware_revision1.dev_available", &val) < 0)
-    goto cleanup;
-
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("dev_availability"), 
-				       gh_bool2scm ((unsigned int) val));
-  {
-    char version_string[17];
-    uint64_t major, minor;
-    
-    if (fiid_obj_get (cmd_rs, "ipmi_version.ms_bits", &major) < 0)
-      goto cleanup;
-
-    if (fiid_obj_get (cmd_rs, "ipmi_version.ls_bits", &minor) < 0)
-      goto cleanup;
-
-    snprintf (version_string, 17, 
-	      "%d.%d", 
-	      (int) major, (int) minor);
-    scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-					 gh_str02scm ("ipmi_version"), 
-					 gh_str02scm (version_string));
-  }
-  
-  if (fiid_obj_get (cmd_rs, "additional_device_support.sensor_device", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sensor_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "additional_device_support.sdr_repository_device", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sdr_repo_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
-
-  if (fiid_obj_get (cmd_rs, "additional_device_support.sel_device", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sel_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "additional_device_support.fru_inventory_device", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("fru_inventory_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "additional_device_support.ipmb_event_receiver", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("ipmb_event_receiver_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "additional_device_support.ipmb_event_generator", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("ipmb_event_generator_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "additional_device_support.bridge", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("bridge_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "additional_device_support.chassis_device", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("chassis_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "manufacturer_id.id", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("manufacturer_id"), 
-				       gh_long2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "product_id", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("product_id"), 
-				       gh_long2scm ((unsigned int) val));
-  
-  if (fiid_obj_get (cmd_rs, "auxiliary_firmware_revision_info", &val) < 0)
-    goto cleanup;
-  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("aux_firmware_rev_info"), 
-				       gh_long2scm ((unsigned int) val));
-  
-  fiid_obj_destroy(cmd_rs);
-  return scm_bmc_info_list;
 
  cleanup:
   if (cmd_rs)
@@ -1354,9 +1197,7 @@ ex_get_pef_info ()
 
   if (ipmi_cmd_get_pef_capabilities (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, 
-                  (fi_get_ipmi_device ())->net_fn,
-                  "ipmi_cmd_get_pef_capabilities2()");
+      perror("ipmi_cmd_get_pef_capabilities()");
       goto cleanup;
     }
   
@@ -1430,9 +1271,7 @@ ex_get_pef_info ()
 									     BLOCK_SELECTOR, 
 									     cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, 
-                      (fi_get_ipmi_device ())->net_fn,
-                      "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2()");
+          perror ("ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters()");
           goto cleanup;
 	}
 
@@ -1461,9 +1300,7 @@ ex_get_pef_info ()
 										    BLOCK_SELECTOR, 
 										    cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, 
-                      (fi_get_ipmi_device ())->net_fn,
-                      "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2()");
+          perror ("ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries()");
           goto cleanup;
 	}
       
@@ -1492,9 +1329,7 @@ ex_get_pef_info ()
 									     BLOCK_SELECTOR, 
 									     cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, 
-                      (fi_get_ipmi_device ())->net_fn,
-                      "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2()");
+          perror ("ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings()");
           goto cleanup;
 	}
 

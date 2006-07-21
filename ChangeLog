@@ -60,13 +60,20 @@
 	Other cleanup
 
 	* common/src/ipmi-common.h, common/src/ipmi-common.c
-	(ipmi_open_free_udp_port): Removed function.
+	(ipmi_open_free_udp_port, ipmi_error): Removed functions.
 
 	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband): Adjust
 	appropriately.
 
 	* fish/src/common.h, fish/src/ipmi-wrapper.c (ipmi_ping): Adjust
 	appropriately.
+
+	* fish/src/scm-procedures.h, fish/src/scm-procedures.c
+	(ex_get_bmc_info): Remove function.
+
+	* bmc-info/src/bmc-info.c (display_get_device_id),
+	fish/src/scm-procedures.c (ex_get_sdr_repository_info,
+	ex_get_pef_info): Adjust appropriately for ipmi_error() removal .
 
 2006-07-20  Albert Chu <chu11@llnl.gov>
 

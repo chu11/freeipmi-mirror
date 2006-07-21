@@ -90,9 +90,7 @@ display_get_device_id (ipmi_device_t *dev)
 
   if (ipmi_cmd_get_device_id (dev, cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, 
-                  dev->net_fn,
-                  "ipmi_cmd_get_device_id()");
+      perror ("ipmi_cmd_get_device_id()");
       return (-1);
     }
   

@@ -64,8 +64,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 int ipmi_is_root ();
 
-void ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s);
-
 /* Portable version of the extremely unportable Linux dprintf() */
 int ipmi_dprintf(int fd, char *fmt, ...);
 
