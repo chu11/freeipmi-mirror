@@ -52,6 +52,17 @@
 
 	* fish/bmc-config.conf.5.in: Remove file.
 
+	Other cleanup
+
+	* common/src/ipmi-common.h, common/src/ipmi-common.c
+	(ipmi_open_free_udp_port): Removed function.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband): Adjust
+	appropriately.
+
+	* fish/src/common.h, fish/src/ipmi-wrapper.c (ipmi_ping): Adjust
+	appropriately.
+
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm

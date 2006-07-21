@@ -69,8 +69,6 @@ void ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s);
 /* Portable version of the extremely unportable Linux dprintf() */
 int ipmi_dprintf(int fd, char *fmt, ...);
 
-int ipmi_open_free_udp_port (void);
-
 /* From David Wheeler's Secure Programming Guide */
 void *guaranteed_memset(void *s, int c, size_t n);
 

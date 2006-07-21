@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.16 2006-07-20 23:02:00 chu11 Exp $ 
+   $Id: common.h,v 1.17 2006-07-21 15:55:22 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -52,6 +52,7 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>

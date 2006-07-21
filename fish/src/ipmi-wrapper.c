@@ -437,6 +437,7 @@ ipmi_ping (char *host, unsigned int sock_timeout)
 {
   int sockfd;
   int status = -1;
+  struct sockaddr_in from_addr;
   struct sockaddr_in to_addr;
   struct hostent *hostinfo;
   
@@ -450,13 +451,24 @@ ipmi_ping (char *host, unsigned int sock_timeout)
       return (-1);
     }
   
-  sockfd = ipmi_open_free_udp_port ();
-  if (sockfd == -1)
+  if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
-      perror ("ipmi_open_free_udp_port()");
+      perror ("socket()");
       return (-1);
     }
   
+  memset (&from_addr, 0, sizeof (struct sockaddr_in));
+  from_addr.sin_family = AF_INET;
+  from_addr.sin_port   = htons (0);
+  from_addr.sin_addr.s_addr = htonl (INADDR_ANY);
+
+  if (bind (sockfd, (struct sockaddr *)&from_addr, sizeof(struct sockaddr_in)) < 0)
+    {
+      perror("bind");
+      close (sockfd);
+      return (-1);
+    } 
+
   {
     struct timeval time;
     
