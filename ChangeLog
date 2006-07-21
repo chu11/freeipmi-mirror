@@ -75,6 +75,10 @@
 	fish/src/scm-procedures.c (ex_get_sdr_repository_info,
 	ex_get_pef_info): Adjust appropriately for ipmi_error() removal .
 
+	* libfreeipmi/src/ipmi-sol-cmds.c: Fix
+	tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs
+	template bug.
+
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm
