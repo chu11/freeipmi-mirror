@@ -578,14 +578,6 @@ bmc_rmcpplus_conf_privilege_section_get (struct arguments *args)
 		id_validate);
 
   add_keyvalue (rmcpplus_conf_privilege_section,
-		"Maximum_Privilege_Cipher_Suite_Id_8",
-		"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-		id_8_checkout,
-		id_8_commit,
-		id_8_diff,
-		id_validate);
-
-  add_keyvalue (rmcpplus_conf_privilege_section,
 		"Maximum_Privilege_Cipher_Suite_Id_9",
 		"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 		id_9_checkout,

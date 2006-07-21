@@ -19,6 +19,9 @@
 
 	* bmc-config/src: Adjust remaining code appropriately.
 
+	* bmc-config/src/bmc-rmcpplus-conf-privilege-section.c
+	(bmc_rmcpplus_conf_privilege_section_get): Remove duplicate entry.
+
 	Cleanup fish by removing dead code.
 
 	* fish/src/ipmi-wrapper.h, fish/src/ipmi-wrapper.c
