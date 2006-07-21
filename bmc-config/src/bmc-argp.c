@@ -122,9 +122,8 @@ static struct argp_option options[] = {
 
   {"verbose",   'v', 0, 0,  "Produce verbose output", 17},
   {"quiet",     'q', 0, 0,  "Do not produce any output", 18 },
-  {"silent",    's', 0, OPTION_ALIAS },
 #ifndef NDEBUG
-  {"debug",     'd', 0, 0,  "Print debug output",19 },
+  {"debug",     'B', 0, 0,  "Print debug output", 19},
 #endif /* NDEBUG */
 
   { 0, }
@@ -212,12 +211,18 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case 'q': case 's':
+    case 'q': 
+    case 's':
       arguments->silent = 1;
       break;
     case 'v':
       arguments->verbose = 1;
       break;
+#ifndef NDEBUG
+    case 'B':
+      arguments->debug = 1;
+      break;
+#endif /* NDEBUG */
 
     case 'f':
       if (arguments->filename) /* If specified more than once */

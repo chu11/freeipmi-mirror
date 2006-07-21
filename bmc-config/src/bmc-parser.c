@@ -27,19 +27,18 @@ bmc_parser (struct arguments *arguments,
     char *first_word = strtok (buf, " \t\n");
 
     if (! first_word) {
-      if (arguments->verbose)
+#ifndef NDEBUG 
+      if (arguments->debug)
 	fprintf (stderr, "%d: empty line\n", line_num);
+#endif /* NDEBUG */
       continue;
     }
     
-    /*      
-	    if (arguments->verbose)
-	    fprintf (stderr, "%d: First word = '%s'\n", line_num, first_word);
-    */
-    
     if (first_word[0] == '#') {
-      if (arguments->verbose)
+#ifndef NDEBUG 
+      if (arguments->debug)
 	  fprintf (stderr, "Comment on line %d\n", line_num);
+#endif /* NDEBUG */
       continue;
     }
     
@@ -62,8 +61,10 @@ bmc_parser (struct arguments *arguments,
       }
       
       section_name = strdup (section_name);
-      if (arguments->verbose) 
+#ifndef NDEBUG 
+      if (arguments->debug) 
 	fprintf (stderr, "Entering section `%s'\n", section_name);
+#endif /* NDEBUG */
       continue;
     } /* same (first_word, "Section") */
 
@@ -78,8 +79,10 @@ bmc_parser (struct arguments *arguments,
 	ret = -1;
 	break;
       }
-      if (arguments->verbose)
+#ifndef NDEBUG 
+      if (arguments->debug)
 	  fprintf (stderr, "Leaving section `%s'\n", section_name);
+#endif /* NDEBUG */
       free (section_name);
       section_name = NULL;
       
@@ -108,9 +111,11 @@ bmc_parser (struct arguments *arguments,
     else
       value = strdup ("");
     
-    if (arguments->verbose) 
+#ifndef NDEBUG 
+    if (arguments->debug) 
       fprintf (stderr, "Trying to set `%s:%s=%s'\n",
 	       section_name, key_name, value);
+#endif /* NDEBUG */
     
     if (bmc_section_set_value (section_name, key_name, value,
 			       arguments, sections) != 0) {

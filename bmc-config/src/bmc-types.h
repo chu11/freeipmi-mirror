@@ -39,7 +39,9 @@ struct arguments
 {
   struct common_cmd_args common;
   ipmi_device_t dev;
-  unsigned char silent, verbose;
+  unsigned char silent;
+  unsigned char verbose;
+  unsigned char debug;
 
   char *filename;
   char *keypair;

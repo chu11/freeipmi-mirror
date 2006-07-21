@@ -97,6 +97,10 @@
 	* bmc-config/src/bmc-user-sections.c (password20_checkout): Ensure
 	Password20 is a reasonable checkoutable value.
 
+	* bmc-config/src/bmc-types.h, bmc-config/src/bmc-argp.c: Support debug option. 
+	
+	* bmc-config/src/bmc-parser.c (bmc_parser): Output debugging on debugging only.
+
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm
