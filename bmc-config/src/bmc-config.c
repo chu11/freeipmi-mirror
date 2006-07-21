@@ -191,6 +191,7 @@ main (int argc, char *argv[])
   /* Default values. */
   memset (&arguments, 0, sizeof (arguments));
   init_common_cmd_args (&(arguments.common));
+  /* ADMIN is minimum for bmc-config b/c its needed for many ipmi cmds */
   arguments.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 
   if (bmc_argp (argc, argv,  &arguments) != 0)
