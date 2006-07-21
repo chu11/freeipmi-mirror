@@ -53,7 +53,7 @@
 	(ex_cmd_get_device_id_display): Remove functions.
 
 	* fish/src/extension.c (install_new_procedures): Remove
-	appropriately scheme hooks.
+	appropriate scheme hooks.
 
 	* fish/bmc-config.conf.5.in: Remove file.
 
