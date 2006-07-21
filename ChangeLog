@@ -1,3 +1,11 @@
+2006-07-20  Albert Chu <chu11@llnl.gov>
+
+	* fish/extensions/sensors-simple-display.scm
+	(sensors-display-simple): Don't output event sensors.
+
+	* common/src/ipmi-sensor-api.c (get_sensor_reading): Output debug
+	info when a record isn't supported for sensor readings.
+	
 2006-07-21  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/udm/ipmi-ssif-api-udm.c (ipmi_ssif_cmd_udm):

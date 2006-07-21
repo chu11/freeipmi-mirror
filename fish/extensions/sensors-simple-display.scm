@@ -97,6 +97,4 @@
       (begin (sensors-display-simple-full-record sdr-record sensor-reading) #t))
      ((= record-type FI-SDR-COMPACT-RECORD)
       (begin (sensors-display-simple-compact-record sdr-record sensor-reading) #t))
-     ((= record-type FI-SDR-EVENT-ONLY-RECORD)
-      (begin (sensors-display-simple-event-only-record sdr-record sensor-reading) #t))
      (else #f))))

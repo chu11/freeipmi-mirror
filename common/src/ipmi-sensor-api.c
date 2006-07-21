@@ -202,7 +202,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   
   FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id", &val);
   sdr_full_record->sensor_owner_id = val;
-  
+
   FIID_OBJ_GET_CLEANUP (obj, "sensor_number", &val);
   sdr_full_record->sensor_number = val;
   
@@ -211,7 +211,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   
   FIID_OBJ_GET_CLEANUP (obj, "event_reading_type_code", &val);
   sdr_full_record->event_reading_type_code = val;
-  
+
   FIID_OBJ_GET_CLEANUP (obj, "sensor_unit2.base_unit", &val);
   sdr_full_record->sensor_unit = val;
   
@@ -979,7 +979,7 @@ get_sensor_reading (ipmi_device_t *dev,
       sensor_type = sdr_record->record.sdr_compact_record.sensor_type;
       break;
     default:
-      return -1;
+      ERR(0);
     }
   
   switch (ipmi_sensor_classify (event_reading_type_code))
