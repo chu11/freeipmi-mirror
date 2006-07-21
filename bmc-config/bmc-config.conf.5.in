@@ -20,6 +20,13 @@ the different sections of the BMC configuration file in more detail
 with explanations of how the BMC can be configured for different
 environments.
 
+Note that many options may or may not be available on your particular
+machine.  For example, Serial-Over-Lan (SOL) is available only on IPMI
+2.0 machines.  Therefore, if you are looking to configure an IPMI 1.5
+machine, many of the SOL or IPMI 2.0 related options will be be
+unavailable to you.  The number of configurable users may also vary
+for your particular machine.
+
 The below configuration file and most of this manpage assume the user
 is interested in configuring a BMC for use with IPMI over LAN.
 Various configuration options from 
@@ -33,11 +40,15 @@ Future versions of this manpage will try to include more information.
      	## Possible values: Yes/No or blank to not set
      	Enable_User                                  Yes
      	## Give password or leave it blank to clear password
-     	Password                                     
+     	Password                                     mypassword
+     	## Give password for IPMI 2.0 or blank to clear. MAX 20 chars.
+      	## Password20                                   
      	## Possible values: Yes/No
      	Lan_Enable_Ipmi_Msgs                         Yes
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          Administrator
+     	## Possible values: Yes/No
+     	SOL_Payload_Access                           Yes
      EndSection
      Section User2
      	## Give username
@@ -46,34 +57,14 @@ Future versions of this manpage will try to include more information.
      	Enable_User                                  No
      	## Give password or leave it blank to clear password
      	Password                                     userpass
+     	## Give password for IPMI 2.0 or blank to clear. MAX 20 chars.
+     	## Password20                                   
      	## Possible values: Yes/No
      	Lan_Enable_Ipmi_Msgs                         No
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          No_Access
-     EndSection
-     Section User3
-     	## Give username
-     	Username                                     user3
-     	## Possible values: Yes/No or blank to not set
-     	Enable_User                                  No
-     	## Give password or leave it blank to clear password
-     	Password                                     userpass
-     	## Possible values: Yes/No
-     	Lan_Enable_Ipmi_Msgs                         No
-     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-     	Lan_Privilege_Limit                          No_Access
-     EndSection
-     Section User4
-     	## Give username
-     	Username                                     user4
-     	## Possible values: Yes/No or blank to not set
-     	Enable_User                                  No
-     	## Give password or leave it blank to clear password
-     	Password                                     userpass
-     	## Possible values: Yes/No
-     	Lan_Enable_Ipmi_Msgs                         No
-     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-     	Lan_Privilege_Limit                          No_Access
+        ## Possible values: Yes/No
+        SOL_Payload_Access                           No
      EndSection
      Section LAN_Channel
      	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
@@ -175,17 +166,70 @@ Future versions of this manpage will try to include more information.
      	## Give valid number. Intervals are 500 ms.
      	Gratuitous_Arp_Interval                      4
      EndSection
+     Section Rmcpplus_Conf_Privilege
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_0          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_1          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_2          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_3          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_4          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_5          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_6          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_7          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_8          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_9          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_10         Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_11         Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_12         Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_13         Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_14         Administrator
+     EndSection
+     Section SOL_Conf
+     	## Possible values: Yes/No
+     	Enable_SOL                                   Yes
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
+     	SOL_Privilege_Level                          Administrator
+     	## Possible values: Yes/No
+     	Force_SOL_Payload_Authentication             Yes
+     	## Possible values: Yes/No
+     	Force_SOL_Payload_Encryption                 Yes
+     	## Give a valid integer. Each unit is 5ms
+     	Character_Accumulate_Interval                50
+     	## Give a valid number
+     	Character_Send_Threshold                     100
+     	## Give a valid integer
+     	SOL_Retry_Count                              5
+     	## Give a valid integer. Interval unit is 10ms
+     	SOL_Retry_Interval                           50
+     	## Possible values: Serial/9600/19200/38400/57600/115200
+     	Non_Volatile_Bit_Rate                        115200
+     	## Possible values: Serial/9600/19200/38400/57600/115200
+     	Volatile_Bit_Rate                            115200
+     EndSection
      Section Misc
      	## Possible Values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply
      	Power_Restore_Policy                         Restore_State_Ac_Apply
      EndSection
 
-.SH "Section User1, User2, User3, and User4"
-The first four sections of the BMC configuration file are for username
-configuration of the BMC.  With the exception of the Username for
-User1, all four sections are identical.  Most BMCs will allow you to
-configure multiple usernames, however some may only allow the single
-default user to be configured.
+.SH "Section User1, User2, ..."
+The first sections of the BMC configuration file are for username
+configuration of the BMC.  The number of users available to be
+configured on your system will vary by manufacturer.  With the
+exception of the Username for User1, all sections are identical.
 
 The username(s) you wish to configure the BMC with are defined with
 \fIUsername\fR.  The first username under Section User1 is typically
@@ -194,6 +238,11 @@ can be specified with \fIPassword\fR.  It can be left empty to define
 a NULL password.  Each user you wish to enable must be enabled through
 the \fIEnable_User\fR configuration option.  It is recommended that
 all users have non-NULL passwords or be disabled for security reasons.
+
+Under IPMI 2.0, 20 byte passwords have been allowed.  \fIPassword20\fR
+can be used to set longer passwords.  Under most circumstances though,
+it isn't necessary.  In the above configuration, we have chosen not to
+use \fIPassword20\fR.
 
 \fILan_Enable_Ipmi_Msgs\fR is used to enable or disable IPMI over LAN
 access for the user.  This should almost always be enabled so that
@@ -204,13 +253,16 @@ will work.
 \fILan_Privilege_Limit\fR specifies the maximum privilege level limit
 the user is allowed.  Different IPMI commands have different privilege
 restrictions.  For example, determining the power status of a machine
-only requires the 'User' privilege level.  However, power cycling
-requires the 'Operator' privilege.  Typically, you will want to assign
-atleast one user with the 'Administrator' privilege so that all system
+only requires the "User" privilege level.  However, power cycling
+requires the "Operator" privilege.  Typically, you will want to assign
+atleast one user with the "Administrator" privilege so that all system
 functions are available to atleast one user via IPMI over LAN.
 
-The example configuration above disables all usernames except for the
-default 'Anonymous' (or NULL) user.  Many IPMI tools (both open-source
+\fISOL_Payload_Access\fR specifies if a particular user is allowed to
+connect with Serial-Over-LAN (SOL).
+
+The example configuration above disables "User2" but enables the
+default "Anonymous" (or NULL) user.  Many IPMI tools (both open-source
 and vendor) do not allow the user to input a username and assume the
 NULL username by default.  If the tools you are interested in using
 allow usernames to be input, then it is recommended that one of the
@@ -228,16 +280,16 @@ after the next system reset.  Generally, both the \fIVolatile\fR and
 \fINon_Volatile\fR should be configured identically.
 
 The \fIAccess_Mode\fR parameter configures the availability of IPMI
-over LAN on the system.  Typically this should be set to 'Always_Available'.
+over LAN on the system.  Typically this should be set to "Always_Available".
 
 The \fIPrivilege_Limit\fR sets the maximum privilege any user of the
 system can have when performing IPMI over LAN.  This should be set to
 the maximum privilege level given to any of the previously defined
-system users.  Typically, this should be set to 'Administrator'.
+system users.  Typically, this should be set to "Administrator".
 
 Typically \fIUser_Level_Auth\fR and \fIPer_Message_Auth\fR should be
 enabled since disabling them lowers security requirements with
-individual IPMI messages.  Disabling \fIUser_Level_Auth\fR allows 'User' 
+individual IPMI messages.  Disabling \fIUser_Level_Auth\fR allows "User" 
 privileged IPMI commands to be executed without authentication.
 Disabling \fIPer_Message_Auth\fR allows fewer individual IPMI messages
 to require authentication.
@@ -247,7 +299,7 @@ to require authentication.
 Those familiar with setting up networks should find most of the fields
 in this section self explanatory.  The example BMC configuration above
 illustrates the setup of a static IP address.  The field
-\fIIP_Address_Source\fR is configured with 'Static'.  The IP address,
+\fIIP_Address_Source\fR is configured with "Static".  The IP address,
 subnet mask, and gateway IP addresses of the machine are respecitvely
 configured with the \fIIP_Address\fR, \fISubnet_Mask\fR,
 \fIDefault_Gateway_Ip_Address\fR, and \fIBackup_Gateway_Ip_Address\fR
@@ -256,7 +308,7 @@ configured under \fIMac_Address\fR, \fIDefault_Gateway_Mac_Address\fR,
 and \fIBackup_Gateway_Mac_Address\fR.
 
 To instead setup your BMC network information via DHCP, the field
-\fIIP_Address_Source\fR should be configured with 'Use_DHCP'.
+\fIIP_Address_Source\fR should be configured with "Use_DHCP".
 
 It is recommended that static IP addresses be configured for address
 resolution reasons.  See the LAN_Conf_Misc section below regarding
@@ -265,9 +317,9 @@ gratuitous arps for a more detailed explanation.
 .SH "Section LAN_Conf_Auth"
 
 This section determines what types of authentication mechanisms are
-allowed for users at different privilege levels.  For example, should
-a user with 'Administration' privileges be allowed to authenticate
-with a straight password.
+allowed for users at different privilege levels under the IPMI 1.5
+protocol.  For example, should a user with "Administration" privileges
+be allowed to authenticate with a straight password.
 
 Generally speaking, you do not want to allow any user to authenticate
 with \fINone\fR or \fIStraight_Password\fR.  \fINone\fR refers to
@@ -277,7 +329,7 @@ and \fIMd5\fR are digital signature algorithms that can encrypt
 passwords.  Typically, these are the only authentication options that
 should be enabled.  In the above example, \fIMd2\fR and \fIMd5\fR are
 the only authentication mechanisms that are enabled for users 
-with 'User', 'Operator' and 'Administrator' privileges.
+with "User", "Operator" and "Administrator" privileges.
 
 .SH "Section LAN_Conf_Misc"
 
@@ -314,13 +366,100 @@ See
 for a method which allows gratuitous ARPs to be disabled when the
 operating system is running, but enabled when the system is down.
 
+.SH "Section Rmcpplus_Conf_Privilege"
+
+This section determines what user privileges are required to use
+different cipher suites.  The following table shows the cipher suite
+ID to algorithm mapping:
+
+.sp
+0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
+.sp
+3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
+.sp
+4 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128
+.sp
+5 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40
+.sp
+6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
+.sp
+8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
+.sp
+9 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-128
+.sp
+10 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-40
+.sp
+11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm =
+None
+.sp
+12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm =
+AES-CBC-128
+.sp
+13 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128
+.sp
+14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
+
+The authentication algorithm is used for user authentication with the
+BMC.  The integrity algorithm is used for generating signatures on
+IPMI packets.  The confidentiality algorithm is used for encrypting
+data.
+
+Generally speaking, HMAC-SHA1 based algorithms are stronger than
+HMAC-MD5, which are better than MD5-128 algorithms.  AES-CBC-128
+confidentiality algorithms are stronger than xRC4-128 algorithms,
+which are better than xRC4-40 algorithms.
+
+The above example configuration has decided to allow any user with
+"Administrator" privileges use any Cipher Suite algorithm suite which
+requires an authentication, integrity, and confidentiality algorithm.
+
+.SH "Section SOL_Conf"
+
+This section is for setting up Serial-Over-Lan (SOL).  SOL can be
+enabled with the \fIEnable_SOL\fR field.  The minimum privilege level
+required for connecting with SOL is specified by
+\fISOL_Privilege_Level\fR Authentication and Encryption can be forced
+or not using the fields \fIForce_SOL_Payload_Authentication\fR and
+\fIForce_SOL_Payload_Encryption\fR respectively.  It is recommended
+that these be set on.
+
+The \fICharacter_Accumulate_Interval\fR,
+\fICharacter_Send_Threshold\fR , \fISOL_Retry_Count\fR and ,
+\fISOL_Retry_Interval\fR options are used to set SOL character output
+speeds. \fICharacter_Accumulate_Interval\fR determines how often
+serial data should be regularly sent and
+\fICharacter_Send_Threshold\fR indicates the character count that if
+passed, will force serial data to be sent.  \fISOL_Retry_Count\fR
+indicates how many times packets must be retransmitted if
+acknowledgements are not received.  \fISOL_Retry_Interval\fR indicates
+the timeout interval.  Generally, the manufacturer recommended numbers
+will be sufficient.  However, you may wish to experiment with these
+values if SOL is slow for you.
+
+The \fINon_Volatile_Bit_Rate\fR and \fIVolatile_Bit_Rate\fR simply
+determine the baudrate the BMC should use.  This should match the
+baudrate set in the BIOS and any console access tools, such as 
+.B agetty(8).  
+Generally speaking, both the \fIVolatile\fR and \fINon_Volatile\fR
+options should be set identically.
+
+In addition to enabling SOL in this section, individual users most
+also be capable of connecting with SOL.  See the section "Section
+User1, User2, ..." above for details.  
+
 .SH "Section Misc"
 
 The \fIPower_Restore_Policy\fR determines the behavior of the machine
 when AC power returns after a power loss.  The behavior can be set to
-always power on the machine ('On_State_AC_Apply'), power off the
-machine ('Off_State_AC_Apply'), or return the power to the state that
-existed before the power loss ('Restore_State_AC_Apply').
+always power on the machine ("On_State_AC_Apply"), power off the
+machine ("Off_State_AC_Apply"), or return the power to the state that
+existed before the power loss ("Restore_State_AC_Apply").
 
 .SH "SEE ALSO"
-bmc-config(1), ipmipower(8), bmc-watchdog(8)	
+bmc-config(1), ipmipower(8), bmc-watchdog(8), agetty(8)	
