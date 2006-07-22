@@ -82,6 +82,10 @@
 	* common/src/argp-common.h, bmc-config/src/bmc-argp.c,
 	ipmi-raw/src/ipmi-raw-argp.c: Fix help output ordering.
 
+	* libfreeipmi/src/udm/ipmi-rmcpplus-support-and-payload-cmds-udm.c
+	(ipmi_cmd_set_user_payload_access,
+	ipmi_cmd_get_user_payload_access): Add dev checks.
+
 	BMC-Config fixes galore
 
 	* Globally use libfreeipmi/include definitions, not hardcoded values.
