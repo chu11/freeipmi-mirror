@@ -7,16 +7,17 @@
 static char *
 channel_access_mode_string (uint8_t mode)
 {
-  switch (mode) {
-  case IPMI_MESSAGING_ACCESS_MODE_DISABLED:
-    return "Disabled";
-  case IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY:
-    return "Pre_Boot_Only";
-  case IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE:
-    return "Always_Available";
-  case IPMI_MESSAGING_ACCESS_MODE_SHARED:
-    return "Shared";
-  }
+  switch (mode) 
+    {
+    case IPMI_MESSAGING_ACCESS_MODE_DISABLED:
+      return "Disabled";
+    case IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY:
+      return "Pre_Boot_Only";
+    case IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE:
+      return "Always_Available";
+    case IPMI_MESSAGING_ACCESS_MODE_SHARED:
+      return "Shared";
+    }
   return "";
 }
 
@@ -37,20 +38,21 @@ channel_access_mode (const char *string)
 static char *
 get_privilege_limit_string (uint8_t limit)
 {
-  switch (limit) {
-  case IPMI_PRIVILEGE_LEVEL_CALLBACK:
-    return "Callback";
-  case IPMI_PRIVILEGE_LEVEL_USER:
-    return "User";
-  case IPMI_PRIVILEGE_LEVEL_OPERATOR:
-    return "Operator";
-  case IPMI_PRIVILEGE_LEVEL_ADMIN:
-    return "Administrator";
-  case IPMI_PRIVILEGE_LEVEL_OEM:
-    return "OEM_Proprietary";
-  case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
-    return "NO_Access";
-  }
+  switch (limit) 
+    {
+    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
+      return "Callback";
+    case IPMI_PRIVILEGE_LEVEL_USER:
+      return "User";
+    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
+      return "Operator";
+    case IPMI_PRIVILEGE_LEVEL_ADMIN:
+      return "Administrator";
+    case IPMI_PRIVILEGE_LEVEL_OEM:
+      return "OEM_Proprietary";
+    case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
+      return "NO_Access";
+    }
   return "";
 }
 
@@ -76,16 +78,16 @@ get_privilege_limit_number (const char *value)
 
 static int
 serial_channel_volatile_access_set (ipmi_device_t *dev,
-				 uint8_t access_mode,
-				 uint8_t access_mode_is_set,
-				 uint8_t user_level_authentication,
-				 uint8_t user_level_authentication_is_set,
-				 uint8_t per_message_authentication,
-				 uint8_t per_message_authentication_is_set,
-				 uint8_t pef_alerting,
-				 uint8_t pef_alerting_is_set,
-				 uint8_t channel_privilege_limit,
-				 uint8_t channel_privilege_limit_is_set)
+                                    uint8_t access_mode,
+                                    uint8_t access_mode_is_set,
+                                    uint8_t user_level_authentication,
+                                    uint8_t user_level_authentication_is_set,
+                                    uint8_t per_message_authentication,
+                                    uint8_t per_message_authentication_is_set,
+                                    uint8_t pef_alerting,
+                                    uint8_t pef_alerting_is_set,
+                                    uint8_t channel_privilege_limit,
+                                    uint8_t channel_privilege_limit_is_set)
 {
   uint8_t tmp_access_mode;
   uint8_t tmp_user_level_authentication;
@@ -95,11 +97,11 @@ serial_channel_volatile_access_set (ipmi_device_t *dev,
   int ret;
   
   ret = get_bmc_serial_channel_volatile_access (dev,
-					     &tmp_access_mode,
-					     &tmp_user_level_authentication,
-					     &tmp_per_message_authentication,
-					     &tmp_pef_alerting,
-					     &tmp_channel_privilege_limit);
+                                                &tmp_access_mode,
+                                                &tmp_user_level_authentication,
+                                                &tmp_per_message_authentication,
+                                                &tmp_pef_alerting,
+                                                &tmp_channel_privilege_limit);
   if (ret != 0)
     return -1;
 
@@ -115,11 +117,11 @@ serial_channel_volatile_access_set (ipmi_device_t *dev,
     tmp_channel_privilege_limit = channel_privilege_limit;
 
   ret = set_bmc_serial_channel_volatile_access (dev,
-					     tmp_access_mode,
-					     tmp_user_level_authentication,
-					     tmp_per_message_authentication,
-					     tmp_pef_alerting,
-					     tmp_channel_privilege_limit);
+                                                tmp_access_mode,
+                                                tmp_user_level_authentication,
+                                                tmp_per_message_authentication,
+                                                tmp_pef_alerting,
+                                                tmp_channel_privilege_limit);
 
   if (ret != 0)
     return -1;
@@ -139,11 +141,11 @@ volatile_access_mode_checkout (const struct arguments *args,
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                &get_val,
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &foo);
   if (ret != 0)
     return ret;
 
@@ -162,11 +164,11 @@ volatile_access_mode_commit (const struct arguments *args,
 
   commit_val = channel_access_mode (kv->value);
   return serial_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  0, 0);
+                                             commit_val, 1,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0);
 }
 
 static int
@@ -180,24 +182,25 @@ volatile_access_mode_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                &get_val,
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &foo);
   if (ret != 0)
     return -1;
 
   passed_val = channel_access_mode (kv->value);
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 channel_access_mode_string (get_val));
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   channel_access_mode_string (get_val));
+    }
   return ret;
 }
 
@@ -221,11 +224,11 @@ volatile_enable_user_level_auth_checkout (const struct arguments *args,
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                &foo,
+                                                &get_val,
+                                                &foo,
+                                                &foo,
+                                                &foo);
   if (ret != 0)
     return ret;
 
@@ -247,11 +250,11 @@ volatile_enable_user_level_auth_commit (const struct arguments *args,
 
   commit_val = same (kv->value, "yes");
   return serial_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0,
-					  0, 0);
+                                             0, 0,
+                                             commit_val, 1,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0);
 }
 
 static int
@@ -265,25 +268,26 @@ volatile_enable_user_level_auth_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                &foo,
+                                                &get_val,
+                                                &foo,
+                                                &foo,
+                                                &foo);
   if (ret != 0)
     return -1;
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -307,11 +311,11 @@ volatile_enable_per_msg_auth_checkout (const struct arguments *args,
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo);
+                                                &foo,
+                                                &foo,
+                                                &get_val,
+                                                &foo,
+                                                &foo);
   if (ret != 0)
     return ret;
 
@@ -333,11 +337,11 @@ volatile_enable_per_msg_auth_commit (const struct arguments *args,
 
   commit_val = same (kv->value, "yes");
   return serial_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  0, 0,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0);
+                                             0, 0,
+                                             0, 0,
+                                             commit_val, 1,
+                                             0, 0,
+                                             0, 0);
 }
 
 static int
@@ -351,32 +355,33 @@ volatile_enable_per_msg_auth_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo);
+                                                &foo,
+                                                &foo,
+                                                &get_val,
+                                                &foo,
+                                                &foo);
   if (ret != 0)
     return -1;
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
 static int
 volatile_enable_per_msg_auth_validate (const struct arguments *args,
-					  const struct section *sect,
-					  const char *value)
+                                       const struct section *sect,
+                                       const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
@@ -394,11 +399,11 @@ volatile_enable_pef_alerting_checkout (const struct arguments *args,
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &get_val,
-					     &foo);
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &get_val,
+                                                &foo);
   if (ret != 0)
     return ret;
 
@@ -420,11 +425,11 @@ volatile_enable_pef_alerting_commit (const struct arguments *args,
 
   commit_val = same (kv->value, "yes");
   return serial_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0);
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             commit_val, 1,
+                                             0, 0);
 }
 
 static int
@@ -438,24 +443,25 @@ volatile_enable_pef_alerting_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &get_val,
-					     &foo);
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &get_val,
+                                                &foo);
   if (ret != 0)
     return -1;
 
   passed_val = same (kv->value, "yes");
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -479,11 +485,11 @@ volatile_channel_priv_limit_checkout (const struct arguments *args,
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &get_val);
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &get_val);
   if (ret != 0)
     return ret;
 
@@ -504,11 +510,11 @@ volatile_channel_priv_limit_commit (const struct arguments *args,
 
   commit_val = get_privilege_limit_number (kv->value);
   return serial_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  commit_val, 1);
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             commit_val, 1);
 }
 
 static int
@@ -522,25 +528,26 @@ volatile_channel_priv_limit_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &get_val);
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &foo,
+                                                &get_val);
   if (ret != 0)
     return -1;
 
   passed_val = get_privilege_limit_number (kv->value);
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_privilege_limit_string (get_val));
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_privilege_limit_string (get_val));
+    }
   return ret;
 }
 
@@ -559,16 +566,16 @@ volatile_channel_priv_limit_validate (const struct arguments *args,
 
 static int
 serial_channel_non_volatile_access_set (ipmi_device_t *dev,
-				 uint8_t access_mode,
-				 uint8_t access_mode_is_set,
-				 uint8_t user_level_authentication,
-				 uint8_t user_level_authentication_is_set,
-				 uint8_t per_message_authentication,
-				 uint8_t per_message_authentication_is_set,
-				 uint8_t pef_alerting,
-				 uint8_t pef_alerting_is_set,
-				 uint8_t channel_privilege_limit,
-				 uint8_t channel_privilege_limit_is_set)
+                                        uint8_t access_mode,
+                                        uint8_t access_mode_is_set,
+                                        uint8_t user_level_authentication,
+                                        uint8_t user_level_authentication_is_set,
+                                        uint8_t per_message_authentication,
+                                        uint8_t per_message_authentication_is_set,
+                                        uint8_t pef_alerting,
+                                        uint8_t pef_alerting_is_set,
+                                        uint8_t channel_privilege_limit,
+                                        uint8_t channel_privilege_limit_is_set)
 {
   uint8_t tmp_access_mode;
   uint8_t tmp_user_level_authentication;
@@ -578,11 +585,11 @@ serial_channel_non_volatile_access_set (ipmi_device_t *dev,
   int ret;
   
   ret = get_bmc_serial_channel_non_volatile_access (dev,
-					     &tmp_access_mode,
-					     &tmp_user_level_authentication,
-					     &tmp_per_message_authentication,
-					     &tmp_pef_alerting,
-					     &tmp_channel_privilege_limit);
+                                                    &tmp_access_mode,
+                                                    &tmp_user_level_authentication,
+                                                    &tmp_per_message_authentication,
+                                                    &tmp_pef_alerting,
+                                                    &tmp_channel_privilege_limit);
   if (ret != 0)
     return -1;
 
@@ -598,11 +605,11 @@ serial_channel_non_volatile_access_set (ipmi_device_t *dev,
     tmp_channel_privilege_limit = channel_privilege_limit;
 
   ret = set_bmc_serial_channel_non_volatile_access (dev,
-					     tmp_access_mode,
-					     tmp_user_level_authentication,
-					     tmp_per_message_authentication,
-					     tmp_pef_alerting,
-					     tmp_channel_privilege_limit);
+                                                    tmp_access_mode,
+                                                    tmp_user_level_authentication,
+                                                    tmp_per_message_authentication,
+                                                    tmp_pef_alerting,
+                                                    tmp_channel_privilege_limit);
 
   if (ret != 0)
     return -1;
@@ -615,18 +622,18 @@ serial_channel_non_volatile_access_set (ipmi_device_t *dev,
 
 static int
 non_volatile_access_mode_checkout (const struct arguments *args,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+                                   const struct section *sect,
+                                   struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo);
   if (ret != 0)
     return ret;
 
@@ -638,24 +645,24 @@ non_volatile_access_mode_checkout (const struct arguments *args,
 
 static int
 non_volatile_access_mode_commit (const struct arguments *args,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+                                 const struct section *sect,
+                                 const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = channel_access_mode (kv->value);
   return serial_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  0, 0);
+                                                 commit_val, 1,
+                                                 0, 0,
+                                                 0, 0,
+                                                 0, 0,
+                                                 0, 0);
 }
 
 static int
 non_volatile_access_mode_diff (const struct arguments *args,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+                               const struct section *sect,
+                               const struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -663,32 +670,33 @@ non_volatile_access_mode_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo);
   if (ret != 0)
     return -1;
 
   passed_val = channel_access_mode (kv->value);
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 channel_access_mode_string (get_val));
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   channel_access_mode_string (get_val));
+    }
   return ret;
 }
 
 static int
 non_volatile_access_mode_validate (const struct arguments *args,
-			       const struct section *sect,
-			       const char *value)
+                                   const struct section *sect,
+                                   const char *value)
 {
   return (channel_access_mode (value) >= 0) ? 0 : 1;
 }
@@ -698,18 +706,18 @@ non_volatile_access_mode_validate (const struct arguments *args,
 
 static int
 non_volatile_enable_user_level_auth_checkout (const struct arguments *args,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+                                              const struct section *sect,
+                                              struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo);
   if (ret != 0)
     return ret;
 
@@ -724,24 +732,24 @@ non_volatile_enable_user_level_auth_checkout (const struct arguments *args,
 
 static int
 non_volatile_enable_user_level_auth_commit (const struct arguments *args,
-					const struct section *sect,
-					const struct keyvalue *kv)
+                                            const struct section *sect,
+                                            const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
   return serial_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0,
-					  0, 0);
+                                                 0, 0,
+                                                 commit_val, 1,
+                                                 0, 0,
+                                                 0, 0,
+                                                 0, 0);
 }
 
 static int
 non_volatile_enable_user_level_auth_diff (const struct arguments *args,
-				      const struct section *sect,
-				      const struct keyvalue *kv)
+                                          const struct section *sect,
+                                          const struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -749,25 +757,26 @@ non_volatile_enable_user_level_auth_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo,
-					     &foo);
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo);
   if (ret != 0)
     return -1;
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -784,18 +793,18 @@ non_volatile_enable_user_level_auth_validate (const struct arguments *args,
 
 static int
 non_volatile_enable_per_msg_auth_checkout (const struct arguments *args,
-				       const struct section *sect,
-				       struct keyvalue *kv)
+                                           const struct section *sect,
+                                           struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo);
+                                                    &foo,
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo);
   if (ret != 0)
     return ret;
 
@@ -810,24 +819,24 @@ non_volatile_enable_per_msg_auth_checkout (const struct arguments *args,
 
 static int
 non_volatile_enable_per_msg_auth_commit (const struct arguments *args,
-				     const struct section *sect,
-				     const struct keyvalue *kv)
+                                         const struct section *sect,
+                                         const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
   return serial_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
-					  0, 0,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0);
+                                                 0, 0,
+                                                 0, 0,
+                                                 commit_val, 1,
+                                                 0, 0,
+                                                 0, 0);
 }
 
 static int
 non_volatile_enable_per_msg_auth_diff (const struct arguments *args,
-				   const struct section *sect,
-				   const struct keyvalue *kv)
+                                       const struct section *sect,
+                                       const struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -835,25 +844,26 @@ non_volatile_enable_per_msg_auth_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &get_val,
-					     &foo,
-					     &foo);
+                                                    &foo,
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo);
   if (ret != 0)
     return -1;
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -878,11 +888,11 @@ non_volatile_enable_pef_alerting_checkout (const struct arguments *args,
   uint8_t foo;
   int ret;
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-					     &foo,
-					     &foo,
-					     &foo,
-					     &get_val,
-					     &foo);
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo);
   if (ret != 0)
     return ret;
 
@@ -931,15 +941,16 @@ non_volatile_enable_pef_alerting_diff (const struct arguments *args,
     return -1;
 
   passed_val = same (kv->value, "yes");
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -1006,24 +1017,25 @@ non_volatile_channel_priv_limit_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
-						 &foo,
-						 &foo,
-						 &foo,
-						 &foo,
-						 &get_val);
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &get_val);
   if (ret != 0)
     return -1;
 
   passed_val = get_privilege_limit_number (kv->value);
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 0;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_privilege_limit_string (get_val));
-  }
+  else 
+    {
+      ret = 0;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_privilege_limit_string (get_val));
+    }
   return ret;
 }
 

@@ -7,12 +7,13 @@
 static char *
 connect_mode_string (uint8_t mode)
 {
-  switch (mode) {
-  case IPMI_CONNECT_MODE_MODEM:
-    return "Modem_Connect";
-  case IPMI_CONNECT_MODE_DIRECT:
-    return "Direct_Connect";
-  }
+  switch (mode) 
+    {
+    case IPMI_CONNECT_MODE_MODEM:
+      return "Modem_Connect";
+    case IPMI_CONNECT_MODE_DIRECT:
+      return "Direct_Connect";
+    }
   return "";
 }
 
@@ -24,6 +25,68 @@ connect_mode_number (const  char *string)
   if (same (string, "Direct_Connect"))
     return IPMI_CONNECT_MODE_DIRECT;
 
+  return -1;
+}
+
+static char *
+flow_control_string (uint8_t value)
+{
+  switch (value) 
+    {
+    case IPMI_FLOW_CONTROL_NO_FLOW_CONTROL:
+      return "NO_Flow_Control";
+    case IPMI_FLOW_CONTROL_RTS_CTS_FLOW_CONTROL:
+      return "RTS_CTS";
+    case IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL:
+      return "XON_XOFF";
+    }
+  return "";
+}
+
+static int
+flow_control_number (const char *string)
+{
+  if (same (string, "no_flow_control"))
+    return IPMI_FLOW_CONTROL_NO_FLOW_CONTROL;
+  if (same (string, "rts_cts"))
+    return IPMI_FLOW_CONTROL_RTS_CTS_FLOW_CONTROL;
+  if (same (string, "xon_xoff"))
+    return IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL;
+  return -1;
+}
+
+static char *
+bit_rate_string (uint8_t value)
+{
+  switch (value) 
+    {
+    case IPMI_BIT_RATE_9600_BPS:
+      return "9600";
+    case IPMI_BIT_RATE_19200_BPS:
+      return "19200";
+    case IPMI_BIT_RATE_38400_BPS:
+      return "38400";
+    case IPMI_BIT_RATE_57600_BPS:
+      return "57600";
+    case IPMI_BIT_RATE_115200_BPS:
+      return "115200";
+    }
+  return "";
+}
+
+static int
+bit_rate_number (const char *string)
+{
+  if (same (string, "9600"))
+    return IPMI_BIT_RATE_9600_BPS;
+  if (same (string, "19200"))
+    return IPMI_BIT_RATE_19200_BPS;
+  if (same (string, "38400"))
+    return IPMI_BIT_RATE_38400_BPS;
+  if (same (string, "57600"))
+    return IPMI_BIT_RATE_57600_BPS;
+  if (same (string, "115200"))
+    return IPMI_BIT_RATE_115200_BPS;
   return -1;
 }
 
@@ -167,15 +230,16 @@ enable_basic_mode_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
 
-  if (passed_value == get_value) {
+  if (passed_value == get_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -250,15 +314,16 @@ enable_ppp_mode_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
 
-  if (passed_value == get_value) {
+  if (passed_value == get_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -332,15 +397,16 @@ enable_terminal_mode_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
 
-  if (passed_value == get_value) {
+  if (passed_value == get_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -410,15 +476,16 @@ connect_mode_diff (const struct arguments *args,
     return -1;
 
   passed_value = connect_mode_number (kv->value);
-  if (passed_value == get_value) {
+  if (passed_value == get_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 connect_mode_string (get_value));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   connect_mode_string (get_value));
+    }
   return ret;
 }
 
@@ -479,17 +546,18 @@ page_blackout_interval_diff (const struct arguments *args,
 
   passed_interval = atoi (kv->value);
 
-  if (passed_interval == interval) {
+  if (passed_interval == interval)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", interval);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", interval);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -558,17 +626,18 @@ call_retry_interval_diff (const struct arguments *args,
 
   passed_interval = atoi (kv->value);
 
-  if (passed_interval == interval) {
+  if (passed_interval == interval)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", interval);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", interval);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -708,15 +777,16 @@ enable_dtr_hangup_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -726,33 +796,6 @@ enable_dtr_hangup_validate (const struct arguments *args,
 			    const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
-}
-
-
-static char *
-flow_control_string (uint8_t value)
-{
-  switch (value) {
-  case 0:
-    return "NO_Flow_Control";
-  case 1:
-    return "RTS_CTS";
-  case 2:
-    return "XON_XOFF";
-  }
-  return "";
-}
-
-static int
-flow_control_number (const char *string)
-{
-  if (same (string, "no_flow_control"))
-    return 0;
-  if (same (string, "rts_cts"))
-    return 1;
-  if (same (string, "xon_xoff"))
-    return 2;
-  return -1;
 }
 
 static int
@@ -810,15 +853,16 @@ flow_control_diff (const struct arguments *args,
 
   passed_value = flow_control_number (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 flow_control_string (got_value));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   flow_control_string (got_value));
+    }
   return ret;
 }
 
@@ -828,40 +872,6 @@ flow_control_validate (const struct arguments *args,
 		       const char *value)
 {
   return (flow_control_number (value) > -1 ) ? 0 : 1;
-}
-
-static char *
-bit_rate_string (uint8_t value)
-{
-  switch (value) {
-  case 6:
-    return "9600";
-  case 7:
-    return "19200";
-  case 8:
-    return "38400";
-  case 9:
-    return "57600";
-  case 10:
-    return "115200";
-  }
-  return "";
-}
-
-static int
-bit_rate_number (const char *string)
-{
-  if (same (string, "9600"))
-    return 6;
-  if (same (string, "19200"))
-    return 7;
-  if (same (string, "38400"))
-    return 8;
-  if (same (string, "57600"))
-    return 9;
-  if (same (string, "115200"))
-    return 10;
-  return -1;
 }
 
 static int
@@ -919,15 +929,16 @@ bit_rate_diff (const struct arguments *args,
 
   passed_value = bit_rate_number (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 bit_rate_string (got_value));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   bit_rate_string (got_value));
+    }
   return ret;
 }
 

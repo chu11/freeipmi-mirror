@@ -26,20 +26,21 @@ rmcpplus_priv_number (const char *value)
 static char *
 rmcpplus_priv_string (int value)
 {
-  switch (value) {
-  case 0:
-    return "Unused";
-  case IPMI_PRIVILEGE_LEVEL_CALLBACK:
-    return "Callback";
-  case IPMI_PRIVILEGE_LEVEL_USER:
-    return "User";
-  case IPMI_PRIVILEGE_LEVEL_OPERATOR:
-    return "Operator";
-  case IPMI_PRIVILEGE_LEVEL_ADMIN:
-    return "Administrator";
-  case IPMI_PRIVILEGE_LEVEL_OEM:
-    return "OEM_Proprietary";
-  }
+  switch (value) 
+    {
+    case 0:
+      return "Unused";
+    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
+      return "Callback";
+    case IPMI_PRIVILEGE_LEVEL_USER:
+      return "User";
+    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
+      return "Operator";
+    case IPMI_PRIVILEGE_LEVEL_ADMIN:
+      return "Administrator";
+    case IPMI_PRIVILEGE_LEVEL_OEM:
+      return "OEM_Proprietary";
+    }
   return "";
 }
 
@@ -92,15 +93,16 @@ id_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (same (kv->value, rmcpplus_priv_string (priv))) {
+  if (same (kv->value, rmcpplus_priv_string (priv)))
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 rmcpplus_priv_string (priv));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   rmcpplus_priv_string (priv));
+    }
   return ret;
 }
 

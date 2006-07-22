@@ -19,14 +19,15 @@ power_restore_policy_number (const char *string)
 static char *
 power_restore_policy_string (uint8_t value)
 {
-  switch (value) {
-  case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS:
-    return "OFF_State_AC_Apply";
-  case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE:
-    return "Restore_State_AC_Apply";
-  case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
-    return "ON_State_AC_Apply";
-  }
+  switch (value) 
+    {
+    case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS:
+      return "OFF_State_AC_Apply";
+    case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE:
+      return "Restore_State_AC_Apply";
+    case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
+      return "ON_State_AC_Apply";
+    }
   return "";
 }
 
@@ -78,15 +79,16 @@ power_restore_policy_diff (const struct arguments *args,
   
   passed_value = power_restore_policy_number (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 power_restore_policy_string (got_value));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   power_restore_policy_string (got_value));
+    }
   return ret;
 }
 

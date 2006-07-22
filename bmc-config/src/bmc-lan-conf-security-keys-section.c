@@ -53,15 +53,17 @@ k_r_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (strcmp (kv->value?kv->value:"", (char *)k_r)) {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 (char *)k_r);
-  } else {
+  if (strcmp (kv->value?kv->value:"", (char *)k_r)) 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   (char *)k_r);
+    } 
+  else
     ret = 0;
-  }
+
   return ret;
 }
 
@@ -125,15 +127,17 @@ k_g_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (strcmp (kv->value?kv->value:"", (char *)k_g)) {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 (char *)k_g);
-  } else {
+  if (strcmp (kv->value?kv->value:"", (char *)k_g)) 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   (char *)k_g);
+    }
+  else
     ret = 0;
-  }
+
   return ret;
 }
 

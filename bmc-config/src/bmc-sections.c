@@ -50,12 +50,12 @@ bmc_section_find_section (const char *section_name,
 {
   const struct section *sect = sections;
 
-  while (sect) {
-    if (same (section_name, sect->section)) {
-      break;
+  while (sect) 
+    {
+      if (same (section_name, sect->section))
+        break;
+      sect = sect->next;
     }
-    sect = sect->next;
-  }
   return (struct section *)sect;
 }
 
@@ -69,25 +69,27 @@ bmc_section_find_keyvalue (const char *section_name,
 							 sections);
   struct keyvalue *kv = NULL;
 
-  if (!sect) {
-    fprintf (stderr, "Unknown section `%s'\n",
-	     section_name);
-    return NULL;
-  }
+  if (!sect) 
+    {
+      fprintf (stderr, "Unknown section `%s'\n", section_name);
+      return NULL;
+    }
 
   kv = sect->keyvalues;
 
-  while (kv) {
-    if (same (key_name, kv->key)) {
-      break;
+  while (kv) 
+    {
+      if (same (key_name, kv->key))
+        break;
+      kv = kv->next;
     }
-    kv = kv->next;
-  }
-  if (!kv) {
-    fprintf (stderr, "Unknown key `%s' in section `%s'\n",
-	     key_name, section_name);
-    return NULL;
-  }
+
+  if (!kv) 
+    {
+      fprintf (stderr, "Unknown key `%s' in section `%s'\n",
+               key_name, section_name);
+      return NULL;
+    }
 
   return kv;
 }
@@ -109,11 +111,12 @@ bmc_section_set_value (const char *section_name,
   if (!kv)
     return -1;
 
-  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) {
-    fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-	     value, key_name);
-    return -1;
-  }
+  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) 
+    {
+      fprintf (stderr, "Invalid value `%s' for key `%s'\n",
+               value, key_name);
+      return -1;
+    }
 
   if (kv->value)
     free (kv->value);
@@ -138,11 +141,12 @@ bmc_section_commit_value (const char *section_name,
   if (!kv)
     return -1;
 
-  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) {
-    fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-	     value, key_name);
-    return -1;
-  }
+  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) 
+    {
+      fprintf (stderr, "Invalid value `%s' for key `%s'\n",
+               value, key_name);
+      return -1;
+    }
 
   if (kv->value)
     free (kv->value);
@@ -167,11 +171,12 @@ bmc_section_diff_value (const char *section_name,
   if (!kv)
     return -1;
 
-  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) {
-    fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-	     value, key_name);
-    return -1;
-  }
+  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) 
+    {
+      fprintf (stderr, "Invalid value `%s' for key `%s'\n",
+               value, key_name);
+      return -1;
+    }
 
   if (kv->value)
     free (kv->value);

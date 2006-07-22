@@ -29,11 +29,12 @@
 
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT 0x1
 
-typedef enum {
-  BMC_ACTION_CHECKOUT = 1,
-  BMC_ACTION_COMMIT,
-  BMC_ACTION_DIFF
-} bmc_action_t;
+typedef enum 
+  {
+    BMC_ACTION_CHECKOUT = 1,
+    BMC_ACTION_COMMIT,
+    BMC_ACTION_DIFF
+  } bmc_action_t;
 
 struct arguments
 {

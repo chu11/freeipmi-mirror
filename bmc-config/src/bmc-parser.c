@@ -21,84 +21,94 @@ bmc_parser (struct arguments *arguments,
   int ret = 0;
 
 
-  while (fgets (buf, 4096, fp)) {
-    line_num ++;
-    buf[4095] = 0;
-    char *first_word = strtok (buf, " \t\n");
-
-    if (! first_word) {
+  while (fgets (buf, 4096, fp)) 
+    {
+      line_num ++;
+      buf[4095] = 0;
+      char *first_word = strtok (buf, " \t\n");
+      
+      if (! first_word) 
+        {
 #ifndef NDEBUG 
-      if (arguments->debug)
-	fprintf (stderr, "%d: empty line\n", line_num);
+          if (arguments->debug)
+            fprintf (stderr, "%d: empty line\n", line_num);
 #endif /* NDEBUG */
-      continue;
-    }
+          continue;
+        }
     
-    if (first_word[0] == '#') {
+    if (first_word[0] == '#') 
+      {
 #ifndef NDEBUG 
-      if (arguments->debug)
+        if (arguments->debug)
 	  fprintf (stderr, "Comment on line %d\n", line_num);
 #endif /* NDEBUG */
-      continue;
-    }
-    
-    if (same (first_word, "Section")) {
-      if (section_name)
-	free (section_name);
-      section_name = strtok (NULL, " \t\n");
-      
-      if (!section_name) {
-	fprintf (stderr, "FATAL: Error parsing line number %d\n",
-		 line_num);
-	if (section_name)
-	  free (section_name);
-	  if (key_name)
-	    free (key_name);
-	  if (value)
-	    free (value);
-	  ret = -1;
-	  break;
+        continue;
       }
+    
+    if (same (first_word, "Section")) 
+      {
+        if (section_name)
+          free (section_name);
+        section_name = strtok (NULL, " \t\n");
+        
+        if (!section_name) 
+          {
+            fprintf (stderr, "FATAL: Error parsing line number %d\n",
+                     line_num);
+            if (section_name)
+              free (section_name);
+            if (key_name)
+              free (key_name);
+            if (value)
+              free (value);
+            ret = -1;
+            break;
+          }
       
-      section_name = strdup (section_name);
+        section_name = strdup (section_name);
 #ifndef NDEBUG 
-      if (arguments->debug) 
-	fprintf (stderr, "Entering section `%s'\n", section_name);
+        if (arguments->debug) 
+          fprintf (stderr, "Entering section `%s'\n", section_name);
 #endif /* NDEBUG */
       continue;
-    } /* same (first_word, "Section") */
+      } 
+    /* same (first_word, "Section") */
 
-    if (same (first_word, "EndSection")) {
-      if (!section_name) {
-	fprintf (stderr, "FATAL: encountered `%s' without a matching Section\n",
-		 first_word);
-	if (key_name)
-	  free (key_name);
-	if (value)
-	  free (value);
-	ret = -1;
-	break;
-      }
+    if (same (first_word, "EndSection")) 
+      {
+        if (!section_name) 
+          {
+            fprintf (stderr, "FATAL: encountered `%s' without a matching Section\n",
+                     first_word);
+            if (key_name)
+              free (key_name);
+            if (value)
+              free (value);
+            ret = -1;
+            break;
+          }
 #ifndef NDEBUG 
-      if (arguments->debug)
+        if (arguments->debug)
 	  fprintf (stderr, "Leaving section `%s'\n", section_name);
 #endif /* NDEBUG */
-      free (section_name);
-      section_name = NULL;
-      
-      continue;
-    } /* same (first_word, "EndSection") */
+        free (section_name);
+        section_name = NULL;
+        
+        continue;
+      } 
+    /* same (first_word, "EndSection") */
     
-    if (!section_name) {
-      fprintf (stderr, "FATAL: Key `%s' not inside any Section\n",
-	       first_word);
-      if (key_name)
-	free (key_name);
+    if (!section_name) 
+      {
+        fprintf (stderr, "FATAL: Key `%s' not inside any Section\n",
+                 first_word);
+        if (key_name)
+          free (key_name);
 	if (value)
 	  free (value);
 	ret = -1;
 	break;
-    }
+      }
     
     if (key_name)
       free (key_name);
@@ -118,17 +128,18 @@ bmc_parser (struct arguments *arguments,
 #endif /* NDEBUG */
     
     if (bmc_section_set_value (section_name, key_name, value,
-			       arguments, sections) != 0) {
-      if (section_name) 
-	free (section_name);
-      if (key_name)
-	free (key_name);
-      if (value)
-	free (value);
-      ret = -1;
-      break;
+			       arguments, sections) != 0) 
+      {
+        if (section_name) 
+          free (section_name);
+        if (key_name)
+          free (key_name);
+        if (value)
+          free (value);
+        ret = -1;
+        break;
+      }
     }
-  }
-
+  
   return ret;
 }

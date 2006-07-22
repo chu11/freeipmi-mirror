@@ -86,6 +86,8 @@
 
 	* Globally use libfreeipmi/include definitions, not hardcoded values.
 
+	* Globally fix indenting/code style to match rest of FreeIPMI.
+
 	* bmc-config/src/bmc-sol-conf-section.c
 	(character_accumulate_interval_validate): Fix range check.
 

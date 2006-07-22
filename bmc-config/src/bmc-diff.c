@@ -24,12 +24,13 @@ bmc_diff_keypair (struct arguments *arguments,
   key_name = strtok (NULL, "=");
   value = strtok (NULL, "");
 
-  if (! (section_name && key_name && value)) {
-    fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", 
-	     arguments->keypair);
-    free (keypair);
-    return -1;
-  }
+  if (! (section_name && key_name && value)) 
+    {
+      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", 
+               arguments->keypair);
+      free (keypair);
+      return -1;
+    }
      
   section_name = strtok (section_name, " \t");
   key_name = strtok (key_name, " \t");
@@ -55,10 +56,11 @@ bmc_diff_file (struct arguments *arguments,
   else
     fp = stdin;
 
-  if (!fp) {
-    perror (arguments->filename);
-    return -1;
-  }
+  if (!fp) 
+    {
+      perror (arguments->filename);
+      return -1;
+    }
 
   /* 1st pass */
   ret = bmc_parser (arguments, sections, fp);
@@ -66,20 +68,22 @@ bmc_diff_file (struct arguments *arguments,
   if (fp != stdin)
     fclose (fp);
 
-  if (!ret) {
-    /* 2nd pass if 1st pass was successful */
-    struct section *sect = sections;
-    while (sect) {
-      struct keyvalue *kv = sect->keyvalues;
-      while (kv) {
-	if (kv->value) {
-	  ret = (kv->diff (arguments, sect, kv) || ret);
-	}
-	kv = kv->next;
-      }
-      sect = sect->next;
+  if (!ret) 
+    {
+      /* 2nd pass if 1st pass was successful */
+      struct section *sect = sections;
+      while (sect) 
+        {
+          struct keyvalue *kv = sect->keyvalues;
+          while (kv) 
+            {
+              if (kv->value) 
+                ret = (kv->diff (arguments, sect, kv) || ret);
+              kv = kv->next;
+            }
+          sect = sect->next;
+        }
     }
-  }
 
   return ret;
 }
@@ -90,13 +94,11 @@ bmc_diff (struct arguments *arguments,
 {
   int ret = 0;
 
-  if (arguments->keypair) {
-    ret = bmc_diff_keypair (arguments,
-			    sections);
-  } else {
-    ret = bmc_diff_file (arguments,
-			 sections);
-  }
+  if (arguments->keypair)
+    ret = bmc_diff_keypair (arguments, sections);
+  else
+    ret = bmc_diff_file (arguments, sections);
+
   return ret;
 }
 

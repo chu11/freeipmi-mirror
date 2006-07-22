@@ -5,6 +5,80 @@
 #include "bmc-common.h"
 
 static int
+privilege_level_number (const char *string)
+{
+  if (same (string, "callback"))
+    return IPMI_PRIVILEGE_LEVEL_CALLBACK;
+  if (same (string, "user"))
+    return IPMI_PRIVILEGE_LEVEL_USER;
+  if (same (string, "operator"))
+    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
+  if (same (string, "administrator"))
+    return IPMI_PRIVILEGE_LEVEL_ADMIN;
+  if (same (string, "oem_proprietary"))
+    return IPMI_PRIVILEGE_LEVEL_OEM;
+  return -1;
+}
+
+static char *
+privilege_level_string (uint8_t value)
+{
+  switch (value) 
+    {
+    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
+      return "Callback";
+    case IPMI_PRIVILEGE_LEVEL_USER:
+      return "User";
+    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
+      return "Operator";
+    case IPMI_PRIVILEGE_LEVEL_ADMIN:
+      return "Administrator";
+    case IPMI_PRIVILEGE_LEVEL_OEM:
+      return "OEM_Proprietary";
+    }
+  return "";
+}
+
+static int
+sol_bit_rate_number (const char *string)
+{
+  if (same (string, "serial"))
+    return 0;
+  if (same (string, "9600"))
+    return IPMI_BIT_RATE_9600_BPS;
+  if (same (string, "19200"))
+    return IPMI_BIT_RATE_19200_BPS;
+  if (same (string, "38400"))
+    return IPMI_BIT_RATE_38400_BPS;
+  if (same (string, "57600"))
+    return IPMI_BIT_RATE_57600_BPS;
+  if (same (string, "115200"))
+    return IPMI_BIT_RATE_115200_BPS;
+  return -1;
+}
+
+static char *
+sol_bit_rate_string (uint8_t value)
+{
+  switch (value) 
+    {
+    case 0:
+      return "Serial";
+    case IPMI_BIT_RATE_9600_BPS:
+      return "9600";
+    case IPMI_BIT_RATE_19200_BPS:
+      return "19200";
+    case IPMI_BIT_RATE_38400_BPS:
+      return "38400";
+    case IPMI_BIT_RATE_57600_BPS:
+      return "57600";
+    case IPMI_BIT_RATE_115200_BPS:
+      return "115200";
+    }
+  return "";
+}
+
+static int
 sol_auth_checkout (ipmi_device_t *dev,
 		   uint8_t *sol_privilege_level,
 		   uint8_t *force_sol_payload_authentication,
@@ -117,15 +191,16 @@ enable_sol_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -135,40 +210,6 @@ enable_sol_validate (const struct arguments *args,
 		     const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
-}
-
-static int
-privilege_level_number (const char *string)
-{
-  if (same (string, "callback"))
-    return 1;
-  if (same (string, "user"))
-    return 2;
-  if (same (string, "operator"))
-    return 3;
-  if (same (string, "administrator"))
-    return 4;
-  if (same (string, "oem_proprietary"))
-    return 5;
-  return -1;
-}
-
-static char *
-privilege_level_string (uint8_t value)
-{
-  switch (value) {
-  case 1:
-    return "Callback";
-  case 2:
-    return "User";
-  case 3:
-    return "Operator";
-  case 4:
-    return "Administrator";
-  case 5:
-    return "OEM_Proprietary";
-  }
-  return "";
 }
 
 static int
@@ -225,16 +266,16 @@ sol_privilege_level_diff (const struct arguments *args,
 
   passed_value = privilege_level_number (kv->value);
 
-
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 privilege_level_string (got_value));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   privilege_level_string (got_value));
+    }
   return ret;
 }
 
@@ -305,16 +346,16 @@ force_sol_payload_authentication_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
-
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -383,16 +424,16 @@ force_sol_payload_encryption_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
-
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -475,17 +516,18 @@ character_accumulate_interval_diff (const struct arguments *args,
   got_value = interval;
   passed_value = atoi (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", got_value);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", got_value);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -578,17 +620,18 @@ character_send_threshold_diff (const struct arguments *args,
   got_value = threshold;
   passed_value = atoi (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", got_value);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", got_value);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -684,17 +727,18 @@ sol_retry_count_diff (const struct arguments *args,
   got_value = count;
   passed_value = atoi (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", got_value);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", got_value);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -792,17 +836,18 @@ sol_retry_interval_diff (const struct arguments *args,
   got_value = interval;
   passed_value = atoi (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", got_value);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", got_value);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -823,44 +868,6 @@ sol_retry_interval_validate (const struct arguments *args,
     return 1;
 
   return 0;
-}
-
-static int
-sol_bit_rate_number (const char *string)
-{
-  if (same (string, "serial"))
-    return 0;
-  if (same (string, "9600"))
-    return 6;
-  if (same (string, "19200"))
-    return 7;
-  if (same (string, "38400"))
-    return 8;
-  if (same (string, "57600"))
-    return 9;
-  if (same (string, "115200"))
-    return 10;
-  return -1;
-}
-
-static char *
-sol_bit_rate_string (uint8_t value)
-{
-  switch (value) {
-  case 0:
-    return "Serial";
-  case 6:
-    return "9600";
-  case 7:
-    return "19200";
-  case 8:
-    return "38400";
-  case 9:
-    return "57600";
-  case 10:
-    return "115200";
-  }
-  return "";
 }
 
 static int
@@ -909,15 +916,16 @@ non_volatile_bit_rate_diff (const struct arguments *args,
 
   passed_value = sol_bit_rate_number (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 sol_bit_rate_string (got_value));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   sol_bit_rate_string (got_value));
+    }
   return ret;
 }
 
@@ -978,15 +986,16 @@ volatile_bit_rate_diff (const struct arguments *args,
   passed_value = sol_bit_rate_number (kv->value);
 
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 sol_bit_rate_string (got_value));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   sol_bit_rate_string (got_value));
+    }
   return ret;
 }
 
@@ -1044,18 +1053,18 @@ port_diff (const struct arguments *args,
 
   passed_value = atoi (kv->value);
 
-
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", got_value);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", got_value);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 

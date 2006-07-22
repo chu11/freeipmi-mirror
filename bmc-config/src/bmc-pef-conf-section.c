@@ -139,15 +139,16 @@ enable_pef_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -217,15 +218,16 @@ enable_pef_event_messages_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -296,15 +298,16 @@ enable_pef_startup_delay_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -375,15 +378,16 @@ enable_pef_alert_startup_delay_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -558,15 +562,16 @@ enable_alert_action_diff (const struct arguments *args,
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -642,15 +647,16 @@ enable_power_down_action_diff (const struct arguments *args,
     return -1;
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -726,15 +732,16 @@ enable_reset_action_diff (const struct arguments *args,
     return -1;
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -810,15 +817,16 @@ enable_power_cycle_action_diff (const struct arguments *args,
     return -1;
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -895,15 +903,16 @@ enable_oem_action_diff (const struct arguments *args,
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -980,15 +989,16 @@ enable_diagnostic_interrupt_diff (const struct arguments *args,
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 got_value ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -1048,17 +1058,18 @@ pef_startup_delay_diff (const struct arguments *args,
 
   passed_value = atoi (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", got_value);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", got_value);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -1128,17 +1139,18 @@ pef_alert_startup_delay_diff (const struct arguments *args,
 
   passed_value = atoi (kv->value);
 
-  if (passed_value == got_value) {
+  if (passed_value == got_value)
     ret = 0;
-  } else {
-    char num[32];
-    ret = 1;
-    sprintf (num, "%d", got_value);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", got_value);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 

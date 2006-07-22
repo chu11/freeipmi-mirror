@@ -7,16 +7,17 @@
 static char *
 channel_access_mode_string (uint8_t mode)
 {
-  switch (mode) {
-  case IPMI_MESSAGING_ACCESS_MODE_DISABLED:
-    return "Disabled";
-  case IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY:
-    return "Pre_Boot_Only";
-  case IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE:
-    return "Always_Available";
-  case IPMI_MESSAGING_ACCESS_MODE_SHARED:
-    return "Shared";
-  }
+  switch (mode) 
+    {
+    case IPMI_MESSAGING_ACCESS_MODE_DISABLED:
+      return "Disabled";
+    case IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY:
+      return "Pre_Boot_Only";
+    case IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE:
+      return "Always_Available";
+    case IPMI_MESSAGING_ACCESS_MODE_SHARED:
+      return "Shared";
+    }
   return "";
 }
 
@@ -37,20 +38,21 @@ channel_access_mode (const char *string)
 static char *
 get_privilege_limit_string (uint8_t limit)
 {
-  switch (limit) {
-  case IPMI_PRIVILEGE_LEVEL_CALLBACK:
-    return "Callback";
-  case IPMI_PRIVILEGE_LEVEL_USER:
-    return "User";
-  case IPMI_PRIVILEGE_LEVEL_OPERATOR:
-    return "Operator";
-  case IPMI_PRIVILEGE_LEVEL_ADMIN:
-    return "Administrator";
-  case IPMI_PRIVILEGE_LEVEL_OEM:
-    return "OEM_Proprietary";
-  case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
-    return "NO_Access";
-  }
+  switch (limit) 
+    {
+    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
+      return "Callback";
+    case IPMI_PRIVILEGE_LEVEL_USER:
+      return "User";
+    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
+      return "Operator";
+    case IPMI_PRIVILEGE_LEVEL_ADMIN:
+      return "Administrator";
+    case IPMI_PRIVILEGE_LEVEL_OEM:
+      return "OEM_Proprietary";
+    case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
+      return "NO_Access";
+    }
   return "";
 }
 
@@ -191,15 +193,16 @@ volatile_access_mode_diff (const struct arguments *args,
 
   passed_val = channel_access_mode (kv->value);
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0; 
-  } else {
-    report_diff (sect->section, 
-		 kv->key,
-		 kv->value,
-		 channel_access_mode_string (get_val));
-    ret = 1;
-  }
+  else
+    {
+      report_diff (sect->section, 
+                   kv->key,
+                   kv->value,
+                   channel_access_mode_string (get_val));
+      ret = 1;
+    }
 
   return ret;
 }
@@ -277,15 +280,16 @@ volatile_enable_user_level_auth_diff (const struct arguments *args,
     return -1;
 
   passed_val = same (kv->value, "yes");
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-    ret = 1;
-  }
+  else
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -363,15 +367,16 @@ volatile_enable_per_msg_auth_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
-     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-    ret = 1;
-  }
+  if (passed_val == get_val)
+    ret = 0;
+  else
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+      ret = 1;
+    }
 
   return ret;
 }
@@ -451,15 +456,16 @@ volatile_enable_pef_alerting_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
-     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-    ret = 1;
-  }
+  if (passed_val == get_val)
+    ret = 0;
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+      ret = 1;
+    }
 
   return ret;
 }
@@ -537,15 +543,16 @@ volatile_channel_priv_limit_diff (const struct arguments *args,
 
   passed_val = get_privilege_limit_number (kv->value);
 
-  if (passed_val == get_val) {
-     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_privilege_limit_string (get_val));
-    ret = 1;
-  }
+  if (passed_val == get_val)
+    ret = 0;
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_privilege_limit_string (get_val));
+      ret = 1;
+    }
 
   return ret;
 }
@@ -678,15 +685,16 @@ non_volatile_access_mode_diff (const struct arguments *args,
     return -1;
 
   passed_val = channel_access_mode (kv->value);
-  if (passed_val == get_val) {
-     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-    ret = 1;
-  }
+  if (passed_val == get_val)
+    ret = 0;
+  else
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+      ret = 1;
+    }
 
   return ret;
 }
@@ -764,15 +772,16 @@ non_volatile_enable_user_level_auth_diff (const struct arguments *args,
     return -1;
 
   passed_val = same (kv->value, "yes");
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
      ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+      ret = 1;
+    }
 
   return ret;
 }
@@ -851,15 +860,16 @@ non_volatile_enable_per_msg_auth_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
-     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-    ret = 1;
-  }
+  if (passed_val == get_val)
+    ret = 0;
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+      ret = 1;
+    }
 
   return ret;
 }
@@ -939,15 +949,16 @@ non_volatile_enable_pef_alerting_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "yes");
 
-  if (passed_val == get_val) {
-     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-    ret = 1;
-  }
+  if (passed_val == get_val)
+    ret = 0;
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+      ret = 1;
+    }
 
   return ret;
 }
@@ -1025,16 +1036,17 @@ non_volatile_channel_priv_limit_diff (const struct arguments *args,
 
   passed_val = get_privilege_limit_number (kv->value);
   
-  if (passed_val == get_val) {
-     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_privilege_limit_string (get_val));
-    ret = 1;
-  }
-
+  if (passed_val == get_val)
+    ret = 0;
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_privilege_limit_string (get_val));
+      ret = 1;
+    }
+  
   return ret;
 }
 

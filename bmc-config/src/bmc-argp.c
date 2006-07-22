@@ -137,62 +137,61 @@ args_validate (struct arguments *args)
   int ret = 0;
 
   // action is non 0 and -1
-  if (! args->action || args->action == -1) {
-    fprintf (stderr, 
-	     "Exactly one of --checkout, --commit or --diff MUST be given\n");
-    return -1;
-  }
+  if (! args->action || args->action == -1) 
+    {
+      fprintf (stderr, 
+               "Exactly one of --checkout, --commit or --diff MUST be given\n");
+      return -1;
+    }
 
   // filename and keypair both not given
-  if (args->filename && args->keypair) {
-    fprintf (stderr, 
-	     "Both --filename or --keypair cannot be used\n");
-    return -1;
-  }
+  if (args->filename && args->keypair) 
+    {
+      fprintf (stderr, 
+               "Both --filename or --keypair cannot be used\n");
+      return -1;
+    }
 
   // filename is readable if commit, writable/creatable if checkout
 
-  if (args->filename) {
-    switch (args->action) {
-    case BMC_ACTION_COMMIT: case BMC_ACTION_DIFF:
-      if (access (args->filename, R_OK) != 0) {
-	perror (args->filename);
-	return -1;
-      }
-      break;
-    case BMC_ACTION_CHECKOUT:
-      if (access (args->filename, F_OK) == 0) {
-	if (access (args->filename, W_OK) != 0) {
-	  perror (args->filename);
-	  return -1;
-	}
-      } else {
-	int fd;
-	fd = open (args->filename, O_CREAT);
-	if (fd == -1) {
-	  perror (args->filename);
-	  return -1;
-	} else {
-	  close (fd);
-	  unlink (args->filename);
-	}
-      }
+  if (args->filename) 
+    {
+      switch (args->action) 
+        {
+        case BMC_ACTION_COMMIT: case BMC_ACTION_DIFF:
+          if (access (args->filename, R_OK) != 0) 
+            {
+              perror (args->filename);
+              return -1;
+            }
+          break;
+        case BMC_ACTION_CHECKOUT:
+          if (access (args->filename, F_OK) == 0) 
+            {
+              if (access (args->filename, W_OK) != 0) 
+                {
+                  perror (args->filename);
+                  return -1;
+                }
+            } 
+          else 
+            {
+              int fd;
+              fd = open (args->filename, O_CREAT);
+              if (fd == -1) 
+                {
+                  perror (args->filename);
+                  return -1;
+                } 
+              else 
+                {
+                  close (fd);
+                  unlink (args->filename);
+                }
+            }
+        }
     }
-  }
   
-  /*
-    THIS CHECK MOVED TO COMMIT/CHECKOUT/DIFF CODE
-
-    if (args->keypair) {
-    char *colon = strchr (args->keypair, ':');
-    char *equal = strchr (args->keypair, '=');
-
-    if (!colon || !equal || colon > equal) {
-      fprintf (stderr, "Invalid keypair `%s'\n", args->keypair);
-      return -1;
-    }
-  }
-  */
   return ret;
 }
 
@@ -273,7 +272,7 @@ static struct argp argp = { options, parse_opt, args_doc, doc};
 int
 bmc_argp (int argc, char *argv[], struct arguments *arguments)
 {
-
+  
   argp_parse (&argp, argc, argv, 0, 0, arguments);
 
   if (args_validate (arguments) == -1)

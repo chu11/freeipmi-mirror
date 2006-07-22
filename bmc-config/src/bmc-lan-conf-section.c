@@ -25,18 +25,19 @@ ip_address_source_number (const char *source)
 static char *
 ip_address_source_string (uint8_t source)
 {
-  switch (source) {
-  case IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED:
-    return "Unspecified";
-  case IPMI_IP_ADDRESS_SOURCE_STATIC:
-    return "Static";
-  case IPMI_IP_ADDRESS_SOURCE_DHCP:
-    return "Use_DHCP";
-  case IPMI_IP_ADDRESS_SOURCE_BIOS:
-    return "Use_BIOS";
-  case IPMI_IP_ADDRESS_SOURCE_OTHER:
-    return "Use_Others";
-  }
+  switch (source) 
+    {
+    case IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED:
+      return "Unspecified";
+    case IPMI_IP_ADDRESS_SOURCE_STATIC:
+      return "Static";
+    case IPMI_IP_ADDRESS_SOURCE_DHCP:
+      return "Use_DHCP";
+    case IPMI_IP_ADDRESS_SOURCE_BIOS:
+      return "Use_BIOS";
+    case IPMI_IP_ADDRESS_SOURCE_OTHER:
+      return "Use_Others";
+    }
   return "";
 }
 
@@ -85,15 +86,16 @@ ip_address_source_diff (const struct arguments *args,
     return -1;
 
   passed_val = ip_address_source_number (kv->value);
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 ip_address_source_string (get_val));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   ip_address_source_string (get_val));
+    }
   return ret;
 }
 
@@ -153,15 +155,16 @@ ip_address_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (same (ip, kv->value)) {
+  if (same (ip, kv->value))
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 ip);
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   ip);
+    }
   return ret;
 }
 
@@ -216,15 +219,16 @@ mac_address_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (same (mac, kv->value)) {
+  if (same (mac, kv->value))
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 mac);
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   mac);
+    }
   return ret;
 }
 
@@ -286,15 +290,16 @@ subnet_mask_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (same (mask, kv->value)) {
+  if (same (mask, kv->value))
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 mask);
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   mask);
+    }
   return ret;
 }
 
@@ -357,15 +362,16 @@ default_gateway_address_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (same (ip, kv->value)) {
+  if (same (ip, kv->value)) 
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 ip);
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   ip);
+    }
   return ret;
 }
 
@@ -484,15 +490,16 @@ backup_gateway_address_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (same (ip, kv->value)) {
+  if (same (ip, kv->value))
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 ip);
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   ip);
+    }
   return ret;
 }
 
@@ -621,17 +628,18 @@ vlan_id_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (vlan_id == atoi (kv->value)) {
+  if (vlan_id == atoi (kv->value))
     ret = 0;
-  } else {
-    char num[32];
-    sprintf (num, "%d", vlan_id);
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      sprintf (num, "%d", vlan_id);
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -714,15 +722,16 @@ vlan_id_enable_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (vlan_id_enable == (same (kv->value, "yes"))) {
+  if (vlan_id_enable == (same (kv->value, "yes")))
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 vlan_id_enable ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   vlan_id_enable ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -776,17 +785,18 @@ vlan_priority_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (priority == atoi (kv->value)) {
+  if (priority == atoi (kv->value))
     ret = 0;
-  } else {
-    char prio[32];
-    ret = 1;
-    sprintf (prio, "%d", priority);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 prio);
-  }
+  else 
+    {
+      char prio[32];
+      ret = 1;
+      sprintf (prio, "%d", priority);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   prio);
+    }
   return ret;
 }
 

@@ -21,20 +21,21 @@ get_num_users (struct arguments *args)
 static char *
 get_privilege_limit_string (uint8_t limit)
 {
-  switch (limit) {
-  case IPMI_PRIVILEGE_LEVEL_CALLBACK:
-    return "Callback";
-  case IPMI_PRIVILEGE_LEVEL_USER:
-    return "User";
-  case IPMI_PRIVILEGE_LEVEL_OPERATOR:
-    return "Operator";
-  case IPMI_PRIVILEGE_LEVEL_ADMIN:
-    return "Administrator";
-  case IPMI_PRIVILEGE_LEVEL_OEM:
-    return "OEM_Proprietary";
-  case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
-    return "NO_Access";
-  }
+  switch (limit) 
+    {
+    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
+      return "Callback";
+    case IPMI_PRIVILEGE_LEVEL_USER:
+      return "User";
+    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
+      return "Operator";
+    case IPMI_PRIVILEGE_LEVEL_ADMIN:
+      return "Administrator";
+    case IPMI_PRIVILEGE_LEVEL_OEM:
+      return "OEM_Proprietary";
+    case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
+      return "NO_Access";
+    }
   return "";
 }
 
@@ -111,19 +112,20 @@ username_diff (const struct arguments *args,
 			IPMI_MAX_USER_NAME_LENGTH+1))
     return -1;
 
-  if (userid == 1) {
-    if (! kv->value || same (kv->value, "null") || same (kv->value, "anonymous")) {
-      ret = 0;
-    } else {
-      ret = 1;
+  if (userid == 1) 
+    {
+      if (! kv->value || same (kv->value, "null") || same (kv->value, "anonymous")) 
+        ret = 0;
+      else 
+        ret = 1;
+    } 
+  else 
+    {
+      if (!kv->value || !same (kv->value, (char *)username))
+        ret = 1;
+      else
+        ret = 0;
     }
-  } else {
-    if (!kv->value || !same (kv->value, (char *)username)) {
-      ret = 1;
-    } else {
-      ret = 0;
-    }
-  }
 
   if (ret == 1)
     report_diff (sect->section,
@@ -141,19 +143,20 @@ username_validate (const struct arguments *args,
   uint8_t userid;
   userid = atoi (sect->section + strlen ("User"));
 
-  if (userid == 1) {
-    if (!value || same (value, "null") || same (value, "anonymous")) {
-      return 0;
-    } else {
-      return -1;
+  if (userid == 1) 
+    {
+      if (!value || same (value, "null") || same (value, "anonymous"))
+        return 0;
+      else
+        return -1;
+    } 
+  else 
+    {
+      if (!value || strlen (value) > 16)
+        return -1;
+      else
+        return 0;
     }
-  } else {
-    if (!value || strlen (value) > 16) {
-      return -1;
-    } else {
-      return 0;
-    }
-  }
   return 0;
 }
 
@@ -519,15 +522,16 @@ lan_enable_ipmi_msgs_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "Yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
   
@@ -610,15 +614,16 @@ lan_enable_link_auth_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "Yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		  kv->key,
-		  kv->value,
-		  get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -701,15 +706,16 @@ lan_enable_restricted_to_callback_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "Yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val) 
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		  kv->key,
-		  kv->value,
-		  get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -789,15 +795,16 @@ lan_privilege_limit_diff (const struct arguments *args,
 
   passed_val = get_privilege_limit_number (kv->value);
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		  kv->key,
-		  kv->value,
-		  get_privilege_limit_string (get_val));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_privilege_limit_string (get_val));
+    }
   return ret;
 }
 
@@ -878,17 +885,18 @@ lan_session_limit_diff (const struct arguments *args,
 
   passed_val = atoi (kv->value);
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    char num[32];
-    sprintf (num, "%d", get_val);
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      sprintf (num, "%d", get_val);
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 
@@ -1001,15 +1009,16 @@ sol_payload_access_diff (const struct arguments *args,
 
   passed_value = same (kv->value, "yes");
   
-  if (passed_value == have_access) {
+  if (passed_value == have_access)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 have_access ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   have_access ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -1190,15 +1199,16 @@ serial_enable_ipmi_msgs_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "Yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		  kv->key,
-		  kv->value,
-		  get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
   
@@ -1281,15 +1291,16 @@ serial_enable_link_auth_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "Yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		  kv->key,
-		  kv->value,
-		  get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -1372,15 +1383,16 @@ serial_enable_restricted_to_callback_diff (const struct arguments *args,
 
   passed_val = same (kv->value, "Yes");
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		  kv->key,
-		  kv->value,
-		  get_val ? "Yes" : "No");
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_val ? "Yes" : "No");
+    }
   return ret;
 }
 
@@ -1460,15 +1472,16 @@ serial_privilege_limit_diff (const struct arguments *args,
 
   passed_val = get_privilege_limit_number (kv->value);
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    report_diff (sect->section,
-		  kv->key,
-		  kv->value,
-		  get_privilege_limit_string (get_val));
-  }
+  else 
+    {
+      ret = 1;
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   get_privilege_limit_string (get_val));
+    }
   return ret;
 }
 
@@ -1549,17 +1562,18 @@ serial_session_limit_diff (const struct arguments *args,
 
   passed_val = atoi (kv->value);
 
-  if (passed_val == get_val) {
+  if (passed_val == get_val)
     ret = 0;
-  } else {
-    ret = 1;
-    char num[32];
-    sprintf (num, "%d", get_val);
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 num);
-  }
+  else 
+    {
+      char num[32];
+      ret = 1;
+      sprintf (num, "%d", get_val);
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
   return ret;
 }
 

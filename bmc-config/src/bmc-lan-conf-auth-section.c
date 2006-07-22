@@ -66,15 +66,16 @@ callback_none_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.callback.type_none == same (kv->value, "yes")) {
+  if (auth.callback.type_none == same (kv->value, "yes")) 
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.callback.type_none ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.callback.type_none ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -146,15 +147,16 @@ callback_md2_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.callback.type_md2 == same (kv->value, "yes")) {
+  if (auth.callback.type_md2 == same (kv->value, "yes")) 
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.callback.type_md2 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.callback.type_md2 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -226,15 +228,16 @@ callback_md5_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.callback.type_md5 == same (kv->value, "yes")) {
+  if (auth.callback.type_md5 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.callback.type_md5 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.callback.type_md5 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -306,15 +309,16 @@ callback_straight_password_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.callback.type_straight_password == same (kv->value, "yes")) {
+  if (auth.callback.type_straight_password == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.callback.type_straight_password ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.callback.type_straight_password ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -386,15 +390,16 @@ callback_oem_proprietary_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.callback.type_oem_proprietary == same (kv->value, "yes")) {
+  if (auth.callback.type_oem_proprietary == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.callback.type_oem_proprietary ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.callback.type_oem_proprietary ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -468,15 +473,16 @@ user_none_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.user.type_none == same (kv->value, "yes")) {
+  if (auth.user.type_none == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.user.type_none ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.user.type_none ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -548,15 +554,16 @@ user_md2_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.user.type_md2 == same (kv->value, "yes")) {
+  if (auth.user.type_md2 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.user.type_md2 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.user.type_md2 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -628,15 +635,16 @@ user_md5_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.user.type_md5 == same (kv->value, "yes")) {
+  if (auth.user.type_md5 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.user.type_md5 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.user.type_md5 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -708,15 +716,16 @@ user_straight_password_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.user.type_straight_password == same (kv->value, "yes")) {
+  if (auth.user.type_straight_password == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.user.type_straight_password ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.user.type_straight_password ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -788,15 +797,16 @@ user_oem_proprietary_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.user.type_oem_proprietary == same (kv->value, "yes")) {
+  if (auth.user.type_oem_proprietary == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.user.type_oem_proprietary ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.user.type_oem_proprietary ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -870,15 +880,16 @@ operator_none_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.operator.type_none == same (kv->value, "yes")) {
+  if (auth.operator.type_none == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.operator.type_none ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.operator.type_none ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -950,15 +961,16 @@ operator_md2_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.operator.type_md2 == same (kv->value, "yes")) {
+  if (auth.operator.type_md2 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.operator.type_md2 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.operator.type_md2 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1030,15 +1042,16 @@ operator_md5_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.operator.type_md5 == same (kv->value, "yes")) {
+  if (auth.operator.type_md5 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.operator.type_md5 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.operator.type_md5 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1110,15 +1123,16 @@ operator_straight_password_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.operator.type_straight_password == same (kv->value, "yes")) {
+  if (auth.operator.type_straight_password == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.operator.type_straight_password ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.operator.type_straight_password ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1190,15 +1204,16 @@ operator_oem_proprietary_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.operator.type_oem_proprietary == same (kv->value, "yes")) {
+  if (auth.operator.type_oem_proprietary == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.operator.type_oem_proprietary ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.operator.type_oem_proprietary ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1273,15 +1288,16 @@ admin_none_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.admin.type_none == same (kv->value, "yes")) {
+  if (auth.admin.type_none == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.admin.type_none ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.admin.type_none ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1353,15 +1369,16 @@ admin_md2_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.admin.type_md2 == same (kv->value, "yes")) {
+  if (auth.admin.type_md2 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.admin.type_md2 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.admin.type_md2 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1433,15 +1450,16 @@ admin_md5_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.admin.type_md5 == same (kv->value, "yes")) {
+  if (auth.admin.type_md5 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.admin.type_md5 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.admin.type_md5 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1513,15 +1531,16 @@ admin_straight_password_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.admin.type_straight_password == same (kv->value, "yes")) {
+  if (auth.admin.type_straight_password == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.admin.type_straight_password ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.admin.type_straight_password ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1593,15 +1612,16 @@ admin_oem_proprietary_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.admin.type_oem_proprietary == same (kv->value, "yes")) {
+  if (auth.admin.type_oem_proprietary == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.admin.type_oem_proprietary ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.admin.type_oem_proprietary ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1677,15 +1697,16 @@ oem_none_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.oem.type_none == same (kv->value, "yes")) {
+  if (auth.oem.type_none == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.oem.type_none ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.oem.type_none ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1757,15 +1778,16 @@ oem_md2_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.oem.type_md2 == same (kv->value, "yes")) {
+  if (auth.oem.type_md2 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.oem.type_md2 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.oem.type_md2 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1837,15 +1859,16 @@ oem_md5_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.oem.type_md5 == same (kv->value, "yes")) {
+  if (auth.oem.type_md5 == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.oem.type_md5 ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.oem.type_md5 ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1917,15 +1940,16 @@ oem_straight_password_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.oem.type_straight_password == same (kv->value, "yes")) {
+  if (auth.oem.type_straight_password == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.oem.type_straight_password ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.oem.type_straight_password ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
@@ -1997,15 +2021,16 @@ oem_oem_proprietary_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (auth.oem.type_oem_proprietary == same (kv->value, "yes")) {
+  if (auth.oem.type_oem_proprietary == same (kv->value, "yes"))
     ret = 0;
-  } else {
-    report_diff (sect->section,
-		 kv->key,
-		 kv->value,
-		 auth.oem.type_oem_proprietary ? "Yes" : "No");
-    ret = 1;
-  }
+  else 
+    {
+      report_diff (sect->section,
+                   kv->key,
+                   kv->value,
+                   auth.oem.type_oem_proprietary ? "Yes" : "No");
+      ret = 1;
+    }
   return ret;
 }
 
