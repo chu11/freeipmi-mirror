@@ -240,7 +240,7 @@ mem_chunk (size_t base, size_t len, const char *devmem)
 }
 
 static int 
-dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interface_type_t interface_type, ipmi_locate_info_t *locate_info)
+dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
   u8 *buf;
   u8 *data;
@@ -277,7 +277,8 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 	      locate_info->base_address.bmc_smbus_slave_address = data[0x06] >> 1;
 	      locate_info->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
 	      locate_info->reg_space = 0x01;
-	      locate_info->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+	      strncpy(locate_info->bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+	      locate_info->bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
 	    }
 	  else 
 	    {
@@ -368,7 +369,7 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 }
 
 static int 
-smbios_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type, ipmi_locate_info_t *locate_info)
+smbios_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
   if (checksum (buf, buf[0x05]) && 
       (memcmp (buf + 0x10, "_DMI_", 5) == 0) && 
@@ -384,7 +385,7 @@ smbios_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type
 
 #ifndef USE_EFI
 static int 
-legacy_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type, ipmi_locate_info_t *locate_info)
+legacy_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
   if (checksum (buf, 0x0F))
     {
@@ -397,11 +398,10 @@ legacy_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type
 }
 #endif /* USE_EFI */
 
-ipmi_locate_info_t *
-ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type)
+int
+ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_locate_info *info)
 {
-  ipmi_locate_info_t locate_info;
-  ipmi_locate_info_t *pinfo;
+  struct ipmi_locate_info locate_info;
   int found = 0;
   size_t fp;
 #ifdef USE_EFI
@@ -410,10 +410,11 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type)
   char linebuf[64];
 #endif /* USE_EFI */
   u8 *buf;
+  int rv = -1;
   
-  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
+  ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
 
-  memset (&locate_info, 0, sizeof (ipmi_locate_info_t));
+  memset(&locate_info, '\0', sizeof(struct ipmi_locate_info));
 #ifdef USE_EFI
   /*
    * Linux up to 2.6.6-rc2: /proc/efi/systab
@@ -422,7 +423,7 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type)
   if (((efi_systab = fopen (filename = "/proc/efi/systab", "r")) == NULL) && 
       ((efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r")) == NULL))
     {
-      return NULL;
+      return -1;
     }
   
   fp = 0;
@@ -439,12 +440,12 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type)
     perror (filename);
   if (fp == 0)
     {
-      return NULL;
+      return -1;
     }
   
   if ((buf = mem_chunk (fp, 0x20, DEFAULT_MEM_DEV)) == NULL)
     {
-      return NULL;
+      return -1;
     }
   
   if (!smbios_decode (buf, DEFAULT_MEM_DEV, type, &locate_info))
@@ -456,7 +457,7 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type)
 #else /* USE_EFI */
   if ((buf = mem_chunk (0xF0000, 0x10000, DEFAULT_MEM_DEV)) == NULL)
     {
-      return NULL;
+      return -1;
     }
   
   for (fp = 0; fp <= 0xFFF0; fp += 16)
@@ -485,11 +486,9 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type)
   
   if (found)
     {
-      pinfo = (ipmi_locate_info_t *) malloc (sizeof (struct ipmi_locate_info));
-      if (pinfo)
-	*pinfo = locate_info;
-      return pinfo;
+      memcpy(info, &locate_info, sizeof(struct ipmi_locate_info));
+      rv = 0;
     }
   
-  return NULL;
+  return rv;
 }

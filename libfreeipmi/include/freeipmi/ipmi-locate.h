@@ -27,6 +27,8 @@ extern "C" {
 
 #include <stdint.h>
 
+#define IPMI_LOCATE_PATH_MAX                1024
+
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY 0x00
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_IO     0x01
 #define IPMI_ADDRESS_SPACE_ID_SMBUS         0x04
@@ -78,7 +80,7 @@ struct ipmi_locate_info
   ipmi_locate_driver_type_t locate_driver_type;
   uint8_t locate_driver;
   ipmi_interface_type_t interface_type; /* KCS, SMIC, BT, SSIF */
-  char *bmc_i2c_dev_name;
+  char bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX];
   uint8_t address_space_id;  /* Memory mapped, IO mapped, SMBus*/
   union {
     uint64_t bmc_iobase_address;
@@ -87,21 +89,18 @@ struct ipmi_locate_info
   } base_address;
   uint8_t reg_space; /* Register spacing in bytes */
 };
-typedef struct ipmi_locate_info ipmi_locate_info_t;
 
-ipmi_locate_info_t* ipmi_locate (ipmi_interface_type_t type);
+int ipmi_locate (ipmi_interface_type_t type, struct ipmi_locate_info *info);
 
-ipmi_locate_info_t* ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type);
+int ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info);
 
-ipmi_locate_info_t* ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type);
+int ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info);
 
-ipmi_locate_info_t *ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type);
+int ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type, struct ipmi_locate_info *info);
 
-ipmi_locate_info_t* ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type);
+int ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info);
 
-ipmi_locate_info_t *ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type);
-
-void ipmi_locate_destroy (ipmi_locate_info_t* pinfo);
+int ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info);
 
 #ifdef __cplusplus
 }

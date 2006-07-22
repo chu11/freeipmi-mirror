@@ -25,6 +25,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif 
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
@@ -33,10 +36,10 @@
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
 
-typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t));
+typedef int ((*ipmi_locate_func)(ipmi_interface_type_t, struct ipmi_locate_info *));
 
-ipmi_locate_info_t*
-ipmi_locate (ipmi_interface_type_t type)
+int
+ipmi_locate (ipmi_interface_type_t type, struct ipmi_locate_info *info)
 {
   static ipmi_locate_func things_to_try[] =
     {
@@ -47,29 +50,21 @@ ipmi_locate (ipmi_interface_type_t type)
       ipmi_locate_defaults_get_dev_info,
       NULL
     };
-  ipmi_locate_info_t* pinfo = NULL;
-  int i;
+  struct ipmi_locate_info linfo;
+  int i, rv;
 
-  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
+  ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
   
   for (i = 0; things_to_try[i] != NULL; i++)
     {
-      pinfo = (*things_to_try[i])(type);
+      rv = (*things_to_try[i])(type, &linfo);
       
-      if (pinfo)
-	return (pinfo);
+      if (!rv)
+	{
+	  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
+	  return 0;
+	}
     }
 
-  return (NULL);
-}
-
-void
-ipmi_locate_destroy (ipmi_locate_info_t* pinfo)
-{
-  if (pinfo)
-    {
-      if (pinfo->bmc_i2c_dev_name)
-	xfree (pinfo->bmc_i2c_dev_name);
-      xfree (pinfo);
-    }
+  return (-1);
 }

@@ -13,6 +13,28 @@
 
 	* fish/, bmc-info/, bmc-config/, ipmi-sel/, ipmi-raw/: Readjust
 	code appropriately.
+
+	Remove ipmi_locate_info_t typedef.  Replace with struct pointer
+	globally.  Re-adjust struct and API to return structure as
+	parameter, rather than pointer.
+
+	* libfreeipmi/include/freeipmi/ipmi-locate.h,
+	libfreeipmi/src/ipmi-locate.c (ipmi_locate_destroy): Remove
+	function.
+	
+	* libfreeipmi/include/freeipmi/ipmi-locate.h: Adjust function
+	prototypes.  
+
+	* libfreeipmi/src/ipmi-locate.c,
+	libfreeipmi/src/ipmi-locate-acpi-spmi.c,
+	libfreeipmi/src/ipmi-locate-defaults.c,
+	libfreeipmi/src/ipmi-locate-dmidecode.c,
+	libfreeipmi/src/ipmi-locate-pci.c,
+	libfreeipmi/src/ipmi-locate-smbios.c: Adjust code appropriately.
+
+	* libfreeipmi/src/udm/: Adjust code appropriately.
+
+	* bmc-watchdog/, ipmi-locate/: Adjust code appropriately.
 	
 2006-07-21  Albert Chu <chu11@llnl.gov>
 

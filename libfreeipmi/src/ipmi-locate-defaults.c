@@ -38,55 +38,57 @@
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
-ipmi_locate_info_t*
-ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
+int
+ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info)
 {
-  ipmi_locate_info_t *pinfo = NULL;
+  struct ipmi_locate_info linfo;
 
-  ERR_EINVAL_NULL_RETURN (type == IPMI_INTERFACE_KCS
-			  || type == IPMI_INTERFACE_SMIC
-			  || type == IPMI_INTERFACE_SSIF);
+  ERR_EINVAL ((type == IPMI_INTERFACE_KCS
+	       || type == IPMI_INTERFACE_SMIC
+	       || type == IPMI_INTERFACE_SSIF) 
+	      && info);
 
-  ERR_CLEANUP ((pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))));
-  memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
-  pinfo->interface_type = type;
+  memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
+  linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
-    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
-
-  pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_DEFAULTS;
+    {
+      strncpy(linfo.bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+      linfo.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+    }
+  linfo.locate_driver_type = IPMI_LOCATE_DRIVER_DEFAULTS;
   switch (type)
     {
     case IPMI_INTERFACE_KCS:
-      pinfo->ipmi_ver_major = 1;
-      pinfo->ipmi_ver_minor = 5;
-      pinfo->interface_type = IPMI_INTERFACE_KCS;
-      pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-      pinfo->base_address.bmc_iobase_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-      pinfo->reg_space = 1;
+      linfo.ipmi_ver_major = 1;
+      linfo.ipmi_ver_minor = 5;
+      linfo.interface_type = IPMI_INTERFACE_KCS;
+      linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+      linfo.base_address.bmc_iobase_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+      linfo.reg_space = 1;
       break;
     case IPMI_INTERFACE_SMIC:
-      pinfo->ipmi_ver_major = 1;
-      pinfo->ipmi_ver_minor = 5;
-      pinfo->interface_type = IPMI_INTERFACE_SMIC;
-      pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-      pinfo->base_address.bmc_iobase_address = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
-      pinfo->reg_space = 1;
+      linfo.ipmi_ver_major = 1;
+      linfo.ipmi_ver_minor = 5;
+      linfo.interface_type = IPMI_INTERFACE_SMIC;
+      linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+      linfo.base_address.bmc_iobase_address = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
+      linfo.reg_space = 1;
       break;
     case IPMI_INTERFACE_SSIF:
-      pinfo->ipmi_ver_major = 1;
-      pinfo->ipmi_ver_minor = 5;
-      pinfo->interface_type = IPMI_INTERFACE_SSIF;
-      pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-      pinfo->base_address.bmc_smbus_slave_address = IPMI_SSIF_SMBUS_SLAVE_ADDRESS;
-      pinfo->reg_space = 1;
+      linfo.ipmi_ver_major = 1;
+      linfo.ipmi_ver_minor = 5;
+      linfo.interface_type = IPMI_INTERFACE_SSIF;
+      linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
+      linfo.base_address.bmc_smbus_slave_address = IPMI_SSIF_SMBUS_SLAVE_ADDRESS;
+      linfo.reg_space = 1;
       break;
     default:
       ERR_EXIT(0);
     }
 
-  return (pinfo);
+  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
+  return 0;
 
  cleanup:
-  ipmi_locate_destroy(pinfo);
-  return (NULL);
+  return -1;
 }

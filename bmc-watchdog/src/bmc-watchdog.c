@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.61 2006-07-14 21:48:49 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.62 2006-07-22 15:19:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -268,11 +268,11 @@ _err_exit(char *fmt, ...)
 static int
 _init_ipmi(void)
 {
-  ipmi_locate_info_t *l;
+  struct ipmi_locate_info l;
 
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
-  if (!(l = ipmi_locate(IPMI_INTERFACE_KCS)))
+  if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
     {
       _bmclog("ipmi_locate: %s", strerror(errno));
       return -1;
@@ -285,17 +285,17 @@ _init_ipmi(void)
     }
 
   if (cinfo.io_port)
-    l->base_address.bmc_iobase_address = cinfo.io_port_val;
+    l.base_address.bmc_iobase_address = cinfo.io_port_val;
   if (cinfo.reg_space)
-    l->reg_space = cinfo.reg_space_val;
+    l.reg_space = cinfo.reg_space_val;
   
-  if (ipmi_kcs_ctx_set_bmc_iobase_address(kcs_ctx, l->base_address.bmc_iobase_address) < 0)
+  if (ipmi_kcs_ctx_set_bmc_iobase_address(kcs_ctx, l.base_address.bmc_iobase_address) < 0)
     {
       _bmclog("ipmi_kcs_ctx_set_bmc_iobase_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
       return -1;
     }
   
-  if (ipmi_kcs_ctx_set_register_space(kcs_ctx, l->reg_space) < 0)
+  if (ipmi_kcs_ctx_set_register_space(kcs_ctx, l.reg_space) < 0)
     {
       _bmclog("ipmi_kcs_ctx_set_register_space: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
       return -1;

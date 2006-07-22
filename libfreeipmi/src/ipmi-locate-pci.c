@@ -120,8 +120,8 @@ pci_get_regs (uint8_t bus, uint8_t dev, uint16_t func, pci_class_regs_t* pregs)
 /* type = which interface (KCS, SMIC, BT) */
 /* pinfo = pointer to information structure filled in by this function */
 
-ipmi_locate_info_t*
-ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
+into
+ipmi_locate_pci_get_dev_info (ipmi_interface_t type, struct ipmi_locate_info *info)
 {
   unsigned dfn;
   unsigned vendor;
@@ -135,15 +135,17 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
   int items;
   int i;
   int status;
-  ipmi_locate_info_t *pinfo = NULL;
+  struct ipmi_locate_info linfo;
 
-  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
+  ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
 
-  ERR_CLEANUP ((pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))));
-  memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
-  pinfo->interface_type = type;
+  memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
+  linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
-    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+    {
+      strncpy(linfo.bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+      linfo.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+    }
 
   status = 1;
   ERR_CLEANUP ((fp_devices = fopen ("/proc/bus/pci/devices", "r")));
@@ -154,7 +156,7 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
     items = sscanf (buf, "%x %x %x " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64,
 		    &dfn, &vendor, &irq,
 		    &base_address[0], &base_address[1], &base_address[2], &base_address[3], &base_address[4], &base_address[5]);
-    pinfo->intr_num = (uint16_t)irq;
+    linfo.intr_num = (uint16_t)irq;
     
     ERR_CLEANUP (items == 9);
 
@@ -174,14 +176,16 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
 	switch (base_address[i] & PCI_BASE_ADDRESS_SPACE)
 	  {
 	  case past_io:
-	    pinfo->bmc_io_mapped = 0;
-	    pinfo->base.bmc_iobase_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
-	    return pinfo;
+	    linfo.bmc_io_mapped = 0;
+	    linfo.base.bmc_iobase_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
+	    memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
+	    return 0;
 	    
 	  case past_memory:
-	    pinfo->bmc_io_mapped = 1;
-	    pinfo->base.bmc_membase_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
-	    return pinfo;
+	    linfo.bmc_io_mapped = 1;
+	    linfo.base.bmc_membase_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
+	    memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
+	    return 0;
 	  }
       }
   }
@@ -189,16 +193,15 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
  cleanup:
   if (fp_devices)
     fclose (fp_devices);
-  ipmi_locate_destroy(pinfo);
-  return NULL;
+  return -1;
 }
 
 #else  /* __linux */
 
-ipmi_locate_info_t*
-ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type)
+int
+ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info)
 {
-  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
+  ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
 
   return NULL;
 }

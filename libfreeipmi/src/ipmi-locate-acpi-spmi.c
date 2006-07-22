@@ -1172,24 +1172,24 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   return (rv);
 }
 
-ipmi_locate_info_t*
-ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
+int
+ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_info *info)
 {
   fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
-  ipmi_locate_info_t *pinfo = NULL;
-  ipmi_locate_info_t *rv = NULL;
-  extern int errno;
+  struct ipmi_locate_info linfo;
+  int rv = -1;
 
-  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
+  ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
 
-  ERR_CLEANUP ((pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))));
-  memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
-  pinfo->interface_type = type;
+  memset(&linfo, '\0', sizeof(struct ipmi_locate_info));
+  linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
-    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
-
-  pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
+    {
+      strncpy(linfo.bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+      linfo.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+    }
+  linfo.locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
 
   FIID_OBJ_CREATE_CLEANUP (obj_acpi_table_hdr, tmpl_acpi_table_hdr);
 
@@ -1226,8 +1226,8 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
 			  "specification_revision.minor", 
 			  &ipmi_ver_min);
 
-    pinfo->ipmi_ver_major = ipmi_ver_maj;
-    pinfo->ipmi_ver_minor = ipmi_ver_min;
+    linfo.ipmi_ver_major = ipmi_ver_maj;
+    linfo.ipmi_ver_minor = ipmi_ver_min;
   }  
 
   /* Interface type - KCS, SMIC, SSIF, BT */
@@ -1240,7 +1240,7 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
     
     ERR_ENODEV_CLEANUP(IPMI_INTERFACE_TYPE_VALID(interface_type));
 
-    pinfo->interface_type = interface_type;
+    linfo.interface_type = interface_type;
   }
   
   /* Address space id (memory mapped, IO mapped, SMBus) and IO base address */
@@ -1260,20 +1260,20 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
       {
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY:
 	{
-	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-	  pinfo->base_address.bmc_iobase_address = base_address;
+	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+	  linfo.base_address.bmc_iobase_address = base_address;
 	  break;
 	}
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO:
 	{
-	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-	  pinfo->base_address.bmc_membase_address = base_address;
+	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+	  linfo.base_address.bmc_membase_address = base_address;
 	  break;
 	}
       case IPMI_ACPI_ADDRESS_SPACE_ID_SMBUS:
 	{
-	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-	  pinfo->base_address.bmc_smbus_slave_address = base_address;
+	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
+	  linfo.base_address.bmc_smbus_slave_address = base_address;
 	  break;
 	}
       default:
@@ -1288,15 +1288,14 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
     FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
 			  "base_address.register_bit_width", 
 			  &reg_bit_width);
-    pinfo->reg_space = (reg_bit_width / 8);
+    linfo.reg_space = (reg_bit_width / 8);
   }
 
-  rv = pinfo;
+  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
+  rv = 0;
  cleanup:
   FIID_OBJ_DESTROY_NO_RETURN (obj_acpi_table_hdr);
   FIID_OBJ_DESTROY_NO_RETURN (obj_acpi_spmi_table_descriptor);
-  if (!rv)
-    ipmi_locate_destroy(pinfo);
   return (rv);
 }
 
