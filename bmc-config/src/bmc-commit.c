@@ -1,13 +1,7 @@
-
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "bmc-types.h"
+#include "bmc-common.h"
 #include "bmc-config.h"
 #include "bmc-sections.h"
-
-
+#include "bmc-types.h"
 
 static int
 bmc_commit_keypair (struct arguments *arguments,

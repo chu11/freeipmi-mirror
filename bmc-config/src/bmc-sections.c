@@ -19,9 +19,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
+#include "bmc-common.h"
 #include "bmc-sections.h"
-#include <string.h>
-#include <stdlib.h>
 
 struct section *
 bmc_sections_init (struct arguments *args)

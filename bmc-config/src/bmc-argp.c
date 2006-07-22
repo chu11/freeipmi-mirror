@@ -25,11 +25,10 @@
 
 #include <argp.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #ifndef __FreeBSD__
 #include <sys/io.h>
 #endif
@@ -60,33 +59,12 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# ifndef HAVE_STRCHR
-static char*
-strchr (const char* s, int c)
-{
-  while (*s != '\0')
-    if (*s == (char)c) return s;
-    else s++;
-  return NULL;
-}
-# endif
-#endif
-
 #include "argp-common.h"
 
 #include "bmc-types.h"
 #include "bmc-sections.h"
+
+#include "freeipmi-portability.h"
 
 const char *argp_program_version = PACKAGE_VERSION;
 const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";

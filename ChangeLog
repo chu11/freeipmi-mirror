@@ -103,10 +103,24 @@
 	* bmc-config/src/bmc-user-sections.c (password20_checkout): Ensure
 	Password20 is a reasonable checkoutable value.
 
-	* bmc-config/src/bmc-types.h, bmc-config/src/bmc-argp.c: Support debug option. 
+	* bmc-config/src/bmc-types.h, bmc-config/src/bmc-argp.c: Support
+	debug option.
 	
-	* bmc-config/src/bmc-parser.c (bmc_parser): Output debugging on debugging only.
+	* bmc-config/src/bmc-parser.c (bmc_parser): Output debugging on
+	debugging only.
 
+	* bmc-config/src/bmc-util.c: Remove file.
+
+	* bmc-config/src/bmc-map.h, bmc-config/src/bmc-map.c: New files.
+
+	* bmc-config/src/Makefile.am: Adjust appropriately.
+	
+	* bmc-config/src: Use new common map functions.
+
+	* bmc-config/src/bmc-common.h: Fix autoconf and header use.
+
+	* bmc-config/src/: Use headers consistently across files.
+	
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm

@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-common.h,v 1.2 2006-07-20 23:02:00 chu11 Exp $ 
+   $Id: bmc-common.h,v 1.3 2006-07-22 04:18:53 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -27,6 +27,11 @@
 #include <config.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
 #include <argp.h>
 #include <pwd.h>
 #include <termios.h>
@@ -52,7 +57,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <string.h>
+#include <errno.h>
 
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
@@ -60,9 +65,7 @@
 #include "argp-common.h"
 #include "ipmi-common.h"
 #include "ipmi-sensor-api.h"
-
 #include "xmalloc.h"
-
 
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0

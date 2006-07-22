@@ -27,8 +27,6 @@
 #include "argp-common.h"
 #include "ipmi-common.h"
 
-#define BMC_CHECKOUT_KEY_COMMENTED_OUT 0x1
-
 typedef enum 
   {
     BMC_ACTION_CHECKOUT = 1,

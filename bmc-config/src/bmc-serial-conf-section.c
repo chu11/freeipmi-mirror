@@ -1,94 +1,9 @@
 #include "bmc-common.h"
+#include "bmc-config-api.h"
 #include "bmc-diff.h"
+#include "bmc-map.h"
 #include "bmc-sections.h"
 #include "bmc-types.h"
-#include "bmc-config-api.h"
-
-static char *
-connect_mode_string (uint8_t mode)
-{
-  switch (mode) 
-    {
-    case IPMI_CONNECT_MODE_MODEM:
-      return "Modem_Connect";
-    case IPMI_CONNECT_MODE_DIRECT:
-      return "Direct_Connect";
-    }
-  return "";
-}
-
-static int
-connect_mode_number (const  char *string)
-{
-  if (same (string, "Modem_Connect"))
-    return IPMI_CONNECT_MODE_MODEM;
-  if (same (string, "Direct_Connect"))
-    return IPMI_CONNECT_MODE_DIRECT;
-
-  return -1;
-}
-
-static char *
-flow_control_string (uint8_t value)
-{
-  switch (value) 
-    {
-    case IPMI_FLOW_CONTROL_NO_FLOW_CONTROL:
-      return "NO_Flow_Control";
-    case IPMI_FLOW_CONTROL_RTS_CTS_FLOW_CONTROL:
-      return "RTS_CTS";
-    case IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL:
-      return "XON_XOFF";
-    }
-  return "";
-}
-
-static int
-flow_control_number (const char *string)
-{
-  if (same (string, "no_flow_control"))
-    return IPMI_FLOW_CONTROL_NO_FLOW_CONTROL;
-  if (same (string, "rts_cts"))
-    return IPMI_FLOW_CONTROL_RTS_CTS_FLOW_CONTROL;
-  if (same (string, "xon_xoff"))
-    return IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL;
-  return -1;
-}
-
-static char *
-bit_rate_string (uint8_t value)
-{
-  switch (value) 
-    {
-    case IPMI_BIT_RATE_9600_BPS:
-      return "9600";
-    case IPMI_BIT_RATE_19200_BPS:
-      return "19200";
-    case IPMI_BIT_RATE_38400_BPS:
-      return "38400";
-    case IPMI_BIT_RATE_57600_BPS:
-      return "57600";
-    case IPMI_BIT_RATE_115200_BPS:
-      return "115200";
-    }
-  return "";
-}
-
-static int
-bit_rate_number (const char *string)
-{
-  if (same (string, "9600"))
-    return IPMI_BIT_RATE_9600_BPS;
-  if (same (string, "19200"))
-    return IPMI_BIT_RATE_19200_BPS;
-  if (same (string, "38400"))
-    return IPMI_BIT_RATE_38400_BPS;
-  if (same (string, "57600"))
-    return IPMI_BIT_RATE_57600_BPS;
-  if (same (string, "115200"))
-    return IPMI_BIT_RATE_115200_BPS;
-  return -1;
-}
 
 static int
 serial_conf_checkout (ipmi_device_t *dev,

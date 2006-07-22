@@ -1,47 +1,12 @@
+#include "bmc-common.h"
+#include "bmc-config-api.h"
 #include "bmc-diff.h"
+#include "bmc-map.h"
 #include "bmc-sections.h"
 #include "bmc-types.h"
-#include "bmc-config-api.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+
 
 #define BMC_MAXIPADDRLEN 16
-
-static int
-ip_address_source_number (const char *source)
-{
-  if (same (source, "unspecified"))
-    return IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED;
-  if (same (source, "static"))
-    return IPMI_IP_ADDRESS_SOURCE_STATIC;
-  if (same (source, "use_dhcp"))
-    return IPMI_IP_ADDRESS_SOURCE_DHCP;
-  if (same (source, "use_bios"))
-    return IPMI_IP_ADDRESS_SOURCE_BIOS;
-  if (same (source, "use_others"))
-    return IPMI_IP_ADDRESS_SOURCE_OTHER;
-  return -1;
-}
-
-static char *
-ip_address_source_string (uint8_t source)
-{
-  switch (source) 
-    {
-    case IPMI_IP_ADDRESS_SOURCE_UNSPECIFIED:
-      return "Unspecified";
-    case IPMI_IP_ADDRESS_SOURCE_STATIC:
-      return "Static";
-    case IPMI_IP_ADDRESS_SOURCE_DHCP:
-      return "Use_DHCP";
-    case IPMI_IP_ADDRESS_SOURCE_BIOS:
-      return "Use_BIOS";
-    case IPMI_IP_ADDRESS_SOURCE_OTHER:
-      return "Use_Others";
-    }
-  return "";
-}
 
 static int
 ip_address_source_checkout (const struct arguments *args,

@@ -22,7 +22,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #endif
 
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <error.h>
 #if STDC_HEADERS

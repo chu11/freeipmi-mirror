@@ -23,9 +23,11 @@
 #ifndef _BMC_SECTIONS_H_
 #define _BMC_SECTIONS_H_
 
-#include "bmc-types.h"
+#include "bmc-common.h"
 #include "bmc-config-api.h"
-#include <stdio.h>
+#include "bmc-types.h"
+
+#define BMC_CHECKOUT_KEY_COMMENTED_OUT 0x1
 
 struct keyvalue;
 

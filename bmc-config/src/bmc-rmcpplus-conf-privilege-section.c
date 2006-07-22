@@ -1,48 +1,9 @@
-#include "bmc-diff.h"
 #include "bmc-common.h"
 #include "bmc-config-api.h"
+#include "bmc-diff.h"
+#include "bmc-map.h"
 #include "bmc-sections.h"
 #include "bmc-types.h"
-
-
-static int
-rmcpplus_priv_number (const char *value)
-{
-  if (same (value, "unused"))
-    return 0;
-  if (same (value, "callback"))
-    return IPMI_PRIVILEGE_LEVEL_CALLBACK;
-  if (same (value, "user"))
-    return IPMI_PRIVILEGE_LEVEL_USER;
-  if (same (value, "operator"))
-    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
-  if (same (value, "administrator"))
-    return IPMI_PRIVILEGE_LEVEL_ADMIN;
-  if (same (value, "oem_proprietary"))
-    return IPMI_PRIVILEGE_LEVEL_OEM;
-  return -1;
-}
-
-static char *
-rmcpplus_priv_string (int value)
-{
-  switch (value) 
-    {
-    case 0:
-      return "Unused";
-    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
-      return "Callback";
-    case IPMI_PRIVILEGE_LEVEL_USER:
-      return "User";
-    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
-      return "Operator";
-    case IPMI_PRIVILEGE_LEVEL_ADMIN:
-      return "Administrator";
-    case IPMI_PRIVILEGE_LEVEL_OEM:
-      return "OEM_Proprietary";
-    }
-  return "";
-}
 
 static int
 id_checkout (const struct arguments *args,

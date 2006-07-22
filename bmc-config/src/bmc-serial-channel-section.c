@@ -1,78 +1,9 @@
-
-#include <stdio.h>
-#include "bmc-diff.h"
-#include "bmc-sections.h"
+#include "bmc-common.h"
 #include "bmc-config-api.h"
-
-static char *
-channel_access_mode_string (uint8_t mode)
-{
-  switch (mode) 
-    {
-    case IPMI_MESSAGING_ACCESS_MODE_DISABLED:
-      return "Disabled";
-    case IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY:
-      return "Pre_Boot_Only";
-    case IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE:
-      return "Always_Available";
-    case IPMI_MESSAGING_ACCESS_MODE_SHARED:
-      return "Shared";
-    }
-  return "";
-}
-
-static int
-channel_access_mode (const char *string)
-{
-  if (same (string, "disabled"))
-    return IPMI_MESSAGING_ACCESS_MODE_DISABLED;
-  if (same (string, "pre_boot_only"))
-    return IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY;
-  if (same (string, "always_available"))
-    return IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE;
-  if (same (string, "shared"))
-    return IPMI_MESSAGING_ACCESS_MODE_SHARED;
-  return -1;
-}
-
-static char *
-get_privilege_limit_string (uint8_t limit)
-{
-  switch (limit) 
-    {
-    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
-      return "Callback";
-    case IPMI_PRIVILEGE_LEVEL_USER:
-      return "User";
-    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
-      return "Operator";
-    case IPMI_PRIVILEGE_LEVEL_ADMIN:
-      return "Administrator";
-    case IPMI_PRIVILEGE_LEVEL_OEM:
-      return "OEM_Proprietary";
-    case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
-      return "NO_Access";
-    }
-  return "";
-}
-
-static uint8_t
-get_privilege_limit_number (const char *value)
-{
-  if (same (value, "callback"))
-    return IPMI_PRIVILEGE_LEVEL_CALLBACK;
-  if (same (value, "user"))
-    return IPMI_PRIVILEGE_LEVEL_USER;
-  if (same (value, "operator"))
-    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
-  if (same (value, "administrator"))
-    return IPMI_PRIVILEGE_LEVEL_ADMIN;
-  if (same (value, "oem_proprietary"))
-    return IPMI_PRIVILEGE_LEVEL_OEM;
-  if (same (value, "no_access"))
-    return IPMI_PRIVILEGE_LEVEL_NO_ACCESS;
-  return 0;
-}
+#include "bmc-diff.h"
+#include "bmc-map.h"
+#include "bmc-sections.h"
+#include "bmc-types.h"
 
 /* volatile */
 

@@ -1,82 +1,9 @@
+#include "bmc-common.h"
+#include "bmc-config-api.h"
 #include "bmc-diff.h"
+#include "bmc-map.h"
 #include "bmc-sections.h"
 #include "bmc-types.h"
-#include "bmc-config-api.h"
-#include "bmc-common.h"
-
-static int
-privilege_level_number (const char *string)
-{
-  if (same (string, "callback"))
-    return IPMI_PRIVILEGE_LEVEL_CALLBACK;
-  if (same (string, "user"))
-    return IPMI_PRIVILEGE_LEVEL_USER;
-  if (same (string, "operator"))
-    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
-  if (same (string, "administrator"))
-    return IPMI_PRIVILEGE_LEVEL_ADMIN;
-  if (same (string, "oem_proprietary"))
-    return IPMI_PRIVILEGE_LEVEL_OEM;
-  return -1;
-}
-
-static char *
-privilege_level_string (uint8_t value)
-{
-  switch (value) 
-    {
-    case IPMI_PRIVILEGE_LEVEL_CALLBACK:
-      return "Callback";
-    case IPMI_PRIVILEGE_LEVEL_USER:
-      return "User";
-    case IPMI_PRIVILEGE_LEVEL_OPERATOR:
-      return "Operator";
-    case IPMI_PRIVILEGE_LEVEL_ADMIN:
-      return "Administrator";
-    case IPMI_PRIVILEGE_LEVEL_OEM:
-      return "OEM_Proprietary";
-    }
-  return "";
-}
-
-static int
-sol_bit_rate_number (const char *string)
-{
-  if (same (string, "serial"))
-    return IPMI_SOL_BIT_RATE_SERIAL_BIT_RATE;
-  if (same (string, "9600"))
-    return IPMI_SOL_BIT_RATE_96_KBPS;
-  if (same (string, "19200"))
-    return IPMI_SOL_BIT_RATE_192_KBPS;
-  if (same (string, "38400"))
-    return IPMI_SOL_BIT_RATE_384_KBPS;
-  if (same (string, "57600"))
-    return IPMI_SOL_BIT_RATE_576_KBPS;
-  if (same (string, "115200"))
-    return IPMI_SOL_BIT_RATE_1152_KBPS;
-  return -1;
-}
-
-static char *
-sol_bit_rate_string (uint8_t value)
-{
-  switch (value) 
-    {
-    case IPMI_SOL_BIT_RATE_SERIAL_BIT_RATE:
-      return "Serial";
-    case IPMI_SOL_BIT_RATE_96_KBPS:
-      return "9600";
-    case IPMI_SOL_BIT_RATE_192_KBPS:
-      return "19200";
-    case IPMI_SOL_BIT_RATE_384_KBPS:
-      return "38400";
-    case IPMI_SOL_BIT_RATE_576_KBPS:
-      return "57600";
-    case IPMI_SOL_BIT_RATE_1152_KBPS:
-      return "115200";
-    }
-  return "";
-}
 
 static int
 sol_auth_checkout (ipmi_device_t *dev,

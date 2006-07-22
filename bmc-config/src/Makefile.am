@@ -1,8 +1,14 @@
 #noinst_PROGRAMS = bmc-config
 sbin_PROGRAMS = bmc-config
 
-bmc_config_SOURCES = bmc-config.c bmc-argp.c bmc-sections.c bmc-parser.c \
-	bmc-config-api.c bmc-ipmi-wrapper.c bmc-util.c \
+bmc_config_SOURCES = \
+	bmc-config.c \
+	bmc-argp.c \
+	bmc-map.c \
+	bmc-sections.c \
+	bmc-parser.c \
+	bmc-config-api.c \
+	bmc-ipmi-wrapper.c \
 	bmc-checkout.c \
 	bmc-commit.c \
 	bmc-diff.c \
@@ -31,6 +37,7 @@ noinst_HEADERS = bmc-common.h \
 		bmc-config.h \
 		bmc-diff.h \
 		bmc-ipmi-wrapper.h \
+		bmc-map.h \
 		bmc-sections.h \
 		bmc-types.h
 

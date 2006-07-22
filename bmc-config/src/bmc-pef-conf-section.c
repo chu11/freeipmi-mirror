@@ -1,8 +1,8 @@
 #include "bmc-common.h"
-#include "bmc-diff.h"
-#include "bmc-types.h"
-#include "bmc-sections.h"
 #include "bmc-config-api.h"
+#include "bmc-diff.h"
+#include "bmc-sections.h"
+#include "bmc-types.h"
 
 int
 pef_control_checkout (ipmi_device_t *dev,
