@@ -1,3 +1,11 @@
+2006-07-23  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_receive):
+	returns actual received bytes for smaller packets.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw2): calls
+	ipmi_lan_cmd_receive() with appropriate fiid object.
+
 2006-07-19  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw_send):
