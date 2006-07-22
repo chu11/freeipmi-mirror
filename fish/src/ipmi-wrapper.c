@@ -33,10 +33,10 @@ static int8_t sol_channel_number;
 
 static unsigned int rmcp_message_tag = 0;
 
-ipmi_device_t *
+ipmi_device_t
 fi_get_ipmi_device ()
 {
-  return &dev;
+  return dev;
 }
 
 int 
@@ -61,18 +61,16 @@ fi_ipmi_open (struct arguments *args)
 	}
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
       
-      memset (&dev, 0, sizeof (ipmi_device_t));
-      if (ipmi_open_outofband (&dev, 
-			       IPMI_DEVICE_LAN, 
-			       IPMI_MODE_DEFAULT, 
-			       args->common.session_timeout, 
-			       args->common.retry_timeout, 
-			       (struct sockaddr *) &host, 
-			       sizeof (struct sockaddr), 
-			       args->common.authentication_type, 
-			       args->common.username, 
-			       args->common.password, 
-			       args->common.privilege_level) != 0)
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN, 
+                                       IPMI_MODE_DEFAULT, 
+                                       args->common.session_timeout, 
+                                       args->common.retry_timeout, 
+                                       (struct sockaddr *) &host, 
+                                       sizeof (struct sockaddr), 
+                                       args->common.authentication_type, 
+                                       args->common.username, 
+                                       args->common.password, 
+                                       args->common.privilege_level)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);
@@ -86,24 +84,22 @@ fi_ipmi_open (struct arguments *args)
 		   "Warning: You are NOT root; "
 		   "inband access may NOT work\n");
 	}
-      memset (&dev, 0, sizeof (ipmi_device_t));
+
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  if (ipmi_open_inband (&dev, 
-				args->common.disable_auto_probe, 
-				IPMI_DEVICE_KCS, 
-				args->common.driver_address,
-				0,
-				args->common.driver_device, 
-				IPMI_MODE_DEFAULT) != 0)
+	  if (!(dev = ipmi_open_inband (args->common.disable_auto_probe, 
+                                        IPMI_DEVICE_KCS, 
+                                        args->common.driver_address,
+                                        0,
+                                        args->common.driver_device, 
+                                        IPMI_MODE_DEFAULT)))
 	    {
-	      if (ipmi_open_inband (&dev, 
-				    args->common.disable_auto_probe, 
-				    IPMI_DEVICE_SSIF, 
-				    args->common.driver_address, 
-				    0,
-				    args->common.driver_device, 
-				    IPMI_MODE_DEFAULT) != 0)
+	      if (!(dev = ipmi_open_inband (args->common.disable_auto_probe, 
+                                            IPMI_DEVICE_SSIF, 
+                                            args->common.driver_address, 
+                                            0,
+                                            args->common.driver_device, 
+                                            IPMI_MODE_DEFAULT)))
 		{
 		  perror ("ipmi_open_inband()");
 		  return (-1);
@@ -112,13 +108,12 @@ fi_ipmi_open (struct arguments *args)
 	}
       else 
 	{
-	  if (ipmi_open_inband (&dev, 
-				args->common.disable_auto_probe, 
-				args->common.driver_type, 
-				args->common.driver_address, 
-				0,
-				args->common.driver_device, 
-				IPMI_MODE_DEFAULT) != 0)
+	  if (!(dev = ipmi_open_inband (args->common.disable_auto_probe, 
+                                        args->common.driver_type, 
+                                        args->common.driver_address, 
+                                        0,
+                                        args->common.driver_device, 
+                                        IPMI_MODE_DEFAULT)))
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);
@@ -137,12 +132,7 @@ fi_ipmi_close ()
   if (!dev_opened)
     return 0;
   
-  if (ipmi_close (&dev) != 0)
-    {
-      perror ("ipmi_close()");
-      return (-1);
-    }
-  
+  ipmi_close_device(dev);
   dev_opened = false;
   
   return 0;

@@ -26,7 +26,7 @@ static uint8_t sol_channel_number_initialized = false;
 static int8_t sol_channel_number;
 
 int8_t 
-get_lan_channel_number (ipmi_device_t *dev)
+get_lan_channel_number (ipmi_device_t dev)
 {
   if (lan_channel_number_initialized)
     return lan_channel_number;
@@ -40,7 +40,7 @@ get_lan_channel_number (ipmi_device_t *dev)
 }
 
 int8_t 
-get_serial_channel_number (ipmi_device_t *dev)
+get_serial_channel_number (ipmi_device_t dev)
 {
   if (serial_channel_number_initialized)
     return serial_channel_number;
@@ -53,7 +53,7 @@ get_serial_channel_number (ipmi_device_t *dev)
 }
 
 int8_t 
-get_sol_channel_number (ipmi_device_t *dev)
+get_sol_channel_number (ipmi_device_t dev)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;

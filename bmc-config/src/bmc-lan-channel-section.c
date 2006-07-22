@@ -8,7 +8,7 @@
 /* volatile */
 
 static int
-lan_channel_volatile_access_set (ipmi_device_t *dev,
+lan_channel_volatile_access_set (ipmi_device_t dev,
 				 uint8_t access_mode,
 				 uint8_t access_mode_is_set,
 				 uint8_t user_level_authentication,
@@ -71,7 +71,7 @@ volatile_access_mode_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &get_val,
 					     &foo,
 					     &foo,
@@ -94,7 +94,7 @@ volatile_access_mode_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = channel_access_mode (kv->value);
-  return lan_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_volatile_access_set (args->dev,
 					  commit_val, 1,
 					  0, 0,
 					  0, 0,
@@ -112,7 +112,7 @@ volatile_access_mode_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &get_val,
 					     &foo,
 					     &foo,
@@ -156,7 +156,7 @@ volatile_enable_user_level_auth_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &get_val,
 					     &foo,
@@ -182,7 +182,7 @@ volatile_enable_user_level_auth_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_volatile_access_set (args->dev,
 					  0, 0,
 					  commit_val, 1,
 					  0, 0,
@@ -200,7 +200,7 @@ volatile_enable_user_level_auth_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &get_val,
 					     &foo,
@@ -242,7 +242,7 @@ volatile_enable_per_msg_auth_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &get_val,
@@ -268,7 +268,7 @@ volatile_enable_per_msg_auth_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_volatile_access_set (args->dev,
 					  0, 0,
 					  0, 0,
 					  commit_val, 1,
@@ -286,7 +286,7 @@ volatile_enable_per_msg_auth_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &get_val,
@@ -331,7 +331,7 @@ volatile_enable_pef_alerting_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &foo,
@@ -357,7 +357,7 @@ volatile_enable_pef_alerting_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_volatile_access_set (args->dev,
 					  0, 0,
 					  0, 0,
 					  0, 0,
@@ -375,7 +375,7 @@ volatile_enable_pef_alerting_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &foo,
@@ -419,7 +419,7 @@ volatile_channel_priv_limit_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &foo,
@@ -444,7 +444,7 @@ volatile_channel_priv_limit_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = get_privilege_limit_number (kv->value);
-  return lan_channel_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_volatile_access_set (args->dev,
 					  0, 0,
 					  0, 0,
 					  0, 0,
@@ -462,7 +462,7 @@ volatile_channel_priv_limit_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &foo,
@@ -501,7 +501,7 @@ volatile_channel_priv_limit_validate (const struct arguments *args,
 
 
 static int
-lan_channel_non_volatile_access_set (ipmi_device_t *dev,
+lan_channel_non_volatile_access_set (ipmi_device_t dev,
 				 uint8_t access_mode,
 				 uint8_t access_mode_is_set,
 				 uint8_t user_level_authentication,
@@ -564,7 +564,7 @@ non_volatile_access_mode_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 					     &get_val,
 					     &foo,
 					     &foo,
@@ -587,7 +587,7 @@ non_volatile_access_mode_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = channel_access_mode (kv->value);
-  return lan_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_non_volatile_access_set (args->dev,
 					  commit_val, 1,
 					  0, 0,
 					  0, 0,
@@ -605,7 +605,7 @@ non_volatile_access_mode_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 						 &get_val,
 						 &foo,
 						 &foo,
@@ -648,7 +648,7 @@ non_volatile_enable_user_level_auth_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 						 &foo,
 						 &get_val,
 						 &foo,
@@ -674,7 +674,7 @@ non_volatile_enable_user_level_auth_commit (const struct arguments *args,
   uint8_t commit_val;
   
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_non_volatile_access_set (args->dev,
 					      0, 0,
 					      commit_val, 1,
 					      0, 0,
@@ -692,7 +692,7 @@ non_volatile_enable_user_level_auth_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 						 &foo,
 						 &get_val,
 						 &foo,
@@ -735,7 +735,7 @@ non_volatile_enable_per_msg_auth_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 						 &foo,
 						 &foo,
 						 &get_val,
@@ -761,7 +761,7 @@ non_volatile_enable_per_msg_auth_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_non_volatile_access_set (args->dev,
 					      0, 0,
 					      0, 0,
 					      commit_val, 1,
@@ -779,7 +779,7 @@ non_volatile_enable_per_msg_auth_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &get_val,
@@ -824,7 +824,7 @@ non_volatile_enable_pef_alerting_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 						 &foo,
 						 &foo,
 						 &foo,
@@ -850,7 +850,7 @@ non_volatile_enable_pef_alerting_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_non_volatile_access_set (args->dev,
 					      0, 0,
 					      0, 0,
 					      0, 0,
@@ -868,7 +868,7 @@ non_volatile_enable_pef_alerting_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 						 &foo,
 						 &foo,
 						 &foo,
@@ -912,7 +912,7 @@ non_volatile_channel_priv_limit_checkout (const struct arguments *args,
   uint8_t get_val;
   uint8_t foo;
   int ret;
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 					     &foo,
 					     &foo,
 					     &foo,
@@ -937,7 +937,7 @@ non_volatile_channel_priv_limit_commit (const struct arguments *args,
   uint8_t commit_val;
 
   commit_val = get_privilege_limit_number (kv->value);
-  return lan_channel_non_volatile_access_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_non_volatile_access_set (args->dev,
 					      0, 0,
 					      0, 0,
 					      0, 0,
@@ -955,7 +955,7 @@ non_volatile_channel_priv_limit_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_channel_non_volatile_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_channel_non_volatile_access (args->dev,
 						 &foo,
 						 &foo,
 						 &foo,

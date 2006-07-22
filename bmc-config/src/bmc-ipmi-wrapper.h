@@ -22,8 +22,8 @@
 #include "bmc-common.h"
 #include "bmc-types.h"
 
-int8_t get_lan_channel_number (ipmi_device_t *dev);
-int8_t get_serial_channel_number (ipmi_device_t *dev);
-int8_t get_sol_channel_number (ipmi_device_t *dev);
+int8_t get_lan_channel_number (ipmi_device_t dev);
+int8_t get_serial_channel_number (ipmi_device_t dev);
+int8_t get_sol_channel_number (ipmi_device_t dev);
 
 #endif

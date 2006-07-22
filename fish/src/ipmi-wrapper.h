@@ -27,7 +27,7 @@ typedef struct channel_info
   uint8_t protocol_type;
 } channel_info;
 
-ipmi_device_t *fi_get_ipmi_device ();
+ipmi_device_t fi_get_ipmi_device ();
 
 int fi_ipmi_open (struct arguments *args);
 int fi_ipmi_close ();

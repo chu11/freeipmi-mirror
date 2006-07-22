@@ -101,17 +101,16 @@ ipmi_core_init (char *progname, struct arguments *args)
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
 
       memset (&args->dev, 0, sizeof (ipmi_device_t));
-      if (ipmi_open_outofband (&args->dev,
-                               IPMI_DEVICE_LAN,
-                               IPMI_MODE_DEFAULT,
-                               args->common.session_timeout,
-                               args->common.retry_timeout,
-                               (struct sockaddr *) &host,
-                               sizeof (struct sockaddr),
-                               args->common.authentication_type,
-                               args->common.username,
-                               args->common.password,
-                               args->common.privilege_level) != 0) 
+      if (!(args->dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
+                                             IPMI_MODE_DEFAULT,
+                                             args->common.session_timeout,
+                                             args->common.retry_timeout,
+                                             (struct sockaddr *) &host,
+                                             sizeof (struct sockaddr),
+                                             args->common.authentication_type,
+                                             args->common.username,
+                                             args->common.password,
+                                             args->common.privilege_level)))
         {
           perror ("ipmi_open_outofband()");
           exit (EXIT_FAILURE);
@@ -119,31 +118,27 @@ ipmi_core_init (char *progname, struct arguments *args)
     } 
   else 
     {
-      
       if (!ipmi_is_root())
         {
           fprintf(stderr, "%s: Permission Denied\n", progname);
           exit(EXIT_FAILURE);
         }
       
-      memset (&args->dev, 0, sizeof (ipmi_device_t));
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN) 
         {
-          if (ipmi_open_inband (&args->dev,
-                                args->common.disable_auto_probe,
-                                IPMI_DEVICE_KCS,
-                                args->common.driver_address,
-                                args->common.register_spacing,
-                                args->common.driver_device,
-                                IPMI_MODE_DEFAULT) != 0) 
+          if (!(args->dev = ipmi_open_inband (args->common.disable_auto_probe,
+                                              IPMI_DEVICE_KCS,
+                                              args->common.driver_address,
+                                              args->common.register_spacing,
+                                              args->common.driver_device,
+                                              IPMI_MODE_DEFAULT)))
             {
-              if (ipmi_open_inband (&args->dev,
-                                    args->common.disable_auto_probe,
-                                    IPMI_DEVICE_SSIF,
-                                    args->common.driver_address,
-                                    args->common.register_spacing,
-                                    args->common.driver_device,
-                                    IPMI_MODE_DEFAULT) != 0) 
+              if (!(args->dev = ipmi_open_inband (args->common.disable_auto_probe,
+                                                  IPMI_DEVICE_SSIF,
+                                                  args->common.driver_address,
+                                                  args->common.register_spacing,
+                                                  args->common.driver_device,
+                                                  IPMI_MODE_DEFAULT)))
                 {
                   perror ("ipmi_open_inband()");
                   exit (EXIT_FAILURE);
@@ -152,13 +147,12 @@ ipmi_core_init (char *progname, struct arguments *args)
         } 
       else 
         {
-          if (ipmi_open_inband (&args->dev,
-                                args->common.disable_auto_probe,
-                                args->common.driver_type,
-                                args->common.driver_address,
-                                args->common.register_spacing,
-                                args->common.driver_device,
-                                IPMI_MODE_DEFAULT) != 0) 
+          if (!(args->dev = ipmi_open_inband (args->common.disable_auto_probe,
+                                              args->common.driver_type,
+                                              args->common.driver_address,
+                                              args->common.register_spacing,
+                                              args->common.driver_device,
+                                              IPMI_MODE_DEFAULT)))
             {
               perror ("ipmi_open_inband()");
               exit (EXIT_FAILURE);
@@ -234,6 +228,6 @@ main (int argc, char *argv[])
     break;
   }
   
-  ipmi_close(&arguments.dev);
+  ipmi_close_device(arguments.dev);
   return (ret);
 }

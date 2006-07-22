@@ -1,3 +1,19 @@
+2006-07-22  Albert Chu <chu11@llnl.gov>
+
+	Hide struct ipmi_device from users in the libfreeipmi API.
+
+	* libfreeipmi/src/udm/ipmi-udm-device.h: New file.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Remove struct
+	ipmi_device.  Typedef new ipmi_device_t.  Modify udm functions to
+	return ipmi_device_t.
+
+	* libfreeipmi/: Globally readjust code to take new ipmi_device_t,
+	check magic numbers, use struct appropriately.
+
+	* fish/, bmc-info/, bmc-config/, ipmi-sel/, ipmi-raw/: Readjust
+	code appropriately.
+	
 2006-07-21  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config.c (main): Close ipmi.

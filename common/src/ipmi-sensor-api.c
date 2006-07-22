@@ -617,7 +617,7 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
 }
 
 int8_t 
-get_sdr_sensor_record (ipmi_device_t *dev, 
+get_sdr_sensor_record (ipmi_device_t dev, 
 		       uint16_t record_id, 
 		       fiid_obj_t obj_cmd_rs, 
 		       uint8_t *sensor_record,
@@ -720,7 +720,7 @@ get_sdr_sensor_record (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sdr_record (ipmi_device_t *dev, 
+get_sdr_record (ipmi_device_t dev, 
 		uint16_t record_id, 
 		uint16_t *next_record_id, 
 		sdr_record_t *sdr_record)
@@ -745,18 +745,7 @@ get_sdr_record (ipmi_device_t *dev,
 			     obj_cmd_rs, 
 			     sensor_record,
 			     &sensor_record_len) < 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs,
-                           dev->net_fn,
-                           dev->errmsg,
-                           IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   memset (sdr_record, 0, sizeof (sdr_record_t));
   
@@ -789,19 +778,8 @@ get_sdr_record (ipmi_device_t *dev,
       if (ipmi_cmd_get_sensor_thresholds (dev, 
 					  sdr_record->record.sdr_full_record.sensor_number, 
 					  obj_cmd_rs) != 0)
-	{
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-	  dev->cmd = val;
-	  
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-	  dev->comp_code = val;
-	  ipmi_strerror_cmd_r (obj_cmd_rs,
-                               dev->net_fn,
-			       dev->errmsg,
-			       IPMI_ERR_STR_MAX_LEN);
-	  /* This is ok */
-	  break;
-	}
+        /* This is ok - no biggie if we can't get thresholds*/
+        break;
       
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
                             "readable_thresholds.lower_critical_threshold", 
@@ -888,7 +866,7 @@ get_sdr_record (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sensor_reading (ipmi_device_t *dev, 
+get_sensor_reading (ipmi_device_t dev, 
 		    sdr_record_t *sdr_record, 
 		    sensor_reading_t *sensor_reading)
 {
@@ -991,18 +969,7 @@ get_sensor_reading (ipmi_device_t *dev,
       if (ipmi_cmd_get_sensor_reading_threshold (dev, 
 						 sensor_number, 
 						 obj_cmd_rs) != 0)
-	{
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-	  dev->cmd = val;
-	  
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-	  dev->comp_code = val;
-	  ipmi_strerror_cmd_r (obj_cmd_rs,
-                               dev->net_fn,
-			       dev->errmsg,
-			       IPMI_ERR_STR_MAX_LEN);
-	  goto cleanup;
-	}
+        goto cleanup;
 
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,
@@ -1058,18 +1025,7 @@ get_sensor_reading (ipmi_device_t *dev,
       if (ipmi_cmd_get_sensor_reading_discrete (dev, 
 						sensor_number, 
 						obj_cmd_rs) != 0)
-	{
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-	  dev->cmd = val;
-	  
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-	  dev->comp_code = val;
-	  ipmi_strerror_cmd_r (obj_cmd_rs,
-                               dev->net_fn,
-			       dev->errmsg,
-			       IPMI_ERR_STR_MAX_LEN);
-	  goto cleanup;
-	}
+        goto cleanup;
       
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,
@@ -1125,18 +1081,7 @@ get_sensor_reading (ipmi_device_t *dev,
       if (ipmi_cmd_get_sensor_reading_discrete (dev, 
 						sensor_number, 
 						obj_cmd_rs) != 0)
-	{
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-	  dev->cmd = val;
-	  
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-	  dev->comp_code = val;
-	  ipmi_strerror_cmd_r (obj_cmd_rs,
-                               dev->net_fn,
-			       dev->errmsg,
-			       IPMI_ERR_STR_MAX_LEN);
-	  goto cleanup;
-	}
+        goto cleanup;
       
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,
@@ -1192,18 +1137,7 @@ get_sensor_reading (ipmi_device_t *dev,
       if (ipmi_cmd_get_sensor_reading_discrete (dev, 
 						sensor_number, 
 						obj_cmd_rs) != 0)
-	{
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-	  dev->cmd = val;
-	  
-	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-	  dev->comp_code = val;
-	  ipmi_strerror_cmd_r (obj_cmd_rs,
-                               dev->net_fn,
-			       dev->errmsg,
-			       IPMI_ERR_STR_MAX_LEN);
-	  goto cleanup;
-	}
+        goto cleanup;
       
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,

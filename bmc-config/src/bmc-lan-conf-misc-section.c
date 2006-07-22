@@ -14,7 +14,7 @@ enable_gratuitous_arps_checkout (const struct arguments *args,
   int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						    &enable_arp,
 						    &reply_arp);
   if (ret != 0)
@@ -38,7 +38,7 @@ enable_gratuitous_arps_commit (const struct arguments *args,
   int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						    &enable_arp,
 						    &reply_arp);
   if (ret != 0)
@@ -46,7 +46,7 @@ enable_gratuitous_arps_commit (const struct arguments *args,
 
   enable_arp = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						     enable_arp,
 						     reply_arp);
 }
@@ -59,7 +59,7 @@ enable_gratuitous_arps_diff (const struct arguments *args,
   int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						    &enable_arp,
 						    &reply_arp);
   if (ret != 0)
@@ -86,7 +86,7 @@ enable_arp_response_checkout (const struct arguments *args,
   int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						    &enable_arp,
 						    &reply_arp);
   if (ret != 0)
@@ -110,7 +110,7 @@ enable_arp_response_commit (const struct arguments *args,
   int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						    &enable_arp,
 						    &reply_arp);
   if (ret != 0)
@@ -118,7 +118,7 @@ enable_arp_response_commit (const struct arguments *args,
 
   reply_arp = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						     enable_arp,
 						     reply_arp);
 }
@@ -131,7 +131,7 @@ enable_arp_response_diff (const struct arguments *args,
   int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						    &enable_arp,
 						    &reply_arp);
   if (ret != 0)
@@ -156,7 +156,7 @@ gratuitous_arp_interval_checkout (const struct arguments *args,
   int ret;
   uint8_t interval;
 
-  ret = get_bmc_lan_conf_gratuitous_arp_interval ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_gratuitous_arp_interval (args->dev,
 						  &interval);
   if (ret != 0)
     return -1;
@@ -173,7 +173,7 @@ gratuitous_arp_interval_commit (const struct arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
-  return set_bmc_lan_conf_gratuitous_arp_interval ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_gratuitous_arp_interval (args->dev,
 						  atoi (kv->value));
 }
 
@@ -185,7 +185,7 @@ gratuitous_arp_interval_diff (const struct arguments *args,
   int ret;
   uint8_t interval;
 
-  ret = get_bmc_lan_conf_gratuitous_arp_interval ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_gratuitous_arp_interval (args->dev,
 						  &interval);
   if (ret != 0)
     return -1;

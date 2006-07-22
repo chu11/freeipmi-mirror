@@ -29,10 +29,10 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_lan_cmd (ipmi_device_t *dev, 
+int8_t ipmi_lan_cmd (ipmi_device_t dev, 
 		     fiid_obj_t obj_cmd_rq, 
 		     fiid_obj_t obj_cmd_rs);
-int32_t ipmi_lan_cmd_raw (ipmi_device_t *dev, 
+int32_t ipmi_lan_cmd_raw (ipmi_device_t dev, 
                           uint8_t *buf_rq, 
                           size_t buf_rq_len, 
                           uint8_t *buf_rs, 

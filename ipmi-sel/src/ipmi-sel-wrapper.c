@@ -42,7 +42,7 @@
 #include "ipmi-sel-wrapper.h"
 
 int 
-get_sel_info (ipmi_device_t *dev, local_sel_info_t *sel_info)
+get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -53,19 +53,7 @@ get_sel_info (ipmi_device_t *dev, local_sel_info_t *sel_info)
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
   if (ipmi_cmd_get_sel_info (dev, obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sel_version_major", &val);
   sel_info->sel_version_major = val;
@@ -531,7 +519,7 @@ _parse_sel_record (uint8_t *record_data,
 }
 
 int 
-get_sel_record (ipmi_device_t *dev, 
+get_sel_record (ipmi_device_t dev, 
                 uint16_t record_id, 
                 sel_record_t *sel_rec, 
                 uint16_t *next_record_id)
@@ -554,18 +542,7 @@ get_sel_record (ipmi_device_t *dev,
 			      0,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
   *next_record_id = val;
@@ -590,7 +567,7 @@ get_sel_record (ipmi_device_t *dev,
 }
 
 int 
-get_sel_record_raw (ipmi_device_t *dev, 
+get_sel_record_raw (ipmi_device_t dev, 
                     uint16_t record_id, 
                     uint8_t *record_data, 
                     uint32_t record_data_len, 
@@ -610,18 +587,7 @@ get_sel_record_raw (ipmi_device_t *dev,
 			      0,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
   *next_record_id = val;
@@ -639,7 +605,7 @@ get_sel_record_raw (ipmi_device_t *dev,
 }
 
 int 
-delete_sel_entry (ipmi_device_t *dev, uint16_t record_id)
+delete_sel_entry (ipmi_device_t dev, uint16_t record_id)
 {
   fiid_obj_t obj_cmd_rs;
   uint16_t reservation_id;
@@ -649,18 +615,7 @@ delete_sel_entry (ipmi_device_t *dev, uint16_t record_id)
     goto cleanup;
   
   if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
@@ -676,18 +631,7 @@ delete_sel_entry (ipmi_device_t *dev, uint16_t record_id)
 				 reservation_id, 
 				 record_id, 
 				 obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   fiid_obj_destroy(obj_cmd_rs);
   return 0;
@@ -699,7 +643,7 @@ delete_sel_entry (ipmi_device_t *dev, uint16_t record_id)
 }
 
 int 
-clear_sel_entries (ipmi_device_t *dev)
+clear_sel_entries (ipmi_device_t dev)
 {
   fiid_obj_t obj_cmd_rs;
   uint16_t reservation_id;
@@ -709,18 +653,7 @@ clear_sel_entries (ipmi_device_t *dev)
     goto cleanup;
 
   if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
@@ -736,18 +669,7 @@ clear_sel_entries (ipmi_device_t *dev)
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
 			  obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   return 0;
  cleanup:
@@ -757,7 +679,7 @@ clear_sel_entries (ipmi_device_t *dev)
 }
 
 int 
-get_sel_clear_status (ipmi_device_t *dev, int *status)
+get_sel_clear_status (ipmi_device_t dev, int *status)
 {
   fiid_obj_t obj_cmd_rs;
   uint16_t reservation_id;
@@ -767,18 +689,7 @@ get_sel_clear_status (ipmi_device_t *dev, int *status)
     goto cleanup;
 
   if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
@@ -794,18 +705,7 @@ get_sel_clear_status (ipmi_device_t *dev, int *status)
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
 			  obj_cmd_rs) != 0)
-    {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
-      dev->cmd = val;
-      
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
-      dev->comp_code = val;
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-                           dev->net_fn,
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-      goto cleanup;
-    }
+    goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, "erasure_progress", &val) < 0)
     goto cleanup;

@@ -76,7 +76,7 @@ do {                                                   \
 } while (0)
 
 int 
-display_get_device_id (ipmi_device_t *dev)
+display_get_device_id (ipmi_device_t dev)
 {
   fiid_obj_t cmd_rs = NULL;
   uint64_t val = 0;
@@ -272,7 +272,7 @@ display_get_device_id (ipmi_device_t *dev)
 }
 
 static channel_info_t *
-get_channel_info_list (ipmi_device_t *dev)
+get_channel_info_list (ipmi_device_t dev)
 {
   fiid_obj_t data_rs = NULL; 
   uint8_t i;
@@ -315,7 +315,7 @@ get_channel_info_list (ipmi_device_t *dev)
 }
 
 int 
-display_channel_info (ipmi_device_t *dev)
+display_channel_info (ipmi_device_t dev)
 {
   channel_info_t *channel_list;
   uint8_t i;
@@ -406,7 +406,7 @@ int
 main (int argc, char **argv)
 {
   struct arguments *args = NULL;
-  ipmi_device_t dev;
+  ipmi_device_t dev = NULL;
   
   struct hostent *hostinfo;
   struct sockaddr_in host;
@@ -437,18 +437,16 @@ main (int argc, char **argv)
 	}
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
       
-      memset (&dev, 0, sizeof (ipmi_device_t));
-      if (ipmi_open_outofband (&dev, 
-			       IPMI_DEVICE_LAN, 
-			       IPMI_MODE_DEFAULT, 
-			       args->common.session_timeout, 
-			       args->common.retry_timeout, 
-			       (struct sockaddr *) &host, 
-			       sizeof (struct sockaddr), 
-			       args->common.authentication_type, 
-			       args->common.username, 
-			       args->common.password, 
-			       args->common.privilege_level) != 0)
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN, 
+                                       IPMI_MODE_DEFAULT, 
+                                       args->common.session_timeout, 
+                                       args->common.retry_timeout, 
+                                       (struct sockaddr *) &host, 
+                                       sizeof (struct sockaddr), 
+                                       args->common.authentication_type, 
+                                       args->common.username, 
+                                       args->common.password, 
+                                       args->common.privilege_level)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -462,24 +460,21 @@ main (int argc, char **argv)
           exit(EXIT_FAILURE);
         }
 
-      memset (&dev, 0, sizeof (ipmi_device_t));
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  if (ipmi_open_inband (&dev, 
-				args->common.disable_auto_probe, 
-				IPMI_DEVICE_KCS, 
-				args->common.driver_address, 
-				args->common.register_spacing,
-				args->common.driver_device, 
-				IPMI_MODE_DEFAULT) != 0)
+	  if (!(dev = ipmi_open_inband (args->common.disable_auto_probe, 
+                                        IPMI_DEVICE_KCS, 
+                                        args->common.driver_address, 
+                                        args->common.register_spacing,
+                                        args->common.driver_device, 
+                                        IPMI_MODE_DEFAULT)))
 	    {
-	      if (ipmi_open_inband (&dev, 
-				    args->common.disable_auto_probe, 
-				    IPMI_DEVICE_SSIF, 
-				    args->common.driver_address, 
-                                    args->common.register_spacing,
-				    args->common.driver_device, 
-				    IPMI_MODE_DEFAULT) != 0)
+	      if (!(dev = ipmi_open_inband (args->common.disable_auto_probe, 
+                                            IPMI_DEVICE_SSIF, 
+                                            args->common.driver_address, 
+                                            args->common.register_spacing,
+                                            args->common.driver_device, 
+                                            IPMI_MODE_DEFAULT)))
 		{
 		  perror ("ipmi_open_inband()");
 		  return (-1);
@@ -488,13 +483,12 @@ main (int argc, char **argv)
 	}
       else 
 	{
-	  if (ipmi_open_inband (&dev, 
-				args->common.disable_auto_probe, 
-				args->common.driver_type, 
-				args->common.driver_address, 
-				args->common.register_spacing,
-				args->common.driver_device, 
-				IPMI_MODE_DEFAULT) != 0)
+	  if (!(dev = ipmi_open_inband (args->common.disable_auto_probe, 
+                                        args->common.driver_type, 
+                                        args->common.driver_address, 
+                                        args->common.register_spacing,
+                                        args->common.driver_device, 
+                                        IPMI_MODE_DEFAULT)))
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);
@@ -502,14 +496,10 @@ main (int argc, char **argv)
 	}
     }
   
-  display_get_device_id (&dev);
-  display_channel_info (&dev);
+  display_get_device_id (dev);
+  display_channel_info (dev);
   
-  if (ipmi_close (&dev) != 0)
-    {
-      perror ("ipmi_close()");
-      exit (EXIT_FAILURE);
-    }
+  ipmi_close_device (dev);
   
   return (0);
 }

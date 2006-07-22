@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.3 2006-03-07 07:25:59 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.4 2006-07-22 05:08:00 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
@@ -31,21 +31,21 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_get_pef_capabilities (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_capabilities (ipmi_device_t dev, 
 				      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_arm_pef_postpone_timer (ipmi_device_t *dev, 
+int8_t ipmi_cmd_arm_pef_postpone_timer (ipmi_device_t dev, 
 					uint8_t pef_postpone_timeout, 
 					fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_pef_configuration_parameters_pef_control (ipmi_device_t dev, 
 							      uint8_t pef, 
 							      uint8_t pef_event_messages, 
 							      uint8_t pef_startup_delay, 
 							      uint8_t pef_alert_startup_delay, 
 							      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi_device_t dev, 
 									    uint8_t alert_action,
 									    uint8_t power_down_action,
 									    uint8_t reset_action,
@@ -54,15 +54,15 @@ int8_t ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (ipmi
 									    uint8_t diagnostic_interrupt, 
 									    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (ipmi_device_t dev, 
 								    uint8_t pef_startup_delay, 
 								    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (ipmi_device_t dev, 
 									  uint8_t pef_alert_startup_delay, 
 									  fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_device_t dev, 
 								     uint8_t filter_number,
 								     uint8_t filter_configuration_type,
 								     uint8_t filter_configuration_filter,
@@ -93,87 +93,87 @@ int8_t ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_device
 								     uint8_t event_data3_compare2,
 								     fiid_obj_t obj_cmd_rs);
   
-int8_t ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_device_t dev, 
 									    uint8_t filter_number,
 									    uint8_t filter_configuration_type,
 									    uint8_t filter_configuration_filter,
 									    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_device_t dev, 
 							      uint8_t get_parameter, 
 							      uint8_t set_selector, 
 							      uint8_t block_selector, 
 							      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_device_t dev, 
 									    uint8_t get_parameter, 
 									    uint8_t set_selector,
 									    uint8_t block_selector, 
 									    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_device_t dev, 
 								    uint8_t get_parameter, 
 								    uint8_t set_selector,
 								    uint8_t block_selector, 
 								    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_device_t dev, 
 									  uint8_t get_parameter, 
 									  uint8_t set_selector,
 									  uint8_t block_selector, 
 									  fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_device_t dev, 
 									  uint8_t get_parameter, 
 									  uint8_t set_selector,
 									  uint8_t block_selector, 
 									  fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_device_t dev, 
 								     uint8_t get_parameter, 
 								     uint8_t set_selector,
 								     uint8_t block_selector, 
 								     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_device_t dev, 
 									    uint8_t get_parameter, 
 									    uint8_t set_selector, 
 									    uint8_t block_selector, 
 									    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_device_t dev,
 										 uint8_t get_parameter, 
 										 uint8_t set_selector,
 										 uint8_t block_selector, 
 										 fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_device_t dev, 
 									  uint8_t get_parameter, 
 									  uint8_t set_selector, 
 									  uint8_t block_selector, 
 									  fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_device_t dev,
 								    uint8_t get_parameter, 
 								    uint8_t set_selector,
 								    uint8_t block_selector, 
 								    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_device_t dev,
 							       uint8_t get_parameter, 
 							       uint8_t set_selector,
 							       uint8_t block_selector, 
 							       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_last_processed_event_id (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_last_processed_event_id (ipmi_device_t dev, 
 					     uint8_t set_record_id_for_last_record,
 					     uint16_t record_id,
 					     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_last_processed_event_id (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_last_processed_event_id (ipmi_device_t dev, 
 					     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_alert_immediate (ipmi_device_t *dev,
+int8_t ipmi_cmd_alert_immediate (ipmi_device_t dev,
 				 uint8_t channel_number,
 				 uint8_t destination_selector,
 				 uint8_t operation,
@@ -181,7 +181,7 @@ int8_t ipmi_cmd_alert_immediate (ipmi_device_t *dev,
 				 uint8_t send_alert_string,
 				 fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_pet_acknowledge (ipmi_device_t *dev, 
+int8_t ipmi_cmd_pet_acknowledge (ipmi_device_t dev, 
 				 uint16_t sequence_number,
 				 uint32_t local_timestamp,
 				 uint8_t event_source_type,

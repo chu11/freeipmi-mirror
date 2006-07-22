@@ -1077,7 +1077,7 @@ ex_get_sdr_repository_info ()
   return (SCM_EOL);
 }
 
-SCM 
+SCM
 ex_ipmi_open (SCM scm_arg_list)
 {
   SCM scm_value;

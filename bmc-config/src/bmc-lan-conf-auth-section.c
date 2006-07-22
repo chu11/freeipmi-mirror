@@ -14,7 +14,7 @@ callback_none_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -38,7 +38,7 @@ callback_none_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -46,7 +46,7 @@ callback_none_commit (const struct arguments *args,
 
   auth.callback.type_none = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -58,7 +58,7 @@ callback_none_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -95,7 +95,7 @@ callback_md2_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -119,7 +119,7 @@ callback_md2_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -127,7 +127,7 @@ callback_md2_commit (const struct arguments *args,
 
   auth.callback.type_md2 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -139,7 +139,7 @@ callback_md2_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -176,7 +176,7 @@ callback_md5_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -200,7 +200,7 @@ callback_md5_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -208,7 +208,7 @@ callback_md5_commit (const struct arguments *args,
 
   auth.callback.type_md5 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -220,7 +220,7 @@ callback_md5_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -257,7 +257,7 @@ callback_straight_password_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -281,7 +281,7 @@ callback_straight_password_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -289,7 +289,7 @@ callback_straight_password_commit (const struct arguments *args,
 
   auth.callback.type_straight_password = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -301,7 +301,7 @@ callback_straight_password_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -338,7 +338,7 @@ callback_oem_proprietary_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -362,7 +362,7 @@ callback_oem_proprietary_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -370,7 +370,7 @@ callback_oem_proprietary_commit (const struct arguments *args,
 
   auth.callback.type_oem_proprietary = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -382,7 +382,7 @@ callback_oem_proprietary_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -421,7 +421,7 @@ user_none_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -445,7 +445,7 @@ user_none_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -453,7 +453,7 @@ user_none_commit (const struct arguments *args,
 
   auth.user.type_none = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -465,7 +465,7 @@ user_none_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -502,7 +502,7 @@ user_md2_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -526,7 +526,7 @@ user_md2_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -534,7 +534,7 @@ user_md2_commit (const struct arguments *args,
 
   auth.user.type_md2 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -546,7 +546,7 @@ user_md2_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -583,7 +583,7 @@ user_md5_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -607,7 +607,7 @@ user_md5_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -615,7 +615,7 @@ user_md5_commit (const struct arguments *args,
 
   auth.user.type_md5 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -627,7 +627,7 @@ user_md5_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -664,7 +664,7 @@ user_straight_password_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -688,7 +688,7 @@ user_straight_password_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -696,7 +696,7 @@ user_straight_password_commit (const struct arguments *args,
 
   auth.user.type_straight_password = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -708,7 +708,7 @@ user_straight_password_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -745,7 +745,7 @@ user_oem_proprietary_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -769,7 +769,7 @@ user_oem_proprietary_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -777,7 +777,7 @@ user_oem_proprietary_commit (const struct arguments *args,
 
   auth.user.type_oem_proprietary = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -789,7 +789,7 @@ user_oem_proprietary_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -828,7 +828,7 @@ operator_none_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -852,7 +852,7 @@ operator_none_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -860,7 +860,7 @@ operator_none_commit (const struct arguments *args,
 
   auth.operator.type_none = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -872,7 +872,7 @@ operator_none_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -909,7 +909,7 @@ operator_md2_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -933,7 +933,7 @@ operator_md2_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -941,7 +941,7 @@ operator_md2_commit (const struct arguments *args,
 
   auth.operator.type_md2 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -953,7 +953,7 @@ operator_md2_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -990,7 +990,7 @@ operator_md5_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1014,7 +1014,7 @@ operator_md5_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1022,7 +1022,7 @@ operator_md5_commit (const struct arguments *args,
 
   auth.operator.type_md5 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1034,7 +1034,7 @@ operator_md5_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1071,7 +1071,7 @@ operator_straight_password_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1095,7 +1095,7 @@ operator_straight_password_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1103,7 +1103,7 @@ operator_straight_password_commit (const struct arguments *args,
 
   auth.operator.type_straight_password = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1115,7 +1115,7 @@ operator_straight_password_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1152,7 +1152,7 @@ operator_oem_proprietary_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1176,7 +1176,7 @@ operator_oem_proprietary_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1184,7 +1184,7 @@ operator_oem_proprietary_commit (const struct arguments *args,
 
   auth.operator.type_oem_proprietary = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1196,7 +1196,7 @@ operator_oem_proprietary_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1236,7 +1236,7 @@ admin_none_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1260,7 +1260,7 @@ admin_none_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1268,7 +1268,7 @@ admin_none_commit (const struct arguments *args,
 
   auth.admin.type_none = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1280,7 +1280,7 @@ admin_none_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1317,7 +1317,7 @@ admin_md2_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1341,7 +1341,7 @@ admin_md2_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1349,7 +1349,7 @@ admin_md2_commit (const struct arguments *args,
 
   auth.admin.type_md2 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1361,7 +1361,7 @@ admin_md2_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1398,7 +1398,7 @@ admin_md5_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1422,7 +1422,7 @@ admin_md5_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1430,7 +1430,7 @@ admin_md5_commit (const struct arguments *args,
 
   auth.admin.type_md5 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1442,7 +1442,7 @@ admin_md5_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1479,7 +1479,7 @@ admin_straight_password_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1503,7 +1503,7 @@ admin_straight_password_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1511,7 +1511,7 @@ admin_straight_password_commit (const struct arguments *args,
 
   auth.admin.type_straight_password = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1523,7 +1523,7 @@ admin_straight_password_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1560,7 +1560,7 @@ admin_oem_proprietary_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1584,7 +1584,7 @@ admin_oem_proprietary_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1592,7 +1592,7 @@ admin_oem_proprietary_commit (const struct arguments *args,
 
   auth.admin.type_oem_proprietary = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1604,7 +1604,7 @@ admin_oem_proprietary_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1645,7 +1645,7 @@ oem_none_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1669,7 +1669,7 @@ oem_none_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1677,7 +1677,7 @@ oem_none_commit (const struct arguments *args,
 
   auth.oem.type_none = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1689,7 +1689,7 @@ oem_none_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1726,7 +1726,7 @@ oem_md2_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1750,7 +1750,7 @@ oem_md2_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1758,7 +1758,7 @@ oem_md2_commit (const struct arguments *args,
 
   auth.oem.type_md2 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1770,7 +1770,7 @@ oem_md2_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1807,7 +1807,7 @@ oem_md5_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1831,7 +1831,7 @@ oem_md5_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1839,7 +1839,7 @@ oem_md5_commit (const struct arguments *args,
 
   auth.oem.type_md5 = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1851,7 +1851,7 @@ oem_md5_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1888,7 +1888,7 @@ oem_straight_password_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1912,7 +1912,7 @@ oem_straight_password_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1920,7 +1920,7 @@ oem_straight_password_commit (const struct arguments *args,
 
   auth.oem.type_straight_password = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -1932,7 +1932,7 @@ oem_straight_password_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -1969,7 +1969,7 @@ oem_oem_proprietary_checkout (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
   if (ret != 0)
     return -1;
@@ -1993,7 +1993,7 @@ oem_oem_proprietary_commit (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)
@@ -2001,7 +2001,7 @@ oem_oem_proprietary_commit (const struct arguments *args,
 
   auth.oem.type_oem_proprietary = same (kv->value, "yes");
 
-  return set_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_authentication_type_enables (args->dev,
 						       &auth);
 }
 
@@ -2013,7 +2013,7 @@ oem_oem_proprietary_diff (const struct arguments *args,
   struct bmc_authentication_level auth;
   int ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
 						      &auth);
 
   if (ret != 0)

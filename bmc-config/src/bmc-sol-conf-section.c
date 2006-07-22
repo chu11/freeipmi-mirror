@@ -6,7 +6,7 @@
 #include "bmc-types.h"
 
 static int
-sol_auth_checkout (ipmi_device_t *dev,
+sol_auth_checkout (ipmi_device_t dev,
 		   uint8_t *sol_privilege_level,
 		   uint8_t *force_sol_payload_authentication,
 		   uint8_t *force_sol_payload_encryption)
@@ -38,7 +38,7 @@ sol_auth_checkout (ipmi_device_t *dev,
 
 
 static int
-sol_auth_commit (ipmi_device_t *dev,
+sol_auth_commit (ipmi_device_t dev,
 		 uint8_t *sol_privilege_level,
 		 uint8_t *force_sol_payload_authentication,
 		 uint8_t *force_sol_payload_encryption)
@@ -79,7 +79,7 @@ enable_sol_checkout (const struct arguments *args,
   uint8_t enable;
   int ret;
 
-  ret = get_sol_sol_enable ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_enable (args->dev,
 			    &enable);
 
   if (ret != 0)
@@ -98,7 +98,7 @@ enable_sol_commit (const struct arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
-  return set_sol_sol_enable ((ipmi_device_t *)&args->dev,
+  return set_sol_sol_enable (args->dev,
 			     same (kv->value, "yes"));
 }
 
@@ -111,7 +111,7 @@ enable_sol_diff (const struct arguments *args,
   uint8_t passed_value;
   int ret;
 
-  ret = get_sol_sol_enable ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_enable (args->dev,
 			    &got_value);
   if (ret != 0)
     return -1;
@@ -147,7 +147,7 @@ sol_privilege_level_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = sol_auth_checkout ((ipmi_device_t *)&args->dev,
+  ret = sol_auth_checkout (args->dev,
 			   &value,
 			   NULL,
 			   NULL);
@@ -168,7 +168,7 @@ sol_privilege_level_commit (const struct arguments *args,
 			    const struct keyvalue *kv)
 {
   uint8_t value = privilege_level_number (kv->value);
-  return sol_auth_commit ((ipmi_device_t *)&args->dev,
+  return sol_auth_commit (args->dev,
 			  &value,
 			  NULL,
 			  NULL);
@@ -183,7 +183,7 @@ sol_privilege_level_diff (const struct arguments *args,
   uint8_t passed_value;
   uint8_t got_value;
 
-  ret = sol_auth_checkout ((ipmi_device_t *)&args->dev,
+  ret = sol_auth_checkout (args->dev,
 			   &got_value,
 			   NULL,
 			   NULL);
@@ -227,7 +227,7 @@ force_sol_payload_authentication_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = sol_auth_checkout ((ipmi_device_t *)&args->dev,
+  ret = sol_auth_checkout (args->dev,
 			   NULL,
 			   &value,
 			   NULL);
@@ -248,7 +248,7 @@ force_sol_payload_authentication_commit (const struct arguments *args,
 					 const struct keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes") ? 1 : 0;
-  return sol_auth_commit ((ipmi_device_t *)&args->dev,
+  return sol_auth_commit (args->dev,
 			  NULL,
 			  &value,
 			  NULL);
@@ -263,7 +263,7 @@ force_sol_payload_authentication_diff (const struct arguments *args,
   uint8_t passed_value;
   uint8_t got_value;
 
-  ret = sol_auth_checkout ((ipmi_device_t *)&args->dev,
+  ret = sol_auth_checkout (args->dev,
 			   NULL,
 			   &got_value,
 			   NULL);
@@ -305,7 +305,7 @@ force_sol_payload_encryption_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = sol_auth_checkout ((ipmi_device_t *)&args->dev,
+  ret = sol_auth_checkout (args->dev,
 			   NULL,
 			   NULL,
 			   &value);
@@ -326,7 +326,7 @@ force_sol_payload_encryption_commit (const struct arguments *args,
 				     const struct keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes") ? 1 : 0;
-  return sol_auth_commit ((ipmi_device_t *)&args->dev,
+  return sol_auth_commit (args->dev,
 			  NULL,
 			  NULL,
 			  &value);
@@ -341,7 +341,7 @@ force_sol_payload_encryption_diff (const struct arguments *args,
   uint8_t passed_value;
   uint8_t got_value;
 
-  ret = sol_auth_checkout ((ipmi_device_t *)&args->dev,
+  ret = sol_auth_checkout (args->dev,
 			   NULL,
 			   NULL,
 			   &got_value);
@@ -384,7 +384,7 @@ character_accumulate_interval_checkout (const struct arguments *args,
   uint8_t interval;
   uint8_t threshold;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								  &interval,
 								  &threshold);
 
@@ -407,7 +407,7 @@ character_accumulate_interval_commit (const struct arguments *args,
   uint8_t interval;
   uint8_t threshold;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								  &interval,
 								  &threshold);
 
@@ -419,7 +419,7 @@ character_accumulate_interval_commit (const struct arguments *args,
 
   interval = atoi (kv->value);
 
-  return set_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  return set_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								   interval,
 								   threshold);
 }
@@ -436,7 +436,7 @@ character_accumulate_interval_diff (const struct arguments *args,
   uint8_t interval;
   uint8_t threshold;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								  &interval,
 								  &threshold);
 
@@ -488,7 +488,7 @@ character_send_threshold_checkout (const struct arguments *args,
   uint8_t interval;
   uint8_t threshold;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								  &interval,
 								  &threshold);
 
@@ -511,7 +511,7 @@ character_send_threshold_commit (const struct arguments *args,
   uint8_t interval;
   uint8_t threshold;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								  &interval,
 								  &threshold);
 
@@ -523,7 +523,7 @@ character_send_threshold_commit (const struct arguments *args,
 
   threshold = atoi (kv->value);
 
-  return set_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  return set_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								   interval,
 								   threshold);
 }
@@ -540,7 +540,7 @@ character_send_threshold_diff (const struct arguments *args,
   uint8_t interval;
   uint8_t threshold;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold ((ipmi_device_t *)&args->dev,
+  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
 								  &interval,
 								  &threshold);
 
@@ -591,7 +591,7 @@ sol_retry_count_checkout (const struct arguments *args,
   uint8_t interval;
   int ret;
 
-  ret = get_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_retry (args->dev,
 			   &count,
 			   &interval);
 
@@ -615,7 +615,7 @@ sol_retry_count_commit (const struct arguments *args,
   uint8_t interval;
   int ret;
 
-  ret = get_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_retry (args->dev,
 			   &count,
 			   &interval);
 
@@ -627,7 +627,7 @@ sol_retry_count_commit (const struct arguments *args,
 
   count = atoi (kv->value);
 
-  return set_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  return set_sol_sol_retry (args->dev,
 			    count,
 			    interval);
 }
@@ -644,7 +644,7 @@ sol_retry_count_diff (const struct arguments *args,
   uint8_t count;
   uint8_t interval;
 
-  ret = get_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_retry (args->dev,
 			   &count,
 			   &interval);
 
@@ -700,7 +700,7 @@ sol_retry_interval_checkout (const struct arguments *args,
   uint8_t interval;
   int ret;
 
-  ret = get_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_retry (args->dev,
 			   &count,
 			   &interval);
 
@@ -724,7 +724,7 @@ sol_retry_interval_commit (const struct arguments *args,
   uint8_t interval;
   int ret;
 
-  ret = get_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_retry (args->dev,
 			   &count,
 			   &interval);
 
@@ -736,7 +736,7 @@ sol_retry_interval_commit (const struct arguments *args,
 
   interval = atoi (kv->value);
 
-  return set_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  return set_sol_sol_retry (args->dev,
 			    count,
 			    interval);
 }
@@ -753,7 +753,7 @@ sol_retry_interval_diff (const struct arguments *args,
   uint8_t count;
   uint8_t interval;
 
-  ret = get_sol_sol_retry ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_retry (args->dev,
 			   &count,
 			   &interval);
 
@@ -805,7 +805,7 @@ non_volatile_bit_rate_checkout (const struct arguments *args,
   int ret;
   uint8_t bitrate;
 
-  ret = get_sol_sol_non_volatile_bit_rate ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_non_volatile_bit_rate (args->dev,
 					   &bitrate);
 
   if (ret != 0)
@@ -823,7 +823,7 @@ non_volatile_bit_rate_commit (const struct arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
-  return set_sol_sol_non_volatile_bit_rate ((ipmi_device_t *)&args->dev,
+  return set_sol_sol_non_volatile_bit_rate (args->dev,
 					    sol_bit_rate_number (kv->value));
 }
 
@@ -836,7 +836,7 @@ non_volatile_bit_rate_diff (const struct arguments *args,
   uint8_t got_value;
   uint8_t passed_value;
 
-  ret = get_sol_sol_non_volatile_bit_rate ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_non_volatile_bit_rate (args->dev,
 					   &got_value);
   if (ret != 0)
     return -1;
@@ -874,7 +874,7 @@ volatile_bit_rate_checkout (const struct arguments *args,
   int ret;
   uint8_t bitrate;
 
-  ret = get_sol_sol_volatile_bit_rate ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_volatile_bit_rate (args->dev,
 				       &bitrate);
 
   if (ret != 0)
@@ -892,7 +892,7 @@ volatile_bit_rate_commit (const struct arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
-  return set_sol_sol_volatile_bit_rate ((ipmi_device_t *)&args->dev,
+  return set_sol_sol_volatile_bit_rate (args->dev,
 					sol_bit_rate_number (kv->value));
 }
 
@@ -905,7 +905,7 @@ volatile_bit_rate_diff (const struct arguments *args,
   uint8_t got_value;
   uint8_t passed_value;
 
-  ret = get_sol_sol_volatile_bit_rate ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_volatile_bit_rate (args->dev,
 					   &got_value);
   if (ret != 0)
     return -1;
@@ -942,7 +942,7 @@ port_checkout (const struct arguments *args,
   int ret;
   uint16_t port;
 
-  ret = get_sol_sol_payload_port_number ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_payload_port_number (args->dev,
 					 &port);
   if (ret != 0)
     return -1;
@@ -960,7 +960,7 @@ port_commit (const struct arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return set_sol_sol_payload_port_number ((ipmi_device_t *)&args->dev,
+  return set_sol_sol_payload_port_number (args->dev,
 					  atoi (kv->value));
 }
 
@@ -973,7 +973,7 @@ port_diff (const struct arguments *args,
   uint16_t passed_value;
   int ret;
 
-  ret = get_sol_sol_payload_port_number ((ipmi_device_t *)&args->dev,
+  ret = get_sol_sol_payload_port_number (args->dev,
 					 &got_value);
   if (ret != 0)
     return -1;

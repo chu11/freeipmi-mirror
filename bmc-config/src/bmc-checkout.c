@@ -109,10 +109,9 @@ bmc_checkout_file (struct arguments *arguments,
           if (this_ret != 0) 
             {
               if (arguments->verbose)
-                fprintf (fp, "\t## FATAL: Unable to checkout %s:%s (comp_code=%d)\n",
+                fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
                          sect->section,
-                         kv->key,
-                         arguments->dev.comp_code);
+                         kv->key);
             } 
           else 
             {

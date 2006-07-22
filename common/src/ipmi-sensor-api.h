@@ -209,18 +209,18 @@ void get_sdr_oem_record (uint8_t *sdr_record_data,
 			 uint32_t sdr_record_data_len,
 			 sdr_oem_record_t *sdr_oem_record);
 
-int8_t get_sdr_sensor_record (ipmi_device_t *dev,
+int8_t get_sdr_sensor_record (ipmi_device_t dev,
 			      uint16_t record_id,
 			      fiid_obj_t obj_cmd_rs,
 			      uint8_t *sensor_record,
 			      uint32_t *sensor_record_len);
 
-int8_t get_sdr_record (ipmi_device_t *dev, 
+int8_t get_sdr_record (ipmi_device_t dev, 
 			 uint16_t record_id, 
 			 uint16_t *next_record_id, 
 			 sdr_record_t *sdr_record);
 
-int8_t get_sensor_reading (ipmi_device_t *dev, 
+int8_t get_sensor_reading (ipmi_device_t dev, 
 			     sdr_record_t *sdr_record, 
 			     sensor_reading_t *sensor_reading);
 

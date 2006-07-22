@@ -34,10 +34,10 @@ extern "C" {
    highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure
    you check the return status of write before calling read.
 */
-int8_t ipmi_kcs_cmd_udm (ipmi_device_t *dev, 
+int8_t ipmi_kcs_cmd_udm (ipmi_device_t dev, 
 			 fiid_obj_t obj_cmd_rq, 
 			 fiid_obj_t obj_cmd_rs);
-int32_t ipmi_kcs_cmd_raw_udm (ipmi_device_t *dev, 
+int32_t ipmi_kcs_cmd_raw_udm (ipmi_device_t dev, 
                               uint8_t *buf_rq, 
                               size_t buf_rq_len, 
                               uint8_t *buf_rs, 

@@ -54,7 +54,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 int exit_status = 0;
 
 int 
-display_sel_info (ipmi_device_t *dev)
+display_sel_info (ipmi_device_t dev)
 {
   local_sel_info_t sel_info;
   char str[512];
@@ -104,7 +104,7 @@ display_sel_info (ipmi_device_t *dev)
 }
 
 int 
-display_sel_records (ipmi_device_t *dev)
+display_sel_records (ipmi_device_t dev)
 {
   sel_record_t sel_rec;
   uint16_t record_id = 0;
@@ -149,7 +149,7 @@ display_sel_records (ipmi_device_t *dev)
 }
 
 int 
-hex_display_sel_records (ipmi_device_t *dev, FILE *stream)
+hex_display_sel_records (ipmi_device_t dev, FILE *stream)
 {
   uint8_t record_data[SEL_RECORD_SIZE];
   uint32_t record_data_len = SEL_RECORD_SIZE;
@@ -201,7 +201,7 @@ hex_display_sel_records (ipmi_device_t *dev, FILE *stream)
 }
 
 int 
-run_cmd_args (ipmi_device_t *dev, struct arguments *args)
+run_cmd_args (ipmi_device_t dev, struct arguments *args)
 {
   int retval = 0;
   
@@ -308,7 +308,7 @@ int
 main (int argc, char **argv)
 {
   struct arguments *args = NULL;
-  ipmi_device_t dev;
+  ipmi_device_t dev = NULL;
   
   struct hostent *hostinfo;
   struct sockaddr_in host;
@@ -341,18 +341,16 @@ main (int argc, char **argv)
 	}
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
       
-      memset (&dev, 0, sizeof (ipmi_device_t));
-      if (ipmi_open_outofband (&dev,
-			       IPMI_DEVICE_LAN,
-			       IPMI_MODE_DEFAULT,
-			       args->common.session_timeout, 
-			       args->common.retry_timeout, 
-			       (struct sockaddr *) &host,
-			       sizeof (struct sockaddr),
-			       args->common.authentication_type, 
-			       args->common.username,
-			       args->common.password,
-			       args->common.privilege_level) != 0)
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
+                                       IPMI_MODE_DEFAULT,
+                                       args->common.session_timeout, 
+                                       args->common.retry_timeout, 
+                                       (struct sockaddr *) &host,
+                                       sizeof (struct sockaddr),
+                                       args->common.authentication_type, 
+                                       args->common.username,
+                                       args->common.password,
+                                       args->common.privilege_level)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -366,24 +364,21 @@ main (int argc, char **argv)
           exit(EXIT_FAILURE);
         }
 
-      memset (&dev, 0, sizeof (ipmi_device_t));
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  if (ipmi_open_inband (&dev,
-				args->common.disable_auto_probe,
-				IPMI_DEVICE_KCS,
-				args->common.driver_address,
-				args->common.register_spacing,
-				args->common.driver_device,
-				IPMI_MODE_DEFAULT) != 0)
+	  if (!(dev = ipmi_open_inband (args->common.disable_auto_probe,
+                                        IPMI_DEVICE_KCS,
+                                        args->common.driver_address,
+                                        args->common.register_spacing,
+                                        args->common.driver_device,
+                                        IPMI_MODE_DEFAULT)))
 	    {
-	      if (ipmi_open_inband (&dev,
-				    args->common.disable_auto_probe,
-				    IPMI_DEVICE_SSIF,
-				    args->common.driver_address,
-				    args->common.register_spacing,
-				    args->common.driver_device,
-				    IPMI_MODE_DEFAULT) != 0)
+	      if (!(dev = ipmi_open_inband (args->common.disable_auto_probe,
+                                            IPMI_DEVICE_SSIF,
+                                            args->common.driver_address,
+                                            args->common.register_spacing,
+                                            args->common.driver_device,
+                                            IPMI_MODE_DEFAULT)))
 		{
 		  perror ("ipmi_open_inband()");
 		  return (-1);
@@ -392,13 +387,12 @@ main (int argc, char **argv)
 	}
       else
 	{
-	  if (ipmi_open_inband (&dev,
-				args->common.disable_auto_probe,
-				args->common.driver_type,
-				args->common.driver_address,
-				args->common.register_spacing,
-				args->common.driver_device,
-				IPMI_MODE_DEFAULT) != 0)
+	  if (!(dev = ipmi_open_inband (args->common.disable_auto_probe,
+                                        args->common.driver_type,
+                                        args->common.driver_address,
+                                        args->common.register_spacing,
+                                        args->common.driver_device,
+                                        IPMI_MODE_DEFAULT)))
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);
@@ -406,13 +400,9 @@ main (int argc, char **argv)
 	}
     }
   
-  retval = run_cmd_args (&dev, args);
+  retval = run_cmd_args (dev, args);
   
-  if (ipmi_close (&dev) != 0)
-    {
-      perror ("ipmi_close()");
-      exit (EXIT_FAILURE);
-    }
+  ipmi_close_device (dev);
   
   return (retval);
 }

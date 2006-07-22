@@ -14,7 +14,7 @@ id_checkout (const struct arguments *args,
   int ret;
   uint8_t priv;
 
-  ret = get_rmcpplus_cipher_suite_id_privilege ((ipmi_device_t *)&args->dev,
+  ret = get_rmcpplus_cipher_suite_id_privilege (args->dev,
 						id,
 						&priv);
   if (ret != 0)
@@ -34,7 +34,7 @@ id_commit (const struct arguments *args,
 	   const struct keyvalue *kv,
 	   int id)
 {
-  return set_rmcpplus_cipher_suite_id_privilege ((ipmi_device_t *)&args->dev,
+  return set_rmcpplus_cipher_suite_id_privilege (args->dev,
 						 id,
 						 rmcpplus_priv_number (kv->value));
 }
@@ -48,7 +48,7 @@ id_diff (const struct arguments *args,
   int ret;
   uint8_t priv;
 
-  ret = get_rmcpplus_cipher_suite_id_privilege ((ipmi_device_t *)&args->dev,
+  ret = get_rmcpplus_cipher_suite_id_privilege (args->dev,
 						id,
 						&priv);
   if (ret != 0)

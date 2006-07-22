@@ -6,7 +6,7 @@
 #include "bmc-types.h"
 
 static int
-serial_conf_checkout (ipmi_device_t *dev,
+serial_conf_checkout (ipmi_device_t dev,
 		      uint8_t *basic_mode,
 		      uint8_t *ppp_mode,
 		      uint8_t *terminal_mode,
@@ -44,7 +44,7 @@ serial_conf_checkout (ipmi_device_t *dev,
 
 
 static int
-serial_conf_commit (ipmi_device_t *dev,
+serial_conf_commit (ipmi_device_t dev,
 		    uint8_t *basic_mode,
 		    uint8_t *ppp_mode,
 		    uint8_t *terminal_mode,
@@ -93,7 +93,7 @@ enable_basic_mode_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      &value,
 			      NULL,
 			      NULL,
@@ -121,7 +121,7 @@ enable_basic_mode_commit (const struct arguments *args,
   uint8_t value;
   value = (same (kv->value, "yes") ? 1 : 0);
 
-  return serial_conf_commit ((ipmi_device_t *)&args->dev,
+  return serial_conf_commit (args->dev,
 			     &value, NULL, NULL, NULL);
 }
 
@@ -134,7 +134,7 @@ enable_basic_mode_diff (const struct arguments *args,
   uint8_t get_value;
   uint8_t passed_value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      &get_value,
 			      NULL,
 			      NULL,
@@ -177,7 +177,7 @@ enable_ppp_mode_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      NULL,
 			      &value,
 			      NULL,
@@ -205,7 +205,7 @@ enable_ppp_mode_commit (const struct arguments *args,
   uint8_t value;
   value = (same (kv->value, "yes") ? 1 : 0);
 
-  return serial_conf_commit ((ipmi_device_t *)&args->dev,
+  return serial_conf_commit (args->dev,
 			     NULL, &value, NULL, NULL);
 }
 
@@ -218,7 +218,7 @@ enable_ppp_mode_diff (const struct arguments *args,
   uint8_t get_value;
   uint8_t passed_value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      NULL,
 			      &get_value,
 			      NULL,
@@ -260,7 +260,7 @@ enable_terminal_mode_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      &value,
@@ -288,7 +288,7 @@ enable_terminal_mode_commit (const struct arguments *args,
   uint8_t value;
   value = (same (kv->value, "yes") ? 1 : 0);
 
-  return serial_conf_commit ((ipmi_device_t *)&args->dev,
+  return serial_conf_commit (args->dev,
 			     NULL, NULL, &value, NULL);
 }
 
@@ -301,7 +301,7 @@ enable_terminal_mode_diff (const struct arguments *args,
   uint8_t get_value;
   uint8_t passed_value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      &get_value,
@@ -343,7 +343,7 @@ connect_mode_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      NULL,
@@ -368,7 +368,7 @@ connect_mode_commit (const struct arguments *args,
   uint8_t value;
   value = connect_mode_number (kv->value);
 
-  return serial_conf_commit ((ipmi_device_t *)&args->dev,
+  return serial_conf_commit (args->dev,
 			     NULL, NULL, NULL, &value);
 }
 
@@ -381,7 +381,7 @@ connect_mode_diff (const struct arguments *args,
   uint8_t get_value;
   uint8_t passed_value;
 
-  ret = serial_conf_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      NULL,
@@ -421,7 +421,7 @@ page_blackout_interval_checkout (const struct arguments *args,
   int ret;
   uint8_t interval;
 
-  ret = get_bmc_serial_conf_page_blackout_interval ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_serial_conf_page_blackout_interval (args->dev,
 						    &interval);
 
   if (ret != 0)
@@ -440,7 +440,7 @@ page_blackout_interval_commit (const struct arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
-  return set_bmc_serial_conf_page_blackout_interval ((ipmi_device_t *)&args->dev,
+  return set_bmc_serial_conf_page_blackout_interval (args->dev,
 						     atoi (kv->value));
 }
 
@@ -453,7 +453,7 @@ page_blackout_interval_diff (const struct arguments *args,
   int passed_interval;
   int ret;
 
-  ret = get_bmc_serial_conf_page_blackout_interval ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_serial_conf_page_blackout_interval (args->dev,
 						    &interval);
 
   if (ret != 0)
@@ -501,8 +501,8 @@ call_retry_interval_checkout (const struct arguments *args,
   int ret;
   uint8_t interval;
 
-  ret = get_bmc_serial_conf_call_retry_interval ((ipmi_device_t *)&args->dev,
-						 &interval);
+  ret = get_bmc_serial_conf_call_retry_interval (args->dev,
+                                                 &interval);
 
   if (ret != 0)
     return -1;
@@ -520,8 +520,8 @@ call_retry_interval_commit (const struct arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
-  return set_bmc_serial_conf_call_retry_interval ((ipmi_device_t *)&args->dev,
-						  atoi (kv->value));
+  return set_bmc_serial_conf_call_retry_interval (args->dev,
+                                                  atoi (kv->value));
 }
 
 static int
@@ -533,8 +533,8 @@ call_retry_interval_diff (const struct arguments *args,
   int passed_interval;
   int ret;
 
-  ret = get_bmc_serial_conf_call_retry_interval ((ipmi_device_t *)&args->dev,
-						 &interval);
+  ret = get_bmc_serial_conf_call_retry_interval (args->dev,
+                                                 &interval);
 
   if (ret != 0)
     return -1;
@@ -571,7 +571,7 @@ call_retry_interval_validate (const struct arguments *args,
 }
 
 static int
-serial_conf_comm_checkout (ipmi_device_t *dev,
+serial_conf_comm_checkout (ipmi_device_t dev,
 			   uint8_t *dtr_hangup,
 			   uint8_t *flow_control,
 			   uint8_t *bit_rate)
@@ -602,7 +602,7 @@ serial_conf_comm_checkout (ipmi_device_t *dev,
 }
 
 static int
-serial_conf_comm_commit (ipmi_device_t *dev,
+serial_conf_comm_commit (ipmi_device_t dev,
 			 uint8_t *dtr_hangup,
 			 uint8_t *flow_control,
 			 uint8_t *bit_rate)
@@ -641,7 +641,7 @@ enable_dtr_hangup_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
   
-  ret = serial_conf_comm_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_comm_checkout (args->dev,
 				   &value,
 				   NULL,
 				   NULL);
@@ -667,7 +667,7 @@ enable_dtr_hangup_commit (const struct arguments *args,
 {
   uint8_t value = same (kv->value, "yes");
 
-  return serial_conf_comm_commit ((ipmi_device_t *)&args->dev,
+  return serial_conf_comm_commit (args->dev,
 				  &value,
 				  NULL,
 				  NULL);
@@ -682,7 +682,7 @@ enable_dtr_hangup_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
 
-  ret = serial_conf_comm_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_comm_checkout (args->dev,
 				   &got_value,
 				   NULL,
 				   NULL);
@@ -721,7 +721,7 @@ flow_control_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
   
-  ret = serial_conf_comm_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_comm_checkout (args->dev,
 				   NULL,
 				   &value,
 				   NULL);
@@ -743,7 +743,7 @@ flow_control_commit (const struct arguments *args,
 		     const struct keyvalue *kv)
 {
   uint8_t value = flow_control_number (kv->value);
-  return serial_conf_comm_commit ((ipmi_device_t *)&args->dev,
+  return serial_conf_comm_commit (args->dev,
 				  NULL,
 				  &value,
 				  NULL);
@@ -758,7 +758,7 @@ flow_control_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
 
-  ret = serial_conf_comm_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_comm_checkout (args->dev,
 				   NULL,
 				   &got_value,
 				   NULL);
@@ -797,7 +797,7 @@ bit_rate_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
   
-  ret = serial_conf_comm_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_comm_checkout (args->dev,
 				   NULL,
 				   NULL,
 				   &value);
@@ -819,7 +819,7 @@ bit_rate_commit (const struct arguments *args,
 		 const struct keyvalue *kv)
 {
   uint8_t value = bit_rate_number (kv->value);
-  return serial_conf_comm_commit ((ipmi_device_t *)&args->dev,
+  return serial_conf_comm_commit (args->dev,
 				  NULL,
 				  NULL,
 				  &value);
@@ -834,7 +834,7 @@ bit_rate_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
 
-  ret = serial_conf_comm_checkout ((ipmi_device_t *)&args->dev,
+  ret = serial_conf_comm_checkout (args->dev,
 				   NULL,
 				   NULL,
 				   &got_value);

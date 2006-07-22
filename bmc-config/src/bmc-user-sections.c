@@ -10,7 +10,7 @@ get_num_users (struct arguments *args)
 {
   int rv = -1;
   uint8_t users = 0;
-  rv = get_bmc_max_users ((ipmi_device_t *)&args->dev, &users);
+  rv = get_bmc_max_users (args->dev, &users);
   if (rv != 0)
     return -1;
   return users;
@@ -28,7 +28,7 @@ username_checkout (const struct arguments *args,
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
 
   userid = atoi (sect->section + strlen ("User"));
-  if (get_bmc_username ((ipmi_device_t *)&args->dev,
+  if (get_bmc_username (args->dev,
 			userid,
 			username,
 			IPMI_MAX_USER_NAME_LENGTH+1))
@@ -50,7 +50,7 @@ username_commit (const struct arguments *args,
 
   if (!kv->value)
     return -1;
-  return set_bmc_username ((ipmi_device_t *)&args->dev,
+  return set_bmc_username (args->dev,
 			   userid,
 			   (uint8_t *)kv->value);
 }
@@ -65,7 +65,7 @@ username_diff (const struct arguments *args,
   int ret;
 
   userid = atoi (sect->section + strlen ("User"));
-  if (get_bmc_username ((ipmi_device_t *)&args->dev,
+  if (get_bmc_username (args->dev,
 			userid,
 			username,
 			IPMI_MAX_USER_NAME_LENGTH+1))
@@ -139,7 +139,7 @@ enable_user_commit (const struct arguments *args,
 		    const struct keyvalue *kv)
 {
   int userid = atoi (sect->section + strlen ("User"));
-  return set_bmc_enable_user ((ipmi_device_t *)&args->dev,
+  return set_bmc_enable_user (args->dev,
 			      userid,
 			      same (kv->value, "yes"));
 }
@@ -181,7 +181,7 @@ clear_password_commit (const struct arguments *args,
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   if (same (kv->value, "yes"))
-    return set_bmc_user_password ((ipmi_device_t *)&args->dev,
+    return set_bmc_user_password (args->dev,
 				  userid,
 				  NULL);
   return 0;
@@ -223,7 +223,7 @@ password_commit (const struct arguments *args,
 		 const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return set_bmc_user_password ((ipmi_device_t *)&args->dev,
+  return set_bmc_user_password (args->dev,
 				userid, (uint8_t *)kv->value);
 }
 
@@ -234,7 +234,7 @@ password_diff (const struct arguments *args,
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   int ret;
-  ret = check_bmc_user_password ((ipmi_device_t *)&args->dev,
+  ret = check_bmc_user_password (args->dev,
 				 userid,
 				 (uint8_t *)kv->value);
   if (!ret)
@@ -266,7 +266,7 @@ password20_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  if (check_bmc_user_password20 ((ipmi_device_t *)&args->dev,
+  if (check_bmc_user_password20 (args->dev,
                                  1,
                                  "foobar") < 0) 
     return -1;
@@ -281,7 +281,7 @@ password20_commit (const struct arguments *args,
 		   const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return set_bmc_user_password20 ((ipmi_device_t *)&args->dev,
+  return set_bmc_user_password20 (args->dev,
 				  userid,
 				  (uint8_t *)kv->value);
 }
@@ -292,7 +292,7 @@ password20_diff (const struct arguments *args,
 		 const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  int ret = check_bmc_user_password20 ((ipmi_device_t *)&args->dev,
+  int ret = check_bmc_user_password20 (args->dev,
 				       userid,
 				       (uint8_t *)kv->value);
 
@@ -315,7 +315,7 @@ password20_validate (const struct arguments *args,
 /* lan_enable_ipmi_msgs */
 
 static int
-lan_channel_get (ipmi_device_t *dev,
+lan_channel_get (ipmi_device_t dev,
 		 uint8_t userid,
 		 uint8_t *user_ipmi_messaging,
 		 uint8_t *user_link_authentication,
@@ -356,7 +356,7 @@ lan_channel_get (ipmi_device_t *dev,
 }
 
 static int
-lan_channel_set (ipmi_device_t *dev,
+lan_channel_set (ipmi_device_t dev,
 		 uint8_t userid,
 		 uint8_t user_ipmi_messaging,
 		 uint8_t user_ipmi_messaging_is_set,
@@ -421,7 +421,7 @@ lan_enable_ipmi_msgs_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 &get_val,
 			 0,
@@ -449,7 +449,7 @@ lan_enable_ipmi_msgs_commit (const struct arguments *args,
 			     const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return lan_channel_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_set (args->dev,
 			  userid,
 			  same (kv->value, "yes"), 1,
 			  0, 0,
@@ -468,7 +468,7 @@ lan_enable_ipmi_msgs_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 &get_val,
 			 0,
@@ -513,7 +513,7 @@ lan_enable_link_auth_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 &get_val,
@@ -541,7 +541,7 @@ lan_enable_link_auth_commit (const struct arguments *args,
 			     const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return lan_channel_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_set (args->dev,
 			  userid,
 			  0, 0,
 			  same (kv->value, "yes"), 1,
@@ -560,7 +560,7 @@ lan_enable_link_auth_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 &get_val,
@@ -605,7 +605,7 @@ lan_enable_restricted_to_callback_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -633,7 +633,7 @@ lan_enable_restricted_to_callback_commit (const struct arguments *args,
 					  const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return lan_channel_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_set (args->dev,
 			  userid,
 			  0, 0,
 			  0, 0,
@@ -652,7 +652,7 @@ lan_enable_restricted_to_callback_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -697,7 +697,7 @@ lan_privilege_limit_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -722,7 +722,7 @@ lan_privilege_limit_commit (const struct arguments *args,
 			    const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return lan_channel_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_set (args->dev,
 			  userid,
 			  0, 0,
 			  0, 0,
@@ -741,7 +741,7 @@ lan_privilege_limit_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -787,7 +787,7 @@ lan_session_limit_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -812,7 +812,7 @@ lan_session_limit_commit (const struct arguments *args,
 			  const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return lan_channel_set ((ipmi_device_t *)&args->dev,
+  return lan_channel_set (args->dev,
 			  userid,
 			  0, 0,
 			  0, 0,
@@ -831,7 +831,7 @@ lan_session_limit_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = lan_channel_get ((ipmi_device_t *)&args->dev,
+  ret = lan_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -887,7 +887,7 @@ sol_payload_access_checkout (const struct arguments *args,
   uint8_t have_access;
   int ret;
 
-  ret = get_bmc_user_payload_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_user_payload_access (args->dev,
 				     userid,
 				     &have_access,
 				     NULL,
@@ -929,7 +929,7 @@ sol_payload_access_commit (const struct arguments *args,
   else
     operation = IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE;
 
-  return set_bmc_user_payload_access ((ipmi_device_t *)&args->dev,
+  return set_bmc_user_payload_access (args->dev,
 				      userid,
 				      operation,
 				      1, 
@@ -946,7 +946,7 @@ sol_payload_access_diff (const struct arguments *args,
   uint8_t passed_value;
   int ret;
 
-  ret = get_bmc_user_payload_access ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_user_payload_access (args->dev,
 				     userid,
 				     &have_access,
 				     NULL,
@@ -992,7 +992,7 @@ sol_payload_access_validate (const struct arguments *args,
 /* serial_enable_ipmi_msgs */
 
 static int
-serial_channel_get (ipmi_device_t *dev,
+serial_channel_get (ipmi_device_t dev,
 		    uint8_t userid,
 		    uint8_t *user_ipmi_messaging,
 		    uint8_t *user_link_authentication,
@@ -1033,7 +1033,7 @@ serial_channel_get (ipmi_device_t *dev,
 }
 
 static int
-serial_channel_set (ipmi_device_t *dev,
+serial_channel_set (ipmi_device_t dev,
 		    uint8_t userid,
 		    uint8_t user_ipmi_messaging,
 		    uint8_t user_ipmi_messaging_is_set,
@@ -1098,7 +1098,7 @@ serial_enable_ipmi_msgs_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 &get_val,
 			 0,
@@ -1126,7 +1126,7 @@ serial_enable_ipmi_msgs_commit (const struct arguments *args,
 			     const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return serial_channel_set ((ipmi_device_t *)&args->dev,
+  return serial_channel_set (args->dev,
 			  userid,
 			  same (kv->value, "yes"), 1,
 			  0, 0,
@@ -1145,7 +1145,7 @@ serial_enable_ipmi_msgs_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 &get_val,
 			 0,
@@ -1190,7 +1190,7 @@ serial_enable_link_auth_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 0,
 			 &get_val,
@@ -1218,7 +1218,7 @@ serial_enable_link_auth_commit (const struct arguments *args,
 			     const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return serial_channel_set ((ipmi_device_t *)&args->dev,
+  return serial_channel_set (args->dev,
 			  userid,
 			  0, 0,
 			  same (kv->value, "yes"), 1,
@@ -1237,7 +1237,7 @@ serial_enable_link_auth_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 0,
 			 &get_val,
@@ -1282,7 +1282,7 @@ serial_enable_restricted_to_callback_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -1310,7 +1310,7 @@ serial_enable_restricted_to_callback_commit (const struct arguments *args,
 					  const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return serial_channel_set ((ipmi_device_t *)&args->dev,
+  return serial_channel_set (args->dev,
 			  userid,
 			  0, 0,
 			  0, 0,
@@ -1329,7 +1329,7 @@ serial_enable_restricted_to_callback_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -1374,7 +1374,7 @@ serial_privilege_limit_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -1399,7 +1399,7 @@ serial_privilege_limit_commit (const struct arguments *args,
 			       const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return serial_channel_set ((ipmi_device_t *)&args->dev,
+  return serial_channel_set (args->dev,
 			  userid,
 			  0, 0,
 			  0, 0,
@@ -1418,7 +1418,7 @@ serial_privilege_limit_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			 userid,
 			 0,
 			 0,
@@ -1464,7 +1464,7 @@ serial_session_limit_checkout (const struct arguments *args,
   uint8_t get_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			    userid,
 			    0,
 			    0,
@@ -1489,7 +1489,7 @@ serial_session_limit_commit (const struct arguments *args,
 			    const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
-  return serial_channel_set ((ipmi_device_t *)&args->dev,
+  return serial_channel_set (args->dev,
 			     userid,
 			     0, 0,
 			     0, 0,
@@ -1508,7 +1508,7 @@ serial_session_limit_diff (const struct arguments *args,
   unsigned long int passed_val;
   int ret;
 
-  ret = serial_channel_get ((ipmi_device_t *)&args->dev,
+  ret = serial_channel_get (args->dev,
 			    userid,
 			    0,
 			    0,

@@ -16,7 +16,7 @@ ip_address_source_checkout (const struct arguments *args,
   uint8_t source;
   int ret;
 
-  ret = get_bmc_lan_conf_ip_address_source ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_ip_address_source (args->dev,
 					     &source);
   if (ret != 0)
     return -1;
@@ -34,7 +34,7 @@ ip_address_source_commit (const struct arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
-  return set_bmc_lan_conf_ip_address_source ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_ip_address_source (args->dev,
 					     ip_address_source_number (kv->value));
 }
 
@@ -47,7 +47,7 @@ ip_address_source_diff (const struct arguments *args,
   uint8_t passed_val;
   int ret;
 
-  ret = get_bmc_lan_conf_ip_address_source ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_ip_address_source (args->dev,
 					     &get_val);
   if (ret != 0)
     return -1;
@@ -82,7 +82,7 @@ ip_address_checkout (const struct arguments *args,
   int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_ip_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_ip_address (args->dev,
 				     (char *)&ip);
 
   if (ret != 0)
@@ -102,7 +102,7 @@ ip_address_commit (const struct arguments *args,
 {
   int ret;
 
-  ret = set_bmc_lan_conf_ip_address ((ipmi_device_t *)&args->dev,
+  ret = set_bmc_lan_conf_ip_address (args->dev,
 				     kv->value);
 
   return ret;
@@ -116,7 +116,7 @@ ip_address_diff (const struct arguments *args,
   int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_ip_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_ip_address (args->dev,
 				     (char *)&ip);
 
   if (ret != 0)
@@ -152,7 +152,7 @@ mac_address_checkout (const struct arguments *args,
   int ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_mac_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_mac_address (args->dev,
 				      (char *)&mac);
   if (ret != 0)
     return -1;
@@ -169,7 +169,7 @@ mac_address_commit (const struct arguments *args,
 		    const struct keyvalue *kv)
 {
 
-  return set_bmc_lan_conf_mac_address ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_mac_address (args->dev,
 				       kv->value);
 }
 
@@ -181,7 +181,7 @@ mac_address_diff (const struct arguments *args,
   int ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_mac_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_mac_address (args->dev,
 				      (char *)&mac);
   if (ret != 0)
     return -1;
@@ -217,7 +217,7 @@ subnet_mask_checkout (const struct arguments *args,
   int ret;
   char mask[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_subnet_mask ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_subnet_mask (args->dev,
 				      (char *)&mask);
   
   if (ret != 0)
@@ -237,7 +237,7 @@ subnet_mask_commit (const struct arguments *args,
 {
   int ret;
 
-  ret = set_bmc_lan_conf_subnet_mask ((ipmi_device_t *)&args->dev,
+  ret = set_bmc_lan_conf_subnet_mask (args->dev,
 				      kv->value);
 
   return ret;
@@ -251,7 +251,7 @@ subnet_mask_diff (const struct arguments *args,
   int ret;
   char mask[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_subnet_mask ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_subnet_mask (args->dev,
 				      (char *)&mask);
 
   if (ret != 0)
@@ -289,7 +289,7 @@ default_gateway_address_checkout (const struct arguments *args,
   int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_default_gateway_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_default_gateway_address (args->dev,
 						  (char *)&ip);
 
   if (ret != 0)
@@ -309,7 +309,7 @@ default_gateway_address_commit (const struct arguments *args,
 {
   int ret;
 
-  ret = set_bmc_lan_conf_default_gateway_address ((ipmi_device_t *)&args->dev,
+  ret = set_bmc_lan_conf_default_gateway_address (args->dev,
 						  kv->value);
 
   return ret;
@@ -323,7 +323,7 @@ default_gateway_address_diff (const struct arguments *args,
   int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_default_gateway_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_default_gateway_address (args->dev,
 						  (char *)&ip);
 
   if (ret != 0)
@@ -359,7 +359,7 @@ default_gateway_mac_address_checkout (const struct arguments *args,
   int ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_default_gateway_mac_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_default_gateway_mac_address (args->dev,
 						      (char *)&mac);
   if (ret != 0)
     return -1;
@@ -376,7 +376,7 @@ default_gateway_mac_address_commit (const struct arguments *args,
 				    const struct keyvalue *kv)
 {
 
-  return set_bmc_lan_conf_default_gateway_mac_address ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_default_gateway_mac_address (args->dev,
 						       kv->value);
 }
 
@@ -388,7 +388,7 @@ default_gateway_mac_address_diff (const struct arguments *args,
   int ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_default_gateway_mac_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_default_gateway_mac_address (args->dev,
 						      (char *)&mac);
   if (ret != 0)
     return -1;
@@ -417,7 +417,7 @@ backup_gateway_address_checkout (const struct arguments *args,
   int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_backup_gateway_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_backup_gateway_address (args->dev,
 						 (char *)&ip);
 
   if (ret != 0)
@@ -437,7 +437,7 @@ backup_gateway_address_commit (const struct arguments *args,
 {
   int ret;
 
-  ret = set_bmc_lan_conf_backup_gateway_address ((ipmi_device_t *)&args->dev,
+  ret = set_bmc_lan_conf_backup_gateway_address (args->dev,
 						 kv->value);
 
   return ret;
@@ -451,7 +451,7 @@ backup_gateway_address_diff (const struct arguments *args,
   int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_backup_gateway_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_backup_gateway_address (args->dev,
 						 (char *)&ip);
 
   if (ret != 0)
@@ -487,7 +487,7 @@ backup_gateway_mac_address_checkout (const struct arguments *args,
   int ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_backup_gateway_mac_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_backup_gateway_mac_address (args->dev,
 						     (char *)&mac);
   if (ret != 0)
     return -1;
@@ -504,7 +504,7 @@ backup_gateway_mac_address_commit (const struct arguments *args,
 				    const struct keyvalue *kv)
 {
 
-  return set_bmc_lan_conf_backup_gateway_mac_address ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_backup_gateway_mac_address (args->dev,
 						      kv->value);
 }
 
@@ -516,7 +516,7 @@ backup_gateway_mac_address_diff (const struct arguments *args,
   int ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_backup_gateway_mac_address ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_backup_gateway_mac_address (args->dev,
 						     (char *)&mac);
   if (ret != 0)
     return -1;
@@ -543,7 +543,7 @@ vlan_id_checkout (const struct arguments *args,
   uint8_t vlan_id_enable;
   int ret;
   
-  ret = get_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_id (args->dev,
 				  &vlan_id,
 				  &vlan_id_enable);
   if (ret != 0)
@@ -565,7 +565,7 @@ vlan_id_commit (const struct arguments *args,
   uint8_t vlan_id_enable;
   int ret;
   
-  ret = get_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_id (args->dev,
 				  &vlan_id,
 				  &vlan_id_enable);
   if (ret != 0)
@@ -573,7 +573,7 @@ vlan_id_commit (const struct arguments *args,
 
   vlan_id = atoi (kv->value);
 
-  ret = set_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = set_bmc_lan_conf_vlan_id (args->dev,
 				  vlan_id,
 				  vlan_id_enable);
 
@@ -589,7 +589,7 @@ vlan_id_diff (const struct arguments *args,
   uint8_t vlan_id_enable;
   int ret;
   
-  ret = get_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_id (args->dev,
 				  &vlan_id,
 				  &vlan_id_enable);
   if (ret != 0)
@@ -634,7 +634,7 @@ vlan_id_enable_checkout (const struct arguments *args,
   uint8_t vlan_id_enable;
   int ret;
   
-  ret = get_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_id (args->dev,
 				  &vlan_id,
 				  &vlan_id_enable);
   if (ret != 0)
@@ -659,7 +659,7 @@ vlan_id_enable_commit (const struct arguments *args,
   uint8_t vlan_id_enable;
   int ret;
   
-  ret = get_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_id (args->dev,
 				  &vlan_id,
 				  &vlan_id_enable);
   if (ret != 0)
@@ -667,7 +667,7 @@ vlan_id_enable_commit (const struct arguments *args,
 
   vlan_id_enable = same (kv->value, "yes");
 
-  ret = set_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = set_bmc_lan_conf_vlan_id (args->dev,
 				  vlan_id,
 				  vlan_id_enable);
 
@@ -683,7 +683,7 @@ vlan_id_enable_diff (const struct arguments *args,
   uint8_t vlan_id_enable;
   int ret;
   
-  ret = get_bmc_lan_conf_vlan_id ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_id (args->dev,
 				  &vlan_id,
 				  &vlan_id_enable);
   if (ret != 0)
@@ -718,7 +718,7 @@ vlan_priority_checkout (const struct arguments *args,
   uint8_t priority;
   int ret;
 
-  ret = get_bmc_lan_conf_vlan_priority ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_priority (args->dev,
 					&priority);
   if (ret != 0)
     return -1;
@@ -735,7 +735,7 @@ vlan_priority_commit (const struct arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
-  return set_bmc_lan_conf_vlan_priority ((ipmi_device_t *)&args->dev,
+  return set_bmc_lan_conf_vlan_priority (args->dev,
 					 atoi (kv->value));
 }
 
@@ -747,7 +747,7 @@ vlan_priority_diff (const struct arguments *args,
   uint8_t priority;
   int ret;
 
-  ret = get_bmc_lan_conf_vlan_priority ((ipmi_device_t *)&args->dev,
+  ret = get_bmc_lan_conf_vlan_priority (args->dev,
 					&priority);
   if (ret != 0)
     return -1;

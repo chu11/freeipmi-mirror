@@ -52,106 +52,40 @@ enum ipmi_driver_type
   };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 
-struct ipmi_device 
-{
-  ipmi_driver_type_t type;
-  ipmi_mode_t        mode;
-  uint8_t            lun;
-  uint8_t            net_fn;
-  uint8_t            cmd;
-  uint8_t            comp_code;
-  char               errmsg[IPMI_ERR_STR_MAX_LEN];
-  union 
-  {
-    struct 
-    {
-      ipmi_locate_info_t *locate_info;
-      ipmi_kcs_ctx_t     kcs_ctx;
-      ipmi_ssif_ctx_t    ssif_ctx;
+typedef struct ipmi_device *ipmi_device_t;
+ 
+ipmi_device_t ipmi_open_inband (int disable_auto_probe, 
+                                ipmi_driver_type_t driver_type, 
+                                uint16_t driver_address, 
+                                uint8_t reg_space,
+                                char *driver_device, 
+                                ipmi_mode_t mode);
 
-      struct 
-      {
-	fiid_obj_t      obj_hdr;
-      } rq;
-      
-      struct 
-      {
-	fiid_obj_t      obj_hdr;
-      } rs;
-    } inband;
-    
-    struct 
-    {
-      int                local_sockfd;
-      struct sockaddr    remote_host;
-      unsigned int       remote_host_len;
-      
-      uint8_t           authentication_type;
-      uint8_t           challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
-      uint32_t          session_id;
-      uint32_t          session_sequence_number;
-      uint8_t           rq_seq;
-      
-      uint8_t           username[IPMI_MAX_USER_NAME_LENGTH];
-      uint8_t           password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
-      uint8_t           privilege_level;
-      
-      unsigned int      session_timeout;
-      unsigned int      retry_timeout;
-      unsigned int      retry_count;
-      struct timeval    last_send;
-      struct timeval    last_received;
-      
-      struct 
-      {
-	fiid_obj_t      obj_rmcp_hdr;
-	fiid_obj_t      obj_lan_session_hdr;
-	fiid_obj_t      obj_lan_msg_hdr;
-	fiid_obj_t      obj_lan_msg_trlr;
-      } rq;
-      
-      struct 
-      {
-	fiid_obj_t      obj_rmcp_hdr;
-	fiid_obj_t      obj_lan_session_hdr;
-	fiid_obj_t      obj_lan_msg_hdr;
-	fiid_obj_t      obj_lan_msg_trlr;
-      } rs;
-    } outofband;
-  } io;
-};
-typedef struct ipmi_device ipmi_device_t;
+ipmi_device_t ipmi_open_outofband (ipmi_driver_type_t driver_type, 
+                                   ipmi_mode_t mode, 
+                                   unsigned int session_timeout,
+                                   unsigned int retry_timeout, 
+                                   struct sockaddr *remote_host, 
+                                   size_t remote_host_len, 
+                                   uint8_t authentication_type, 
+                                   char *username, 
+                                   char *password, 
+                                   uint8_t privilege_level);
 
-int ipmi_open_inband (ipmi_device_t *dev, 
-		      int disable_auto_probe, 
-		      ipmi_driver_type_t driver_type, 
-		      uint16_t driver_address, 
-		      uint8_t reg_space,
-		      char *driver_device, 
-		      ipmi_mode_t mode);
-int ipmi_open_outofband (ipmi_device_t *dev, 
-			 ipmi_driver_type_t driver_type, 
-			 ipmi_mode_t mode, 
-                         unsigned int session_timeout,
-			 unsigned int retry_timeout, 
-			 struct sockaddr *remote_host, 
-			 size_t remote_host_len, 
-			 uint8_t authentication_type, 
-			 char *username, 
-			 char *password, 
-			 uint8_t privilege_level);
-int ipmi_close (ipmi_device_t *dev);
-int ipmi_cmd (ipmi_device_t *dev, 
+int ipmi_cmd (ipmi_device_t dev, 
 	      uint8_t lun, 
 	      uint8_t net_fn, 
 	      fiid_obj_t obj_cmd_rq, 
 	      fiid_obj_t obj_cmd_rs);
-int ipmi_cmd_raw (ipmi_device_t *dev, 
+
+int ipmi_cmd_raw (ipmi_device_t dev, 
                   uint8_t lun, 
                   uint8_t net_fn, 
 		  uint8_t *in, 
 		  size_t in_len, 
 		  uint8_t *out, 
 		  size_t out_len);
+
+void ipmi_close_device (ipmi_device_t dev);
 
 #endif /* _IPMI_UDM_H */

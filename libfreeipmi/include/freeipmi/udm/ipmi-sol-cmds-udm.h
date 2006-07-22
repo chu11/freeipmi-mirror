@@ -29,95 +29,95 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_device_t dev, 
 							     uint8_t channel_number, 
 							     uint8_t sol_enable, 
 							     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_device_t *dev,
+int8_t ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_device_t dev,
                                                                      uint8_t channel_number,
                                                                      uint8_t sol_privilege_level,
                                                                      uint8_t force_sol_payload_authentication,
                                                                      uint8_t force_sol_payload_encryption,
                                                                      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
+int8_t ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (ipmi_device_t dev,
                                                                                                    uint8_t channel_number,
                                                                                                    uint8_t character_accumulate_interval,
                                                                                                    uint8_t character_send_threshold,
                                                                                                    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_device_t *dev,
+int8_t ipmi_cmd_set_sol_configuration_parameters_sol_retry (ipmi_device_t dev,
                                                             uint8_t channel_number,
                                                             uint8_t retry_count,
                                                             uint8_t retry_interval,
                                                             fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_device_t *dev,
+int8_t ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_device_t dev,
                                                                             uint8_t channel_number,
                                                                             uint8_t bit_rate,
                                                                             fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_device_t *dev,
+int8_t ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_device_t dev,
                                                                         uint8_t channel_number,
                                                                         uint8_t bit_rate,
                                                                         fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_device_t *dev,
+int8_t ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_device_t dev,
                                                                           uint8_t channel_number,
                                                                           uint16_t port_number,
                                                                           fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_device_t *dev, 
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_device_t dev, 
 							     uint8_t channel_number,
 							     uint8_t get_parameter,
 							     uint8_t set_selector,
 							     uint8_t block_selector,
 							     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_authentication (ipmi_device_t dev,
                                                                      uint8_t channel_number,
                                                                      uint8_t get_parameter,
                                                                      uint8_t set_selector,
                                                                      uint8_t block_selector,
                                                                      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (ipmi_device_t dev,
                                                                                                    uint8_t channel_number,
                                                                                                    uint8_t get_parameter,
                                                                                                    uint8_t set_selector,
                                                                                                    uint8_t block_selector,
                                                                                                    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_retry (ipmi_device_t dev,
                                                             uint8_t channel_number,
                                                             uint8_t get_parameter,
                                                             uint8_t set_selector,
                                                             uint8_t block_selector,
                                                             fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (ipmi_device_t dev,
                                                                             uint8_t channel_number,
                                                                             uint8_t get_parameter,
                                                                             uint8_t set_selector,
                                                                             uint8_t block_selector,
                                                                             fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_device_t dev,
                                                                         uint8_t channel_number,
                                                                         uint8_t get_parameter,
                                                                         uint8_t set_selector,
                                                                         uint8_t block_selector,
                                                                         fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (ipmi_device_t dev,
                                                                       uint8_t channel_number,
                                                                       uint8_t get_parameter,
                                                                       uint8_t set_selector,
                                                                       uint8_t block_selector,
                                                                       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_device_t *dev,
+int8_t ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_device_t dev,
                                                                           uint8_t channel_number,
                                                                           uint8_t get_parameter,
                                                                           uint8_t set_selector,

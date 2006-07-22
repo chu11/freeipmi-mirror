@@ -67,17 +67,16 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
-      if (ipmi_open_outofband (&dev, 
-			       IPMI_DEVICE_LAN, 
-			       IPMI_MODE_DEFAULT, 
-			       1, 
-			       0, 
-			       (struct sockaddr *) &host, 
-			       sizeof (struct sockaddr), 
-			       authentication_type, 
-			       username, 
-			       password, 
-			       priv_level) != 0)
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN, 
+                                       IPMI_MODE_DEFAULT, 
+                                       1, 
+                                       0, 
+                                       (struct sockaddr *) &host, 
+                                       sizeof (struct sockaddr), 
+                                       authentication_type, 
+                                       username, 
+                                       password, 
+                                       priv_level)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -85,13 +84,12 @@ main (int argc, char **argv)
     }
   else 
     {
-      if (ipmi_open_inband (&dev, 
-			    disable_auto_probe, 
-			    IPMI_DEVICE_KCS, /* can also be any inband device */
-			    driver_address, 
-			    0, /* register spacing */
-			    driver_device, 
-			    IPMI_MODE_DEFAULT) != 0)
+      if (!(dev = ipmi_open_inband (disable_auto_probe, 
+                                    IPMI_DEVICE_KCS, /* can also be any inband device */
+                                    driver_address, 
+                                    0, /* register spacing */
+                                    driver_device, 
+                                    IPMI_MODE_DEFAULT)))
 	{
 	  perror ("ipmi_open_inband()");
 	  exit (EXIT_FAILURE);
@@ -103,18 +101,13 @@ main (int argc, char **argv)
       perror("fiid_obj_create");
       exit (EXIT_FAILURE);
     }
-  if (ipmi_cmd_get_device_id (&dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_device_id (dev, obj_cmd_rs) != 0)
     {
       perror ("ipmi_cmd()");
       exit (EXIT_FAILURE);
     }
   ipmi_obj_dump (fileno (stdout), obj_cmd_rs);
   
-  if (ipmi_close (&dev) != 0)
-    {
-      perror ("ipmi_close()");
-      exit (EXIT_FAILURE);
-    }
-  
+  ipmi_close_device (dev);
   return (0);
 }

@@ -42,7 +42,7 @@ static int cipher_suite_priv_map[16] =
 static int cipher_suite_priv_map_set = 0;
 
 static int8_t 
-set_bmc_user_access (ipmi_device_t *dev, 
+set_bmc_user_access (ipmi_device_t dev, 
 		     uint8_t channel_number, 
 		     uint8_t user_ipmi_messaging, 
 		     uint8_t user_link_authentication, 
@@ -75,7 +75,7 @@ set_bmc_user_access (ipmi_device_t *dev,
 }
 
 static int8_t 
-set_bmc_channel_access (ipmi_device_t *dev, 
+set_bmc_channel_access (ipmi_device_t dev, 
 			uint8_t channel_number, 
 			uint8_t set_option, 
 			uint8_t access_mode, 
@@ -112,7 +112,7 @@ set_bmc_channel_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_username (ipmi_device_t *dev, 
+set_bmc_username (ipmi_device_t dev, 
 		  uint8_t userid, 
 		  uint8_t *username)
 {
@@ -140,7 +140,7 @@ set_bmc_username (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_enable_user (ipmi_device_t *dev, 
+set_bmc_enable_user (ipmi_device_t dev, 
 		     uint8_t userid, 
 		     int user_status)
 {
@@ -170,7 +170,7 @@ set_bmc_enable_user (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_user_password (ipmi_device_t *dev, 
+set_bmc_user_password (ipmi_device_t dev, 
 		       uint8_t userid, 
 		       uint8_t *password)
 {
@@ -196,7 +196,7 @@ set_bmc_user_password (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_user_password20 (ipmi_device_t *dev, 
+set_bmc_user_password20 (ipmi_device_t dev, 
                          uint8_t userid, 
                          uint8_t *password)
 {
@@ -223,7 +223,7 @@ set_bmc_user_password20 (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_user_lan_channel_access (ipmi_device_t *dev, 
+set_bmc_user_lan_channel_access (ipmi_device_t dev, 
 				 uint8_t userid, 
 				 uint8_t lan_user_ipmi_messaging, 
 				 uint8_t lan_user_link_authentication, 
@@ -242,7 +242,7 @@ set_bmc_user_lan_channel_access (ipmi_device_t *dev,
 }
 
 int8_t
-set_bmc_user_payload_access (ipmi_device_t *dev,
+set_bmc_user_payload_access (ipmi_device_t dev,
                              uint8_t userid,
                              uint8_t operation,
                              uint8_t standard_payload_1,
@@ -298,7 +298,7 @@ set_bmc_user_payload_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_user_serial_channel_access (ipmi_device_t *dev, 
+set_bmc_user_serial_channel_access (ipmi_device_t dev, 
 				    uint8_t userid, 
 				    uint8_t serial_user_ipmi_messaging, 
 				    uint8_t serial_user_link_authentication, 
@@ -317,7 +317,7 @@ set_bmc_user_serial_channel_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
+set_bmc_lan_channel_volatile_access (ipmi_device_t dev, 
 				     uint8_t access_mode, 
 				     uint8_t user_level_authentication, 
 				     uint8_t per_message_authentication, 
@@ -335,7 +335,7 @@ set_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
+set_bmc_lan_channel_non_volatile_access (ipmi_device_t dev, 
 					 uint8_t access_mode, 
 					 uint8_t user_level_authentication, 
 					 uint8_t per_message_authentication, 
@@ -353,7 +353,7 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
+set_bmc_lan_conf_ip_address_source (ipmi_device_t dev, 
 				    uint8_t ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -376,7 +376,7 @@ set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
+set_bmc_lan_conf_ip_address (ipmi_device_t dev, 
 			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -403,7 +403,7 @@ set_bmc_lan_conf_ip_address (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
+set_bmc_lan_conf_mac_address (ipmi_device_t dev, 
 			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -430,7 +430,7 @@ set_bmc_lan_conf_mac_address (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev, 
+set_bmc_lan_conf_subnet_mask (ipmi_device_t dev, 
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -457,7 +457,7 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
+set_bmc_lan_conf_default_gateway_address (ipmi_device_t dev, 
 					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -484,7 +484,7 @@ set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
+set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev, 
 					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -511,7 +511,7 @@ set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
+set_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev, 
 					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -538,7 +538,7 @@ set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
+set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev, 
 					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -565,7 +565,7 @@ set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 
+set_bmc_lan_conf_vlan_id (ipmi_device_t dev, 
 			  uint32_t vlan_id,
 			  uint8_t vlan_id_enable)
 {
@@ -590,7 +590,7 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev, 
+set_bmc_lan_conf_vlan_priority (ipmi_device_t dev, 
 				uint8_t vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -703,7 +703,7 @@ _fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
+set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
 					      struct bmc_authentication_level *bmc_authentication_level)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -824,7 +824,7 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
+set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
 					    uint8_t bmc_generated_gratuitous_arps, 
 					    uint8_t bmc_generated_arp_responses)
 {
@@ -850,7 +850,7 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
+set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev, 
 					  uint8_t gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -873,7 +873,7 @@ set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
+set_bmc_serial_channel_volatile_access (ipmi_device_t dev, 
 					uint8_t access_mode, 
 					uint8_t user_level_authentication, 
 					uint8_t per_message_authentication, 
@@ -891,7 +891,7 @@ set_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
+set_bmc_serial_channel_non_volatile_access (ipmi_device_t dev, 
 					    uint8_t access_mode, 
 					    uint8_t user_level_authentication, 
 					    uint8_t per_message_authentication, 
@@ -909,7 +909,7 @@ set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
+set_bmc_serial_conf_connection_mode (ipmi_device_t dev, 
 				     uint8_t basic_mode,
 				     uint8_t ppp_mode,
 				     uint8_t terminal_mode,
@@ -938,7 +938,7 @@ set_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev, 
+set_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev, 
 					    uint8_t page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -961,7 +961,7 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
+set_bmc_serial_conf_call_retry_interval (ipmi_device_t dev, 
 					 uint8_t call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -984,7 +984,7 @@ set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
+set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev, 
 						  uint8_t dtr_hangup, 
 						  uint8_t flow_control, 
 						  uint8_t bit_rate)
@@ -1011,7 +1011,7 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_power_restore_policy (ipmi_device_t *dev, 
+set_bmc_power_restore_policy (ipmi_device_t dev, 
 			      uint8_t power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1033,7 +1033,7 @@ set_bmc_power_restore_policy (ipmi_device_t *dev,
 }
 
 int8_t 
-set_pef_control (ipmi_device_t *dev, 
+set_pef_control (ipmi_device_t dev, 
 		 uint8_t pef, 
 		 uint8_t pef_event_messages, 
 		 uint8_t pef_startup_delay, 
@@ -1061,7 +1061,7 @@ set_pef_control (ipmi_device_t *dev,
 }
 
 int8_t 
-set_pef_action_global_control (ipmi_device_t *dev, 
+set_pef_action_global_control (ipmi_device_t dev, 
 			       uint8_t alert_action, 
 			       uint8_t power_down_action, 
 			       uint8_t reset_action, 
@@ -1093,7 +1093,7 @@ set_pef_action_global_control (ipmi_device_t *dev,
 }
 
 int8_t 
-set_pef_startup_delay (ipmi_device_t *dev, 
+set_pef_startup_delay (ipmi_device_t dev, 
 		       uint8_t pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1115,7 +1115,7 @@ set_pef_startup_delay (ipmi_device_t *dev,
 }
 
 int8_t 
-set_pef_alert_startup_delay (ipmi_device_t *dev, 
+set_pef_alert_startup_delay (ipmi_device_t dev, 
 			     uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1137,7 +1137,7 @@ set_pef_alert_startup_delay (ipmi_device_t *dev,
 }
 
 int8_t
-set_sol_sol_enable(ipmi_device_t *dev,
+set_sol_sol_enable(ipmi_device_t dev,
 		   uint8_t sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1160,7 +1160,7 @@ set_sol_sol_enable(ipmi_device_t *dev,
 }
 
 int8_t
-set_sol_sol_authentication(ipmi_device_t *dev,
+set_sol_sol_authentication(ipmi_device_t dev,
 			   uint8_t sol_privilege_level,
 			   uint8_t force_sol_payload_authentication,
 			   uint8_t force_sol_payload_encryption)
@@ -1187,7 +1187,7 @@ set_sol_sol_authentication(ipmi_device_t *dev,
 }
 
 int8_t
-set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
+set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t dev,
 							 uint8_t character_accumulate_interval,
 							 uint8_t character_send_threshold)
 {
@@ -1212,7 +1212,7 @@ set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
 }
 
 int8_t
-set_sol_sol_retry(ipmi_device_t *dev,
+set_sol_sol_retry(ipmi_device_t dev,
 		  uint8_t retry_count,
 		  uint8_t retry_interval)
 {
@@ -1237,7 +1237,7 @@ set_sol_sol_retry(ipmi_device_t *dev,
 }
 
 int8_t
-set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
+set_sol_sol_non_volatile_bit_rate(ipmi_device_t dev,
 				  uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1260,7 +1260,7 @@ set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
 }
 
 int8_t
-set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
+set_sol_sol_volatile_bit_rate(ipmi_device_t dev,
 			      uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1283,7 +1283,7 @@ set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
 }
 
 int8_t
-set_sol_sol_payload_port_number(ipmi_device_t *dev,
+set_sol_sol_payload_port_number(ipmi_device_t dev,
 				uint16_t port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1306,7 +1306,7 @@ set_sol_sol_payload_port_number(ipmi_device_t *dev,
 }
 
 static int
-_rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
+_rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
 {
   fiid_obj_t obj_cmd_count_rs = NULL;
   fiid_obj_t obj_cmd_id_rs = NULL;
@@ -1467,7 +1467,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
 }
 
 int8_t
-set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
+set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 					uint8_t cipher_suite_id,
 					uint8_t privilege)
 {
@@ -1531,7 +1531,7 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
 }
 
 int8_t
-set_k_r(ipmi_device_t *dev,
+set_k_r(ipmi_device_t dev,
         uint8_t *k_r,
         uint32_t k_r_len)
 {
@@ -1561,7 +1561,7 @@ set_k_r(ipmi_device_t *dev,
 }
 
 int8_t
-set_k_g(ipmi_device_t *dev,
+set_k_g(ipmi_device_t dev,
         uint8_t *k_g,
         uint32_t k_g_len)
 {
@@ -1589,7 +1589,7 @@ set_k_g(ipmi_device_t *dev,
 
 
 int8_t
-get_bmc_max_users (ipmi_device_t *dev, uint8_t *max_users)
+get_bmc_max_users (ipmi_device_t dev, uint8_t *max_users)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1617,7 +1617,7 @@ get_bmc_max_users (ipmi_device_t *dev, uint8_t *max_users)
 			      
 /* get_XXXX functions */
 static int8_t 
-get_bmc_user_access (ipmi_device_t *dev, 
+get_bmc_user_access (ipmi_device_t dev, 
 		     uint8_t userid, 
 		     uint8_t channel_number, 
 		     uint8_t *user_ipmi_messaging, 
@@ -1665,7 +1665,7 @@ get_bmc_user_access (ipmi_device_t *dev,
 }
 
 static int8_t 
-get_bmc_channel_access (ipmi_device_t *dev, 
+get_bmc_channel_access (ipmi_device_t dev, 
 			uint8_t channel_number, 
 			uint8_t access_type, 
 			uint8_t *access_mode, 
@@ -1716,7 +1716,7 @@ get_bmc_channel_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_username (ipmi_device_t *dev, 
+get_bmc_username (ipmi_device_t dev, 
 		  uint8_t userid, 
 		  uint8_t *username,
 		  uint32_t username_len)
@@ -1752,7 +1752,7 @@ get_bmc_username (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_user_lan_channel_access (ipmi_device_t *dev, 
+get_bmc_user_lan_channel_access (ipmi_device_t dev, 
 				 uint8_t userid, 
 				 uint8_t *user_ipmi_messaging, 
 				 uint8_t *user_link_authentication, 
@@ -1771,7 +1771,7 @@ get_bmc_user_lan_channel_access (ipmi_device_t *dev,
 }
 
 int8_t
-get_bmc_user_payload_access (ipmi_device_t *dev,
+get_bmc_user_payload_access (ipmi_device_t dev,
                              uint8_t userid,
                              uint8_t *standard_payload_1,
                              uint8_t *standard_payload_2,
@@ -1915,7 +1915,7 @@ get_bmc_user_payload_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_user_serial_channel_access (ipmi_device_t *dev, 
+get_bmc_user_serial_channel_access (ipmi_device_t dev, 
 				    uint8_t userid, 
 				    uint8_t *user_ipmi_messaging, 
 				    uint8_t *user_link_authentication, 
@@ -1934,7 +1934,7 @@ get_bmc_user_serial_channel_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
+get_bmc_lan_channel_volatile_access (ipmi_device_t dev, 
 				     uint8_t *access_mode, 
 				     uint8_t *user_level_authentication, 
 				     uint8_t *per_message_authentication, 
@@ -1952,7 +1952,7 @@ get_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
+get_bmc_lan_channel_non_volatile_access (ipmi_device_t dev, 
 					 uint8_t *access_mode, 
 					 uint8_t *user_level_authentication, 
 					 uint8_t *per_message_authentication, 
@@ -1970,7 +1970,7 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
+get_bmc_lan_conf_ip_address_source (ipmi_device_t dev, 
 				    uint8_t *ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2000,7 +2000,7 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
+get_bmc_lan_conf_ip_address (ipmi_device_t dev, 
 			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2038,7 +2038,7 @@ get_bmc_lan_conf_ip_address (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
+get_bmc_lan_conf_mac_address (ipmi_device_t dev, 
 			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2078,7 +2078,7 @@ get_bmc_lan_conf_mac_address (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev, 
+get_bmc_lan_conf_subnet_mask (ipmi_device_t dev, 
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2116,7 +2116,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
+get_bmc_lan_conf_default_gateway_address (ipmi_device_t dev, 
 					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2154,7 +2154,7 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
+get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev, 
 					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2194,7 +2194,7 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
+get_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev, 
 					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2232,7 +2232,7 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
+get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev, 
 					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2272,7 +2272,7 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 
+get_bmc_lan_conf_vlan_id (ipmi_device_t dev, 
 			  uint32_t *vlan_id,
 			  uint8_t *vlan_id_enable)
 {
@@ -2308,7 +2308,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev, 
+get_bmc_lan_conf_vlan_priority (ipmi_device_t dev, 
 				uint8_t *vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2338,7 +2338,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
+get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
 					      struct bmc_authentication_level *bmc_authentication_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2464,7 +2464,7 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
+get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
 					    uint8_t *bmc_generated_gratuitous_arps, 
 					    uint8_t *bmc_generated_arp_responses)
 {
@@ -2499,7 +2499,7 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
+get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev, 
 					  uint8_t *gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2529,7 +2529,7 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
+get_bmc_serial_channel_volatile_access (ipmi_device_t dev, 
 					uint8_t *access_mode, 
 					uint8_t *user_level_authentication, 
 					uint8_t *per_message_authentication, 
@@ -2547,7 +2547,7 @@ get_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
+get_bmc_serial_channel_non_volatile_access (ipmi_device_t dev, 
 					    uint8_t *access_mode, 
 					    uint8_t *user_level_authentication, 
 					    uint8_t *per_message_authentication, 
@@ -2565,7 +2565,7 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
+get_bmc_serial_conf_connection_mode (ipmi_device_t dev, 
 				     uint8_t *basic_mode, 
 				     uint8_t *ppp_mode, 
 				     uint8_t *terminal_mode, 
@@ -2610,7 +2610,7 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev, 
+get_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev, 
 					    uint8_t *page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2640,7 +2640,7 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
+get_bmc_serial_conf_call_retry_interval (ipmi_device_t dev, 
 					 uint8_t *call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2670,7 +2670,7 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
+get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev, 
 						  uint8_t *dtr_hangup, 
 						  uint8_t *flow_control, 
 						  uint8_t *bit_rate)
@@ -2710,7 +2710,7 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_power_restore_policy (ipmi_device_t *dev, 
+get_bmc_power_restore_policy (ipmi_device_t dev, 
 			      uint8_t *power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2735,7 +2735,7 @@ get_bmc_power_restore_policy (ipmi_device_t *dev,
 }
 
 int8_t 
-get_pef_control (ipmi_device_t *dev, 
+get_pef_control (ipmi_device_t dev, 
 		 uint8_t *pef, 
 		 uint8_t *pef_event_messages, 
 		 uint8_t *pef_startup_delay, 
@@ -2779,7 +2779,7 @@ get_pef_control (ipmi_device_t *dev,
 }
 
 int8_t 
-get_pef_action_global_control (ipmi_device_t *dev, 
+get_pef_action_global_control (ipmi_device_t dev, 
 			       uint8_t *alert_action, 
 			       uint8_t *power_down_action, 
 			       uint8_t *reset_action, 
@@ -2833,7 +2833,7 @@ get_pef_action_global_control (ipmi_device_t *dev,
 }
 
 int8_t 
-get_pef_startup_delay (ipmi_device_t *dev, 
+get_pef_startup_delay (ipmi_device_t dev, 
 		       uint8_t *pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2862,7 +2862,7 @@ get_pef_startup_delay (ipmi_device_t *dev,
 }
 
 int8_t 
-get_pef_alert_startup_delay (ipmi_device_t *dev, 
+get_pef_alert_startup_delay (ipmi_device_t dev, 
 			     uint8_t *pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2891,7 +2891,7 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sol_sol_enable (ipmi_device_t *dev, 
+get_sol_sol_enable (ipmi_device_t dev, 
 		    uint8_t *sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2921,7 +2921,7 @@ get_sol_sol_enable (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sol_sol_authentication (ipmi_device_t *dev, 
+get_sol_sol_authentication (ipmi_device_t dev, 
 			    uint8_t *sol_privilege_level,
 			    uint8_t *force_sol_payload_authentication,
 			    uint8_t *force_sol_payload_encryption)
@@ -2961,7 +2961,7 @@ get_sol_sol_authentication (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev, 
+get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t dev, 
 							  uint8_t *character_accumulate_interval,
 							  uint8_t *character_send_threshold)
 {
@@ -2996,7 +2996,7 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sol_sol_retry (ipmi_device_t *dev, 
+get_sol_sol_retry (ipmi_device_t dev, 
 		   uint8_t *retry_count,
 		   uint8_t *retry_interval)
 {
@@ -3031,7 +3031,7 @@ get_sol_sol_retry (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev, 
+get_sol_sol_non_volatile_bit_rate (ipmi_device_t dev, 
 				   uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -3061,7 +3061,7 @@ get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sol_sol_volatile_bit_rate (ipmi_device_t *dev, 
+get_sol_sol_volatile_bit_rate (ipmi_device_t dev, 
 			       uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -3091,7 +3091,7 @@ get_sol_sol_volatile_bit_rate (ipmi_device_t *dev,
 }
 
 int8_t 
-get_sol_sol_payload_port_number (ipmi_device_t *dev, 
+get_sol_sol_payload_port_number (ipmi_device_t dev, 
 				 uint16_t *port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -3121,7 +3121,7 @@ get_sol_sol_payload_port_number (ipmi_device_t *dev,
 }
 
 int8_t
-get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
+get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 					uint8_t cipher_suite_id,
 					uint8_t *privilege)
 {
@@ -3153,7 +3153,7 @@ get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
 }
 
 int32_t
-get_k_r(ipmi_device_t *dev,
+get_k_r(ipmi_device_t dev,
         uint8_t *k_r,
         uint32_t k_r_len)
 {
@@ -3189,7 +3189,7 @@ get_k_r(ipmi_device_t *dev,
 }
 
 int32_t
-get_k_g(ipmi_device_t *dev,
+get_k_g(ipmi_device_t dev,
         uint8_t *k_g,
         uint32_t k_g_len)
 {
@@ -3226,7 +3226,7 @@ get_k_g(ipmi_device_t *dev,
 
 /***********************************************************/
 int8_t 
-check_bmc_user_password (ipmi_device_t *dev, 
+check_bmc_user_password (ipmi_device_t dev, 
 			 uint8_t userid, 
 			 uint8_t *password)
 {
@@ -3262,7 +3262,7 @@ check_bmc_user_password (ipmi_device_t *dev,
 }
 
 int8_t 
-check_bmc_user_password20 (ipmi_device_t *dev, 
+check_bmc_user_password20 (ipmi_device_t dev, 
                            uint8_t userid, 
                            uint8_t *password)
 {

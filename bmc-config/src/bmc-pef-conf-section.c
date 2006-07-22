@@ -5,7 +5,7 @@
 #include "bmc-types.h"
 
 int
-pef_control_checkout (ipmi_device_t *dev,
+pef_control_checkout (ipmi_device_t dev,
 		      uint8_t *pef,
 		      uint8_t *pef_event_messages,
 		      uint8_t *pef_startup_delay,
@@ -43,7 +43,7 @@ pef_control_checkout (ipmi_device_t *dev,
 
 
 int
-pef_control_commit (ipmi_device_t *dev,
+pef_control_commit (ipmi_device_t dev,
 		    uint8_t *pef,
 		    uint8_t *pef_event_messages,
 		    uint8_t *pef_startup_delay,
@@ -91,7 +91,7 @@ enable_pef_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
   
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      &value,
 			      NULL,
 			      NULL,
@@ -112,7 +112,7 @@ enable_pef_commit (const struct arguments *args,
 		   const struct keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
-  return pef_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_control_commit (args->dev,
 			     &value,
 			     NULL,
 			     NULL,
@@ -128,7 +128,7 @@ enable_pef_diff (const struct arguments *args,
   uint8_t passed_value;
   int ret;
 
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      &got_value,
 			      NULL,
 			      NULL,
@@ -170,7 +170,7 @@ enable_pef_event_messages_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
   
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      NULL,
 			      &value,
 			      NULL,
@@ -191,7 +191,7 @@ enable_pef_event_messages_commit (const struct arguments *args,
 				  const struct keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
-  return pef_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_control_commit (args->dev,
 			     NULL,
 			     &value,
 			     NULL,
@@ -207,7 +207,7 @@ enable_pef_event_messages_diff (const struct arguments *args,
   uint8_t passed_value;
   int ret;
 
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      NULL,
 			      &got_value,
 			      NULL,
@@ -250,7 +250,7 @@ enable_pef_startup_delay_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
   
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      &value,
@@ -271,7 +271,7 @@ enable_pef_startup_delay_commit (const struct arguments *args,
 				 const struct keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
-  return pef_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_control_commit (args->dev,
 			     NULL,
 			     NULL,
 			     &value,
@@ -287,7 +287,7 @@ enable_pef_startup_delay_diff (const struct arguments *args,
   uint8_t passed_value;
   int ret;
 
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      &got_value,
@@ -330,7 +330,7 @@ enable_pef_alert_startup_delay_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
   
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      NULL,
@@ -351,7 +351,7 @@ enable_pef_alert_startup_delay_commit (const struct arguments *args,
 				       const struct keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
-  return pef_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_control_commit (args->dev,
 			     NULL,
 			     NULL,
 			     NULL,
@@ -367,7 +367,7 @@ enable_pef_alert_startup_delay_diff (const struct arguments *args,
   uint8_t passed_value;
   int ret;
 
-  ret = pef_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_control_checkout (args->dev,
 			      NULL,
 			      NULL,
 			      NULL,
@@ -401,7 +401,7 @@ enable_pef_alert_startup_delay_validate (const struct arguments *args,
 
 
 static int
-pef_global_control_checkout (ipmi_device_t *dev,
+pef_global_control_checkout (ipmi_device_t dev,
 			     uint8_t *alert_action,
 			     uint8_t *power_down_action,
 			     uint8_t *reset_action,
@@ -447,7 +447,7 @@ pef_global_control_checkout (ipmi_device_t *dev,
 
 
 static int
-pef_global_control_commit (ipmi_device_t *dev,
+pef_global_control_commit (ipmi_device_t dev,
 			   uint8_t *alert_action,
 			   uint8_t *power_down_action,
 			   uint8_t *reset_action,
@@ -507,7 +507,7 @@ enable_alert_action_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     &value,
 				     NULL,
 				     NULL,
@@ -531,7 +531,7 @@ enable_alert_action_commit (const struct arguments *args,
 			    const struct keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
-  return pef_global_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_global_control_commit (args->dev,
 				    &value,
 				    NULL,
 				    NULL,
@@ -549,7 +549,7 @@ enable_alert_action_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
   
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     &got_value,
 				     NULL,
 				     NULL,
@@ -593,7 +593,7 @@ enable_power_down_action_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     &value,
 				     NULL,
@@ -617,7 +617,7 @@ enable_power_down_action_commit (const struct arguments *args,
 				 const struct keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
-  return pef_global_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_global_control_commit (args->dev,
 				    NULL,
 				    &value,
 				    NULL,
@@ -635,7 +635,7 @@ enable_power_down_action_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
   
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     &got_value,
 				     NULL,
@@ -678,7 +678,7 @@ enable_reset_action_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     &value,
@@ -702,7 +702,7 @@ enable_reset_action_commit (const struct arguments *args,
 			    const struct keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
-  return pef_global_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_global_control_commit (args->dev,
 				    NULL,
 				    NULL,
 				    &value,
@@ -720,7 +720,7 @@ enable_reset_action_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
   
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     &got_value,
@@ -763,7 +763,7 @@ enable_power_cycle_action_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     NULL,
@@ -787,7 +787,7 @@ enable_power_cycle_action_commit (const struct arguments *args,
 				  const struct keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
-  return pef_global_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_global_control_commit (args->dev,
 				    NULL,
 				    NULL,
 				    NULL,
@@ -805,7 +805,7 @@ enable_power_cycle_action_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
   
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     NULL,
@@ -848,7 +848,7 @@ enable_oem_action_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     NULL,
@@ -872,7 +872,7 @@ enable_oem_action_commit (const struct arguments *args,
 			  const struct keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
-  return pef_global_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_global_control_commit (args->dev,
 				    NULL,
 				    NULL,
 				    NULL,
@@ -890,7 +890,7 @@ enable_oem_action_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
   
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     NULL,
@@ -934,7 +934,7 @@ enable_diagnostic_interrupt_checkout (const struct arguments *args,
   int ret;
   uint8_t value;
 
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     NULL,
@@ -958,7 +958,7 @@ enable_diagnostic_interrupt_commit (const struct arguments *args,
 				    const struct keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
-  return pef_global_control_commit ((ipmi_device_t *)&args->dev,
+  return pef_global_control_commit (args->dev,
 				    NULL,
 				    NULL,
 				    NULL,
@@ -976,7 +976,7 @@ enable_diagnostic_interrupt_diff (const struct arguments *args,
   uint8_t got_value;
   int ret;
   
-  ret = pef_global_control_checkout ((ipmi_device_t *)&args->dev,
+  ret = pef_global_control_checkout (args->dev,
 				     NULL,
 				     NULL,
 				     NULL,
@@ -1020,7 +1020,7 @@ pef_startup_delay_checkout (const struct arguments *args,
   int ret;
   uint8_t delay;
   
-  ret = get_pef_startup_delay ((ipmi_device_t *)&args->dev,
+  ret = get_pef_startup_delay (args->dev,
 			       &delay);
   if (ret != 0)
     return -1;
@@ -1038,7 +1038,7 @@ pef_startup_delay_commit (const struct arguments *args,
 			  const struct keyvalue *kv)
 {
   uint8_t value = atoi (kv->value);
-  return set_pef_startup_delay ((ipmi_device_t *)&args->dev,
+  return set_pef_startup_delay (args->dev,
 				value);
 }
 
@@ -1051,7 +1051,7 @@ pef_startup_delay_diff (const struct arguments *args,
   uint8_t got_value;
   uint8_t passed_value;
   
-  ret = get_pef_startup_delay ((ipmi_device_t *)&args->dev,
+  ret = get_pef_startup_delay (args->dev,
 			       &got_value);
   if (ret != 0)
     return -1;
@@ -1101,7 +1101,7 @@ pef_alert_startup_delay_checkout (const struct arguments *args,
   int ret;
   uint8_t delay;
   
-  ret = get_pef_alert_startup_delay ((ipmi_device_t *)&args->dev,
+  ret = get_pef_alert_startup_delay (args->dev,
 				     &delay);
   if (ret != 0)
     return -1;
@@ -1119,7 +1119,7 @@ pef_alert_startup_delay_commit (const struct arguments *args,
 				const struct keyvalue *kv)
 {
   uint8_t value = atoi (kv->value);
-  return set_pef_alert_startup_delay ((ipmi_device_t *)&args->dev,
+  return set_pef_alert_startup_delay (args->dev,
 				      value);
 }
 
@@ -1132,7 +1132,7 @@ pef_alert_startup_delay_diff (const struct arguments *args,
   uint8_t got_value;
   uint8_t passed_value;
   
-  ret = get_pef_alert_startup_delay ((ipmi_device_t *)&args->dev,
+  ret = get_pef_alert_startup_delay (args->dev,
 			       &got_value);
   if (ret != 0)
     return -1;
