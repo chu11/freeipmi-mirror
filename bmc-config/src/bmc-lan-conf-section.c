@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define BMC_MAXIPADDRLEN 16
+
 static int
 ip_address_source_number (const char *source)
 {
@@ -113,7 +115,7 @@ ip_address_checkout (const struct arguments *args,
 		     struct keyvalue *kv)
 {
   int ret;
-  char ip[17];
+  char ip[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_ip_address ((ipmi_device_t *)&args->dev,
 				     (char *)&ip);
@@ -147,7 +149,7 @@ ip_address_diff (const struct arguments *args,
 		 const struct keyvalue *kv)
 {
   int ret;
-  char ip[17];
+  char ip[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_ip_address ((ipmi_device_t *)&args->dev,
 				     (char *)&ip);
@@ -248,7 +250,7 @@ subnet_mask_checkout (const struct arguments *args,
 		      struct keyvalue *kv)
 {
   int ret;
-  char mask[17];
+  char mask[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_subnet_mask ((ipmi_device_t *)&args->dev,
 				      (char *)&mask);
@@ -282,7 +284,7 @@ subnet_mask_diff (const struct arguments *args,
 		  const struct keyvalue *kv)
 {
   int ret;
-  char mask[17];
+  char mask[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_subnet_mask ((ipmi_device_t *)&args->dev,
 				      (char *)&mask);
@@ -320,7 +322,7 @@ default_gateway_address_checkout (const struct arguments *args,
 				  struct keyvalue *kv)
 {
   int ret;
-  char ip[17];
+  char ip[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_default_gateway_address ((ipmi_device_t *)&args->dev,
 						  (char *)&ip);
@@ -354,7 +356,7 @@ default_gateway_address_diff (const struct arguments *args,
 			      const struct keyvalue *kv)
 {
   int ret;
-  char ip[17];
+  char ip[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_default_gateway_address ((ipmi_device_t *)&args->dev,
 						  (char *)&ip);
@@ -448,7 +450,7 @@ backup_gateway_address_checkout (const struct arguments *args,
 				 struct keyvalue *kv)
 {
   int ret;
-  char ip[17];
+  char ip[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_backup_gateway_address ((ipmi_device_t *)&args->dev,
 						 (char *)&ip);
@@ -482,7 +484,7 @@ backup_gateway_address_diff (const struct arguments *args,
 			     const struct keyvalue *kv)
 {
   int ret;
-  char ip[17];
+  char ip[BMC_MAXIPADDRLEN + 1];
 
   ret = get_bmc_lan_conf_backup_gateway_address ((ipmi_device_t *)&args->dev,
 						 (char *)&ip);
