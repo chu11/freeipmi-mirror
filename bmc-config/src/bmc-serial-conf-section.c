@@ -254,8 +254,8 @@ enable_ppp_mode_validate (const struct arguments *args,
 
 static int
 enable_terminal_mode_checkout (const struct arguments *args,
-			  const struct section *sect,
-			  struct keyvalue *kv)
+			       const struct section *sect,
+			       struct keyvalue *kv)
 {
   int ret;
   uint8_t value;
@@ -502,7 +502,7 @@ call_retry_interval_checkout (const struct arguments *args,
   uint8_t interval;
 
   ret = get_bmc_serial_conf_call_retry_interval ((ipmi_device_t *)&args->dev,
-						    &interval);
+						 &interval);
 
   if (ret != 0)
     return -1;
@@ -521,7 +521,7 @@ call_retry_interval_commit (const struct arguments *args,
 			    const struct keyvalue *kv)
 {
   return set_bmc_serial_conf_call_retry_interval ((ipmi_device_t *)&args->dev,
-						     atoi (kv->value));
+						  atoi (kv->value));
 }
 
 static int
@@ -534,7 +534,7 @@ call_retry_interval_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_serial_conf_call_retry_interval ((ipmi_device_t *)&args->dev,
-						    &interval);
+						 &interval);
 
   if (ret != 0)
     return -1;
