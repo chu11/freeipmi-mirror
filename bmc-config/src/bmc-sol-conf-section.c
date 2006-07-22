@@ -43,17 +43,17 @@ static int
 sol_bit_rate_number (const char *string)
 {
   if (same (string, "serial"))
-    return 0;
+    return IPMI_SOL_BIT_RATE_SERIAL_BIT_RATE;
   if (same (string, "9600"))
-    return IPMI_BIT_RATE_9600_BPS;
+    return IPMI_SOL_BIT_RATE_96_KBPS;
   if (same (string, "19200"))
-    return IPMI_BIT_RATE_19200_BPS;
+    return IPMI_SOL_BIT_RATE_192_KBPS;
   if (same (string, "38400"))
-    return IPMI_BIT_RATE_38400_BPS;
+    return IPMI_SOL_BIT_RATE_384_KBPS;
   if (same (string, "57600"))
-    return IPMI_BIT_RATE_57600_BPS;
+    return IPMI_SOL_BIT_RATE_576_KBPS;
   if (same (string, "115200"))
-    return IPMI_BIT_RATE_115200_BPS;
+    return IPMI_SOL_BIT_RATE_1152_KBPS;
   return -1;
 }
 
@@ -62,17 +62,17 @@ sol_bit_rate_string (uint8_t value)
 {
   switch (value) 
     {
-    case 0:
+    case IPMI_SOL_BIT_RATE_SERIAL_BIT_RATE:
       return "Serial";
-    case IPMI_BIT_RATE_9600_BPS:
+    case IPMI_SOL_BIT_RATE_96_KBPS:
       return "9600";
-    case IPMI_BIT_RATE_19200_BPS:
+    case IPMI_SOL_BIT_RATE_192_KBPS:
       return "19200";
-    case IPMI_BIT_RATE_38400_BPS:
+    case IPMI_SOL_BIT_RATE_384_KBPS:
       return "38400";
-    case IPMI_BIT_RATE_57600_BPS:
+    case IPMI_SOL_BIT_RATE_576_KBPS:
       return "57600";
-    case IPMI_BIT_RATE_115200_BPS:
+    case IPMI_SOL_BIT_RATE_1152_KBPS:
       return "115200";
     }
   return "";
