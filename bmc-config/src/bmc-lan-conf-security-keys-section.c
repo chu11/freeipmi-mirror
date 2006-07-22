@@ -12,7 +12,7 @@ k_r_checkout (const struct arguments *args,
   int ret;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
 
-  memset (k_r, 0, 21);
+  memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
   ret = get_k_r ((ipmi_device_t *) &args->dev,
 		 (uint8_t *)k_r, IPMI_MAX_K_R_LENGTH);
 
@@ -46,7 +46,7 @@ k_r_diff (const struct arguments *args,
   int ret;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
 
-  memset (k_r, 0, 21);
+  memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
   ret = get_k_r ((ipmi_device_t *) &args->dev,
 		 k_r, IPMI_MAX_K_R_LENGTH);
 
