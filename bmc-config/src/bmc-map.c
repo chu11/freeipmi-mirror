@@ -70,7 +70,7 @@ get_privilege_limit_string (uint8_t limit)
     case IPMI_PRIVILEGE_LEVEL_OEM:
       return "OEM_Proprietary";
     case IPMI_PRIVILEGE_LEVEL_NO_ACCESS:
-      return "NO_Access";
+      return "No_Access";
     }
   return "";
 }
@@ -202,11 +202,11 @@ power_restore_policy_string (uint8_t value)
   switch (value)
     {
     case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS:
-      return "OFF_State_AC_Apply";
+      return "Off_State_AC_Apply";
     case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE:
       return "Restore_State_AC_Apply";
     case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
-      return "ON_State_AC_Apply";
+      return "On_State_AC_Apply";
     }
   return "";
 }
@@ -253,7 +253,7 @@ flow_control_string (uint8_t value)
   switch (value)
     {
     case IPMI_FLOW_CONTROL_NO_FLOW_CONTROL:
-      return "NO_Flow_Control";
+      return "No_Flow_Control";
     case IPMI_FLOW_CONTROL_RTS_CTS_FLOW_CONTROL:
       return "RTS_CTS";
     case IPMI_FLOW_CONTROL_XON_XOFF_FLOW_CONTROL:

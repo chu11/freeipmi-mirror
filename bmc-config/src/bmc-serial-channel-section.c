@@ -1026,7 +1026,7 @@ bmc_serial_channel_section_get (struct arguments *args)
 
   add_keyvalue (serial_channel_section,
 		"Volatile_Channel_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/NO_Access",
+		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                 0,
 		volatile_channel_priv_limit_checkout,
 		volatile_channel_priv_limit_commit,
@@ -1071,7 +1071,7 @@ bmc_serial_channel_section_get (struct arguments *args)
 
   add_keyvalue (serial_channel_section,
 		"Non_Volatile_Channel_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/NO_Access",
+		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                 0,
 		non_volatile_channel_priv_limit_checkout,
 		non_volatile_channel_priv_limit_commit,

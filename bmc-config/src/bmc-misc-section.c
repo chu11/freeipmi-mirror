@@ -83,7 +83,7 @@ bmc_misc_section_get (struct arguments *args)
 
   add_keyvalue (misc_section,
 		"Power_Restore_Policy",
-		"Possible values: OFF_State_AC_Apply/Restore_State_AC_Apply/ON_State_AC_Apply",
+		"Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
                 0,
 		power_restore_policy_checkout,
 		power_restore_policy_commit,
