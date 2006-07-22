@@ -58,7 +58,7 @@ ipmi_locate (ipmi_interface_type_t type, struct ipmi_locate_info *info)
   for (i = 0; things_to_try[i] != NULL; i++)
     {
       rv = (*things_to_try[i])(type, &linfo);
-      
+
       if (!rv)
 	{
 	  memcpy(info, &linfo, sizeof(struct ipmi_locate_info));

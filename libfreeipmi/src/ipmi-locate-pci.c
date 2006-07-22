@@ -203,7 +203,7 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_inf
 {
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);
 
-  return NULL;
+  return -1;
 }
 
 #endif

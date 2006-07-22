@@ -434,5 +434,5 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_
  cleanup:
   if (bufp)
     free(bufp);
-  return (NULL);
+  return (-1);
 }
