@@ -158,7 +158,12 @@
 	* bmc-config/src/bmc-common.h: Fix autoconf and header use.
 
 	* bmc-config/src/: Use headers consistently across files.
-	
+
+	* bmc-config/src/bmc-misc-section.c,
+	bmc-config/src/bmc-lan-channel-section.c,
+	bmc-config/src/bmc-serial-channel-section.c,
+	bmc-config/src/bmc-map.c: Fix strings for backwards compatability.
+ 	
 2006-07-20  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/sensors-simple-display.scm
