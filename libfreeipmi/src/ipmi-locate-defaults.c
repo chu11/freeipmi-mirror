@@ -88,7 +88,4 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, struct ipmi_locat
 
   memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
   return 0;
-
- cleanup:
-  return -1;
 }
