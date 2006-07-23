@@ -26,7 +26,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <netdb.h>
 
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
@@ -50,33 +49,19 @@ main (int argc, char **argv)
   char *driver_device = NULL; /* driver device, if needed */
   
   ipmi_device_t dev;
-  
-  struct hostent *hostinfo;
-  struct sockaddr_in host;
-  
   fiid_obj_t obj_cmd_rs;
   
   if (hostname != NULL)
     {
-      host.sin_family = AF_INET;
-      host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (hostname);
-      if (hostinfo == NULL)
-	{
-	  perror ("gethostbyname()");
-	  exit (EXIT_FAILURE);
-	}
-      host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
       if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN, 
-                                       IPMI_MODE_DEFAULT, 
-                                       1, 
-                                       0, 
-                                       (struct sockaddr *) &host, 
-                                       sizeof (struct sockaddr), 
-                                       authentication_type, 
+				       hostname,
                                        username, 
                                        password, 
-                                       priv_level)))
+                                       authentication_type, 
+                                       priv_level,
+                                       0, 
+                                       0, 
+                                       IPMI_MODE_DEFAULT)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -84,9 +69,9 @@ main (int argc, char **argv)
     }
   else 
     {
-      if (!(dev = ipmi_open_inband (disable_auto_probe, 
-                                    IPMI_DEVICE_KCS, /* can also be any inband device */
-                                    driver_address, 
+      if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS, /* can also be any inband device */
+				    disable_auto_probe, 
+				    driver_address, 
                                     0, /* register spacing */
                                     driver_device, 
                                     IPMI_MODE_DEFAULT)))

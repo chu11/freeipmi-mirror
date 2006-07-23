@@ -69,11 +69,7 @@
 #endif
 
 #include <string.h>
-#include <netdb.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
 #include <sys/resource.h>
 
 #include "bmc-types.h"
@@ -85,32 +81,17 @@
 static int
 ipmi_core_init (char *progname, struct arguments *args)
 {
-  struct sockaddr_in host;
-  struct hostent *hostinfo;
-
   if (args->common.host != NULL) 
     {
-      host.sin_family = AF_INET;
-      host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (args->common.host);
-      if (hostinfo == NULL) 
-        {
-          perror ("gethostbyname()");
-          exit (EXIT_FAILURE);
-        }
-      host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
-
-      memset (&args->dev, 0, sizeof (ipmi_device_t));
       if (!(args->dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-                                             IPMI_MODE_DEFAULT,
-                                             args->common.session_timeout,
-                                             args->common.retry_timeout,
-                                             (struct sockaddr *) &host,
-                                             sizeof (struct sockaddr),
-                                             args->common.authentication_type,
+					     args->common.host,
                                              args->common.username,
                                              args->common.password,
-                                             args->common.privilege_level)))
+                                             args->common.authentication_type,
+                                             args->common.privilege_level,
+                                             args->common.session_timeout,
+                                             args->common.retry_timeout,
+                                             IPMI_MODE_DEFAULT)))
         {
           perror ("ipmi_open_outofband()");
           exit (EXIT_FAILURE);
@@ -126,16 +107,16 @@ ipmi_core_init (char *progname, struct arguments *args)
       
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN) 
         {
-          if (!(args->dev = ipmi_open_inband (args->common.disable_auto_probe,
-                                              IPMI_DEVICE_KCS,
-                                              args->common.driver_address,
+          if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_KCS,
+					      args->common.disable_auto_probe,
+					      args->common.driver_address,
                                               args->common.register_spacing,
                                               args->common.driver_device,
                                               IPMI_MODE_DEFAULT)))
             {
-              if (!(args->dev = ipmi_open_inband (args->common.disable_auto_probe,
-                                                  IPMI_DEVICE_SSIF,
-                                                  args->common.driver_address,
+              if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
+						  args->common.disable_auto_probe,
+						  args->common.driver_address,
                                                   args->common.register_spacing,
                                                   args->common.driver_device,
                                                   IPMI_MODE_DEFAULT)))
@@ -147,9 +128,9 @@ ipmi_core_init (char *progname, struct arguments *args)
         } 
       else 
         {
-          if (!(args->dev = ipmi_open_inband (args->common.disable_auto_probe,
-                                              args->common.driver_type,
-                                              args->common.driver_address,
+          if (!(args->dev = ipmi_open_inband (args->common.driver_type,
+					      args->common.disable_auto_probe,
+					      args->common.driver_address,
                                               args->common.register_spacing,
                                               args->common.driver_device,
                                               IPMI_MODE_DEFAULT)))

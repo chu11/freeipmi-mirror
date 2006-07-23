@@ -1,3 +1,20 @@
+2006-07-23  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband,
+	ipmi_open_outofband): Re-work API style to be consistent.  Pass
+	hostname to outofband function rahter than sockaddr.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface.c: Adjust code
+	appropriately.
+
+	* doc/examples/, bmc-config/, bmc-info/, ipmi-raw/, ipmi-sel/:
+	Adjust appropriately for API changes.
+
+	* ac_gethostbyname_r.m4: New file.
+
+	* configure.ac: Add gethostbyname check.
+	
 2006-07-22  Albert Chu <chu11@llnl.gov>
 
 	Hide struct ipmi_device from users in the libfreeipmi API.

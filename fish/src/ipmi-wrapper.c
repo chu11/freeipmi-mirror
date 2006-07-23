@@ -48,29 +48,15 @@ fi_ipmi_open (struct arguments *args)
   if (args->common.host != NULL || 
       args->common.driver_type == IPMI_DEVICE_LAN)
     {
-      struct hostent *hostinfo;
-      struct sockaddr_in host;
-      
-      host.sin_family = AF_INET;
-      host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (args->common.host);
-      if (hostinfo == NULL)
-	{
-	  perror ("gethostbyname()");
-	  return (-1);
-	}
-      host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
-      
       if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN, 
-                                       IPMI_MODE_DEFAULT, 
-                                       args->common.session_timeout, 
-                                       args->common.retry_timeout, 
-                                       (struct sockaddr *) &host, 
-                                       sizeof (struct sockaddr), 
-                                       args->common.authentication_type, 
+				       args->common.host,
                                        args->common.username, 
                                        args->common.password, 
-                                       args->common.privilege_level)))
+                                       args->common.authentication_type, 
+                                       args->common.privilege_level,
+                                       args->common.session_timeout, 
+                                       args->common.retry_timeout, 
+                                       IPMI_MODE_DEFAULT)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);

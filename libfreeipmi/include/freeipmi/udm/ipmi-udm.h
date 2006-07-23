@@ -54,23 +54,22 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 
 typedef struct ipmi_device *ipmi_device_t;
  
-ipmi_device_t ipmi_open_inband (int disable_auto_probe, 
-                                ipmi_driver_type_t driver_type, 
+ipmi_device_t ipmi_open_inband (ipmi_driver_type_t driver_type, 
+				int disable_auto_probe, 
                                 uint16_t driver_address, 
                                 uint8_t reg_space,
                                 char *driver_device, 
                                 ipmi_mode_t mode);
 
 ipmi_device_t ipmi_open_outofband (ipmi_driver_type_t driver_type, 
-                                   ipmi_mode_t mode, 
-                                   unsigned int session_timeout,
-                                   unsigned int retry_timeout, 
-                                   struct sockaddr *remote_host, 
-                                   size_t remote_host_len, 
-                                   uint8_t authentication_type, 
+				   char *hostname,
                                    char *username, 
                                    char *password, 
-                                   uint8_t privilege_level);
+                                   uint8_t authentication_type, 
+                                   uint8_t privilege_level,
+                                   unsigned int session_timeout,
+                                   unsigned int retry_timeout, 
+                                   ipmi_mode_t mode);
 
 int ipmi_cmd (ipmi_device_t dev, 
 	      uint8_t lun, 
