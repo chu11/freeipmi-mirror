@@ -14,6 +14,10 @@
 	* ac_gethostbyname_r.m4: New file.
 
 	* configure.ac: Add gethostbyname check.
+
+	* ipmi-sel/src/ipmi-sel-wrapper.c (_parse_sel_record),
+	libfreeipmi/src/ipmi-locate-defaults.c
+	(ipmi_locate_defaults_get_dev_info): Fix compiler warnings.
 	
 2006-07-22  Albert Chu <chu11@llnl.gov>
 

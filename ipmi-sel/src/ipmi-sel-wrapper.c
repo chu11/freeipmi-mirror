@@ -201,6 +201,7 @@ _get_sel_system_event_record (uint8_t *record_data,
 					       1024);
 	break;
       case IPMI_SENSOR_CLASS_OEM:
+      default:
 	snprintf(buffer, 1024, "Event Type Code = %02Xh", event_type_code);
 	rv = 0;
 	break;
