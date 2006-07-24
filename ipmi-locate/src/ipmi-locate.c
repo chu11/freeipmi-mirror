@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.22 2006-07-24 01:36:19 balamurugan Exp $ 
+   $Id: ipmi-locate.c,v 1.23 2006-07-24 10:41:04 balamurugan Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -123,59 +123,55 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
 void 
 dmidecode_probe_display ()
 {
-  ipmi_locate_info_t *pinfo = NULL;
+  struct ipmi_locate_info info;
   
   printf ("Probing KCS device using DMIDECODE... ");
-  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_KCS)))
+  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_KCS, &info) < 0)
     {
       printf ("done\n");
-      display_ipmi_locate_info (pinfo);
+      display_ipmi_locate_info (&info);
     }
   else 
     {
       printf ("FAILED\n");
     }
   printf ("\n");
-  ipmi_locate_destroy(pinfo);
 
   printf ("Probing SMIC device using DMIDECODE... ");
-  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SMIC)))
+  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SMIC, &info) < 0)
     {
       printf ("done\n");
-      display_ipmi_locate_info (pinfo);
+      display_ipmi_locate_info (&info);
     }
   else 
     {
       printf ("FAILED\n");
     }
   printf ("\n");
-  ipmi_locate_destroy(pinfo);
   
   printf ("Probing BT device using DMIDECODE... ");
-  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_BT)))
+  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_BT, &info) < 0)
     {
       printf ("done\n");
-      display_ipmi_locate_info (pinfo);
+      display_ipmi_locate_info (&info);
     }
   else 
     {
       printf ("FAILED\n");
     }
   printf ("\n");
-  ipmi_locate_destroy(pinfo);
   
   printf ("Probing SSIF device using DMIDECODE... ");
-  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SSIF)))
+  if (ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SSIF, &info) < 0)
     {
       printf ("done\n");
-      display_ipmi_locate_info (pinfo);
+      display_ipmi_locate_info (&info);
     }
   else 
     {
       printf ("FAILED\n");
     }
   printf ("\n");
-  ipmi_locate_destroy(pinfo);
   
   return;
 }
