@@ -129,7 +129,7 @@ enable_user_checkout (const struct arguments *args,
   /* Cant get, always assume Yes */
   if (kv->value)
     free (kv->value);
-  kv->value = strdup ("Yes");
+  kv->value = strdup ("");
   return 0;
 }
 
@@ -160,50 +160,6 @@ enable_user_validate (const struct arguments *args,
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
-
-/* clear_password */
-
-static int
-clear_password_checkout (const struct arguments *args,
-			 const struct section *sect,
-			 struct keyvalue *kv)
-{
-  if (kv->value)
-    free (kv->value);
-  kv->value = strdup ("No");
-  return 0;
-}
-
-static int
-clear_password_commit (const struct arguments *args,
-		       const struct section *sect,
-		       const struct keyvalue *kv)
-{
-  uint8_t userid = atoi (sect->section + strlen ("User"));
-  if (same (kv->value, "yes"))
-    return set_bmc_user_password (args->dev,
-				  userid,
-				  NULL);
-  return 0;
-}
-
-static int
-clear_password_diff (const struct arguments *args,
-		     const struct section *sect,
-		     const struct keyvalue *kv)
-{
-  return 0;
-}
-
-static int
-clear_password_validate (const struct arguments * args,
-			 const struct section *sect,
-			 const char *value)
-{
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
-}
-
-/* password */
 
 static int
 password_checkout (const struct arguments *args,
@@ -1573,20 +1529,11 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Enable_User",
 		"Possible values: Yes/No or blank to not set",
-                0,
+                BMC_CHECKOUT_KEY_COMMENTED_OUT,
 		enable_user_checkout,
 		enable_user_commit,
 		enable_user_diff,
 		enable_user_validate);
-
-  add_keyvalue (this_section,
-		"Clear_Password",
-		"Possible values: Yes/No",
-                0,
-		clear_password_checkout,
-		clear_password_commit,
-		clear_password_diff,
-		clear_password_validate);
 
   add_keyvalue (this_section,
 		"Password",

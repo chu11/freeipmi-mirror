@@ -1,3 +1,16 @@
+2006-07-24  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-user-section.c (get_user_section,
+	enable_user_checkout): Comment out the "Enable User" option as
+	default behavior.
+
+	* bmc-config/src/bmc-user-section.c (get_user_section): Remove
+	"Clear_Password" key.
+
+	* bmc-config/src/bmc-user-section.c (clear_password_checkout,
+	clear_password_commit, clear_password_diff,
+	clear_password_validate): Remove functions.
+	
 2006-07-24  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-locate/src/ipmi-locate.c (dmidecode_probe_display):
