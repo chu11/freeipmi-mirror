@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.21 2006-07-22 15:19:07 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.22 2006-07-24 01:36:19 balamurugan Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -116,6 +116,66 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
     }
   
   printf ("Register space: %d\n", info->reg_space);
+  
+  return;
+}
+
+void 
+dmidecode_probe_display ()
+{
+  ipmi_locate_info_t *pinfo = NULL;
+  
+  printf ("Probing KCS device using DMIDECODE... ");
+  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_KCS)))
+    {
+      printf ("done\n");
+      display_ipmi_locate_info (pinfo);
+    }
+  else 
+    {
+      printf ("FAILED\n");
+    }
+  printf ("\n");
+  ipmi_locate_destroy(pinfo);
+
+  printf ("Probing SMIC device using DMIDECODE... ");
+  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SMIC)))
+    {
+      printf ("done\n");
+      display_ipmi_locate_info (pinfo);
+    }
+  else 
+    {
+      printf ("FAILED\n");
+    }
+  printf ("\n");
+  ipmi_locate_destroy(pinfo);
+  
+  printf ("Probing BT device using DMIDECODE... ");
+  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_BT)))
+    {
+      printf ("done\n");
+      display_ipmi_locate_info (pinfo);
+    }
+  else 
+    {
+      printf ("FAILED\n");
+    }
+  printf ("\n");
+  ipmi_locate_destroy(pinfo);
+  
+  printf ("Probing SSIF device using DMIDECODE... ");
+  if ((pinfo = ipmi_locate_dmidecode_get_dev_info (IPMI_INTERFACE_SSIF)))
+    {
+      printf ("done\n");
+      display_ipmi_locate_info (pinfo);
+    }
+  else 
+    {
+      printf ("FAILED\n");
+    }
+  printf ("\n");
+  ipmi_locate_destroy(pinfo);
   
   return;
 }
@@ -339,6 +399,7 @@ main (int argc, char **argv)
   
   ipmi_locate_argp_parse (argc, argv);
   
+  dmidecode_probe_display ();
   smbios_probe_display ();
   acpi_probe_display ();
   pci_probe_display ();

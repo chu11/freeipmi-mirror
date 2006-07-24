@@ -1,3 +1,16 @@
+2006-07-23  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-locate/src/ipmi-locate.c (dmidecode_probe_display): new
+	function.
+
+	* ipmi-locate/src/ipmi-locate.c (main): uses dmidecode probing.
+
+	* libfreeipmi/include/freeipmi/ipmi-slave-address-spec.h: uses
+	0x42 as IPMI_SSIF_SMBUS_SLAVE_ADDRESS.
+
+	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): removed
+	ipmi_locate_defaults_get_dev_info() in things_to_try list.
+
 2006-07-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,

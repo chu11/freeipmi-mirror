@@ -47,7 +47,6 @@ ipmi_locate (ipmi_interface_type_t type, struct ipmi_locate_info *info)
       ipmi_locate_smbios_get_dev_info,
       ipmi_locate_acpi_spmi_get_dev_info,
       ipmi_locate_pci_get_dev_info,
-      ipmi_locate_defaults_get_dev_info,
       NULL
     };
   struct ipmi_locate_info linfo;

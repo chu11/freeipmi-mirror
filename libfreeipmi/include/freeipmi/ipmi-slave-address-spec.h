@@ -48,7 +48,7 @@ extern "C" {
  */
  
 #define IPMI_LAN_SLAVE_ADDRESS_BMC                      0x20
-#define IPMI_SSIF_SMBUS_SLAVE_ADDRESS                   0x20
+#define IPMI_SSIF_SMBUS_SLAVE_ADDRESS                   0x42
 
 #define IPMI_LAN_SOFTWARE_ID_REMOTE_CONSOLE_SOFTWARE    0x81
 
