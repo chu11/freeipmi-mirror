@@ -10,6 +10,9 @@
 	* bmc-config/src/bmc-user-section.c (clear_password_checkout,
 	clear_password_commit, clear_password_diff,
 	clear_password_validate): Remove functions.
+
+	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): Add back
+	ipmi_locate_defaults_get_dev_info() to things to try list.
 	
 2006-07-24  A Balamurugan  <bala@zresearch.com>
 
