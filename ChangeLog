@@ -1,3 +1,9 @@
+2006-07-25  Albert Chu <chu11@llnl.gov>
+
+	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG): New macro.
+	
+	* common/src/err-wrappers.h (ERR_IPMI_CMD_CLEANUP): Add errmsg support.
+	
 2006-07-24  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-user-section.c (get_user_section,
