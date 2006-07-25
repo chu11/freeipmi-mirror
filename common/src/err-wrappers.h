@@ -298,8 +298,9 @@ do {                                                                            
                            (__netfn),                                              \
                            (__rq),                                                 \
                            (__rs)) < 0));                                          \
-  ERR_NO_RETURN ((__rv = ipmi_check_completion_code_success ((__rs))) == 1);       \
-  __IPMI_TRACE_ERRMSG(__dev, __rs);                                                \
+  ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));       \
+  if (!__rv)                                                                       \
+    __IPMI_TRACE_ERRMSG(__dev, __rs);                                              \
 } while (0)
 
 #ifdef __cplusplus
