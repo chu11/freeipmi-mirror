@@ -260,7 +260,7 @@ common_parse_opt (int key,
 	cmd_args->session_timeout = value;
       }
       break;
-    case AUTHENTICATION_TYPE_KEY: /* values 0,1,2,4,5 = none,md2,md5,straight,oem */
+    case AUTHENTICATION_TYPE_KEY: /* values 0,1,2,4 = none,md2,md5,straight */
       if (strcasecmp (arg, "none") == 0)
 	{
 	  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
@@ -280,16 +280,11 @@ common_parse_opt (int key,
 	      {
 		cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
 	      }
-	    else 
-	      if (strcasecmp (arg, "oem") == 0)
-		{
-		  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_OEM_PROP;
-		}
-	      else 
-		{
-                  fprintf(stderr, "invalid authentication type specified\n");
-                  argp_usage (state);
-		}
+            else 
+              {
+                fprintf(stderr, "invalid authentication type specified\n");
+                argp_usage (state);
+              }
       break;
     case PRIVILEGE_LEVEL_KEY: /* range 1 to 5 = callback,user,operator,admin,oem */
       if (strcasecmp (arg, "callback") == 0)

@@ -5,6 +5,8 @@
 	* common/src/err-wrappers.h (ERR_IPMI_CMD_CLEANUP): Add errmsg support.
 
 	* doc/freeipmi-faq.texi: Minor tweaks and updates.
+
+	* configure.ac: Update lib version.
 	
 2006-07-24  Albert Chu <chu11@llnl.gov>
 

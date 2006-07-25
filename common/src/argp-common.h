@@ -66,8 +66,8 @@ enum argp_common_option_keys
 
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
     {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 		   \
-     "Use AUTHTYPE instead of NONE.  "				           \
-     "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 10}	           \
+     "Use AUTHTYPE instead of MD5.  "				           \
+     "Allowed values are NONE, MD2, MD5, PLAIN.", 10}	                   \
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL                                      \
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
