@@ -144,26 +144,66 @@ set_bmc_enable_user (ipmi_device_t dev,
 		     uint8_t userid, 
 		     int user_status)
 {
+  fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
-  int8_t rv = -1;
+  int8_t ret, rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
   memset (password, 0, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-  if (ipmi_cmd_set_user_password (dev, 
-				  userid, 
-				  (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
-				   IPMI_PASSWORD_OPERATION_DISABLE_USER), 
-				  (char *)password, 
-				  0,
-				  obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  
 
+  ret = ipmi_cmd_set_user_password (dev, 
+				    userid, 
+				    (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
+				     IPMI_PASSWORD_OPERATION_DISABLE_USER), 
+				    (char *)password, 
+				    0,
+				    obj_cmd_rs);
+
+  if (ret != 0)
+    {
+      /* 
+       * Workaround: achu: the IPMI spec says you don't have to set a
+       * password when you enable/disable a user.  But some BMCs care that
+       * you do (even though the password will be ignored)
+       */
+      if ((ret = ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID)) < 0)
+	goto cleanup;
+
+      if (!ret)
+	goto cleanup;
+
+      if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_password_rq)))
+	goto cleanup;
+      
+      if (fill_cmd_set_user_password (userid,
+				      (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
+				       IPMI_PASSWORD_OPERATION_DISABLE_USER),
+				      (char *)password,
+				      0,
+				      obj_cmd_rq) < 0)
+	goto cleanup;
+      
+      /* Force the password to be filled in */
+      if (fiid_obj_set_data (obj_cmd_rq, "password", (char *)password, IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
+	goto cleanup;
+      
+      if (ipmi_cmd (dev, 
+		    IPMI_BMC_IPMB_LUN_BMC,
+		    IPMI_NET_FN_APP_RQ,
+		    obj_cmd_rq,
+		    obj_cmd_rs) < 0)
+	goto cleanup;
+      
+      if (ipmi_check_completion_code_success(obj_cmd_rs) != 1)
+	goto cleanup;
+    }
+  
   rv = 0;
  cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);

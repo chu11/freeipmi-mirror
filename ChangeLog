@@ -13,6 +13,9 @@
 
 	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): Add back
 	ipmi_locate_defaults_get_dev_info() to things to try list.
+
+	* bmc-config/src/bmc-config-api.c (set_bmc_enable_user): Add
+	workaround for return of 0xC7 issue.
 	
 2006-07-24  A Balamurugan  <bala@zresearch.com>
 
