@@ -83,7 +83,8 @@ inventory information that can help identify a failed hardware unit.
 GNU FreeIPMI is a Free Intelligent Platform Management System Software.
 It provides ``Remote-Console'' (out-of-band), ``System Management
 Software'' (in-band) and a development library confirming to
-Intelligent  Platform Management Interface (@acronym{IPMI} v1.5) standards. 
+Intelligent Platform Management Interface (@acronym{IPMI} v1.5 and
+v2.0) standards.
 
 GNU FreeIPMI User's Guide concentrates installation, usage,
 troubleshooting and bug reporting.  It corresponds to @value{VERSION}
@@ -109,9 +110,9 @@ from both California Digital and LLNL to collaborate on various
 aspects of FreeIPMI, including various IPMI tools and the
 libfreeipmi library.
 
-Anand Babu, Balamuruan and Ian Zimmerman at California Digital
+Anand Babu, Balamurugan and Ian Zimmerman at California Digital
 Corp. worked on the an in-band driver, libfreeipmi, fish,
-ipmi-sensors, bmc-config, ipmi-sel, bmc-info.  Jim Garlick and Albert
+ipmi-sensors, bmc-config, ipmi-sel, and bmc-info.  Jim Garlick and Albert
 Chu at LLNL worked on portions of the libfreeipmi library, worked to
 port LLNL tools to use libfreeipmi, and support ipmipower in Powerman.
 In May 2004, the LLNL developed tools ipmipower, bmc-watchdog,
@@ -148,14 +149,14 @@ implements a kernel module for its in-band IPMI driver.
 
 2) Libraries
 
-OpenIPMI (to our knowledge) concentrates on an APIs for IPMI
-driver.  GNU FreeIPMI concentrates on an APIs for driver, IPMI
-commands and high level management interface.
+OpenIPMI (to our knowledge) concentrates on higher level APIs to use
+the IPMI driver.  GNU FreeIPMI primarily concentrates on APIs for IPMI
+packet construction, although APIs for drivers and higher level
+management are also provided.
 
 3) Command-Line Interface
 
-GNU FreeIPMI provides a bunch of independent tools and extensible Scheme
-interface for scripting.
+GNU FreeIPMI provides a set of independent tools.  
 
 Ipmitool offers a single tool for all IPMI features it supports.
 
