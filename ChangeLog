@@ -7,6 +7,14 @@
 	* doc/freeipmi-faq.texi: Minor tweaks and updates.
 
 	* configure.ac: Update lib version.
+
+	* common/src/argp-common.h, common/src/argp-common.c
+	(common_parse_opt): Make default authentication type MD5.  Remove
+	OEM authentication type.
+
+	* bmc-config/src/bmc-sol-conf-section.c
+	(bmc_sol_conf_section_get): Have SOL port commented out on
+	checkout by default.
 	
 2006-07-24  Albert Chu <chu11@llnl.gov>
 

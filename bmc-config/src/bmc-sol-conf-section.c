@@ -1113,7 +1113,7 @@ bmc_sol_conf_section_get (struct arguments *args)
   add_keyvalue (sol_conf_section,
 		"SOL_Payload_Port_Number",
 		"Give a valid port number",
-                0,
+                BMC_CHECKOUT_KEY_COMMENTED_OUT,
 		port_checkout,
 		port_commit,
 		port_diff,
