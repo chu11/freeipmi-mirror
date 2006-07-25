@@ -68,7 +68,7 @@ do {                                                                    \
   errno = save_errno;                                                   \
 } while (0)
 
-#define __IPMI_TRACE_ERRMSG(___dev, ___rs)                              \
+#define __IPMI_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                      \
 do {                                                                    \
   extern int errno;                                                     \
   int save_errno = errno;                                               \
@@ -82,10 +82,11 @@ do {                                                                    \
 	     __LINE__, __PRETTY_FUNCTION__, (___dev)->errmsg);          \
   fflush(stderr);                                                       \
   errno = save_errno;                                                   \
+  goto cleanup;                                                         \
 } while (0) 
 #else
 #define __IPMI_TRACE
-#define __IPMI_TRACE_ERRMSG(___dev, ___rs)                              \
+#define __IPMI_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                      \
 do {                                                                    \
   extern int errno;                                                     \
   int save_errno = errno;                                               \
@@ -95,6 +96,7 @@ do {                                                                    \
 		       (___dev)->errmsg,                                \
 		       IPMI_ERR_STR_MAX_LEN);                           \
   errno = save_errno;                                                   \
+  goto cleanup;                                                         \
 } while (0) 
 
 #endif /* IPMI_TRACE */
@@ -300,7 +302,7 @@ do {                                                                            
                            (__rs)) < 0));                                          \
   ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));       \
   if (!__rv)                                                                       \
-    __IPMI_TRACE_ERRMSG(__dev, __rs);                                              \
+    __IPMI_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                      \
 } while (0)
 
 #ifdef __cplusplus

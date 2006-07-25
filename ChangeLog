@@ -1,6 +1,6 @@
 2006-07-25  Albert Chu <chu11@llnl.gov>
 
-	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG): New macro.
+	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG_CLEANUP): New macro.
 	
 	* common/src/err-wrappers.h (ERR_IPMI_CMD_CLEANUP): Add errmsg support.
 
