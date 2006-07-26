@@ -35,6 +35,16 @@ Redo packages once re-org is complete
   * freeipmi-bmcwatchdog
   * freeipmi-ipmiconsole
 
+ipmi-sensors to check
+---------------------
+don't output event sensors on simple output
+output based on event-type, not record type (i.e. discrete sensor can be listed in a full record, need not be stored in a compact record)
+threshold outputs correct
+disable dumping
+clear command line arguments
+flush non-default cache
+output appropriate error when non-root
+
 libfreeipmi:
 ------------
   * how to support xRC4
