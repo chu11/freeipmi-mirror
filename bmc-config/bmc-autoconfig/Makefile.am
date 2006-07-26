@@ -15,3 +15,4 @@ Bmc_Config_Template_DATA   = $(BMC_CONFIG_TEMPLATE)
 
 EXTRA_DIST = bmc-autoconfig $(BMC_CONFIG_TEMPLATE)
 
+dist_man_MANS = bmc-autoconfig.8
