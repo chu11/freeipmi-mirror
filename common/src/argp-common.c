@@ -337,7 +337,7 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->host = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;
-  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
 }
 

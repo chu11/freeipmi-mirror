@@ -1,3 +1,9 @@
+2006-07-26  Albert Chu <chu11@llnl.gov>
+
+	* common/src/argp-common.c (init_common_cmd_args): Make default authentication type MD5
+
+	* common/doc/argp-common-authtype.man: Make default authentication type MD5
+
 2006-07-25  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG_CLEANUP): New macro.
