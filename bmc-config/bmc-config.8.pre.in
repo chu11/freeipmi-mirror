@@ -35,6 +35,9 @@ Use this file for BMC get/set.
 .TP
 \fB\-k\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
 Update configuration information to BMC.  This option can be used multiple times.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print detailed information.
 .SH "EXAMPLES"
 .B # bmc-config --checkout 
 .PP

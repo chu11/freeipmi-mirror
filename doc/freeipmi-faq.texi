@@ -233,11 +233,12 @@ BMC address Locator:
 @node x86-64 Compilation, libguile-srfi-srfi dynamic-link error, SSIF Driver Configuration, Top
 @section x86-64 Compilation
 
-Under some x86-64 platforms such as SUSE GNU/Linux, native 64 bit
-libraries reside under lib64 and 32 bit libs under lib. Autotools by
-default installs libfreeipmi.so under /usr/lib, instead of /usr/lib64
-causing dynamic linking error. Fix is simple, pass libdir
-appropriately to configure script. 
+Under some x86-64 platforms such as SUSE GNU/Linux, native 64
+bit libraries reside under lib64 and 32 bit libs under lib. Autotools
+by default installs libfreeipmi.so under /usr/lib, instead of
+/usr/lib64 causing dynamic linking errors.  Pass libdir appropriately
+to configure script to workaround this
+problem. (i.e. --libdir=/usr/lib64)
 
 Example:
 @example

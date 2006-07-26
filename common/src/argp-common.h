@@ -50,7 +50,7 @@ enum argp_common_option_keys
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
      "Use this DEVICE for IPMI driver.", 3},                               \
     {"register-spacing", REGISTER_SPACING_KEY, "REGISTERSPACING", 0,       \
-     "Use this REGISTERSPACING instead of probed one", 4}
+     "Use this REGISTERSPACING instead of the probed one", 4}
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                      \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			   \

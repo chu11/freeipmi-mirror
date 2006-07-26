@@ -9,5 +9,8 @@ Allowed values are KCS, SMIC, SSIF and LAN.
 \fB\-\-driver\-address\fR=\fIDRIVERADDR\fR
 Use this DRIVERADDR address instead of probed
 one.
-.HP
+.TP
 \fB\-\-driver\-device\fR=\fIDEVICE\fR Use this DEVICE for IPMI driver.
+.TP
+\fB\-r\fR, \fB\-\-register\-spacing\fR=\fREGISTERSPACING\fR
+Use this REGISTERSPACING instead of the probed one.

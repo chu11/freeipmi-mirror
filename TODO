@@ -22,19 +22,8 @@ libfreeipmi:
 
 documentation
 -------------
-add gcrypt to  2.1 Dependencies
-remove guile/readline from  2.1 Dependencies
-add x86_64 libdir thingie to  2. Installing GNU FreeIPMI
-note about kernel drivers should be moved to install instructions section
-  - or trouble shooting, whatever
 bmc-autoconfig, still exists? 
-ipmi-raw update with new byte interface
-update bmc-watchdog theory
-
-global
-update options in all tools
-done ipmipower, ipmiping, rmcpping
-todo bmc-config, bmc-info, ipmi-sensors, ipmi-raw, ipmi-locate
+ipmi-sensors options and output once C version is done
 
 Al's TODO list
 ==============

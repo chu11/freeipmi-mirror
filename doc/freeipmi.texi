@@ -134,24 +134,12 @@ useful information from the
 @node Dependencies, Build, Installation, Installation
 @section Dependencies
 GNU FreeIPMI is designed to have minimum dependencies on other
-libraries and tools.  FreeIPMI Shell alone depends on GNU Guile and GNU
-Readline for the convenience of extension, scripting and GNU Bash like
-user interface.  libfreeipmi library has virtually no dependencies at
-all.  
+libraries and tools.  Only the libfreeipmi library depends on
+libgcrypt for encryption use with IPMI 2.0.
 
-List of dependencies under Debian GNU/Linux:
+List of dependencies under GNU/Linux:
 @itemize @bullet
-@item GNU Guile    - guile-1.6, guile-1.6-dev
-@item GNU Readline - libreadline4, libreadline4-dev
-@end itemize
-
-@cindex Guile
-@cindex Readline
-
-List of dependencies under Fedora or RedHat GNU/Linux:
-@itemize @bullet
-@item GNU Guile    - guile-1.6.x, guile-devel-1.6.x.
-@item GNU Readline - readline-4.x, readline-devel-4.x
+@item GNU libgcrypt
 @end itemize
 
 List of dependencies under FreeBSD:
@@ -162,7 +150,6 @@ module loaded. On FreeBSD > 5.2.1 You will also need "device io" in
 kernel or loaded as module unless You specify USE_IOPERM compilation
 option (see note on i386_set_ioperm below).
 
-@item guile library (tested with guile-1.6.4_6) - ports/lang/guile
 @item argp library (tested with argp-standalone-1.3) -
 ports/devel/argp-standalone. 
 @item gmake
@@ -180,6 +167,13 @@ For complete list of options, try @command{configure --help}@.
 
 Note: Please run @command{./autogen.sh} script before
 @command{./configure}, if you are compiling FreeIPMI source from CVS.
+
+Note2: Under some x86-64 platforms such as SUSE GNU/Linux, native 64
+bit libraries reside under lib64 and 32 bit libs under lib. Autotools
+by default installs libfreeipmi.so under /usr/lib, instead of
+/usr/lib64 causing dynamic linking errors.  Pass libdir appropriately
+to configure script to workaround this
+problem. (i.e. --libdir=/usr/lib64)
 
 @cindex ./configure
 
@@ -283,11 +277,6 @@ the driver.
 Library internally uses DMI, SMBIOS, PCI, and ACPI drivers to locate
 the system interfaces.
 
-You should note that all the device drivers are completely written in
-user-space.  If you already have any in-kernel @acronym{IPMI} drivers loaded,
-unload them before you launch any GNU FreeIPMI utility.  Otherwise
-there are no other prerequisites.
-
 @c If you want to develop your own remote-console or
 @c system-management-software or integrate @acronym{IPMI} functionality into your
 @c software using C language interface, then you should refer to
@@ -307,6 +296,15 @@ tools work on them with default values.
 @section Command-line options
 
 @itemize @bullet
+@item --brief @*
+      Shorten output.
+
+@item --quiet, --silent @*
+      Inhibit usual output.
+
+@item -v, --verbose @*
+      Print more information.
+
 @item -?, ---help @*
       Give this help list.
 
@@ -414,6 +412,9 @@ replicate the configuration.
 @item ---driver-device=@var{DEVICE} @*
       Use this @var{DEVICE} for IPMI driver.
 
+@item ---register-spacing=@var{REGISTERSPACING} @*
+      Use this @var{REGISTERSPACING} instead of the probed one.
+
 @item -h, ---hostname=@var{IPMIHOST} @*
       Connect to @var{IPMIHOST}.
 
@@ -426,27 +427,12 @@ replicate the configuration.
       16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
       MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
-      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      Use this @var{PRIVILEGE-LEVEL} instead of ADMIN.  Allowed values
       are CALLBACK, USER, OPERATOR, ADMIN and OEM.
-
-@item -o, ---checkout @*
-      Get BMC configuration.
-
-@item -i, ---commit @*
-      Update BMC configuration.
-
-@item -d, ---diff @*
-      Show configuration differences with BMC.
-
-@item -f, ---filename=@var{FILENAME} @*
-      Use FILENAME in checkout, commit or diff.
-
-@item -k, ---key-pair=@var{KEY-PAIR} @*
-      Use KEY-PAIR in commit or diff.
 
 @item -?, ---help @*
       Give this help list.
@@ -454,11 +440,28 @@ replicate the configuration.
 @item ---usage @*
       Give a short usage message.
 
+@item -V, ---version @*
+      Print program version.
+
+@item -o, ---checkout @*
+      Fetch configuration information from BMC.
+
+@item -i, ---commit @*
+      Update configuration information to BMC.
+
+@item -d, ---diff @*
+      Show differences between BMC and config file or key pairs.
+
+@item -f, ---filename=@var{FILENAME} @*
+      Use this file for BMC get/set.
+
+@item -k, ---key-pair=@var{KEY-PAIR} @*
+      Update configuration information to BMC. This option can be used
+      multiple times.
+
 @item -v, ---verbose @*
       Print detailed information.
 
-@item -V, ---version @*
-      Print program version.
 @end itemize
 
 @node Sample Configuration File, BMC checkout, Options, bmc-config
@@ -870,6 +873,9 @@ completed successfully.
 @item ---driver-device=@var{DEVICE} @*
       Use this @var{DEVICE} for IPMI driver.
 
+@item ---register-spacing=@var{REGISTERSPACING} @*
+      Use this @var{REGISTERSPACING} instead of the probed one.
+
 @item -h, ---hostname=@var{IPMIHOST} @*
       Connect to @var{IPMIHOST}.
 
@@ -882,7 +888,7 @@ completed successfully.
       16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
       MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
@@ -984,6 +990,9 @@ and out-of-band.
 @item ---driver-device=@var{DEVICE} @*
       Use this @var{DEVICE} for IPMI driver.
 
+@item ---register-spacing=@var{REGISTERSPACING} @*
+      Use this @var{REGISTERSPACING} instead of the probed one.
+
 @item -h, ---hostname=@var{IPMIHOST} @*
       Connect to @var{IPMIHOST}.
 
@@ -1016,7 +1025,7 @@ and out-of-band.
 @section Example
 @example
 www:~# ipmi-raw
-18 01
+0 6 01
 rcvd: 1C 01 00 20 81 01 20 51 9F 57 01 00 1B 00 00 15 01 10 
 www:~# 
 @end example
@@ -1049,6 +1058,9 @@ nominal, threshold max/min readings and status descriptions.
 @item ---driver-device=@var{DEVICE} @*
       Use this @var{DEVICE} for IPMI driver.
 
+@item ---register-spacing=@var{REGISTERSPACING} @*
+      Use this @var{REGISTERSPACING} instead of the probed one.
+
 @item -h, ---hostname=@var{IPMIHOST} @*
       Connect to @var{IPMIHOST}.
 
@@ -1061,7 +1073,7 @@ nominal, threshold max/min readings and status descriptions.
       16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
       MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
@@ -2585,6 +2597,9 @@ you view and manage system event log.
 @item ---driver-device=@var{DEVICE} @*
       Use this @var{DEVICE} for IPMI driver.
 
+@item ---register-spacing=@var{REGISTERSPACING} @*
+      Use this @var{REGISTERSPACING} instead of the probed one.
+
 @item -h, ---hostname=@var{IPMIHOST} @*
       Connect to @var{IPMIHOST}.
 
@@ -2597,24 +2612,12 @@ you view and manage system event log.
       16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
       MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
       Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
       are CALLBACK, USER, OPERATOR, ADMIN and OEM.
-
-@item -i, ---info @*
-      Show general information about SEL.
-
-@item -d, ---delete=@var{REC-LIST} @*
-      Delete given SEL records entry.
-
-@item -c, ---delete-all @*
-      Delete all SEL entries.
-
-@item -x, ---hex-dump@var{=FILE} @*
-      Hex-dump SEL entries optionally to @var{FILE}.
 
 @item -?, ---help @*
       Give this help list.
@@ -2624,6 +2627,22 @@ you view and manage system event log.
 
 @item -V, ---version @*
       Print program version.
+
+@item -i, ---info @*
+      Show SEL info
+
+@item -x, ---hex-dump@var{=FILE} @*
+      Output a hexadecimal dump of the SEL
+
+@item -c, ---delete-all @*
+      Delete all records in SEL
+
+@item -d, ---delete=@var{REC-LIST} @*
+      Delete REC-LIST in SEL
+
+@item --delete-range=@var{START-END} @*
+      Delete records from START to END in SEL
+
 @end itemize
 
 @node ipmi-sel sample output,  , ipmi-sel options, ipmi-sel
@@ -2631,118 +2650,25 @@ you view and manage system event log.
 
 @example
 www:~# ipmi-sel 
-4:11-Dec-2005 07:03:43:Event Logging Disabled #9:Log Area Reset/Cleared
-24:11-Dec-2005 07:49:05:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-44:11-Dec-2005 07:50:02:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-64:11-Dec-2005 07:52:33:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-84:11-Dec-2005 07:57:04:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-104:11-Dec-2005 07:57:07:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-124:11-Dec-2005 07:57:07:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-144:31-Dec-1969 16:00:02:Power Unit #1:AC lost
-164:31-Dec-1969 16:00:13:Power Supply #112:Presence detected
-184:31-Dec-1969 16:00:15:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-204:31-Dec-1969 16:00:15:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-224:31-Dec-1969 16:00:44:System Event #131:Timestamp Clock Synch
-244:11-Dec-2005 07:59:03:System Event #131:Timestamp Clock Synch
-264:11-Dec-2005 07:59:59:System Event #131:OEM System Boot Event
-284:11-Dec-2005 08:09:46:Platform Chassis Intrusion #5:General Chassis Intrusion
-304:11-Dec-2005 08:27:06:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-324:11-Dec-2005 08:27:06:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-344:11-Dec-2005 08:27:39:System Event #131:Timestamp Clock Synch
-364:11-Dec-2005 08:27:41:System Event #131:Timestamp Clock Synch
-384:11-Dec-2005 08:28:02:Platform Chassis Intrusion #5:General Chassis Intrusion
-404:11-Dec-2005 08:31:36:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-424:11-Dec-2005 08:31:36:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-444:11-Dec-2005 08:32:10:System Event #131:Timestamp Clock Synch
-464:11-Dec-2005 08:32:10:System Event #131:Timestamp Clock Synch
-484:11-Dec-2005 08:32:45:System Event #131:OEM System Boot Event
-504:11-Dec-2005 08:36:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-524:11-Dec-2005 08:36:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-544:11-Dec-2005 08:36:32:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-564:11-Dec-2005 08:36:32:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-584:11-Dec-2005 08:36:54:System Event #131:System Reconfigured:OEM code = 01h
-604:11-Dec-2005 08:37:09:System Event #131:Timestamp Clock Synch
-624:12-Dec-2005 08:37:13:System Event #131:Timestamp Clock Synch
-644:12-Dec-2005 08:40:28:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-664:12-Dec-2005 08:40:28:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-684:12-Dec-2005 08:41:05:System Event #131:Timestamp Clock Synch
-704:12-Dec-2005 08:41:06:System Event #131:Timestamp Clock Synch
-724:12-Dec-2005 08:42:20:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-744:12-Dec-2005 08:42:20:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-764:12-Dec-2005 08:42:56:System Event #131:Timestamp Clock Synch
-784:12-Dec-2005 08:42:56:System Event #131:Timestamp Clock Synch
-804:12-Dec-2005 08:43:33:System Event #131:OEM System Boot Event
-824:12-Dec-2005 08:50:58:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-844:12-Dec-2005 08:50:58:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-864:12-Dec-2005 08:51:18:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-884:12-Dec-2005 08:51:35:System Event #131:Timestamp Clock Synch
-904:12-Dec-2005 08:51:41:System Event #131:Timestamp Clock Synch
-924:12-Dec-2005 08:51:43:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-944:12-Dec-2005 08:51:46:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-964:12-Dec-2005 08:51:46:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-984:12-Dec-2005 08:52:18:System Event #131:Timestamp Clock Synch
-1004:12-Dec-2005 08:52:18:System Event #131:Timestamp Clock Synch
-1024:12-Dec-2005 08:52:29:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1044:12-Dec-2005 08:54:00:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1064:12-Dec-2005 08:54:03:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-1084:12-Dec-2005 08:54:03:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-1104:12-Dec-2005 08:54:39:System Event #131:Timestamp Clock Synch
-1124:12-Dec-2005 08:54:39:System Event #131:Timestamp Clock Synch
-1144:12-Dec-2005 08:55:17:System Event #131:OEM System Boot Event
-1164:12-Dec-2005 09:13:59:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-1184:12-Dec-2005 09:13:59:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-1204:12-Dec-2005 09:14:35:System Event #131:Timestamp Clock Synch
-1224:12-Dec-2005 09:14:36:System Event #131:Timestamp Clock Synch
-1244:12-Dec-2005 09:15:14:System Event #131:OEM System Boot Event
-1264:31-Dec-1969 16:00:08:Power Supply #112:Presence detected
-1284:31-Dec-1969 16:00:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
-1304:31-Dec-1969 16:00:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
-1324:31-Dec-1969 16:01:32:Platform Chassis Intrusion #5:General Chassis Intrusion
-1344:31-Dec-1969 16:00:08:Platform Chassis Intrusion #5:General Chassis Intrusion
-1364:31-Dec-1969 16:00:08:Power Supply #112:Presence detected
-1384:31-Dec-1969 16:00:07:Platform Chassis Intrusion #5:General Chassis Intrusion
-1404:31-Dec-1969 16:00:08:Power Supply #112:Presence detected
-1424:31-Dec-1969 16:00:02:Power Unit #1:AC lost
-1444:31-Dec-1969 16:00:13:Power Supply #112:Presence detected
-1464:31-Dec-1969 16:00:51:System Event #131:Timestamp Clock Synch
-1484:12-Dec-2005 09:26:13:System Event #131:Timestamp Clock Synch
-1504:12-Dec-2005 09:27:12:System Event #131:OEM System Boot Event
-1524:12-Dec-2005 10:06:36:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1544:12-Dec-2005 10:06:58:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1564:12-Dec-2005 10:10:00:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1584:12-Dec-2005 10:10:07:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1604:13-Dec-2005 06:50:05:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1624:14-Dec-2005 11:16:23:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1644:15-Dec-2005 07:35:40:System Event #131:Timestamp Clock Synch
-1664:15-Dec-2005 07:35:37:System Event #131:Timestamp Clock Synch
-1684:15-Dec-2005 07:36:11:System Event #131:OEM System Boot Event
-1704:18-Dec-2005 12:41:53:System Event #131:Timestamp Clock Synch
-1724:18-Dec-2005 12:41:50:System Event #131:Timestamp Clock Synch
-1744:18-Dec-2005 12:42:23:System Event #131:OEM System Boot Event
-1764:19-Dec-2005 04:50:50:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1784:19-Dec-2005 04:50:51:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1804:25-Dec-2005 13:33:22:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1824:25-Dec-2005 13:33:23:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1844:26-Dec-2005 14:36:16:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1864:26-Dec-2005 14:36:55:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1884:26-Dec-2005 14:42:33:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1904:26-Dec-2005 14:42:36:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1924:27-Dec-2005 02:20:51:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1944:27-Dec-2005 02:20:59:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1964:27-Dec-2005 04:16:11:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-1984:27-Dec-2005 04:16:21:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2004:27-Dec-2005 05:06:46:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2024:27-Dec-2005 05:06:55:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2044:28-Dec-2005 08:30:42:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2064:28-Dec-2005 08:31:03:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2084:28-Dec-2005 08:32:39:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2104:28-Dec-2005 08:33:20:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2124:28-Dec-2005 08:42:29:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2144:28-Dec-2005 08:43:28:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2164:03-Jan-2006 16:40:37:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2184:03-Jan-2006 16:40:45:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-2204:03-Jan-2006 16:40:58:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
-www:~# 
+3044:02-May-2005 16:00:30:Power Unit #1:Power Unit Failure detected
+3064:31-Dec-1969 16:00:02:Power Unit #1:AC lost
+3084:31-Dec-1969 16:00:02:Power Unit #1:AC lost
+3104:31-Dec-1969 16:00:42:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+3124:31-Dec-1969 16:00:49:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+3144:04-May-2005 16:56:00:System Firmware #6:System Firmware Error (POST Error):OEM code = 09h:OEM code = 01h
+3164:04-May-2005 16:56:02:System Event #8:OEM System Boot Event
+3184:04-May-2005 17:07:58:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+3204:04-May-2005 17:08:05:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+3224:18-May-2005 08:55:38:System Firmware #6:System Firmware Error (POST Error):OEM code = 09h:OEM code = 01h
+3244:18-May-2005 08:55:40:System Event #8:OEM System Boot Event
+3264:16-Jun-2005 10:49:27:System Firmware #6:System Firmware Error (POST Error):OEM code = 09h:OEM code = 01h
+3284:16-Jun-2005 10:49:29:System Event #8:OEM System Boot Event
+3304:05-Jul-2005 10:10:56:System Firmware #6:System Firmware Error (POST Error):OEM code = 09h:OEM code = 01h
+3324:05-Jul-2005 10:10:58:System Event #8:OEM System Boot Event
+3344:25-Oct-2005 14:55:39:System Event #8:OEM System Boot Event
+3364:25-Oct-2005 15:16:58:System Event #8:OEM System Boot Event
+3384:25-Oct-2005 15:58:58:System Event #8:OEM System Boot Event
+3404:02-Nov-2005 16:07:13:System Firmware #6:System Firmware Error (POST Error):OEM code = 09h:OEM code = 01h
 @end example
 
 @node bmc-watchdog, ipmipower, ipmi-sel, Top
@@ -4071,6 +3997,7 @@ option is to simply @strong{wait awhile}@.
 @menu
 * Ports conflict::              Fencing @acronym{IPMI} @acronym{IP} ports.
 * IPC key conflict::            Non-unique IPC key.
+* Kernel Driver conflict::      Kernel Driver conflicts.
 @end menu
 
 @node Ports conflict, IPC key conflict, Trouble-shooting, Trouble-shooting
@@ -4100,7 +4027,7 @@ implementations by default.
 Thanks to Anand Manian (GE Power Systems) for reporting this 
 problem.
 
-@node IPC key conflict,  , Ports conflict, Trouble-shooting
+@node IPC key conflict, Kernel Driver conflict, Ports conflict, Trouble-shooting
 @section Non-unique IPC key
 @cindex IPC key conflict
 Drivers internally use the inode number of
@@ -4126,6 +4053,13 @@ debian-ia64:~# ls --inode /var/lib/freeipmi/ipckey
 2289284 /var/lib/freeipmi/ipckey
 debian-ia64:~#
 @end example
+
+@node Kernel Driver conflict,  , IPC key conflict, Trouble-shooting
+@section Kernel Driver conflict
+@cindex Kernel Driver conflict
+All the device drivers are completely written in user-space.  If you
+already have any in-kernel @acronym{IPMI} drivers loaded, unload them
+before you launch any GNU FreeIPMI utility.
 
 @node Contact us, Authors, Trouble-shooting, Top
 @chapter Contact us

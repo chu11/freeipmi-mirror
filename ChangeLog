@@ -4,7 +4,9 @@
 	authentication type MD5
 
 	* common/doc/argp-common-authtype.man: Make default authentication
-	type MD5
+	type MD5.
+
+	* common/doc/argp-common-inband.man: Add register spacing option.
 
 	Various cleanup.
 	
