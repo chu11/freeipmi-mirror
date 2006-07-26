@@ -112,14 +112,13 @@ libfreeipmi library.
 
 Anand Babu, Balamurugan and Ian Zimmerman at California Digital
 Corp. worked on the an in-band driver, libfreeipmi, fish,
-ipmi-sensors, bmc-config, ipmi-sel, and bmc-info.  Jim Garlick and Albert
-Chu at LLNL worked on portions of the libfreeipmi library, worked to
-port LLNL tools to use libfreeipmi, and support ipmipower in Powerman.
-In May 2004, the LLNL developed tools ipmipower, bmc-watchdog,
-ipmiping, and rmcpping were officially merged into the GNU FreeIPMI
-project.  In October 2004, FreeIPMI 0.1.0 was officially released.
-Around same time, FreeIPMI project was accepted by the Free Software
-Foundation as a GNU project. 
+ipmi-sensors, bmc-config, ipmi-sel, and bmc-info.  Jim Garlick and
+Albert Chu at LLNL worked on ipmipower, bmc-watchdog, ipmiping,
+rmcpping, portions of the libfreeipmi library, and ipmipower support
+in Powerman, In May 2004, the LLNL developed software was officially
+merged into the GNU FreeIPMI project.  In October 2004, FreeIPMI 0.1.0
+was officially released.  Around same time, FreeIPMI project was
+accepted by the Free Software Foundation as a GNU project.
 
 In September 2005, Supercomputing team of California Digital moved out to
 form Z RESEARCH Inc. Maintenance of the GNU FreeIPMI also moved along from
