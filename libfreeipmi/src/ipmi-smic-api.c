@@ -35,7 +35,7 @@
 #include <err.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-smic-interface.h"
+#include "freeipmi/ipmi-smic-api.h"
 
 #include "ipmi-inband.h"
 
@@ -45,6 +45,48 @@
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
 static int ipmi_smic_dev_io_fd = -1;
 #endif
+
+/* Config items */
+#define IPMI_SMIC_SLEEP_USECS 500
+
+/* SMIC I/O Port */
+#define IPMI_SMIC_SMS_IO_BASE_DEFAULT    0x0CA9
+#define IPMI_SMIC_SMS_IO_BASE_CDC1620    0x0CA9
+#define IPMI_SMIC_SMS_IO_BASE_CDC9416    0x0CA9
+#define IPMI_SMIC_SMS_IO_BASE_SR870BN4   0x08A9
+#define IPMI_SMIC_SMS_IO_BASE_CDC6440    0x08A9
+
+/* IPMI KCS SMS Interface Registers */
+#define IPMI_SMIC_REG_DATA(sms_io_base)    (sms_io_base)
+#define IPMI_SMIC_REG_CONTROL(sms_io_base) (sms_io_base+1)
+#define IPMI_SMIC_REG_STATUS(sms_io_base)  (sms_io_base+1)
+#define IPMI_SMIC_REG_FLAGS(sms_io_base)   (sms_io_base+2)
+
+/* Flag register definitions */
+#define IPMI_SMIC_RX_DATA_RDY       0x80
+#define IPMI_SMIC_TX_DATA_RDY       0x40
+#define IPMI_SMIC_SMI               0x10
+#define IPMI_SMIC_EVT_ATN           0x08
+#define IPMI_SMIC_SMS_ATN           0x04
+#define IPMI_SMIC_BUSY              0x01
+
+/* SMS Stream control codes */
+#define IPMI_SMIC_CC_SMS_GET_STATUS  0x40
+#define IPMI_SMIC_CC_SMS_WR_START    0x41
+#define IPMI_SMIC_CC_SMS_WR_NEXT     0x42
+#define IPMI_SMIC_CC_SMS_WR_END      0x43
+#define IPMI_SMIC_CC_SMS_RD_START    0x44
+#define IPMI_SMIC_CC_SMS_RD_NEXT     0x45
+#define IPMI_SMIC_CC_SMS_RD_END      0x46
+
+/* SMS Stream status codes */
+#define IPMI_SMIC_SC_SMS_RDY         0xc0
+#define IPMI_SMIC_SC_SMS_WR_START    0xc1
+#define IPMI_SMIC_SC_SMS_WR_NEXT     0xc2
+#define IPMI_SMIC_SC_SMS_WR_END      0xc3
+#define IPMI_SMIC_SC_SMS_RD_START    0xc4
+#define IPMI_SMIC_SC_SMS_RD_NEXT     0xc5
+#define IPMI_SMIC_SC_SMS_RD_END      0xc6
 
 static uint64_t smic_poll_count;
 static unsigned long smic_sleep_usecs = IPMI_SMIC_SLEEP_USECS;

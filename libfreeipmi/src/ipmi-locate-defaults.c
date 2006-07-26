@@ -32,7 +32,7 @@
 #include "freeipmi/ipmi-locate.h"
 #include "freeipmi/ipmi-kcs-api.h"
 #include "freeipmi/ipmi-slave-address-spec.h"
-#include "freeipmi/ipmi-smic-interface.h"
+#include "freeipmi/ipmi-smic-api.h"
 #include "freeipmi/ipmi-ssif-api.h"
 
 #include "err-wrappers.h"

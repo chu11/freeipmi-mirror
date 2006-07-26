@@ -56,8 +56,8 @@ extern "C" {
 #include <freeipmi/ipmi-rmcpplus.h>
 #include <freeipmi/ipmi-rmcpplus-interface.h>
 #include <freeipmi/ipmi-rmcpplus-utils.h>
+#include <freeipmi/ipmi-smic-api.h>
 #include <freeipmi/ipmi-ssif-api.h>
-#include <freeipmi/ipmi-smic-interface.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-device-global-cmds.h>

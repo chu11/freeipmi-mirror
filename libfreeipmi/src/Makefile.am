@@ -33,7 +33,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-rmcpplus-debug.c \
 	ipmi-rmcpplus-interface.c \
 	ipmi-rmcpplus-utils.c \
-	ipmi-smic-interface.c \
+	ipmi-smic-api.c \
 	ipmi-ssif-api.c \
 	ipmi-semaphores.c \
 	ipmi-bmc-watchdog-timer-cmds.c \

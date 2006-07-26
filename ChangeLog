@@ -6,6 +6,8 @@
 	* common/doc/argp-common-authtype.man: Make default authentication
 	type MD5
 
+	Various code cleanup.
+	
 	* libfreeipmi/include/freeipmi/ipmi-locate.h
 	(IPMI_INTERFACE_MAX, IPMI_INTERFACE_LAST): Removed macro.
 
@@ -16,7 +18,17 @@
 	(IPMI_POLL_INTERVAL_USECS): Removed macros.
 
 	* libfreeipmi/src/udm/ipmi-udm.c: Move necessary macros here.
+
+	* libfreeipmi/include/freeipmi/ipmi-smic-interface.h: Remove file.
+
+	* libfreeipmi/src/ipmi-smic-interface.c: Bring in appropriate macros.
+
+	* libfreeipmi/include/freeipmi/ipmi-smic-api.h: New file.
+
+	* libfreeipmi/src/ipmi-smic-interface.c: Rename to ipmi-smic-api.c.
 	
+	* libfreeipmi/: Adjust appropriate Makefiles files.
+
 2006-07-25  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG_CLEANUP): New
