@@ -929,6 +929,16 @@ bmc_serial_conf_section_get (struct arguments *args)
 		call_retry_interval_diff,
 		call_retry_interval_validate);
 
+  /* achu: For backwards compatability to bmc-config in 0.2.0 */
+  add_keyvalue (bmc_serial_conf_section,
+		"Call_Retry_Time",
+		"Give a valid number",
+                BMC_DO_NOT_CHECKOUT,
+		call_retry_interval_checkout,
+		call_retry_interval_commit,
+		call_retry_interval_diff,
+		call_retry_interval_validate);
+
   add_keyvalue (bmc_serial_conf_section,
 		"Enable_DTR_Hangup",
 		"Possible values: Yes/No",

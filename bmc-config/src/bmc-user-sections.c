@@ -1580,6 +1580,16 @@ get_user_section (int num, struct arguments *args)
 		lan_enable_restricted_to_callback_diff,
 		lan_enable_restricted_to_callback_validate);
 
+  /* achu: For backwards compatability to bmc-config in 0.2.0 */
+  add_keyvalue (this_section,
+		"LAN_Enable_Restrict_to_Callback",
+		"Possible values: Yes/No",
+                BMC_DO_NOT_CHECKOUT,
+		lan_enable_restricted_to_callback_checkout,
+		lan_enable_restricted_to_callback_commit,
+		lan_enable_restricted_to_callback_diff,
+		lan_enable_restricted_to_callback_validate);
+
   add_keyvalue (this_section,
 		"LAN_Privilege_Limit",
 		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
@@ -1629,6 +1639,16 @@ get_user_section (int num, struct arguments *args)
 		"Serial_Enable_Restricted_to_Callback",
 		"Possible values: Yes/No",
                 0,
+		serial_enable_restricted_to_callback_checkout,
+		serial_enable_restricted_to_callback_commit,
+		serial_enable_restricted_to_callback_diff,
+		serial_enable_restricted_to_callback_validate);
+
+  /* achu: For backwards compatability to bmc-config in 0.2.0 */
+  add_keyvalue (this_section,
+		"Serial_Enable_Restrict_to_Callback",
+		"Possible values: Yes/No",
+                BMC_DO_NOT_CHECKOUT,
 		serial_enable_restricted_to_callback_checkout,
 		serial_enable_restricted_to_callback_commit,
 		serial_enable_restricted_to_callback_diff,

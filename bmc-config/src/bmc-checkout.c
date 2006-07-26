@@ -104,6 +104,13 @@ bmc_checkout_file (struct arguments *arguments,
              checkout, but continue to checkout other
              fields */
           int this_ret = 0;
+
+          if (kv->flags & BMC_DO_NOT_CHECKOUT)
+            {
+              kv = kv->next;
+              continue;
+            }
+              
           ret = ((this_ret = kv->checkout (arguments, sect, kv)) || ret);
           
           if (this_ret != 0) 
@@ -120,6 +127,14 @@ bmc_checkout_file (struct arguments *arguments,
               fprintf (fp, "\t## %s\n", kv->desc);
               
               /* beauty comes at a cost */
+
+              /* achu: Certain keys should have their checked out
+               * value automatically commented out.  Sometimes (in the
+               * case of passwords) they cannot be checked out, so the
+               * default is for value to be empty.  We do not want the
+               * user accidently commiting this checked out file,
+               * which will clear the password.
+               */
               if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
                 key_len = fprintf(fp, "\t## %s", kv->key);
               else
@@ -133,6 +148,7 @@ bmc_checkout_file (struct arguments *arguments,
               
               fprintf (fp, "%s\n", kv->value);
             }
+
           kv = kv->next;
         }
       fprintf (fp, "EndSection\n");

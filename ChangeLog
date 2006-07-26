@@ -34,6 +34,22 @@
 	* doc/authors.texi, doc/freeipmi.texi, ipmiping/ipmiping.8.in,
 	rmcpping/rmcpping.8.in: Fixes and updates.
 
+	Add backwards compatability fixes in bmc-config.
+
+	* bmc-config/src/bmc-sections.h (BMC_DO_NOT_CHECKOUT): New flag.
+
+	* bmc-config/src/bmc-user-sections.c (get_user_section): Support
+	new LAN_Enable_Restrict_to_Callback key and
+	Serial_Enable_Restrict_to_Callback key for backwards
+	compatability.  Both cannot be checked out.
+
+	* bmc-config/src/bmc-checkout.c (bmc_checkout_file): Support
+	BMC_DO_NOT_CHECKOUT flag.
+
+	* bmc-config/src/bmc-serial-conf-section.c
+	(bmc_serial_conf_section_get): Support new Call_Retry_Time key for
+	backwards compatability. It cannot be checked.
+
 2006-07-25  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG_CLEANUP): New
