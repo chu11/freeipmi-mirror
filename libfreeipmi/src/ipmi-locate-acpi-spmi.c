@@ -596,6 +596,8 @@ static int ipmi_acpi_get_spmi_table (uint8_t interface_type,
 				     fiid_obj_t obj_acpi_table_hdr,
 				     fiid_obj_t obj_acpi_spmi_table_descriptor);
 
+#define IPMI_INTERFACE_COUNT 5
+
 /*******************************************************************************
  *
  * FUNCTION:
@@ -1126,7 +1128,7 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
 
-  for (instance = 0; instance <= IPMI_INTERFACE_MAX; instance++)
+  for (instance = 0; instance < IPMI_INTERFACE_COUNT; instance++)
     {
       if (ipmi_acpi_get_firmware_table (IPMI_ACPI_SPMI_SIG, instance, 
 					obj_acpi_table_hdr,

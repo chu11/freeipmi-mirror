@@ -6,6 +6,12 @@
 	* common/doc/argp-common-authtype.man: Make default authentication
 	type MD5
 
+	* libfreeipmi/include/freiepmi/ipmi-locate.h
+	(IPMI_INTERFACE_MAX, IPMI_INTERFACE_LAST): Removed macro.
+
+	* libfreeipmi/src/ipmi-locate-acpi-spmi.c
+	(ipmi_acpi_get_spmi_table): Adjust appropriately.
+	
 2006-07-25  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG_CLEANUP): New

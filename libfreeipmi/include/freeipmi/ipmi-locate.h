@@ -59,8 +59,6 @@ enum ipmi_interface_type
   IPMI_INTERFACE_SMIC = 2,
   IPMI_INTERFACE_BT = 3,
   IPMI_INTERFACE_SSIF = 4,
-  /* Note: If you add a new interface here, don't forget to update 
-     "IPMI_INTERFACE_MAX" macro below. */
 };
 typedef enum ipmi_interface_type ipmi_interface_type_t;
 
@@ -69,9 +67,6 @@ typedef enum ipmi_interface_type ipmi_interface_type_t;
 	  || (__val) == IPMI_INTERFACE_SMIC \
 	  || (__val) == IPMI_INTERFACE_BT \
 	  || (__val) == IPMI_INTERFACE_SSIF) ? 1 : 0)
-
-#define IPMI_INTERFACE_MAX  IPMI_INTERFACE_SSIF
-#define IPMI_INTERFACE_LAST IPMI_INTERFACE_MAX
 
 struct ipmi_locate_info
 {
