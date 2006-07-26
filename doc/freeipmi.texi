@@ -3307,7 +3307,7 @@ If no power commands are specified on the command line,
 @command{ipmipower} will run in interactive mode.  Interactive mode
 gives the user a command-line interface to enter various commands.
 Details of the interactive command line interface can be found under
-@ref{ipmipower basic options} section.
+@ref{ipmipower interactive commands} section.
 
 @menu
 * ipmipower options::           Command-line arguments. 
@@ -3316,6 +3316,7 @@ Details of the interactive command line interface can be found under
 * Host ranges::                 Host range specificaiton.
 * ipmipower example::           ipmipower example.
 * Use with powerman::           PowerMan integration.
+* ipmipower workarounds::       Workarounds.
 * ipmipower known issues::      Known issues.
 @end menu
 
@@ -3353,9 +3354,13 @@ commands.  The user needs only @var{user} privileges to determine the
 status of the machine through @option{--stat}@.  If not specified, a
 null username (Anonymous Login @samp{User ID 1}) is assumed.
 
-@item -p, ---password @var{password} @*
+@item -p, ---password @var{pw} @*
       Sets the @var{password} to use when authenticating with the BMC.
 If not specified, a null password is assumed.
+
+@item -k, ---k-g @var{str} @*
+      Sets the @var{K_g} BMC Key when authenticating with the BMC for
+ipmi 2.0.  If not specified, a null key is assumed.
 
 @item -n, ---on @*
       Power on the target hosts.
@@ -3375,7 +3380,7 @@ If not specified, a null password is assumed.
 @item -j, ---pulse @*
       Send power diagnostic interrupt to target hosts.
 
-@item -k, ---soft @*
+@item -m, ---soft @*
       Initiate a soft-shutdown of the OS via ACPI.
 
 @item -H, ---help @*
@@ -3384,7 +3389,7 @@ If not specified, a null password is assumed.
 @item -V, ---version @*
       Display the version information and exit.
 
-@item -C, ---config file @*
+@item -C, ---config @var{file} @*
       Specify alternate configuration file.
 @end itemize
 
@@ -3394,14 +3399,49 @@ The following advanced options are used to change the behavior of
 ipmipower.
 
 @itemize @bullet
-@item -a, ---authtype @var{auth-type} @*
+@item -a, ---authentication-type @var{str} @*
       Sets the authentication type to use with @command{ipmipower}@.
 The currently available authentication types are:
 @example
+        @samp{auto} => (default)
         @samp{none}
-        @samp{straight_passwd_key} => (default)
+        @samp{straight_password_key} 
         @samp{md2}
         @samp{md5}
+@end example
+
+@item -l, ---privilege @var{str} @*
+      Sets the privilege type to use with @command{ipmipower}@.
+@example
+        @samp{auto} => (default)
+        @samp{user}
+        @samp{operator} 
+        @samp{admin}
+@end example
+
+@item -R, ---ipmi-version @var{version} @*
+      Sets the IPMI protocol version to use with @command{ipmipower}@.
+@example
+        @samp{auto} => (default)
+        @samp{1.5}
+        @samp{2.0} 
+@end example
+
+@item -T, ---cipher-suite-id @var{id} @*
+      Set the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite ID identifies
+a set of authentication, integrity, and confidentiality algorithms to
+use for IPMI 2.0 communication.
+@example
+        @samp{auto} => (default)
+        @samp{0}
+        @samp{1}
+        @samp{2}
+        @samp{3}
+        @samp{6}
+        @samp{7}
+        @samp{8}
+        @samp{11}
+        @samp{12}
 @end example
 
 @item -g,  ---on-if-off @*
@@ -3411,7 +3451,7 @@ powered off.  This option will force @command{ipmipower} to issue a
 power on command instead of a power cycle or hard reset command if the
 remote machine's power is currently off.
 
-@item -o, ---outputtype @var{output-type} @*
+@item -o, ---outputtype @var{str} @*
        Sets the output type to use with @command{ipmipower}@.  The
 currently available output types are: 
 @example
@@ -3419,12 +3459,32 @@ currently available output types are:
         @samp{newline}    => (default)
         @samp{hostlist}
 @end example
-@end itemize
 
 Hostlist output can be used to shorten output if the number of nodes
 in your cluster is quite large.  However, hostlist output will only
 output after the slowest node has completed its power control
 operation. 
+
+@item -P,  ---force-permsg-authentication @*
+      Forces @command{ipmipower} to use IPMI per message authentication
+regardless of what is advertised by the remote machine.  This option
+has been specifically implemented to get around a compliance issue.
+
+@item -S,  ---accept-session-id-zero @*
+      Forces @command{ipmipower} to accept packets with a session id
+of zero.  This option has been specifically implemented to get around
+a compliance issue.
+
+@item -U,  ---check-unexpected-authcode @*
+      Forces @command{ipmipower} to check packet authcodes even if no
+authcode should be received.  This option has been specifically
+implemented to get around a compliance issue.
+
+@item -X,  ---intel-2-0-session @*
+Modifies the IPMI 2.0 session protocol for non-compliant Intel
+machines.
+
+@end itemize
 
 @node ipmipower network options,  , ipmipower advanced options, ipmipower options
 @subsection ipmipower network options
@@ -3432,13 +3492,13 @@ The following options are used to change the behavior of the actual
 @command{ipmipower} network protocol used. 
 
 @itemize @bullet
-@item -t, ---timeout @var{time-out} @*
+@item -t, ---timeout @var{ms} @*
       Sets the @var{time-out} in milliseconds.  @command{ipmipower}
 uses the @var{time-out} value to determine when to give up on a power
 command.  If not specified, a default @var{time-out} of 20000
 milliseconds (20 seconds) is used.
 
-@item -y, ---retry-timeout @var{retry-timeout} @*
+@item -y, ---retry-timeout @var{ms} @*
       Sets the retry-timeout in milliseconds.  The @acronym{IPMI} protocol sends
 a series of packets back and forth to a remote host BMC in order to
 perform a power control operation.  When a response to any individual
@@ -3455,7 +3515,7 @@ time the @acronym{IPMI} protocol has to complete a power control operation.  The
 @option{--retry} option refers to the amount of time any individual
 packet within the @acronym{IPMI} protocol has to complete.
 
-@item -b, ---retry-backoff-count @var{retry-backoff-count} @*
+@item -b, ---retry-backoff-count @var{num} @*
       After every @var{retry-backoff-count} retransmissions,
 @command{ipmipower} will increase the @var{retry-timeout} length by
 another factor for the duration of the current power control
@@ -3464,8 +3524,8 @@ buffers to empty.  If not specified, @var{retry-backoff-count} is
 @samp{8}@.  Retransmission backoff can be disabled by setting the retry
 backoff count to @samp{0}@.
 
-@item -i, ---ping-interval @var{ping-interval} @*
-@item -z, ---ping-timeout @var{ping-timeout} @*
+@item -i, ---ping-interval @var{ms} @*
+@item -z, ---ping-timeout @var{ms} @*
       @command{ipmipower} will send RMCP ping discovery messages every
 @var{ping-interval} milliseconds to discover all remote hosts and
 confirm its support of @acronym{IPMI}@.  Power commands cannot be sent to a host
@@ -3481,8 +3541,8 @@ support of @acronym{IPMI}@.  The value of @var{ping-interval} must be less than
 the @var{ping-timeout} length.  RMCP ping discovery messages are
 automatically disabled in non-interactive mode.
 
-@item -v, ---ping-packet-count @var{ping-packet-count} @*
-@item -w, ---ping-percent @var{ping-percent} @*
+@item -v, ---ping-packet-count @var{num} @*
+@item -w, ---ping-percent @var{num} @*
       It is difficult to distinguish between a missing node and node
 with a bad connection when using just RMCP pings and timeouts. For
 example, if a link consistently drops 80% of the packets to a
@@ -3545,8 +3605,8 @@ character, and lines can be continued on the next using backslash
 ("\").
 
 Note that it is possible to list the username and password in
-the con- figuration file.  If this data is stored in a configuration
-file, sys- tem administrators should limit access to this file.
+the configuration file.  If this data is stored in a configuration
+file, system administrators should limit access to this file.
 
 @itemize @bullet
 @item hostnames @var{host1} @var{host2} @var{host3} @dots{} @*
@@ -3572,14 +3632,56 @@ Specify the default @var{username} to use.
 @item password @var{password} @*
 Specify the default @var{password} to use.
 
-@item authtype @var{authtype} @*
+@item k_g @var{k_g_str} @*
+Specify the BMC key @var{K_g} to use.
+
+@item authentication-type @var{authtype} @*
 Specify the default authentication type to use.  @command{ipmipower}
 currently supports the following authentication types: 
 
 @example
-        @samp{straight_passwd_key}
+        @samp{auto}
+        @samp{straight_password_key}
         @samp{md2}
         @samp{md5}
+@end example
+
+@item privilege @var{privilege} @*
+Specify the default privilege type to use.  @command{ipmipower}
+currently supports the following privilege types: 
+
+@example
+        @samp{auto}
+        @samp{user}
+        @samp{operator}
+        @samp{admin}
+@end example
+
+@item ipmi_version @var{ipmi_version} @*
+Specify the default IPMI protocol version to use.  @command{ipmipower}
+currently supports the following version types: 
+
+@example
+        @samp{auto}
+        @samp{1.5}
+        @samp{2.0}
+@end example
+
+@item cipher_suite_id @var{cipher_suite_id} @*
+Specify the default Cipher Suite ID to use.  @command{ipmipower}
+currently supports the following Cipher Suite IDs:
+
+@example
+        @samp{auto}
+        @samp{0}
+        @samp{1}
+        @samp{2}
+        @samp{3}
+        @samp{6}
+        @samp{7}
+        @samp{8}
+        @samp{11}
+        @samp{12}
 @end example
 
 @item on-if-off enable|disable @*
@@ -3593,6 +3695,14 @@ currently supports the following output types:
         @samp{newline}    => (default)
         @samp{hostlist}
 @end example
+
+@item force_permsg_authentication enable|disable @*
+
+@item accept_session_id_zero enable|disable @*
+
+@item accept_unexpected_authcode enable|disable @*
+
+@item intel_2_0_session enable|disable @*
 
 @item timeout @var{timeout} @*
 Specify the @var{timeout} in ms.
@@ -3639,6 +3749,9 @@ either through the command prompt or the @command{hostnames} command below.
 @item password @var{str} @*
       Specify a new password, no @var{str} for null password.
 
+@item k_g @var{str} @*
+      Specify a new k_g, no @var{str} for null.
+
 @item on @var{host} @*
       Turns on all hosts, or only the specified host.
 
@@ -3674,13 +3787,45 @@ specified host.
 @item quit @*
       Quit ipmipower.
 
-@item authtype @var{str} @*
+@item authentication_type @var{str} @*
       Specify a new authentication type:
 @example
         @samp{none}
         @samp{straight_passwd_key}
         @samp{md2}
         @samp{md5}
+@end example
+
+@item privilege_type @var{str} @*
+      Specify a new privilege type:
+@example
+        @samp{none}
+        @samp{user}
+        @samp{operator}
+        @samp{admin}
+@end example
+
+@item ipmi_version @var{str} @*
+      Specify a new IPMI version:
+@example
+        @samp{auto}
+        @samp{1.5}
+        @samp{2.0}
+@end example
+
+@item cipher_suite_id @var{str} @*
+      Specify a new cipher suite id:
+@example
+        @samp{auto}
+        @samp{0}
+        @samp{1}
+        @samp{2}
+        @samp{3}
+        @samp{6}
+        @samp{7}
+        @samp{8}
+        @samp{11}
+        @samp{12}
 @end example
 
 @item outputtype @var{str} @*
@@ -3690,6 +3835,14 @@ specified host.
         @samp{newline}
         @samp{hostlist}
 @end example
+
+@item force-permsg-authentication on|off @*
+
+@item accept-session-id-zero on|off @*
+
+@item check-unexpected-authcode on|off @*
+
+@item intel-2-0-session on|off @*
 
 @item config @*
       Output the current configuration.
@@ -3782,7 +3935,7 @@ debian-ia64: ok
 debian-sid:~# 
 @end example
 
-@node Use with powerman, ipmipower known issues, ipmipower example, ipmipower
+@node Use with powerman, ipmipower workarounds, ipmipower example, ipmipower
 @section Use with powerman
 @cindex powerman
 @pindex powerman
@@ -3802,7 +3955,66 @@ It is recommend that the @option{--on-if-off} option be used with
 will ensure @command{ipmipower} behaves similarly to other
 @command{powerman} devices. 
 
-@node ipmipower known issues,  , Use with powerman, ipmipower
+@node ipmipower workarounds, ipmipower known issues, Use with powerman, ipmipower
+@section ipmipower workarounds
+As can be expected, with so many different vendors implementing their
+own IPMI solutions, different vendors may implement their IPMI
+protocols slightly differently.  The following lists the handful of
+compliance issues discovered and the workarounds currently used in
+@command{ipmipower}.
+
+When possible, the workarounds have been implemented so they will be
+transparent to the user.  However, some will require command line
+options be set due to issues with code logic or security.  The
+workarounds listed below are listed in the order of their
+implementation.  Therefore, workarounds implemented earlier may have
+solved problems for other vendors.
+
+Note that the following only indicates the hardware that a problem was
+discovered on.  Newer versions of a vendors firmware may fix the
+problems indicated below.  Similar machines from vendors may or may
+not exhibit the same problems.
+
+Intel SR870BN4: BMCs would not respond to retransmissions of a Get
+Session Challenge Request if a previous Get Session Challenge response
+was lost.  Resolved by sending retransmitted Get Session Challenge
+requests from a different source port.
+
+Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
+packet responses return empty session IDs to the client.  In order to
+work around this issue, the @option{-S} (@option{--accept-ses-
+sion-id-zero}) option must be set.  The option will allow empty
+session IDs to be accepted by the client.  This problem is apparently
+fixed in later firmware releases.
+
+Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
+disabled, packet responses contain non-null authentication data (when
+it should in fact be null).  In order to work around this issue, the
+@option{-U} (@option{--check-unexpected-authcode}) option must be set.
+The option will allow unexpected non-null authcodes to be checked as
+though they were expected.  Fix con- firmed on upgraded firmware.
+
+Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The
+activate session response and close session response packets have
+invalid sequence numbers.  Specific workaround no longer required in
+later revisions of @command{ipmipower}.
+
+IBM eServer 325: The remote BMC will advertise that Per Message
+Authentication is disabled, but actually require it for the protocol.
+In order to work around this issue, the @option{-P}
+(@option{--force-permsg-authentication}) option must be set.  The
+option will force Per Message Authentication to be used no matter what
+is advertised by the remote BMC.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): There are a num- ber of Intel IPMI 2.0 bugs which can be
+worked around using the the @option{-X} (@option{--intel-2-0-session})
+option.  The workrarounds include padding of usernames, automatic
+acceptance of a RAKP 4 response integrity check when using the
+integrity algorith MD5-128, and password truncation if the
+authentication algorithm is HMAC-MD5-128.
+
+@node ipmipower known issues,  , ipmipower workarounds, ipmipower
 @section Known issues with the ipmipower command
 In order to prevent brute force attacks, some BMCs will @emph{lock up}
 after a number of username, password, or privilege errors.  There is
@@ -3877,8 +4089,19 @@ device.
       Time to wait for a response, in seconds. Default is five
 seconds. 
 
+@item -r @var{version} @*
+      Specify IPMI  protocol  version.
+@example
+        @samp{1.5}
+        @samp{2.0}
+@end example
+
+@item -s @var{num} @*
+      Specify an initial starting sequence number.
+
 @item -v @*
       Verbose Display.
+
 @end itemize
 
 @node ipmiping example, ipmiping known issues, ipmiping options, ipmiping
@@ -3889,12 +4112,12 @@ Example: Test the BMC reachability of host @samp{debian-ia64} using
 @example
 debian-sid:~# ipmiping debian-ia64
 ipmiping debian-ia64 (192.168.1.60)
-response received from 192.168.1.60: rq_seq=0
-response received from 192.168.1.60: rq_seq=1
-response received from 192.168.1.60: rq_seq=2
-response received from 192.168.1.60: rq_seq=3
-response received from 192.168.1.60: rq_seq=4
-response received from 192.168.1.60: rq_seq=5
+response received from 192.168.1.60: rq_seq=6
+response received from 192.168.1.60: rq_seq=7
+response received from 192.168.1.60: rq_seq=8
+response received from 192.168.1.60: rq_seq=9
+response received from 192.168.1.60: rq_seq=10
+response received from 192.168.1.60: rq_seq=11
 --- ipmiping debian-ia64 statistics ---
 6 requests transmitted, 6 responses received in time, 0.0% packet loss
 @end example
@@ -3904,11 +4127,11 @@ verbose mode.
 @example
 debian-sid:~# ipmiping -v debian-ia64
 ipmiping debian-ia64 (192.168.1.60)
-response received from 192.168.1.60: rq_seq=0, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
-response received from 192.168.1.60: rq_seq=1, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
-response received from 192.168.1.60: rq_seq=2, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
-response received from 192.168.1.60: rq_seq=3, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
-response received from 192.168.1.60: rq_seq=4, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
+response received from 192.168.1.60: rq_seq=45, auth: none=clear md2=clear md5=set passwd=clear oem=clear anon=clear null=clear non-null=set user=clear permsg=clear
+response received from 192.168.1.60: rq_seq=46, auth: none=clear md2=clear md5=set passwd=clear oem=clear anon=clear null=clear non-null=set user=clear permsg=clear
+response received from 192.168.1.60: rq_seq=47, auth: none=clear md2=clear md5=set passwd=clear oem=clear anon=clear null=clear non-null=set user=clear permsg=clear
+response received from 192.168.1.60: rq_seq=48, auth: none=clear md2=clear md5=set passwd=clear oem=clear anon=clear null=clear non-null=set user=clear permsg=clear
+response received from 192.168.1.60: rq_seq=49, auth: none=clear md2=clear md5=set passwd=clear oem=clear anon=clear null=clear non-null=set user=clear permsg=clear
 --- ipmiping debian-ia64 statistics ---
 5 requests transmitted, 5 responses received in time, 0.0% packet loss
 @end example
@@ -3918,8 +4141,8 @@ sending exactly 2 packets.
 @example
 debian-sid:~# ipmiping -c 2 debian-ia64
 ipmiping debian-ia64 (192.168.1.60)
-response received from 192.168.1.60: rq_seq=0
-response received from 192.168.1.60: rq_seq=1
+response received from 192.168.1.60: rq_seq=30
+response received from 192.168.1.60: rq_seq=31
 --- ipmiping debian-ia64 statistics ---
 2 requests transmitted, 2 responses received in time, 0.0% packet loss
 debian-sid:~# 
@@ -3930,7 +4153,7 @@ debian-sid:~#
 It has been observed that some remote BMCs can get @emph{confused} and
 delay packet responses if duplicate packets are sent in succession
 very quickly.  For example, this could happen if the user repeatedly
-executes @command{ipmiping -c 1 destination} very quickly.  There is
+executes @command{ipmiping -c 1 -s X destination} very quickly.  There is
 no known way to cleanly deal with a @emph{confused} BMC.  The best
 option is to simply @strong{wait awhile}@.
 
@@ -3982,6 +4205,9 @@ seconds.
 
 @item -v
       Verbose display.
+
+@item -s @var{num} @*
+      Specify an initial starting sequence number.
 @end itemize
 
 @node rmcpping example, rmcpping known issues, rmcpping options, rmcpping
@@ -4036,7 +4262,7 @@ debian-sid:~#
 It has been observed that some remote BMCs can get @emph{confused} and
 delay packet responses if duplicate packets are sent in succession
 very quickly.  For example, this could happen if the user repeatedly
-executes @command{rmcpping -c 1 destination} very quickly.  There is
+executes @command{rmcpping -c 1 -s X destination} very quickly.  There is
 no known way to cleanly deal with a @emph{confused} BMC.  The best
 option is to simply @strong{wait awhile}@.
 

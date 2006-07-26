@@ -29,7 +29,8 @@
 	
 	* libfreeipmi/: Adjust appropriate Makefiles files.
 
-	* doc/freeipmi.texi: Some minor fixes.
+	* doc/authors.texi, doc/freeipmi.texi, ipmiping/ipmiping.8.in,
+	rmcpping/rmcpping.8.in: Fixes.
 
 2006-07-25  Albert Chu <chu11@llnl.gov>
 

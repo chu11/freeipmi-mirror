@@ -35,14 +35,13 @@ bmc-autoconfig, still exists?
 ipmi-raw update with new byte interface
 remove ipmi-sensors default-startup stuff
 update bmc-watchdog theory
-update known issues in ipmipower
 add workarounds for ipmipower
 remove  16.2 "Cat ate the fish" exception
-add anand avati to authors
 remove fish 20. Glossary
 
 global
 update options in all tools
+update version numbers appropriately (i.e. 0.1.3 -> 0.3.0)
 
 Al's TODO list
 ==============

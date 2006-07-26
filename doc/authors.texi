@@ -3,10 +3,11 @@
 @subsection Core team
 @multitable @columnfractions 0.03 0.25 0.35
 @item 1. @tab Albert Chu @tab <chu11(@@)llnl.gov>
-@item 2. @tab Anand Babu @tab <ab(@@)gnu.org.in>
-@item 3. @tab Balamurugan @tab <bala.a(@@)californiadigital.com>
-@item 4. @tab Ian Zimmerman @tab <itz(@@)californiadigital.com>
-@item 5. @tab Jim Garlick @tab <garlick(@@)llnl.gov>
+@item 2. @tab Anand Avati @tab <avati(@@)hardcodecafe.com>
+@item 3. @tab Anand Babu @tab <ab(@@)gnu.org.in>
+@item 4. @tab Balamurugan @tab <bala.a(@@)californiadigital.com>
+@item 5. @tab Ian Zimmerman @tab <itz(@@)californiadigital.com>
+@item 6. @tab Jim Garlick @tab <garlick(@@)llnl.gov>
 @end multitable
 
 @subsection Documentation
