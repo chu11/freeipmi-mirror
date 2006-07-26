@@ -105,6 +105,11 @@ bmc_checkout_file (struct arguments *arguments,
              fields */
           int this_ret = 0;
 
+          /* achu: Certain keys should be "hidden" and not be checked
+           * out.  They only linger for backwards compatability to
+           * FreeIPMI's 0.2.0 bmc-config, which several options with
+           * typoed names.
+           */
           if (kv->flags & BMC_DO_NOT_CHECKOUT)
             {
               kv = kv->next;
