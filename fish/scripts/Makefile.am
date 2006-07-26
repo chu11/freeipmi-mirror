@@ -1,2 +1,2 @@
-SUBDIRS = sensors bmc-autoconfig pef
+SUBDIRS = sensors pef
 
