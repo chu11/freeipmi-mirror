@@ -54,7 +54,7 @@
 
 	* bmc-config/src/bmc-serial-conf-section.c
 	(bmc_serial_conf_section_get): Support new Call_Retry_Time key for
-	backwards compatability. It cannot be checked.
+	backwards compatability. It cannot be checked out.
 
 2006-07-25  Albert Chu <chu11@llnl.gov>
 
