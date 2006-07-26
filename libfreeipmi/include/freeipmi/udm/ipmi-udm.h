@@ -30,10 +30,6 @@
 #include <freeipmi/ipmi-messaging-support-cmds.h>
 #include <freeipmi/ipmi-ssif-api.h>
 
-#define IPMI_MAX_DRIVERS  5
-#define IPMI_MAX_RETRIES  3
-#define IPMI_POLL_INTERVAL_USECS 60
-
 enum ipmi_mode
   {
     IPMI_MODE_DEFAULT = 0,
