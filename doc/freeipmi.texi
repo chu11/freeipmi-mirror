@@ -78,7 +78,8 @@ release @value{VERSION} of the GNU FreeIPMI.
 GNU FreeIPMI is a Free Intelligent Platform Management System Software.
 It provides ``Remote-Console'' (out-of-band), ``System Management
 Software'' (in-band) and a development library confirming to
-Intelligent  Platform Management Interface (@acronym{IPMI} v1.5) standards. 
+Intelligent  Platform Management Interface (@acronym{IPMI} v1.5 and v2.0) 
+standards. 
 
 GNU FreeIPMI User's Guide concentrates installation, usage,
 troubleshooting and bug reporting.  It corresponds to @value{VERSION}
@@ -302,8 +303,7 @@ there are no other prerequisites.
 techniques.  The tool also displays default values of @acronym{IPMI}
 device interfaces of most commonly used in @acronym{BMC}
 manufacturers.  This tool may not probe on some machines, but FreeIPMI
-tools work on them with default values.  This behavior has been seen
-in Tyan motherboard with SMDC card.
+tools work on them with default values.  
 
 @section Command-line options
 
@@ -4199,7 +4199,7 @@ Contact FreeIPMI Core Team <ab(@@)gnu.org.in>
 @item IPMI  @tab [I]ntelligent [P]latform [M]anagement [I]nterface
 @item NIS   @tab [N]etwork [I]nformation [S]ervice. 
 Also humerously known as [N]etwork [I]ntrusion [S]ervice :) .  
-@item RMCP  @tab [R]empote [M]anagement [C]ontrol [P]rotocol.
+@item RMCP  @tab [R]emote [M]anagement [C]ontrol [P]rotocol.
 @item RSH   @tab [R]emote [SH]ell.
 @end multitable
 

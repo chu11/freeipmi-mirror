@@ -29,6 +29,8 @@
 	
 	* libfreeipmi/: Adjust appropriate Makefiles files.
 
+	* doc/freeipmi.texi: Some minor fixes.
+
 2006-07-25  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h (__IPMI_TRACE_ERRMSG_CLEANUP): New
