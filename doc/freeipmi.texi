@@ -51,7 +51,6 @@ release @value{VERSION} of the GNU FreeIPMI.
 * Installation::                Installing the software.
 * libfreeipmi::                 High-level C library for @acronym{IPMI}
 * ipmi-locate::                 @acronym{IPMI} device probing tool.
-* fish::                        FreeIPMI SHell.
 * bmc-config::                  Baseboard Management Controller configurator.
 * bmc-info::                    Baseboard Management Controller information.
 * bmc-autoconfig::              Wizard-like frontend for bmc-config.
@@ -194,8 +193,8 @@ Note: Please run @command{./autogen.sh} script before
 
 Example:
 @example
-  tar xzvf freeipmi-0.1.3.tar.gz
-  cd freeipmi-0.1.3
+  tar xzvf freeipmi-0.3.0.tar.gz
+  cd freeipmi-0.3.0
   env CFLAGS="-I/usr/local/include" \
     LDFLAGS="-L/usr/local/lib -largp" \
     ./configure
@@ -275,14 +274,14 @@ please refer to @ref{Trouble-shooting}@.
 @chapter @acronym{IPMI} C library (libfreeipmi)
 @pindex libfreeipmi
 
-The Core of GNU FreeIPMI system consists of LAN, KCS, SMIC system
+The Core of GNU FreeIPMI system consists of LAN, KCS, and SSIF system
 interface device drivers, all packaged in a single portable C
 library.  Management applications can access the BMC at various levels 
 using higher level @acronym{IPMI} command APIs or raw read/write interface to
 the driver. 
 
-Library internally uses SM BIOS and PCI drivers to locate the system
-interfaces. 
+Library internally uses DMI, SMBIOS, PCI, and ACPI drivers to locate
+the system interfaces.
 
 You should note that all the device drivers are completely written in
 user-space.  If you already have any in-kernel @acronym{IPMI} drivers loaded,
@@ -294,7 +293,7 @@ there are no other prerequisites.
 @c software using C language interface, then you should refer to
 @c @ref{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@. 
 
-@node ipmi-locate, fish, libfreeipmi, Top
+@node ipmi-locate, bmc-config, libfreeipmi, Top
 @chapter @acronym{ipmi-locate} IPMI device probing tool
 @pindex ipmi-locate
 @command{ipmi-locate} tool tries to probe and display
@@ -384,237 +383,7 @@ Register space: 1
 www:~# 
 @end example
 
-@node fish, bmc-config, ipmi-locate, Top
-@chapter @acronym{FISH} FreeIPMI SHell
-@cindex fish
-@cindex FreeIPMI SHell
-@pindex fish
-
-Fish provides shell, extension/plug-in and scripting interface.  As a
-shell, User has access to both in-band and out-of-band access to the
-host BMC through a rich set of @acronym{IPMI} commands.
-
-Experienced System Administrators can quickly add features or
-limitlessly customize the system using the extension interface in
-Scheme language.  For example, Pushing System Event Log data to a MySQL
-server, Triggering alarm upon Platform Chassis Intrusion, Generating
-email for critical platform events like processor temperature above
-threshold limit or fan failure or memory errors@enddots{}  In fact, most of
-the functionalities and commands of this shell are themselves
-implemented through Fish extensions. 
-
-@c GNU FreeIPMI User's Guide only gives a overview of @command{fish}@.  To
-@c master @command{fish} scripting and extension, please refer to  
-@c @ref{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@.
-
-@menu
-* fish options::                Command-line arguments to fish.
-* fish configuration file::     Sample configuration file.
-* Invoking fish::               Different ways to invoke fish.
-@end menu
-
-@node fish options, fish configuration file, fish, fish
-@section Command-line arguments to fish
-@cindex fish options
-
-@itemize @bullet
-@item ---no-probing @*
-      Do not probe IPMI devices.
-
-@item -D, ---driver-type=@var{IPMIDRIVER} @*
-      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
-      values are KCS, SMIC, SSIF and LAN.
-
-@item ---driver-address=@var{DRIVERADDR} @*
-      Use this @var{DRIVERADDR} address instead of probed one.
-
-@item ---driver-device=@var{DEVICE} @*
-      Use this @var{DEVICE} for IPMI driver.
-
-@item -h, ---hostname=@var{IPMIHOST} @*
-      Connect to @var{IPMIHOST}.
-
-@item -u, ---username=@var{USERNAME} @*
-      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
-      16.
-
-@item -p, ---password=@var{PASSWORD} @*
-      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
-      16.
-
-@item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
-      MD2, MD5, PLAIN and OEM.
-
-@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
-      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
-      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
-
-@item -s, ---script-file=@var{SCRIPT-FILE} @*
-      Load and execute given SCRIPT-FILE.
-
-@item -?, ---help @*
-      Give this help list.
-
-@item ---usage @*
-      Give a short usage message.
-
-@item -V, ---version @*
-      Print program version.
-@end itemize
-
-@node fish configuration file, Invoking fish, fish options, fish
-@section Setting default startup options
-@cindex fish.scm
-
-Fish can be customized to great extent using Scheme language
-interface.  You should refer to @ref{Top, The Guile Reference Manual,
-guile} for advanced options. 
-
-Example configuration file: @file{/usr/etc/fish/fish.scm}
-@lisp
-;; fish.scm: default fish configuration scm
-
-;; Customize Fish:
-(fi-set-prompt! "fish# ")
-
-;; Set driver SMS IO Base port
-; (fi-set-sms-io-base! #x0CA2)
-
-;; Set Driver Internals:
-; (fi-set-default-driver-poll-interval 10)
-
-;; Example Group Aliases
-; (set! sensors-group-alias-list
-;   '(
-;     (mysystem . (Processor Fan "Power Supply" Current Memory Chassis))
-;     (power . ("Power Supply"))
-;     (security . ("Platform Chassis Intrusion Platform Security Violation"))
-;     ))
-@end lisp
-
-@node Invoking fish,  , fish configuration file, fish
-@section Invoking fish
-
-@subsection fish as shell
-Fish takes (GNU getopt-long style) command-line arguments and starts
-as a shell by default with a neat readline interface.  You can type
-@command{fish} commands at the prompt.  Type @option{--help} to get
-help on list of available commands and @option{quit} to exit the
-shell.
-
-@example
-www:~# fish 
-FreeIPMI Shell [fish-0.2.beta1]
-Copyright (C) 2003-2005 FreeIPMI Core Team
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License.  This program has absolutely no warranty.
-fish# help sensors 
-sensors [--no-probing] [--driver-type=IPMIDRIVER]
-        [--driver-address=DRIVERADDR] [--driver-device=DEVICE]
-        [--hostname=IPMIHOST] [--username=USERNAME]
-        [--password=PASSWORD] [--auth-type=AUTHTYPE]
-        [--priv-level=PRIVILEGE-LEVEL] [--verbose] [--sdr-info]
-        [--flush-cache] [--list-groups] [--all] [--group=GROUP]
-        [--sensors=SENSORS-LIST] [--help] [--usage] [--version]
-
-        Displays current readings of sensor chips through BMC.
-fish# quit 
-www:~# 
-@end example
-
-@subsection Fish as script interpreter
-To start fish as a script interpreter, you can either include script
-header or invoke with @command{fish} with
-@option{--script-file=SCRIPT-FILE} option.
-
-@cindex /usr/sbin/fish
-
-Example @command{fish} self executable script:
-@lisp
-#! /usr/sbin/fish -s
-!#
-(bmc-info-main (fi-command-line))
-(display "bmc-info exited with [")
-(display bmc-info-exit-status)
-(display "] status\n")
-(fi-exit bmc-info-exit-status)
-@end lisp
-
-Example invoking through command-line:
-@example
-debian-ia64:~# fish --script-file=/root/work/fish-examples/bmc-info.scm
-Device ID:         20
-Device Revision:   1
-                   [SDR Support]
-Firmware Revision: 1.32
-                   [Device Available (normal operation)]
-IPMI Version:      1.5
-Additional Device Support:
-                   [Sensor Device]
-                   [SDR Repository Device]
-                   [SEL Device]
-                   [FRU Inventory Device]
-                   [IPMB Event Receiver]
-                   [Chassis Device]
-Manufacturer ID:   B000157h
-Product ID:        1Bh
-Aux Firmware Revision Info: 10011500h
-Channel Information:
-       Channel No: 0
-      Medium Type: IPMB (I2C)
-    Protocol Type: IPMB-1.0
-       Channel No: 1
-      Medium Type: Asynch. Serial/Modem (RS-232)
-    Protocol Type: IPMB-1.0
-       Channel No: 3
-      Medium Type: PCI SMBus
-    Protocol Type: IPMI-SMBus
-       Channel No: 4
-      Medium Type: System Interface (KCS, SMIC, or BT)
-    Protocol Type: KCS
-       Channel No: 6
-      Medium Type: 802.3 LAN
-    Protocol Type: IPMB-1.0
-       Channel No: 7
-      Medium Type: 802.3 LAN
-    Protocol Type: IPMB-1.0
-bmc-info exited with 0 status
-debian-ia64:~#
-@end example
-
-@subsection Fish extensions
-@cindex Extensions
-
-Fish extensions are like normal Scheme programming with additional
-built-in @acronym{IPMI} primitives and procedures.  You should refer to 
-@ref{Top, The Guile Reference Manual, guile} to learn more about
-writing extensions.
-
-Example @command{fish} extension:
-This simple extension upon loading, will dynamically add
-@command{bmc-info} command to the @command{fish} shell.
-
-@lisp
-;;
-;; bmc-info.scm: fish extension to get BMC information.
-;;
-(define (bmc-info args)
-  "Show BMC information"
-  (fi-kcs-get-dev-id-display))
-(fi-register-command! '("bmc-info" "bmc-info\n\t- Show BMC Information."))
-@end lisp
-
-Example: Loading the above @file{bmc-info.scm} extension.
-@example 
-fish# load /root/work/fish-examples/bmc-info.scm
-fish# help bmc-info
-bmc-info
-        Shows BMC Information.
-fish#
-@end example
-
-@node bmc-config, bmc-info, fish, Top
+@node bmc-config, bmc-info, ipmi-locate, Top
 @chapter bmc-config
 @pindex bmc-config
 A command line BMC configuration utility.  You can view, set and
@@ -626,7 +395,6 @@ replicate the configuration.
 * BMC checkout::                Extracting current BMC configuration.
 * BMC commit::                  Update BMC configuration.
 * Diff configuration::          Compare BMC configuration.
-* bmc-config known issues::     Known issues with the bmc-config.
 @end menu
 
 @node Options, Sample Configuration File, bmc-config, bmc-config
@@ -659,7 +427,7 @@ replicate the configuration.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
-      MD2, MD5, PLAIN and OEM.
+      MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
       Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
@@ -705,254 +473,324 @@ Example: Extracting BMC configuration to stdout.
 @example
 debian-ia64:~# bmc-config --checkout 
 Section User1
-	## Give username
-	Username                                     Anonymous
-	## Give password or leave it blank to clear password
-	Password                                     
-	## Possible values: Yes/No
-	Lan_Enable_Ipmi_Msgs                         Yes
-	## Possible values: Yes/No
-	Lan_Enable_Link_Auth                         Yes
-	## Possible values: Yes/No
-	Lan_Enable_Restrict_To_Callback              No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Lan_Privilege_Limit                          User
-	## Give valid number
-	Lan_Session_Limit                            0
-	## Possible values: Yes/No
-	Serial_Enable_Ipmi_Msgs                      Yes
-	## Possible values: Yes/No
-	Serial_Enable_Link_Auth                      Yes
-	## Possible values: Yes/No
-	Serial_Enable_Restrict_To_Callback           No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Serial_Privilege_Limit                       User
-	## Give valid number
-	Serial_Session_Limit                         0
+        ## Give Username
+        Username                                     NULL
+        ## Possible values: Yes/No or blank to not set
+        ## Enable_User
+        ## Give password or blank to clear. MAX 16 chars.
+        ## Password
+        ## Possible values: Yes/No
+        LAN_Enable_IPMI_Msgs                         No
+        ## Possible values: Yes/No
+        LAN_Enable_Link_Auth                         No
+        ## Possible values: Yes/No
+        LAN_Enable_Restricted_to_Callback            No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        LAN_Privilege_Limit                          No_Access
+        ## Possible values: 0-255, 0 is unlimited
+        LAN_Session_Limit                            0
+        ## Possible values: Yes/No
+        Serial_Enable_IPMI_Msgs                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Link_Auth                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Restricted_to_Callback         No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Serial_Privilege_Limit                       Administrator
+        ## Possible values: 0-255, 0 is unlimited
+        Serial_Session_Limit                         0
 EndSection
 Section User2
-	## Give username
-	Username                                     ipmiuser
-	## Give password or leave it blank to clear password
-	Password                                     
-	## Possible values: Yes/No
-	Lan_Enable_Ipmi_Msgs                         Yes
-	## Possible values: Yes/No
-	Lan_Enable_Link_Auth                         Yes
-	## Possible values: Yes/No
-	Lan_Enable_Restrict_To_Callback              No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Lan_Privilege_Limit                          Administrator
-	## Give valid number
-	Lan_Session_Limit                            0
-	## Possible values: Yes/No
-	Serial_Enable_Ipmi_Msgs                      No
-	## Possible values: Yes/No
-	Serial_Enable_Link_Auth                      No
-	## Possible values: Yes/No
-	Serial_Enable_Restrict_To_Callback           No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Serial_Privilege_Limit                       No_Access
-	## Give valid number
-	Serial_Session_Limit                         0
+        ## Give Username
+        Username                                     USER
+        ## Possible values: Yes/No or blank to not set
+        ## Enable_User
+        ## Give password or blank to clear. MAX 16 chars.
+        ## Password
+        ## Possible values: Yes/No
+        LAN_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Yes/No
+        LAN_Enable_Link_Auth                         No
+        ## Possible values: Yes/No
+        LAN_Enable_Restricted_to_Callback            No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        LAN_Privilege_Limit                          User
+        ## Possible values: 0-255, 0 is unlimited
+        LAN_Session_Limit                            0
+        ## Possible values: Yes/No
+        Serial_Enable_IPMI_Msgs                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Link_Auth                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Restricted_to_Callback         No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Serial_Privilege_Limit                       No_Access
+        ## Possible values: 0-255, 0 is unlimited
+        Serial_Session_Limit                         0
 EndSection
 Section User3
-	## Give username
-	Username                                     operator
-	## Give password or leave it blank to clear password
-	Password                                     
-	## Possible values: Yes/No
-	Lan_Enable_Ipmi_Msgs                         No
-	## Possible values: Yes/No
-	Lan_Enable_Link_Auth                         No
-	## Possible values: Yes/No
-	Lan_Enable_Restrict_To_Callback              No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Lan_Privilege_Limit                          No_Access
-	## Give valid number
-	Lan_Session_Limit                            0
-	## Possible values: Yes/No
-	Serial_Enable_Ipmi_Msgs                      No
-	## Possible values: Yes/No
-	Serial_Enable_Link_Auth                      No
-	## Possible values: Yes/No
-	Serial_Enable_Restrict_To_Callback           No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Serial_Privilege_Limit                       No_Access
-	## Give valid number
-	Serial_Session_Limit                         0
+        ## Give Username
+        Username                                     OPERATOR
+        ## Possible values: Yes/No or blank to not set
+        ## Enable_User
+        ## Give password or blank to clear. MAX 16 chars.
+        ## Password
+        ## Possible values: Yes/No
+        LAN_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Yes/No
+        LAN_Enable_Link_Auth                         No
+        ## Possible values: Yes/No
+        LAN_Enable_Restricted_to_Callback            No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        LAN_Privilege_Limit                          Operator
+        ## Possible values: 0-255, 0 is unlimited
+        LAN_Session_Limit                            0
+        ## Possible values: Yes/No
+        Serial_Enable_IPMI_Msgs                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Link_Auth                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Restricted_to_Callback         No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Serial_Privilege_Limit                       No_Access
+        ## Possible values: 0-255, 0 is unlimited
+        Serial_Session_Limit                         0
 EndSection
 Section User4
-	## Give username
-	Username                                     user
-	## Give password or leave it blank to clear password
-	Password                                     
-	## Possible values: Yes/No
-	Lan_Enable_Ipmi_Msgs                         No
-	## Possible values: Yes/No
-	Lan_Enable_Link_Auth                         No
-	## Possible values: Yes/No
-	Lan_Enable_Restrict_To_Callback              No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Lan_Privilege_Limit                          No_Access
-	## Give valid number
-	Lan_Session_Limit                            0
-	## Possible values: Yes/No
-	Serial_Enable_Ipmi_Msgs                      No
-	## Possible values: Yes/No
-	Serial_Enable_Link_Auth                      No
-	## Possible values: Yes/No
-	Serial_Enable_Restrict_To_Callback           No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Serial_Privilege_Limit                       No_Access
-	## Give valid number
-	Serial_Session_Limit                         0
+        ## Give Username
+        Username                                     ADMIN
+        ## Possible values: Yes/No or blank to not set
+        ## Enable_User
+        ## Give password or blank to clear. MAX 16 chars.
+        ## Password
+        ## Possible values: Yes/No
+        LAN_Enable_IPMI_Msgs                         Yes
+        ## Possible values: Yes/No
+        LAN_Enable_Link_Auth                         No
+        ## Possible values: Yes/No
+        LAN_Enable_Restricted_to_Callback            No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        LAN_Privilege_Limit                          Administrator
+        ## Possible values: 0-255, 0 is unlimited
+        LAN_Session_Limit                            0
+        ## Possible values: Yes/No
+        Serial_Enable_IPMI_Msgs                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Link_Auth                      No
+        ## Possible values: Yes/No
+        Serial_Enable_Restricted_to_Callback         No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Serial_Privilege_Limit                       No_Access
+        ## Possible values: 0-255, 0 is unlimited
+        Serial_Session_Limit                         0
 EndSection
 Section LAN_Channel
-	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
-	Volatile_Access_Mode                         Always_Available
-	## Possible values: Yes/No
-	Volatile_Enable_User_Level_Auth              Yes
-	## Possible values: Yes/No
-	Volatile_Enable_Per_Message_Auth             No
-	## Possible values: Yes/No
-	Volatile_Enable_Pef_Alerting                 No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Volatile_Channel_Privilege_Limit             User
-	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
-	Non_Volatile_Access_Mode                     Always_Available
-	## Possible values: Yes/No
-	Non_Volatile_Enable_User_Level_Auth          Yes
-	## Possible values: Yes/No
-	Non_Volatile_Enable_Per_Message_Auth         No
-	## Possible values: Yes/No
-	Non_Volatile_Enable_Pef_Alerting             No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Non_Volatile_Channel_Privilege_Limit         User
+        ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+        Volatile_Access_Mode                         Always_Available
+        ## Possible values: Yes/No
+        Volatile_Enable_User_Level_Auth              Yes
+        ## Possible values: Yes/No
+        Volatile_Enable_Per_Message_Auth             Yes
+        ## Possible values: Yes/No
+        Volatile_Enable_Pef_Alerting                 No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Volatile_Channel_Privilege_Limit             Administrator
+        ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+        Non_Volatile_Access_Mode                     Always_Available
+        ## Possible values: Yes/No
+        Non_Volatile_Enable_User_Level_Auth          Yes
+        ## Possible values: Yes/No
+        Non_Volatile_Enable_Per_Message_Auth         Yes
+        ## Possible values: Yes/No
+        Non_Volatile_Enable_Pef_Alerting             No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Non_Volatile_Channel_Privilege_Limit         Administrator
 EndSection
 Section LAN_Conf
-	## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
-	Ip_Address_Source                            Static
-	## Give valid IP Address
-	Ip_Address                                   192.168.1.60
-	## Give valid MAC Address
-	Mac_Address                                  00:0E:0C:21:81:B4
-	## Give valid Subnet mask
-	Subnet_Mask                                  255.255.255.0
-	## Give valid IP Address
-	Default_Gateway_Ip_Address                   192.168.1.1
-	## Give valid MAC Address
-	Default_Gateway_Mac_Address                  00:00:00:00:00:00
-	## Give valid IP Address
-	Backup_Gateway_Ip_Address                    192.168.1.1
-	## Give valid MAC Address
-	Backup_Gateway_Mac_Address                   00:00:00:00:00:00
+        ## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
+        IP_Address_Source                            Static
+        ## Give valid IP address
+        IP_Address                                   192.168.1.60
+        ## Give valid MAC address
+        MAC_Address                                  00:0E:0C:21:81:B4
+        ## Give valid Subnet Mask
+        Subnet_Mask                                  255.255.255.0
+        ## Give valid IP address
+        Default_Gateway_IP_Address                   0.0.0.0
+        ## Give valid MAC address
+        Default_Gateway_MAC_Address                  00:00:00:00:00:00
+        ## Give valid IP address
+        Backup_Gateway_IP_Address                    0.0.0.0
+        ## Give valid MAC address
+        Backup_Gateway_MAC_Address                   00:00:00:00:00:00
 EndSection
 Section LAN_Conf_Auth
-	## Possible values: Yes/No
-	Callback_Enable_Auth_Type_None               No
-	## Possible values: Yes/No
-	Callback_Enable_Auth_Type_Md2                Yes
-	## Possible values: Yes/No
-	Callback_Enable_Auth_Type_Md5                Yes
-	## Possible values: Yes/No
-	Callback_Enable_Auth_Type_Straight_Password  Yes
-	## Possible values: Yes/No
-	Callback_Enable_Auth_Type_Oem_Proprietary    No
-	## Possible values: Yes/No
-	User_Enable_Auth_Type_None                   No
-	## Possible values: Yes/No
-	User_Enable_Auth_Type_Md2                    Yes
-	## Possible values: Yes/No
-	User_Enable_Auth_Type_Md5                    Yes
-	## Possible values: Yes/No
-	User_Enable_Auth_Type_Straight_Password      Yes
-	## Possible values: Yes/No
-	User_Enable_Auth_Type_Oem_Proprietary        No
-	## Possible values: Yes/No
-	Operator_Enable_Auth_Type_None               No
-	## Possible values: Yes/No
-	Operator_Enable_Auth_Type_Md2                Yes
-	## Possible values: Yes/No
-	Operator_Enable_Auth_Type_Md5                Yes
-	## Possible values: Yes/No
-	Operator_Enable_Auth_Type_Straight_Password  Yes
-	## Possible values: Yes/No
-	Operator_Enable_Auth_Type_Oem_Proprietary    No
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_None                  No
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md2                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md5                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Straight_Password     Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Oem_Proprietary       No
-	## Possible values: Yes/No
-	Oem_Enable_Auth_Type_None                    No
-	## Possible values: Yes/No
-	Oem_Enable_Auth_Type_Md2                     No
-	## Possible values: Yes/No
-	Oem_Enable_Auth_Type_Md5                     No
-	## Possible values: Yes/No
-	Oem_Enable_Auth_Type_Straight_Password       No
-	## Possible values: Yes/No
-	Oem_Enable_Auth_Type_Oem_Proprietary         No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_None               No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_MD2                No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_MD5                No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_Straight_Password  No
+        ## Possible values: Yes/No
+        Callback_Enable_Auth_Type_OEM_Proprietary    No
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_None                   No
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_MD2                    No
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_MD5                    Yes
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_Straight_Password      No
+        ## Possible values: Yes/No
+        User_Enable_Auth_Type_OEM_Proprietary        No
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_None               No
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_MD2                No
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_MD5                Yes
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_Straight_Password  No
+        ## Possible values: Yes/No
+        Operator_Enable_Auth_Type_OEM_Proprietary    No
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_None                  No
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_MD2                   No
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_MD5                   Yes
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_Straight_Password     No
+        ## Possible values: Yes/No
+        Admin_Enable_Auth_Type_OEM_Proprietary       No
+        ## Possible values: Yes/No
+        OEM_Enable_Auth_Type_None                    No
+        ## Possible values: Yes/No
+        OEM_Enable_Auth_Type_MD2                     No
+        ## Possible values: Yes/No
+        OEM_Enable_Auth_Type_MD5                     No
+        ## Possible values: Yes/No
+        OEM_Enable_Auth_Type_Straight_Password       No
+        ## Possible values: Yes/No
+        OEM_Enable_Auth_Type_OEM_Proprietary         No
+EndSection
+Section LAN_Conf_Security_Keys
+        ## Give string or blank to clear. Max 20 chars
+        ## K_R
+        ## Give string or blank to clear. Max 20 chars
+        ## K_G
 EndSection
 Section LAN_Conf_Misc
-	## Possible values: Yes/No
-	Enable_Gratuitous_Arps                       Yes
-	## Possible values: Yes/No
-	Enable_Arp_Response                          No
-	## Give valid number
-	Gratuitous_Arp_Interval                      4
+        ## Possible values: Yes/No
+        Enable_Gratuitous_ARPs                       No
+        ## Possible values: Yes/No
+        Enable_ARP_Response                          No
+        ## Give a number (x 500ms)
+        Gratuitous_ARP_Interval                      10
+EndSection
+Section Rmcpplus_Conf_Privilege
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_0          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_1          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_2          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_3          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_4          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_5          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_6          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_7          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_8          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_9          Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_10         Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_11         Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_12         Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_13         Administrator
+        ## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+        Maximum_Privilege_Cipher_Suite_Id_14         Administrator
 EndSection
 Section Serial_Channel
-	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
-	Volatile_Access_Mode                         Always_Available
-	## Possible values: Yes/No
-	Volatile_Enable_User_Level_Auth              Yes
-	## Possible values: Yes/No
-	Volatile_Enable_Per_Message_Auth             No
-	## Possible values: Yes/No
-	Volatile_Enable_Pef_Alerting                 No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Volatile_Channel_Privilege_Limit             User
-	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
-	Non_Volatile_Access_Mode                     Always_Available
-	## Possible values: Yes/No
-	Non_Volatile_Enable_User_Level_Auth          Yes
-	## Possible values: Yes/No
-	Non_Volatile_Enable_Per_Message_Auth         No
-	## Possible values: Yes/No
-	Non_Volatile_Enable_Pef_Alerting             No
-	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-	Non_Volatile_Channel_Privilege_Limit         User
+        ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+        Volatile_Access_Mode                         Always_Available
+        ## Possible values: Yes/No
+        Volatile_Enable_User_Level_Auth              Yes
+        ## Possible values: Yes/No
+        Volatile_Enable_Per_Message_Auth             No
+        ## Possible values: Yes/No
+        Volatile_Enable_Pef_Alerting                 No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Volatile_Channel_Privilege_Limit             Administrator
+        ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+        Non_Volatile_Access_Mode                     Always_Available
+        ## Possible values: Yes/No
+        Non_Volatile_Enable_User_Level_Auth          Yes
+        ## Possible values: Yes/No
+        Non_Volatile_Enable_Per_Message_Auth         No
+        ## Possible values: Yes/No
+        Non_Volatile_Enable_Pef_Alerting             No
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+        Non_Volatile_Channel_Privilege_Limit         Administrator
 EndSection
 Section Serial_Conf
-	## Possible values: Yes/No
-	Enable_Basic_Mode                            Yes
-	## Possible values: Yes/No
-	Enable_Ppp_Mode                              Yes
-	## Possible values: Yes/No
-	Enable_Terminal_Mode                         No
-	## Possible Values: Modem_Connect/Direct_Connect
-	Connect_Mode                                 Direct_Connect
-	## Give valid number
-	Page_Blackout_Interval                       0
-	## Give valid number
-	Call_Retry_Time                              60
-	## Possible values: Yes/No
-	Enable_Dtr_Hangup                            Yes
-	## Possible values: No_Flow_Control/RTS_CTS/XON_XOFF
-	Flow_Control                                 No_Flow_Control
-	## Possible values: 9600/19200/38400/57600/115200
-	Bit_Rate                                     115200
+        ## Possible values: Yes/No
+        Enable_Basic_Mode                            Yes
+        ## Possible values: Yes/No
+        Enable_PPP_Mode                              Yes
+        ## Possible values: Yes/No
+        Enable_Terminal_Mode                         Yes
+        ## Possible values: Modem_Connect/Direct_Mode
+        Connect_Mode                                 Direct_Connect
+        ## Give a valid number
+        Page_Blackout_Interval                       0
+        ## Give a valid number
+        Call_Retry_Interval                          60
+        ## Possible values: Yes/No
+        Enable_DTR_Hangup                            No
+        ## Possible values: No_Flow_Control/RTS_CTS/XON_XOFF
+        Flow_Control                                 No_Flow_Control
+        ## Possible values: 9600/19200/38400/57600/115200
+        Bit_Rate                                     115200
+EndSection
+Section SOL_Conf
+        ## Possible values: Yes/No
+        Enable_SOL                                   Yes
+        ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
+        SOL_Privilege_Level                          Administrator
+        ## Possible values: Yes/No
+        Force_SOL_Payload_Authentication             Yes
+        ## Possible values: Yes/No
+        Force_SOL_Payload_Encryption                 Yes
+        ## Give a valid integer. Each unit is 5ms
+        Character_Accumulate_Interval                50
+        ## Give a valid number
+        Character_Send_Threshold                     100
+        ## Give a valid integer
+        SOL_Retry_Count                              5
+        ## Give a valid integer. Interval unit is 10ms
+        SOL_Retry_Interval                           50
+        ## Possible values: Serial/9600/19200/38400/57600/115200
+        Non_Volatile_Bit_Rate                        115200
+        ## Possible values: Serial/9600/19200/38400/57600/115200
+        Volatile_Bit_Rate                            115200
+        ## Give a valid port number
+        ## SOL_Payload_Port_Number                   623
 EndSection
 Section Misc
-	## Possible Values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply
-	Power_Restore_Policy                         Restore_State_Ac_Apply
+        ## Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply
+        Power_Restore_Policy                         Off_State_AC_Apply
 EndSection
 debian-ia64:~#
 @end example
@@ -993,7 +831,7 @@ debian-ia64:~# bmc-config --commit -k "LAN_conf:Ip_Address=192.168.1.60"
 Note: At this point of time, configuration settings can only be fed
 through a file or key-value pairs and not stdin.
 
-@node Diff configuration, bmc-config known issues, BMC commit, bmc-config
+@node Diff configuration, , BMC commit, bmc-config
 @section Compare BMC configuration
 
 To compare the differences between current active BMC settings and the
@@ -1002,23 +840,11 @@ configuration file, use ``diff'' option
 Example: Comparing the configuration file and BMC settings.
 @example
 debian-ia64:~# bmc-config --diff -f /tmp/bmc.conf
-USER:Ip_Address=192.168.10.160
-BMC :Ip_Address=192.168.1.60 differs
-USER:Default_Gateway_Ip_Address=192.168.10.1
-BMC :Default_Gateway_Ip_Address=192.168.1.1 differs
-USER:Backup_Gateway_Ip_Address=192.168.10.1
-BMC :Backup_Gateway_Ip_Address=192.168.1.1 differs
+LAN_Conf:IP_Address - input=`192.168.10.160':actual=`192.168.1.60'
 debian-ia64:~# bmc-config --diff -k "User2:Username=guest"
-USER:Username=guest
-BMC :Username=ipmiuser differs
+User2:Username - input=`guest':actual=`usertest'
 debian-ia64:~# 
 @end example
-
-@node bmc-config known issues,  , Diff configuration, bmc-config
-@section bmc-config known issues
-@command{bmc-config} checkout in out-of-band may fail to retrieve some
-BMC configuration options, because of default USER privilege level.
-For such cases, use ADMIN privilege level.
 
 @node bmc-info, bmc-autoconfig, bmc-config, Top
 @chapter bmc-info
@@ -1057,7 +883,7 @@ completed successfully.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
-      MD2, MD5, PLAIN and OEM.
+      MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
       Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
@@ -1171,7 +997,7 @@ and out-of-band.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
-      MD2, MD5, PLAIN and OEM.
+      MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
       Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
@@ -1204,11 +1030,10 @@ nominal, threshold max/min readings and status descriptions.
 
 @menu
 * ipmi-sensors options::        Command-line arguments.
-* ipmi-sensors configuration file::  Sample configuration file.
 * ipmi-sensors examples::       Examples.
 @end menu
 
-@node ipmi-sensors options, ipmi-sensors configuration file, ipmi-sensors, ipmi-sensors
+@node ipmi-sensors options, ipmi-sensors examples, ipmi-sensors, ipmi-sensors
 @section command-line arguments
 @itemize @bullet
 @item ---no-probing @*
@@ -1237,7 +1062,7 @@ nominal, threshold max/min readings and status descriptions.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
-      MD2, MD5, PLAIN and OEM.
+      MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
       Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
@@ -1274,33 +1099,7 @@ nominal, threshold max/min readings and status descriptions.
       Print program version.
 @end itemize
 
-@node ipmi-sensors configuration file, ipmi-sensors examples, ipmi-sensors options, ipmi-sensors
-@section Setting default startup options
-
-@cindex ipmi-sensors-conf.scm
-
-Example ipmi-sensors-conf.scm file:
-@lisp
-;;; file: /usr/etc/fish/ipmi-sensors-conf.scm
-
-;; ipmi-sensors-conf.scm: sensors configuration file
-
-;; Sensors cache filename
-; (set! sensors-sdr-cache-file "/path/to/cache-filename")
-
-;; Example: Ignore these sensors
-; (sensors-ignore! '(54 55 88))
-
-;; Example: Group Aliases
-(sensors-group-alias-list-append!
-  '(
-;    (mysystem . ("Processor" "Fan" "Power Supply" "Current Memory Chassis"))
-    (power . ("Power Supply"))
-    (security . ("Platform Chassis Intrusion" "Platform Security Violation"))
-    ))
-@end lisp
-
-@node ipmi-sensors examples,  , ipmi-sensors configuration file, ipmi-sensors
+@node ipmi-sensors examples,  , ipmi-sensors options, ipmi-sensors
 @section ipmi-sensors in action
 
 CDC 6440 (A.K.A SR870BN4) - a Quad Itanium2 system has 136 sensors on
@@ -2799,7 +2598,7 @@ you view and manage system event log.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
-      MD2, MD5, PLAIN and OEM.
+      MD2, MD5, and PLAIN.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
       Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
@@ -4271,11 +4070,10 @@ option is to simply @strong{wait awhile}@.
 
 @menu
 * Ports conflict::              Fencing @acronym{IPMI} @acronym{IP} ports.
-* Fish exception::              @strong{Cat ate the fish} exception.
 * IPC key conflict::            Non-unique IPC key.
 @end menu
 
-@node Ports conflict, Fish exception, Trouble-shooting, Trouble-shooting
+@node Ports conflict, IPC key conflict, Trouble-shooting, Trouble-shooting
 @section Fencing @acronym{IPMI} @acronym{IP} ports
 @cindex Ports conflict
 @cindex Fencing BMC
@@ -4302,44 +4100,7 @@ implementations by default.
 Thanks to Anand Manian (GE Power Systems) for reporting this 
 problem.
 
-@node Fish exception, IPC key conflict, Ports conflict, Trouble-shooting
-@section ``Cat ate the fish'' exception
-@cindex Cat ate the fish
-@cindex Fish exception
-@command{fish} throws exception if it encounters any error in its
-extension system. Most of the times, You will get a clear indicative
-message from the exception dump. 
-
-In this example, Fish throws an exception message, when a built-in
-primitive is misspelt as @command{fi-set-promt!} instead of
-@command{fi-set-prompt!}. Unbound-variable @samp{tag} and @samp{throw
-args} gives you the clue.
-@example
-root@@gnu:~/work/freeipmi# fish
-
->>--:>  >>--:>  >>--:> >>--:>
-~ ~   Cat ate the fish!!  ~ ~
->>--:>  >>--:>  >>--:> >>--:>
-Fish Exception (gh_standard_handler dump):
-tag        : unbound-variable
-throw args : (#f Unbound variable: ~S (fi-set-promt!) #f)
-data       : [/usr/etc/fish/fish.scm]
-No backtrace available.
-
-FreeIPMI Shell [fish-0.1.0]
-Copyright (C) 2003-2004 FreeIPMI Core Team
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License.  This program has absolutely no warranty.
-fish> 
-@end example
-
-@example
-;; file: /usr/etc/fish/fish.scm (fish startup file)
-(fi-set-promt! "fish# ")  
-            ^---<< Typo, Spell correctly as "fi-set-prompt!"
-@end example
-
-@node IPC key conflict,  , Fish exception, Trouble-shooting
+@node IPC key conflict,  , Ports conflict, Trouble-shooting
 @section Non-unique IPC key
 @cindex IPC key conflict
 Drivers internally use the inode number of
@@ -4418,7 +4179,6 @@ Contact FreeIPMI Core Team <ab(@@)gnu.org.in>
 @chapter Glossary
 @multitable @columnfractions 0.15 0.85
 @item BMC   @tab [B]aseboard [M]anagement [C]ontroller.
-@item FISH  @tab [F]ree[I]PMI [SH]ell.
 @item GNU   @tab [G]NU's [N]ot [U]nix.
 @item GPL   @tab GNU [G]eneral [P]ublic [L]icense.
 @item IP    @tab [I]nternet [P]rotocol.

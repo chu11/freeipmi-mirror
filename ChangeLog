@@ -6,7 +6,7 @@
 	* common/doc/argp-common-authtype.man: Make default authentication
 	type MD5
 
-	Various code cleanup.
+	Various cleanup.
 	
 	* libfreeipmi/include/freeipmi/ipmi-locate.h
 	(IPMI_INTERFACE_MAX, IPMI_INTERFACE_LAST): Removed macro.

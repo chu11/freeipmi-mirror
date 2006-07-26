@@ -25,23 +25,16 @@ documentation
 add gcrypt to  2.1 Dependencies
 remove guile/readline from  2.1 Dependencies
 add x86_64 libdir thingie to  2. Installing GNU FreeIPMI
-remove SMIC from 3. IPMI C library (libfreeipmi)
-add dmidecode and acpi to  3. IPMI C library (libfreeipmi)
 note about kernel drivers should be moved to install instructions section
-remove fish stuff
-update bmc-config output
-remove  6.6 bmc-config known issues
+  - or trouble shooting, whatever
 bmc-autoconfig, still exists? 
 ipmi-raw update with new byte interface
-remove ipmi-sensors default-startup stuff
 update bmc-watchdog theory
-add workarounds for ipmipower
-remove  16.2 "Cat ate the fish" exception
-remove fish 20. Glossary
 
 global
 update options in all tools
-update version numbers appropriately (i.e. 0.1.3 -> 0.3.0)
+done ipmipower, ipmiping, rmcpping
+todo bmc-config, bmc-info, ipmi-sensors, ipmi-raw, ipmi-locate
 
 Al's TODO list
 ==============
