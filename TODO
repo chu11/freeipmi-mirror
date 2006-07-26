@@ -20,6 +20,30 @@ libfreeipmi:
   * FRU Commands (SDR Repo does a similar job).
   * Command to Switch MUX between BMC and ttyS1
 
+documentation
+-------------
+add gcrypt to  2.1 Dependencies
+remove guile/readline from  2.1 Dependencies
+add x86_64 libdir thingie to  2. Installing GNU FreeIPMI
+remove SMIC from 3. IPMI C library (libfreeipmi)
+add dmidecode and acpi to  3. IPMI C library (libfreeipmi)
+note about kernel drivers should be moved to install instructions section
+remove fish stuff
+update bmc-config output
+remove  6.6 bmc-config known issues
+bmc-autoconfig, still exists? 
+ipmi-raw update with new byte interface
+remove ipmi-sensors default-startup stuff
+update bmc-watchdog theory
+update known issues in ipmipower
+add workarounds for ipmipower
+remove  16.2 "Cat ate the fish" exception
+add anand avati to authors
+remove fish 20. Glossary
+
+global
+update options in all tools
+
 Al's TODO list
 ==============
 rpm
