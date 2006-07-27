@@ -20,3 +20,6 @@ install-data-local:
 	$(top_srcdir)/install-sh -m 444 $(srcdir)/freeipmi-bmc-watchdog.logrotate $(DESTDIR)$(sysconfdir)/logrotate.d/freeipmi-bmc-watchdog
 	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(BMCWATCHDOGLOGdir)
 
+uninstall-local:
+	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/freeipmi-bmc-watchdog
+	$(RM) -f $(DESTDIR)$(sysconfdir)/logrotate.d/freeipmi-bmc-watchdog

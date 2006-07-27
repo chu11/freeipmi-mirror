@@ -1,3 +1,15 @@
+2006-07-27  Albert Chu <chu11@llnl.gov>
+
+	* fish/scripts/bmc-autoconfig/: Removed all files.
+
+	* bmc-config/bmc-autoconfig/Makefile.am: Use $(localstatedir)
+
+	* libfreeipmi/src/udm/Makefile.am: Dist ipmi-udm-device.h.
+
+	* libfreeipmi/Makefile.am: Fix ipckey installation.
+
+	* bmc-watchdog/Makefile.am: Fix distcheck. 
+
 2006-07-27  Anand V. Avati <avati@zresearch.com>
 
 	* bmc-config/bmc-autoconfig: moved from fish/scripts/bmc-autoconfig

@@ -22,7 +22,6 @@ libfreeipmi:
 
 documentation
 -------------
-bmc-autoconfig, still exists? 
 ipmi-sensors options and output once C version is done
 
 Al's TODO list

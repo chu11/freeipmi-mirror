@@ -4,8 +4,8 @@ CLEANFILES =
 DISTCLEANFILES = .deps/*.P
 
 # Semaphore IPC Key file for ftok:
-Ipckeydir     = $(IPCKEY_DIR)
-Ipckey_DATA   = $(IPCKEY_FILE)
+Ipckeydir     = $(localstatedir)/lib/$(PACKAGE_NAME)
+Ipckey_DATA   = ipckey
 
-EXTRA_DIST = $(IPCKEY_FILE)
+EXTRA_DIST = ipckey
 

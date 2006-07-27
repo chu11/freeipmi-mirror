@@ -56,6 +56,11 @@ libfreeipmi_la_SOURCES = \
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
 # libfreeipmi_la_CPPFLAGS = 
 
+# achu
+#
+# IPMI_DEBUG_IPCKEY is so we can do inband development without the real ipckey being
+# installed.
+
 libfreeipmi_la_CFLAGS = \
 	-I$(srcdir)/../include \
 	-I$(srcdir)/../../common/src \

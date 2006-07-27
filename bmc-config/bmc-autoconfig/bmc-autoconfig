@@ -77,10 +77,10 @@ ${ME} is an autoconfiguration tool and wrapper around bmc-config.
                              length is 16.
   -p, --password=PASSWORD    Use PASSWORD instead of NULL.  Maximum PASSWORD
                              length is 16.
-  -a, --auth-type=AUTHTYPE   Use AUTHTYPE instead of NONE.  Allowed values are
-                             NONE, MD2, MD5, PLAIN and OEM.
+  -a, --auth-type=AUTHTYPE   Use AUTHTYPE instead of MD5.  Allowed values are
+                             NONE, MD2, MD5, and PLAIN.
   -l, --priv-level=PRIVILEGE-LEVEL
-                             Use this PRIVILEGE-LEVEL instead of USER.  Allowed
+                             Use this PRIVILEGE-LEVEL instead of ADMIN.  Allowed
                              values are CALLBACK, USER, OPERATOR, ADMIN and
                              OEM.
   -?, --help                 Give this help list.
