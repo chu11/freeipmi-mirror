@@ -1,3 +1,13 @@
+2006-07-27  A Balamurugan  <bala@zresearch.com>
+
+	* bmc-config/bmc-config.8.pre.in: removed unclosed double quote.
+
+	* ipmi-locate/src/ipmi-locate.c: Fixed bug in return value check
+	of ipmi_locate_*_get_dev_info calls.
+
+	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): clears linfo before
+	calling probing functions.
+
 2006-07-27  Albert Chu <chu11@llnl.gov>
 
 	* fish/scripts/bmc-autoconfig/: Removed all files.
