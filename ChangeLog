@@ -1,5 +1,15 @@
 2006-07-27  A Balamurugan  <bala@zresearch.com>
 
+	* libfreeipmi/include/freeipmi/ipmi-locate.h: removed
+	locate_driver in struct ipmi_locate_info.
+
+	* ipmi-locate/src/ipmi-locate.c (display_ipmi_locate_info),
+	libfreeipmi/src/ipmi-locate-dmidecode.c (dmi_table),
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Adjusted struct
+	ipmi_locate_info change accordingly.
+
+2006-07-27  A Balamurugan  <bala@zresearch.com>
+
 	* ipmi-locate/src/ipmi-locate.c (display_ipmi_locate_info):
 	displays 'DMIDECODE' locate_driver_type.
 

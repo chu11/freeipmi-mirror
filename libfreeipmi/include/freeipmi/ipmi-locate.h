@@ -73,7 +73,6 @@ struct ipmi_locate_info
   uint8_t ipmi_ver_major;
   uint8_t ipmi_ver_minor;
   ipmi_locate_driver_type_t locate_driver_type;
-  uint8_t locate_driver;
   ipmi_interface_type_t interface_type; /* KCS, SMIC, BT, SSIF */
   char bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX];
   uint8_t address_space_id;  /* Memory mapped, IO mapped, SMBus*/

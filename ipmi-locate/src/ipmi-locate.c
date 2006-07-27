@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.25 2006-07-27 01:45:15 balamurugan Exp $ 
+   $Id: ipmi-locate.c,v 1.26 2006-07-27 02:12:12 balamurugan Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -77,8 +77,6 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
     default:
       printf ("IPMI locate driver: UNKNOWN\n");
     };
-  
-  printf ("IPMI locate driver: %d\n", info->locate_driver);
   
   switch (info->interface_type)
     {

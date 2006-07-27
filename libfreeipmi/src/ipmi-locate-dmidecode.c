@@ -334,8 +334,6 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 		  locate_info->ipmi_ver_minor);
 	  printf ("ipmi_locate_info.locate_driver_type = [%d]\n", 
 		  locate_info->locate_driver_type);
-	  printf ("ipmi_locate_info.locate_driver = [%d]\n", 
-		  locate_info->locate_driver);
 	  printf ("ipmi_locate_info.interface_type = [%d]\n", 
 		  locate_info->interface_type);
 	  printf ("ipmi_locate_info.bmc_i2c_dev_name = [%s]\n", 
