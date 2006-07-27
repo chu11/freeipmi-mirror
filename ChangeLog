@@ -682,7 +682,7 @@
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
 	Rework udm raw functions to take lun and netfn parameters and
-	had API similar to rest of FreeIPMI (bug #16283).
+	have API similar to rest of FreeIPMI (bug #16283).
 
 	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
 	libfreeipmi/src/udm/ipmi-udm.c (ipmi_cmd_raw): Add lun and netfn
