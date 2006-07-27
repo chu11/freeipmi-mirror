@@ -45,9 +45,8 @@
 #define IPMI_SSIF_CTX_ERR_INTERNAL        10
 #define IPMI_SSIF_CTX_ERR_ERRNUMRANGE     11
 
-#define IPMI_SSIF_MODE_BLOCKING    0
-#define IPMI_SSIF_MODE_NONBLOCKING 1
-#define IPMI_SSIF_MODE_DEFAULT     IPMI_SSIF_MODE_BLOCKING
+#define IPMI_SSIF_FLAGS_DEFAULT     0x00000000
+#define IPMI_SSIF_FLAGS_NONBLOCKING 0x00000001
 
 typedef struct ipmi_ssif_ctx *ipmi_ssif_ctx_t;
 
@@ -63,11 +62,11 @@ char *ipmi_ssif_ctx_strerror(int32_t errnum);
 
 int8_t ipmi_ssif_ctx_get_i2c_device(ipmi_ssif_ctx_t ctx, char **i2c_device);
 int8_t ipmi_ssif_ctx_get_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_address);
-int8_t ipmi_ssif_ctx_get_mode(ipmi_ssif_ctx_t ctx, uint8_t *mode);
+int8_t ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, uint32_t *flags);
 
 int8_t ipmi_ssif_ctx_set_i2c_device(ipmi_ssif_ctx_t ctx, char *i2c_device);
 int8_t ipmi_ssif_ctx_set_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t ipmb_address);
-int8_t ipmi_ssif_ctx_set_mode(ipmi_ssif_ctx_t ctx, uint8_t mode);
+int8_t ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, uint32_t flags);
 
 int8_t ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx);
 

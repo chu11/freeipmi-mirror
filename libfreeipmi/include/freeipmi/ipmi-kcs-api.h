@@ -44,9 +44,8 @@ extern "C" {
 #define IPMI_KCS_CTX_ERR_INTERNAL        10
 #define IPMI_KCS_CTX_ERR_ERRNUMRANGE     11
 
-#define IPMI_KCS_MODE_BLOCKING    0
-#define IPMI_KCS_MODE_NONBLOCKING 1
-#define IPMI_KCS_MODE_DEFAULT     IPMI_KCS_MODE_BLOCKING
+#define IPMI_KCS_FLAGS_DEFAULT     0x00000000
+#define IPMI_KCS_FLAGS_NONBLOCKING 0x00000001
 
 typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
 
@@ -58,12 +57,12 @@ char *ipmi_kcs_ctx_strerror(int32_t errnum);
 int8_t ipmi_kcs_ctx_get_bmc_iobase_address(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
 int8_t ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *reg_space);
 int8_t ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
-int8_t ipmi_kcs_ctx_get_mode(ipmi_kcs_ctx_t ctx, uint8_t *mode);
+int8_t ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags);
 
 int8_t ipmi_kcs_ctx_set_bmc_iobase_address(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
 int8_t ipmi_kcs_ctx_set_register_space(ipmi_kcs_ctx_t ctx, uint8_t reg_space);
 int8_t ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
-int8_t ipmi_kcs_ctx_set_mode(ipmi_kcs_ctx_t ctx, uint8_t mode);
+int8_t ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags);
 
 int8_t ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx);
 

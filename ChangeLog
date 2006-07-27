@@ -1,3 +1,27 @@
+2006-07-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-udm-device.h,
+	libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Convert parameter
+	mode into flags parameter.  Adjust definitions appropriately.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband,
+	ipmi_open_inband): Adjust for use of flags parameter.
+
+	* bmc-config/, bmc-info/, doc/udm-test/, fish/src/, ipmi-raw/,
+	ipmi-sel/: Adjust for new flag use appropriately.
+
+	* libfreeipmi/include/freeipmi/ipmi-kcs-api.h,
+	libfreeipmi/include/freeipmi/ipmi-ssif-api.h: Convert parameter
+	mode into flags parameter.  Adjust definitions appropriately.
+
+	* libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c:
+	Adjust for flags changes appropriately.
+
+	* bmc-watchdog/: Adjust for flags changes appropriately.
+	
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Adjust for
+	use of kcs and ssif flags.
+
 2006-07-27  A Balamurugan  <bala@zresearch.com>
 
 	* fish/src/ipmi-wrapper.c (fi_ipmi_open): fixed improper argument

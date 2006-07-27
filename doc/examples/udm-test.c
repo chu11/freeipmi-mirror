@@ -61,7 +61,7 @@ main (int argc, char **argv)
                                        priv_level,
                                        0, 
                                        0, 
-                                       IPMI_MODE_DEFAULT)))
+                                       IPMI_FLAGS_DEFAULT)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -74,7 +74,7 @@ main (int argc, char **argv)
 				    driver_address, 
                                     0, /* register spacing */
                                     driver_device, 
-                                    IPMI_MODE_DEFAULT)))
+                                    IPMI_FLAGS_DEFAULT)))
 	{
 	  perror ("ipmi_open_inband()");
 	  exit (EXIT_FAILURE);

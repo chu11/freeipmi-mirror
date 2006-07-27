@@ -30,13 +30,6 @@
 #include <freeipmi/ipmi-messaging-support-cmds.h>
 #include <freeipmi/ipmi-ssif-api.h>
 
-enum ipmi_mode
-  {
-    IPMI_MODE_DEFAULT = 0,
-    IPMI_MODE_NONBLOCK = 1
-  };
-typedef enum ipmi_mode ipmi_mode_t;
-
 enum ipmi_driver_type
   {
     IPMI_DEVICE_UNKNOWN = 0,
@@ -48,6 +41,10 @@ enum ipmi_driver_type
   };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 
+#define IPMI_FLAGS_DEFAULT        0x00000000
+#define IPMI_FLAGS_NONBLOCKING    0x00000001
+#define IPMI_FLAGS_DEBUG_DUMP     0x80000000
+
 typedef struct ipmi_device *ipmi_device_t;
  
 ipmi_device_t ipmi_open_inband (ipmi_driver_type_t driver_type, 
@@ -55,7 +52,7 @@ ipmi_device_t ipmi_open_inband (ipmi_driver_type_t driver_type,
                                 uint16_t driver_address, 
                                 uint8_t reg_space,
                                 char *driver_device, 
-                                ipmi_mode_t mode);
+                                uint32_t flags);
 
 ipmi_device_t ipmi_open_outofband (ipmi_driver_type_t driver_type, 
 				   char *hostname,
@@ -65,7 +62,7 @@ ipmi_device_t ipmi_open_outofband (ipmi_driver_type_t driver_type,
                                    uint8_t privilege_level,
                                    unsigned int session_timeout,
                                    unsigned int retry_timeout, 
-                                   ipmi_mode_t mode);
+                                   uint32_t flags);
 
 int ipmi_cmd (ipmi_device_t dev, 
 	      uint8_t lun, 

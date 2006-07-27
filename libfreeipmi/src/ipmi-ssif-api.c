@@ -313,6 +313,8 @@ _ipmi_ssif_read (int dev_fd,
   return bytes_read;
 }
 
+#define IPMI_SSIF_FLAGS_MASK IPMI_SSIF_FLAGS_NONBLOCKING
+
 #define IPMI_SSIF_CTX_MAGIC 0xaddaabba
 
 static char * ipmi_ssif_ctx_errmsg[] =
@@ -336,7 +338,7 @@ struct ipmi_ssif_ctx {
   int32_t errnum;
   char *i2c_device;
   uint8_t ipmb_address;
-  uint8_t mode;
+  uint32_t flags;
   int i2c_fd;
   int io_init;
   int semid;
@@ -352,7 +354,7 @@ ipmi_ssif_ctx_create(void)
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
   ERR_CLEANUP ((ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
   ctx->ipmb_address = IPMI_DEFAULT_SSIF_IPMB_ADDR;
-  ctx->mode = IPMI_SSIF_MODE_DEFAULT;
+  ctx->flags = IPMI_SSIF_FLAGS_DEFAULT;
   ctx->i2c_fd = -1;
   ctx->io_init = 0;
 
@@ -437,18 +439,18 @@ ipmi_ssif_ctx_get_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_address)
 }
 
 int8_t
-ipmi_ssif_ctx_get_mode(ipmi_ssif_ctx_t ctx, uint8_t *mode)
+ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, uint32_t *flags)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  if (!mode)
+  if (!flags)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
       return (-1);
     }
 
-  *mode = ctx->mode;
+  *flags = ctx->flags;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -491,19 +493,18 @@ ipmi_ssif_ctx_set_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t ipmb_address)
 }
 
 int8_t
-ipmi_ssif_ctx_set_mode(ipmi_ssif_ctx_t ctx, uint8_t mode)
+ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, uint32_t flags)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  if (!(mode == IPMI_SSIF_MODE_BLOCKING
-        || mode == IPMI_SSIF_MODE_NONBLOCKING))
+  if (flags & ~IPMI_SSIF_FLAGS_MASK)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
       return (-1);
     }
 
-  ctx->mode = mode;
+  ctx->flags = flags;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -569,7 +570,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->mode == IPMI_SSIF_MODE_BLOCKING)
+  if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
     IPMI_MUTEX_LOCK(ctx->semid);
   else
     {

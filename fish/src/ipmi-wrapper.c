@@ -56,7 +56,7 @@ fi_ipmi_open (struct arguments *args)
                                        args->common.privilege_level,
                                        args->common.session_timeout, 
                                        args->common.retry_timeout, 
-                                       IPMI_MODE_DEFAULT)))
+                                       IPMI_FLAGS_DEFAULT)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);
@@ -78,14 +78,14 @@ fi_ipmi_open (struct arguments *args)
                                         args->common.driver_address,
                                         0,
                                         args->common.driver_device, 
-                                        IPMI_MODE_DEFAULT)))
+                                        IPMI_FLAGS_DEFAULT)))
 	    {
 	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF, 
                                             args->common.disable_auto_probe, 
                                             args->common.driver_address, 
                                             0,
                                             args->common.driver_device, 
-                                            IPMI_MODE_DEFAULT)))
+                                            IPMI_FLAGS_DEFAULT)))
 		{
 		  perror ("ipmi_open_inband()");
 		  return (-1);
@@ -99,7 +99,7 @@ fi_ipmi_open (struct arguments *args)
                                         args->common.driver_address, 
                                         0,
                                         args->common.driver_device, 
-                                        IPMI_MODE_DEFAULT)))
+                                        IPMI_FLAGS_DEFAULT)))
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);

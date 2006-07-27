@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.62 2006-07-22 15:19:07 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.63 2006-07-27 22:44:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -301,9 +301,9 @@ _init_ipmi(void)
       return -1;
     }
   
-  if (ipmi_kcs_ctx_set_mode(kcs_ctx, IPMI_KCS_MODE_NONBLOCKING) < 0)
+  if (ipmi_kcs_ctx_set_flags(kcs_ctx, IPMI_KCS_FLAGS_NONBLOCKING) < 0)
     {
-      _bmclog("ipmi_kcs_ctx_set_mode: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      _bmclog("ipmi_kcs_ctx_set_flags: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
       return -1;
     }
   

@@ -122,6 +122,8 @@
 
 #define IPMI_KCS_CTX_MAGIC 0xabbaadda
 
+#define IPMI_KCS_FLAGS_MASK IPMI_KCS_FLAGS_NONBLOCKING
+
 static char * ipmi_kcs_ctx_errmsg[] =
   {
     "success",
@@ -144,7 +146,7 @@ struct ipmi_kcs_ctx {
   int32_t errnum;
   uint16_t bmc_iobase_address;
   uint8_t reg_space;
-  uint8_t mode;
+  uint32_t flags;
   uint32_t poll_interval;
 #ifdef __FreeBSD__
 #ifndef USE_IOPERM
@@ -166,7 +168,7 @@ ipmi_kcs_ctx_create(void)
   ctx->bmc_iobase_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
   ctx->reg_space = IPMI_KCS_SMS_REGISTER_SPACE_DEFAULT;
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
-  ctx->mode = IPMI_KCS_MODE_DEFAULT;
+  ctx->flags = IPMI_KCS_FLAGS_DEFAULT;
   ctx->io_init = 0;
 
   ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));
@@ -268,18 +270,18 @@ ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
 }
 
 int8_t 
-ipmi_kcs_ctx_get_mode(ipmi_kcs_ctx_t ctx, uint8_t *mode)
+ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  if (!mode)
+  if (!flags)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
       return (-1);
     }
 
-  *mode = ctx->mode;
+  *flags = ctx->flags;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -318,19 +320,18 @@ ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval)
 }
 
 int8_t 
-ipmi_kcs_ctx_set_mode(ipmi_kcs_ctx_t ctx, uint8_t mode)
+ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  if (!(mode == IPMI_KCS_MODE_BLOCKING
-        || mode == IPMI_KCS_MODE_NONBLOCKING))
+  if (flags & ~IPMI_KCS_FLAGS_MASK)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
       return (-1);
     }
   
-  ctx->mode = mode;
+  ctx->flags = flags;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -598,7 +599,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       return (-1); 
     }
 
-  if (ctx->mode == IPMI_KCS_MODE_BLOCKING)
+  if (!(ctx->flags & IPMI_KCS_FLAGS_NONBLOCKING))
     IPMI_MUTEX_LOCK(ctx->semid);
   else
     {
