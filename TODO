@@ -1,3 +1,14 @@
+0.3.0
+=====
+A) ipmi-sensors: scheme to C conversion
+B) bmc-autoconfig: fixed for new bmc-config
+C) ipmi-sel: proper trigger output fix
+D) Remove Fish
+E) debug dumping for all tools
+F) including ipmiconsole + libipmiconsole
+G) RPM repackaging
+H) OpenIPMI inband driver suppport (optional?)
+
 AB's TODO list
 ==============
 libfreeipmi:
