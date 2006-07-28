@@ -1,0 +1,3 @@
+.TP
+\fB\-\-debug\fR
+Turn on debugging.

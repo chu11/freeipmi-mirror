@@ -8,6 +8,9 @@ IPMI Sensors displays current readings of sensors chips through BMC
 #include <@top_srcdir@/common/doc/argp-common-outofband.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel.man>
+.if @WITH_DEBUG@ \{
+#include <@top_srcdir@/common/doc/argp-common-debug.man>
+\}
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR

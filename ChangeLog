@@ -37,6 +37,13 @@
 
 	* bmc-config/, bmc-info/, fish/, ipmi-raw/, ipmi-sel/: When
 	debugging is turned on, turn on dump output.
+
+	* common/doc/argp-common-debug.man: New file.
+
+	* common/doc/Makefile.am: Update for new file.
+
+	* bmc-config/, bmc-info/, ipmi-sel/, ipmi-raw/, fish/: Update
+	manpages with debug option.
 	
 2006-07-27  A Balamurugan  <bala@zresearch.com>
 

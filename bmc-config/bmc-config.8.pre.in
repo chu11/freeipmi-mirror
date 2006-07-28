@@ -19,6 +19,9 @@ options will not be retrieved or set.
 Use this PRIVILEGE\-LEVEL instead of ADMIN.  Allowed
 values are CALLBACK, USER, OPERATOR, ADMIN and
 OEM.
+.if @WITH_DEBUG@ \{
+#include <@top_srcdir@/common/doc/argp-common-debug.man>
+\}
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
