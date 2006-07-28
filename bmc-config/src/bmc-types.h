@@ -40,7 +40,6 @@ struct arguments
   ipmi_device_t dev;
   unsigned char silent;
   unsigned char verbose;
-  unsigned char debug;
 
   char *filename;
   char *keypair;

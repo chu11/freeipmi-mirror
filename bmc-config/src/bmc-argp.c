@@ -85,25 +85,25 @@ static struct argp_option options[] = {
   {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,
    "Use this PRIVILEGE-LEVEL instead of ADMIN.  "
    "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 11},
-
-  {"checkout", 'o', 0, 0, 
-   "Action is to GET the BMC configuration", 12},
-  {"commit", 'i', 0, 0, 
-   "Action is to UPDATE the BMC configuration", 13},
-  {"diff", 'd', 0, 0, 
-   "Action is to SHOW THE DIFFERENCES with BMC", 14},
-
-  {"filename", 'f', "FILENAME", 0, 
-   "use FILENAME in checkout, commit or diff", 15},
-  {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in commit or diff", 16},
-
-  {"verbose",   'v', 0, 0,  "Produce verbose output", 17},
-  {"quiet",     'q', 0, 0,  "Do not produce any output", 18 },
 #ifndef NDEBUG
-  {"debug",     'B', 0, 0,  "Print debug output", 19},
+  ARGP_COMMON_OPTIONS_DEBUG,
 #endif /* NDEBUG */
 
+  {"checkout", 'o', 0, 0, 
+   "Action is to GET the BMC configuration", 13},
+  {"commit", 'i', 0, 0, 
+   "Action is to UPDATE the BMC configuration", 14},
+  {"diff", 'd', 0, 0, 
+   "Action is to SHOW THE DIFFERENCES with BMC", 15},
+
+  {"filename", 'f', "FILENAME", 0, 
+   "use FILENAME in checkout, commit or diff", 16},
+  {"key-pair", 'k', "KEY-PAIR", 0, 
+   "use KEY-PAIR in commit or diff", 17},
+
+  {"verbose",   'v', 0, 0,  "Produce verbose output", 18},
+  {"quiet",     'q', 0, 0,  "Do not produce any output", 19 },
+  {"silent",    's', 0, OPTION_ALIAS },
   { 0, }
 };
 
@@ -195,12 +195,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'v':
       arguments->verbose = 1;
       break;
-#ifndef NDEBUG
-    case 'B':
-      arguments->debug = 1;
-      break;
-#endif /* NDEBUG */
-
     case 'f':
       if (arguments->filename) /* If specified more than once */
 	free (arguments->filename);

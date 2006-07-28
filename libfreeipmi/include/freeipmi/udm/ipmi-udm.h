@@ -43,7 +43,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 
 #define IPMI_FLAGS_DEFAULT        0x00000000
 #define IPMI_FLAGS_NONBLOCKING    0x00000001
-#define IPMI_FLAGS_DEBUG_DUMP     0x80000000
+#define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 
 typedef struct ipmi_device *ipmi_device_t;
  

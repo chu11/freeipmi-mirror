@@ -20,6 +20,10 @@
 #ifndef _ARGP_COMMON_H
 #define _ARGP_COMMON_H
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "freeipmi/udm/ipmi-udm.h"
 
 enum argp_common_option_keys
@@ -36,7 +40,8 @@ enum argp_common_option_keys
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
     AUTHENTICATION_TYPE_KEY = 'a', 
-    PRIVILEGE_LEVEL_KEY = 'l'
+    PRIVILEGE_LEVEL_KEY = 'l',
+    DEBUG_KEY = 135
   };
 
 #define ARGP_COMMON_OPTIONS_INBAND                                         \
@@ -74,11 +79,27 @@ enum argp_common_option_keys
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 11}     
 
+#ifdef NDEBUG
+
 #define ARGP_COMMON_OPTIONS                                                \
        ARGP_COMMON_OPTIONS_INBAND,                                         \
        ARGP_COMMON_OPTIONS_OUTOFBAND,                                      \
        ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
        ARGP_COMMON_OPTIONS_PRIVLEVEL 
+
+#else  /* !NDEBUG */
+
+#define ARGP_COMMON_OPTIONS_DEBUG                                          \
+    {"debug",     DEBUG_KEY, 0, 0, 	                                   \
+     "Turn on debugging.", 12}                                             
+
+#define ARGP_COMMON_OPTIONS                                                \
+       ARGP_COMMON_OPTIONS_INBAND,                                         \
+       ARGP_COMMON_OPTIONS_OUTOFBAND,                                      \
+       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
+       ARGP_COMMON_OPTIONS_PRIVLEVEL,                                      \
+       ARGP_COMMON_OPTIONS_DEBUG
+#endif /* !NDEBUG */
 
 struct common_cmd_args 
 {
@@ -94,6 +115,9 @@ struct common_cmd_args
   char *password;
   int authentication_type;
   int privilege_level;
+#ifndef NDEBUG
+  int debug;
+#endif /* NDEBUG */
 };
 
 error_t common_parse_opt (int key, 

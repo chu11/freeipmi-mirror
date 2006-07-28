@@ -42,8 +42,19 @@ fi_get_ipmi_device ()
 int 
 fi_ipmi_open (struct arguments *args)
 {
+  uint32_t flags;
+
   if (dev_opened)
     return 0;
+
+#ifndef NDEBUG
+  if (args->common.debug)
+    flags = IPMI_FLAGS_DEBUG_DUMP;
+  else
+    flags = IPMI_FLAGS_DEFAULT;
+#else  /* NDEBUG */
+  flags = IPMI_FLAGS_DEFAULT;
+#endif /* NDEBUG */
   
   if (args->common.host != NULL || 
       args->common.driver_type == IPMI_DEVICE_LAN)
@@ -56,7 +67,7 @@ fi_ipmi_open (struct arguments *args)
                                        args->common.privilege_level,
                                        args->common.session_timeout, 
                                        args->common.retry_timeout, 
-                                       IPMI_FLAGS_DEFAULT)))
+                                       flags)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);
@@ -76,16 +87,16 @@ fi_ipmi_open (struct arguments *args)
 	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS, 
                                         args->common.disable_auto_probe, 
                                         args->common.driver_address,
-                                        0,
+                                        args->common.register_spacing,
                                         args->common.driver_device, 
-                                        IPMI_FLAGS_DEFAULT)))
+                                        flags)))
 	    {
 	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF, 
                                             args->common.disable_auto_probe, 
                                             args->common.driver_address, 
-                                            0,
+                                            args->common.register_spacing,
                                             args->common.driver_device, 
-                                            IPMI_FLAGS_DEFAULT)))
+                                            flags)))
 		{
 		  perror ("ipmi_open_inband()");
 		  return (-1);
@@ -97,9 +108,9 @@ fi_ipmi_open (struct arguments *args)
 	  if (!(dev = ipmi_open_inband (args->common.driver_type, 
                                         args->common.disable_auto_probe, 
                                         args->common.driver_address, 
-                                        0,
+                                        args->common.register_spacing,
                                         args->common.driver_device, 
-                                        IPMI_FLAGS_DEFAULT)))
+                                        flags)))
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);

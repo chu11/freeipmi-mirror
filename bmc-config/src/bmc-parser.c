@@ -26,7 +26,7 @@ bmc_parser (struct arguments *arguments,
       if (! first_word) 
         {
 #ifndef NDEBUG 
-          if (arguments->debug)
+          if (arguments->common.debug)
             fprintf (stderr, "%d: empty line\n", line_num);
 #endif /* NDEBUG */
           continue;
@@ -35,7 +35,7 @@ bmc_parser (struct arguments *arguments,
     if (first_word[0] == '#') 
       {
 #ifndef NDEBUG 
-        if (arguments->debug)
+        if (arguments->common.debug)
 	  fprintf (stderr, "Comment on line %d\n", line_num);
 #endif /* NDEBUG */
         continue;
@@ -63,7 +63,7 @@ bmc_parser (struct arguments *arguments,
       
         section_name = strdup (section_name);
 #ifndef NDEBUG 
-        if (arguments->debug) 
+        if (arguments->common.debug) 
           fprintf (stderr, "Entering section `%s'\n", section_name);
 #endif /* NDEBUG */
       continue;
@@ -84,7 +84,7 @@ bmc_parser (struct arguments *arguments,
             break;
           }
 #ifndef NDEBUG 
-        if (arguments->debug)
+        if (arguments->common.debug)
 	  fprintf (stderr, "Leaving section `%s'\n", section_name);
 #endif /* NDEBUG */
         free (section_name);
@@ -118,7 +118,7 @@ bmc_parser (struct arguments *arguments,
       value = strdup ("");
     
 #ifndef NDEBUG 
-    if (arguments->debug) 
+    if (arguments->common.debug) 
       fprintf (stderr, "Trying to set `%s:%s=%s'\n",
 	       section_name, key_name, value);
 #endif /* NDEBUG */

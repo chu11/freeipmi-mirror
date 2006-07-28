@@ -1,5 +1,7 @@
 2006-07-27  Albert Chu <chu11@llnl.gov>
 
+	Convert mode parameters to flag parameters
+
 	* libfreeipmi/src/udm/ipmi-udm-device.h,
 	libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Convert parameter
 	mode into flags parameter.  Adjust definitions appropriately.
@@ -22,6 +24,20 @@
 	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Adjust for
 	use of kcs and ssif flags.
 
+	Add architectural support for debug dump.
+	
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h
+	(IPMI_FLAGS_DEBUG_DUMP): New define.
+
+	* common/src/argp-common.h, common/src/argp-common.c: Support
+	debug option.
+
+	* bmc-config/: Remove internal debug flag option.  Convert to use
+	argp-common debug option.
+
+	* bmc-config/, bmc-info/, fish/, ipmi-raw/, ipmi-sel/: When
+	debugging is turned on, turn on dump output.
+	
 2006-07-27  A Balamurugan  <bala@zresearch.com>
 
 	* fish/src/ipmi-wrapper.c (fi_ipmi_open): fixed improper argument

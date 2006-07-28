@@ -307,6 +307,7 @@ main (int argc, char **argv)
   struct arguments *args = NULL;
   ipmi_device_t dev = NULL;
   int retval = 0;
+  uint32_t flags;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
@@ -322,6 +323,15 @@ main (int argc, char **argv)
     memset(argv[i], '\0', strlen(argv[i]));
 #endif /* NDEBUG */
   
+#ifndef NDEBUG
+  if (args->common.debug)
+    flags = IPMI_FLAGS_DEBUG_DUMP;
+  else
+    flags = IPMI_FLAGS_DEFAULT;
+#else  /* NDEBUG */
+  flags = IPMI_FLAGS_DEFAULT;
+#endif /* NDEBUG */
+
   if (args->common.host != NULL)
     {
       if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
@@ -332,7 +342,7 @@ main (int argc, char **argv)
                                        args->common.privilege_level,
                                        args->common.session_timeout, 
                                        args->common.retry_timeout, 
-				       IPMI_FLAGS_DEFAULT)))
+				       flags)))
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -353,14 +363,14 @@ main (int argc, char **argv)
 					args->common.driver_address,
                                         args->common.register_spacing,
                                         args->common.driver_device,
-                                        IPMI_FLAGS_DEFAULT)))
+                                        flags)))
 	    {
 	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
 					    args->common.disable_auto_probe,
 					    args->common.driver_address,
                                             args->common.register_spacing,
                                             args->common.driver_device,
-                                            IPMI_FLAGS_DEFAULT)))
+                                            flags)))
 		{
 		  perror ("ipmi_open_inband()");
 		  return (-1);
@@ -374,7 +384,7 @@ main (int argc, char **argv)
 					args->common.driver_address,
                                         args->common.register_spacing,
                                         args->common.driver_device,
-                                        IPMI_FLAGS_DEFAULT)))
+                                        flags)))
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);

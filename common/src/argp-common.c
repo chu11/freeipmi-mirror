@@ -317,6 +317,11 @@ common_parse_opt (int key,
                   argp_usage (state);
 		}
       break;
+#ifndef NDEBUG
+    case DEBUG_KEY:
+      cmd_args->debug = 1;
+      break;
+#endif /* NDEBUG */
     default:
       return ARGP_ERR_UNKNOWN;
     }
@@ -339,6 +344,9 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->password = NULL;
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
+#ifndef NDEBUG
+  cmd_args->debug = 0;
+#endif /* NDEBUG */
 }
 
 void 
