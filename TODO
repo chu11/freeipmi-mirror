@@ -26,11 +26,6 @@ ipmi-sensors options and output once C version is done
 
 Al's TODO list
 ==============
-debug dumping
--------------
-manpage support (bmc-config, ipmi-sensors, bmc-info, ipmi-sel, ipmi-raw)
-do it
-
 rpm
 ---
 Redo packages once re-org is complete
