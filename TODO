@@ -1,17 +1,7 @@
-Testing TODO
-============
-* APIs
-  - acpi
-  - ssif
-  - pef config
-
 AB's TODO list
 ==============
 libfreeipmi:
 ------------
-[HIGH PRIORITY]
-  * Unified Driver Model (one interface for all in-band and out-of-band drivers)
-
 [MEDIUM PRIORITY]
   * Missing IPMI commands.
   * Modify system boot priority table.
@@ -77,18 +67,10 @@ Autoconf/Portability
          
 Bala's TODO List:
 =================
-  * lan based sensors, sel and bmc-info
-  * bmc-config --auto-configure
-  * sensors will be simplified with Scheme <DONE>
-  * dual fiid for ipmi_kcs_lan_set_auth_type_enables
-  * convert ipmi-sensors, ipmi-sel, bmc-config to C based tools rather
-    than Scheme based tools
-  * forward port SSIF 0.2.X changes
-  * forward port udm-lan 0.2.X changes
+  * convert ipmi-sensors to C based tool
 
 Ian's TODO List:
 ================
-  * Convert fish to the (now preferred) scm_ interface completely.
   * Event Messaging and PEF Subsystem.
 
 Later on:
