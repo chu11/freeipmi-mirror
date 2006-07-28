@@ -24,10 +24,17 @@
 	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Adjust for
 	use of kcs and ssif flags.
 
-	Add architectural support for debug dump.
+	Add support for debug dump.
 	
 	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h
 	(IPMI_FLAGS_DEBUG_DUMP): New define.
+
+	* libfreeipmi/src/ipmi-lan-interface-udm.c (_ipmi_lan_dump,
+	_ipmi_lan_dump_rq, _ipmi_lan_dump_rs): New functions.
+	
+	* libfreeipmi/src/ipmi-udm.c (ipmi_cmd),
+	libfreeipmi/src/ipmi-lan-interface-udm.c (_ipmi_lan_cmd_send,
+	_ipmi_lan_cmd_recv): Add debug dump support.
 
 	* common/src/argp-common.h, common/src/argp-common.c: Support
 	debug option.
@@ -44,7 +51,7 @@
 
 	* bmc-config/, bmc-info/, ipmi-sel/, ipmi-raw/, fish/: Update
 	manpages with debug option.
-	
+
 2006-07-27  A Balamurugan  <bala@zresearch.com>
 
 	* fish/src/ipmi-wrapper.c (fi_ipmi_open): fixed improper argument
