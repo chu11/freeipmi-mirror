@@ -1,3 +1,9 @@
+2006-07-28  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (_ipmi_lan_dump,
+	_ipmi_lan_dump_rq): Rework request dump output, since calculations
+	won't have a trailer.
+	
 2006-07-27  Albert Chu <chu11@llnl.gov>
 
 	Convert mode parameters to flag parameters
