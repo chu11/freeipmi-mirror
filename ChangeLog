@@ -36,6 +36,19 @@
 	
 	* libfreeipmi/src/ipmi-locate-acpi-spmi.c: Up interface count.
 
+	* common/doc/argp-common-inband.man, common/src/argp-common.h,
+	common/src/argp-common.c: Support openipmi driver type.
+
+	* bmc-config/, bmc-info/, fish/, ipmi-raw/, ipmi-sel/: Support
+	openipmi driver.
+
+	Add more debugging
+
+	* common/src/err-wrappers.h (ERR_LOG): New debugging macro.
+
+	* libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c,
+	libfreeipmi/src/ipmi-openipmi-api.c: Employ new debugging macro.
+
 2006-07-27  Albert Chu <chu11@llnl.gov>
 
 	Convert mode parameters to flag parameters

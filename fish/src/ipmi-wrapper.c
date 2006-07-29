@@ -84,22 +84,30 @@ fi_ipmi_open (struct arguments *args)
 
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS, 
-                                        args->common.disable_auto_probe, 
-                                        args->common.driver_address,
+	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
+					args->common.disable_auto_probe, 
+                                        args->common.driver_address, 
                                         args->common.register_spacing,
                                         args->common.driver_device, 
                                         flags)))
 	    {
-	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF, 
-                                            args->common.disable_auto_probe, 
-                                            args->common.driver_address, 
-                                            args->common.register_spacing,
-                                            args->common.driver_device, 
-                                            flags)))
+	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS, 
+					    args->common.disable_auto_probe, 
+					    args->common.driver_address,
+					    args->common.register_spacing,
+					    args->common.driver_device, 
+					    flags)))
 		{
-		  perror ("ipmi_open_inband()");
-		  return (-1);
+		  if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF, 
+						args->common.disable_auto_probe, 
+						args->common.driver_address, 
+						args->common.register_spacing,
+						args->common.driver_device, 
+						flags)))
+		    {
+		      perror ("ipmi_open_inband()");
+		      return (-1);
+		    }
 		}
 	    }
 	}

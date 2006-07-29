@@ -293,7 +293,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       else if (errno == ENOENT)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOTFOUND;
       else
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       goto cleanup;
     }
   
@@ -302,7 +302,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
       else
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       goto cleanup;
     }
 
@@ -345,7 +345,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   memset(rq_buf_temp, '\0', IPMI_OPENIPMI_BUFLEN);
   if ((len = fiid_obj_get_all(obj_cmd_rq, rq_buf_temp, IPMI_OPENIPMI_BUFLEN)) <= 0)
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
     }
 
@@ -372,7 +372,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
 
   if (ioctl(ctx->device_fd, OPENIPMICTL_SEND_COMMAND, &rq_packet) < 0) 
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
     }
 
@@ -404,25 +404,26 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
                   NULL,
                   NULL)) < 0)
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
     }
 
   if (!n)
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
     }
 
   if (ioctl(ctx->device_fd, IPMICTL_RECEIVE_MSG_TRUNC, &rs_packet) < 0) 
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
     }
 
+  /* achu: atleast the completion code should be returned */
   if (!rs_packet.msg.data_len)
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
     }
 
@@ -433,7 +434,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
 
   if (fiid_obj_set_all(obj_cmd_rs, rs_buf, rs_packet.msg.data_len + 1) < 0)
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
     }
 

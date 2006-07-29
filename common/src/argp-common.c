@@ -74,10 +74,15 @@ common_parse_opt (int key,
 		  cmd_args->driver_type = IPMI_DEVICE_SSIF;
 		}
 	      else 
-		{
-                  fprintf(stderr, "invalid driver type specified\n");
-                  argp_usage (state);
-		}
+		if (strcasecmp (arg, "openipmi") == 0)
+		  {
+		    cmd_args->driver_type = IPMI_DEVICE_OPENIPMI;
+		  }
+		else
+		  {
+		    fprintf(stderr, "invalid driver type specified\n");
+		    argp_usage (state);
+		  }
       break;
     case DRIVER_ADDRESS_KEY:
       {

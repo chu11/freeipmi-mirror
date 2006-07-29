@@ -32,6 +32,9 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
 #include <syslog.h>
 #include <errno.h>
 
@@ -47,8 +50,8 @@ do {                                                                    \
   int save_errno = errno;                                               \
   char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
   snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
-           "%s: %d: %s: errno (%d): expression failed", __FILE__,       \
-           __LINE__, __PRETTY_FUNCTION__, save_errno);                  \
+            "%s: %d: %s: errno (%d): expression failed", __FILE__,      \
+            __LINE__, __PRETTY_FUNCTION__, save_errno);                 \
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
   errno = save_errno;                                                   \
 } while (0)
@@ -100,6 +103,13 @@ do {                                                                    \
 } while (0) 
 
 #endif /* IPMI_TRACE */
+
+#define ERR_LOG(expr)                                                   \
+do {                                                                    \
+  __IPMI_SYSLOG;                                                        \
+  __IPMI_TRACE;                                                         \
+  expr;                                                                 \
+} while (0)   
 
 #define ERR(expr)                                                       \
 do {                                                                    \

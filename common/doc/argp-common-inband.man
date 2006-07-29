@@ -4,7 +4,7 @@ Do not probe IPMI devices.
 .TP
 \fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
 Use this IPMIDRIVER instead of auto selection.
-Allowed values are KCS, SMIC, SSIF and LAN.
+Allowed values are KCS, SMIC, SSIF, LAN, and OPENIPMI.
 .TP
 \fB\-\-driver\-address\fR=\fIDRIVERADDR\fR
 Use this DRIVERADDR address instead of probed

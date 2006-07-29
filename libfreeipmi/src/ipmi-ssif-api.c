@@ -530,7 +530,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
 	       || errno == ENAMETOOLONG)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
       else
-	ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
       return (-1);
     }
 
@@ -539,7 +539,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
       else
-	ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
       return (-1);
     }
 
@@ -579,9 +579,9 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
       if ((ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE(ctx->semid)) < 0)
         {
           if (errno == EINTR || errno == EAGAIN)
-            ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY;
+            ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_BUSY);
           else
-            ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL;
+            ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
           goto cleanup;
         }
     }
@@ -604,7 +604,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
       else
-	ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
       goto cleanup_unlock;
     }
 
@@ -650,7 +650,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
       else
-	ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
       goto cleanup_unlock;
     }
   

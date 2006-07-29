@@ -118,23 +118,31 @@ ipmi_core_init (char *progname, struct arguments *args)
       
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN) 
         {
-          if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_KCS,
-					      args->common.disable_auto_probe,
-					      args->common.driver_address,
-                                              args->common.register_spacing,
-                                              args->common.driver_device,
-                                              flags)))
-            {
-              if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
+	  if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
+					      args->common.disable_auto_probe, 
+					      args->common.driver_address, 
+					      args->common.register_spacing,
+					      args->common.driver_device, 
+					      flags)))
+	    {
+	      if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_KCS,
 						  args->common.disable_auto_probe,
 						  args->common.driver_address,
-                                                  args->common.register_spacing,
-                                                  args->common.driver_device,
-                                                  flags)))
-                {
-                  perror ("ipmi_open_inband()");
-                  exit (EXIT_FAILURE);
-                }
+						  args->common.register_spacing,
+						  args->common.driver_device,
+						  flags)))
+		{
+		  if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
+						      args->common.disable_auto_probe,
+						      args->common.driver_address,
+						      args->common.register_spacing,
+						      args->common.driver_device,
+						      flags)))
+		    {
+		      perror ("ipmi_open_inband()");
+		      exit (EXIT_FAILURE);
+		    }
+		}
             }
         } 
       else 

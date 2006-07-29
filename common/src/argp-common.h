@@ -49,7 +49,7 @@ enum argp_common_option_keys
      "Do not probe IPMI devices.", 0},		                           \
     {"driver-type",    DRIVER_TYPE_KEY, "IPMIDRIVER", 0, 	           \
      "Use this IPMIDRIVER instead of auto selection.  "		           \
-     "Allowed values are KCS, SMIC, SSIF and LAN.", 1},		           \
+     "Allowed values are KCS, SMIC, SSIF, LAN, and OPENIPMI.", 1},         \
     {"driver-address", DRIVER_ADDRESS_KEY, "DRIVERADDR", 0,                \
      "Use this DRIVERADDR address instead of probed one.", 2}, 	           \
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \

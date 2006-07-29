@@ -355,7 +355,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else
-        ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+	ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
 #else  /* !USE_IOPERM */
@@ -366,7 +366,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else
-        ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
 #endif /* !USE_IOPERM */
@@ -376,7 +376,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else
-        ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
 #endif/* !__FreeBSD__ */
@@ -613,9 +613,9 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       if ((ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE(ctx->semid)) < 0)
         {
           if (errno == EINTR || errno == EAGAIN)
-            ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+            ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
           else
-            ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+            ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
           goto cleanup;
         }
     }
@@ -626,7 +626,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   ipmi_kcs_wait_for_ibf_clear (ctx);
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
       goto cleanup_unlock;
     }
   ipmi_kcs_clear_obf (ctx);
@@ -639,7 +639,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       ipmi_kcs_wait_for_ibf_clear (ctx);
       if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
         {
-          ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+          ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
           goto cleanup_unlock;
         }
       ipmi_kcs_clear_obf (ctx);
@@ -650,7 +650,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   ipmi_kcs_wait_for_ibf_clear (ctx);
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
       goto cleanup_unlock;
     }
   ipmi_kcs_clear_obf (ctx);
@@ -704,7 +704,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   ipmi_kcs_wait_for_ibf_clear (ctx);
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ)) 
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
       goto cleanup_unlock;
     }
   while (ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
@@ -728,7 +728,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     }
   else
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
       goto cleanup_unlock;
     }
 
@@ -762,13 +762,13 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 
   if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
   
   if ((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
   
@@ -790,7 +790,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 			 net_fn,
 			 obj_hdr) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
   
@@ -799,13 +799,13 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 			     pkt,
 			     pkt_len) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
   
   if (ipmi_kcs_write (ctx, pkt, pkt_len) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
     }
 
@@ -835,19 +835,19 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 
   if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return -1;
     }
   
   if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       goto cleanup;
     }
 
   if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       goto cleanup;
     }
 
@@ -870,7 +870,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 				 pkt,
 				 pkt_len)) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       goto cleanup;
     }
   
@@ -879,7 +879,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 			       obj_hdr,
 			       obj_cmd_rs) < 0)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL;
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       goto cleanup;
     }
 
