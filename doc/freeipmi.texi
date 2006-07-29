@@ -2743,13 +2743,28 @@ only the specific options for that command will be listed.
 @item -v, ---version @*
       Display the version information.
 
-@item -o @var{int}, ---io-port=@var{int} @*
-      Identify the System Base Address for KCS SMS/IO.  By default,
-@samp{0x0CA2} is used.  Port @samp{0x8A2} is also common.  If the
-io-port number is prefixed with a @samp{0x}, it is assumed to be a
-base-16 integer.  Otherwise, it is assumed to be a base-10 integer.
+@item -I @var{string}, ---driver-type=@var{string} @*
+      Identify the IPMI driver type to use.  The available driver
+types are KCS and SSIF.  If not specified, @command{bmc-watchdog} will
+attempt both.
 
-@cindex io-port
+@item -o @var{int}, ---driver-address=@var{int} @*
+      Identify the System Base Address for the IPMI Driver.  If not
+specified, @command{bmc-watchdog} will attempt to probe for the
+system's default address.  If the probe fails, the IPMI defined
+default will be used.  If the io-port number is prefixed with a
+``0x'', it is assumed to be a base 16 integer.  Otherwise, it is
+assumed to be a base 10 integer.
+
+@item -R @var{int}, --reg-space=@var{int} @*
+      Specify base address register spacing. If not specified,
+@command{bmc-watchdog} will attempt to probe for the system's default
+register spacing.  If the probe fails, the IPMI defined default will
+be used.
+
+@item -E @var{string}, --driver-device=@var{string} @*
+      Identify the driver device path the IPMI driver should use.  It
+not specified, a default path will be assumed.
 
 @item -f @var{string}, ---logfile=@var{string} @*
       Specify an alternate logfile from the default of

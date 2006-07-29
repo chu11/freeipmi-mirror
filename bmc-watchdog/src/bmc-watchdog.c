@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.63 2006-07-27 22:44:16 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.64 2006-07-29 13:55:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,6 +37,7 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <signal.h>
+#include <sys/types.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -62,6 +63,10 @@
 #endif
 
 #include <freeipmi/freeipmi.h>
+
+/* Driver Types */
+#define DRIVER_TYPE_KCS  0
+#define DRIVER_TYPE_SSIF 1
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
@@ -107,10 +112,14 @@ struct cmdline_info
   int stop;
   int clear;
   int daemon;
-  int io_port;
-  uint32_t io_port_val;
+  int driver_type;
+  int driver_type_val;
+  int driver_address;
+  uint32_t driver_address_val;
   int reg_space;
   uint8_t reg_space_val;
+  int driver_device;
+  char *driver_device_val;
   char *logfile;
   int no_logging;
   int timer_use;
@@ -150,7 +159,9 @@ struct cmdline_info
 /* program name */
 char *err_progname = NULL;
 
-ipmi_kcs_ctx_t kcs_ctx;
+ipmi_kcs_ctx_t kcs_ctx = NULL;
+ipmi_ssif_ctx_t ssif_ctx = NULL;
+int driver_type_used = -1;
 
 int cmdline_parsed = 0;
 struct cmdline_info cinfo;
@@ -264,13 +275,10 @@ _err_exit(char *fmt, ...)
   exit(1);
 }
 
-/* Must be called after cmdline parsed b/c user may pass in io port */
 static int
-_init_ipmi(void)
+_init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
-
-  assert(cmdline_parsed != 0 && err_progname != NULL);
 
   if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
     {
@@ -284,8 +292,8 @@ _init_ipmi(void)
       return -1;
     }
 
-  if (cinfo.io_port)
-    l.base_address.bmc_iobase_address = cinfo.io_port_val;
+  if (cinfo.driver_address)
+    l.base_address.bmc_iobase_address = cinfo.driver_address_val;
   if (cinfo.reg_space)
     l.reg_space = cinfo.reg_space_val;
   
@@ -309,11 +317,100 @@ _init_ipmi(void)
   
   if (ipmi_kcs_ctx_io_init(kcs_ctx) < 0)
     {
-      if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
-        _err_exit("Permission denied, must be root.");
-      else
-	_bmclog("ipmi_kcs_ctx_io_init: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      _bmclog("ipmi_kcs_ctx_io_init: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
       return -1;
+    }
+
+  return 0;
+}
+
+static int
+_init_ssif_ipmi(void)
+{
+  struct ipmi_locate_info l;
+
+  if (ipmi_locate(IPMI_INTERFACE_SSIF, &l) < 0)
+    {
+      _bmclog("ipmi_locate: %s", strerror(errno));
+      return -1;
+    }
+
+  if (!(ssif_ctx = ipmi_ssif_ctx_create()))
+    {
+      _bmclog("ipmi_ssif_ctx_create: %s", strerror(errno));
+      return -1;
+    }
+
+  if (cinfo.driver_address)
+    l.base_address.bmc_smbus_slave_address = cinfo.driver_address_val;
+  if (cinfo.driver_device)
+    {
+      strncpy(l.bmc_i2c_dev_name, cinfo.driver_device_val, IPMI_LOCATE_PATH_MAX);
+      l.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+    }
+  
+  if (ipmi_ssif_ctx_set_ipmb_address(ssif_ctx, l.base_address.bmc_smbus_slave_address) < 0)
+    {
+      _bmclog("ipmi_ssif_ctx_set_ipmb_address: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      return -1;
+    }
+  
+  if (ipmi_ssif_ctx_set_i2c_device(ssif_ctx, l.bmc_i2c_dev_name) < 0)
+    {
+      _bmclog("ipmi_ssif_ctx_set_i2c_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      return -1;
+    }
+  
+  if (ipmi_ssif_ctx_set_flags(ssif_ctx, IPMI_SSIF_FLAGS_NONBLOCKING) < 0)
+    {
+      _bmclog("ipmi_ssif_ctx_set_flags: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      return -1;
+    }
+  
+  if (ipmi_ssif_ctx_io_init(ssif_ctx) < 0)
+    {
+      _bmclog("ipmi_ssif_ctx_io_init: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      return -1;
+    }
+
+  return 0;
+}
+
+/* Must be called after cmdline parsed b/c user may pass in io port */
+static int
+_init_ipmi(void)
+{
+  assert(cmdline_parsed != 0 && err_progname != NULL);
+
+  if (getuid() != 0)
+    _err_exit("Permission denied, must be root.");
+
+  if (cinfo.driver_type)
+    {
+      if (cinfo.driver_type_val == DRIVER_TYPE_KCS)
+	{
+	  if (_init_kcs_ipmi() < 0)
+	    _err_exit("Error initializing KCS IPMI driver");
+	  driver_type_used = DRIVER_TYPE_KCS;
+	}
+      if (cinfo.driver_type_val == DRIVER_TYPE_SSIF)
+	{
+	  if (_init_ssif_ipmi() < 0)
+	    _err_exit("Error initializing SSIF IPMI driver");
+	  driver_type_used = DRIVER_TYPE_SSIF;
+	}
+    }
+  else
+    {
+      if (_init_kcs_ipmi() < 0)
+	{
+	  if (_init_ssif_ipmi() < 0)
+	    _err_exit("Error initializing IPMI driver");
+	  else
+	    driver_type_used = DRIVER_TYPE_SSIF;
+	}
+      else
+	driver_type_used = DRIVER_TYPE_KCS;
     }
 
   return 0;
@@ -408,6 +505,7 @@ _cmd(char *str,
 {
   uint64_t comp_code;
   int retry_count = 0;
+  int8_t ret;
 
   assert (str != NULL 
 	  && retry_wait_time >= 0 
@@ -426,52 +524,85 @@ _cmd(char *str,
 
   while (1)
     {
-      if (ipmi_kcs_cmd (kcs_ctx,
-			IPMI_BMC_IPMB_LUN_BMC, 
-			netfn, 
-			cmd_rq, 
-			cmd_rs) < 0)
-        {
-          if (ipmi_kcs_ctx_errnum(kcs_ctx) != IPMI_KCS_CTX_ERR_BUSY)
-            {
-              _bmclog("%s: ipmi_kcs_cmd_interruptible: %s", 
-                      str, ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-	      if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PARAMETERS)
-		errno = EINVAL;
-	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
-		errno = EPERM;
-	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUTMEM)
-		errno = ENOMEM;
-	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_PARAMETERS
-		       || ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_INIT)
-		errno = EIO;
-	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OVERFLOW)
-		errno = ENOSPC;
-	      else
-		errno = EINVAL;
-              return -1;
-            }
-          else
-            {
-              if (retry_count >= retry_attempt)
-                {
-                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC too busy: "
-                          "retry_wait_time=%d, retry_attempt=%d", 
-                          str, retry_wait_time, retry_attempt);
-		  errno = EBUSY;
-                  return -1;
-                }
+      if (driver_type_used == DRIVER_TYPE_KCS)
+	{
+	  if ((ret = ipmi_kcs_cmd (kcs_ctx,
+				   IPMI_BMC_IPMB_LUN_BMC, 
+				   netfn, 
+				   cmd_rq, 
+				   cmd_rs)) < 0)
+	    {
+	      if (ipmi_kcs_ctx_errnum(kcs_ctx) != IPMI_KCS_CTX_ERR_BUSY)
+		{
+		  _bmclog("%s: ipmi_kcs_cmd: %s", 
+			  str, ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+		  if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PARAMETERS)
+		    errno = EINVAL;
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
+		    errno = EPERM;
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUTMEM)
+		    errno = ENOMEM;
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_PARAMETERS
+			   || ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_INIT)
+		    errno = EIO;
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OVERFLOW)
+		    errno = ENOSPC;
+		  else
+		    errno = EINVAL;
+		  return -1;
+		}
+	    }
+	}
+      else
+	{
+	  if ((ret = ipmi_ssif_cmd (ssif_ctx,
+				    IPMI_BMC_IPMB_LUN_BMC, 
+				    netfn, 
+				    cmd_rq, 
+				    cmd_rs)) < 0)
+	    {
+	      if (ipmi_ssif_ctx_errnum(ssif_ctx) != IPMI_SSIF_CTX_ERR_BUSY)
+		{
+		  _bmclog("%s: ipmi_ssif_cmd: %s", 
+			  str, ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+		  if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PARAMETERS)
+		    errno = EINVAL;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PERMISSION)
+		    errno = EPERM;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUTMEM)
+		    errno = ENOMEM;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_PARAMETERS
+			   || ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_INIT)
+		    errno = EIO;
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OVERFLOW)
+		    errno = ENOSPC;
+		  else
+		    errno = EINVAL;
+		  return -1;
+		}
+	    }
+	}
+
+      if (ret < 0)
+	{
+	  if (retry_count >= retry_attempt)
+	    {
+	      _bmclog("%s: BMC busy: "
+		      "retry_wait_time=%d, retry_attempt=%d", 
+		      str, retry_wait_time, retry_attempt);
+	      errno = EBUSY;
+	      return -1;
+	    }
 #ifndef NDEBUG
-              if (cinfo.debug)
-                {
-                  fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
-                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
-                }
+	  if (cinfo.debug)
+	    {
+	      fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
+	      _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
+	    }
 #endif
-              _sleep(retry_wait_time);
-              retry_count++;
-            }
-        }
+	  _sleep(retry_wait_time);
+	  retry_count++;
+	}
       else
         break;
     }
@@ -929,8 +1060,10 @@ _usage(void)
 	  "OPTIONS:\n"
           "  -h         --help                       Output help menu\n"
           "  -v         --version                    Output version\n"
-	  "  -o INT     --io-port=INT                Base address for KCS SMS I/O\n"
+	  "  -I STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF)\n"
+	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
           "  -R INT     --reg-space=INT              Base address register spacing in bytes\n"
+	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
           "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
@@ -1052,8 +1185,10 @@ _cmdline_parse(int argc, char **argv)
     {"stop",                  0, NULL, 'y'},
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
-    {"io-port",               1, NULL, 'o'},
+    {"driver-type",           1, NULL, 'I'},
+    {"driver-address",        1, NULL, 'o'},
     {"reg-space",             1, NULL, 'R'},
+    {"driver-device",         1, NULL, 'E'},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
@@ -1082,7 +1217,7 @@ _cmdline_parse(int argc, char **argv)
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvo:R:f:nsgrtycd u:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
+  strcpy(options, "hvI:o:R:E:f:nsgrtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 #ifndef NDEBUG
   strcat(options, "D");
 #endif
@@ -1125,12 +1260,21 @@ _cmdline_parse(int argc, char **argv)
         case 'd':
           cinfo.daemon++;
           break;
+	case 'I':
+	  cinfo.driver_type++;
+	  if (!strcasecmp(optarg, "kcs"))
+	    cinfo.driver_type_val = DRIVER_TYPE_KCS;
+	  else if (!strcasecmp(optarg, "ssif"))
+	    cinfo.driver_type_val = DRIVER_TYPE_SSIF;
+	  else
+	    _err_exit("driver-type value invalid");
+	  break;
         case 'o':
-          cinfo.io_port++;
-          cinfo.io_port_val = strtol(optarg, &ptr, 0);
+          cinfo.driver_address++;
+          cinfo.driver_address_val = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
-              || cinfo.io_port_val <= 0)
-            _err_exit("io-port value invalid");
+              || cinfo.driver_address_val <= 0)
+            _err_exit("driver-address value invalid");
           break;
         case 'R':
           cinfo.reg_space++;
@@ -1138,6 +1282,10 @@ _cmdline_parse(int argc, char **argv)
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("reg-space value invalid");
           break;
+	case 'E':
+	  cinfo.driver_device++;
+	  cinfo.driver_device_val = optarg;
+	  break;
         case 'f':
           cinfo.logfile = optarg;
           break;
@@ -2026,7 +2174,10 @@ main(int argc, char **argv)
   else
     _err_exit("internal error, command not set");
 
-  ipmi_kcs_ctx_destroy(kcs_ctx);
+  if (kcs_ctx)
+    ipmi_kcs_ctx_destroy(kcs_ctx);
+  if (ssif_ctx)
+    ipmi_ssif_ctx_destroy(ssif_ctx);
   close(logfile_fd);
   closelog();
   exit(0);

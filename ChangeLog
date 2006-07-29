@@ -1,3 +1,14 @@
+2006-07-29  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-ssif-api.c (_ipmi_ssif_cmd_write,
+	_ipmi_ssif_cmd_read, ipmi_ssif_cmd): New functions.
+
+	* bmc-watchdog/src/: Support ssif driver, --driver-type option,
+	--driver-address option, and --driver-device option.
+
+	* bmc-watchdog/bmc-watchdog.8.in, doc/freeipmi.texi: Updated with
+	new options.
+	
 2006-07-28  Albert Chu <chu11@llnl.gov>
 
 	Various cleanup

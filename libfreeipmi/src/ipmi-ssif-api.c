@@ -43,6 +43,7 @@
 #endif /* HAVE_FCNTL_H */
 #include <sys/ioctl.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "freeipmi/ipmi-ssif-api.h"
 
@@ -659,4 +660,194 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
  cleanup_unlock:
   IPMI_MUTEX_UNLOCK (ctx->semid);
   return (rv);
+}
+
+static int8_t
+_ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx, 
+		     uint8_t lun,
+		     uint8_t net_fn,
+		     fiid_obj_t obj_cmd_rq)
+{
+  uint8_t *pkt = NULL;
+  uint32_t pkt_len;
+  int32_t hdr_len, cmd_len;
+  fiid_obj_t obj_hdr = NULL;
+  int rv = -1;
+
+  assert(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  assert(IPMI_BMC_LUN_VALID(lun));
+  assert(IPMI_NET_FN_RQ_VALID(net_fn));
+  assert(fiid_obj_valid(obj_cmd_rq));
+  assert(fiid_obj_packet_valid(obj_cmd_rq));
+
+  if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      return (-1);
+    }
+  
+  if ((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      return (-1);
+    }
+  
+  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
+    {
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      goto cleanup;
+    }
+  
+  pkt_len = hdr_len + cmd_len;
+  if (!(pkt = (uint8_t *)malloc (pkt_len)))
+    {
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      goto cleanup;
+    }
+  memset (pkt, 0, pkt_len);
+    
+  if (fill_hdr_ipmi_kcs (lun,
+			 net_fn,
+			 obj_hdr) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      return (-1);
+    }
+  
+  if (assemble_ipmi_kcs_pkt (obj_hdr,
+			     obj_cmd_rq,
+			     pkt,
+			     pkt_len) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      return (-1);
+    }
+  
+  if (ipmi_ssif_write (ctx, pkt, pkt_len) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      return (-1);
+    }
+
+  rv = 0;
+ cleanup:
+  if (obj_hdr)
+    fiid_obj_destroy(obj_hdr);
+  if (pkt)
+    free(pkt);
+  return rv;
+}
+
+static int8_t
+_ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx, 
+		    fiid_obj_t obj_cmd_rs)
+{
+  uint8_t *pkt;
+  uint32_t pkt_len;
+  int32_t hdr_len, cmd_len;
+  int32_t read_len;
+  fiid_obj_t obj_hdr = NULL;
+  fiid_field_t *tmpl = NULL;
+  int8_t rv = -1;
+
+  assert(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC);
+  assert(fiid_obj_valid(obj_cmd_rs));
+
+  if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      return -1;
+    }
+  
+  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      goto cleanup;
+    }
+
+  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      goto cleanup;
+    }
+
+  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
+    {
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      goto cleanup;
+    }
+
+  pkt_len = hdr_len + cmd_len;
+  
+  if (!(pkt = (uint8_t *)malloc(pkt_len)))
+    {
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      goto cleanup;
+    }
+  memset (pkt, 0, pkt_len);
+
+  if ((read_len = ipmi_ssif_read (ctx, 
+				  pkt,
+				  pkt_len)) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      goto cleanup;
+    }
+  
+  if (unassemble_ipmi_kcs_pkt (pkt,
+			       read_len,
+			       obj_hdr,
+			       obj_cmd_rs) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  if (tmpl)
+    fiid_template_free(tmpl);
+  if (obj_hdr)
+    fiid_obj_destroy(obj_hdr);
+  return rv;
+}
+
+int8_t
+ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx, 
+	       uint8_t lun,
+	       uint8_t net_fn,
+	       fiid_obj_t obj_cmd_rq,
+	       fiid_obj_t obj_cmd_rs)
+{
+  if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
+    return (-1); 
+ 
+  if (!IPMI_BMC_LUN_VALID(lun)
+      || !IPMI_NET_FN_RQ_VALID(net_fn)
+      || !fiid_obj_valid(obj_cmd_rq)
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
+      return (-1); 
+    }
+  
+  if (!ctx->io_init)
+    {
+      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
+      return (-1); 
+    }
+
+  if (!fiid_obj_packet_valid(obj_cmd_rq))
+    {
+      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
+      return (-1); 
+    }
+ 
+  if (_ipmi_ssif_cmd_write(ctx, lun, net_fn, obj_cmd_rq) < 0)
+    return -1;
+
+  if (_ipmi_ssif_cmd_read(ctx, obj_cmd_rs) < 0)
+    return -1;
+
+  return (0);
 }
