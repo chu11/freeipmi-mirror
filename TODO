@@ -44,6 +44,7 @@ disable dumping
 clear command line arguments
 flush non-default cache
 output appropriate error when non-root
+openipmi interface supprot
 
 misc:
 -----
