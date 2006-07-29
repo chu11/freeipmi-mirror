@@ -274,11 +274,11 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 	  
 	  if (locate_info->interface_type == IPMI_INTERFACE_SSIF)
 	    {
-	      locate_info->base_address.bmc_smbus_slave_address = data[0x06] >> 1;
+	      locate_info->driver_address = data[0x06] >> 1;
 	      locate_info->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
 	      locate_info->reg_space = 0x01;
-	      strncpy(locate_info->bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
-	      locate_info->bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+	      strncpy(locate_info->driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+	      locate_info->driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
 	    }
 	  else 
 	    {
@@ -304,13 +304,13 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 	      
 	      if (address.l & 1)
 		{
-		  locate_info->base_address.bmc_iobase_address = base_addr;
 		  locate_info->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+		  locate_info->driver_address = base_addr;
 		}
 	      else
 		{
-		  locate_info->base_address.bmc_membase_address = base_addr;
 		  locate_info->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+		  locate_info->driver_address = base_addr;
 		}
 	      
 	      switch (data[0x10] >> 6)
@@ -336,16 +336,12 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 		  locate_info->locate_driver_type);
 	  printf ("ipmi_locate_info.interface_type = [%d]\n", 
 		  locate_info->interface_type);
-	  printf ("ipmi_locate_info.bmc_i2c_dev_name = [%s]\n", 
-		  locate_info->bmc_i2c_dev_name);
-	  printf ("ipmi_locate_info.addr_space_id = [%X]\n", 
+	  printf ("ipmi_locate_info.driver_device = [%s]\n", 
+		  locate_info->driver_device);
+	  printf ("ipmi_locate_info.address_space_id = [%X]\n", 
 		  locate_info->address_space_id);
-	  printf ("ipmi_locate_info.base_addr.bmc_iobase_addr = [%LX]\n", 
-		  locate_info->base_address.bmc_iobase_address);
-	  printf ("ipmi_locate_info.base_addr.bmc_membase_addr = [%LX]\n", 
-		  locate_info->base_address.bmc_membase_address);
-	  printf ("ipmi_locate_info.base_addr.bmc_smbus_slave_addr = [%X]\n", 
-		  locate_info->base_address.bmc_smbus_slave_address);
+	  printf ("ipmi_locate_info.driver_address = [%X]\n", 
+		  locate_info->driver_address);
 	  printf ("ipmi_locate_info.reg_space = [%X]\n", 
 		  locate_info->reg_space);
 #endif

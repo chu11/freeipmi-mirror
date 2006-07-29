@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.64 2006-07-29 13:55:03 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.65 2006-07-29 17:05:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -293,13 +293,13 @@ _init_kcs_ipmi(void)
     }
 
   if (cinfo.driver_address)
-    l.base_address.bmc_iobase_address = cinfo.driver_address_val;
+    l.driver_address = cinfo.driver_address_val;
   if (cinfo.reg_space)
     l.reg_space = cinfo.reg_space_val;
   
-  if (ipmi_kcs_ctx_set_bmc_iobase_address(kcs_ctx, l.base_address.bmc_iobase_address) < 0)
+  if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
     {
-      _bmclog("ipmi_kcs_ctx_set_bmc_iobase_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      _bmclog("ipmi_kcs_ctx_set_driver_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
       return -1;
     }
   
@@ -342,20 +342,20 @@ _init_ssif_ipmi(void)
     }
 
   if (cinfo.driver_address)
-    l.base_address.bmc_smbus_slave_address = cinfo.driver_address_val;
+    l.driver_address = cinfo.driver_address_val;
   if (cinfo.driver_device)
     {
-      strncpy(l.bmc_i2c_dev_name, cinfo.driver_device_val, IPMI_LOCATE_PATH_MAX);
-      l.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+      strncpy(l.driver_device, cinfo.driver_device_val, IPMI_LOCATE_PATH_MAX);
+      l.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   
-  if (ipmi_ssif_ctx_set_ipmb_address(ssif_ctx, l.base_address.bmc_smbus_slave_address) < 0)
+  if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
     {
-      _bmclog("ipmi_ssif_ctx_set_ipmb_address: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      _bmclog("ipmi_ssif_ctx_set_driver_address: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
       return -1;
     }
   
-  if (ipmi_ssif_ctx_set_i2c_device(ssif_ctx, l.bmc_i2c_dev_name) < 0)
+  if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
     {
       _bmclog("ipmi_ssif_ctx_set_i2c_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
       return -1;

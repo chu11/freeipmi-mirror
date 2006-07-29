@@ -60,12 +60,12 @@ int8_t ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx);
 int32_t ipmi_ssif_ctx_errnum(ipmi_ssif_ctx_t ctx);
 char *ipmi_ssif_ctx_strerror(int32_t errnum);
 
-int8_t ipmi_ssif_ctx_get_i2c_device(ipmi_ssif_ctx_t ctx, char **i2c_device);
-int8_t ipmi_ssif_ctx_get_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_address);
+int8_t ipmi_ssif_ctx_get_driver_device(ipmi_ssif_ctx_t ctx, char **driver_device);
+int8_t ipmi_ssif_ctx_get_driver_address(ipmi_ssif_ctx_t ctx, uint8_t *driver_address);
 int8_t ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, uint32_t *flags);
 
-int8_t ipmi_ssif_ctx_set_i2c_device(ipmi_ssif_ctx_t ctx, char *i2c_device);
-int8_t ipmi_ssif_ctx_set_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t ipmb_address);
+int8_t ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char *driver_device);
+int8_t ipmi_ssif_ctx_set_driver_address(ipmi_ssif_ctx_t ctx, uint8_t driver_address);
 int8_t ipmi_ssif_ctx_set_flags(ipmi_ssif_ctx_t ctx, uint32_t flags);
 
 int8_t ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx);

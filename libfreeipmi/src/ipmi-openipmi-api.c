@@ -127,7 +127,7 @@ struct ipmi_openipmi_ctx {
   uint32_t magic;
   int32_t errnum;
   uint32_t flags;
-  char *device;
+  char *driver_device;
   int device_fd;
   int io_init;
   int semid;
@@ -162,10 +162,10 @@ ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx)
 
   ctx->magic = ~IPMI_OPENIPMI_CTX_MAGIC;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
-  if (ctx->device)
+  if (ctx->driver_device)
     {
-      xfree(ctx->device);
-      ctx->device = NULL;
+      xfree(ctx->driver_device);
+      ctx->driver_device = NULL;
     }
   close(ctx->device_fd);
   xfree(ctx);
@@ -193,21 +193,18 @@ ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx)
 }
 
 int8_t 
-ipmi_openipmi_ctx_get_device(ipmi_openipmi_ctx_t ctx, char *device, unsigned int devicelen)
+ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_device)
 {
   if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
     return (-1);
 
-  if (!device 
-      || !devicelen 
-      || (!ctx->device && (devicelen <= strlen(IPMI_OPENIPMI_DEVICE_DEFAULT)))
-      || (ctx->device && (devicelen <= strlen(ctx->device))))
+  if (!driver_device)
     {
       ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;
       return (-1);
     }
 
-  strcpy(device, ctx->device);
+  *driver_device = ctx->driver_device;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -235,15 +232,15 @@ ipmi_openipmi_ctx_set_device(ipmi_openipmi_ctx_t ctx, char *device)
   if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
     return (-1);
 
-  if (ctx->device)
+  if (ctx->driver_device)
     {
-      xfree(ctx->device);
-      ctx->device = NULL;
+      xfree(ctx->driver_device);
+      ctx->driver_device = NULL;
     }
 
   if (device)
     {
-      if (!(ctx->device = strdup(device)))
+      if (!(ctx->driver_device = strdup(device)))
         {
           ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUTMEM;
           return (-1);
@@ -280,10 +277,10 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
     return (-1);
 
-  if (ctx->device)
-    device = ctx->device;
+  if (ctx->driver_device)
+    device = ctx->driver_device;
   else
-    device = IPMI_OPENIPMI_DEVICE_DEFAULT;
+    device = IPMI_OPENIPMI_DRIVER_DEVICE_DEFAULT;
 
   ctx->device_fd = open (device, O_RDWR);
   if (ctx->device_fd < 0)

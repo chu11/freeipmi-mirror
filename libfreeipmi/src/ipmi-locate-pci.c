@@ -143,8 +143,8 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type, struct ipmi_locate_info *in
   linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     {
-      strncpy(linfo.bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
-      linfo.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+      strncpy(linfo.driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+      linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
 
   status = 1;
@@ -176,14 +176,14 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type, struct ipmi_locate_info *in
 	switch (base_address[i] & PCI_BASE_ADDRESS_SPACE)
 	  {
 	  case past_io:
-	    linfo.bmc_io_mapped = 0;
-	    linfo.base.bmc_iobase_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
+	    linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+	    linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
 	    memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
 	    return 0;
 	    
 	  case past_memory:
-	    linfo.bmc_io_mapped = 1;
-	    linfo.base.bmc_membase_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
+	    linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+	    linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
 	    memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
 	    return 0;
 	  }

@@ -1188,8 +1188,8 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_loca
   linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     {
-      strncpy(linfo.bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
-      linfo.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+      strncpy(linfo.driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+      linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   linfo.locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
 
@@ -1263,19 +1263,19 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_loca
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY:
 	{
 	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-	  linfo.base_address.bmc_iobase_address = base_address;
+	  linfo.driver_address = base_address;
 	  break;
 	}
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO:
 	{
 	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-	  linfo.base_address.bmc_membase_address = base_address;
+	  linfo.driver_address = base_address;
 	  break;
 	}
       case IPMI_ACPI_ADDRESS_SPACE_ID_SMBUS:
 	{
 	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-	  linfo.base_address.bmc_smbus_slave_address = base_address;
+	  linfo.driver_address = base_address;
 	  break;
 	}
       default:

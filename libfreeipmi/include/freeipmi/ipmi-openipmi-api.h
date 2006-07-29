@@ -29,7 +29,7 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
-#define IPMI_OPENIPMI_DEVICE_DEFAULT          "/dev/ipmi0"
+#define IPMI_OPENIPMI_DRIVER_DEVICE_DEFAULT   "/dev/ipmi0"
 
 #define IPMI_OPENIPMI_CTX_ERR_SUCCESS         0
 #define IPMI_OPENIPMI_CTX_ERR_NULL            1
@@ -51,10 +51,10 @@ int8_t ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx);
 int32_t ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx);
 char *ipmi_openipmi_ctx_strerror(int32_t errnum);
 
-int8_t ipmi_openipmi_ctx_get_device(ipmi_openipmi_ctx_t ctx, char *device, unsigned int devicelen);
+int8_t ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_device);
 int8_t ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags);
 
-int8_t ipmi_openipmi_ctx_set_device(ipmi_openipmi_ctx_t ctx, char *device);
+int8_t ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *driver_device);
 int8_t ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags);
 
 int8_t ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx);

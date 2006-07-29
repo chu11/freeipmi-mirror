@@ -337,10 +337,10 @@ static char * ipmi_ssif_ctx_errmsg[] =
 struct ipmi_ssif_ctx {
   uint32_t magic;
   int32_t errnum;
-  char *i2c_device;
-  uint8_t ipmb_address;
+  char *driver_device;
+  uint8_t driver_address;
   uint32_t flags;
-  int i2c_fd;
+  int device_fd;
   int io_init;
   int semid;
 };
@@ -353,10 +353,10 @@ ipmi_ssif_ctx_create(void)
   ERR_CLEANUP ((ctx = (ipmi_ssif_ctx_t)xmalloc(sizeof(struct ipmi_ssif_ctx))));
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
-  ERR_CLEANUP ((ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
-  ctx->ipmb_address = IPMI_DEFAULT_SSIF_IPMB_ADDR;
+  ERR_CLEANUP ((ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
+  ctx->driver_address = IPMI_DEFAULT_SSIF_IPMB_ADDR;
   ctx->flags = IPMI_SSIF_FLAGS_DEFAULT;
-  ctx->i2c_fd = -1;
+  ctx->device_fd = -1;
   ctx->io_init = 0;
 
   ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init ()) < 0));
@@ -378,9 +378,9 @@ ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx)
 
   ctx->magic = ~IPMI_SSIF_CTX_MAGIC;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
-  if (ctx->i2c_device)
-    free(ctx->i2c_device);
-  close(ctx->i2c_fd);
+  if (ctx->driver_device)
+    free(ctx->driver_device);
+  close(ctx->device_fd);
   xfree(ctx);
   return (0);
 }
@@ -406,35 +406,35 @@ ipmi_ssif_ctx_errnum(ipmi_ssif_ctx_t ctx)
 }
 
 int8_t
-ipmi_ssif_ctx_get_i2c_device(ipmi_ssif_ctx_t ctx, char **i2c_device)
+ipmi_ssif_ctx_get_driver_device(ipmi_ssif_ctx_t ctx, char **driver_device)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  if (!i2c_device)
+  if (!driver_device)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
       return (-1);
     }
   
-  *i2c_device = ctx->i2c_device;
+  *driver_device = ctx->driver_device;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
 }
 
 int8_t
-ipmi_ssif_ctx_get_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_address)
+ipmi_ssif_ctx_get_driver_address(ipmi_ssif_ctx_t ctx, uint8_t *driver_address)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  if (!ipmb_address)
+  if (!driver_address)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
       return (-1);
     }
 
-  *ipmb_address = ctx->ipmb_address;
+  *driver_address = ctx->driver_address;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -457,22 +457,22 @@ ipmi_ssif_ctx_get_flags(ipmi_ssif_ctx_t ctx, uint32_t *flags)
 }
 
 int8_t
-ipmi_ssif_ctx_set_i2c_device(ipmi_ssif_ctx_t ctx, char* i2c_device)
+ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  if (!i2c_device)
+  if (!driver_device)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
       return (-1);
     }
 
-  if (ctx->i2c_device)
-    free(ctx->i2c_device);
-  ctx->i2c_device = NULL;
+  if (ctx->driver_device)
+    free(ctx->driver_device);
+  ctx->driver_device = NULL;
   
-  if (!(ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)))
+  if (!(ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)))
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
       return (-1);
@@ -483,12 +483,12 @@ ipmi_ssif_ctx_set_i2c_device(ipmi_ssif_ctx_t ctx, char* i2c_device)
 }
 
 int8_t
-ipmi_ssif_ctx_set_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t ipmb_address)
+ipmi_ssif_ctx_set_driver_address(ipmi_ssif_ctx_t ctx, uint8_t driver_address)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  ctx->ipmb_address = ipmb_address;
+  ctx->driver_address = driver_address;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -516,13 +516,13 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
   
-  if (!(ctx->i2c_device && ctx->i2c_fd))
+  if (!(ctx->driver_device && ctx->device_fd))
     {
       ctx->errnum = EINVAL;
       return (-1);
     }
   
-  if ((ctx->i2c_fd = open (ctx->i2c_device, O_RDWR)) < 0)
+  if ((ctx->device_fd = open (ctx->driver_device, O_RDWR)) < 0)
     {
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
@@ -535,7 +535,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
       return (-1);
     }
 
-  if (ioctl (ctx->i2c_fd, IPMI_I2C_SLAVE, ctx->ipmb_address) < 0)
+  if (ioctl (ctx->device_fd, IPMI_I2C_SLAVE, ctx->driver_address) < 0)
     {
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
@@ -589,13 +589,13 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   
   if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
     {
-      count = ipmi_ssif_single_part_write (ctx->i2c_fd, 
+      count = ipmi_ssif_single_part_write (ctx->device_fd, 
 					   buf, 
 					   buf_len);
     }
   else 
     {
-      count = ipmi_ssif_multi_part_write (ctx->i2c_fd, 
+      count = ipmi_ssif_multi_part_write (ctx->device_fd, 
 					  buf, 
 					  buf_len);
     }
@@ -644,7 +644,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   if (buf_len > IPMI_I2C_SMBUS_BLOCK_MAX)
     buf_len = IPMI_I2C_SMBUS_BLOCK_MAX;
   
-  if ((count = _ipmi_ssif_read (ctx->i2c_fd, 
+  if ((count = _ipmi_ssif_read (ctx->device_fd, 
 				buf, 
 				buf_len)) < 0)
     {

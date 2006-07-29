@@ -8,6 +8,11 @@
 
 	* bmc-watchdog/bmc-watchdog.8.in, doc/freeipmi.texi: Updated with
 	new options.
+
+	* libfreeipmi/, bmc-watchdog/: Change locate structure
+	bmc_i2c_dev_name to driver_device and base_address to
+	driver_address globally for consistency.  Adjust kcs, ssif,
+	openipmi apis for consistency.
 	
 2006-07-28  Albert Chu <chu11@llnl.gov>
 

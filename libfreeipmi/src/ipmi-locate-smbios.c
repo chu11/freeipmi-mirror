@@ -378,8 +378,8 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_
   linfo.interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     {
-      strncpy(linfo.bmc_i2c_dev_name, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
-      linfo.bmc_i2c_dev_name[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+      strncpy(linfo.driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
+      linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
 
   ERR_CLEANUP ((bufp = copy_impi_dev_info (type)));
@@ -411,19 +411,19 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_
   if (linfo.interface_type == IPMI_INTERFACE_SSIF)
     {
       linfo.address_space_id  = IPMI_ADDRESS_SPACE_ID_SMBUS;
-      linfo.base_address.bmc_smbus_slave_address = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET];
+      linfo.driver_address = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET];
     }
   else
     {
       if ((address & 1) != 0)
 	{
 	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-	  linfo.base_address.bmc_iobase_address = strobed;
+	  linfo.driver_address = strobed;
 	}
       else
 	{
 	  linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-	  linfo.base_address.bmc_membase_address = strobed;
+	  linfo.driver_address = strobed;
 	}
     }
 

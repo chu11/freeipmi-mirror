@@ -54,12 +54,12 @@ int8_t ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx);
 int32_t ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx);
 char *ipmi_kcs_ctx_strerror(int32_t errnum);
 
-int8_t ipmi_kcs_ctx_get_bmc_iobase_address(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
+int8_t ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
 int8_t ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *reg_space);
 int8_t ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
 int8_t ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags);
 
-int8_t ipmi_kcs_ctx_set_bmc_iobase_address(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
+int8_t ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
 int8_t ipmi_kcs_ctx_set_register_space(ipmi_kcs_ctx_t ctx, uint8_t reg_space);
 int8_t ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
 int8_t ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags);
