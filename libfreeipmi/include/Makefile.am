@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.17 2006-07-26 17:44:05 chu11 Exp $
+## $Id: Makefile.am,v 1.18 2006-07-29 00:43:40 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -32,6 +32,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-lan.h \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-utils.h \
+	freeipmi/ipmi-openipmi-api.h \
 	freeipmi/ipmi-crypt.h \
 	freeipmi/ipmi-rmcpplus.h \
 	freeipmi/ipmi-rmcpplus-interface.h \
@@ -58,6 +59,7 @@ nobase_include_HEADERS = \
 	freeipmi/udm/ipmi-udm.h \
 	freeipmi/udm/ipmi-kcs-api-udm.h \
 	freeipmi/udm/ipmi-lan-interface-udm.h \
+	freeipmi/udm/ipmi-openipmi-api-udm.h \
 	freeipmi/udm/ipmi-ssif-api-udm.h \
 	freeipmi/udm/ipmi-chassis-cmds-udm.h \
 	freeipmi/udm/ipmi-device-global-cmds-udm.h \

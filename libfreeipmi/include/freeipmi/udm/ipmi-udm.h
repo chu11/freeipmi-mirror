@@ -37,7 +37,8 @@ enum ipmi_driver_type
     IPMI_DEVICE_KCS = 2,
     IPMI_DEVICE_SMIC = 3,
     IPMI_DEVICE_BT = 4,
-    IPMI_DEVICE_SSIF = 5
+    IPMI_DEVICE_SSIF = 5,
+    IPMI_DEVICE_OPENIPMI = 6,
   };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 

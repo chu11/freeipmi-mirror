@@ -457,8 +457,7 @@ main (int argc, char **argv)
 
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  if (!(dev = ipmi_open_inband (
-                                        IPMI_DEVICE_KCS, 
+	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS, 
 					args->common.disable_auto_probe, 
                                         args->common.driver_address, 
                                         args->common.register_spacing,

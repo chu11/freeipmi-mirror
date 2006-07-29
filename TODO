@@ -45,6 +45,10 @@ clear command line arguments
 flush non-default cache
 output appropriate error when non-root
 
+misc:
+-----
+openipmi built optionally only?
+
 libfreeipmi:
 ------------
   * how to support xRC4

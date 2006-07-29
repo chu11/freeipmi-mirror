@@ -596,7 +596,7 @@ static int ipmi_acpi_get_spmi_table (uint8_t interface_type,
 				     fiid_obj_t obj_acpi_table_hdr,
 				     fiid_obj_t obj_acpi_spmi_table_descriptor);
 
-#define IPMI_INTERFACE_COUNT 5
+#define IPMI_INTERFACE_COUNT 6
 
 /*******************************************************************************
  *

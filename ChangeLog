@@ -3,6 +3,36 @@
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (_ipmi_lan_dump,
 	_ipmi_lan_dump_rq): Rework request dump output, since calculations
 	won't have a trailer.
+
+	* libfreeipmi/src/ipmi-kcs-api.c: Add forgotten headers.
+
+	* libfreeipmi/src/ipmi-locate-acpi-spmi.c: Up interface count.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Fix
+	ssif memcopying bug.
+
+	* libfreeipmi/srd/udm/ipmi-udm-device.h: Remove locate_info.  Not
+	necessary to store in device.
+	
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband): Adjust for
+	device structure change.
+
+	Add OpenIPMI as a possibly driver to use with FreeIPMI
+
+	* libfreeipmi/src/ipmi-openipmi-api.c,
+	libfreeipmi/include/freeipmi/ipmi-openipmi-api.h,
+	libfreeipmi/srd/udm/ipmi-openipmi-api-udm.c,
+	libfreeipmi/include/freeipmi/udm/ipmi-openipmi-api-udm.h: New
+	files.
+
+	* libfreeipmi/src/Makefile.am, libfreeipmi/src/udm/Makefile.am, 
+	libfreeipmi/include/Makefile.am: Adjust for new files
+	appropriately.
+
+	* libfreeipmi/src/udm/ipmi-udm-device.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_inband,
+	ipmi_close_device, _ipmi_inband_close, _ipmi_inband_free,
+	ipmi_cmd_raw, ipmi_cmd): Add openipmi driver support.
 	
 2006-07-27  Albert Chu <chu11@llnl.gov>
 
