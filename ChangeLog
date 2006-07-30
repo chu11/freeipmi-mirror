@@ -165,7 +165,8 @@
 
 	* bmc-config/bmc-autoconfig: moved from fish/scripts/bmc-autoconfig
 
-	* bmc-config/bmc-autoconfig/bmc-autocnfig.8: man page for bmc-autoconfig
+	* bmc-config/bmc-autoconfig/bmc-autoconfig.8: man page for
+	bmc-autoconfig
 	
 2006-07-26  Albert Chu <chu11@llnl.gov>
 
