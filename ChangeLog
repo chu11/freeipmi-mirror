@@ -1,3 +1,7 @@
+2006-07-30  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Re-architect packages.
+	
 2006-07-29  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-ssif-api.c (_ipmi_ssif_cmd_write,

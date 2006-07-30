@@ -33,23 +33,6 @@ Requires: freeipmi = %{version}-%{release}
 Development package for FreeIPMI.  This package includes the FreeIPMI
 header files and static libraries.
 
-%package fish
-Summary: FreeIPMI Shell
-Group: Applications/System
-Requires: freeipmi = %{version}-%{release}
-Requires: guile
-%description fish
-Fish provides a shell, extension/Plug-in and scripting interface. As a
-shell, the user has access to both in-band and out-of-band access to
-the host BMC through a rich set of IPMI commands.
-
-%package utils
-Summary: FreeIPMI Utilities
-Group: Applications/System
-Requires: freeipmi = %{version}-%{release}
-%description utils
-FreeIPMI utilities.
-
 %package bmc-watchdog
 Summary: FreeIPMI BMC watchdog
 Group: Applications/System
@@ -143,8 +126,41 @@ fi
 %doc %{_datadir}/doc/%{name}/TODO
 %doc %{_datadir}/doc/%{name}/ipmi-over-ts2000.texi
 %doc %{_infodir}/*
+%config(noreplace) %{_sysconfdir}/fish/fish.scm
+%config(noreplace) %{_sysconfdir}/fish/ipmi-sensors-conf.scm
+%doc %{_datadir}/doc/%{name}/COPYING.ipmiping
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
+%doc %{_datadir}/doc/%{name}/COPYING.ipmipower
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
+%doc %{_datadir}/doc/%{name}/COPYING.rmcpping
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %{_libdir}/*so.2*
 /var/lib/*
+%{_sbindir}/fish
+%{_sbindir}/bmc-autoconfig
+%{_sbindir}/bmc-config
+%{_sbindir}/bmc-info
+%{_sbindir}/ipmi-locate
+%{_sbindir}/ipmi-pef
+%{_sbindir}/ipmi-raw
+%{_sbindir}/ipmi-sel
+%{_sbindir}/ipmi-sensors
+%{_sbindir}/ipmiping
+%{_sbindir}/ipmipower
+%{_sbindir}/rmcpping
+%{_datadir}/fish/*
+%{_mandir}/man8/bmc-config.8*
+%{_mandir}/man5/bmc-config.conf.5*
+%{_mandir}/man8/bmc-info.8*
+%{_mandir}/man8/fish.8*
+%{_mandir}/man8/ipmi-locate.8*
+%{_mandir}/man8/ipmi-raw.8*
+%{_mandir}/man8/ipmi-sel.8*
+%{_mandir}/man8/ipmi-sensors.8*
+%{_mandir}/man8/ipmiping.8*
+%{_mandir}/man8/ipmipower.8*
+%{_mandir}/man5/ipmipower.conf.5*
+%{_mandir}/man8/rmcpping.8*
 
 %files devel
 %defattr(-,root,root)
@@ -160,45 +176,6 @@ fi
 %{_includedir}/freeipmi/*.h
 %{_includedir}/freeipmi/udm/*.h
 
-%files fish
-%defattr(-,root,root)
-%config(noreplace) %{_sysconfdir}/fish/fish.scm
-%config(noreplace) %{_sysconfdir}/fish/ipmi-sensors-conf.scm
-%{_sbindir}/fish
-%{_sbindir}/bmc-autoconfig
-%{_sbindir}/bmc-config
-%{_sbindir}/ipmi-pef
-%{_sbindir}/ipmi-sel
-%{_sbindir}/ipmi-sensors
-%{_mandir}/man8/bmc-config.8*
-%{_mandir}/man5/bmc-config.conf.5*
-%{_mandir}/man8/fish.8*
-%{_mandir}/man8/ipmi-sel.8*
-%{_mandir}/man8/ipmi-sensors.8*
-%{_datadir}/fish/*
-
-%files utils
-%defattr(-,root,root)
-%doc %{_datadir}/doc/%{name}/COPYING.ipmiping
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
-%doc %{_datadir}/doc/%{name}/COPYING.ipmipower
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
-%doc %{_datadir}/doc/%{name}/COPYING.rmcpping
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
-%{_sbindir}/bmc-info
-%{_sbindir}/ipmi-locate
-%{_sbindir}/ipmi-raw
-%{_sbindir}/ipmiping
-%{_sbindir}/ipmipower
-%{_sbindir}/rmcpping
-%{_mandir}/man8/bmc-info.8*
-%{_mandir}/man8/ipmi-locate.8*
-%{_mandir}/man8/ipmi-raw.8*
-%{_mandir}/man8/ipmiping.8*
-%{_mandir}/man8/ipmipower.8*
-%{_mandir}/man5/ipmipower.conf.5*
-%{_mandir}/man8/rmcpping.8*
-
 %files bmc-watchdog
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/COPYING.bmc-watchdog
@@ -210,5 +187,7 @@ fi
 %dir /var/log/freeipmi
 
 %changelog
+* Sun Jul 30 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0-1
+- Re-architect for 0.3.X
 * Mon May 15 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0-1
 - Fixed up spec file to pass rpmlint
