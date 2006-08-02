@@ -66,6 +66,7 @@ libfreeipmi:
 
 ipmipower
 ---------
+  * use common error.h/error.c
   * compile options to make workarounds automatic for ipmipower
 
 General:
