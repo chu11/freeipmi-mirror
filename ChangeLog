@@ -1,3 +1,10 @@
+2006-08-01  Albert Chu <chu11@llnl.gov>
+
+	* fish/src/fish-argp.c (fi_argp_parse), fish/src/ipmi-wrapper.c
+	(fi_ipmi_close, fi_ipmi_close, fi_get_ipmi_device),
+	fish/src/scm-procedures.c (ex_ipmi_open): Minor temporary fixes to
+	make ipmi-sensors work again.
+	
 2006-07-30  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Re-architect packages.

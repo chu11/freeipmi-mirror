@@ -17,7 +17,7 @@
 
 #include "common.h"
 
-static ipmi_device_t dev;
+static ipmi_device_t dev = NULL;
 static int dev_opened = false;
 
 uint8_t channel_info_list_initialized = false;
@@ -42,7 +42,7 @@ fi_get_ipmi_device ()
 int 
 fi_ipmi_open (struct arguments *args)
 {
-  uint32_t flags;
+  uint32_t flags = 0;
 
   if (dev_opened)
     return 0;
@@ -81,7 +81,7 @@ fi_ipmi_open (struct arguments *args)
 		   "Warning: You are NOT root; "
 		   "inband access may NOT work\n");
 	}
-
+      
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
 	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
@@ -138,6 +138,7 @@ fi_ipmi_close ()
     return 0;
   
   ipmi_close_device(dev);
+  dev = NULL;
   dev_opened = false;
   
   return 0;

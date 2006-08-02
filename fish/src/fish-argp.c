@@ -1,5 +1,5 @@
 /* 
-   $Id: fish-argp.c,v 1.6 2006-03-07 07:25:59 chu11 Exp $ 
+   $Id: fish-argp.c,v 1.7 2006-08-02 00:10:23 chu11 Exp $ 
    
    fish-argp.c - fish command line argument parser.
    
@@ -119,7 +119,7 @@ fi_argp_parse (int argc, char **argv)
 {
   init_common_cmd_args (&(cmd_args.common));
   cmd_args.script_file = NULL;
-  
+
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
   
   if (script_arg_start_index != 0)
@@ -153,6 +153,10 @@ fi_set_arguments (struct arguments *args)
   else 
     cmd_args.common.driver_device = NULL;
   
+  cmd_args.common.register_spacing = 0;	/* XXX - needs to be fixed in ex_ipmi_open */
+  cmd_args.common.session_timeout = args->common.session_timeout;
+  cmd_args.common.retry_timeout = args->common.retry_timeout;
+
   if (cmd_args.common.host)
     xfree (cmd_args.common.host);
   if (args->common.host)
@@ -177,6 +181,10 @@ fi_set_arguments (struct arguments *args)
   cmd_args.common.authentication_type = args->common.authentication_type;
   cmd_args.common.privilege_level = args->common.privilege_level;
   
+#ifndef NDEBUG
+  cmd_args.common.debug = 0;	/* XXX - needs to be fixed in ex_ipmi_open */
+#endif /* NDEBUG */
+
   if (cmd_args.script_file)
     xfree (cmd_args.script_file);
   if (args->script_file)

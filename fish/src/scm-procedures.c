@@ -1083,6 +1083,8 @@ ex_ipmi_open (SCM scm_arg_list)
   SCM scm_value;
   struct arguments args;
   
+  memset(&args, '\0', sizeof(struct arguments));
+
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (0));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     args.common.disable_auto_probe = 0;
