@@ -97,8 +97,8 @@ struct openipmi_recv
   struct openipmi_msg msg;
 };
 
-#define OPENIPMI_IOC_MAGIC 'i'
-#define IPMICTL_RECEIVE_MSG_TRUNC      _IOWR(OPENIPMI_IOC_MAGIC, 11, struct openipmi_recv)
+#define OPENIPMI_IOC_MAGIC             'i'
+#define OPENIPMICTL_RECEIVE_MSG_TRUNC  _IOWR(OPENIPMI_IOC_MAGIC, 11, struct openipmi_recv)
 #define OPENIPMICTL_RECEIVE_MSG        _IOWR(OPENIPMI_IOC_MAGIC, 12, struct openipmi_recv)
 #define OPENIPMICTL_SEND_COMMAND       _IOR(OPENIPMI_IOC_MAGIC,  13, struct openipmi_req)
 #define OPENIPMICTL_SET_MY_ADDRESS_CMD _IOR(OPENIPMI_IOC_MAGIC,  17, unsigned int)
@@ -411,7 +411,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ioctl(ctx->device_fd, IPMICTL_RECEIVE_MSG_TRUNC, &rs_packet) < 0) 
+  if (ioctl(ctx->device_fd, OPENIPMICTL_RECEIVE_MSG_TRUNC, &rs_packet) < 0) 
     {
       ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);

@@ -4,6 +4,8 @@
 
 	* bmc-config/src/bmc-lan-conf-section.c
 	(bmc_lan_conf_section_get): Fix Vlan ID string.
+
+	* libfreeipmi/src/ipmi-openipmi-api.c: Minor code cleanup.
 	
 2006-08-01  Albert Chu <chu11@llnl.gov>
 
