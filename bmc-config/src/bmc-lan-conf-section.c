@@ -862,7 +862,7 @@ bmc_lan_conf_section_get (struct arguments *args)
 		backup_gateway_mac_address_validate);
 
   add_keyvalue (lan_conf_section,
-		"VLAN_id",
+		"Vlan_id",
 		"Give valid number",
                 0,
 		vlan_id_checkout,

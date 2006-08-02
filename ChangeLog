@@ -1,3 +1,10 @@
+2006-08-02  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-commit.c (bmc_commit_file): Output message on error.
+
+	* bmc-config/src/bmc-lan-conf-section.c
+	(bmc_lan_conf_section_get): Fix Vlan ID string.
+	
 2006-08-01  Albert Chu <chu11@llnl.gov>
 
 	* fish/src/fish-argp.c (fi_argp_parse), fish/src/ipmi-wrapper.c
