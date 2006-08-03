@@ -118,7 +118,7 @@ bmc_checkout_file (struct arguments *arguments,
               continue;
             }
 
-	  if (kv->flags & BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE
+	  if (kv->flags & BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE_FLAG
 	      && section_error)
 	    {
 	      kv = kv->next;
@@ -133,7 +133,12 @@ bmc_checkout_file (struct arguments *arguments,
                 fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
                          sect->section,
                          kv->key);
-	      section_error++;
+
+              /* achu: Only certain checkouts can trigger a section
+               * error.
+               */
+              if (kv->flags & BMC_SECTION_FAILURE_FLAG)
+                section_error++;
             } 
           else 
             {
