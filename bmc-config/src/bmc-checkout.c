@@ -148,7 +148,7 @@ bmc_checkout_file (struct arguments *arguments,
                * case of passwords) they cannot be checked out, so the
                * default is for value to be empty.  We do not want the
                * user accidently commiting this checked out file,
-               * which will clear the password.
+               * which (in this example) clear the password.
                */
               if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
                 key_len = fprintf(fp, "\t## %s", kv->key);
