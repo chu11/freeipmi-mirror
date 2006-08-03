@@ -1,3 +1,23 @@
+2006-08-03  Albert Chu <chu11@llnl.gov>
+
+	Revert section failure flag implementation from 2006-08-02 in
+	favor of a different solution.
+
+        * bmc-config/src/bmc-sections.h: Remove flags
+	BMC_SECTION_FAILURE_FLAG and
+	BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE.
+
+        * bmc-config/src/bmc-user-sections.c (username_checkout): Remove
+        userpassword test for section checkoutability.
+
+        * bmc-config/src/bmc-user-sections.c (get_user_section): Remove
+	BMC_SECTION_FAILURE_FLAG and
+	BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE support.
+
+        * bmc-config/src/bmc-checkout.c (bmc_checkout_file): Remove
+        BMC_SECTION_FAILURE_FLAG and
+        BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE flag support.
+	
 2006-08-02  Albert Chu <chu11@llnl.gov>
 
 	Don't checkout user id sections if a particular user id isn't
