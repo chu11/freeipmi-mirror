@@ -23,6 +23,8 @@
 	* bmc-config/src/bmc-checkout.c (bmc_checkout_file): Support
 	BMC_SECTION_FAILURE_FLAG and
 	BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE flag.
+
+	* freeipmi.spec.in: Fix for new library version.
 	
 2006-08-02  Albert Chu <chu11@llnl.gov>
 

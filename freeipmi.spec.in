@@ -134,7 +134,7 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
 %doc %{_datadir}/doc/%{name}/COPYING.rmcpping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
-%{_libdir}/*so.2*
+%{_libdir}/*so.3*
 /var/lib/*
 %{_sbindir}/fish
 %{_sbindir}/bmc-autoconfig
