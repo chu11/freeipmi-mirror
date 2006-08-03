@@ -1764,12 +1764,6 @@ get_bmc_username (ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
   
-  if (userid == 1)
-    {
-      strcpy ((char *)username, "NULL");
-      return (0);
-    }
-  
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_name_rs)))
     goto cleanup;
 
@@ -1778,12 +1772,18 @@ get_bmc_username (ipmi_device_t dev,
 			      obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-                         "user_name", 
-			 username,
-			 username_len) < 0)
-    goto cleanup;
-  
+  /* achu: after get_user_name call to ensure the command can succeed */
+  if (userid == 1)
+    strcpy ((char *)username, "NULL");
+  else
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+			     "user_name", 
+			     username,
+			     username_len) < 0)
+	goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   if (obj_cmd_rs)

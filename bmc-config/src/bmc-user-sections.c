@@ -28,6 +28,19 @@ username_checkout (const struct arguments *args,
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
 
   userid = atoi (sect->section + strlen ("User"));
+
+  /* achu: Some BMC's don't support user id 1 or other random user id
+     numbers.  So determine if this username is configurable by seeing
+     if we can test a password.  The rest of the section won't be
+     checked out b/c we set the
+     BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE flag in the various
+     sections afterward.
+  */
+  if (check_bmc_user_password (args->dev,
+			       userid,
+			       "foobar") < 0) 
+    return -1;
+
   if (get_bmc_username (args->dev,
 			userid,
 			username,
@@ -216,6 +229,8 @@ password20_checkout (const struct arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
+  uint8_t userid = atoi (sect->section + strlen ("User"));
+
   /* achu: password can't be checked out, but we should make sure IPMI
    * 2.0 exists on the system.
    */
@@ -223,7 +238,7 @@ password20_checkout (const struct arguments *args,
     free (kv->value);
 
   if (check_bmc_user_password20 (args->dev,
-                                 1,
+                                 userid,
                                  "foobar") < 0) 
     return -1;
 
@@ -1529,7 +1544,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Enable_User",
 		"Possible values: Yes/No or blank to not set",
-                BMC_CHECKOUT_KEY_COMMENTED_OUT,
+                BMC_CHECKOUT_KEY_COMMENTED_OUT | BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		enable_user_checkout,
 		enable_user_commit,
 		enable_user_diff,
@@ -1538,7 +1553,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Password",
 		"Give password or blank to clear. MAX 16 chars.",
-                BMC_CHECKOUT_KEY_COMMENTED_OUT,
+                BMC_CHECKOUT_KEY_COMMENTED_OUT | BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		password_checkout,
 		password_commit,
 		password_diff,
@@ -1547,7 +1562,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Password20",
 		"Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
-                BMC_CHECKOUT_KEY_COMMENTED_OUT,
+                BMC_CHECKOUT_KEY_COMMENTED_OUT | BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		password20_checkout,
 		password20_commit,
 		password20_diff,
@@ -1556,7 +1571,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Enable_IPMI_Msgs",
 		"Possible values: Yes/No",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		lan_enable_ipmi_msgs_checkout,
 		lan_enable_ipmi_msgs_commit,
 		lan_enable_ipmi_msgs_diff,
@@ -1565,7 +1580,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Enable_Link_Auth",
 		"Possible values: Yes/No",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		lan_enable_link_auth_checkout,
 		lan_enable_link_auth_commit,
 		lan_enable_link_auth_diff,
@@ -1574,7 +1589,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Enable_Restricted_to_Callback",
 		"Possible values: Yes/No",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		lan_enable_restricted_to_callback_checkout,
 		lan_enable_restricted_to_callback_commit,
 		lan_enable_restricted_to_callback_diff,
@@ -1584,7 +1599,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Enable_Restrict_to_Callback",
 		"Possible values: Yes/No",
-                BMC_DO_NOT_CHECKOUT,
+                BMC_DO_NOT_CHECKOUT | BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		lan_enable_restricted_to_callback_checkout,
 		lan_enable_restricted_to_callback_commit,
 		lan_enable_restricted_to_callback_diff,
@@ -1593,7 +1608,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Privilege_Limit",
 		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		lan_privilege_limit_checkout,
 		lan_privilege_limit_commit,
 		lan_privilege_limit_diff,
@@ -1602,7 +1617,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"LAN_Session_Limit",
 		"Possible values: 0-255, 0 is unlimited",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		lan_session_limit_checkout,
 		lan_session_limit_commit,
 		lan_session_limit_diff,
@@ -1611,7 +1626,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"SOL_Payload_Access",
 		"Possible values: Yes/No",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		sol_payload_access_checkout,
 		sol_payload_access_commit,
 		sol_payload_access_diff,
@@ -1620,7 +1635,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Enable_IPMI_Msgs",
 		"Possible values: Yes/No",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		serial_enable_ipmi_msgs_checkout,
 		serial_enable_ipmi_msgs_commit,
 		serial_enable_ipmi_msgs_diff,
@@ -1629,7 +1644,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Enable_Link_Auth",
 		"Possible values: Yes/No",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		serial_enable_link_auth_checkout,
 		serial_enable_link_auth_commit,
 		serial_enable_link_auth_diff,
@@ -1638,7 +1653,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Enable_Restricted_to_Callback",
 		"Possible values: Yes/No",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		serial_enable_restricted_to_callback_checkout,
 		serial_enable_restricted_to_callback_commit,
 		serial_enable_restricted_to_callback_diff,
@@ -1648,7 +1663,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Enable_Restrict_to_Callback",
 		"Possible values: Yes/No",
-                BMC_DO_NOT_CHECKOUT,
+                BMC_DO_NOT_CHECKOUT | BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		serial_enable_restricted_to_callback_checkout,
 		serial_enable_restricted_to_callback_commit,
 		serial_enable_restricted_to_callback_diff,
@@ -1657,7 +1672,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Privilege_Limit",
 		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		serial_privilege_limit_checkout,
 		serial_privilege_limit_commit,
 		serial_privilege_limit_diff,
@@ -1666,7 +1681,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Serial_Session_Limit",
 		"Possible values: 0-255, 0 is unlimited",
-                0,
+                BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE,
 		serial_session_limit_checkout,
 		serial_session_limit_commit,
 		serial_session_limit_diff,

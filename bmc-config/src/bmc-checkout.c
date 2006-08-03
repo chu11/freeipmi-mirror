@@ -96,6 +96,8 @@ bmc_checkout_file (struct arguments *arguments,
   while (sect) 
     {
       struct keyvalue *kv = sect->keyvalues;
+      int section_error = 0;
+
       fprintf (fp, "Section %s\n", sect->section);
 
       while (kv) 
@@ -115,6 +117,13 @@ bmc_checkout_file (struct arguments *arguments,
               kv = kv->next;
               continue;
             }
+
+	  if (kv->flags & BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE
+	      && section_error)
+	    {
+	      kv = kv->next;
+	      continue;
+	    }
               
           ret = ((this_ret = kv->checkout (arguments, sect, kv)) || ret);
           
@@ -124,6 +133,7 @@ bmc_checkout_file (struct arguments *arguments,
                 fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
                          sect->section,
                          kv->key);
+	      section_error++;
             } 
           else 
             {

@@ -1,5 +1,28 @@
 2006-08-02  Albert Chu <chu11@llnl.gov>
 
+	Don't checkout user id sections if a particular user id isn't
+	supported.
+
+	* bmc-config/src/bmc-config-api.c (get_bmc_username): Copy "NULL"
+	after the IPMI call to ensure the username is readable.
+
+	* bmc-config/src/bmc-sections.h: New flag
+	BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE.
+
+	* bmc-config/src/bmc-user-sections.c (username_checkout): Add
+	userpassword test for section checkoutability.
+
+	* bmc-config/src/bmc-user-sections.c (password20_checkout): Use
+	userid in check password call.
+
+	* bmc-config/src/bmc-user-sections.c (get_user_section): Support
+	BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE.
+	
+	* bmc-config/src/bmc-checkout.c (bmc_checkout_file): Support
+	BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE flag.
+	
+2006-08-02  Albert Chu <chu11@llnl.gov>
+
 	* bmc-config/src/bmc-commit.c (bmc_commit_file): Output message on error.
 
 	* bmc-config/src/bmc-lan-conf-section.c
