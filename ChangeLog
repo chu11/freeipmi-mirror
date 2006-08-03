@@ -17,6 +17,12 @@
         * bmc-config/src/bmc-checkout.c (bmc_checkout_file): Remove
         BMC_SECTION_FAILURE_FLAG and
         BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE flag support.
+
+	Misc
+
+	* freeipmi.spec.in: Update for librrary version and autoconfig.
+
+	* bmc-config/src/bmc-sections.h: Clean up junk.
 	
 2006-08-02  Albert Chu <chu11@llnl.gov>
 
@@ -44,7 +50,11 @@
 	BMC_SECTION_FAILURE_FLAG and
 	BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE flag.
 
-	* freeipmi.spec.in: Fix for new library version.
+	Misc
+
+	* freeipmi.spec.in: Fix for new library version and bmc-autoconfig.
+
+	* bmc-config/src/bmc-sections.h: Remove junk code.
 	
 2006-08-02  Albert Chu <chu11@llnl.gov>
 
