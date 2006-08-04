@@ -1224,11 +1224,17 @@ ipmi_get_threshold_message_list (uint8_t sensor_state)
   char *message_list[16];
   char buf[1024];
   int indx = 0;
-  uint16_t offset;
+  int16_t offset;
   uint16_t bit; 
   int i;
   
-  for (offset = 0; offset < 16; offset++)
+  /* achu: multiple threshold flags can be crossed but we only want to
+   * output one message at the max.  Luckily for us (and due to smarts
+   * by the IPMI specification authors) if we go from high bits to low
+   * bits, we will read the flags in the correct order for output.
+   */
+
+  for (offset = 5; offset >= 0; offset--)
     {
       bit = pow (2, offset);
       if (sensor_state & bit)
@@ -1237,13 +1243,15 @@ ipmi_get_threshold_message_list (uint8_t sensor_state)
                                           buf,
                                           1024) < 0)
             continue;
-
+	  
 	  message_list[indx] = strdup(buf);
 	  if (!message_list[indx])
 	    goto cleanup;
 	  else
-	    indx++;
-	  
+	    {
+	      indx++;
+	      break;
+	    }
 	}
     }
   

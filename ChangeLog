@@ -1,3 +1,8 @@
+2006-08-04  Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sensor-api.c (ipmi_get_threshold_message_list):
+	Redo due to interpretation of get sensor reading command.
+	
 2006-08-03  Albert Chu <chu11@llnl.gov>
 
 	Revert section failure flag implementation from 2006-08-02 in
