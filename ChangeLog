@@ -3,6 +3,10 @@
 	* common/src/ipmi-sensor-api.c (ipmi_get_threshold_message_list):
 	Redo due to interpretation of get sensor reading command.
 	
+	* bmc-config/src/bmc-commit.c (bmc_commit_file): Continue
+	committing fields in the same section even if a previous one
+	fails.
+
 2006-08-03  Albert Chu <chu11@llnl.gov>
 
 	Revert section failure flag implementation from 2006-08-02 in
