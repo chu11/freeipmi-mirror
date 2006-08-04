@@ -82,8 +82,6 @@ bmc_commit_file (struct arguments *arguments,
                 }
               kv = kv->next;
             }
-          if (ret != 0)
-            break;
           sect = sect->next;
         }
     }

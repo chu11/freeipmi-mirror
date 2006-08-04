@@ -18,6 +18,11 @@
         BMC_SECTION_FAILURE_FLAG and
         BMC_NO_CHECKOUT_ON_EARLIER_SECTION_FAILURE flag support.
 
+	Alter bmc-config commit behavior
+
+	* bmc-config/src/bmc-commit.c (bmc_commit_file): Continue
+	committing fields even if a previous one fails.
+
 	Misc
 
 	* freeipmi.spec.in: Update for librrary version and autoconfig.
