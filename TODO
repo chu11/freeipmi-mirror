@@ -1,6 +1,6 @@
 0.3.0
 =====
-A) ipmi-sensors: scheme to C conversion
+X A) ipmi-sensors: scheme to C conversion (done by bala)
 B) bmc-autoconfig: fixed for new bmc-config
 C) ipmi-sel: proper trigger output fix
 D) Remove Fish
