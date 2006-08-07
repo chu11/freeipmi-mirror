@@ -69,7 +69,7 @@ and
 .B sensors
 programs are properly installed at your site, the command
 .IP
-.B info fish
+.B info ipmi-sensors
 .PP
 should give you access to the complete manual.
 .SH "AUTHORS"
