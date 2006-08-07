@@ -35,12 +35,6 @@ Redo packages once re-org is complete
   * freeipmi-bmcwatchdog
   * freeipmi-ipmiconsole
 
-ipmi-sensors to check/do
-------------------------
-output based on event-type, not record type (i.e. discrete sensor can be listed in a full record, need not be stored in a compact record)
-- needed in sensors_display_verbose_full_record and sensors_display_very_verbose_full_record
-move libsensors out of common/src
-
 libfreeipmi:
 ------------
   * how to support xRC4
