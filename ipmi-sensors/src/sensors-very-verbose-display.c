@@ -169,14 +169,10 @@ sensors_display_very_verbose_compact_record (int record_id,
   printf ("Positive Hysteresis: %d\n", record->positive_going_threshold_hysteresis);
   if (sensor_reading == NULL)
     {
-      printf ("Sensor Reading: %s\n", "NA");
       printf ("Sensor Status: [%s]\n\n", "Unknown");
     }
   else 
     {
-      printf ("Sensor Reading: %f %s\n", 
-	      sensor_reading->current_reading, 
-	      ipmi_sensor_units[record->sensor_unit]);
       if (sensor_reading->event_message_list == NULL)
 	{
 	  printf ("Sensor Status: [%s]\n\n", "OK");

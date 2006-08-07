@@ -43,13 +43,13 @@ sensors_display_simple_full_record (int record_id,
 	}
       else 
 	{
-	  printf ("%f %s ", 
+	  printf ("%.2f %s ", 
 		  round_double2 (sensor_reading->current_reading), 
 		  ipmi_sensor_units_abbreviated[record->sensor_unit]);
 	}
       if (record->readable_threshold_lower_critical_threshold)
 	{
-	  printf ("(%f/", round_double2 (record->lower_critical_threshold));
+	  printf ("(%.2f/", round_double2 (record->lower_critical_threshold));
 	}
       else 
 	{
@@ -57,7 +57,7 @@ sensors_display_simple_full_record (int record_id,
 	}
       if (record->readable_threshold_upper_critical_threshold)
 	{
-	  printf ("%f): ", round_double2 (record->upper_critical_threshold));
+	  printf ("%.2f): ", round_double2 (record->upper_critical_threshold));
 	}
       else 
 	{

@@ -151,14 +151,10 @@ sensors_display_verbose_compact_record (int record_id,
   printf ("Event/Reading Type Code: %Xh\n", record->event_reading_type_code);
   if (sensor_reading == NULL)
     {
-      printf ("Sensor Reading: %s\n", "NA");
       printf ("Sensor Status: [%s]\n\n", "Unknown");
     }
   else 
     {
-      printf ("Sensor Reading: %f %s\n", 
-	      sensor_reading->current_reading, 
-	      ipmi_sensor_units[record->sensor_unit]);
       if (sensor_reading->event_message_list == NULL)
 	{
 	  printf ("Sensor Status: [%s]\n\n", "OK");

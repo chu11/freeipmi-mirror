@@ -1,5 +1,18 @@
 2006-08-08  A Balamurugan  <bala@zresearch.com>
 
+	* ipmi-sensors/src/sensors-simple-display.c
+	(sensors_display_simple_full_record): displays 2 decimals for
+	double values.
+
+	* ipmi-sensors/src/sensors-verbose-display.c
+	(sensors_display_verbose_compact_record): fixed invalid value
+	display bug.
+
+	* ipmi-sensors/src/sensors-very-verbose-display.c
+	(sensors_display_very_verbose_compact_record): like wise.
+
+2006-08-08  A Balamurugan  <bala@zresearch.com>
+
 	* ipmi-sensors/src/ipmi-sensors-utils.c (round_double2): fixed a
 	bug.
 
