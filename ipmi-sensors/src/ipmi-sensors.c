@@ -220,13 +220,14 @@ display_group_sensors (ipmi_device_t dev,
   for (i = 0; i < sdr_record_count; i++)
     {
       sdr_record = sdr_record_list + i;
-      memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
-      sensor_reading = (get_sensor_reading (dev, 
-					    sdr_record, 
-					    &_sensor_reading)) ? NULL : &_sensor_reading;
       
       if (sensors_group_cmp (sdr_record, group_name) == 0)
 	{
+          memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
+          sensor_reading = (get_sensor_reading (dev, 
+                                                sdr_record, 
+                                                &_sensor_reading)) ? NULL : &_sensor_reading;
+
 	  switch (verbose)
 	    {
 	    case 0:
@@ -261,13 +262,14 @@ display_sensor_list (ipmi_device_t dev,
   for (i = 0; i < sdr_record_count; i++)
     {
       sdr_record = sdr_record_list + i;
-      memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
-      sensor_reading = (get_sensor_reading (dev, 
-					    sdr_record, 
-					    &_sensor_reading)) ? NULL : &_sensor_reading;
       
       if (sensors_list_cmp (sdr_record, sensors_list, sensors_list_length) == 0)
 	{
+          memset (&_sensor_reading, 0, sizeof (sensor_reading_t));
+          sensor_reading = (get_sensor_reading (dev, 
+                                                sdr_record, 
+                                                &_sensor_reading)) ? NULL : &_sensor_reading;
+
 	  switch (verbose)
 	    {
 	    case 0:
