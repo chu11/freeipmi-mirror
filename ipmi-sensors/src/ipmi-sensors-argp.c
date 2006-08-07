@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.1 2006-08-07 13:58:00 balamurugan Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.2 2006-08-07 20:56:33 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -122,7 +122,7 @@ validate_sensor_list_string (char *sensor_list_string)
   dlist = strdupa (sensor_list_string);
   while (sensor_list_string)
     {
-      int value = 0;
+      unsigned int value = 0;
       char *token = NULL;
       char *str = NULL;
       
@@ -133,7 +133,7 @@ validate_sensor_list_string (char *sensor_list_string)
       free (token);
       
       if (str2uint (str, 10, &value))
-	return (-1);
+        return (-1);
     }
   
   return 0;
@@ -165,7 +165,7 @@ get_sensor_list_count (char *sensor_list_string)
 }
 
 static int 
-get_sensor_list (char *sensor_list_string, int *records, int count)
+get_sensor_list (char *sensor_list_string, unsigned int *records, int count)
 {
   int i = 0;
   char *dlist = NULL;
@@ -177,7 +177,7 @@ get_sensor_list (char *sensor_list_string, int *records, int count)
   dlist = strdupa (sensor_list_string);
   for (i = 0; i < count; i++)
     {
-      int value = 0;
+      unsigned int value = 0;
       char *str = NULL;
       
       str = get_token (&dlist);

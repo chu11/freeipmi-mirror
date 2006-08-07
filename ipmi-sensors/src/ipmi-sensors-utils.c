@@ -99,13 +99,13 @@ str2int (char *str, int base, int *i)
 }
 
 int 
-str2uint (char *str, int base, int *ui)
+str2uint (char *str, int base, unsigned int *ui)
 {
   unsigned long ul;
   
   if (!str2ulong (str, base, &ul))
     {
-      if (ul >= INT_MIN && ul <= UINT_MAX)
+      if (ul <= UINT_MAX)
 	{
 	  *ui = ul;
 	  return 0;
@@ -164,8 +164,8 @@ sensors_group_cmp (sdr_record_t *sdr_record, char *group_name)
 
 int 
 sensors_list_cmp (sdr_record_t *sdr_record, 
-		  int *sensors_list, 
-		  int sensors_list_length)
+		  unsigned int *sensors_list, 
+		  unsigned int sensors_list_length)
 {
   int i;
   

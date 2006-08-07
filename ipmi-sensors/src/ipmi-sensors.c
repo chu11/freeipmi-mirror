@@ -247,8 +247,8 @@ display_group_sensors (ipmi_device_t dev,
 
 int 
 display_sensor_list (ipmi_device_t dev, 
-		     int *sensors_list, 
-		     int sensors_list_length, 
+		     unsigned int *sensors_list, 
+		     unsigned int sensors_list_length, 
 		     int verbose)
 {
   int i;

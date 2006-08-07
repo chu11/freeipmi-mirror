@@ -22,12 +22,12 @@
 int str2long (char *str, int base, long *l);
 int str2ulong (char *str, int base, long *ul);
 int str2int (char *str, int base, int *i);
-int str2uint (char *str, int base, int *ui);
+int str2uint (char *str, int base, unsigned int *ui);
 void str_replace_chr (char *str, char chr, char with);
 int sensors_group_cmp (sdr_record_t *sdr_record, char *group_name);
 int sensors_list_cmp (sdr_record_t *sdr_record, 
-		      int *sensors_list, 
-		      int sensors_list_length);
+		      unsigned int *sensors_list, 
+		      unsigned int sensors_list_length);
 double round_double2 (double d);
 
 #endif

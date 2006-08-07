@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.h,v 1.1 2006-08-07 13:58:00 balamurugan Exp $ 
+   $Id: ipmi-sensors-argp.h,v 1.2 2006-08-07 20:56:33 chu11 Exp $ 
    
    ipmi-sensors-argp.h - IPMI Sensors utility.
    
@@ -44,8 +44,8 @@ struct arguments
   int group_wanted;
   char *group;
   int sensors_list_wanted;
-  int *sensors_list;
-  int sensors_list_length;
+  unsigned int *sensors_list;
+  unsigned int sensors_list_length;
 };
 
 void ipmi_sensors_argp_parse (int argc, char **argv);
