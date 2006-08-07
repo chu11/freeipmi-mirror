@@ -23,6 +23,9 @@
 	* configure.ac, Makefile.am, freeipmi.spec.in, fish/: Remove fish
 	and all fish related code.
 
+	* bmc-config/src/bmc-user-sections.c: Replace "LAN" with "Lan" for
+	consistency and backwards compatability.
+
 2006-08-08  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-sensors/src/sensors-simple-display.c

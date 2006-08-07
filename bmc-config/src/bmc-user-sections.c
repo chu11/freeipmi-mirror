@@ -1556,7 +1556,7 @@ get_user_section (int num, struct arguments *args)
 		password20_validate);
 
   add_keyvalue (this_section,
-		"LAN_Enable_IPMI_Msgs",
+		"Lan_Enable_IPMI_Msgs",
 		"Possible values: Yes/No",
                 0,
 		lan_enable_ipmi_msgs_checkout,
@@ -1565,7 +1565,7 @@ get_user_section (int num, struct arguments *args)
 		lan_enable_ipmi_msgs_validate);
 
   add_keyvalue (this_section,
-		"LAN_Enable_Link_Auth",
+		"Lan_Enable_Link_Auth",
 		"Possible values: Yes/No",
                 0,
 		lan_enable_link_auth_checkout,
@@ -1574,7 +1574,7 @@ get_user_section (int num, struct arguments *args)
 		lan_enable_link_auth_validate);
 
   add_keyvalue (this_section,
-		"LAN_Enable_Restricted_to_Callback",
+		"Lan_Enable_Restricted_to_Callback",
 		"Possible values: Yes/No",
                 0,
 		lan_enable_restricted_to_callback_checkout,
@@ -1584,7 +1584,7 @@ get_user_section (int num, struct arguments *args)
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
   add_keyvalue (this_section,
-		"LAN_Enable_Restrict_to_Callback",
+		"Lan_Enable_Restrict_to_Callback",
 		"Possible values: Yes/No",
                 BMC_DO_NOT_CHECKOUT,
 		lan_enable_restricted_to_callback_checkout,
@@ -1593,7 +1593,7 @@ get_user_section (int num, struct arguments *args)
 		lan_enable_restricted_to_callback_validate);
 
   add_keyvalue (this_section,
-		"LAN_Privilege_Limit",
+		"Lan_Privilege_Limit",
 		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                 0,
 		lan_privilege_limit_checkout,
@@ -1602,7 +1602,7 @@ get_user_section (int num, struct arguments *args)
 		lan_privilege_limit_validate);
 
   add_keyvalue (this_section,
-		"LAN_Session_Limit",
+		"Lan_Session_Limit",
 		"Possible values: 0-255, 0 is unlimited",
                 0,
 		lan_session_limit_checkout,
