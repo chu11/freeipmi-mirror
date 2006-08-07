@@ -1,5 +1,13 @@
 2006-08-08  A Balamurugan  <bala@zresearch.com>
 
+	* ipmi-sensors/src/ipmi-sensors-utils.c (round_double2): fixed a
+	bug.
+
+	* ipmi-sensors/src/sensors-simple-display.c: included
+	ipmi-sensors-utils.h.
+
+2006-08-08  A Balamurugan  <bala@zresearch.com>
+
 	* ipmi-sensors/src/ipmi-sdr-api.c (load_sdr_cache): fixed improper
 	count calculation.
 

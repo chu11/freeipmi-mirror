@@ -185,7 +185,7 @@ round_double2 (double d)
   
   r = (d - (long) d) * 100.0;
   
-  if (((r - (long) r) * 100.0) > 0.5)
+  if ((r - (long) r) > 0.5)
     return ((long) d + (((long) r + 1) / 100.0));
   
   return ((long) d + ((long) r / 100.0));

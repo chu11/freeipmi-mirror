@@ -22,6 +22,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "freeipmi/ipmi-sensor-units-spec.h"
 #include "freeipmi/ipmi-sdr-record-types.h"
 
+#include "ipmi-sensors-utils.h"
+
 static int 
 sensors_display_simple_full_record (int record_id, 
 				    sdr_full_record_t *record, 
