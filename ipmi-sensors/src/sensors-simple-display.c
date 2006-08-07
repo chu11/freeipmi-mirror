@@ -126,42 +126,6 @@ sensors_display_simple_compact_record (uint16_t record_id,
   return 0;
 }
 
-static int 
-sensors_display_simple_event_only_record (uint16_t record_id, 
-					  sdr_event_only_record_t *record, 
-					  sensor_reading_t *sensor_reading)
-{
-  printf ("%d: %s (%s):", 
-	  record_id, 
-	  record->sensor_name, 
-	  ipmi_get_sensor_group (record->sensor_type));
-  if (sensor_reading == NULL)
-    {
-      printf ("[%s]\n", "Unknown");
-    }
-  else 
-    {
-      if (sensor_reading->event_message_list == NULL)
-	{
-	  printf ("[%s]\n", "OK");
-	}
-      else 
-	{
-	  int i;
-	  
-	  for (i = 0; 
-	       sensor_reading->event_message_list[i]; 
-	       i++)
-	    {
-	      printf ("[%s]", sensor_reading->event_message_list[i]);
-	    }
-	  printf ("\n");
-	}
-    }
-  
-  return 0;
-}
-
 int 
 sensors_display_simple (sdr_record_t *sdr_record, sensor_reading_t *sensor_reading)
 {
