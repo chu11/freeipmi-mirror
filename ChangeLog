@@ -1,3 +1,16 @@
+2006-08-08  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-sensors/src/ipmi-sdr-api.c (load_sdr_cache): fixed improper
+	count calculation.
+
+	* ipmi-sensors/src/ipmi-sensors-utils.[ch] (round_double2): new
+	function.
+
+	* ipmi-sensors/src/sensors-simple-display.c
+	(sensors_display_simple_full_record,
+	sensors_display_simple_compact_record): numbers are rounded to 2
+	decimal places.
+
 2006-08-07  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-sensors/Makefile.am, ipmi-sensors/ipmi-sensors.8.pre.in,

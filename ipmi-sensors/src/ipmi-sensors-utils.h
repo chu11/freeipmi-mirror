@@ -28,6 +28,6 @@ int sensors_group_cmp (sdr_record_t *sdr_record, char *group_name);
 int sensors_list_cmp (sdr_record_t *sdr_record, 
 		      int *sensors_list, 
 		      int sensors_list_length);
-
+double round_double2 (double d);
 
 #endif

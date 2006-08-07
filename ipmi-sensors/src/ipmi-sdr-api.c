@@ -412,7 +412,7 @@ load_sdr_cache (FILE *fp, sdr_repository_info_t *sdr_info,
 	return (-1);
       }
     
-    *count = (eof_position - current_position) % sizeof (sdr_record_t);
+    *count = (eof_position - current_position) / sizeof (sdr_record_t);
     
     if (fseek (fp, current_position, SEEK_SET))
       {

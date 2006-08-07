@@ -27,7 +27,7 @@ sensors_display_simple_full_record (int record_id,
 				    sdr_full_record_t *record, 
 				    sensor_reading_t *sensor_reading)
 {
-  printf ("%d: %s (%s):", 
+  printf ("%d: %s (%s): ", 
 	  record_id, 
 	  record->sensor_name, 
 	  ipmi_get_sensor_group (record->sensor_type));
@@ -37,17 +37,17 @@ sensors_display_simple_full_record (int record_id,
     case IPMI_SENSOR_CLASS_THRESHOLD:
       if (sensor_reading == NULL)
 	{
-	  printf (" NA");
+	  printf ("NA");
 	}
       else 
 	{
-	  printf ("%f %s", 
-		  sensor_reading->current_reading, 
+	  printf ("%f %s ", 
+		  round_double2 (sensor_reading->current_reading), 
 		  ipmi_sensor_units_abbreviated[record->sensor_unit]);
 	}
       if (record->readable_threshold_lower_critical_threshold)
 	{
-	  printf ("(%f/", record->lower_critical_threshold);
+	  printf ("(%f/", round_double2 (record->lower_critical_threshold));
 	}
       else 
 	{
@@ -55,11 +55,11 @@ sensors_display_simple_full_record (int record_id,
 	}
       if (record->readable_threshold_upper_critical_threshold)
 	{
-	  printf ("%f):", record->upper_critical_threshold);
+	  printf ("%f): ", round_double2 (record->upper_critical_threshold));
 	}
       else 
 	{
-	  printf ("NA):");
+	  printf ("NA): ");
 	}
     default:
       if (sensor_reading == NULL)
@@ -95,7 +95,7 @@ sensors_display_simple_compact_record (uint16_t record_id,
 				       sdr_compact_record_t *record, 
 				       sensor_reading_t *sensor_reading)
 {
-  printf ("%d: %s (%s):", 
+  printf ("%d: %s (%s): ", 
 	  record_id, 
 	  record->sensor_name, 
 	  ipmi_get_sensor_group (record->sensor_type));
