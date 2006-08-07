@@ -126,8 +126,6 @@ fi
 %doc %{_datadir}/doc/%{name}/TODO
 %doc %{_datadir}/doc/%{name}/ipmi-over-ts2000.texi
 %doc %{_infodir}/*
-%config(noreplace) %{_sysconfdir}/fish/fish.scm
-%config(noreplace) %{_sysconfdir}/fish/ipmi-sensors-conf.scm
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmipower
@@ -136,7 +134,6 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %{_libdir}/*so.3*
 /var/lib/*
-%{_sbindir}/fish
 %{_sbindir}/bmc-autoconfig
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
@@ -148,12 +145,10 @@ fi
 %{_sbindir}/ipmiping
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
-%{_datadir}/fish/*
 %{_mandir}/man8/bmc-autoconfig.8*
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man8/bmc-info.8*
-%{_mandir}/man8/fish.8*
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*

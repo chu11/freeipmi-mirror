@@ -1,14 +1,14 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.64 2006-08-07 13:58:00 balamurugan Exp $])
+AC_REVISION([$Id: configure.ac,v 1.65 2006-08-07 21:14:13 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
 AC_PREREQ([2.57])
 
 dnl Locate the sources.
-AC_CONFIG_SRCDIR([fish/fish.scm])
+AC_CONFIG_SRCDIR([ChangeLog.0])
 
 dnl create a config.h file
 AM_CONFIG_HEADER([config.h])
@@ -17,11 +17,6 @@ dnl define output files
 AC_CONFIG_FILES([
         Makefile doc/Makefile doc/examples/Makefile 
 	common/Makefile common/doc/Makefile common/src/Makefile
-	fish/Makefile fish/fish.8.pre
-	fish/ipmi-sensors.8.pre 
-	fish/src/Makefile fish/extensions/Makefile fish/scripts/Makefile
-	fish/scripts/sensors/Makefile fish/scripts/sensors/ipmi-sensors
-	fish/scripts/pef/Makefile fish/scripts/pef/ipmi-pef 
         libfreeipmi/Makefile libfreeipmi/include/Makefile 
 	libfreeipmi/src/Makefile libfreeipmi/src/udm/Makefile
         bmc-watchdog/Makefile bmc-watchdog/src/Makefile
@@ -103,68 +98,6 @@ else
    WITH_DEBUG=0
 fi
 AC_SUBST(WITH_DEBUG)
-
-dnl See if they want to build fish.
-AC_ARG_ENABLE([fish],
-              AC_HELP_STRING([--disable-fish], [don't build the fish IPMI shell]))
-AM_CONDITIONAL([FISH], [test x"${enable_fish}" != "xno"])
-if test "x${enable_fish}" = "x" ; then
-   enable_fish=yes
-fi
-
-lesserthan()
-{
-   ver1=$1
-   ver2=$2
- 
-   dig1_1=`echo $ver1 | cut -f1 -d'.'`
-   dig2_1=`echo $ver1 | cut -f2 -d'.'`
-   dig3_1=`echo $ver1 | cut -f3 -d'.'`
-
-   dig1_2=`echo $ver2 | cut -f1 -d'.'`
-   dig2_2=`echo $ver2 | cut -f2 -d'.'`
-   dig3_2=`echo $ver2 | cut -f3 -d'.'`
-
-   num1=`expr \( $dig1_1 \* 10000 \) + \( $dig2_1 \* 100 \) + $dig3_1`
-   num2=`expr \( $dig1_2 \* 10000 \) + \( $dig2_2 \* 100 \) + $dig3_2`
-
-   test $num1 -lt $num2
-}
-
-if test "x${enable_fish}" = "xyes" ; then
-   AC_CHECK_LIB([guile], [scm_boot_guile], , AC_MSG_ERROR([GNU Guile development library is not installed on your system. Fish based utilities are dependent on it.]))
-   GUILE_PROGS
-   GUILE_FLAGS
-
-   # Check for minimum required Guile version:
-   GUILE_REQUIRED_MINIMUM_VERSION="1.6.4"
-   GUILE_VERSION=`guile-config --version 2>&1 | cut -f5 -d' '`
-   if lesserthan $GUILE_VERSION $GUILE_REQUIRED_MINIMUM_VERSION ; then
-      AC_MSG_ERROR([Installed version of GNU Guile is too old. You need "$GUILE_REQUIRED_MINIMUM_VERSION" or higher])
-   fi
-
-   NOREADLINE_LIBS=${LIBS}
-   LIBS=${READLINE_LIBS}
-   AC_SEARCH_LIBS([tgetent],[ncurses termcap curses])
-   AC_CHECK_LIB([readline],[readline])
-   have_ding=no
-   AC_CHECK_FUNCS([ding rl_ding],[have_ding=yes])
-   have_completion_matches=no
-   AC_CHECK_FUNCS([completion_matches rl_completion_matches],[have_completion_matches=yes])
-   if test "x${have_ding}" = "xno" -o "x${have_completion_matches}" = "xno" ; then
-      AC_MSG_ERROR([fish build requested but no readline functions found])
-   fi
-   READLINE_LIBS=${LIBS}
-   AC_SUBST([READLINE_LIBS])
-   LIBS=${NOREADLINE_LIBS}
-else
-   GUILE_CFLAGS=
-   AC_SUBST([GUILE_CFLAGS])
-   GUILE_LDFLAGS=
-   AC_SUBST([GUILE_LDFLAGS])
-   READLINE_LIBS=
-   AC_SUBST([READLINE_LIBS])
-fi
 
 dnl Checks for libraries.
 AC_CHECK_LIB([gcrypt], [gcry_md_open], [have_gcrypt=yes], [have_gcrypt=no])

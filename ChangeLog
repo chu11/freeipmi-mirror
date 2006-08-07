@@ -20,6 +20,9 @@
 	display_group_sensors): Don't get sensor reading unless it's
 	required by output choice.
 
+	* configure.ac, Makefile.am, freeipmi.spec.in, fish/: Remove fish
+	and all fish related code.
+
 2006-08-08  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-sensors/src/sensors-simple-display.c

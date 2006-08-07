@@ -1,7 +1,0 @@
-#! @prefix@/sbin/fish -s
-!#
-(let ((cmd-args (pef-argp (fi-command-line))))
-  (if (list? cmd-args)
-      (pef-main cmd-args)))
-(fi-exit pef-exit-status)
-
