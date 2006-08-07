@@ -1,0 +1,74 @@
+.TH IPMI-SENSORS 8 "@ISODATE@" "IPMI Sensors version @PACKAGE_VERSION@" "System Commands"
+.SH NAME
+ipmi-sensors \- manual page for sensors.  IPMI Sensors version @PACKAGE_VERSION@
+.SH DESCRIPTION
+IPMI Sensors displays current readings of sensors chips through BMC
+.SH OPTIONS
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel.man>
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Verbose sensor output
+.TP
+\fB\-vv\fR
+Very verbose sensor output
+.TP
+\fB\-i\fR, \fB\-\-sdr\-info\fR
+Show SDR Info
+.TP
+\fB\-f\fR, \fB\-\-flush\-cache\fR
+Flush sensor cache
+.TP
+\fB\-L\fR, \fB\-\-list\-groups\fR
+List sensor groups
+.TP
+\fB\-g\fR GROUP-NAME, \fB\-\-group\fR=\fIGROUP\-NAME\fR
+List sensors from group
+.TP
+\fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
+List given sensors
+.SH "EXAMPLES"
+.B # ipmi-sensors 
+.PP
+Show all sensors and readings.
+.PP
+.B # ipmi-sensors --sensors="82 11 7 102"
+.PP
+Show sensors #82, #11, #7 and #102 only.
+.PP
+.B # ipmi-sensors --group=Fan
+.PP
+Show all sensors in Fan group.
+.PP
+.B # ipmi-sensors --group=Fan --sensors="82 11 7 102"
+.PP
+Show all sensors in Fan group and sensors #82, #11, #7, #102.
+.SH "REPORTING BUGS"
+Report bugs to <@PACKAGE_BUGREPORT@>.
+.SH COPYRIGHT
+Copyright \(co 2003,04,05 FreeIPMI Core Team.  
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+.SH WORKAROUND
+On the IBM e325, the BMC firmware is very buggy and prohibits most
+in-band communication in FreeIPMI.  We recommend using the IBM
+provided 'lancfg' tool to initially configure the BMC, then use
+out-of-band access for further communication.
+.SH "SEE ALSO"
+The full documentation for
+.B sensors
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B sensors
+programs are properly installed at your site, the command
+.IP
+.B info fish
+.PP
+should give you access to the complete manual.
+.SH "AUTHORS"
+Albert Chu <chu11@llnl.gov>, Anand Babu <ab@gnu.org.in>, Balamurugan <bala.a@californiadigital.com>, Ian Zimmerman <itz@californiadigital.com>, Jim Garlick <garlick@llnl.gov>
+

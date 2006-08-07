@@ -1,3 +1,17 @@
+2006-08-07  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-sensors/Makefile.am, ipmi-sensors/ipmi-sensors.8.pre.in,
+	ipmi-sensors/src/Makefile.am, ipmi-sensors/src/ipmi-sdr-api.[ch],
+	ipmi-sensors/src/ipmi-sensors-argp.[ch],
+	ipmi-sensors/src/ipmi-sensors-utils.[ch],
+	ipmi-sensors/src/ipmi-sensors.c,
+	ipmi-sensors/src/sensors-simple-display.[ch],
+	ipmi-sensors/src/sensors-verbose-display.[ch],
+	ipmi-sensors/src/sensors-very-verbose-display.[ch]: new files.
+
+	* Makefile.am, configure.ac: updated for initial C version of
+	ipmi-sensors.
+
 2006-08-04  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sensor-api.c (ipmi_get_threshold_message_list):
