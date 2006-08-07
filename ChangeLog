@@ -1,3 +1,13 @@
+2006-08-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors.8.pre.in: Add debug flag option.
+
+	* ipmi-sensors/src/ipmi-sensors.c (main): Add OPENIPMI driver
+	support.
+
+	* ipmi-sensors/src/sensors-simple-display.c
+	(sensors_display_simple_event_only_record): Removed unused function.
+
 2006-08-08  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-sensors/src/sensors-simple-display.c
