@@ -1,13 +1,14 @@
 noinst_PROGRAMS=ipmi-sensors
-ipmi_sensors_SOURCES=ipmi-sdr-api.c ipmi-sensors.c sensors-very-verbose-display.c \
+ipmi_sensors_SOURCES=ipmi-sensors.c sensors-very-verbose-display.c \
 	ipmi-sensors-argp.c sensors-simple-display.c ipmi-sensors-utils.c \
 	sensors-verbose-display.c
 ipmi_sensors_LDADD = ../../common/src/libargpcommon.la \
 	../../common/src/libipmicommon.la \
+	../../common/src/libsdr.la \
 	../../common/src/libsensor.la \
 	../../libfreeipmi/src/libfreeipmi.la
  
-noinst_HEADERS=ipmi-sdr-api.h ipmi-sensors-utils.h sensors-verbose-display.h \
+noinst_HEADERS=ipmi-sensors-utils.h sensors-verbose-display.h \
 	ipmi-sensors-argp.h sensors-simple-display.h sensors-very-verbose-display.h
  
 AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \

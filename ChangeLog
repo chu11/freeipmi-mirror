@@ -1,3 +1,19 @@
+2006-08-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/src/ipmi-sdr-api.h,
+	ipmi-sensors/src/ipmi-sdr-api.c: Move to common/src/ as common
+	lib:
+
+	* ipmi-sensors/src/Makefile.am, common/src/Makefile.am: Adjust
+	appropriately for use.
+
+	* common/src/ipmi-sensor-api.c, common/src/ipmi-sensor-api.h,
+	common/src/ipmi-sdr-api.h, common/src/ipmi-sdr-api.c: Move SDR
+	related defines and functions from ipmi-sensor-api.[ch] to
+	ipmi-sdr-api.[ch].  General code cleanup throughout.
+
+	* common/src/ipmi-sdr-api.c: Globally add more debugging info.
+	
 2006-08-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/ipmi-sensors.8.pre.in: Add debug flag option.

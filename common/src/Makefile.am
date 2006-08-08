@@ -8,6 +8,7 @@ noinst_HEADERS = \
 	ipmi-ping.h \
 	md2.h \
 	md5.h \
+	ipmi-sdr-api.h \
 	ipmi-sensor-api.h \
 	xmalloc.h
 
@@ -19,6 +20,7 @@ noinst_LTLIBRARIES = \
 	libipmiping.la \
 	libmd2.la \
 	libmd5.la \
+	libsdr.la \
 	libsensor.la \
 	libxmalloc.la
 
@@ -43,9 +45,12 @@ libmd2_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include
 libmd5_la_SOURCES = md5.c
 libmd5_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
+libsdr_la_SOURCES = ipmi-sdr-api.c
+libsdr_la_CFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include
+libsdr_la_LIBADD = ./libbitops.la
+
 libsensor_la_SOURCES = ipmi-sensor-api.c
 libsensor_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include
-libsensor_la_LIBADD = ./libbitops.la
 
 libxmalloc_la_SOURCES = xmalloc.c
 libxmalloc_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include 
