@@ -596,7 +596,42 @@ static int ipmi_acpi_get_spmi_table (uint8_t interface_type,
 				     fiid_obj_t obj_acpi_table_hdr,
 				     fiid_obj_t obj_acpi_spmi_table_descriptor);
 
-#define IPMI_INTERFACE_COUNT 6
+#define IPMI_INTERFACE_COUNT 5
+
+static uint64_t physical_memory_size = 0; 
+
+static int
+ipmi_physical_address_valid(uint64_t physical_address, size_t length)
+{
+  /* achu: Some buggy kernels will crash the system if the physical
+   * address is bad.  Yes, I know it's the kernel's fault, but we have
+   * to do our best to get around it.  We do so by making sure the
+   * physical address is legit.
+   */
+#if defined(_SC_PAGESIZE) && defined(_SC_PHYS_PAGES)
+  if (!physical_memory_size)
+    {
+      long pagesize, physical_pages;
+
+      ERR (!((pagesize = sysconf(_SC_PAGESIZE)) < 0));
+      ERR (!((physical_pages = sysconf(_SC_PHYS_PAGES)) < 0));
+
+      physical_memory_size = pagesize * physical_pages;
+    }
+
+    if (physical_address < physical_memory_size
+        && (physical_address + length) > physical_address
+        && (physical_address + length) < physical_memory_size)
+      return 1;
+    else
+      return 0;
+#else /* !(_SC_PAGESIZE && _SC_PHYS_PAGES) */
+  /* achu: For now we return 1.  Later we can maybe read /dev/meminfo
+   * or something.
+   */
+  return 1;
+#endif /* !(_SC_PAGESIZE && _SC_PHYS_PAGES) */
+}
 
 /*******************************************************************************
  *
@@ -642,6 +677,8 @@ ipmi_ioremap (uint64_t physical_address, size_t physical_address_len,
 	      && virtual_address 
 	      && mapped_address 
 	      && mapped_address_len);
+
+  ERR (ipmi_physical_address_valid (physical_address, physical_address_len) == 1);
 
   ERR (!((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0));
 
