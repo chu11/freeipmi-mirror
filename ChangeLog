@@ -16,6 +16,10 @@
 	ipmi-sdr-api.[ch].  General code cleanup throughout.
 
 	* common/src/ipmi-sdr-api.c: Globally add more debugging info.
+
+	* common/src/ipmi-sdr-api.c (get_sdr_cache_filename): Fix sdr
+	cache filename corner case which can exist in environments with
+	NFS mounted home directories.
 	
 2006-08-07  Albert Chu <chu11@llnl.gov>
 
