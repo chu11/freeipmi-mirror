@@ -1,5 +1,8 @@
 2006-08-08  Albert Chu <chu11@llnl.gov>
 
+	ipmi-sensors and ipmi-sel convenience code cleanup and re-org in
+	preparation for code fixes in ipmi-sel.
+
 	* ipmi-sensors/src/ipmi-sdr-api.h,
 	ipmi-sensors/src/ipmi-sdr-api.c: Move to common/src/ as common
 	lib:
