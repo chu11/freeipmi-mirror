@@ -6,7 +6,7 @@ C) ipmi-sel: proper trigger output fix
 X D) Remove Fish
 X E) debug dumping for all tools (achu: done)
 F) including ipmiconsole + libipmiconsole
-G) RPM repackaging
+X G) RPM repackaging (achu: done)
 X H) OpenIPMI inband driver suppport (achu: done)
 
 AB's TODO list
