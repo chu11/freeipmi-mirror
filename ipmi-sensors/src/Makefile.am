@@ -1,4 +1,4 @@
-noinst_PROGRAMS=ipmi-sensors
+sbin_PROGRAMS=ipmi-sensors
 ipmi_sensors_SOURCES=ipmi-sensors.c sensors-very-verbose-display.c \
 	ipmi-sensors-argp.c sensors-simple-display.c ipmi-sensors-utils.c \
 	sensors-verbose-display.c

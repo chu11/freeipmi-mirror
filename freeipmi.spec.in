@@ -138,7 +138,6 @@ fi
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
 %{_sbindir}/ipmi-locate
-%{_sbindir}/ipmi-pef
 %{_sbindir}/ipmi-raw
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors

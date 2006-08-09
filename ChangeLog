@@ -12,6 +12,10 @@
 	(ipmi_cmd_set_channel_access): Fix parameter check bug.
 
 	* Makefile.am: Fix distcheck.
+
+	* ipmi-sensors/src/Makefile.am: Fix install bug.
+
+	* freeipmi.spec.in: Fix packaging bug.
 	
 2006-08-08  Albert Chu <chu11@llnl.gov>
 
