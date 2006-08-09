@@ -3,7 +3,7 @@ SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-raw ipmi-sel ipmi-s
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
-EXTRA = ChangeLog AUTHORS COPYING INSTALL NEWS README TODO THANKS COPYING.bmc-watchdog DISCLAIMER.bmc-watchdog COPYING.ipmipower DISCLAIMER.ipmipower COPYING.ipmiping DISCLAIMER.ipmiping COPYING.rmcpping DISCLAIMER.rmcpping
+EXTRA = ChangeLog ChangeLog.0 AUTHORS COPYING INSTALL NEWS README TODO THANKS COPYING.bmc-watchdog DISCLAIMER.bmc-watchdog COPYING.ipmipower DISCLAIMER.ipmipower COPYING.ipmiping DISCLAIMER.ipmiping COPYING.rmcpping DISCLAIMER.rmcpping
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 doc_DATA = $(EXTRA)

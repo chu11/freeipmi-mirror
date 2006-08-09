@@ -10,6 +10,8 @@
 	(fill_cmd_set_channel_access),
 	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
 	(ipmi_cmd_set_channel_access): Fix parameter check bug.
+
+	* Makefile.am: Fix distcheck.
 	
 2006-08-08  Albert Chu <chu11@llnl.gov>
 
