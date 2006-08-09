@@ -75,7 +75,7 @@ bmc_commit_file (struct arguments *arguments,
                 {
                   ret = kv->commit (arguments, sect, kv);
                   if (ret != 0)
-		    fprintf (stderr, "FATAL: Error commiting `%s'\n", kv->key);
+		    fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section, kv->key);
                 }
               kv = kv->next;
             }

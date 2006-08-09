@@ -685,7 +685,7 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 	      && IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
 	      && IPMI_PEF_ALERTING_VALID(pef_alerting)
 	      && IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
-	      && IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
+	      && IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit)
 	      && IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
 	      && fiid_obj_valid(obj_cmd_rq));
 

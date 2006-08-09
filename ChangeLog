@@ -2,6 +2,14 @@
 
 	* bmc-config/src/: Change section names with "LAN" to "Lan" for
 	backwards consistency.
+
+	* bmc-config/src/bmc-commit.c (bmc_commit_file): Add section to
+	error output.
+
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_channel_access),
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_cmd_set_channel_access): Fix parameter check bug.
 	
 2006-08-08  Albert Chu <chu11@llnl.gov>
 
