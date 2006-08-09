@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.61 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.62 2006-08-09 00:50:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -562,6 +562,7 @@ struct ipmipower_config
   ipmipower_bool_t         check_unexpected_authcode;
   ipmipower_bool_t         cipher_suite_records_all_oem;
   ipmipower_bool_t         intel_2_0_session;
+  ipmipower_bool_t         supermicro_2_0_session;
 #ifndef NDEBUG
   ipmipower_bool_t         debug;
   ipmipower_bool_t         ipmidump;
@@ -594,6 +595,7 @@ struct ipmipower_config
   ipmipower_bool_t         check_unexpected_authcode_set;
   ipmipower_bool_t         cipher_suite_records_all_oem_set;
   ipmipower_bool_t         intel_2_0_session_set;
+  ipmipower_bool_t         supermicro_2_0_session_set;
   ipmipower_bool_t         outputtype_set;
   ipmipower_bool_t         timeout_len_set;
   ipmipower_bool_t         retry_timeout_len_set;

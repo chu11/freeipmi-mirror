@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.31 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.32 2006-08-09 00:50:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,7 +97,8 @@ _cmd_advanced(void)
               "force-permsg-authentication [on|off]  - toggle force-permsg-auth functionality\n"
               "accept-session-id-zero [on|off]       - toggle accept-session-id-zero functionality\n"
               "check-unexpected-authcode [on|off]    - toggle check-unexpected-authcode functionality\n"
-              "intel-2-0-session [on|off]            - toggle intel-2-0-session functionality\n");
+              "intel-2-0-session [on|off]            - toggle intel-2-0-session functionality\n"
+              "supermicro-2-0-session [on|off]       - toggle supermicro-2-0-session functionality\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
               "debug [on|off]                        - toggle debug to stderr\n"
@@ -652,6 +653,8 @@ _cmd_config(void)
               (conf->check_unexpected_authcode) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Intel-2-0-Session:            %s\n",
 	      (conf->intel_2_0_session) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Supermicro-2-0-Session:       %s\n",
+	      (conf->supermicro_2_0_session) ? "enabled" : "disabled");
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
               (conf->debug) ? "on" : "off");
@@ -829,6 +832,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
             else if (strcmp(argv[0], "intel-2-0-session") == 0)
               _cmd_set_flag(argv, &conf->intel_2_0_session, "intel-2-0-session");
+            else if (strcmp(argv[0], "supermicro-2-0-session") == 0)
+              _cmd_set_flag(argv, &conf->supermicro_2_0_session, "supermicro-2-0-session");
 #ifndef NDEBUG
             else if (strcmp(argv[0], "debug") == 0) 
 	      {

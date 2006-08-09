@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.36 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.37 2006-08-09 00:50:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,6 +96,7 @@ ipmipower_config_setup(void)
   conf->accept_session_id_zero = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode = IPMIPOWER_FALSE;
   conf->intel_2_0_session = IPMIPOWER_FALSE;
+  conf->supermicro_2_0_session = IPMIPOWER_FALSE;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
   conf->ipmidump = IPMIPOWER_FALSE;
@@ -127,6 +128,7 @@ ipmipower_config_setup(void)
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode_set = IPMIPOWER_FALSE;
   conf->intel_2_0_session_set = IPMIPOWER_FALSE;
+  conf->supermicro_2_0_session_set = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set = IPMIPOWER_FALSE;
@@ -245,13 +247,13 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 
   /* achu: Here's are what options are left and available
      lower case: deq
-     upper case: ABEGJKNOQWYZ
+     upper case: ABEGJKNOQWZ
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXDIMLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXYDIMLF:t:y:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXYt:y:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -282,6 +284,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"accept-session-id-zero",       0, NULL, 'S'},
       {"check-unexpected-authcode",    0, NULL, 'U'},
       {"intel-2-0-session",            0, NULL, 'X'},
+      {"supermicro-2-0-session",       0, NULL, 'Y'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
       {"ipmidump",                     0, NULL, 'I'},
@@ -410,6 +413,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'X':      /* --intel-2-0-session */
           conf->intel_2_0_session = IPMIPOWER_TRUE;
           conf->intel_2_0_session_set = IPMIPOWER_TRUE;
+          break;
+        case 'Y':      /* --supermicro-2-0-session */
+          conf->supermicro_2_0_session = IPMIPOWER_TRUE;
+          conf->supermicro_2_0_session_set = IPMIPOWER_TRUE;
           break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
@@ -671,7 +678,7 @@ ipmipower_config_conffile_parse(char *configfile)
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
     force_permsg_authentication_flag, accept_session_id_zero_flag, 
-    check_unexpected_authcode_flag, intel_2_0_session_flag, 
+    check_unexpected_authcode_flag, intel_2_0_session_flag, supermicro_2_0_session_flag, 
     timeout_flag, retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
     ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
     ping_consec_count_flag;
@@ -710,6 +717,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"intel_2_0_session", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &intel_2_0_session_flag, &(conf->intel_2_0_session), 
        conf->intel_2_0_session_set},
+      {"supermicro_2_0_session", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &supermicro_2_0_session_flag, &(conf->supermicro_2_0_session), 
+       conf->supermicro_2_0_session_set},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), conf->timeout_len_set},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 

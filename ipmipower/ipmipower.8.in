@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.46 2006-04-20 21:20:13 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.47 2006-08-09 00:50:54 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -247,6 +247,9 @@ compliance issue.  For more information, see WORKAROUNDS below.
 .I "-X, --intel-2-0-session"
 Modifies the IPMI 2.0 session protocol for non-compliant Intel
 machines.  For more information, see WORKAROUNDS below.
+-I "-Y, --supermicro-2-0-session"
+Modifies the IPMI 2.0 session protocol for non-compliant Supermicro
+machines.  For more information, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
@@ -454,6 +457,9 @@ toggle check-unexpected-authcode functionality.
 .TP
 .I "intel-2-0-session [on|off]"
 toggle intel-2-0-session functionality.
+.TP
+.I "supermicro-2-0-session [on|off]"
+toggle supermicro-2-0-session functionality.
 .if @WITH_DEBUG@ \{
 .TP
 .I "debug [on|off]"
@@ -634,6 +640,10 @@ workrarounds include padding of usernames, automatic acceptance of a
 RAKP 4 response integrity check when using the integrity algorith
 MD5-128, and password truncation if the authentication algorithm is
 HMAC-MD5-128.
+
+Supermicro H8QME with SIMSO daughter card: There are a number of
+Supermicro IPMI 2.0 bugs on early firmware revisions which can be
+worked around using the -Y (--supermicro-2-0-session) option.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

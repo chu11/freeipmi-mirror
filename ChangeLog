@@ -26,6 +26,8 @@
 
 	* libfreeipmi/src/ipmi-locate-acpi-spmi.c (ipmi_ioremap): Use
 	ipmi_physical_address_valid appropriately.
+
+	* ipmipower/: Begin support of --supermicro-2-0-session option.
 	
 2006-08-07  Albert Chu <chu11@llnl.gov>
 
