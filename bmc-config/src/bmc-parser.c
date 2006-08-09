@@ -61,7 +61,11 @@ bmc_parser (struct arguments *arguments,
             break;
           }
       
-        section_name = strdup (section_name);
+        if (!(section_name = strdup (section_name)))
+          {
+            perror("strdup");
+            exit(1);
+          }
 #ifndef NDEBUG 
         if (arguments->common.debug) 
           fprintf (stderr, "Entering section `%s'\n", section_name);
@@ -108,14 +112,30 @@ bmc_parser (struct arguments *arguments,
     
     if (key_name)
       free (key_name);
-    key_name = strdup (first_word);
+    if (!(key_name = strdup (first_word)))
+      {
+        perror("strdup");
+        exit(1);
+      }
     if (value)
 	free (value);
     value = strtok (NULL, " \t\n");
     if (value)
-      value = strdup (value);
+      {
+        if (!(value = strdup (value)))
+          {
+            perror("strdup");
+            exit(1);
+          }
+      }
     else
-      value = strdup ("");
+      {
+        if (!(value = strdup ("")))
+          {
+            perror("strdup");
+            exit(1);
+          }
+      }
     
 #ifndef NDEBUG 
     if (arguments->common.debug) 

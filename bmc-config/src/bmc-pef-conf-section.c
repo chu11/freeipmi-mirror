@@ -102,7 +102,23 @@ enable_pef_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+
   return 0;
 }
 
@@ -181,7 +197,23 @@ enable_pef_event_messages_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+
   return 0;
 }
 
@@ -261,7 +293,22 @@ enable_pef_startup_delay_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -341,7 +388,23 @@ enable_pef_alert_startup_delay_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+
   return 0;
 }
 
@@ -521,7 +584,22 @@ enable_alert_action_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -607,7 +685,22 @@ enable_power_down_action_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -692,7 +785,22 @@ enable_reset_action_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -777,7 +885,22 @@ enable_power_cycle_action_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -862,7 +985,22 @@ enable_oem_action_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -948,7 +1086,22 @@ enable_diagnostic_interrupt_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (value ? "Yes" : "No");
+  if (value)
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  else
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -1177,8 +1330,16 @@ struct section *
 bmc_pef_conf_section_get (struct arguments *args)
 {
   struct section *pef_section;
-  pef_section = (void *) calloc (1, sizeof (struct section));
-  pef_section->section = strdup ("PEF_Conf");
+  if (!(pef_section = (void *) calloc (1, sizeof (struct section))))
+    {
+      perror("calloc");
+      exit(1);
+    }
+  if (!(pef_section->section = strdup ("PEF_Conf")))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   add_keyvalue (pef_section,
 		"Enable_PEF",

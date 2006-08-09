@@ -483,15 +483,15 @@ Section User1
         ## Give password or blank to clear. MAX 16 chars.
         ## Password
         ## Possible values: Yes/No
-        LAN_Enable_IPMI_Msgs                         No
+        Lan_Enable_IPMI_Msgs                         No
         ## Possible values: Yes/No
-        LAN_Enable_Link_Auth                         No
+        Lan_Enable_Link_Auth                         No
         ## Possible values: Yes/No
-        LAN_Enable_Restricted_to_Callback            No
+        Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-        LAN_Privilege_Limit                          No_Access
+        Lan_Privilege_Limit                          No_Access
         ## Possible values: 0-255, 0 is unlimited
-        LAN_Session_Limit                            0
+        Lan_Session_Limit                            0
         ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
@@ -511,15 +511,15 @@ Section User2
         ## Give password or blank to clear. MAX 16 chars.
         ## Password
         ## Possible values: Yes/No
-        LAN_Enable_IPMI_Msgs                         Yes
+        Lan_Enable_IPMI_Msgs                         Yes
         ## Possible values: Yes/No
-        LAN_Enable_Link_Auth                         No
+        Lan_Enable_Link_Auth                         No
         ## Possible values: Yes/No
-        LAN_Enable_Restricted_to_Callback            No
+        Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-        LAN_Privilege_Limit                          User
+        Lan_Privilege_Limit                          User
         ## Possible values: 0-255, 0 is unlimited
-        LAN_Session_Limit                            0
+        Lan_Session_Limit                            0
         ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
@@ -539,15 +539,15 @@ Section User3
         ## Give password or blank to clear. MAX 16 chars.
         ## Password
         ## Possible values: Yes/No
-        LAN_Enable_IPMI_Msgs                         Yes
+        Lan_Enable_IPMI_Msgs                         Yes
         ## Possible values: Yes/No
-        LAN_Enable_Link_Auth                         No
+        Lan_Enable_Link_Auth                         No
         ## Possible values: Yes/No
-        LAN_Enable_Restricted_to_Callback            No
+        Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-        LAN_Privilege_Limit                          Operator
+        Lan_Privilege_Limit                          Operator
         ## Possible values: 0-255, 0 is unlimited
-        LAN_Session_Limit                            0
+        Lan_Session_Limit                            0
         ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
@@ -567,15 +567,15 @@ Section User4
         ## Give password or blank to clear. MAX 16 chars.
         ## Password
         ## Possible values: Yes/No
-        LAN_Enable_IPMI_Msgs                         Yes
+        Lan_Enable_IPMI_Msgs                         Yes
         ## Possible values: Yes/No
-        LAN_Enable_Link_Auth                         No
+        Lan_Enable_Link_Auth                         No
         ## Possible values: Yes/No
-        LAN_Enable_Restricted_to_Callback            No
+        Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
-        LAN_Privilege_Limit                          Administrator
+        Lan_Privilege_Limit                          Administrator
         ## Possible values: 0-255, 0 is unlimited
-        LAN_Session_Limit                            0
+        Lan_Session_Limit                            0
         ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
@@ -587,7 +587,7 @@ Section User4
         ## Possible values: 0-255, 0 is unlimited
         Serial_Session_Limit                         0
 EndSection
-Section LAN_Channel
+Section Lan_Channel
         ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
         Volatile_Access_Mode                         Always_Available
         ## Possible values: Yes/No
@@ -609,7 +609,7 @@ Section LAN_Channel
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Non_Volatile_Channel_Privilege_Limit         Administrator
 EndSection
-Section LAN_Conf
+Section Lan_Conf
         ## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
         IP_Address_Source                            Static
         ## Give valid IP address
@@ -627,7 +627,7 @@ Section LAN_Conf
         ## Give valid MAC address
         Backup_Gateway_MAC_Address                   00:00:00:00:00:00
 EndSection
-Section LAN_Conf_Auth
+Section Lan_Conf_Auth
         ## Possible values: Yes/No
         Callback_Enable_Auth_Type_None               No
         ## Possible values: Yes/No
@@ -679,13 +679,13 @@ Section LAN_Conf_Auth
         ## Possible values: Yes/No
         OEM_Enable_Auth_Type_OEM_Proprietary         No
 EndSection
-Section LAN_Conf_Security_Keys
+Section Lan_Conf_Security_Keys
         ## Give string or blank to clear. Max 20 chars
         ## K_R
         ## Give string or blank to clear. Max 20 chars
         ## K_G
 EndSection
-Section LAN_Conf_Misc
+Section Lan_Conf_Misc
         ## Possible values: Yes/No
         Enable_Gratuitous_ARPs                       No
         ## Possible values: Yes/No
@@ -828,7 +828,7 @@ debian-ia64:~# bmc-config --commit -f /tmp/bmc.conf
 
 Example using a specific key:
 @example
-debian-ia64:~# bmc-config --commit -k "LAN_conf:Ip_Address=192.168.1.60"
+debian-ia64:~# bmc-config --commit -k "Lan_conf:Ip_Address=192.168.1.60"
 @end example
 
 Note: At this point of time, configuration settings can only be fed
@@ -843,7 +843,7 @@ configuration file, use ``diff'' option
 Example: Comparing the configuration file and BMC settings.
 @example
 debian-ia64:~# bmc-config --diff -f /tmp/bmc.conf
-LAN_Conf:IP_Address - input=`192.168.10.160':actual=`192.168.1.60'
+Lan_Conf:IP_Address - input=`192.168.10.160':actual=`192.168.1.60'
 debian-ia64:~# bmc-config --diff -k "User2:Username=guest"
 User2:Username - input=`guest':actual=`usertest'
 debian-ia64:~# 

@@ -16,6 +16,12 @@
 	* ipmi-sensors/src/Makefile.am: Fix install bug.
 
 	* freeipmi.spec.in: Fix packaging bug.
+
+	bmc-config various fixes
+
+	* bmc-config/src/: Support multiple -k values on the command line;
+	
+	* bmc-config/src/: Globally check value of malloc, calloc, and strdup.
 	
 2006-08-08  Albert Chu <chu11@llnl.gov>
 

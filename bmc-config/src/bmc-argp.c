@@ -123,7 +123,7 @@ args_validate (struct arguments *args)
     }
 
   // filename and keypair both not given
-  if (args->filename && args->keypair) 
+  if (args->filename && args->keypairs) 
     {
       fprintf (stderr, 
                "Both --filename or --keypair cannot be used\n");
@@ -179,12 +179,32 @@ display (const struct arguments *args)
   return;
 }
 
+static struct keypair *
+_create_keypair(char *arg)
+{
+  struct keypair *kp;
+  
+  if (!(kp = (struct keypair *)malloc(sizeof(struct keypair))))
+    {
+      perror("malloc");
+      exit(1);
+    }
+  if (!(kp->keypair = strdup(arg)))
+    {
+      perror("strdup");
+      exit(1);
+    }
+  kp->next = NULL;
+
+  return kp;
+}
+
 /* Parse a single option. */
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-
   struct arguments *arguments = state->input;
+  struct keypair *kp;
 
   switch (key)
     {
@@ -198,13 +218,28 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'f':
       if (arguments->filename) /* If specified more than once */
 	free (arguments->filename);
-      arguments->filename = strdup (arg);
+      if (!(arguments->filename = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
 
     case 'k':
-      if (arguments->keypair) /* if specified more than once */
-	free (arguments->keypair);
-      arguments->keypair = strdup (arg);
+
+      kp = _create_keypair(arg);
+      if (arguments->keypairs)
+        {
+          struct keypair *p = NULL;
+          
+          p = arguments->keypairs;
+          while (p->next)
+            p = p->next;
+          
+          p->next = kp;
+        }
+      else
+        arguments->keypairs = kp;
       break;
 
     case 'o':

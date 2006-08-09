@@ -23,7 +23,11 @@ id_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (rmcpplus_priv_string (priv));
+  if (!(kv->value = strdup (rmcpplus_priv_string (priv))))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -465,8 +469,16 @@ bmc_rmcpplus_conf_privilege_section_get (struct arguments *args)
 {
   struct section *rmcpplus_conf_privilege_section = NULL;
   
-  rmcpplus_conf_privilege_section = (void *) calloc (1, sizeof (struct section));
-  rmcpplus_conf_privilege_section->section = strdup ("Rmcpplus_Conf_Privilege");
+  if (!(rmcpplus_conf_privilege_section = (void *) calloc (1, sizeof (struct section))))
+    {
+      perror("calloc");
+      exit(1);
+    }
+  if (!(rmcpplus_conf_privilege_section->section = strdup ("Rmcpplus_Conf_Privilege")))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   add_keyvalue (rmcpplus_conf_privilege_section,
 		"Maximum_Privilege_Cipher_Suite_Id_0",

@@ -90,7 +90,11 @@ ip_address_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (ip);
+  if (!(kv->value = strdup (ip)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -159,7 +163,11 @@ mac_address_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (mac);
+  if (!(kv->value = strdup (mac)))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -225,7 +233,11 @@ subnet_mask_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (mask);
+  if (!(kv->value = strdup (mask)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -297,7 +309,11 @@ default_gateway_address_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (ip);
+  if (!(kv->value = strdup (ip)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -366,7 +382,11 @@ default_gateway_mac_address_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (mac);
+  if (!(kv->value = strdup (mac)))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -425,7 +445,11 @@ backup_gateway_address_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (ip);
+  if (!(kv->value = strdup (ip)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -494,7 +518,11 @@ backup_gateway_mac_address_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (mac);
+  if (!(kv->value = strdup (mac)))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -644,9 +672,21 @@ vlan_id_enable_checkout (const struct arguments *args,
     free (kv->value);
 
   if (vlan_id_enable)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -786,8 +826,16 @@ struct section *
 bmc_lan_conf_section_get (struct arguments *args)
 {
   struct section *lan_conf_section = NULL;
-  lan_conf_section = (void *) calloc (1, sizeof (struct section));
-  lan_conf_section->section = strdup ("Lan_Conf");
+  if (!(lan_conf_section = (void *) calloc (1, sizeof (struct section))))
+    {
+      perror("calloc");
+      exit(1);
+    }
+  if (!(lan_conf_section->section = strdup ("Lan_Conf")))
+    {
+      perror("strdup");
+      exit(1);
+    }
   
   add_keyvalue (lan_conf_section,
 		"IP_Address_Source",

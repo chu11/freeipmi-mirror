@@ -82,7 +82,11 @@ volatile_access_mode_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (channel_access_mode_string (get_val));
+  if (!(kv->value = strdup (channel_access_mode_string (get_val))))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -167,10 +171,23 @@ volatile_enable_user_level_auth_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -181,6 +198,7 @@ volatile_enable_user_level_auth_commit (const struct arguments *args,
 {
   uint8_t commit_val;
 
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
   return lan_channel_volatile_access_set (args->dev,
 					  0, 0,
@@ -209,6 +227,7 @@ volatile_enable_user_level_auth_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   passed_val = same (kv->value, "yes");
   if (passed_val == get_val)
     ret = 0;
@@ -253,10 +272,24 @@ volatile_enable_per_msg_auth_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
+
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -267,6 +300,7 @@ volatile_enable_per_msg_auth_commit (const struct arguments *args,
 {
   uint8_t commit_val;
 
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
   return lan_channel_volatile_access_set (args->dev,
 					  0, 0,
@@ -295,8 +329,8 @@ volatile_enable_per_msg_auth_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   passed_val = same (kv->value, "yes");
-
   if (passed_val == get_val)
     ret = 0;
   else
@@ -342,10 +376,23 @@ volatile_enable_pef_alerting_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -356,6 +403,7 @@ volatile_enable_pef_alerting_commit (const struct arguments *args,
 {
   uint8_t commit_val;
 
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
   return lan_channel_volatile_access_set (args->dev,
 					  0, 0,
@@ -384,8 +432,8 @@ volatile_enable_pef_alerting_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   passed_val = same (kv->value, "yes");
-
   if (passed_val == get_val)
     ret = 0;
   else 
@@ -431,7 +479,11 @@ volatile_channel_priv_limit_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (get_privilege_limit_string (get_val));
+  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -575,7 +627,11 @@ non_volatile_access_mode_checkout (const struct arguments *args,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (channel_access_mode_string (get_val));
+  if (!(kv->value = strdup (channel_access_mode_string (get_val))))
+    {
+      perror("strdup");
+      exit(1);
+    }
   return 0;
 }
 
@@ -660,9 +716,21 @@ non_volatile_enable_user_level_auth_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -747,9 +815,21 @@ non_volatile_enable_per_msg_auth_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -836,9 +916,21 @@ non_volatile_enable_pef_alerting_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
@@ -924,7 +1016,11 @@ non_volatile_channel_priv_limit_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (get_privilege_limit_string (get_val));
+  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -995,8 +1091,17 @@ bmc_lan_channel_section_get (struct arguments *args)
 {
   struct section * lan_channel_section = NULL;
 
-  lan_channel_section = (void *) calloc (1, sizeof (struct section));
-  lan_channel_section->section = strdup ("Lan_Channel");
+  if (!(lan_channel_section = (void *) calloc (1, sizeof (struct section))))
+    {
+      perror("calloc");
+      exit(1);
+    }
+
+  if (!(lan_channel_section->section = strdup ("Lan_Channel")))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   add_keyvalue (lan_channel_section,
 		"Volatile_Access_Mode",

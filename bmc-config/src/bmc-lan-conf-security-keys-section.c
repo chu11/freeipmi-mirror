@@ -23,7 +23,11 @@ k_r_checkout (const struct arguments *args,
     free (kv->value);
 
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
-  kv->value = strdup ((char *)k_r);
+  if (!(kv->value = strdup ((char *)k_r)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -95,7 +99,11 @@ k_g_checkout (const struct arguments *args,
     free (kv->value);
 
   k_g[IPMI_MAX_K_G_LENGTH] = '\0';
-  kv->value = strdup ((char *)k_g);
+  if (!(kv->value = strdup ((char *)k_g)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -151,8 +159,16 @@ bmc_lan_conf_security_keys_section_get (struct arguments *args)
 {
   struct section *lan_conf_security_keys_section = NULL;
 
-  lan_conf_security_keys_section = (void *) calloc (1, sizeof (struct section));
-  lan_conf_security_keys_section->section = strdup ("Lan_Conf_Security_Keys");
+  if (!(lan_conf_security_keys_section = (void *) calloc (1, sizeof (struct section))))
+    {
+      perror("calloc");
+      exit(1);
+    }
+  if (!(lan_conf_security_keys_section->section = strdup ("Lan_Conf_Security_Keys")))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   add_keyvalue (lan_conf_security_keys_section,
 		"K_R",

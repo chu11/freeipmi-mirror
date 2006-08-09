@@ -10,6 +10,10 @@ X E) debug dumping for all tools (achu: done)
 X G) RPM repackaging (achu: done)
   G-1) ipmiconsole/libipmiconsole
 X H) OpenIPMI inband driver suppport (achu: done)
+  I) doc/freeipmi.texi
+  I-1) ipmi-sensors update
+  I-2) bmc-config update
+  I-3) bmc-autoconfig options
 
 AB's TODO list
 ==============

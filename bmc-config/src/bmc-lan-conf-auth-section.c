@@ -23,9 +23,21 @@ callback_none_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.callback.type_none)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -104,9 +116,21 @@ callback_md2_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.callback.type_md2)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -185,9 +209,21 @@ callback_md5_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.callback.type_md5)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -266,9 +302,21 @@ callback_straight_password_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.callback.type_straight_password)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -347,9 +395,21 @@ callback_oem_proprietary_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.callback.type_oem_proprietary)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -430,9 +490,21 @@ user_none_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.user.type_none)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -511,9 +583,21 @@ user_md2_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.user.type_md2)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -592,9 +676,21 @@ user_md5_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.user.type_md5)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -673,9 +769,21 @@ user_straight_password_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.user.type_straight_password)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -754,9 +862,21 @@ user_oem_proprietary_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.user.type_oem_proprietary)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -837,9 +957,21 @@ operator_none_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.operator.type_none)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -918,9 +1050,21 @@ operator_md2_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.operator.type_md2)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -999,9 +1143,21 @@ operator_md5_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.operator.type_md5)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1080,9 +1236,21 @@ operator_straight_password_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.operator.type_straight_password)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1161,9 +1329,21 @@ operator_oem_proprietary_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.operator.type_oem_proprietary)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1245,9 +1425,21 @@ admin_none_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.admin.type_none)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1326,9 +1518,21 @@ admin_md2_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.admin.type_md2)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1407,9 +1611,21 @@ admin_md5_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.admin.type_md5)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1488,9 +1704,21 @@ admin_straight_password_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.admin.type_straight_password)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1569,9 +1797,21 @@ admin_oem_proprietary_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.admin.type_oem_proprietary)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1654,9 +1894,21 @@ oem_none_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.oem.type_none)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1735,9 +1987,21 @@ oem_md2_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.oem.type_md2)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1816,9 +2080,21 @@ oem_md5_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.oem.type_md5)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1897,9 +2173,21 @@ oem_straight_password_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.oem.type_straight_password)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -1978,9 +2266,21 @@ oem_oem_proprietary_checkout (const struct arguments *args,
     free (kv->value);
   
   if (auth.oem.type_oem_proprietary)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -2045,8 +2345,16 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 {
   struct section *lan_conf_auth_section = NULL;
 
-  lan_conf_auth_section = (void *) calloc (1, sizeof (struct section));
-  lan_conf_auth_section->section = strdup ("Lan_Conf_Auth");
+  if (!(lan_conf_auth_section = (void *) calloc (1, sizeof (struct section))))
+    {
+      perror("calloc");
+      exit(1);
+    }
+  if (!(lan_conf_auth_section->section = strdup ("Lan_Conf_Auth")))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   add_keyvalue (lan_conf_auth_section,
 		"Callback_Enable_Auth_Type_None",

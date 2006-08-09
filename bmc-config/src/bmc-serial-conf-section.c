@@ -106,9 +106,21 @@ enable_basic_mode_checkout (const struct arguments *args,
     free (kv->value);
 
   if (value)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -190,9 +202,21 @@ enable_ppp_mode_checkout (const struct arguments *args,
     free (kv->value);
 
   if (value)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -273,9 +297,21 @@ enable_terminal_mode_checkout (const struct arguments *args,
     free (kv->value);
 
   if (value)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -653,9 +689,21 @@ enable_dtr_hangup_checkout (const struct arguments *args,
     free (kv->value);
 
   if (value)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -732,7 +780,11 @@ flow_control_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (flow_control_string (value));
+  if (!(kv->value = strdup (flow_control_string (value))))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -808,7 +860,11 @@ bit_rate_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (bit_rate_string (value));
+  if (!(kv->value = strdup (bit_rate_string (value))))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -870,9 +926,17 @@ bmc_serial_conf_section_get (struct arguments *args)
 {
   struct section *bmc_serial_conf_section = NULL;
 
-  bmc_serial_conf_section = (void *) calloc (1, sizeof (struct section));
+  if (!(bmc_serial_conf_section = (void *) calloc (1, sizeof (struct section))))
+    {
+      perror("calloc");
+      exit(1);
+    }
 
-  bmc_serial_conf_section->section = strdup ("Serial_Conf");
+  if (!(bmc_serial_conf_section->section = strdup ("Serial_Conf")))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   add_keyvalue (bmc_serial_conf_section,
 		"Enable_Basic_Mode",

@@ -5,24 +5,28 @@
 
 static int
 bmc_checkout_keypair (struct arguments *arguments,
-		      struct section *sections)
+		      struct section *sections,
+                      struct keypair *kp)
 {
-  char *keypair = strdup (arguments->keypair);
+  char *keypair;
   char *section_name;
   char *key_name;
-
   int ret = 0;
-
   struct section *sect = sections;
   struct keyvalue *kv;
+
+  if (!(keypair = strdup (kp->keypair)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   section_name = strtok (keypair, ":");
   key_name = strtok (NULL, "");
 
-  if (! (section_name && key_name)) 
+  if (!(section_name && key_name)) 
     {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", 
-               arguments->keypair);
+      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
       free (keypair);
       return -1;
     }
@@ -67,12 +71,28 @@ bmc_checkout_keypair (struct arguments *arguments,
   if (ret == 0) 
     printf ("%s:%s=%s\n", key_name, section_name, kv->value);
   else
-    printf ("error fetching value for %s in %s (errcode=%d)\n",
+    printf ("Error fetching value for %s in %s (errcode=%d)\n",
 	    key_name, section_name, ret);
 
+  free (keypair);
   return ret;
 }
 
+static int
+bmc_checkout_keypairs (struct arguments *arguments,
+                       struct section *sections)
+{
+  struct keypair *kp;
+
+  kp = arguments->keypairs;
+  while (kp)
+    {
+      bmc_checkout_keypair(arguments, sections, kp);
+      kp = kp->next;
+    }
+
+  return 0;
+}
 
 static int
 bmc_checkout_file (struct arguments *arguments,
@@ -169,8 +189,8 @@ bmc_checkout (struct arguments *arguments,
 {
   int ret = 0;
 
-  if (arguments->keypair) 
-    ret = bmc_checkout_keypair (arguments, sections);
+  if (arguments->keypairs) 
+    ret = bmc_checkout_keypairs (arguments, sections);
   else
     ret = bmc_checkout_file (arguments, sections);
 

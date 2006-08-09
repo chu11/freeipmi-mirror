@@ -66,7 +66,7 @@ Future versions of this manpage will try to include more information.
         ## Possible values: Yes/No
         SOL_Payload_Access                           No
      EndSection
-     Section LAN_Channel
+     Section Lan_Channel
      	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
      	Volatile_Access_Mode                         Always_Available
      	## Possible values: Yes/No
@@ -88,7 +88,7 @@ Future versions of this manpage will try to include more information.
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Non_Volatile_Channel_Privilege_Limit         Administrator
      EndSection
-     Section LAN_Conf
+     Section Lan_Conf
      	## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
      	Ip_Address_Source                            Static
      	## Give valid IP Address
@@ -106,7 +106,7 @@ Future versions of this manpage will try to include more information.
      	## Give valid MAC Address
      	Backup_Gateway_Mac_Address                   00:0E:0E:FF:AA:15
      EndSection
-     Section LAN_Conf_Auth
+     Section Lan_Conf_Auth
      	## Possible values: Yes/No
      	Callback_Enable_Auth_Type_None               No
      	## Possible values: Yes/No
@@ -158,7 +158,7 @@ Future versions of this manpage will try to include more information.
      	## Possible values: Yes/No
      	Oem_Enable_Auth_Type_Oem_Proprietary         No
      EndSection
-     Section LAN_Conf_Misc
+     Section Lan_Conf_Misc
      	## Possible values: Yes/No
      	Enable_Gratuitous_Arps                       Yes
      	## Possible values: Yes/No
@@ -269,9 +269,9 @@ allow usernames to be input, then it is recommended that one of the
 non-NULL usernames be enabled and the NULL username disabled for
 security reasons.
 
-.SH "Section LAN_Channel"
+.SH "Section Lan_Channel"
 
-The LAN_Channel section configures a variety of IPMI over LAN
+The Lan_Channel section configures a variety of IPMI over LAN
 configuration parameters.  Both \fIVolatile\fR and \fINon_Volatile\fR
 configurations can be set.  \fIVolatile\fR configurations are
 immediately configured onto the BMC and will have immediate effect on
@@ -294,7 +294,7 @@ privileged IPMI commands to be executed without authentication.
 Disabling \fIPer_Message_Auth\fR allows fewer individual IPMI messages
 to require authentication.
 
-.SH "Section LAN_Conf"
+.SH "Section Lan_Conf"
 
 Those familiar with setting up networks should find most of the fields
 in this section self explanatory.  The example BMC configuration above
@@ -311,10 +311,10 @@ To instead setup your BMC network information via DHCP, the field
 \fIIP_Address_Source\fR should be configured with "Use_DHCP".
 
 It is recommended that static IP addresses be configured for address
-resolution reasons.  See the LAN_Conf_Misc section below regarding
+resolution reasons.  See the Lan_Conf_Misc section below regarding
 gratuitous arps for a more detailed explanation.
 
-.SH "Section LAN_Conf_Auth"
+.SH "Section Lan_Conf_Auth"
 
 This section determines what types of authentication mechanisms are
 allowed for users at different privilege levels under the IPMI 1.5
@@ -331,7 +331,7 @@ should be enabled.  In the above example, \fIMd2\fR and \fIMd5\fR are
 the only authentication mechanisms that are enabled for users 
 with "User", "Operator" and "Administrator" privileges.
 
-.SH "Section LAN_Conf_Misc"
+.SH "Section Lan_Conf_Misc"
 
 This section lists miscaellaneous IPMI over LAN configuration options.
 Normally, these are optional IPMI configuration options that are not

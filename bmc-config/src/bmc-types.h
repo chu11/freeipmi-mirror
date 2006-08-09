@@ -34,6 +34,12 @@ typedef enum
     BMC_ACTION_DIFF
   } bmc_action_t;
 
+struct keypair 
+{
+  char *keypair;
+  struct keypair *next;
+};
+
 struct arguments
 {
   struct common_cmd_args common;
@@ -42,7 +48,7 @@ struct arguments
   unsigned char verbose;
 
   char *filename;
-  char *keypair;
+  struct keypair *keypairs;
 
   bmc_action_t action;
 };

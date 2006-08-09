@@ -5,23 +5,28 @@
 
 static int
 bmc_commit_keypair (struct arguments *arguments,
-		      struct section *sections)
+                    struct section *sections,
+                    struct keypair *kp)
 {
-  char *keypair = strdup (arguments->keypair);
+  char *keypair;
   char *section_name;
   char *key_name;
   char *value;
-
   int ret = 0;
+
+  if (!(keypair = strdup (kp->keypair)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   section_name = strtok (keypair, ":");
   key_name = strtok (NULL, "=");
   value = strtok (NULL, "");
 
-  if (! (section_name && key_name && value)) 
+  if (!(section_name && key_name && value)) 
     {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", 
-               arguments->keypair);
+      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
       free (keypair);
       return -1;
     }
@@ -37,6 +42,21 @@ bmc_commit_keypair (struct arguments *arguments,
   return ret;
 }
 
+static int
+bmc_commit_keypairs (struct arguments *arguments,
+                     struct section *sections)
+{
+  struct keypair *kp;
+
+  kp = arguments->keypairs;
+  while (kp)
+    {
+      bmc_commit_keypair(arguments, sections, kp);
+      kp = kp->next;
+    }
+
+  return 0;
+}
 
 static int
 bmc_commit_file (struct arguments *arguments,
@@ -92,9 +112,9 @@ bmc_commit (struct arguments *arguments,
 {
   int ret = 0;
 
-  if (arguments->keypair)
-    ret = bmc_commit_keypair (arguments, sections);
-  else
+  if (arguments->filename)
     ret = bmc_commit_file (arguments, sections);
+  else
+    ret = bmc_commit_keypairs (arguments, sections);
   return ret;
 }
