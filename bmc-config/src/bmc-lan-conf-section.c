@@ -787,7 +787,7 @@ bmc_lan_conf_section_get (struct arguments *args)
 {
   struct section *lan_conf_section = NULL;
   lan_conf_section = (void *) calloc (1, sizeof (struct section));
-  lan_conf_section->section = strdup ("LAN_Conf");
+  lan_conf_section->section = strdup ("Lan_Conf");
   
   add_keyvalue (lan_conf_section,
 		"IP_Address_Source",

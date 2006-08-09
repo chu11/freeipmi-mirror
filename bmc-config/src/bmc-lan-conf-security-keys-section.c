@@ -152,7 +152,7 @@ bmc_lan_conf_security_keys_section_get (struct arguments *args)
   struct section *lan_conf_security_keys_section = NULL;
 
   lan_conf_security_keys_section = (void *) calloc (1, sizeof (struct section));
-  lan_conf_security_keys_section->section = strdup ("LAN_Conf_Security_Keys");
+  lan_conf_security_keys_section->section = strdup ("Lan_Conf_Security_Keys");
 
   add_keyvalue (lan_conf_security_keys_section,
 		"K_R",

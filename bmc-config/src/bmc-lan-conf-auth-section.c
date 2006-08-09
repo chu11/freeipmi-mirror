@@ -2046,7 +2046,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
   struct section *lan_conf_auth_section = NULL;
 
   lan_conf_auth_section = (void *) calloc (1, sizeof (struct section));
-  lan_conf_auth_section->section = strdup ("LAN_Conf_Auth");
+  lan_conf_auth_section->section = strdup ("Lan_Conf_Auth");
 
   add_keyvalue (lan_conf_auth_section,
 		"Callback_Enable_Auth_Type_None",

@@ -1,3 +1,8 @@
+2006-08-09  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/: Change section names with "LAN" to "Lan" for
+	backwards consistency.
+	
 2006-08-08  Albert Chu <chu11@llnl.gov>
 
 	ipmi-sensors and ipmi-sel convenience code cleanup and re-org in

@@ -996,7 +996,7 @@ bmc_lan_channel_section_get (struct arguments *args)
   struct section * lan_channel_section = NULL;
 
   lan_channel_section = (void *) calloc (1, sizeof (struct section));
-  lan_channel_section->section = strdup ("LAN_Channel");
+  lan_channel_section->section = strdup ("Lan_Channel");
 
   add_keyvalue (lan_channel_section,
 		"Volatile_Access_Mode",

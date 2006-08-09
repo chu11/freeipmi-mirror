@@ -214,7 +214,7 @@ bmc_lan_conf_misc_section_get (struct arguments *args)
   struct section *lan_conf_misc_section = NULL;
 
   lan_conf_misc_section = (void *) calloc (1, sizeof (struct section));
-  lan_conf_misc_section->section = strdup ("LAN_Conf_Misc");
+  lan_conf_misc_section->section = strdup ("Lan_Conf_Misc");
 
   add_keyvalue (lan_conf_misc_section,
 		"Enable_Gratuitous_ARPs",
