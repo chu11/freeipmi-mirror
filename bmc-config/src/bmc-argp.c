@@ -122,6 +122,16 @@ args_validate (struct arguments *args)
       return -1;
     }
 
+  // filename and keypair both given for checkout or diff
+  if (args->filename && args->keypairs 
+      && (args->action == BMC_ACTION_CHECKOUT
+          || args->action == BMC_ACTION_DIFF))
+    {
+      fprintf (stderr, 
+               "Both --filename or --keypair cannot be used\n");
+      return -1;
+    }
+
   // filename is readable if commit, writable/creatable if checkout
 
   if (args->filename) 
