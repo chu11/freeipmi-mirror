@@ -30,7 +30,8 @@
 	* bmc-config/src/bmc-commit.c (bmc_commit_file): Support keypairs
 	and filenames both on the commandline.
 
-	* bmc-config/src/bmc-argp.c (args_validate): Remove check of only one of -k and -f.
+	* bmc-config/src/bmc-argp.c (args_validate): Fix check of only
+	one of -k and -f for when you --commit.
 	
 2006-08-08  Albert Chu <chu11@llnl.gov>
 
