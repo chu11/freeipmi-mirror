@@ -1,3 +1,18 @@
+2006-08-10  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmi-wrappers.h, ipmipower/src/ipmi-wrappers.c
+	(Fiid_obj_clear): Return void instead of int8_t.
+
+	* ipmipower/src/ipmi-wrappers.h, ipmipower/src/ipmi-wrappers.c
+	(Fiid_obj_set_data): New function.
+
+	* ipmipower/src/ipmi-wrappers.h, ipmipower/src/ipmi-wrappers.c
+	(Fiid_obj_clear_field): Return void instead of int8_t.
+
+	* ipmipower/src/ipmipower_check.c
+	(ipmipower_check_rakp_2_key_exchange_authentication_code): Add
+	supermicro IPMI 2.0 workarounds.
+	
 2006-08-09  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/: Change section names with "LAN" to "Lan" for

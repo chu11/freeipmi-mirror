@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.47 2006-08-09 00:50:54 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.48 2006-08-10 18:09:09 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -641,7 +641,7 @@ RAKP 4 response integrity check when using the integrity algorith
 MD5-128, and password truncation if the authentication algorithm is
 HMAC-MD5-128.
 
-Supermicro H8QME with SIMSO daughter card: There are a number of
+Supermicro H8QME with SIMSO daughter card: There are several
 Supermicro IPMI 2.0 bugs on early firmware revisions which can be
 worked around using the -Y (--supermicro-2-0-session) option.
 

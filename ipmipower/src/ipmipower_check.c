@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.56 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.57 2006-08-10 18:09:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -816,6 +816,43 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       username_len = (username) ? strlen((char *)username) : 0;
     }
   
+  if (conf->supermicro_2_0_session)
+    {
+      uint8_t keybuf[IPMI_PACKET_BUFLEN];
+      int32_t keybuf_len;
+
+      /* IPMI Workaround (achu) 
+       * 
+       * Discovered on Supermicro H8QME with SIMSO daughter card.
+       *
+       * The IPMI 2.0 packet responses for RAKP 2 have payload lengths
+       * that are off by 1 (i.e. if the payload length should be X,
+       * the payload length returned in the packet is X + 1)
+       *
+       * We fix/adjust for the situation here.
+       */
+      
+      keybuf_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+				     "key_exchange_authentication_code",
+				     keybuf,
+				     IPMI_PACKET_BUFLEN);
+      if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+	  && keybuf_len == 1) 
+	Fiid_obj_clear_field(ip->obj_rakp_message_2_res, "key_exchange_authentication_code");
+       else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	       && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
+	Fiid_obj_set_data(ip->obj_rakp_message_2_res,
+			  "key_exchange_authentication_code",
+			  keybuf,
+			  IPMI_HMAC_SHA1_DIGEST_LENGTH);
+      else if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+               && keybuf_len == (IPMI_HMAC_MD5_DIGEST_LENGTH + 1))
+	Fiid_obj_set_data(ip->obj_rakp_message_2_res,
+			  "key_exchange_authentication_code",
+			  keybuf,
+			  IPMI_HMAC_MD5_DIGEST_LENGTH);
+    }
+
   if (strlen(conf->password))
     password = (uint8_t *)conf->password;
   else

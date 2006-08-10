@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.17 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.18 2006-08-10 18:09:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -172,7 +172,15 @@ Fiid_obj_create(fiid_template_t tmpl)
   return obj;
 }
 
-int8_t
+void 
+Fiid_obj_destroy(fiid_obj_t obj) 
+{
+  assert(fiid_obj_valid(obj));
+
+  fiid_obj_destroy(obj);
+}
+
+void
 Fiid_obj_clear(fiid_obj_t obj)
 {
   int8_t rv;
@@ -181,16 +189,17 @@ Fiid_obj_clear(fiid_obj_t obj)
 
   if ((rv = fiid_obj_clear(obj)) < 0)
     err_exit("Fiid_obj_clear: %s", strerror(errno)); 
-
-  return rv;
 }
 
-void 
-Fiid_obj_destroy(fiid_obj_t obj) 
+void
+Fiid_obj_clear_field(fiid_obj_t obj, char *field)
 {
-  assert(fiid_obj_valid(obj));
+  int8_t rv;
 
-  fiid_obj_destroy(obj);
+  assert(fiid_obj_valid(obj) && field);
+
+  if ((rv = fiid_obj_clear_field(obj, field)) < 0)
+    err_exit("Fiid_obj_clear_field: %s", strerror(errno)); 
 }
 
 void
@@ -219,6 +228,19 @@ Fiid_obj_get_data(fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len)
   if ((rv = fiid_obj_get_data(obj, field, data, data_len)) < 0)
     err_exit("Fiid_obj_get_data: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
 
+  return rv;
+}
+
+int32_t 
+Fiid_obj_set_data(fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len)
+{
+  int32_t rv;
+  
+  assert(fiid_obj_valid(obj) && field && data && data_len);
+  
+  if ((rv = fiid_obj_set_data(obj, field, data, data_len)) < 0)
+    err_exit("Fiid_obj_set_data: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
+  
   return rv;
 }
 
