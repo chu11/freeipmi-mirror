@@ -22,6 +22,15 @@
 	* bmc-config/src/: Support multiple -k values on the command line;
 	
 	* bmc-config/src/: Globally check value of malloc, calloc, and strdup.
+
+	Re-support -k and -f options on the command line at the same time.
+
+	* bmc-config/src/bmc-commit.c (bmc_keypair_feed): New function.
+
+	* bmc-config/src/bmc-commit.c (bmc_commit_file): Support keypairs
+	and filenames both on the commandline.
+
+	* bmc-config/src/bmc-argp.c (args_validate): Remove check of only one of -k and -f.
 	
 2006-08-08  Albert Chu <chu11@llnl.gov>
 

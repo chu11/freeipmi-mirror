@@ -59,6 +59,99 @@ bmc_commit_keypairs (struct arguments *arguments,
 }
 
 static int
+bmc_keypair_feed (struct arguments *arguments,
+                  struct section *sections)
+{
+  struct keypair *kp = arguments->keypairs;
+
+  while (kp)
+    {
+      struct section *sect;
+      char *keypair;
+      char *section_name;
+      char *key_name;
+      char *value;
+      int found_section;
+
+      if (!(keypair = strdup (kp->keypair)))
+        {
+          perror("strdup");
+          exit(1);
+        }
+      
+      section_name = strtok (keypair, ":");
+      key_name = strtok (NULL, "=");
+      value = strtok (NULL, "");
+      
+      if (!(section_name && key_name && value)) 
+        {
+          fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
+          free (keypair);
+          return -1;
+        }
+     
+      section_name = strtok (section_name, " \t");
+      key_name = strtok (key_name, " \t");
+      value = strtok (value, " \t");
+      
+      sect = sections;
+      found_section = 0;
+      while (sect) 
+        {
+          if (!strcasecmp(sect->section, section_name))
+            {
+              struct keyvalue *kv = sect->keyvalues;
+              int found_key = 0;
+
+              found_section++;
+
+              while (kv) 
+                {
+                  if (!strcasecmp(kv->key, key_name))
+                    {
+                      found_key++;
+
+                      if (kv->value)
+                        free(kv->value);
+                      
+                      if (!(kv->value = strdup(value)))
+                        {
+                          perror("strdup");
+                          exit(1);
+                        }
+
+                      break;    /* break out of 'kv' loop */
+                    }
+                  kv = kv->next;
+                }
+
+              if (!found_key)
+                {
+                  fprintf (stderr, "Invalid KEY in `%s'\n", kp->keypair);
+                  free (keypair);
+                  return -1;
+                }
+
+              break;            /* break out of 'sect' loop */
+            }
+          sect = sect->next;
+        }
+      
+      if (!found_section)
+        {
+          fprintf (stderr, "Invalid SECTION in `%s'\n", kp->keypair);
+          free (keypair);
+          return -1;
+        }
+
+      free (keypair);
+      kp = kp->next;
+    }
+
+  return 0;
+}
+
+static int
 bmc_commit_file (struct arguments *arguments,
 		 struct section *sections)
 {
@@ -82,9 +175,13 @@ bmc_commit_file (struct arguments *arguments,
   if (fp != stdin)
     fclose (fp);
 
+  /* 2nd pass - feed in keypair elements from the command line */
+  if (arguments->keypairs)
+    ret = bmc_keypair_feed (arguments, sections);
+
   if (!ret) 
     {
-      /* 2nd pass if 1st pass was successful */
+      /* 3rd pass */
       struct section *sect = sections;
       while (sect) 
         {

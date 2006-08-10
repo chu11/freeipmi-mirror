@@ -122,14 +122,6 @@ args_validate (struct arguments *args)
       return -1;
     }
 
-  // filename and keypair both not given
-  if (args->filename && args->keypairs) 
-    {
-      fprintf (stderr, 
-               "Both --filename or --keypair cannot be used\n");
-      return -1;
-    }
-
   // filename is readable if commit, writable/creatable if checkout
 
   if (args->filename) 
