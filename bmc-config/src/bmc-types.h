@@ -40,6 +40,12 @@ struct keypair
   struct keypair *next;
 };
 
+struct sectionstr
+{
+  char *sectionstr;
+  struct sectionstr *next;
+};
+
 struct arguments
 {
   struct common_cmd_args common;
@@ -49,7 +55,7 @@ struct arguments
 
   char *filename;
   struct keypair *keypairs;
-  char *section;
+  struct sectionstr *sectionstrs;
 
   bmc_action_t action;
 };

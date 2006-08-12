@@ -1,3 +1,7 @@
+2006-08-12  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Support multiple invocations for --section option.
+	
 2006-08-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_config.c (ipmipower_config_setup): Call

@@ -136,7 +136,7 @@ args_validate (struct arguments *args)
 
   // only one of keypairs or section can be given for checkout
   if (args->action == BMC_ACTION_CHECKOUT
-      && (args->keypairs && args->section))
+      && (args->keypairs && args->sectionstrs))
     {
       fprintf (stderr, 
                "Only one of --filename, --keypair, and --section can be used\n");
@@ -212,12 +212,33 @@ _create_keypair(char *arg)
   return kp;
 }
 
+static struct sectionstr *
+_create_sectionstr(char *arg)
+{
+  struct sectionstr *kp;
+  
+  if (!(kp = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
+    {
+      perror("malloc");
+      exit(1);
+    }
+  if (!(kp->sectionstr = strdup(arg)))
+    {
+      perror("strdup");
+      exit(1);
+    }
+  kp->next = NULL;
+
+  return kp;
+}
+
 /* Parse a single option. */
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct arguments *arguments = state->input;
   struct keypair *kp;
+  struct sectionstr *sstr;
 
   switch (key)
     {
@@ -256,13 +277,19 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case 'S':
-      if (arguments->section) /* If specified more than once */
-	free (arguments->section);
-      if (!(arguments->section = strdup (arg)))
+      sstr = _create_sectionstr(arg);
+      if (arguments->sectionstrs)
         {
-          perror("strdup");
-          exit(1);
+          struct sectionstr *p = NULL;
+          
+          p = arguments->sectionstrs;
+          while (p->next)
+            p = p->next;
+          
+          p->next = sstr;
         }
+      else
+        arguments->sectionstrs = sstr;
       break;
 
     case 'o':

@@ -172,8 +172,7 @@ bmc_checkout_section (struct arguments *arguments,
 {
   int ret = 0;
   FILE *fp;
-  struct section *sect = sections;
-  int found = 0;
+  struct sectionstr *sstr = arguments->sectionstrs;
 
   if (arguments->filename && strcmp (arguments->filename, "-"))
     fp = fopen (arguments->filename, "w");
@@ -186,30 +185,41 @@ bmc_checkout_section (struct arguments *arguments,
       return -1;
     }
 
-  while (sect) 
+
+
+  while (sstr)
     {
-      if (!strcasecmp(sect->section, arguments->section))
+      struct section *sect = sections;
+      int found = 0;
+      
+      while (sect) 
         {
-          /* exit with non- zero if any field fails to
-             checkout, but continue to checkout other
-             fields */
-          int this_ret = 0;
+          if (!strcasecmp(sect->section, sstr->sectionstr))
+            {
+              /* exit with non- zero if any field fails to
+                 checkout, but continue to checkout other
+                 fields */
+              int this_ret = 0;
+              
+              found++;
+              
+              ret = ((this_ret = bmc_checkout_section_common (arguments, sect, fp)) || ret);
+              
+              break;
+            }
 
-          found++;
-
-          ret = ((this_ret = bmc_checkout_section_common (arguments, sect, fp)) || ret);
-
-          break;
+          sect = sect->next;
         }
-      sect = sect->next;
+
+      if (!found)
+        {
+          fprintf(stderr, "Invalid section `%s'\n", sstr->sectionstr);
+          ret = -1;
+        } 
+
+      sstr = sstr->next;
     }
-
-  if (!found)
-    {
-      fprintf(stderr, "Invalid section `%s'\n", arguments->section);
-      ret = -1;
-    } 
-
+  
   return ret;
 }
 
@@ -254,7 +264,7 @@ bmc_checkout (struct arguments *arguments,
 
   if (arguments->keypairs) 
     ret = bmc_checkout_keypairs (arguments, sections);
-  else if (arguments->section)
+  else if (arguments->sectionstrs)
     ret = bmc_checkout_section (arguments, sections);
   else
     ret = bmc_checkout_file (arguments, sections);
