@@ -102,9 +102,11 @@ static struct argp_option options[] = {
    "use KEY-PAIR in checkout, commit or diff", 17},
   {"section", 'S', "SECTION", 0,
    "use SECTION in checkout", 18},
+  {"listsections", 'L', 0, 0,
+   "List available sections for checkout", 19},
 
-  {"verbose",   'v', 0, 0,  "Produce verbose output", 19},
-  {"quiet",     'q', 0, 0,  "Do not produce any output", 20},
+  {"verbose",   'v', 0, 0,  "Produce verbose output", 20},
+  {"quiet",     'q', 0, 0,  "Do not produce any output", 21},
   {"silent",    's', 0, OPTION_ALIAS },
   { 0, }
 };
@@ -120,7 +122,7 @@ args_validate (struct arguments *args)
   if (! args->action || args->action == -1) 
     {
       fprintf (stderr, 
-               "Exactly one of --checkout, --commit or --diff MUST be given\n");
+               "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
       return -1;
     }
 
@@ -290,6 +292,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       else
         arguments->sectionstrs = sstr;
+      break;
+
+    case 'L':
+      if (! arguments->action)
+	arguments->action = BMC_ACTION_LIST_SECTIONS;
+      else
+	arguments->action = -1;
       break;
 
     case 'o':

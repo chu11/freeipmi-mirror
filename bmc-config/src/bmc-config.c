@@ -226,6 +226,9 @@ main (int argc, char *argv[])
   case BMC_ACTION_DIFF:
     ret = bmc_diff (&arguments, sections);
     break;
+  case BMC_ACTION_LIST_SECTIONS:
+    ret = bmc_sections_list (&arguments, sections);
+    break;
   }
   
   ipmi_close_device(arguments.dev);

@@ -31,7 +31,8 @@ typedef enum
   {
     BMC_ACTION_CHECKOUT = 1,
     BMC_ACTION_COMMIT,
-    BMC_ACTION_DIFF
+    BMC_ACTION_DIFF,
+    BMC_ACTION_LIST_SECTIONS,
   } bmc_action_t;
 
 struct keypair 

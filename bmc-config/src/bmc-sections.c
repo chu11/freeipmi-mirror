@@ -183,3 +183,18 @@ bmc_section_diff_value (const char *section_name,
 
   return kv->diff (arguments, sect, kv);
 }
+
+int 
+bmc_sections_list (struct arguments *args, 
+                   struct section *sections)
+{
+  struct section *sect = sections;
+
+  while (sect)
+    {
+      printf("%s\n", sect->section); 
+      sect = sect->next;
+    }
+
+  return 0;
+}

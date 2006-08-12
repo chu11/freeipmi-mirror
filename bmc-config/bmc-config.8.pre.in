@@ -39,9 +39,11 @@ Use this file for BMC checkout/commit.
 \fB\-k\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
 Use KEY=VALUE pairs for checkout/commit/diff.  This option can be used multiple times.
 .TP
-\fB\-S\fR "KEY=VALUE", \fB\-\-section=\fR"SECTION"
+\fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
 Use SECTION for checkout.  This option can be used multiple times.
-
+.TP
+\fB\-L\fR, \fB\-\-listsections\fR
+List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print detailed information.

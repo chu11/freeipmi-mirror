@@ -101,6 +101,8 @@ struct section * bmc_pef_conf_section_get (struct arguments *args);
 struct section * bmc_sol_conf_section_get (struct arguments *args);
 struct section * bmc_misc_section_get (struct arguments *args);
 
+int bmc_sections_list (struct arguments *args, struct section *sections);
+
 #define same(a,b) (strcasecmp(a,b) == 0)
 
 #define add_section(db, extra) do { \
