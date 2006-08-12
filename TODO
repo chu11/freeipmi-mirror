@@ -13,7 +13,7 @@ X H) OpenIPMI inband driver suppport (achu: done)
   I) doc/freeipmi.texi
   I-1) ipmi-sensors update
   I-2) bmc-config update
-       - --section option
+       - --section && --listsections stuff
   I-3) bmc-autoconfig options
 
 AB's TODO list
