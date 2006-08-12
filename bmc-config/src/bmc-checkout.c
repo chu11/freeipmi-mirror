@@ -95,6 +95,125 @@ bmc_checkout_keypairs (struct arguments *arguments,
 }
 
 static int
+bmc_checkout_section_common (struct arguments *arguments,
+                             struct section *sect, 
+                             FILE *fp)
+{
+  struct keyvalue *kv = sect->keyvalues;
+  int ret = 0;
+
+  fprintf (fp, "Section %s\n", sect->section);
+  
+  while (kv) 
+    {
+      /* exit with non- zero if any field fails to
+         checkout, but continue to checkout other
+         fields */
+      int this_ret = 0;
+      
+      /* achu: Certain keys should be "hidden" and not be checked
+       * out.  They only linger for backwards compatability to
+       * FreeIPMI's 0.2.0 bmc-config, which several options with
+       * typoed names.
+       */
+      if (kv->flags & BMC_DO_NOT_CHECKOUT)
+        {
+          kv = kv->next;
+          continue;
+        }
+
+      ret = ((this_ret = kv->checkout (arguments, sect, kv)) || ret);
+              
+      if (this_ret != 0) 
+        {
+          if (arguments->verbose)
+            fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
+                     sect->section,
+                     kv->key);
+        } 
+      else 
+        {
+          int key_len = 0;
+                  
+          fprintf (fp, "\t## %s\n", kv->desc);
+                  
+          /* beauty comes at a cost */
+          
+          /* achu: Certain keys should have their checked out
+           * value automatically commented out.  Sometimes (in the
+           * case of passwords) they cannot be checked out, so the
+           * default is for value to be empty.  We do not want the
+           * user accidently commiting this checked out file,
+           * which (in this example) clear the password.
+           */
+          if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
+            key_len = fprintf(fp, "\t## %s", kv->key);
+          else
+            key_len = fprintf (fp, "\t%s", kv->key);
+          
+          while (key_len <= 45) 
+            {
+              fprintf (fp, " ");
+              key_len++;
+            }
+          
+          fprintf (fp, "%s\n", kv->value);
+        }
+      
+      kv = kv->next;
+    }
+  fprintf (fp, "EndSection\n");
+  return ret;
+}
+
+static int
+bmc_checkout_section (struct arguments *arguments,
+                      struct section *sections)
+{
+  int ret = 0;
+  FILE *fp;
+  struct section *sect = sections;
+  int found = 0;
+
+  if (arguments->filename && strcmp (arguments->filename, "-"))
+    fp = fopen (arguments->filename, "w");
+  else
+    fp = stdout;
+
+  if (!fp) 
+    {
+      perror (arguments->filename);
+      return -1;
+    }
+
+  while (sect) 
+    {
+      if (!strcasecmp(sect->section, arguments->section))
+        {
+          /* exit with non- zero if any field fails to
+             checkout, but continue to checkout other
+             fields */
+          int this_ret = 0;
+
+          found++;
+
+          ret = ((this_ret = bmc_checkout_section_common (arguments, sect, fp)) || ret);
+
+          break;
+        }
+      sect = sect->next;
+    }
+
+  if (!found)
+    {
+      fprintf(stderr, "Invalid section `%s'\n", arguments->section);
+      ret = -1;
+    } 
+
+  return ret;
+}
+
+static int
 bmc_checkout_file (struct arguments *arguments,
 		   struct section *sections)
 {
@@ -115,69 +234,13 @@ bmc_checkout_file (struct arguments *arguments,
 
   while (sect) 
     {
-      struct keyvalue *kv = sect->keyvalues;
+      /* exit with non- zero if any field fails to
+         checkout, but continue to checkout other
+         fields */
+      int this_ret = 0;
+      
+      ret = ((this_ret = bmc_checkout_section_common (arguments, sect, fp)) || ret);
 
-      fprintf (fp, "Section %s\n", sect->section);
-
-      while (kv) 
-        {
-          /* exit with non- zero if any field fails to
-             checkout, but continue to checkout other
-             fields */
-          int this_ret = 0;
-
-          /* achu: Certain keys should be "hidden" and not be checked
-           * out.  They only linger for backwards compatability to
-           * FreeIPMI's 0.2.0 bmc-config, which several options with
-           * typoed names.
-           */
-          if (kv->flags & BMC_DO_NOT_CHECKOUT)
-            {
-              kv = kv->next;
-              continue;
-            }
-
-          ret = ((this_ret = kv->checkout (arguments, sect, kv)) || ret);
-          
-          if (this_ret != 0) 
-            {
-              if (arguments->verbose)
-                fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
-                         sect->section,
-                         kv->key);
-            } 
-          else 
-            {
-              int key_len = 0;
-              
-              fprintf (fp, "\t## %s\n", kv->desc);
-              
-              /* beauty comes at a cost */
-
-              /* achu: Certain keys should have their checked out
-               * value automatically commented out.  Sometimes (in the
-               * case of passwords) they cannot be checked out, so the
-               * default is for value to be empty.  We do not want the
-               * user accidently commiting this checked out file,
-               * which (in this example) clear the password.
-               */
-              if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
-                key_len = fprintf(fp, "\t## %s", kv->key);
-              else
-                key_len = fprintf (fp, "\t%s", kv->key);
-              
-              while (key_len <= 45) 
-                {
-                  fprintf (fp, " ");
-                  key_len++;
-                }
-              
-              fprintf (fp, "%s\n", kv->value);
-            }
-
-          kv = kv->next;
-        }
-      fprintf (fp, "EndSection\n");
       sect = sect->next;
     }
   return ret;
@@ -191,6 +254,8 @@ bmc_checkout (struct arguments *arguments,
 
   if (arguments->keypairs) 
     ret = bmc_checkout_keypairs (arguments, sections);
+  else if (arguments->section)
+    ret = bmc_checkout_section (arguments, sections);
   else
     ret = bmc_checkout_file (arguments, sections);
 

@@ -99,10 +99,12 @@ static struct argp_option options[] = {
   {"filename", 'f', "FILENAME", 0, 
    "use FILENAME in checkout, commit or diff", 16},
   {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in commit or diff", 17},
+   "use KEY-PAIR in checkout, commit or diff", 17},
+  {"section", 'S', "SECTION", 0,
+   "use SECTION in checkout", 18},
 
-  {"verbose",   'v', 0, 0,  "Produce verbose output", 18},
-  {"quiet",     'q', 0, 0,  "Do not produce any output", 19 },
+  {"verbose",   'v', 0, 0,  "Produce verbose output", 19},
+  {"quiet",     'q', 0, 0,  "Do not produce any output", 20},
   {"silent",    's', 0, OPTION_ALIAS },
   { 0, }
 };
@@ -129,6 +131,15 @@ args_validate (struct arguments *args)
     {
       fprintf (stderr, 
                "Both --filename or --keypair cannot be used\n");
+      return -1;
+    }
+
+  // only one of keypairs or section can be given for checkout
+  if (args->action == BMC_ACTION_CHECKOUT
+      && (args->keypairs && args->section))
+    {
+      fprintf (stderr, 
+               "Only one of --filename, --keypair, and --section can be used\n");
       return -1;
     }
 
@@ -242,6 +253,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       else
         arguments->keypairs = kp;
+      break;
+
+    case 'S':
+      if (arguments->section) /* If specified more than once */
+	free (arguments->section);
+      if (!(arguments->section = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
 
     case 'o':

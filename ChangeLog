@@ -2,6 +2,8 @@
 
 	* ipmipower/src/ipmipower_config.c (ipmipower_config_setup): Call
 	secure_malloc only if in non-debug mode.
+
+	* bmc-config/: Support --section option. 
 	
 2006-08-10  Albert Chu <chu11@llnl.gov>
 

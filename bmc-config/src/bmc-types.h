@@ -49,6 +49,7 @@ struct arguments
 
   char *filename;
   struct keypair *keypairs;
+  char *section;
 
   bmc_action_t action;
 };
