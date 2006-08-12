@@ -1,3 +1,8 @@
+2006-08-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_config.c (ipmipower_config_setup): Call
+	secure_malloc only if in non-debug mode.
+	
 2006-08-10  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmi-wrappers.h, ipmipower/src/ipmi-wrappers.c

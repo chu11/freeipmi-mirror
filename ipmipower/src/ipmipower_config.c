@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.37 2006-08-09 00:50:55 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.38 2006-08-12 00:39:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,8 +75,13 @@ ipmipower_config_setup(void)
 {
   assert(conf == NULL);         /* Already initialized */
 
+#ifdef NDEBUG
   if (!(conf = (struct ipmipower_config *)secure_malloc(sizeof(struct ipmipower_config))))
     err_exit("secure_malloc: %s", strerror(errno));
+#else  /* !NDEBUG */
+  if (!(conf = (struct ipmipower_config *)malloc(sizeof(struct ipmipower_config))))
+    err_exit("malloc: %s", strerror(errno));
+#endif /* !NDEBUG */
 
   conf->hosts = NULL;
   conf->hosts_count = 0;
