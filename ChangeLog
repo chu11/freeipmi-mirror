@@ -7,6 +7,8 @@
 	* ipmipower/src/ipmipower_prompt.c
 	(ipmipower_prompt_process_cmdline): Fix tabbing.
 
+	* doc/freeipmi.texi: Update with new bmc-config options.
+
 2006-08-12  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Support multiple invocations for --section option.

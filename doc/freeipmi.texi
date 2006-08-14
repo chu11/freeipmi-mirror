@@ -459,6 +459,12 @@ replicate the configuration.
       Update configuration information to BMC. This option can be used
       multiple times.
 
+@item -S, ---section=@var{SECTION} @*
+      Use SECTION for checkout.  This option can be used multiple times.
+
+@item -L, ---listsections @*
+      List available sections for checkout.
+
 @item -v, ---verbose @*
       Print detailed information.
 
