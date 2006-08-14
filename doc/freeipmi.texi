@@ -1045,10 +1045,10 @@ nominal, threshold max/min readings and status descriptions.
 
 @menu
 * ipmi-sensors options::        Command-line arguments.
-* ipmi-sensors examples::       Examples.
+* ipmi-sensors example::        Example.
 @end menu
 
-@node ipmi-sensors options, ipmi-sensors examples, ipmi-sensors, ipmi-sensors
+@node ipmi-sensors options, ipmi-sensors example, ipmi-sensors, ipmi-sensors
 @section command-line arguments
 @itemize @bullet
 @item ---no-probing @*
@@ -1117,7 +1117,7 @@ nominal, threshold max/min readings and status descriptions.
       Print program version.
 @end itemize
 
-@node ipmi-sensors examples,  , ipmi-sensors options, ipmi-sensors
+@node ipmi-sensors example,  , ipmi-sensors options, ipmi-sensors
 @section ipmi-sensors output
 @example
 www:~# ipmi-sensors 
