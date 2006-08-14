@@ -11,7 +11,7 @@ X G) RPM repackaging (achu: done)
   G-1) ipmiconsole/libipmiconsole
 X H) OpenIPMI inband driver suppport (achu: done)
   I) doc/freeipmi.texi
-  I-1) ipmi-sensors update
+  X I-1) ipmi-sensors update
   X I-2) bmc-config update
   X       - --section && --listsections stuff
   I-3) bmc-autoconfig options
