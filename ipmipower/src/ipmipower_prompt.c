@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.32 2006-08-09 00:50:55 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.33 2006-08-14 01:45:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -778,117 +778,118 @@ ipmipower_prompt_process_cmdline(void)
           char **argv = argv_create((char *)buf, "");
           int i;
 
-          if (argv[0] != NULL) {
-            if (strcmp(argv[0], "hostnames") == 0)
-              _cmd_hostnames(argv);
-            else if (strcmp(argv[0], "username") == 0)
-              _cmd_username(argv); 
-            else if (strcmp(argv[0], "password") == 0)
-              _cmd_password(argv);
-            else if (strcmp(argv[0], "k_g") == 0)
-              _cmd_k_g(argv);
-            else if (strcmp(argv[0], "on") == 0)
-              _cmd_power(argv, POWER_CMD_POWER_ON);
-            else if (strcmp(argv[0], "off") == 0)
-              _cmd_power(argv, POWER_CMD_POWER_OFF);
-            else if (strcmp(argv[0], "cycle") == 0)
-              _cmd_power(argv, POWER_CMD_POWER_CYCLE);
-            else if (strcmp(argv[0], "reset") == 0)
-              _cmd_power(argv, POWER_CMD_POWER_RESET);
-            else if (strcmp(argv[0], "stat") == 0)
-              _cmd_power(argv, POWER_CMD_POWER_STATUS);
-            else if (strcmp(argv[0], "pulse") == 0)
-              _cmd_power(argv, POWER_CMD_PULSE_DIAG_INTR);
-            else if (strcmp(argv[0], "soft") == 0)
-              _cmd_power(argv, POWER_CMD_SOFT_SHUTDOWN_OS);
-            else if (strcmp(argv[0], "help") == 0 
-                     || strcmp(argv[0], "?") == 0)
-              _cmd_help();
-            else if (strcmp(argv[0], "advanced") == 0)
-              _cmd_advanced();
-            else if (strcmp(argv[0], "network") == 0)
-              _cmd_network();
-            else if (strcmp(argv[0], "version") == 0)
-              _cmd_version();
-            else if (strcmp(argv[0], "quit") == 0)
-              quit = 1;
-            else if (strcmp(argv[0], "authentication_type") == 0)
-              _cmd_authentication_type(argv);
-            else if (strcmp(argv[0], "privilege") == 0)
-              _cmd_privilege(argv);
-            else if (strcmp(argv[0], "ipmi_version") == 0)
-              _cmd_ipmi_version(argv);
-            else if (strcmp(argv[0], "cipher_suite_id") == 0)
-              _cmd_cipher_suite_id(argv);
-            else if (strcmp(argv[0], "on-if-off") == 0)
+          if (argv[0] != NULL) 
+            {
+              if (strcmp(argv[0], "hostnames") == 0)
+                _cmd_hostnames(argv);
+              else if (strcmp(argv[0], "username") == 0)
+                _cmd_username(argv); 
+              else if (strcmp(argv[0], "password") == 0)
+                _cmd_password(argv);
+              else if (strcmp(argv[0], "k_g") == 0)
+                _cmd_k_g(argv);
+              else if (strcmp(argv[0], "on") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_ON);
+              else if (strcmp(argv[0], "off") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_OFF);
+              else if (strcmp(argv[0], "cycle") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_CYCLE);
+              else if (strcmp(argv[0], "reset") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_RESET);
+              else if (strcmp(argv[0], "stat") == 0)
+                _cmd_power(argv, POWER_CMD_POWER_STATUS);
+              else if (strcmp(argv[0], "pulse") == 0)
+                _cmd_power(argv, POWER_CMD_PULSE_DIAG_INTR);
+              else if (strcmp(argv[0], "soft") == 0)
+                _cmd_power(argv, POWER_CMD_SOFT_SHUTDOWN_OS);
+              else if (strcmp(argv[0], "help") == 0 
+                       || strcmp(argv[0], "?") == 0)
+                _cmd_help();
+              else if (strcmp(argv[0], "advanced") == 0)
+                _cmd_advanced();
+              else if (strcmp(argv[0], "network") == 0)
+                _cmd_network();
+              else if (strcmp(argv[0], "version") == 0)
+                _cmd_version();
+              else if (strcmp(argv[0], "quit") == 0)
+                quit = 1;
+              else if (strcmp(argv[0], "authentication_type") == 0)
+                _cmd_authentication_type(argv);
+              else if (strcmp(argv[0], "privilege") == 0)
+                _cmd_privilege(argv);
+              else if (strcmp(argv[0], "ipmi_version") == 0)
+                _cmd_ipmi_version(argv);
+              else if (strcmp(argv[0], "cipher_suite_id") == 0)
+                _cmd_cipher_suite_id(argv);
+              else if (strcmp(argv[0], "on-if-off") == 0)
               _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
-            else if (strcmp(argv[0], "outputtype") == 0)
-              _cmd_outputtype(argv);
-            else if (strcmp(argv[0], "force-permsg-authentication") == 0)
-              _cmd_set_flag(argv, &conf->force_permsg_authentication, "force-permsg-authentication");
-            else if (strcmp(argv[0], "accept-session-id-zero") == 0)
-              _cmd_set_flag(argv, &conf->accept_session_id_zero, "accept-session-id-zero");
-            else if (strcmp(argv[0], "check-unexpected-authcode") == 0)
-              _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
-            else if (strcmp(argv[0], "intel-2-0-session") == 0)
-              _cmd_set_flag(argv, &conf->intel_2_0_session, "intel-2-0-session");
-            else if (strcmp(argv[0], "supermicro-2-0-session") == 0)
-              _cmd_set_flag(argv, &conf->supermicro_2_0_session, "supermicro-2-0-session");
+              else if (strcmp(argv[0], "outputtype") == 0)
+                _cmd_outputtype(argv);
+              else if (strcmp(argv[0], "force-permsg-authentication") == 0)
+                _cmd_set_flag(argv, &conf->force_permsg_authentication, "force-permsg-authentication");
+              else if (strcmp(argv[0], "accept-session-id-zero") == 0)
+                _cmd_set_flag(argv, &conf->accept_session_id_zero, "accept-session-id-zero");
+              else if (strcmp(argv[0], "check-unexpected-authcode") == 0)
+                _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
+              else if (strcmp(argv[0], "intel-2-0-session") == 0)
+                _cmd_set_flag(argv, &conf->intel_2_0_session, "intel-2-0-session");
+              else if (strcmp(argv[0], "supermicro-2-0-session") == 0)
+                _cmd_set_flag(argv, &conf->supermicro_2_0_session, "supermicro-2-0-session");
 #ifndef NDEBUG
-            else if (strcmp(argv[0], "debug") == 0) 
-	      {
-		_cmd_set_flag(argv, &conf->debug, "debugging");
-		err_cbuf(conf->debug, ttyerr);
-                err_cbuf_dump_file_stream(conf->debug, stderr);
-	      }
-            else if (strcmp(argv[0], "ipmidump") == 0)
-              _cmd_set_flag(argv, &conf->ipmidump, "ipmi dump");
-            else if (strcmp(argv[0], "rmcpdump") == 0)
-              _cmd_set_flag(argv, &conf->rmcpdump, "rmcp dump");
-	    else if (strcmp(argv[0], "log") == 0)
-              _cmd_log(argv);
-	    else if (strcmp(argv[0], "logfile") == 0)
-	      _cmd_logfile(argv);
+              else if (strcmp(argv[0], "debug") == 0) 
+                {
+                  _cmd_set_flag(argv, &conf->debug, "debugging");
+                  err_cbuf(conf->debug, ttyerr);
+                  err_cbuf_dump_file_stream(conf->debug, stderr);
+                }
+              else if (strcmp(argv[0], "ipmidump") == 0)
+                _cmd_set_flag(argv, &conf->ipmidump, "ipmi dump");
+              else if (strcmp(argv[0], "rmcpdump") == 0)
+                _cmd_set_flag(argv, &conf->rmcpdump, "rmcp dump");
+              else if (strcmp(argv[0], "log") == 0)
+                _cmd_log(argv);
+              else if (strcmp(argv[0], "logfile") == 0)
+                _cmd_logfile(argv);
 #endif /* NDEBUG */
-            else if (strcmp(argv[0], "happyeaster") == 0)
-              cbuf_printf(ttyout, "Ipmipower by Albert Chu <chu11@llnl.gov>\n");
-            else if (strcmp(argv[0], "config") == 0)
-              _cmd_config();
-            else if (strcmp(argv[0], "timeout") == 0)
-              _cmd_set_int(argv, &conf->timeout_len, "timeout", 0, 
-                           IPMIPOWER_TIMEOUT_MIN, IPMIPOWER_TIMEOUT_MAX);
-            else if (strcmp(argv[0], "retry-timeout") == 0)
-              _cmd_set_int(argv, &conf->retry_timeout_len, "retry-timeout", 1,
-                           IPMIPOWER_RETRY_TIMEOUT_MIN, conf->timeout_len);
-            else if (strcmp(argv[0], "retry-backoff-count") == 0)
-              _cmd_set_int(argv, &conf->retry_backoff_count, 
-                           "retry-backoff-count", 1,
-                           IPMIPOWER_RETRY_BACKOFF_COUNT_MIN,
-                           IPMIPOWER_RETRY_BACKOFF_COUNT_MAX);
-            else if (strcmp(argv[0], "ping-interval") == 0)
-              _cmd_set_int(argv, &conf->ping_interval_len, "ping-interval", 1, 
-                           IPMIPOWER_PING_INTERVAL_MIN, conf->ping_timeout_len);
-            else if (strcmp(argv[0], "ping-timeout") == 0)
-              _cmd_set_int(argv, &conf->ping_timeout_len, "ping-timeout", 1, 
-                           IPMIPOWER_PING_TIMEOUT_MIN, 
-                           IPMIPOWER_PING_TIMEOUT_MAX);
-            else if (strcmp(argv[0], "ping-packet-count") == 0)
-              _cmd_set_int(argv, &conf->ping_packet_count, "ping-packet-count",
-                           1, IPMIPOWER_PING_PACKET_COUNT_MIN, 
-                           IPMIPOWER_PING_PACKET_COUNT_MAX);
-            else if (strcmp(argv[0], "ping-percent") == 0)
-              _cmd_set_int(argv, &conf->ping_percent, "ping-percent", 
-                           1, IPMIPOWER_PING_PERCENT_MIN, 
-                           IPMIPOWER_PING_PERCENT_MAX);
-            else if (strcmp(argv[0], "ping-consec-count") == 0)
-              _cmd_set_int(argv, &conf->ping_consec_count, "ping-consec-count", 
-                           1, IPMIPOWER_PING_CONSEC_COUNT_MIN, 
-                           conf->ping_packet_count);
-            else
-              cbuf_printf(ttyout, "unknown command - type \"help\"\n");
-          }
+              else if (strcmp(argv[0], "happyeaster") == 0)
+                cbuf_printf(ttyout, "Ipmipower by Albert Chu <chu11@llnl.gov>\n");
+              else if (strcmp(argv[0], "config") == 0)
+                _cmd_config();
+              else if (strcmp(argv[0], "timeout") == 0)
+                _cmd_set_int(argv, &conf->timeout_len, "timeout", 0, 
+                             IPMIPOWER_TIMEOUT_MIN, IPMIPOWER_TIMEOUT_MAX);
+              else if (strcmp(argv[0], "retry-timeout") == 0)
+                _cmd_set_int(argv, &conf->retry_timeout_len, "retry-timeout", 1,
+                             IPMIPOWER_RETRY_TIMEOUT_MIN, conf->timeout_len);
+              else if (strcmp(argv[0], "retry-backoff-count") == 0)
+                _cmd_set_int(argv, &conf->retry_backoff_count, 
+                             "retry-backoff-count", 1,
+                             IPMIPOWER_RETRY_BACKOFF_COUNT_MIN,
+                             IPMIPOWER_RETRY_BACKOFF_COUNT_MAX);
+              else if (strcmp(argv[0], "ping-interval") == 0)
+                _cmd_set_int(argv, &conf->ping_interval_len, "ping-interval", 1, 
+                             IPMIPOWER_PING_INTERVAL_MIN, conf->ping_timeout_len);
+              else if (strcmp(argv[0], "ping-timeout") == 0)
+                _cmd_set_int(argv, &conf->ping_timeout_len, "ping-timeout", 1, 
+                             IPMIPOWER_PING_TIMEOUT_MIN, 
+                             IPMIPOWER_PING_TIMEOUT_MAX);
+              else if (strcmp(argv[0], "ping-packet-count") == 0)
+                _cmd_set_int(argv, &conf->ping_packet_count, "ping-packet-count",
+                             1, IPMIPOWER_PING_PACKET_COUNT_MIN, 
+                             IPMIPOWER_PING_PACKET_COUNT_MAX);
+              else if (strcmp(argv[0], "ping-percent") == 0)
+                _cmd_set_int(argv, &conf->ping_percent, "ping-percent", 
+                             1, IPMIPOWER_PING_PERCENT_MIN, 
+                             IPMIPOWER_PING_PERCENT_MAX);
+              else if (strcmp(argv[0], "ping-consec-count") == 0)
+                _cmd_set_int(argv, &conf->ping_consec_count, "ping-consec-count", 
+                             1, IPMIPOWER_PING_CONSEC_COUNT_MIN, 
+                             conf->ping_packet_count);
+              else
+                cbuf_printf(ttyout, "unknown command - type \"help\"\n");
+            }
           need_prompt = 1;
-
+          
           /* Clear out argv data for generic security purposes since
            * usernames or passwords could be stored here.  argv_create
            * guarantees a null terminated pointer, so this loop is

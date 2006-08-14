@@ -1,3 +1,12 @@
+2006-08-13  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_powercmd.c
+	(ipmipower_powercmd_process_pending): Fix corner case.  Do not
+	modify timeout if no pending commands exist.
+
+	* ipmipower/src/ipmipower_prompt.c
+	(ipmipower_prompt_process_cmdline): Fix tabbing.
+
 2006-08-12  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Support multiple invocations for --section option.
