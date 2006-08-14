@@ -15,6 +15,7 @@ X H) OpenIPMI inband driver suppport (achu: done)
   X I-2) bmc-config update
   X       - --section && --listsections stuff
   I-3) bmc-autoconfig options
+  J) Legacy Pad issue - not needed for ipmi 2.0
 
 AB's TODO list
 ==============
