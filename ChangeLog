@@ -7,7 +7,8 @@
 	* ipmipower/src/ipmipower_prompt.c
 	(ipmipower_prompt_process_cmdline): Fix tabbing.
 
-	* doc/freeipmi.texi: Update with new bmc-config options.
+	* doc/freeipmi.texi: Update with new bmc-config options and
+	ipmi-sensors info.
 
 2006-08-12  Albert Chu <chu11@llnl.gov>
 
