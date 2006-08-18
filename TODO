@@ -35,14 +35,6 @@ ipmi-sensors options and output once C version is done
 
 Al's TODO list
 ==============
-rpm
----
-Redo packages once re-org is complete
-  * freeipmi - lib + most utils
-  * freeipmi-devel - devel libs
-  * freeipmi-bmcwatchdog
-  * freeipmi-ipmiconsole
-
 libfreeipmi:
 ------------
   * how to support xRC4
