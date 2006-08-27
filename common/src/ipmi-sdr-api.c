@@ -49,7 +49,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <sys/param.h>
 #include <arpa/inet.h>
 #include <pwd.h>
-#include <errno.h>
 
 #define SDR_CACHE_DIR                "sdr-cache"
 #define SDR_CACHE_FILENAME_PREFIX    "sdr-cache"
@@ -69,7 +68,92 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "freeipmi-portability.h"
 #include "ipmi-common.h"
 
+#include "common-utils.h"
+
 #include "ipmi-sdr-api.h"
+#include "ipmi-sdr-cache-writes.h"
+#include "ipmi-sdr-cache-reads.h"
+
+static int 
+_fread_record (FILE *fp, char **cache_record)
+{
+  char *record;
+  
+  record = NULL;
+  
+  while (1)
+    {
+      char *line = NULL;
+      size_t n = 0;
+      
+      if (getline (&line, &n, fp) == -1)
+	{
+	  return (-1);
+	}
+      else 
+	{
+	  char *lineptr = line;
+	  char *tmp_lineptr = line;
+	  line = strdupa (stripwhite (tmp_lineptr));
+	  free (lineptr);
+	}
+      if (strlen (line) == 0)
+	{
+	  *cache_record = NULL;
+	  if (record)
+	    {
+	      *cache_record = strdup (record);
+	    }
+	  return 0;
+	}
+      
+      {
+	char *l_record = NULL;
+	int len = 0;
+	
+	if (record)
+	  {
+	    len = strlen (record) + strlen (line) + 2;
+	    l_record = alloca (len);
+	    strcpy (l_record, record);
+	    strcat (l_record, line);
+	    strcat (l_record, "\n");
+	    record = l_record;
+	  }
+	else 
+	  {
+	    len = strlen (line) + 2;
+	    l_record = alloca (len);
+	    strcpy (l_record, line);
+	    strcat (l_record, "\n");
+	    record = l_record;
+	  }
+      }
+    }
+  
+  return 0;
+}
+
+static int 
+_get_record_count (FILE *fp, int *count)
+{
+  char *cache_record = NULL;
+  int rcount = 0;
+  
+  while (1)
+    {
+      cache_record = NULL;
+      if (_fread_record (fp, &cache_record) == -1)
+	{
+	  *count = rcount;
+	  return 0;
+	}
+      rcount++;
+      free (cache_record);
+    }
+  
+  return (-1);
+}
 
 static char *
 _get_home_directory ()
@@ -1086,11 +1170,12 @@ create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose)
 	}
       return (-1);
     }
-  if (fwrite (&sdr_info, sizeof (sdr_repository_info_t), 1, fp) != 1)
+
+  if (write_sdr_repository_info (fp, &sdr_info) == -1)
     {
       if (verbose)
 	{
-	  fprintf (stderr, "FAILED: fwrite: %s\n", strerror(errno));
+	  fprintf (stderr, "FAILED: fprintf: %s\n", strerror(errno));
 	}
       return (-1);
     }
@@ -1118,9 +1203,9 @@ create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose)
 	  }
 
 	if (_get_sdr_record (dev, 
-                             record_id, 
-                             &next_record_id, 
-                             &sdr_record) == -1)
+			     record_id, 
+			     &next_record_id, 
+			     &sdr_record) == -1)
 	  {
 	    if (verbose)
 	      {
@@ -1128,12 +1213,12 @@ create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose)
 	      }
 	    return (-1);
 	  }
-
-	if (fwrite (&sdr_record, sizeof (sdr_record_t), 1, fp) != 1)
+	
+	if (write_sdr_record (fp, &sdr_record) == -1)
 	  {
 	    if (verbose)
 	      {
-                fprintf (stderr, "FAILED: fwrite: %s\n", strerror(errno));
+                fprintf (stderr, "FAILED: fprintf: %s\n", strerror(errno));
 	      }
 	    return (-1);
 	  }
@@ -1154,61 +1239,71 @@ int
 load_sdr_cache (FILE *fp, sdr_repository_info_t *sdr_info, 
 		sdr_record_t **sdr_record_list, int *count)
 {
-
+  char *cache_record = NULL;
+  int rv = -1;
+  
   ERR_EINVAL (fp 
               && sdr_info
               && sdr_record_list
               && count);
-
+  
   memset (sdr_info, 0, sizeof (sdr_repository_info_t));
-  if (fread (sdr_info, sizeof (sdr_repository_info_t), 1, fp) != 1)
+  if (_fread_record (fp, &cache_record) == -1)
     {
-      fprintf (stderr, "FAILED: fread: %s\n", strerror(errno));
+      fprintf (stderr, "FAILED: _fread_record: %s\n", strerror(errno));
+      return (-1);
+    }
+  rv = read_sdr_repository_info (cache_record, 
+				 sdr_info);
+  free (cache_record);
+  if (rv == -1)
+    {
       return (-1);
     }
   
   {
     long int current_position;
-    long int eof_position;
+    sdr_record_t *l_sdr_record_list;
+    int l_count;
+    int i;
     
     if ((current_position = ftell (fp)) == -1)
       {
         fprintf (stderr, "FAILED: ftell: %s\n", strerror(errno));
 	return (-1);
       }
-    if (fseek (fp, 0, SEEK_END))
+    if (_get_record_count (fp, &l_count) == -1)
       {
-        fprintf (stderr, "FAILED: fseek: %s\n", strerror(errno));
+        fprintf (stderr, "FAILED: _get_record_count: %s\n", strerror(errno));
 	return (-1);
       }
-    if ((eof_position = ftell (fp)) == -1)
-      {
-        fprintf (stderr, "FAILED: ftell: %s\n", strerror(errno));
-	return (-1);
-      }
-    
-    if ((eof_position - current_position) % sizeof (sdr_record_t))
-      {
-        fprintf (stderr, "FAILED: invalid position\n");
-	return (-1);
-      }
-    
-    *count = (eof_position - current_position) / sizeof (sdr_record_t);
-    
     if (fseek (fp, current_position, SEEK_SET))
       {
         fprintf (stderr, "FAILED: fseek: %s\n", strerror(errno));
 	return (-1);
       }
     
-    *sdr_record_list = calloc (*count, sizeof (sdr_record_t));
-    if (fread (*sdr_record_list, sizeof (sdr_record_t), *count, fp) != *count)
+    l_sdr_record_list = calloc (l_count, sizeof (sdr_record_t));
+    for (i = 0; i < l_count; i++)
       {
-        fprintf (stderr, "FAILED: fread: %s\n", strerror(errno));
-	return (-1);
+	if (_fread_record (fp, &cache_record) == -1)
+	  {
+	    fprintf (stderr, "FAILED: _fread_record: %s\n", strerror(errno));
+	    free (l_sdr_record_list);
+	    return (-1);
+	  }
+	rv = read_sdr_record (cache_record, (l_sdr_record_list + i));
+	free (cache_record);
+	if (rv == -1)
+	  {
+	    free (l_sdr_record_list);
+	    return (-1);
+	  }
       }
+    
+    *sdr_record_list = l_sdr_record_list;
+    *count = l_count;
   }
   
   return 0;
 }
-

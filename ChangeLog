@@ -1,3 +1,24 @@
+2006-08-27  A Balamurugan  <bala@zresearch.com>
+
+	* common/src/common-utils.[ch],
+	common/src/ipmi-sdr-cache-reads.[ch],
+	common/src/ipmi-sdr-cache-writes.[ch]: new files.
+
+	* common/src/ipmi-sdr-api.c: reworked according to new sdr cache
+	format.
+
+	* common/src/Makefile.am: updated.
+
+	* libfreeipmi/src/ipmi-ssif-api.c: fixed
+	IPMI_SSIF_MULTI_PART_WRITE_END_SMBUS_CMD value to 0x08.
+
+	* ipmi-sensors/src/sensors-very-verbose-display.c
+	(sensors_display_very_verbose_oem_record): displays oem_data of
+	oem_data_length.
+
+	* ipmi-sensors/src/ipmi-sensors-utils.c (str2long, str2ulong,
+	str2int, str2uint): moved to common/src/common-utils.[ch]
+
 2006-08-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_powercmd.c

@@ -337,7 +337,7 @@ sensors_display_very_verbose_oem_record (int record_id,
   printf ("Manufacturer ID: %Xh\n", 
 	  record->manufacturer_id);
   printf ("OEM Data: ");
-  for (i = 0; i < 55; i++)
+  for (i = 0; i < record->oem_data_length; i++)
     {
       printf ("%02X ", record->oem_data[i]);
     }
