@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.18 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.19 2006-08-30 18:38:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -215,7 +215,7 @@ _sendto(cbuf_t buf, int fd, struct sockaddr_in *destaddr)
   if (n == IPMI_PACKET_BUFLEN)
     err_exit("_sendto: Buffer full");
     
-  rv = ipmi_lan_sendto(fd, buffer, n, 0, (struct sockaddr *)destaddr,
+  rv = sendto(fd, buffer, n, 0, (struct sockaddr *)destaddr,
                        sizeof(struct sockaddr_in));
   if (rv < 0)
     err_exit("_sendto: ipmi_lan_sendto %s", strerror(errno));
@@ -235,8 +235,8 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
   struct sockaddr_in from;
   unsigned int fromlen = sizeof(struct sockaddr_in);
   
-  rv = ipmi_lan_recvfrom(fd, buffer, IPMI_PACKET_BUFLEN, 0, 
-                         (struct sockaddr *)&from, &fromlen);
+  rv = recvfrom(fd, buffer, IPMI_PACKET_BUFLEN, 0, 
+		(struct sockaddr *)&from, &fromlen);
   if (rv < 0)
     err_exit("_recvfrom: ipmi_lan_recvfrom: %s", strerror(errno));
   if (rv == 0)

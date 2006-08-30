@@ -1,3 +1,9 @@
+2006-08-30  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_check.c
+	(ipmipower_check_open_session_response_privilege): Fix privilege
+	check corner case.
+	
 2006-08-27  A Balamurugan  <bala@zresearch.com>
 
 	* common/src/common-utils.[ch],

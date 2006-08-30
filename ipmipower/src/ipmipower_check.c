@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.57 2006-08-10 18:09:09 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.58 2006-08-30 18:38:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -749,14 +749,17 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
       if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER
 	  && (val == IPMI_PRIVILEGE_LEVEL_USER
 	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
-	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN))
+	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN
+	      || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
       else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	       && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
-		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN))
-	rv = 1;
+		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN
+		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
+     rv = 1;
       else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
-	       && val == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	       && (val == IPMI_PRIVILEGE_LEVEL_ADMIN
+		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
       else
 	rv = 0;
