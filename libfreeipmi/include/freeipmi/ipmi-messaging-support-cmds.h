@@ -176,6 +176,10 @@ extern "C" {
 #define IPMI_PASSWORD_SIZE_VALID(__password_size) \
         (((__password_size) == IPMI_PASSWORD_SIZE_16_BYTES \
           || (__password_size) == IPMI_PASSWORD_SIZE_20_BYTES) ? 1 : 0)
+
+#define IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED 0x0
+#define IPMI_USER_ID_ENABLE_STATUS_ENABLED     0x1
+#define IPMI_USER_ID_ENABLE_STATUS_DISABLED    0x2
   
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;

@@ -285,9 +285,10 @@ static char * ipmi_sensor_type_code_0C_desc[] =
     "Configuration error",
     "Spare",
     "Memory Automatically Throttled",
+    "Critical Overtemperature.  Memory device has entered a critical overtemperature state, exceeding specified operating conditions.  Memory devices in this state may produce errors or become inaccessible",
     NULL
   };
-int ipmi_sensor_type_code_0C_desc_max = 0x09;
+int ipmi_sensor_type_code_0C_desc_max = 0x0A;
 
 static char * ipmi_sensor_type_code_0D_desc[] =
   {
@@ -363,9 +364,11 @@ static char * ipmi_sensor_type_code_13_desc[] =
     "Bus Correctable Error",
     "Bus Uncorrectable Error",
     "Fatal NMI (port 61h, bit 7)",
+    "Bus Fatal Error",
+    "Bus Degraded (bus operating in a degraded performance state)",
     NULL
   };
-int ipmi_sensor_type_code_13_desc_max = 0x09;
+int ipmi_sensor_type_code_13_desc_max = 0x0B;
 
 static char * ipmi_sensor_type_code_14_desc[] =
   {

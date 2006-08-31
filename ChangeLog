@@ -2,7 +2,21 @@
 
 	* ipmipower/src/ipmipower_powercmd.c (_check_open_session_error):
 	Fix corner cases.
-	
+
+	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Update w/ new
+	completion codes based on IPMI 2.0 Errata 3.
+
+	* libfreeipmi/src/ipmi-sensor-and-event-code-tables.c
+	(ipmi_sensor_type_code_13_desc): Updated with new strings.
+
+	* libfreeipmi/include/ipmi-messaging-support-cmds.h,
+	libfreeipmi/src/ipmi-messaging-support-cmds.c: Support user id
+	enabled/disabled detection in get user access command.
+
+	* bmc-config/src/: Support enable user id checkout due to errata
+	change to get user access command.
+
 2006-08-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_check.c

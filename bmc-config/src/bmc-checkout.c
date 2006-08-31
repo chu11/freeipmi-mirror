@@ -111,10 +111,10 @@ bmc_checkout_section_common (struct arguments *arguments,
          fields */
       int this_ret = 0;
       
-      /* achu: Certain keys should be "hidden" and not be checked
-       * out.  They only linger for backwards compatability to
-       * FreeIPMI's 0.2.0 bmc-config, which several options with
-       * typoed names.
+      /* achu: Certain keys should be "hidden" and not be checked out.
+       * They only linger for backwards compatability to FreeIPMI's
+       * 0.2.0 bmc-config, which have several options with typoed
+       * names.
        */
       if (kv->flags & BMC_DO_NOT_CHECKOUT)
         {
@@ -148,6 +148,13 @@ bmc_checkout_section_common (struct arguments *arguments,
            */
           if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
             key_len = fprintf(fp, "\t## %s", kv->key);
+          else if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
+            {
+              if (kv->value && strlen(kv->value))
+                key_len = fprintf (fp, "\t%s", kv->key);
+              else
+                key_len = fprintf(fp, "\t## %s", kv->key);
+            }
           else
             key_len = fprintf (fp, "\t%s", kv->key);
           

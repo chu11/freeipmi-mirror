@@ -381,6 +381,10 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER_STR \
 "attempt to write read-only parameter"
 
+#define IPMI_COMP_CODE_SET_PEF_READ_WRITE_ONLY_PARAMETER                  0x83
+#define IPMI_COMP_CODE_SET_PEF_READ_WRITE_ONLY_PARAMETER_STR \
+"attempt to read write-only parameter"
+
 /* IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS */
 
 #define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED                    0x80
@@ -455,6 +459,10 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER_STR \
 "attempt to write read-only parameter"
 
+#define IPMI_COMP_CODE_SET_LAN_READ_WRITE_ONLY_PARAMETER                  0x83
+#define IPMI_COMP_CODE_SET_LAN_READ_WRITE_ONLY_PARAMETER_STR \
+"attempt to read write-only parameter"
+
 /* IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS */
 
 #define IPMI_COMP_CODE_GET_LAN_PARAMETER_NOT_SUPPORTED                    0x80
@@ -502,6 +510,10 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER                  0x82
 #define IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER_STR \
 "attempt to write read-only parameter"
+
+#define IPMI_COMP_CODE_SET_SOL_READ_WRITE_ONLY_PARAMETER                  0x83
+#define IPMI_COMP_CODE_SET_SOL_READ_WRITE_ONLY_PARAMETER_STR \
+"attempt to read write-only parameter"
 
 /* IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS */
 

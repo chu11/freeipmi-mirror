@@ -126,10 +126,42 @@ enable_user_checkout (const struct arguments *args,
 		      const struct section *sect,
 		      struct keyvalue *kv)
 {
-  /* Cant get, always assume Yes */
+  int userid = atoi (sect->section + strlen ("User"));
+  uint8_t tmp_user_ipmi_messaging;
+  uint8_t tmp_user_link_authentication;
+  uint8_t tmp_user_restricted_to_callback;
+  uint8_t tmp_privilege_limit;
+  uint8_t tmp_session_limit;
+  uint8_t tmp_user_id_enable_status;
+  uint8_t ret;
+  
+  ret = get_bmc_user_lan_channel_access (args->dev,
+					 userid,
+					 &tmp_user_ipmi_messaging,
+					 &tmp_user_link_authentication,
+					 &tmp_user_restricted_to_callback,
+					 &tmp_privilege_limit,
+					 &tmp_session_limit,
+                                         &tmp_user_id_enable_status);
+
+  if (ret != 0)
+    return ret;
+  
   if (kv->value)
     free (kv->value);
-  kv->value = strdup ("");
+
+  /* 
+   * Older IPMI implementations cannot get the value, but new ones
+   * can.  If it cannot be checked out, the line will be commented out
+   * later on.
+   */
+  if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED)
+    kv->value = strdup ("");
+  else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
+    kv->value = strdup ("Yes");
+  else
+    kv->value = strdup ("No");
+
   return 0;
 }
 
@@ -286,6 +318,7 @@ lan_channel_get (ipmi_device_t dev,
   uint8_t tmp_user_restricted_to_callback;
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
+  uint8_t tmp_user_id_enable_status;
   uint8_t ret;
   
   ret = get_bmc_user_lan_channel_access (dev,
@@ -294,7 +327,8 @@ lan_channel_get (ipmi_device_t dev,
 					 &tmp_user_link_authentication,
 					 &tmp_user_restricted_to_callback,
 					 &tmp_privilege_limit,
-					 &tmp_session_limit);
+					 &tmp_session_limit,
+                                         &tmp_user_id_enable_status);
 
   if (ret != 0)
     return ret;
@@ -332,6 +366,7 @@ lan_channel_set (ipmi_device_t dev,
   uint8_t tmp_user_restricted_to_callback;
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
+  uint8_t tmp_user_id_enable_status;
   uint8_t ret;
   
   ret = get_bmc_user_lan_channel_access (dev,
@@ -340,7 +375,8 @@ lan_channel_set (ipmi_device_t dev,
 					 &tmp_user_link_authentication,
 					 &tmp_user_restricted_to_callback,
 					 &tmp_privilege_limit,
-					 &tmp_session_limit);
+					 &tmp_session_limit,
+                                         &tmp_user_id_enable_status);
 
   if (ret != 0)
     return ret;
@@ -963,6 +999,7 @@ serial_channel_get (ipmi_device_t dev,
   uint8_t tmp_user_restricted_to_callback;
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
+  uint8_t tmp_user_id_enable_status;
   uint8_t ret;
   
   ret = get_bmc_user_serial_channel_access (dev,
@@ -971,7 +1008,8 @@ serial_channel_get (ipmi_device_t dev,
 					    &tmp_user_link_authentication,
 					    &tmp_user_restricted_to_callback,
 					    &tmp_privilege_limit,
-					    &tmp_session_limit);
+					    &tmp_session_limit,
+                                            &tmp_user_id_enable_status);
 
   if (ret != 0)
     return ret;
@@ -1009,6 +1047,7 @@ serial_channel_set (ipmi_device_t dev,
   uint8_t tmp_user_restricted_to_callback;
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
+  uint8_t tmp_user_id_enable_status;
   uint8_t ret;
   
   ret = get_bmc_user_serial_channel_access (dev,
@@ -1017,7 +1056,8 @@ serial_channel_set (ipmi_device_t dev,
 					    &tmp_user_link_authentication,
 					    &tmp_user_restricted_to_callback,
 					    &tmp_privilege_limit,
-					    &tmp_session_limit);
+					    &tmp_session_limit,
+                                            &tmp_user_id_enable_status);
 
   if (ret != 0)
     return ret;
@@ -1531,7 +1571,7 @@ get_user_section (int num, struct arguments *args)
   add_keyvalue (this_section,
 		"Enable_User",
 		"Possible values: Yes/No or blank to not set",
-                BMC_CHECKOUT_KEY_COMMENTED_OUT,
+                BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
 		enable_user_checkout,
 		enable_user_commit,
 		enable_user_diff,

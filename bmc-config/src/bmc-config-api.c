@@ -1664,7 +1664,8 @@ get_bmc_user_access (ipmi_device_t dev,
 		     uint8_t *user_link_authentication, 
 		     uint8_t *user_restricted_to_callback, 
 		     uint8_t *privilege_limit, 
-		     uint8_t *session_limit)
+		     uint8_t *session_limit,
+                     uint8_t *user_id_enable_status)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1697,6 +1698,10 @@ get_bmc_user_access (ipmi_device_t dev,
   
   *session_limit = 0;
  
+  if (fiid_obj_get (obj_cmd_rs, "user_id_enable_status", &val) < 0)
+    goto cleanup;
+  *user_id_enable_status = (uint8_t) val;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rs)
@@ -1798,7 +1803,8 @@ get_bmc_user_lan_channel_access (ipmi_device_t dev,
 				 uint8_t *user_link_authentication, 
 				 uint8_t *user_restricted_to_callback, 
 				 uint8_t *privilege_limit, 
-				 uint8_t *session_limit)
+				 uint8_t *session_limit,
+                                 uint8_t *user_id_enable_status)
 {
   return get_bmc_user_access (dev, 
 			      userid, 
@@ -1807,7 +1813,8 @@ get_bmc_user_lan_channel_access (ipmi_device_t dev,
 			      user_link_authentication, 
 			      user_restricted_to_callback, 
 			      privilege_limit, 
-			      session_limit);
+			      session_limit,
+                              user_id_enable_status);
 }
 
 int8_t
@@ -1961,7 +1968,8 @@ get_bmc_user_serial_channel_access (ipmi_device_t dev,
 				    uint8_t *user_link_authentication, 
 				    uint8_t *user_restricted_to_callback, 
 				    uint8_t *privilege_limit, 
-				    uint8_t *session_limit)
+				    uint8_t *session_limit,
+                                    uint8_t *user_id_enable_status)
 {
   return get_bmc_user_access (dev, 
 			      userid, 
@@ -1970,7 +1978,8 @@ get_bmc_user_serial_channel_access (ipmi_device_t dev,
 			      user_link_authentication, 
 			      user_restricted_to_callback, 
 			      privilege_limit, 
-			      session_limit);
+			      session_limit,
+                              user_id_enable_status);
 }
 
 int8_t 

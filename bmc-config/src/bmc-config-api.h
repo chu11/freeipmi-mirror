@@ -212,7 +212,8 @@ int8_t get_bmc_user_lan_channel_access (ipmi_device_t dev,
 					uint8_t *user_link_authentication, 
 					uint8_t *user_restricted_to_callback, 
 					uint8_t *privilege_limit, 
-					uint8_t *session_limit);
+					uint8_t *session_limit,
+					uint8_t *user_id_enable_status);
 int8_t get_bmc_user_payload_access (ipmi_device_t dev,
                                     uint8_t userid,
                                     uint8_t *standard_payload_1,
@@ -236,7 +237,8 @@ int8_t get_bmc_user_serial_channel_access (ipmi_device_t dev,
 					   uint8_t *user_link_authentication, 
 					   uint8_t *user_restricted_to_callback, 
 					   uint8_t *privilege_limit, 
-					   uint8_t *session_limit);
+					   uint8_t *session_limit,
+					   uint8_t *user_id_enable_status);
 int8_t get_bmc_lan_channel_volatile_access (ipmi_device_t dev, 
 					    uint8_t *access_mode, 
 					    uint8_t *user_level_authentication, 

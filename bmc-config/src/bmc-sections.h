@@ -28,7 +28,8 @@
 #include "bmc-types.h"
 
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT                  0x1
-#define BMC_DO_NOT_CHECKOUT                             0x2
+#define BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x2
+#define BMC_DO_NOT_CHECKOUT                             0x4
 
 struct section {
   struct section *next;

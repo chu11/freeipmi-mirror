@@ -182,6 +182,10 @@ args_validate (struct arguments *args)
                   unlink (args->filename);
                 }
             }
+          break;
+        case BMC_ACTION_LIST_SECTIONS:
+          /* do nothing - here to remove compile warning */
+          break;
         }
     }
   
