@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.94 2006-08-14 01:45:41 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.95 2006-08-31 17:38:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1640,7 +1640,8 @@ _check_open_session_error(ipmipower_powercmd_t ip)
   /* A rmcpplus status error takes precedence over a privilege error */
   if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
     {
-      if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL)
+      if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
+	  && conf->privilege == PRIVILEGE_TYPE_AUTO)
 	{
 	  if (ip->cmd == POWER_CMD_POWER_STATUS)
 	    {
@@ -1662,7 +1663,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	}
       else
 	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege) ? 1 : 0;
-
+      
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
 	  && conf->privilege != PRIVILEGE_TYPE_AUTO 
 	  && !priv_check)
@@ -1672,6 +1673,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 #else  /* !NDEBUG */
 	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif /* !NDEBUG */
+	  return -1;
 	}
       
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
@@ -1683,6 +1685,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 #else  /* !NDEBUG */
 	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif /* !NDEBUG */
+	  return -1;
 	}
     }
 

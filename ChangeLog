@@ -1,3 +1,8 @@
+2006-08-31  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_powercmd.c (_check_open_session_error):
+	Fix corner cases.
+	
 2006-08-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_check.c
