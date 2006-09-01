@@ -1,10 +1,10 @@
 0.3.0
 =====
 X A) ipmi-sensors: scheme to C conversion (done by bala)
-X A-1): SDR cache format
+X A-1): SDR cache format (done by bala)
   B) bmc-autoconfig: fixed for new bmc-config
   C) ipmi-sel: proper trigger output fix
-X D) Remove Fish
+X D) Remove Fish (achu: done)
 X E) debug dumping for all tools (achu: done)
   F) including ipmiconsole + libipmiconsole
 X G) RPM repackaging (achu: done)
