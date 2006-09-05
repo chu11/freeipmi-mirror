@@ -465,9 +465,6 @@ character_accumulate_interval_commit (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (kv->value)
-    free (kv->value);
-
   interval = atoi (kv->value);
 
   return set_sol_character_accumulate_interval_and_send_threshold (args->dev,
@@ -569,9 +566,6 @@ character_send_threshold_commit (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (kv->value)
-    free (kv->value);
-
   threshold = atoi (kv->value);
 
   return set_sol_character_accumulate_interval_and_send_threshold (args->dev,
@@ -672,9 +666,6 @@ sol_retry_count_commit (const struct arguments *args,
 
   if (ret != 0)
     return -1;
-
-  if (kv->value)
-    free (kv->value);
 
   count = atoi (kv->value);
 
@@ -781,9 +772,6 @@ sol_retry_interval_commit (const struct arguments *args,
 
   if (ret != 0)
     return -1;
-
-  if (kv->value)
-    free (kv->value);
 
   interval = atoi (kv->value);
 

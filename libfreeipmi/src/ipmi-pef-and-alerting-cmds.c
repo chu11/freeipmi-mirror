@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.14 2006-09-05 05:34:51 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.15 2006-09-05 15:43:24 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -124,7 +124,7 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq =
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "startup_delay", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "pef_startup_delay", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 

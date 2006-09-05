@@ -1,3 +1,19 @@
+2006-09-05  Albert Chu <chu11@llnl.gov>
+	
+	Apply BMC config fixes from Ingo van Lil (inguin at gmx dot de)
+
+	* bmc-config/src/bmc-misc-section.c (bmc_misc_section_get): Set
+	flag to BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY.
+
+	* bmc-config/src/bmc-sol-conf-section.c
+	(character_accumulate_interval_commit,
+	character_send_threshold_commit, sol_retry_count_commit,
+	sol_retry_interval_commit): Fix commit bug.
+
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c: Fix misnamed
+	fields in
+	tmpl_cmd_set_pef_configuration_parameters_pef_startup_delay_rq.
+
 2006-09-04  Albert Chu <chu11@llnl.gov>
 
 	Various compile warning fixes.
