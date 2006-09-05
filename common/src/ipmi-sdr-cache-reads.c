@@ -702,7 +702,7 @@ _read_sdr_oem_record (char *cache_record,
 		      sdr_oem_record_t *record)
 {
   int int_value = 0;
-  int i;
+
   char *oem_data_string = NULL;
   
   ERR_EINVAL (cache_record && record);

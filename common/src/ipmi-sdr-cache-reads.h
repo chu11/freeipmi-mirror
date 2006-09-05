@@ -20,6 +20,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #ifndef _IPMI_SDR_CACHE_READS_H
 #define _IPMI_SDR_CACHE_READS_H
 
+#include "ipmi-sdr-api.h"
+
+int read_sdr_repository_info (char *cache_record, sdr_repository_info_t *sdr_info);
 int read_sdr_record (char *cache_record, sdr_record_t *record);
 
 #endif

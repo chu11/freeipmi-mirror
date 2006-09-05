@@ -28,6 +28,7 @@
 #define IPMI_SSIF_API_H
 
 #include <stdint.h>
+#include <freeipmi/fiid.h>
 
 #define IPMI_DEFAULT_I2C_DEVICE        "/dev/i2c-0"
 #define IPMI_DEFAULT_SSIF_IPMB_ADDR    0x42
@@ -77,5 +78,11 @@ int32_t ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 int32_t ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 			uint8_t* buf,
 			uint32_t buf_len);
+
+int8_t ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx, 
+                      uint8_t lun,
+                      uint8_t net_fn,
+                      fiid_obj_t obj_cmd_rq,
+                      fiid_obj_t obj_cmd_rs);
 
 #endif /* IPMI_SSIF_API_H */

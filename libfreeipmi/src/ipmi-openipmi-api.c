@@ -227,7 +227,7 @@ ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags)
 }
 
 int8_t 
-ipmi_openipmi_ctx_set_device(ipmi_openipmi_ctx_t ctx, char *device)
+ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 {
   if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
     return (-1);
