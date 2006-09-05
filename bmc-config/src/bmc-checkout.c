@@ -145,6 +145,9 @@ bmc_checkout_section_common (struct arguments *arguments,
            * default is for value to be empty.  We do not want the
            * user accidently commiting this checked out file,
            * which (in this example) clear the password.
+           *
+           * Some other keys may or may not have a value, depending on
+           * the IPMI version or the implementation.
            */
           if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
             key_len = fprintf(fp, "\t## %s", kv->key);
