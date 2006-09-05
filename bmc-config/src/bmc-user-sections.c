@@ -155,12 +155,12 @@ enable_user_checkout (const struct arguments *args,
    * can.  If it cannot be checked out, the line will be commented out
    * later on.
    */
-  if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED)
-    kv->value = strdup ("");
-  else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
+  if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
     kv->value = strdup ("Yes");
-  else
+  else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
     kv->value = strdup ("No");
+  else /* tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
+    kv->value = strdup ("");
 
   return 0;
 }

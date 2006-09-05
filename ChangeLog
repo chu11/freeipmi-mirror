@@ -1,4 +1,9 @@
 2006-09-05  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-user-sections.c (enable_user_checkout):
+	Slightly alter logic.
+
+2006-09-05  Albert Chu <chu11@llnl.gov>
 	
 	Apply BMC config fixes from Ingo van Lil (inguin at gmx dot de)
 
