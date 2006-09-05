@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.13 2006-04-14 04:20:06 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.14 2006-09-05 05:34:51 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -242,6 +242,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_pef_control_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "pef", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "pef_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "pef_startup_delay", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -254,6 +256,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_pef_action_global_cont
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "alert_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "power_down_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reset_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -268,6 +272,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "pef_startup_delay", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
@@ -276,6 +282,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_dela
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "pef_alert_startup_delay", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
@@ -285,6 +293,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_number_of_event_filter
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "number_of_event_filters", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
@@ -294,6 +304,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs 
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7,  "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {5,  "filter_configuration.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -335,6 +347,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_event_filter_table_dat
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {5, "filter_configuration.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -348,6 +362,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "number_of_alert_policy_entries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
@@ -358,6 +374,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_number_of_alert_string
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "number_of_alert_strings", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
@@ -367,6 +385,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -380,6 +400,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

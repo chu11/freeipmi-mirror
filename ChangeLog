@@ -1,3 +1,13 @@
+2006-09-04  Albert Chu <chu11@llnl.gov>
+
+	Apply PEF configuration fixes from Ingo van Lil (inguin at gmx dot de)
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c: Fix
+	incorrect NetFNs.
+	
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c: Fix parameter
+	revision inconsistency with other templates.
+	
 2006-08-31  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_powercmd.c (_check_open_session_error):
