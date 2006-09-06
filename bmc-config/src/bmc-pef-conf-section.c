@@ -65,7 +65,7 @@ pef_control_commit (ipmi_device_t dev,
     return -1;
 
   if (pef)
-    *pef = tmp_pef;
+    tmp_pef = *pef;
 
   if (pef_event_messages)
     tmp_pef_event_messages = *pef_event_messages;

@@ -2,6 +2,9 @@
 
 	* bmc-config/src/bmc-user-sections (enable_user_diff): Implement
 	appropriately for errata 3 changes.
+
+	* bmc-config/src/bmc-pef-conf-section.c (pef_control_commit): Fix
+	bug.
 	
 2006-09-05  Albert Chu <chu11@llnl.gov>
 
