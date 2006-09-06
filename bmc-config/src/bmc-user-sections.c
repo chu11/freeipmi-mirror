@@ -181,8 +181,50 @@ enable_user_diff (const struct arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
-  /* Cant get, always assume equal */
-  return 0;
+  int userid = atoi (sect->section + strlen ("User"));
+  uint8_t tmp_user_ipmi_messaging;
+  uint8_t tmp_user_link_authentication;
+  uint8_t tmp_user_restricted_to_callback;
+  uint8_t tmp_privilege_limit;
+  uint8_t tmp_session_limit;
+  uint8_t tmp_user_id_enable_status;
+  uint8_t ret;
+  uint8_t passed_val;
+
+  ret = get_bmc_user_lan_channel_access (args->dev,
+					 userid,
+					 &tmp_user_ipmi_messaging,
+					 &tmp_user_link_authentication,
+					 &tmp_user_restricted_to_callback,
+					 &tmp_privilege_limit,
+					 &tmp_session_limit,
+                                         &tmp_user_id_enable_status);
+
+  if (ret != 0)
+    return ret;
+  
+  /* Cant get, assume equal */
+  if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED)
+    ret = 0;
+  else
+    {
+      passed_val = same (kv->value, "Yes");
+
+      if (passed_val && tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
+        ret = 0;
+      else if (!passed_val && tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
+        ret = 0;
+      else
+        {
+          ret = 1;
+          report_diff (sect->section,
+                       kv->key,
+                       kv->value,
+                       (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED) ? "Yes" : "No");
+        }
+    }
+
+  return ret;
 }
 
 static int
