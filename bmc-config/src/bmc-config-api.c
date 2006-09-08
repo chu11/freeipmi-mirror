@@ -1514,9 +1514,8 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
-  int i;
 
-  if (cipher_suite_id < CIPHER_SUITE_LEN)
+  if (!(cipher_suite_id < CIPHER_SUITE_LEN))
     goto cleanup;
 
   if (_rmcpplus_cipher_suite_id_privilege_setup(dev) < 0)
@@ -3170,7 +3169,7 @@ get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 {
   int8_t rv = -1;
 
-  if (cipher_suite_id < CIPHER_SUITE_LEN)
+  if (!(cipher_suite_id < CIPHER_SUITE_LEN))
     goto cleanup;
 
   if (_rmcpplus_cipher_suite_id_privilege_setup(dev) < 0)
