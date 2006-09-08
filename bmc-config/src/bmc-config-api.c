@@ -34,7 +34,7 @@ static int cipher_suite_id_supported[CIPHER_SUITE_LEN] =
   };
 static int cipher_suite_id_supported_set = 0;
 
-static int cipher_suite_priv[CIPHER_SUITE_LEN] =
+static uint8_t cipher_suite_priv[CIPHER_SUITE_LEN] =
   {
     0, 0, 0, 0,
     0, 0, 0, 0,
@@ -1553,7 +1553,7 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 												     obj_cmd_rs) < 0)
 	goto cleanup;
       
-      privs[cipher_suite_id] = privilege;
+      cipher_suite_priv[cipher_suite_id] = privilege;
       rv = 0;
     }
   
