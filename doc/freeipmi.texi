@@ -496,8 +496,6 @@ Section User1
         Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Lan_Privilege_Limit                          No_Access
-        ## Possible values: 0-255, 0 is unlimited
-        Lan_Session_Limit                            0
         ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
@@ -506,8 +504,6 @@ Section User1
         Serial_Enable_Restricted_to_Callback         No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Serial_Privilege_Limit                       Administrator
-        ## Possible values: 0-255, 0 is unlimited
-        Serial_Session_Limit                         0
 EndSection
 Section User2
         ## Give Username
@@ -525,8 +521,6 @@ Section User2
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Lan_Privilege_Limit                          User
         ## Possible values: 0-255, 0 is unlimited
-        Lan_Session_Limit                            0
-        ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
         Serial_Enable_Link_Auth                      No
@@ -534,8 +528,6 @@ Section User2
         Serial_Enable_Restricted_to_Callback         No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Serial_Privilege_Limit                       No_Access
-        ## Possible values: 0-255, 0 is unlimited
-        Serial_Session_Limit                         0
 EndSection
 Section User3
         ## Give Username
@@ -552,8 +544,6 @@ Section User3
         Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Lan_Privilege_Limit                          Operator
-        ## Possible values: 0-255, 0 is unlimited
-        Lan_Session_Limit                            0
         ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
@@ -562,8 +552,6 @@ Section User3
         Serial_Enable_Restricted_to_Callback         No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Serial_Privilege_Limit                       No_Access
-        ## Possible values: 0-255, 0 is unlimited
-        Serial_Session_Limit                         0
 EndSection
 Section User4
         ## Give Username
@@ -580,8 +568,6 @@ Section User4
         Lan_Enable_Restricted_to_Callback            No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Lan_Privilege_Limit                          Administrator
-        ## Possible values: 0-255, 0 is unlimited
-        Lan_Session_Limit                            0
         ## Possible values: Yes/No
         Serial_Enable_IPMI_Msgs                      No
         ## Possible values: Yes/No
@@ -590,8 +576,6 @@ Section User4
         Serial_Enable_Restricted_to_Callback         No
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
         Serial_Privilege_Limit                       No_Access
-        ## Possible values: 0-255, 0 is unlimited
-        Serial_Session_Limit                         0
 EndSection
 Section Lan_Channel
         ## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
@@ -772,6 +756,32 @@ Section Serial_Conf
         Flow_Control                                 No_Flow_Control
         ## Possible values: 9600/19200/38400/57600/115200
         Bit_Rate                                     115200
+EndSection
+Section PEF_Conf
+        ## Possible values: Yes/No
+        Enable_PEF                                   No
+        ## Possible values: Yes/No
+        Enable_PEF_Event_Messages                    No
+        ## Possible values: Yes/No
+        Enable_PEF_Startup_Delay                     No
+        ## Possible values: Yes/No
+        Enable_PEF_Alert_Startup_Delay               No
+        ## Possible values: Yes/No
+        Enable_Alert_Action                          Yes
+        ## Possible values: Yes/No
+        Enable_Power_Down_Action                     Yes
+        ## Possible values: Yes/No
+        Enable_Reset_Action                          Yes
+        ## Possible values: Yes/No
+        Enable_Power_Cycle_Action                    Yes
+        ## Possible values: Yes/No
+        Enable_OEM_Action                            No
+        ## Possible values: Yes/No
+        Enable_Diagnostic_Interrupt                  Yes
+        ## Give value in seconds
+        PEF_Startup_Delay                            255
+        ## Give value in seconds
+        PEF_Alert_Startup_Delay                      60
 EndSection
 Section SOL_Conf
         ## Possible values: Yes/No

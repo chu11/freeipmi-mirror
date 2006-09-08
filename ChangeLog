@@ -2,6 +2,13 @@
 
 	* bmc-config/src/bmc-config-api.c: Fix rmcpplus cipher suite
 	privilege interpretation issue.
+
+	* bmc-config/src/bmc-user-sections.c (get_user_section): Remove
+	checkout of "Lan_Session_Limit" and "Serial_Session_Limit" keys
+	until a solution can be determined for how to retrieve the current
+	session limit.
+
+	* doc/freeipmi.texi: Adjust bmc config output appropriately. 
 	
 2006-09-06  Albert Chu <chu11@llnl.gov>
 

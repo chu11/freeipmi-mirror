@@ -1689,6 +1689,7 @@ get_bmc_user_access (ipmi_device_t dev,
     goto cleanup;
   *user_restricted_to_callback = (uint8_t) val;
   
+  /* XXX: Need to fix */
   *session_limit = 0;
  
   if (fiid_obj_get (obj_cmd_rs, "user_id_enable_status", &val) < 0)
