@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.50 2006-09-09 00:42:05 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.51 2006-09-09 04:25:20 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -309,6 +309,14 @@ protocol has to complete a power control operation.  The
 "--retry-timeout" option refers to the amount of time any individual
 packet within the IPMI protocol has to complete.
 .TP
+.I "-q, --retry-wait-timeout ms"
+Sets the retry-wait-timeout in milliseconds.  The retry-wait-timeout
+is similar to the 'retry-timeout' above, but is used specifically with the
+"--wait-until-off" option.  It is used during the period in which
+.B ipmipower
+is querying the remote machine to determine if it has properly turned
+off.
+.TP
 .I "-b, --retry-backoff-count num"
 After every retry-backoff-count retransmissions, 
 .B ipmipower 
@@ -448,8 +456,12 @@ specify the ipmi version, auto, 1.5 or 2.0.
 .TP
 .I "cipher_suite_id str"
 specify the cipher suite id, auto, 0, 1, 2, 3, 6, 7, 8, 11, 12.
+.TP
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
+.TP
+.I "wait-until-off [on|off]"
+toggle wait-until-off functionality.
 .TP
 .I "outputtype str"
 specify a new output type, none, newline, or hostrange.
@@ -494,6 +506,9 @@ specify a new timeout length
 .TP
 .I "retry-timeout ms"
 specify a new retry timeout length
+.TP
+.I "retry-wait-timeout ms"
+specify a new retry-wait timeout length
 .TP
 .I "retry-backoff-count num"
 specify a new retry backoff count

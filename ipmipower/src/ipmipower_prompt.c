@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.34 2006-09-09 00:42:05 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.35 2006-09-09 04:25:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -118,6 +118,7 @@ _cmd_network(void)
   cbuf_printf(ttyout, 
               "timeout len                     - set a new timeout length\n"
               "retry-timeout len               - set a new retry timeout length\n"
+              "retry-wait-timeout len          - set a new retry timeout length\n"
               "retry-backoff-count num         - set a new retry backoff count\n"
               "ping-interval len               - set a new ping interval length\n"
               "ping-timeout len                - set a new ping timeout length\n"
@@ -672,6 +673,7 @@ _cmd_config(void)
 #endif /* NDEBUG */
   cbuf_printf(ttyout, "Timeout:                      %d ms\n", conf->timeout_len);
   cbuf_printf(ttyout, "Retry Timeout:                %d ms\n", conf->retry_timeout_len);
+  cbuf_printf(ttyout, "Retry Wait Timeout:           %d ms\n", conf->retry_wait_timeout_len);
   cbuf_printf(ttyout, "Retry Backoff Count:          %d\n", conf->retry_backoff_count);
   cbuf_printf(ttyout, "Ping Interval:                %d ms\n", conf->ping_interval_len);
   cbuf_printf(ttyout, "Ping Timeout:                 %d ms\n", conf->ping_timeout_len);
@@ -866,6 +868,10 @@ ipmipower_prompt_process_cmdline(void)
               else if (strcmp(argv[0], "retry-timeout") == 0)
                 _cmd_set_int(argv, &conf->retry_timeout_len, "retry-timeout", 1,
                              IPMIPOWER_RETRY_TIMEOUT_MIN, conf->timeout_len);
+              else if (strcmp(argv[0], "retry-wait-timeout") == 0)
+                _cmd_set_int(argv, &conf->retry_wait_timeout_len, 
+			     "retry-wait-timeout", 1,
+                             IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN, conf->timeout_len);
               else if (strcmp(argv[0], "retry-backoff-count") == 0)
                 _cmd_set_int(argv, &conf->retry_backoff_count, 
                              "retry-backoff-count", 1,

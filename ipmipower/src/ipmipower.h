@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.63 2006-09-09 00:42:05 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.64 2006-09-09 04:25:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -81,6 +81,9 @@
 
 #define IPMIPOWER_RETRY_TIMEOUT_MIN        50     /* .05 seconds */
 #define IPMIPOWER_RETRY_TIMEOUT_MAX        IPMIPOWER_TIMEOUT_MAX
+
+#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN   50     /* .05 seconds */
+#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MAX   IPMIPOWER_TIMEOUT_MAX
 
 #define IPMIPOWER_RETRY_BACKOFF_COUNT_MIN  1
 #define IPMIPOWER_RETRY_BACKOFF_COUNT_MAX  200
@@ -464,7 +467,7 @@ struct ipmipower_powercmd {
   uint32_t cipher_suite_record_data_bytes;
   uint8_t cipher_suite_ids[IPMI_CIPHER_SUITE_IDS_LENGTH];
   uint32_t cipher_suite_ids_num;
-  int power_command_completed;
+  int wait_until_off_state;
 
   struct ipmipower_connection *ic;
   
@@ -576,6 +579,7 @@ struct ipmipower_config
 #endif /* NDEBUG */
   int                      timeout_len;
   int                      retry_timeout_len;
+  int                      retry_wait_timeout_len;
   int                      retry_backoff_count; 
   int                      ping_interval_len;
   int                      ping_timeout_len;
@@ -603,6 +607,7 @@ struct ipmipower_config
   ipmipower_bool_t         outputtype_set;
   ipmipower_bool_t         timeout_len_set;
   ipmipower_bool_t         retry_timeout_len_set;
+  ipmipower_bool_t         retry_wait_timeout_len_set;
   ipmipower_bool_t         retry_backoff_count_set;
   ipmipower_bool_t         ping_interval_len_set;
   ipmipower_bool_t         ping_timeout_len_set; 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.39 2006-09-09 00:42:05 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.40 2006-09-09 04:25:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -114,6 +114,7 @@ ipmipower_config_setup(void)
 #endif /* NDEBUG */
   conf->timeout_len = 20000;     /* 20 seconds */
   conf->retry_timeout_len = 400; /* .4 seconds  */
+  conf->retry_wait_timeout_len = 750; /* .75 seconds  */
   conf->retry_backoff_count = 8;
   conf->ping_interval_len = 5000; /* 5 seconds */
   conf->ping_timeout_len = 30000; /* 30 seconds */
@@ -139,6 +140,7 @@ ipmipower_config_setup(void)
   conf->supermicro_2_0_session_set = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
+  conf->retry_wait_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set = IPMIPOWER_FALSE;
   conf->ping_interval_len_set = IPMIPOWER_FALSE;
   conf->ping_timeout_len_set = IPMIPOWER_FALSE;
@@ -180,6 +182,11 @@ _config_common_checks(char *str)
       && (conf->retry_timeout_len < IPMIPOWER_RETRY_TIMEOUT_MIN 
           || conf->retry_timeout_len > IPMIPOWER_RETRY_TIMEOUT_MAX))
     err_exit("%s: retry timeout out of range", str);
+
+  if (conf->retry_wait_timeout_len != 0 
+      && (conf->retry_wait_timeout_len < IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN 
+          || conf->retry_wait_timeout_len > IPMIPOWER_RETRY_WAIT_TIMEOUT_MAX))
+    err_exit("%s: retry wait timeout out of range", str);
   
   if (conf->retry_backoff_count != 0 
       && (conf->retry_backoff_count < IPMIPOWER_RETRY_BACKOFF_COUNT_MIN 
@@ -254,7 +261,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
   /* achu: Here's are what options are left and available
-     lower case: dq
+     lower case: d
      upper case: ABEGJKNOQWZ
    */
 
@@ -302,6 +309,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 #endif /* NDEBUG */
       {"timeout" ,                     1, NULL, 't'},
       {"retry-timeout",                1, NULL, 'y'},
+      {"retry-wait-timeout",           1, NULL, 'q'},
       {"retry-backoff-count",          1, NULL, 'b'},
       {"ping-interval",                1, NULL, 'i'},
       {"ping-timeout",                 1, NULL, 'z'},
@@ -461,6 +469,12 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           if (ptr != (optarg + strlen(optarg)))
             err_exit("Command Line Error: retry timeout length invalid\n");
           conf->retry_timeout_len_set = IPMIPOWER_TRUE;
+          break;
+        case 'q':       /* --retry-wait-timeout */
+          conf->retry_wait_timeout_len = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg)))
+            err_exit("Command Line Error: retry wait timeout length invalid\n");
+          conf->retry_wait_timeout_len_set = IPMIPOWER_TRUE;
           break;
         case 'b':       /* --retry-backoff-count */
           conf->retry_backoff_count = strtol(optarg, &ptr, 10);
@@ -688,12 +702,12 @@ void
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
-    privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, wait_until_off_flag, 
-    outputtype_flag, force_permsg_authentication_flag, accept_session_id_zero_flag, 
-    check_unexpected_authcode_flag, intel_2_0_session_flag, supermicro_2_0_session_flag, 
-    timeout_flag, retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
-    ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
-    ping_consec_count_flag;
+    privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
+    wait_until_off_flag, outputtype_flag, force_permsg_authentication_flag, 
+    accept_session_id_zero_flag, check_unexpected_authcode_flag, intel_2_0_session_flag, 
+    supermicro_2_0_session_flag, timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
+    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, 
+    ping_percent_flag, ping_consec_count_flag;
 
   struct conffile_option options[] = 
     {
@@ -739,6 +753,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &retry_timeout_flag, &(conf->retry_timeout_len), 
        conf->retry_timeout_len_set},
+      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+       1, 0, &retry_wait_timeout_flag, &(conf->retry_wait_timeout_len), 
+       conf->retry_wait_timeout_len_set},
       {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
        1, 0, &retry_backoff_count_flag, &(conf->retry_backoff_count), 
        conf->retry_backoff_count_set},

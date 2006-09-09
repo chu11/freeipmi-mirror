@@ -1,3 +1,7 @@
+2006-09-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Added support for --retry-wait-timeout option.
+	
 2006-09-08  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-api.c: Fix rmcpplus cipher suite
@@ -10,7 +14,7 @@
 
 	* doc/freeipmi.texi: Adjust bmc config output appropriately. 
 
-	* ipmipower/: Add supported for --wait-until-off option.
+	* ipmipower/: Add support for --wait-until-off option.
 
 2006-09-06  Albert Chu <chu11@llnl.gov>
 

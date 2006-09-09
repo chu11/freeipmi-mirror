@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.96 2006-09-09 00:42:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.97 2006-09-09 04:25:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -308,7 +308,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->cipher_suite_record_data_bytes = 0;
       memset(ip->cipher_suite_ids, '\0', IPMI_CIPHER_SUITE_IDS_LENGTH);
       ip->cipher_suite_ids_num = 0;
-      ip->power_command_completed = 0;
+      ip->wait_until_off_state = 0;
     }
 
   ip->ic = ic;
@@ -804,12 +804,18 @@ _retry_packets(ipmipower_powercmd_t ip)
 
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
-      || conf->retry_timeout_len == 0)             /* no retransmissions */
+      || conf->retry_timeout_len == 0             /* no retransmissions */
+      || (conf->wait_until_off == IPMIPOWER_TRUE
+	  && ip->cmd == POWER_CMD_POWER_OFF
+	  && conf->retry_wait_timeout_len == 0))
     return 0;
 
   /* Did we timeout on this packet? */
-  
-  retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
+  if (conf->wait_until_off == IPMIPOWER_TRUE
+      && ip->cmd == POWER_CMD_POWER_OFF)
+    retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_wait_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_wait_timeout_len;
+  else
+    retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
 
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->ic->last_ipmi_send), &result);
@@ -2216,11 +2222,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    &power_state);
 
       if (conf->wait_until_off == IPMIPOWER_TRUE
-          && ip->cmd == POWER_CMD_POWER_OFF)
+          && ip->cmd == POWER_CMD_POWER_OFF
+	  && ip->wait_until_off_state)
 	{
-          if (ip->power_command_completed && !power_state)
+          if (!power_state)
 	    {
 	      ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
+	      ip->wait_until_off_state = 0;
 	      _send_packet(ip, CLOSE_SESSION_REQ);
 	    }
 	}
@@ -2252,11 +2260,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             _send_packet(ip, CLOSE_SESSION_REQ);
           goto done;
         }
-      ip->power_command_completed++;
         
       if (conf->wait_until_off == IPMIPOWER_TRUE
           && ip->cmd == POWER_CMD_POWER_OFF)
-        _send_packet(ip, GET_CHASSIS_STATUS_REQ);
+	{
+	  ip->wait_until_off_state++;
+	  _send_packet(ip, GET_CHASSIS_STATUS_REQ);
+	}
       else
         {
           ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
@@ -2305,7 +2315,14 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   timeval_millisecond_calc(&result, &timeout);
 
   /* shorter timeout b/c of retransmission timeout */
-  if (conf->retry_timeout_len) 
+  if (conf->wait_until_off
+      && conf->retry_wait_timeout_len)
+    {
+      int retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_wait_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_wait_timeout_len;
+      if (timeout > retry_timeout_len)
+        timeout = retry_timeout_len;
+    }
+  else if (conf->retry_timeout_len) 
     {
       int retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
       if (timeout > retry_timeout_len)
