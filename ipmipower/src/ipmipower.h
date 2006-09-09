@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.62 2006-08-09 00:50:54 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.63 2006-09-09 00:42:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -464,6 +464,7 @@ struct ipmipower_powercmd {
   uint32_t cipher_suite_record_data_bytes;
   uint8_t cipher_suite_ids[IPMI_CIPHER_SUITE_IDS_LENGTH];
   uint32_t cipher_suite_ids_num;
+  int power_command_completed;
 
   struct ipmipower_connection *ic;
   
@@ -556,6 +557,8 @@ struct ipmipower_config
   ipmi_version_t           ipmi_version;
   cipher_suite_id_t        cipher_suite_id;
   ipmipower_bool_t         on_if_off;
+  ipmipower_bool_t         wait_until_off;
+  ipmipower_bool_t         power_command_completed; /* for use with wait_until_off */
   output_type_t            outputtype;
   ipmipower_bool_t         force_permsg_authentication;
   ipmipower_bool_t         accept_session_id_zero;
@@ -590,6 +593,7 @@ struct ipmipower_config
   ipmipower_bool_t         ipmi_version_set;
   ipmipower_bool_t         cipher_suite_id_set;
   ipmipower_bool_t         on_if_off_set;
+  ipmipower_bool_t         wait_until_off_set;
   ipmipower_bool_t         force_permsg_authentication_set;
   ipmipower_bool_t         accept_session_id_zero_set;
   ipmipower_bool_t         check_unexpected_authcode_set;

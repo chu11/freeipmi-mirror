@@ -9,7 +9,9 @@
 	session limit.
 
 	* doc/freeipmi.texi: Adjust bmc config output appropriately. 
-	
+
+	* ipmipower/: Add supported for --wait-until-off option.
+
 2006-09-06  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-user-sections (enable_user_diff): Implement

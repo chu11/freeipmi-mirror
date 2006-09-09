@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.49 2006-08-31 22:29:18 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.50 2006-09-09 00:42:05 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -210,6 +210,13 @@ option will force
 .B ipmipower 
 to issue a power on command instead of a power cycle or hard reset
 command if the remote machine's power is currently off.
+.TP
+.I "-e, --wait-until-off"
+The IPMI specification allows power off commands to return prior the
+power off actually taking place.  This option will force
+.B ipmipower 
+to regularly query the remote BMC and return only after the machine
+has powered off.
 .TP
 .I "-o, --outputtype str"
 Sets the output type to use with 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.95 2006-08-31 17:38:24 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.96 2006-09-09 00:42:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -308,6 +308,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->cipher_suite_record_data_bytes = 0;
       memset(ip->cipher_suite_ids, '\0', IPMI_CIPHER_SUITE_IDS_LENGTH);
       ip->cipher_suite_ids_num = 0;
+      ip->power_command_completed = 0;
     }
 
   ip->ic = ic;
@@ -2214,7 +2215,16 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    "current_power_state.power_is_on",
                    &power_state);
 
-      if (ip->cmd == POWER_CMD_POWER_STATUS) 
+      if (conf->wait_until_off == IPMIPOWER_TRUE
+          && ip->cmd == POWER_CMD_POWER_OFF)
+	{
+          if (ip->power_command_completed && !power_state)
+	    {
+	      ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
+	      _send_packet(ip, CLOSE_SESSION_REQ);
+	    }
+	}
+      else if (ip->cmd == POWER_CMD_POWER_STATUS) 
         {
           ipmipower_output((power_state) ? MSG_TYPE_ON : MSG_TYPE_OFF, 
                            ip->ic->hostname); 
@@ -2242,17 +2252,24 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             _send_packet(ip, CLOSE_SESSION_REQ);
           goto done;
         }
+      ip->power_command_completed++;
         
-      ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
-
-      /* Typically there is no response from the IPMI close command if
-       * the POWER_CMD_POWER_RESET power control command is
-       * successful.  So just skip the close session.
-       */
-      if (ip->cmd == POWER_CMD_POWER_RESET)
-        goto finish_up;
+      if (conf->wait_until_off == IPMIPOWER_TRUE
+          && ip->cmd == POWER_CMD_POWER_OFF)
+        _send_packet(ip, GET_CHASSIS_STATUS_REQ);
       else
-        _send_packet(ip, CLOSE_SESSION_REQ);
+        {
+          ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
+          
+          /* Typically there is no response from the IPMI close command if
+           * the POWER_CMD_POWER_RESET power control command is
+           * successful.  So just skip the close session.
+           */
+          if (ip->cmd == POWER_CMD_POWER_RESET)
+            goto finish_up;
+          else
+            _send_packet(ip, CLOSE_SESSION_REQ);
+        }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT) 
     {

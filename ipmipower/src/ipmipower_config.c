@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.38 2006-08-12 00:39:51 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.39 2006-09-09 00:42:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,6 +96,7 @@ ipmipower_config_setup(void)
   conf->ipmi_version = IPMI_VERSION_AUTO;
   conf->cipher_suite_id = CIPHER_SUITE_ID_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
+  conf->wait_until_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
   conf->force_permsg_authentication = IPMIPOWER_FALSE;
   conf->accept_session_id_zero = IPMIPOWER_FALSE;
@@ -128,6 +129,8 @@ ipmipower_config_setup(void)
   conf->privilege_set = IPMIPOWER_FALSE;
   conf->ipmi_version_set = IPMIPOWER_FALSE;
   conf->cipher_suite_id_set = IPMIPOWER_FALSE;
+  conf->on_if_off_set = IPMIPOWER_FALSE;
+  conf->wait_until_off_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
   conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
@@ -251,14 +254,14 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
   /* achu: Here's are what options are left and available
-     lower case: deq
+     lower case: dq
      upper case: ABEGJKNOQWZ
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXYDIMLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:geo:PSUXYDIMLF:t:y:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXYt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:geo:PSUXYt:y:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -278,12 +281,12 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"help",                         0, NULL, 'H'},
       {"version",                      0, NULL, 'V'},
       {"config",                       1, NULL, 'C'}, 
-
       {"authentication-type",          1, NULL, 'a'},  
       {"privilege",                    1, NULL, 'l'},
       {"ipmi-version",                 1, NULL, 'R'},
       {"cipher-suite-id",              1, NULL, 'T'},
       {"on-if-off",                    0, NULL, 'g'},
+      {"wait-until-off",               0, NULL, 'e'},
       {"outputtype",                   1, NULL, 'o'},
       {"force-permsg-authentication",  0, NULL, 'P'},
       {"accept-session-id-zero",       0, NULL, 'S'},
@@ -398,6 +401,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'g':       /* --on-if-off */
           conf->on_if_off = !conf->on_if_off;
           conf->on_if_off_set = IPMIPOWER_TRUE;
+          break;
+        case 'e':       /* --wait-until-off */
+          conf->wait_until_off = !conf->wait_until_off;
+          conf->wait_until_off_set = IPMIPOWER_TRUE;
           break;
         case 'o':       /* --outputtype */
           conf->outputtype = ipmipower_output_index(optarg);
@@ -681,8 +688,8 @@ void
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
-    privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
-    force_permsg_authentication_flag, accept_session_id_zero_flag, 
+    privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, wait_until_off_flag, 
+    outputtype_flag, force_permsg_authentication_flag, accept_session_id_zero_flag, 
     check_unexpected_authcode_flag, intel_2_0_session_flag, supermicro_2_0_session_flag, 
     timeout_flag, retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
     ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
@@ -708,6 +715,8 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &cipher_suite_id_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
+      {"wait-until-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &wait_until_off_flag, &(conf->wait_until_off), conf->wait_until_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
        1, 0, &outputtype_flag, NULL, 0},
       {"force_permsg_authentication", CONFFILE_OPTION_BOOL, -1, _cb_bool,

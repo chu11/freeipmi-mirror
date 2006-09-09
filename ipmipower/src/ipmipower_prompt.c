@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.33 2006-08-14 01:45:41 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.34 2006-09-09 00:42:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,6 +93,7 @@ _cmd_advanced(void)
 	      "ipmi_version str                      - set a new ipmi version\n"
               "cipher_suite_id str                   - set a new cipher suite id\n"
               "on-if-off [on|off]                    - toggle on-if-off functionality\n"
+              "wait-until-off [on|off]               - toggle wait-until-off functionality\n"
               "outputtype str                        - set a new output type\n"
               "force-permsg-authentication [on|off]  - toggle force-permsg-auth functionality\n"
               "accept-session-id-zero [on|off]       - toggle accept-session-id-zero functionality\n"
@@ -643,6 +644,8 @@ _cmd_config(void)
 	      ipmipower_cipher_suite_id_string(conf->cipher_suite_id));
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Wait-Until-Off:               %s\n",
+              (conf->wait_until_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:                   %s\n",
               ipmipower_output_string(conf->outputtype));
   cbuf_printf(ttyout, "Force-Permsg_authentication:  %s\n",
@@ -822,7 +825,9 @@ ipmipower_prompt_process_cmdline(void)
               else if (strcmp(argv[0], "cipher_suite_id") == 0)
                 _cmd_cipher_suite_id(argv);
               else if (strcmp(argv[0], "on-if-off") == 0)
-              _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
+                _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
+              else if (strcmp(argv[0], "wait-until-off") == 0)
+                _cmd_set_flag(argv, &conf->wait_until_off, "wait-until-off");
               else if (strcmp(argv[0], "outputtype") == 0)
                 _cmd_outputtype(argv);
               else if (strcmp(argv[0], "force-permsg-authentication") == 0)
