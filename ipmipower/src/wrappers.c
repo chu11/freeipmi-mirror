@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.6 2006-01-28 15:03:39 chu11 Exp $
+ *  $Id: wrappers.c,v 1.6.4.1 2006-09-10 17:11:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,9 +42,10 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <sys/socket.h>
-#include <stdint.h>
 #if HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif

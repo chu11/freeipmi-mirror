@@ -1109,7 +1109,12 @@ unassemble_ipmi_lan_pkt2 (ipmi_device_t *dev,
 {
   fiid_field_t *tmpl_lan_packet = NULL;
   int lan_packet_length = 0;
-  
+  int rmcp_length = 0;
+  int session_length = 0;
+  int hdr_length = 0;
+  int cmd_length = 0;
+  int trlr_length = 0;
+
   if (!dev
       || !pkt
       || !obj_cmd
@@ -1119,12 +1124,6 @@ unassemble_ipmi_lan_pkt2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  int rmcp_length = 0;
-  int session_length = 0;
-  int hdr_length = 0;
-  int cmd_length = 0;
-  int trlr_length = 0;
-  
   ERR ((rmcp_length = 
 	fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr))) != -1);
   ERR ((session_length = 

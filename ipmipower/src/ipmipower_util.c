@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.3 2005-12-16 08:48:40 ab Exp $
+ *  $Id: ipmipower_util.c,v 1.3.6.1 2006-09-10 17:11:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,7 +35,9 @@
 #endif
 #include <errno.h>
 #include <assert.h>
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <sys/stat.h>
 #include <sys/mman.h>
 #if HAVE_FCNTL_H

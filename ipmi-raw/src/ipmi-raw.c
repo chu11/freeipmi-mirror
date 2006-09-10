@@ -20,7 +20,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

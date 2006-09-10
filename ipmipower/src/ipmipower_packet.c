@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.16 2006-02-05 20:36:30 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.16.4.1 2006-09-10 17:11:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,7 +35,9 @@
 #endif
 #include <errno.h>
 #include <assert.h>
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 
 #include "ipmipower_packet.h"
 #include "ipmipower_auth.h"

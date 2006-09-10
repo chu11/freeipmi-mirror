@@ -20,7 +20,9 @@
 */
 
 #include "freeipmi.h"
+#ifdef HAVE_LINUX_TYPES_H
 #include <linux/types.h>
+#endif
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
 static int ipmi_smic_dev_io_fd = -1;

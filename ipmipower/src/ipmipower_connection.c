@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.7 2006-01-28 15:03:39 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.7.4.1 2006-09-10 17:11:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,7 +39,9 @@
 #endif
 #include <errno.h>
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

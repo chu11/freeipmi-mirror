@@ -135,38 +135,51 @@ char *
 get_home_directory (void)
 {
   struct passwd *current_passwd;
-  uid_t user_id;
-  setpwent ();
-  user_id = getuid ();
   char * username = "unknownuser";
   char * dir;
+  char *tmpdir;
 
-  while ((current_passwd = getpwent ()))
-    {
-      if (current_passwd->pw_uid == user_id) {
-	username = current_passwd->pw_name ? current_passwd->pw_name :
-	  username;
-	if (access (current_passwd->pw_dir, R_OK|W_OK|X_OK)) 
-	  break;
-	else
-	  return current_passwd->pw_dir;
-      } 
-    }
-  dir = calloc (strlen ("/tmp") + 1 + strlen (username) + 1, 1);
-  sprintf (dir, "/tmp/%s", username);
-  return mkdir (dir, 0755) ? NULL : dir;
+  current_passwd = getpwuid(getuid());
+  if (current_passwd != NULL) {
+    if (current_passwd->pw_dir != NULL &&
+        access(current_passwd->pw_dir, R_OK | W_OK | X_OK) == 0)
+      return strdup(current_passwd->pw_dir);
+    if (current_passwd->pw_name != NULL)
+      username = current_passwd->pw_name;
+  }
+
+  tmpdir = getenv("TMPDIR");
+  if (tmpdir == NULL)
+    tmpdir = "/tmp";
+  dir = malloc (strlen (tmpdir) + 1 + sizeof("freeipmi-") - 1 +
+    strlen (username) + 1);
+  if (dir == NULL)
+    return NULL;
+  sprintf (dir, "%s/freeipmi-%s", tmpdir, username);
+  if (mkdir (dir, 0700) < 0 && errno != EEXIST) {
+    free(dir);
+    return NULL;
+  }
+  return dir;
 }
 
 char *
 get_config_directory (void)
 {
   char *config_directory;
-  int length =
-    strlen (get_home_directory ()) + strlen (FI_CONFIG_DIRECTORY) + 2;
+  char *homedir;
+  int length;
+
+  homedir = get_home_directory();
+  if (homedir == NULL)
+    return NULL;
+
+  length = strlen (homedir) + strlen (FI_CONFIG_DIRECTORY) + 2;
 
   config_directory = (char *) calloc (length, sizeof (char));
-  sprintf (config_directory, "%s/" FI_CONFIG_DIRECTORY,
-	   get_home_directory ());
+  sprintf (config_directory, "%s/" FI_CONFIG_DIRECTORY, homedir);
+
+  free(homedir);
 
   return config_directory;
 }
@@ -175,10 +188,20 @@ char *
 get_config_filename (void)
 {
   char *config_filename;
-  int length = strlen (get_home_directory ()) + strlen (FI_CONFIG_FILE) + 2;
+  char *homedir;
+  int length;
+
+  homedir = get_home_directory();
+  if (homedir == NULL)
+    return NULL;
+
+  length = strlen (homedir) + strlen (FI_CONFIG_FILE) + 2;
 
   config_filename = (char *) calloc (length, sizeof (char));
-  sprintf (config_filename, "%s/" FI_CONFIG_FILE, get_home_directory ());
+  sprintf (config_filename, "%s/" FI_CONFIG_FILE, homedir);
+
+  free(homedir);
+
   return config_filename;
 }
 
@@ -198,11 +221,18 @@ char *
 get_local_extensions_directory (void)
 {
   char *local_extensions_directory = NULL;
-  
+  char *homedir;
+
+  homedir = get_home_directory();
+  if (homedir == NULL)
+    return NULL;
+
   asprintf (&local_extensions_directory, 
 	    "%s/%s", 
-	    get_home_directory (),
+		homedir,
 	    FI_LOCAL_EXTENSIONS_DIRECTORY);
+
+  free(homedir);
   
   return local_extensions_directory;
 }

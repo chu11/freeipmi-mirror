@@ -29,7 +29,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #include <argp.h>
 
 #include "freeipmi.h"

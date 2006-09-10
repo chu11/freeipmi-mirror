@@ -1,3 +1,7 @@
+2006-09-10  Dmitry Frolov <frolov@riss-telecom.ru>
+
+	* FreeIPMI 0.2.3 FreeBSD support added.
+	
 2006-07-25  A Balamurugan  <bala@zresearch.com>
 
 	* tagged Release-0_2_3.

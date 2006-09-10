@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.3],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.41.6.8 2006-07-25 09:56:57 balamurugan Exp $])
+AC_REVISION([$Id: configure.ac,v 1.41.6.9 2006-09-10 17:11:30 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -97,6 +97,20 @@ else
 fi
 AC_SUBST(WITH_DEBUG)
 
+dnl Search for argp functions, in standard C library or in argp-standalone
+AC_CHECK_FUNC([argp_parse], ,
+	AC_CHECK_LIB([argp], [argp_parse], ,
+		AC_MSG_ERROR([argp library not found. Install argp-standalone.])
+	)
+)
+
+dnl Search for getopt_long() in standard C library or in libgnugetopt
+AC_CHECK_FUNC([getopt_long], ,
+	AC_CHECK_LIB([gnugetopt], [getopt_long], ,
+		AC_MSG_ERROR([gnugetopt library not found. Install gnugetopt.])
+	)
+)
+
 dnl See if they want to build fish.
 AC_ARG_ENABLE([fish],
               AC_HELP_STRING([--disable-fish], [don't build the fish IPMI shell]))
@@ -163,13 +177,14 @@ AC_C_BIGENDIAN
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([strchr memcpy memset getopt_long mlock])
+AC_CHECK_FUNCS([strchr memcpy memset mlock])
 
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([unistd.h fcntl.h])
+AC_CHECK_HEADERS([unistd.h fcntl.h stdint.h getopt.h linux/types.h error.h])
+AC_CHECK_HEADERS([netpacket/packet.h net/bpf.h])
 
 dnl Check for random number paths
 AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))

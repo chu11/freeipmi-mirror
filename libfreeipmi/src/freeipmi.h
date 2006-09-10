@@ -39,7 +39,9 @@ extern "C" {
 #include <sys/stat.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
@@ -176,8 +178,13 @@ extern "C" {
 # define _OUTB(data, port)  outb (data, port)
 #endif
 
-#if defined(__FreeBSD__) && !defined(EBADMSG)
-# define EBADMSG    ENOMSG
+#if defined(__FreeBSD__)
+# ifndef EBADMSG
+#  define EBADMSG    ENOMSG
+# endif
+# ifndef O_SYNC
+#  define O_SYNC	O_FSYNC
+# endif
 #endif
 
 #ifdef FREEIPMI_LIBRARY

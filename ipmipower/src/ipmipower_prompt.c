@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.12 2006-01-24 00:34:32 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.12.4.1 2006-09-10 17:11:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,7 +33,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <sys/stat.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
