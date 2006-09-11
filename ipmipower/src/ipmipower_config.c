@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.40 2006-09-09 04:25:20 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.41 2006-09-11 17:53:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -114,7 +114,7 @@ ipmipower_config_setup(void)
 #endif /* NDEBUG */
   conf->timeout_len = 20000;     /* 20 seconds */
   conf->retry_timeout_len = 400; /* .4 seconds  */
-  conf->retry_wait_timeout_len = 750; /* .75 seconds  */
+  conf->retry_wait_timeout_len = 800; /* .8 seconds  */
   conf->retry_backoff_count = 8;
   conf->ping_interval_len = 5000; /* 5 seconds */
   conf->ping_timeout_len = 30000; /* 30 seconds */
