@@ -55,7 +55,8 @@ noinst_HEADERS= \
 	timeval.h \
 	wrappers.h
  
-AM_CFLAGS = -Wall -I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
+AM_CFLAGS = -Wall
+AM_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 -DWITH_LSD_NOMEM_ERROR_FUNC=1
  

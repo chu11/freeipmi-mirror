@@ -25,7 +25,11 @@
 extern "C" {
 #endif
 
+#include <sys/types.h>
+
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 
 #define IPMI_CRYPT_HASH_SHA1             0x00
 #define IPMI_CRYPT_HASH_MD5              0x01

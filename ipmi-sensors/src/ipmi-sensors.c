@@ -29,7 +29,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif	/* HAVE_UNISTD_H */
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #include <sys/resource.h>
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
@@ -52,6 +54,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "sensors-simple-display.h"
 #include "sensors-verbose-display.h"
 #include "sensors-very-verbose-display.h"
+
+#include "freeipmi-portability.h"
 
 int exit_status = 0;
 sdr_repository_info_t sdr_info;

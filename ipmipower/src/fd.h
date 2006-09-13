@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: fd.h,v 1.6 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: fd.h,v 1.7 2006-09-13 21:23:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,7 +33,9 @@
 #  include "config.h"
 #endif /* HAVE_CONFIG_H */
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.12 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: wrappers.c,v 1.13 2006-09-13 21:23:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,25 +42,15 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <sys/socket.h>
-#include <stdint.h>
 #if HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif /* HAVE_SYS_WAIT_H */
 #include <sys/poll.h>
-
-#ifdef __FreeBSD__
-#include <sys/param.h>
-#if __FreeBSD_version >= 502010
-#include <sys/limits.h>
-#else
-#include <machine/limits.h>
-#endif
-#ifndef REG_NOERROR
-#define REG_NOERROR 0
-#endif
-#endif /* __FreeBSD__ */
+#include <limits.h>
 
 #include "wrappers.h"
 #include "cbuf.h"
@@ -374,7 +364,7 @@ int Accept(int fd, struct sockaddr_in *addr, socklen_t * addrlen)
          */
         if (!((errno == EWOULDBLOCK) ||
               (errno == ECONNABORTED) ||
-#ifndef __FreeBSD__
+#ifdef EPROTO
               (errno == EPROTO) ||
 #endif
               (errno == EINTR)))
@@ -513,7 +503,7 @@ void Regcomp(regex_t * preg, const char *regex, int cflags)
      * cause the library call to silently fail.
      */
     n = regcomp(preg, buf, cflags);
-    if (n != REG_NOERROR)
+    if (n != 0)
         lsd_fatal_error(__FILE__, __LINE__, "regcomp failed");
 }
 

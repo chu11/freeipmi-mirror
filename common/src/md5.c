@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md5.c,v 1.4 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: md5.c,v 1.5 2006-09-13 21:23:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -27,6 +27,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+#include <sys/types.h>
 
 #include <stdio.h>
 #include <stdlib.h>

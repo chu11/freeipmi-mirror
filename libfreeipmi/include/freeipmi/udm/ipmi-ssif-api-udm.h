@@ -27,7 +27,9 @@
 #ifndef IPMI_SSIF_API_UDM_H
 #define IPMI_SSIF_API_UDM_H
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 

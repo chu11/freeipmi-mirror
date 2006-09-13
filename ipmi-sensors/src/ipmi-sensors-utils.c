@@ -24,6 +24,8 @@
 #include "ipmi-sensor-api.h"
 #include "freeipmi/ipmi-sdr-record-types.h"
 
+#include "freeipmi-portability.h"
+
 void 
 str_replace_chr (char *str, char chr, char with)
 {

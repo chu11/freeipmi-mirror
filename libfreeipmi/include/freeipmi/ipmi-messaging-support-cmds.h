@@ -25,7 +25,9 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/ipmi-lan.h>
 #include <freeipmi/fiid.h>
 

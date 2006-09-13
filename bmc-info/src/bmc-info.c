@@ -23,7 +23,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */

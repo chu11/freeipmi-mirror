@@ -21,7 +21,9 @@
 #ifndef _IPMI_SERIAL_MODEM_CMDS_H
 #define	_IPMI_SERIAL_MODEM_CMDS_H
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_BASIC_MODE_ENABLE                             0x1

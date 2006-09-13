@@ -29,55 +29,109 @@ extern "C" {
 #include <config.h>
 #endif
 
+#include <sys/types.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+
+#if !defined(EBADMSG) && defined(ENOMSG)
+#define EBADMSG	ENOMSG
+#endif
+#if !defined(O_SYNC) && defined(O_FSYNC)
+#define O_SYNC	O_FSYNC
+#endif
+
+/* FreeBSD don't have log2(), exp10() and exp2() */
+#ifndef HAVE_LOG2
+#define log2(x)		(M_LOG2E * log((x)))
+#endif
+#ifndef HAVE_EXP10
+#define exp10(x)	(pow(10.0, (x)))
+#endif
+#ifndef HAVE_EXP2
+#define exp2(x)		(pow(2.0, (x)))
+#endif
+
+/* FreeBSD don't have program_invocation_short_name but have getprogname() */
+#ifndef HAVE_PROGRAM_SHORT_NAME
+# if defined(HAVE_GETPROGNAME)
+#  define program_invocation_short_name (getprogname())
+# else
+#  error "don't know how to get short program name on your platform"
+# endif
+#endif
+
+/* FreeBSD don't have strdupa */
+#ifndef strdupa
+/* Duplicate S, returning an identical alloca'd string.  */
+# define strdupa(s)								\
+	({											\
+		const char *__old = (s);				\
+		size_t __len = strlen (__old) + 1;		\
+		char *__new = (char *) alloca (__len);	\
+		(char *) memcpy (__new, __old, __len);	\
+	})
+#endif
+
 #ifndef STDC_HEADERS
 #ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
+static inline void*
+freeipmi_memcpy (void *dest, const void *src, size_t n)
 {
   while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
   return dest;
 }
+#define memcpy freeipmi_memcpy
 #endif /* HAVE_MEMCPY */
 #  ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
+static inline void*
+freeipmi_memset (void *s, int c, size_t n)
 {
   while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
   return s;
 }
+#define memset freeipmi_memset
 #endif /* HAVE_MEMSET */
 #ifndef HAVE_STRCHR
-static char*
-strchr (const char* s, int c)
+static inline char*
+freeipmi_strchr (const char* s, int c)
 {
   while (*s != '\0')
     if (*s == (char)c) return s;
     else s++;
   return NULL;
 }
+# define strchr	freeipmi_strchr
 #endif /* HAVE_STRCHR */
 #endif /* STDC_HEADERS */
 
-#if defined(__FreeBSD__) && !defined(EBADMSG)
-# define EBADMSG    ENOMSG
+/* FreeBSD don't have error() */
+#ifndef HAVE_ERROR
+# if defined(__GNUC__) && __GNUC__ >= 3
+void freeipmi_error(int __status, int __errnum,
+	const char *__format, ...)
+		__attribute__ ((__format__ (__printf0__, 3, 4)));
+# else
+void freeipmi_error(int __status, int __errnum,
+	const char *__format, ...);
+# endif
+# define error	freeipmi_error
 #endif
 
-#ifdef __FreeBSD__
-extern void freeipmi_error(int __status, int __errnum,
-	const char *__format, ...)
-		__attribute__ ((__format__ (__printf__, 3, 4)));
-char *freeipmi_strndup(const char *, size_t);
-ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
-
-#define error	freeipmi_error
+/* FreeBSD don't have strndup() */
+#ifndef HAVE_STRNDUP
 #define strndup	freeipmi_strndup
-#define getline	freeipmi_getline
+char *freeipmi_strndup(const char *, size_t);
+#endif
 
-#endif /* __FreeBSD__ */
+/* FreeBSD don't have getline() */
+#ifndef HAVE_GETLINE
+#define getline	freeipmi_getline
+ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* freeipmi-portability.h */
-

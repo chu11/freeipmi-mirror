@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.h,v 1.6 2006-03-07 07:25:59 chu11 Exp $ 
+   $Id: ipmi-raw-argp.h,v 1.7 2006-09-13 21:23:56 chu11 Exp $ 
    
    ipmi-raw-argp.h - ipmi-raw command line argument parser.
    
@@ -22,6 +22,8 @@
 
 #ifndef _IPMI_RAW_ARGP_H
 #define _IPMI_RAW_ARGP_H
+
+#include <limits.h>	/* ARG_MAX */
 
 #define CMD_FILE_KEY     'f'
 

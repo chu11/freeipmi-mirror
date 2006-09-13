@@ -29,13 +29,16 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #include <argp.h>
 
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 
 #include "argp-common.h"
+#include "freeipmi-portability.h"
 
 error_t 
 common_parse_opt (int key, 

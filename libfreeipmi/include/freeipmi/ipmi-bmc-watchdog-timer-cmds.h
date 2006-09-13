@@ -25,7 +25,9 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2                        0x1

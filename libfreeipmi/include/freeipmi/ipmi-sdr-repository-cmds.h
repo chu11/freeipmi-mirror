@@ -22,7 +22,9 @@
 #ifndef _IPMI_SDR_REPOSITORY_CMDS_H
 #define _IPMI_SDR_REPOSITORY_CMDS_H
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED    0x0

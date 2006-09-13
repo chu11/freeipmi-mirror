@@ -29,7 +29,8 @@ bmc_config_LDADD = ../../common/src/libargpcommon.la \
                  ../../common/src/libipmicommon.la \
                  ../../libfreeipmi/src/libfreeipmi.la
 
-AM_CFLAGS = -Wall -I$(srcdir)/../../common/src -D_GNU_SOURCE \
+AM_CFLAGS = -Wall
+AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 		-I$(srcdir)/../../libfreeipmi/include 
 
 noinst_HEADERS = bmc-common.h \

@@ -22,6 +22,8 @@
 #include <config.h>
 #endif
 
+#include <sys/types.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef STDC_HEADERS

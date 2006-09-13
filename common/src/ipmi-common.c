@@ -32,7 +32,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #endif
 #include <sys/types.h>
 #include <errno.h>
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #include <argp.h>
 
 #include "ipmi-common.h"

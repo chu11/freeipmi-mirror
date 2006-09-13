@@ -27,7 +27,9 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 int8_t ipmi_rmcp_check_message_tag (fiid_obj_t pong, uint8_t message_tag);

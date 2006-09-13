@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.2 2006-08-07 20:56:33 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.3 2006-09-13 21:23:56 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -37,6 +37,8 @@
 #include "ipmi-sensor-api.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-utils.h"
+
+#include "freeipmi-portability.h"
 
 static struct arguments cmd_args;
 

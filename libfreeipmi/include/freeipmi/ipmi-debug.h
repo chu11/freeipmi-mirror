@@ -25,7 +25,9 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
  
 extern fiid_template_t tmpl_unexpected_data;

@@ -29,25 +29,21 @@ extern "C" {
 #include <config.h>
 #endif
 
-#ifndef _OS2_
-#  if (defined(__GLIBC__) && __GLIBC__ >= 2)
-#    include <sys/io.h>
-#  elif defined (__OpenBSD__) || defined (__NetBSD__)
-#    include <machine/pio.h>/* inb/outb */
-#    include <machine/sysarch.h>/* sysarch call */
-#  elif defined (__FreeBSD__)
-#    include <machine/cpufunc.h>
-#    include <machine/sysarch.h>
-#  elif defined (PPC)
-#    include <asm/io.h>
-#  else
-#    ifdef _AXP_
-#       include <sys/io.h>
-#    endif
-#  endif   
+#if defined(__FreeBSD__)
+# include <machine/cpufunc.h>
+# include <machine/sysarch.h>
+#elif defined(__NetBSD__) || defined(__OpenBSD__)
+# include <machine/pio.h>		/* inb/outb */
+# include <machine/sysarch.h>	/* sysarch call */
+#elif defined(HAVE_SYS_IO_H)
+/* Linux, _AXP_ */
+# include <sys/io.h>
+#elif defined(HAVE_ASM_IO_H)
+/* PPC */
+# include <asm/io.h>
 #endif
 
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 # define _INB(port)  inb (port)
 # define _OUTB(data, port)  outb (port, data)
 #else

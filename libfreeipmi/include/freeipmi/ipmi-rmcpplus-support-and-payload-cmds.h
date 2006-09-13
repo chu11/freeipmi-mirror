@@ -22,7 +22,9 @@
 #ifndef _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H
 #define _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H 
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
  
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED   0x0

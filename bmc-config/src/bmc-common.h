@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-common.h,v 1.3 2006-07-22 04:18:53 chu11 Exp $ 
+   $Id: bmc-common.h,v 1.4 2006-09-13 21:23:56 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -58,6 +58,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
+#include <limits.h>
 
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>

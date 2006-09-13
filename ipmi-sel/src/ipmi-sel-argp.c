@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.5 2006-07-28 00:37:55 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.6 2006-09-13 21:23:56 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -35,6 +35,8 @@
 
 #include "argp-common.h"
 #include "ipmi-sel-argp.h"
+
+#include "freeipmi-portability.h"
 
 static struct arguments cmd_args;
 

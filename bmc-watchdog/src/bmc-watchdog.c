@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.65 2006-07-29 17:05:22 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.66 2006-09-13 21:23:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,7 +48,9 @@
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <sys/stat.h>
 #include <sys/select.h>
 #if TIME_WITH_SYS_TIME

@@ -31,19 +31,9 @@
 #include <sys/types.h>
 #include <errno.h>
 
-#ifdef __FreeBSD__
+#include "freeipmi-portability.h"
 
-#if __GNUC__
-#define _program_name   __progname
-#define program_invocation_short_name	__progname
-extern char *__progname;
-#else  /* !__GNUC__ */
-#define _program_name   (NULL)
-#define	program_invocation_short_name	(NULL)
-#endif /* !__GNUC__ */
-
-#include <readline/readline.h>
-
+#ifndef HAVE_ERROR
 /* Replacement for glibc error() */
 void
 freeipmi_error(int status, int errnum, const char *message, ...)
@@ -51,37 +41,50 @@ freeipmi_error(int status, int errnum, const char *message, ...)
 	va_list args;
 
 	fflush(stdout);
-	if (_program_name)
-		fprintf(stderr, "%s: ", _program_name);
+	fprintf(stderr, "%s: ", program_invocation_short_name);
 
 	va_start(args, message);
 	vfprintf(stderr, message, args);
 	va_end(args);
 
-	if (errnum)
+	if (errnum) {
+#ifdef HAVE_STRERROR_R
+		char buf[256];
+
+		strerror_r(errnum, buf, sizeof(buf));
+		fprintf(stderr, ": %s", buf);
+#else
 		/* XXX strerror is not not thread safe */
 		fprintf(stderr, ": %s", strerror(errnum));
+#endif
+	}
+
 	putc('\n', stderr);
-	fflush (stderr);
 	if (status)
 		exit(status);
 }
+#endif
 
+#ifndef HAVE_STRNDUP
 /* Replacement for glibc strndup() */
 char *
 freeipmi_strndup(const char *s, size_t n)
 {
-	/* XXX strlen -> strnlen */
 	size_t len = strlen(s);
-	char *new = (char *)malloc(len + 1);
-
+	char *new;
+	
+	if (len > n)
+		len = n;
+	new = (char *)malloc(len + 1);
 	if (new == NULL)
 		return NULL;
 
 	new[len] = '\0';
 	return (char *)memcpy(new, s, len);
 }
+#endif
 
+#ifndef HAVE_GETLINE
 /* Replacement for glibc getline */
 ssize_t
 freeipmi_getline(char **buf, size_t *size, FILE *fp)
@@ -128,5 +131,4 @@ freeipmi_getline(char **buf, size_t *size, FILE *fp)
 		}
 	}
 }
-
-#endif /* __FreeBSD__ */
+#endif

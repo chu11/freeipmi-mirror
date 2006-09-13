@@ -21,7 +21,9 @@
 #ifndef _IPMI_RMCPPLUS_H
 #define _IPMI_RMCPPLUS_H 
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 /**************************

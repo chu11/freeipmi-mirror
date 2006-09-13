@@ -26,7 +26,15 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <sys/types.h>
+
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 
 #define FIID_ERR_SUCCESS                         0
 #define FIID_ERR_OBJ_NULL                        1 

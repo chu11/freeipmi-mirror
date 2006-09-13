@@ -21,7 +21,9 @@
 #ifndef _IPMI_SEL_CMDS_H
 #define _IPMI_SEL_CMDS_H
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY 0x0000

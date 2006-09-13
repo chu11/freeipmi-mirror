@@ -25,7 +25,9 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 int32_t ipmi_calculate_sik(uint8_t authentication_algorithm, 

@@ -27,7 +27,9 @@
 #ifndef IPMI_SSIF_API_H
 #define IPMI_SSIF_API_H
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_DEFAULT_I2C_DEVICE        "/dev/i2c-0"

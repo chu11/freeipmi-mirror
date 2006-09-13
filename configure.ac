@@ -1,7 +1,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.65 2006-08-07 21:14:13 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.66 2006-09-13 21:23:56 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -99,6 +99,35 @@ else
 fi
 AC_SUBST(WITH_DEBUG)
 
+dnl Option to disable installing init.d scripts
+AC_ARG_ENABLE(init-scripts,
+	AC_HELP_STRING([--disable-init-scripts],
+		[don't install init.d startup scripts]))
+INSTALL_INIT_SCRIPTS=install-init-scripts
+if test x"$enable_init_scripts" = xno; then
+	INSTALL_INIT_SCRIPTS=
+fi
+AC_SUBST(INSTALL_INIT_SCRIPTS)
+
+dnl Option to disable installing logrotate config
+AC_ARG_ENABLE(logrotate-config,
+	AC_HELP_STRING([--disable-logrotate-config],
+		[don't install logrotate configuration files]))
+INSTALL_LOGROTATE_CONFIG=install-logrotate-config
+if test x"$enable_logrotate_config" = xno; then
+	INSTALL_LOGROTATE_CONFIG=
+fi
+AC_SUBST(INSTALL_LOGROTATE_CONFIG)
+
+dnl Option to disable creating log directory
+AC_ARG_ENABLE([logdir],
+	AC_HELP_STRING([--disable-logdir], [don't create log directory]))
+INSTALL_LOGDIR=install-logdir
+if test x"$enable_logdir" = xno; then
+	INSTALL_LOGDIR=
+fi
+AC_SUBST(INSTALL_LOGDIR)
+
 dnl Checks for libraries.
 AC_CHECK_LIB([gcrypt], [gcry_md_open], [have_gcrypt=yes], [have_gcrypt=no])
 if test "x${have_gcrypt}" = "xno"; then
@@ -106,20 +135,55 @@ if test "x${have_gcrypt}" = "xno"; then
    AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
 fi
 
+dnl FreeBSD has argp as a separate library
+AC_CHECK_FUNC([argp_parse], ,
+	AC_CHECK_LIB([argp], [argp_parse], ,
+		AC_MSG_ERROR([argp library not found. argp-standalone required.])))
+
+dnl FreeBSD < 5 has getopt_long in a separate gnugetopt library
+AC_CHECK_FUNC([getopt_long], ,
+	AC_CHECK_LIB([gnugetopt], [getopt_long], ,
+		AC_MSG_ERROR([gnugetopt library not found. libgnugetopt required.])))
+
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
+AC_C_CONST
+AC_C_INLINE
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([strchr memcpy memset getopt_long mlock])
+AC_CHECK_FUNCS([strchr memcpy memset mlock])
 AC_caolan_FUNC_WHICH_GETHOSTBYNAME_R
+dnl There is no error(), strndup() and getline() on FreeBSD
+AC_CHECK_FUNCS([error strndup getline strerror_r getprogname])
+dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
+AC_CHECK_LIB([m], [exp10])
+AC_CHECK_LIB([m], [exp2])
+AC_CHECK_LIB([m], [log2])
 
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
+AC_CHECK_HEADERS([stdint.h linux/types.h error.h sys/io.h asm/io.h])
+
+dnl Check for variables
+
+dnl program_invocation_short_name is a GNU extension,
+dnl we use getprogname() instead on FreeBSD
+AC_MSG_CHECKING([for program_invocation_short_name])
+AC_TRY_LINK([
+		#define _GNU_SOURCE
+		#include <errno.h>
+	], [
+		char *try = program_invocation_short_name;
+	], [
+		AC_DEFINE([HAVE_PROGRAM_SHORT_NAME], [1],
+			[Define if you have program_invocation_shortname variable])
+		AC_MSG_RESULT([yes])
+	], [AC_MSG_RESULT([no])])
 
 dnl Macro definitions
 

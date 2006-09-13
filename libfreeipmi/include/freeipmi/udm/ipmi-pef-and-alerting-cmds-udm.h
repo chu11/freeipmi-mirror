@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.4 2006-07-22 05:08:00 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.5 2006-09-13 21:23:56 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
@@ -27,7 +27,9 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 

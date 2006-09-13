@@ -4,7 +4,8 @@ ipmiping_SOURCES=ipmiping.c
 ipmiping_LDADD = ../../libfreeipmi/src/libfreeipmi.la \
 		 ../../common/src/libipmiping.la 
  
-AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
+AM_CFLAGS = -Wall
+AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"
  

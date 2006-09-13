@@ -1,3 +1,7 @@
+2006-09-10  Dmitry Frolov <frolov@riss-telecom.ru>
+
+        * FreeIPMI 0.3.X FreeBSD support added.
+
 2006-09-13  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src: Remove "No_Access" support for lan channel and

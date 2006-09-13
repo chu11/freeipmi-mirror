@@ -23,14 +23,18 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif	/* HAVE_UNISTD_H */
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>

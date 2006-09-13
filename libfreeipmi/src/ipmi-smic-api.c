@@ -31,9 +31,12 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#ifdef HAVE_LINUX_TYPES_H
 #include <linux/types.h>
+#endif
 #include <err.h>
 #include <errno.h>
+#include <fcntl.h>
 
 #include "freeipmi/ipmi-smic-api.h"
 

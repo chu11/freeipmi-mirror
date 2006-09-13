@@ -22,7 +22,9 @@
 #ifndef _IPMI_SENSOR_API_H
 #define _IPMI_SENSOR_API_H
 
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 
 #include "freeipmi/udm/ipmi-udm.h"
 

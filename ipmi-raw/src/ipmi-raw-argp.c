@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.10 2006-07-28 00:37:55 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.11 2006-09-13 21:23:56 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -33,6 +33,8 @@
 
 #include "argp-common.h"
 #include "ipmi-raw-argp.h"
+
+#include "freeipmi-portability.h"
 
 static struct arguments cmd_args;
 
@@ -114,7 +116,7 @@ ipmi_raw_argp_parse (int argc, char **argv)
 {
   init_common_cmd_args (&(cmd_args.common));
   cmd_args.cmd_file = NULL;
-  memset (cmd_args.cmd, 0, ARG_MAX);
+  memset (cmd_args.cmd, 0, sizeof(cmd_args.cmd));
   cmd_args.cmd_length = 0;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);

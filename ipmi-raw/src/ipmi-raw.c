@@ -29,7 +29,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif	/* HAVE_UNISTD_H */
+#ifdef HAVE_ERROR_H
 #include <error.h>
+#endif
 #include <sys/resource.h>
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
@@ -42,6 +44,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <argp.h>
+#include <limits.h>
 
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
@@ -49,6 +52,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "argp-common.h"
 #include "ipmi-raw-argp.h"
 #include "ipmi-common.h"
+#include "freeipmi-portability.h"
 
 static int 
 string2bytes (char *line, unsigned char **buf, int *len)

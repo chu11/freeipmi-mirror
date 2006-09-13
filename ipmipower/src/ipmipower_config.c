@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.41 2006-09-11 17:53:53 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.42 2006-09-13 21:23:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,7 +37,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif /* HAVE_GETOPT_H */

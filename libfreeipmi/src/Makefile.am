@@ -62,10 +62,10 @@ libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERS
 # IPMI_DEBUG_IPCKEY is so we can do inband development without the real ipckey being
 # installed.
 
-libfreeipmi_la_CFLAGS = \
+libfreeipmi_la_CFLAGS = -Wall
+libfreeipmi_la_CPPFLAGS = \
 	-I$(srcdir)/../include \
 	-I$(srcdir)/../../common/src \
-	-Wall \
 	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
 	-DIPMI_DEBUG_IPCKEY=\"$(top_builddir)/libfreeipmi/src/ipmi-semaphores.h\" \
 	-D_GNU_SOURCE \
