@@ -467,7 +467,7 @@ volatile_channel_priv_limit_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+  if (!(kv->value = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
       exit(1);
@@ -483,7 +483,7 @@ volatile_channel_priv_limit_commit (const struct arguments *args,
 {
   uint8_t commit_val;
 
-  commit_val = get_privilege_limit_number (kv->value);
+  commit_val = privilege_level_number (kv->value);
   return serial_channel_volatile_access_set (args->dev,
                                              0, 0,
                                              0, 0,
@@ -511,7 +511,7 @@ volatile_channel_priv_limit_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  passed_val = get_privilege_limit_number (kv->value);
+  passed_val = privilege_level_number (kv->value);
 
   if (passed_val == get_val)
     ret = 0;
@@ -521,7 +521,7 @@ volatile_channel_priv_limit_diff (const struct arguments *args,
       report_diff (sect->section,
                    kv->key,
                    kv->value,
-                   get_privilege_limit_string (get_val));
+                   privilege_level_string (get_val));
     }
   return ret;
 }
@@ -531,7 +531,7 @@ volatile_channel_priv_limit_validate (const struct arguments *args,
 				      const struct section *sect,
 				      const char *value)
 {
-  int level = get_privilege_limit_number (value);
+  int level = privilege_level_number (value);
   return (level > 0) ? 0 : 1;
 }
 
@@ -1000,7 +1000,7 @@ non_volatile_channel_priv_limit_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+  if (!(kv->value = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
       exit(1);
@@ -1016,7 +1016,7 @@ non_volatile_channel_priv_limit_commit (const struct arguments *args,
 {
   uint8_t commit_val;
 
-  commit_val = get_privilege_limit_number (kv->value);
+  commit_val = privilege_level_number (kv->value);
   return serial_channel_non_volatile_access_set (args->dev,
 						 0, 0,
 						 0, 0,
@@ -1044,7 +1044,7 @@ non_volatile_channel_priv_limit_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  passed_val = get_privilege_limit_number (kv->value);
+  passed_val = privilege_level_number (kv->value);
   if (passed_val == get_val)
     ret = 0;
   else 
@@ -1053,7 +1053,7 @@ non_volatile_channel_priv_limit_diff (const struct arguments *args,
       report_diff (sect->section,
                    kv->key,
                    kv->value,
-                   get_privilege_limit_string (get_val));
+                   privilege_level_string (get_val));
     }
   return ret;
 }
@@ -1063,7 +1063,7 @@ non_volatile_channel_priv_limit_validate (const struct arguments *args,
 					  const struct section *sect,
 					  const char *value)
 {
-  int level = get_privilege_limit_number (value);
+  int level = privilege_level_number (value);
   return (level > 0) ? 0 : 1;
 }
 
@@ -1122,7 +1122,7 @@ bmc_serial_channel_section_get (struct arguments *args)
 
   add_keyvalue (serial_channel_section,
 		"Volatile_Channel_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                 0,
 		volatile_channel_priv_limit_checkout,
 		volatile_channel_priv_limit_commit,
@@ -1167,7 +1167,7 @@ bmc_serial_channel_section_get (struct arguments *args)
 
   add_keyvalue (serial_channel_section,
 		"Non_Volatile_Channel_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                 0,
 		non_volatile_channel_priv_limit_checkout,
 		non_volatile_channel_priv_limit_commit,

@@ -1,3 +1,9 @@
+2006-09-13  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src: Remove "No_Access" support for lan channel and
+	serial channel configuration.  It is not a valid privilege for
+	setting/getting.
+	
 2006-09-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Added support for --retry-wait-timeout option.
