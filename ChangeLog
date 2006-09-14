@@ -1,3 +1,8 @@
+2006-09-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_config.c
+	(ipmipower_config_cmdline_parse): Add missing -q parse option.
+	
 2006-09-10  Dmitry Frolov <frolov@riss-telecom.ru>
 
         * FreeIPMI 0.3.X FreeBSD support added.
