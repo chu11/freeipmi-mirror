@@ -2,6 +2,8 @@
 
 	* ipmipower/src/ipmipower_config.c
 	(ipmipower_config_cmdline_parse): Add missing -q parse option.
+
+	* configure.ac: Define HAVE_GETOPT_LONG if found.
 	
 2006-09-10  Dmitry Frolov <frolov@riss-telecom.ru>
 

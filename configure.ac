@@ -1,7 +1,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.66 2006-09-13 21:23:56 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.67 2006-09-14 20:59:43 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -141,9 +141,13 @@ AC_CHECK_FUNC([argp_parse], ,
 		AC_MSG_ERROR([argp library not found. argp-standalone required.])))
 
 dnl FreeBSD < 5 has getopt_long in a separate gnugetopt library
-AC_CHECK_FUNC([getopt_long], ,
-	AC_CHECK_LIB([gnugetopt], [getopt_long], ,
+AC_CHECK_FUNC([getopt_long], [have_getopt_long=yes],
+	AC_CHECK_LIB([gnugetopt], [getopt_long], [have_getopt_long=yes],
 		AC_MSG_ERROR([gnugetopt library not found. libgnugetopt required.])))
+
+if test "x${have_getopt_long}" = "xyes"; then
+   AC_DEFINE(HAVE_GETOPT_LONG, 1, [define if you found getopt_long])
+fi
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
