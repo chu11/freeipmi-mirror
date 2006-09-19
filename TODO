@@ -3,7 +3,7 @@
 X A) ipmi-sensors: scheme to C conversion (done by bala)
 X A-1): SDR cache format (done by bala)
   B) bmc-autoconfig: fixed for new bmc-config (assigned: anand)
-  C) ipmi-sel: proper trigger output fix (assigned: bala)
+X C) ipmi-sel: proper trigger output fix (done by achu)
 X D) Remove Fish (done by achu)
 X E) debug dumping for all tools (done by achu)
   F) including ipmiconsole + libipmiconsole (assigned: achu)
@@ -11,9 +11,9 @@ X G) RPM repackaging (done by achu)
   G-1) ipmiconsole/libipmiconsole (assigned: achu)
 X H) OpenIPMI inband driver suppport (done by achu)
 - I) doc/freeipmi.texi
-  X I-1) ipmi-sensors update (done by achu)
-  X I-2) bmc-config update (done by achu)
-  X       - --section && --listsections stuff
+X I-1) ipmi-sensors update (done by achu)
+X I-2) bmc-config update (done by achu)
+X       - --section && --listsections stuff
   I-3) bmc-autoconfig options (assigned: anyone)
 ? J) Legacy Pad issue - not needed for ipmi 2.0
   K) ipmi-pef (assigned: ?)
