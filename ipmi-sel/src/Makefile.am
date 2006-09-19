@@ -4,6 +4,7 @@ ipmi_sel_SOURCES=ipmi-sel-argp.c ipmi-sel-wrapper.c ipmi-sel.c
 ipmi_sel_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libipmicommon.la \
 		 ../../common/src/libsensor.la \
+		 ../../common/src/libsdr.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
 		 ../../common/src/libfreeipmiportability.la
  
@@ -22,6 +23,12 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libipmicommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libsensor.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libsdr.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

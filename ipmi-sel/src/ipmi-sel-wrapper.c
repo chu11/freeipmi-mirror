@@ -39,9 +39,14 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 #include "ipmi-common.h"
+#include "ipmi-sdr-api.h"
 #include "ipmi-sensor-api.h"
 
 #include "ipmi-sel-wrapper.h"
+
+extern sdr_repository_info_t sdr_info;
+extern sdr_record_t *sdr_record_list;
+extern int sdr_record_count;
 
 int 
 get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info)
@@ -96,6 +101,37 @@ get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info)
   return (rv);
 }
 
+static sdr_record_t *
+_find_sdr_record(uint8_t sensor_number)
+{
+  sdr_record_t *sdr_record;
+  int i;
+
+  for (i = 0; i < sdr_record_count; i++)
+    {
+      sdr_record = sdr_record_list + i;
+      /* achu: It seems only threshold sensors can output Trigger data? */
+      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
+	  && sdr_record->record.sdr_full_record.sensor_number == sensor_number)
+	return sdr_record;
+    }
+
+  return NULL;
+}
+
+static double
+_round_double2 (double d)
+{
+  double r = 0.0;
+
+  r = (d - (long) d) * 100.0;
+
+  if ((r - (long) r) > 0.5)
+    return ((long) d + (((long) r + 1) / 100.0));
+
+  return ((long) d + ((long) r / 100.0));
+}
+
 static int 
 _get_sel_system_event_record (uint8_t *record_data, 
                               uint32_t record_data_len,
@@ -115,10 +151,12 @@ _get_sel_system_event_record (uint8_t *record_data,
   uint8_t event_data3_flag;
   uint8_t event_data2;
   uint8_t event_data3;
-  
+
   uint64_t val;
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
+
+  sdr_record_t *sdr_record;
 
   ERR_EINVAL (record_data && sel_record);
 
@@ -223,9 +261,34 @@ _get_sel_system_event_record (uint8_t *record_data,
 	switch (event_data2_flag)
 	  {
 	  case IPMI_SEL_TRIGGER_READING:
-	    asprintf (&(sel_record->event_data2_message), 
-		      "Trigger reading = %02Xh", 
-		      event_data2);
+	    if (sdr_record_list 
+		&& sdr_record_count
+		&& (sdr_record = _find_sdr_record(sensor_number))
+		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
+		&& sdr_record->record.sdr_full_record.event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
+	      {
+		double current_reading;
+
+		ERR_CLEANUP (!(ipmi_sensor_decode_value (sdr_record->record.sdr_full_record.r_exponent,
+							 sdr_record->record.sdr_full_record.b_exponent,
+							 sdr_record->record.sdr_full_record.m,
+							 sdr_record->record.sdr_full_record.b,
+							 sdr_record->record.sdr_full_record.linear,
+							 sdr_record->record.sdr_full_record.analog_data_format,
+							 event_data2,
+							 &current_reading) < 0));
+		
+		asprintf (&(sel_record->event_data2_message),
+			  "Reading = %.2f %s",
+			  _round_double2 (current_reading),
+			  ipmi_sensor_units_abbreviated[sdr_record->record.sdr_full_record.sensor_unit]);
+	      }
+	    else
+	      {
+		asprintf (&(sel_record->event_data2_message), 
+			  "Trigger reading = %02Xh", 
+			  event_data2);
+	      }
 	    break;
 	  case IPMI_SEL_OEM_CODE:
 	    asprintf (&(sel_record->event_data2_message), 
@@ -254,9 +317,34 @@ _get_sel_system_event_record (uint8_t *record_data,
 	switch (event_data3_flag)
 	  {
 	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
-	    asprintf (&(sel_record->event_data3_message), 
-		      "Trigger reading = %02Xh", 
-		      event_data3);
+	    if (sdr_record_list 
+		&& sdr_record_count
+		&& (sdr_record = _find_sdr_record(sensor_number))
+		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
+		&& sdr_record->record.sdr_full_record.event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
+	      {
+		double current_reading;
+
+		ERR_CLEANUP (!(ipmi_sensor_decode_value (sdr_record->record.sdr_full_record.r_exponent,
+							 sdr_record->record.sdr_full_record.b_exponent,
+							 sdr_record->record.sdr_full_record.m,
+							 sdr_record->record.sdr_full_record.b,
+							 sdr_record->record.sdr_full_record.linear,
+							 sdr_record->record.sdr_full_record.analog_data_format,
+							 event_data3,
+							 &current_reading) < 0));
+		
+		asprintf (&(sel_record->event_data3_message),
+			  "Threshold = %.2f %s",
+			  _round_double2 (current_reading),
+			  ipmi_sensor_units_abbreviated[sdr_record->record.sdr_full_record.sensor_unit]);
+	      }
+	    else
+	      {
+		asprintf (&(sel_record->event_data3_message), 
+			  "Trigger reading = %02Xh", 
+			  event_data3);
+	      }
 	    break;
 	  case IPMI_SEL_OEM_CODE:
 	    asprintf (&(sel_record->event_data3_message), 

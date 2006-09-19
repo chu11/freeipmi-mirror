@@ -50,7 +50,7 @@ const char *const ipmi_sensor_types[] =
     "System Event",
     "Critical Interrupt",
     "Button",
-    "Board",
+    "Module/Board",
     "Microcontroller",
     "Add In Card",
     "Chassis",

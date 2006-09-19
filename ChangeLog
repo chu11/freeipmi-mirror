@@ -1,9 +1,19 @@
+2006-09-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/: Fix trigger reading output.  Add SDR flush cache option.
+
+	* ipmi-sel/ipmi-sel.8.pre.in, doc/freeipmi.texi: Update with new
+	option appropriately.
+
 2006-09-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_config.c
 	(ipmipower_config_cmdline_parse): Add missing -q parse option.
 
 	* configure.ac: Define HAVE_GETOPT_LONG if found.
+
+	* libfreeipmi/src/ipmi-sensor-types-spec.c: Rename "Board" to
+	"Module/Board" to match spec.
 	
 2006-09-10  Dmitry Frolov <frolov@riss-telecom.ru>
 

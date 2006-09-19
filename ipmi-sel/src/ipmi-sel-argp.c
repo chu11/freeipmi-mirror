@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.6 2006-09-13 21:23:56 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.7 2006-09-19 17:08:02 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -67,6 +67,8 @@ static struct argp_option options[] =
      "Delete records from START to END in SEL.", 16},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
      "Hex-dump SEL entries optionally to FILE.", 17},
+    {"flush-cache", FLUSH_CACHE_KEY,  0, 0,
+     "Flush sensor SDR cache.", 18},
     { 0 }
   };
 
@@ -338,6 +340,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	    free (cmd_args->hex_dump_filename);
 	  cmd_args->hex_dump_filename = strdup (arg);
 	}
+      break;
+    case FLUSH_CACHE_KEY:
+      cmd_args->flush_cache_wanted = 1;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */

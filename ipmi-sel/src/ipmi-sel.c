@@ -47,12 +47,77 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "argp-common.h"
 #include "ipmi-common.h"
+#include "ipmi-sdr-api.h"
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-wrapper.h"
 
 #include "freeipmi-portability.h"
 
 int exit_status = 0;
+sdr_repository_info_t sdr_info;
+sdr_record_t *sdr_record_list = NULL;
+int sdr_record_count = 0;
+
+int
+init_sdr_cache (ipmi_device_t dev, struct arguments *args)
+{
+  char *sdr_cache_filename = NULL;
+  FILE *fp = NULL;
+  int rv = -1;
+
+  if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host)) == NULL)
+    return (-1);
+
+  if ((fp = fopen (sdr_cache_filename, "r")))
+    {
+      rv = load_sdr_cache (fp, &sdr_info, &sdr_record_list, &sdr_record_count);
+      fclose (fp);
+      
+      if (rv == 0)
+        {
+          sdr_repository_info_t l_sdr_info;
+	  
+          memset (&l_sdr_info, 0, sizeof (sdr_repository_info_t));
+          if (get_sdr_repository_info (dev, &l_sdr_info) == -1)
+            {
+              free (sdr_cache_filename);
+              free (sdr_record_list);
+              sdr_record_list = NULL;
+              sdr_record_count = 0;
+              return (-1);
+            }
+	  
+          if (l_sdr_info.most_recent_addition_timestamp == sdr_info.most_recent_addition_timestamp && l_sdr_info.most_recent_erase_timestamp == sdr_info.most_recent_erase_timestamp)
+            {
+              free (sdr_cache_filename);
+              return 0;
+            }
+	  
+          free (sdr_cache_filename);
+          free (sdr_record_list);
+          sdr_record_list = NULL;
+          sdr_record_count = 0;
+        }
+    }
+  
+  if ((fp = fopen (sdr_cache_filename, "w")))
+    {
+      rv = create_sdr_cache (dev, fp, 1);
+      fclose (fp);
+      if (rv)
+        {
+          return (-1);
+        }
+    }
+  
+  if ((fp = fopen (sdr_cache_filename, "r")))
+    {
+      rv = load_sdr_cache (fp, &sdr_info, &sdr_record_list, &sdr_record_count);
+      fclose (fp);
+    }
+  
+  return rv;
+}
 
 int 
 display_sel_info (ipmi_device_t dev)
@@ -215,6 +280,14 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
       return retval;
     }
   
+  if (args->flush_cache_wanted)
+    {
+      printf ("flushing cache... ");
+      retval = flush_sdr_cache_file (args->common.host);
+      printf ("%s\n", (retval ? "FAILED" : "done"));
+      return retval;
+    }
+
   if (args->hex_dump_wanted)
     {
       if (args->hex_dump_filename)
@@ -282,6 +355,13 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
       return retval;
     }
   
+  if ((retval = init_sdr_cache (dev, args)))
+    {
+      fprintf (stderr, "%s: sdr cache initialization failed\n",
+               program_invocation_short_name);
+      return retval;
+    }
+
   retval = display_sel_records (dev);
   
   return retval;

@@ -1284,6 +1284,9 @@ you view and manage system event log.
 @item --delete-range=@var{START-END} @*
       Delete records from START to END in SEL
 
+@item -f, ---flush-cache @*
+      Flush SDR cache.
+
 @end itemize
 
 @node ipmi-sel sample output,  , ipmi-sel options, ipmi-sel
