@@ -1,3 +1,9 @@
+2006-09-26  Anand V. Avati <avati@zreesarch.com>
+
+	* bmc-config/bmc-autoconfig: command line arguments are now 
+	handled (passwd on to bmc-config)
+
+	
 2006-09-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/: Fix trigger reading output.  Add SDR flush cache option.
