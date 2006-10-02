@@ -36,7 +36,13 @@ username_checkout (const struct arguments *args,
 		    
   if (kv->value)
     free (kv->value);
-  kv->value = strdup ((char *)username);
+
+  if (!(kv->value = strdup ((char *)username)))
+    {
+      perror("strdup");
+      exit(1);
+    }
+
   return 0;
 }
 
@@ -156,11 +162,29 @@ enable_user_checkout (const struct arguments *args,
    * later on.
    */
   if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else /* tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
-    kv->value = strdup ("");
+    {
+      if (!(kv->value = strdup ("")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -242,7 +266,12 @@ password_checkout (const struct arguments *args,
 {
   if (kv->value)
     free (kv->value);
-  kv->value = strdup ("");
+
+  if (!(kv->value = strdup ("")))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -303,7 +332,12 @@ password20_checkout (const struct arguments *args,
                                  "foobar") < 0) 
     return -1;
 
-  kv->value = strdup ("");
+  if (!(kv->value = strdup ("")))
+    {
+      perror("strdup");
+      exit(1);
+    }
+
   return 0;
 }
 
@@ -472,9 +506,21 @@ lan_enable_ipmi_msgs_checkout (const struct arguments *args,
     free (kv->value);
 
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
@@ -564,32 +610,44 @@ lan_enable_link_auth_checkout (const struct arguments *args,
     free (kv->value);
 
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
-
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
+  
   return 0;
 }
 
 static int
 lan_enable_link_auth_commit (const struct arguments *args,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+                             const struct section *sect,
+                             const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return lan_channel_set (args->dev,
-			  userid,
-			  0, 0,
-			  same (kv->value, "yes"), 1,
-			  0, 0,
-			  0, 0,
-			  0, 0);
+                          userid,
+                          0, 0,
+                          same (kv->value, "yes"), 1,
+                          0, 0,
+                          0, 0,
+                          0, 0);
 }
 
 static int
 lan_enable_link_auth_diff (const struct arguments *args,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+                           const struct section *sect,
+                           const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -597,12 +655,12 @@ lan_enable_link_auth_diff (const struct arguments *args,
   int ret;
 
   ret = lan_channel_get (args->dev,
-			 userid,
-			 0,
-			 &get_val,
-			 0,
-			 0,
-			 0);
+                         userid,
+                         0,
+                         &get_val,
+                         0,
+                         0,
+                         0);
 
   if (ret != 0)
     return ret;
@@ -624,8 +682,8 @@ lan_enable_link_auth_diff (const struct arguments *args,
 
 static int
 lan_enable_link_auth_validate (const struct arguments *args,
-			       const struct section *sect,
-			       const char *value)
+                               const struct section *sect,
+                               const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
@@ -634,20 +692,20 @@ lan_enable_link_auth_validate (const struct arguments *args,
 
 static int
 lan_enable_restricted_to_callback_checkout (const struct arguments *args,
-					    const struct section *sect,
-					    struct keyvalue *kv)
+                                            const struct section *sect,
+                                            struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
 
   ret = lan_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 &get_val,
-			 0,
-			 0);
+                         userid,
+                         0,
+                         0,
+                         &get_val,
+                         0,
+                         0);
 
   if (ret != 0)
     return ret;
@@ -656,32 +714,44 @@ lan_enable_restricted_to_callback_checkout (const struct arguments *args,
     free (kv->value);
 
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
 
 static int
 lan_enable_restricted_to_callback_commit (const struct arguments *args,
-					  const struct section *sect,
-					  const struct keyvalue *kv)
+                                          const struct section *sect,
+                                          const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return lan_channel_set (args->dev,
-			  userid,
-			  0, 0,
-			  0, 0,
-			  same (kv->value, "yes"), 1,
-			  0, 0,
-			  0, 0);
+                          userid,
+                          0, 0,
+                          0, 0,
+                          same (kv->value, "yes"), 1,
+                          0, 0,
+                          0, 0);
 }
 
 static int
 lan_enable_restricted_to_callback_diff (const struct arguments *args,
-					const struct section *sect,
-					const struct keyvalue *kv)
+                                        const struct section *sect,
+                                        const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -689,12 +759,12 @@ lan_enable_restricted_to_callback_diff (const struct arguments *args,
   int ret;
 
   ret = lan_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 &get_val,
-			 0,
-			 0);
+                         userid,
+                         0,
+                         0,
+                         &get_val,
+                         0,
+                         0);
 
   if (ret != 0)
     return ret;
@@ -716,8 +786,8 @@ lan_enable_restricted_to_callback_diff (const struct arguments *args,
 
 static int
 lan_enable_restricted_to_callback_validate (const struct arguments *args,
-					    const struct section *sect,
-					    const char *value)
+                                            const struct section *sect,
+                                            const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
@@ -726,20 +796,20 @@ lan_enable_restricted_to_callback_validate (const struct arguments *args,
 
 static int
 lan_privilege_limit_checkout (const struct arguments *args,
-			      const struct section *sect,
-			      struct keyvalue *kv)
+                              const struct section *sect,
+                              struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
 
   ret = lan_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 0,
-			 &get_val,
-			 0);
+                         userid,
+                         0,
+                         0,
+                         0,
+                         &get_val,
+                         0);
 
   if (ret != 0)
     return ret;
@@ -747,30 +817,34 @@ lan_privilege_limit_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (get_privilege_limit_string (get_val));
+  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
 
 static int
 lan_privilege_limit_commit (const struct arguments *args,
-			    const struct section *sect,
-			    const struct keyvalue *kv)
+                            const struct section *sect,
+                            const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return lan_channel_set (args->dev,
-			  userid,
-			  0, 0,
-			  0, 0,
-			  0, 0,
-			  get_privilege_limit_number (kv->value), 1,
-			  0, 0);
+                          userid,
+                          0, 0,
+                          0, 0,
+                          0, 0,
+                          get_privilege_limit_number (kv->value), 1,
+                          0, 0);
 }
 
 static int
 lan_privilege_limit_diff (const struct arguments *args,
-					const struct section *sect,
-					const struct keyvalue *kv)
+                          const struct section *sect,
+                          const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -778,12 +852,12 @@ lan_privilege_limit_diff (const struct arguments *args,
   int ret;
 
   ret = lan_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 0,
-			 &get_val,
-			 0);
+                         userid,
+                         0,
+                         0,
+                         0,
+                         &get_val,
+                         0);
 
   if (ret != 0)
     return ret;
@@ -806,8 +880,8 @@ lan_privilege_limit_diff (const struct arguments *args,
   
 static int
 lan_privilege_limit_validate (const struct arguments *args,
-			       const struct section *sect,
-			       const char *value)
+                              const struct section *sect,
+                              const char *value)
 {
   return (get_privilege_limit_number (value) > 0) ? 0 : 1;
 }
@@ -816,20 +890,20 @@ lan_privilege_limit_validate (const struct arguments *args,
 
 static int
 lan_session_limit_checkout (const struct arguments *args,
-			      const struct section *sect,
-			      struct keyvalue *kv)
+                            const struct section *sect,
+                            struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
 
   ret = lan_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 0,
-			 0,
-			 &get_val);
+                         userid,
+                         0,
+                         0,
+                         0,
+                         0,
+                         &get_val);
 
   if (ret != 0)
     return ret;
@@ -844,23 +918,23 @@ lan_session_limit_checkout (const struct arguments *args,
 
 static int
 lan_session_limit_commit (const struct arguments *args,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+                          const struct section *sect,
+                          const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return lan_channel_set (args->dev,
-			  userid,
-			  0, 0,
-			  0, 0,
-			  0, 0,
-			  0, 0,
-			  strtol (kv->value, NULL, 0), 1);
+                          userid,
+                          0, 0,
+                          0, 0,
+                          0, 0,
+                          0, 0,
+                          strtol (kv->value, NULL, 0), 1);
 }
 
 static int
 lan_session_limit_diff (const struct arguments *args,
-			const struct section *sect,
-			const struct keyvalue *kv)
+                        const struct section *sect,
+                        const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -868,12 +942,12 @@ lan_session_limit_diff (const struct arguments *args,
   int ret;
 
   ret = lan_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 0,
-			 0,
-			 &get_val);
+                         userid,
+                         0,
+                         0,
+                         0,
+                         0,
+                         &get_val);
 
   if (ret != 0)
     return ret;
@@ -898,8 +972,8 @@ lan_session_limit_diff (const struct arguments *args,
   
 static int
 lan_session_limit_validate (const struct arguments *args,
-			    const struct section *sect,
-			    const char *value)
+                            const struct section *sect,
+                            const char *value)
 {
   long int conv;
   char *endptr;
@@ -916,46 +990,58 @@ lan_session_limit_validate (const struct arguments *args,
 
 static int
 sol_payload_access_checkout (const struct arguments *args,
-			     const struct section *sect,
-			     struct keyvalue *kv)
+                             const struct section *sect,
+                             struct keyvalue *kv)
 {
   int userid = atoi (sect->section + strlen ("User"));
   uint8_t have_access;
   int ret;
 
   ret = get_bmc_user_payload_access (args->dev,
-				     userid,
-				     &have_access,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL);
+                                     userid,
+                                     &have_access,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL);
   if (ret != 0)
     return -1;
 
   if (kv->value)
     free (kv->value);
   if (have_access)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   return 0;
 }
 
 static int
 sol_payload_access_commit (const struct arguments *args,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+                           const struct section *sect,
+                           const struct keyvalue *kv)
 {
   int userid = atoi (sect->section + strlen ("User"));
   uint8_t operation;
@@ -966,16 +1052,16 @@ sol_payload_access_commit (const struct arguments *args,
     operation = IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE;
 
   return set_bmc_user_payload_access (args->dev,
-				      userid,
-				      operation,
-				      1, 
-				      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                                      userid,
+                                      operation,
+                                      1, 
+                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 static int
 sol_payload_access_diff (const struct arguments *args,
-		  const struct section *sect,
-		  const struct keyvalue *kv)
+                         const struct section *sect,
+                         const struct keyvalue *kv)
 {
   int userid = atoi (sect->section + strlen ("User"));
   uint8_t have_access;
@@ -983,22 +1069,22 @@ sol_payload_access_diff (const struct arguments *args,
   int ret;
 
   ret = get_bmc_user_payload_access (args->dev,
-				     userid,
-				     &have_access,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL);
+                                     userid,
+                                     &have_access,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL);
   if (ret != 0)
     return -1;
 
@@ -1019,8 +1105,8 @@ sol_payload_access_diff (const struct arguments *args,
 
 static int
 sol_payload_access_validate (const struct arguments *args,
-		      const struct section *sect,
-		      const char *value)
+                             const struct section *sect,
+                             const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
@@ -1029,12 +1115,12 @@ sol_payload_access_validate (const struct arguments *args,
 
 static int
 serial_channel_get (ipmi_device_t dev,
-		    uint8_t userid,
-		    uint8_t *user_ipmi_messaging,
-		    uint8_t *user_link_authentication,
-		    uint8_t *user_restricted_to_callback,
-		    uint8_t *privilege_limit,
-		    uint8_t *session_limit)
+                    uint8_t userid,
+                    uint8_t *user_ipmi_messaging,
+                    uint8_t *user_link_authentication,
+                    uint8_t *user_restricted_to_callback,
+                    uint8_t *privilege_limit,
+                    uint8_t *session_limit)
 {
   uint8_t tmp_user_ipmi_messaging;
   uint8_t tmp_user_link_authentication;
@@ -1045,12 +1131,12 @@ serial_channel_get (ipmi_device_t dev,
   uint8_t ret;
   
   ret = get_bmc_user_serial_channel_access (dev,
-					    userid,
-					    &tmp_user_ipmi_messaging,
-					    &tmp_user_link_authentication,
-					    &tmp_user_restricted_to_callback,
-					    &tmp_privilege_limit,
-					    &tmp_session_limit,
+                                            userid,
+                                            &tmp_user_ipmi_messaging,
+                                            &tmp_user_link_authentication,
+                                            &tmp_user_restricted_to_callback,
+                                            &tmp_privilege_limit,
+                                            &tmp_session_limit,
                                             &tmp_user_id_enable_status);
 
   if (ret != 0)
@@ -1072,17 +1158,17 @@ serial_channel_get (ipmi_device_t dev,
 
 static int
 serial_channel_set (ipmi_device_t dev,
-		    uint8_t userid,
-		    uint8_t user_ipmi_messaging,
-		    uint8_t user_ipmi_messaging_is_set,
-		    uint8_t user_link_authentication,
-		    uint8_t user_link_authentication_is_set,
-		    uint8_t user_restricted_to_callback,
-		    uint8_t user_restricted_to_callback_is_set,
-		    uint8_t privilege_limit,
-		    uint8_t privilege_limit_is_set,
-		    uint8_t session_limit,
-		    uint8_t session_limit_is_set)
+                    uint8_t userid,
+                    uint8_t user_ipmi_messaging,
+                    uint8_t user_ipmi_messaging_is_set,
+                    uint8_t user_link_authentication,
+                    uint8_t user_link_authentication_is_set,
+                    uint8_t user_restricted_to_callback,
+                    uint8_t user_restricted_to_callback_is_set,
+                    uint8_t privilege_limit,
+                    uint8_t privilege_limit_is_set,
+                    uint8_t session_limit,
+                    uint8_t session_limit_is_set)
 {
   uint8_t tmp_user_ipmi_messaging;
   uint8_t tmp_user_link_authentication;
@@ -1093,12 +1179,12 @@ serial_channel_set (ipmi_device_t dev,
   uint8_t ret;
   
   ret = get_bmc_user_serial_channel_access (dev,
-					    userid,
-					    &tmp_user_ipmi_messaging,
-					    &tmp_user_link_authentication,
-					    &tmp_user_restricted_to_callback,
-					    &tmp_privilege_limit,
-					    &tmp_session_limit,
+                                            userid,
+                                            &tmp_user_ipmi_messaging,
+                                            &tmp_user_link_authentication,
+                                            &tmp_user_restricted_to_callback,
+                                            &tmp_privilege_limit,
+                                            &tmp_session_limit,
                                             &tmp_user_id_enable_status);
 
   if (ret != 0)
@@ -1116,12 +1202,12 @@ serial_channel_set (ipmi_device_t dev,
     tmp_session_limit = session_limit;
 
   ret = set_bmc_user_serial_channel_access (dev,
-					    userid,
-					    tmp_user_ipmi_messaging,
-					    tmp_user_link_authentication,
-					    tmp_user_restricted_to_callback,
-					    tmp_privilege_limit,
-					    tmp_session_limit);
+                                            userid,
+                                            tmp_user_ipmi_messaging,
+                                            tmp_user_link_authentication,
+                                            tmp_user_restricted_to_callback,
+                                            tmp_privilege_limit,
+                                            tmp_session_limit);
 
   return ret;
 }
@@ -1131,20 +1217,20 @@ serial_channel_set (ipmi_device_t dev,
 
 static int
 serial_enable_ipmi_msgs_checkout (const struct arguments *args,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+                                  const struct section *sect,
+                                  struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
-
+  
   ret = serial_channel_get (args->dev,
-			 userid,
-			 &get_val,
-			 0,
-			 0,
-			 0,
-			 0);
+                            userid,
+                            &get_val,
+                            0,
+                            0,
+                            0,
+                            0);
 
   if (ret != 0)
     return ret;
@@ -1153,32 +1239,44 @@ serial_enable_ipmi_msgs_checkout (const struct arguments *args,
     free (kv->value);
 
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
 
 static int
 serial_enable_ipmi_msgs_commit (const struct arguments *args,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+                                const struct section *sect,
+                                const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return serial_channel_set (args->dev,
-			  userid,
-			  same (kv->value, "yes"), 1,
-			  0, 0,
-			  0, 0,
-			  0, 0,
-			  0, 0);
+                             userid,
+                             same (kv->value, "yes"), 1,
+                             0, 0,
+                             0, 0,
+                             0, 0,
+                             0, 0);
 }
 
 static int
 serial_enable_ipmi_msgs_diff (const struct arguments *args,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+                              const struct section *sect,
+                              const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -1186,12 +1284,12 @@ serial_enable_ipmi_msgs_diff (const struct arguments *args,
   int ret;
 
   ret = serial_channel_get (args->dev,
-			 userid,
-			 &get_val,
-			 0,
-			 0,
-			 0,
-			 0);
+                            userid,
+                            &get_val,
+                            0,
+                            0,
+                            0,
+                            0);
 
   if (ret != 0)
     return ret;
@@ -1213,8 +1311,8 @@ serial_enable_ipmi_msgs_diff (const struct arguments *args,
   
 static int
 serial_enable_ipmi_msgs_validate (const struct arguments *args,
-			       const struct section *sect,
-			       const char *value)
+                                  const struct section *sect,
+                                  const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
@@ -1223,20 +1321,20 @@ serial_enable_ipmi_msgs_validate (const struct arguments *args,
 
 static int
 serial_enable_link_auth_checkout (const struct arguments *args,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+                                  const struct section *sect,
+                                  struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
 
   ret = serial_channel_get (args->dev,
-			 userid,
-			 0,
-			 &get_val,
-			 0,
-			 0,
-			 0);
+                            userid,
+                            0,
+                            &get_val,
+                            0,
+                            0,
+                            0);
 
   if (ret != 0)
     return ret;
@@ -1245,32 +1343,44 @@ serial_enable_link_auth_checkout (const struct arguments *args,
     free (kv->value);
 
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
 
 static int
 serial_enable_link_auth_commit (const struct arguments *args,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+                                const struct section *sect,
+                                const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return serial_channel_set (args->dev,
-			  userid,
-			  0, 0,
-			  same (kv->value, "yes"), 1,
-			  0, 0,
-			  0, 0,
-			  0, 0);
+                             userid,
+                             0, 0,
+                             same (kv->value, "yes"), 1,
+                             0, 0,
+                             0, 0,
+                             0, 0);
 }
 
 static int
 serial_enable_link_auth_diff (const struct arguments *args,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+                              const struct section *sect,
+                              const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -1278,12 +1388,12 @@ serial_enable_link_auth_diff (const struct arguments *args,
   int ret;
 
   ret = serial_channel_get (args->dev,
-			 userid,
-			 0,
-			 &get_val,
-			 0,
-			 0,
-			 0);
+                            userid,
+                            0,
+                            &get_val,
+                            0,
+                            0,
+                            0);
 
   if (ret != 0)
     return ret;
@@ -1305,8 +1415,8 @@ serial_enable_link_auth_diff (const struct arguments *args,
 
 static int
 serial_enable_link_auth_validate (const struct arguments *args,
-			       const struct section *sect,
-			       const char *value)
+                                  const struct section *sect,
+                                  const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
@@ -1315,20 +1425,20 @@ serial_enable_link_auth_validate (const struct arguments *args,
 
 static int
 serial_enable_restricted_to_callback_checkout (const struct arguments *args,
-					    const struct section *sect,
-					    struct keyvalue *kv)
+                                               const struct section *sect,
+                                               struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
 
   ret = serial_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 &get_val,
-			 0,
-			 0);
+                            userid,
+                            0,
+                            0,
+                            &get_val,
+                            0,
+                            0);
 
   if (ret != 0)
     return ret;
@@ -1337,32 +1447,44 @@ serial_enable_restricted_to_callback_checkout (const struct arguments *args,
     free (kv->value);
 
   if (get_val)
-    kv->value = strdup ("Yes");
+    {
+      if (!(kv->value = strdup ("Yes")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
   else
-    kv->value = strdup ("No");
+    {
+      if (!(kv->value = strdup ("No")))
+        {
+          perror("strdup");
+          exit(1);
+        }
+    }
 
   return 0;
 }
 
 static int
 serial_enable_restricted_to_callback_commit (const struct arguments *args,
-					  const struct section *sect,
-					  const struct keyvalue *kv)
+                                             const struct section *sect,
+                                             const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return serial_channel_set (args->dev,
-			  userid,
-			  0, 0,
-			  0, 0,
-			  same (kv->value, "yes"), 1,
-			  0, 0,
-			  0, 0);
+                             userid,
+                             0, 0,
+                             0, 0,
+                             same (kv->value, "yes"), 1,
+                             0, 0,
+                             0, 0);
 }
 
 static int
 serial_enable_restricted_to_callback_diff (const struct arguments *args,
-					const struct section *sect,
-					const struct keyvalue *kv)
+                                           const struct section *sect,
+                                           const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -1370,12 +1492,12 @@ serial_enable_restricted_to_callback_diff (const struct arguments *args,
   int ret;
 
   ret = serial_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 &get_val,
-			 0,
-			 0);
+                            userid,
+                            0,
+                            0,
+                            &get_val,
+                            0,
+                            0);
 
   if (ret != 0)
     return ret;
@@ -1397,8 +1519,8 @@ serial_enable_restricted_to_callback_diff (const struct arguments *args,
 
 static int
 serial_enable_restricted_to_callback_validate (const struct arguments *args,
-					       const struct section *sect,
-					       const char *value)
+                                               const struct section *sect,
+                                               const char *value)
 {
   return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
 }
@@ -1407,20 +1529,20 @@ serial_enable_restricted_to_callback_validate (const struct arguments *args,
 
 static int
 serial_privilege_limit_checkout (const struct arguments *args,
-				 const struct section *sect,
-				 struct keyvalue *kv)
+                                 const struct section *sect,
+                                 struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
 
   ret = serial_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 0,
-			 &get_val,
-			 0);
+                            userid,
+                            0,
+                            0,
+                            0,
+                            &get_val,
+                            0);
 
   if (ret != 0)
     return ret;
@@ -1428,30 +1550,34 @@ serial_privilege_limit_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = strdup (get_privilege_limit_string (get_val));
+  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
 
 static int
 serial_privilege_limit_commit (const struct arguments *args,
-			       const struct section *sect,
-			       const struct keyvalue *kv)
+                               const struct section *sect,
+                               const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return serial_channel_set (args->dev,
-			  userid,
-			  0, 0,
-			  0, 0,
-			  0, 0,
-			  get_privilege_limit_number (kv->value), 1,
-			  0, 0);
+                             userid,
+                             0, 0,
+                             0, 0,
+                             0, 0,
+                             get_privilege_limit_number (kv->value), 1,
+                             0, 0);
 }
 
 static int
 serial_privilege_limit_diff (const struct arguments *args,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+                             const struct section *sect,
+                             const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -1459,18 +1585,18 @@ serial_privilege_limit_diff (const struct arguments *args,
   int ret;
 
   ret = serial_channel_get (args->dev,
-			 userid,
-			 0,
-			 0,
-			 0,
-			 &get_val,
-			 0);
+                            userid,
+                            0,
+                            0,
+                            0,
+                            &get_val,
+                            0);
 
   if (ret != 0)
     return ret;
-
+  
   passed_val = get_privilege_limit_number (kv->value);
-
+  
   if (passed_val == get_val)
     ret = 0;
   else 
@@ -1487,8 +1613,8 @@ serial_privilege_limit_diff (const struct arguments *args,
   
 static int
 serial_privilege_limit_validate (const struct arguments *args,
-				 const struct section *sect,
-				 const char *value)
+                                 const struct section *sect,
+                                 const char *value)
 {
   return (get_privilege_limit_number (value) > 0) ? 0 : 1;
 }
@@ -1497,51 +1623,51 @@ serial_privilege_limit_validate (const struct arguments *args,
 
 static int
 serial_session_limit_checkout (const struct arguments *args,
-			      const struct section *sect,
-			      struct keyvalue *kv)
+                               const struct section *sect,
+                               struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
   int ret;
-
+  
   ret = serial_channel_get (args->dev,
-			    userid,
-			    0,
-			    0,
-			    0,
-			    0,
-			    &get_val);
-
+                            userid,
+                            0,
+                            0,
+                            0,
+                            0,
+                            &get_val);
+  
   if (ret != 0)
     return ret;
 
   if (kv->value)
     free (kv->value);
-
+  
   asprintf (&kv->value, "%d", get_val);
-
+  
   return 0;
 }
 
 static int
 serial_session_limit_commit (const struct arguments *args,
-			    const struct section *sect,
-			    const struct keyvalue *kv)
+                             const struct section *sect,
+                             const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return serial_channel_set (args->dev,
-			     userid,
-			     0, 0,
-			     0, 0,
-			     0, 0,
-			     0, 0,
-			     strtol (kv->value, NULL, 0), 1);
+                             userid,
+                             0, 0,
+                             0, 0,
+                             0, 0,
+                             0, 0,
+                             strtol (kv->value, NULL, 0), 1);
 }
 
 static int
 serial_session_limit_diff (const struct arguments *args,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+                           const struct section *sect,
+                           const struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   uint8_t get_val;
@@ -1549,12 +1675,12 @@ serial_session_limit_diff (const struct arguments *args,
   int ret;
 
   ret = serial_channel_get (args->dev,
-			    userid,
-			    0,
-			    0,
-			    0,
-			    0,
-			    &get_val);
+                            userid,
+                            0,
+                            0,
+                            0,
+                            0,
+                            &get_val);
 
   if (ret != 0)
     return ret;
@@ -1579,8 +1705,8 @@ serial_session_limit_diff (const struct arguments *args,
   
 static int
 serial_session_limit_validate (const struct arguments *args,
-			       const struct section *sect,
-			       const char *value)
+                               const struct section *sect,
+                               const char *value)
 {
   long int conv;
   char *endptr;
@@ -1602,159 +1728,159 @@ get_user_section (int num, struct arguments *args)
   asprintf ((char **)&this_section->section, "User%d", num + 1);
 
   add_keyvalue (this_section,
-		"Username",
-		"Give Username",
+                "Username",
+                "Give Username",
                 0,
-		username_checkout,
-		username_commit,
-		username_diff,
-		username_validate);
+                username_checkout,
+                username_commit,
+                username_diff,
+                username_validate);
 
   add_keyvalue (this_section,
-		"Enable_User",
-		"Possible values: Yes/No or blank to not set",
+                "Enable_User",
+                "Possible values: Yes/No or blank to not set",
                 BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-		enable_user_checkout,
-		enable_user_commit,
-		enable_user_diff,
-		enable_user_validate);
+                enable_user_checkout,
+                enable_user_commit,
+                enable_user_diff,
+                enable_user_validate);
 
   add_keyvalue (this_section,
-		"Password",
-		"Give password or blank to clear. MAX 16 chars.",
+                "Password",
+                "Give password or blank to clear. MAX 16 chars.",
                 BMC_CHECKOUT_KEY_COMMENTED_OUT,
-		password_checkout,
-		password_commit,
-		password_diff,
-		password_validate);
+                password_checkout,
+                password_commit,
+                password_diff,
+                password_validate);
 
   add_keyvalue (this_section,
-		"Password20",
-		"Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
+                "Password20",
+                "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
                 BMC_CHECKOUT_KEY_COMMENTED_OUT,
-		password20_checkout,
-		password20_commit,
-		password20_diff,
-		password20_validate);
+                password20_checkout,
+                password20_commit,
+                password20_diff,
+                password20_validate);
 
   add_keyvalue (this_section,
-		"Lan_Enable_IPMI_Msgs",
-		"Possible values: Yes/No",
+                "Lan_Enable_IPMI_Msgs",
+                "Possible values: Yes/No",
                 0,
-		lan_enable_ipmi_msgs_checkout,
-		lan_enable_ipmi_msgs_commit,
-		lan_enable_ipmi_msgs_diff,
-		lan_enable_ipmi_msgs_validate);
+                lan_enable_ipmi_msgs_checkout,
+                lan_enable_ipmi_msgs_commit,
+                lan_enable_ipmi_msgs_diff,
+                lan_enable_ipmi_msgs_validate);
 
   add_keyvalue (this_section,
-		"Lan_Enable_Link_Auth",
-		"Possible values: Yes/No",
+                "Lan_Enable_Link_Auth",
+                "Possible values: Yes/No",
                 0,
-		lan_enable_link_auth_checkout,
-		lan_enable_link_auth_commit,
-		lan_enable_link_auth_diff,
-		lan_enable_link_auth_validate);
+                lan_enable_link_auth_checkout,
+                lan_enable_link_auth_commit,
+                lan_enable_link_auth_diff,
+                lan_enable_link_auth_validate);
 
   add_keyvalue (this_section,
-		"Lan_Enable_Restricted_to_Callback",
-		"Possible values: Yes/No",
+                "Lan_Enable_Restricted_to_Callback",
+                "Possible values: Yes/No",
                 0,
-		lan_enable_restricted_to_callback_checkout,
-		lan_enable_restricted_to_callback_commit,
-		lan_enable_restricted_to_callback_diff,
-		lan_enable_restricted_to_callback_validate);
+                lan_enable_restricted_to_callback_checkout,
+                lan_enable_restricted_to_callback_commit,
+                lan_enable_restricted_to_callback_diff,
+                lan_enable_restricted_to_callback_validate);
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
   add_keyvalue (this_section,
-		"Lan_Enable_Restrict_to_Callback",
-		"Possible values: Yes/No",
+                "Lan_Enable_Restrict_to_Callback",
+                "Possible values: Yes/No",
                 BMC_DO_NOT_CHECKOUT,
-		lan_enable_restricted_to_callback_checkout,
-		lan_enable_restricted_to_callback_commit,
-		lan_enable_restricted_to_callback_diff,
-		lan_enable_restricted_to_callback_validate);
+                lan_enable_restricted_to_callback_checkout,
+                lan_enable_restricted_to_callback_commit,
+                lan_enable_restricted_to_callback_diff,
+                lan_enable_restricted_to_callback_validate);
 
   add_keyvalue (this_section,
-		"Lan_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                "Lan_Privilege_Limit",
+                "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                 0,
-		lan_privilege_limit_checkout,
-		lan_privilege_limit_commit,
-		lan_privilege_limit_diff,
-		lan_privilege_limit_validate);
+                lan_privilege_limit_checkout,
+                lan_privilege_limit_commit,
+                lan_privilege_limit_diff,
+                lan_privilege_limit_validate);
 
   add_keyvalue (this_section,
-		"Lan_Session_Limit",
-		"Possible values: 0-255, 0 is unlimited",
+                "Lan_Session_Limit",
+                "Possible values: 0-255, 0 is unlimited",
                 BMC_DO_NOT_CHECKOUT,
-		lan_session_limit_checkout,
-		lan_session_limit_commit,
-		lan_session_limit_diff,
-		lan_session_limit_validate);
+                lan_session_limit_checkout,
+                lan_session_limit_commit,
+                lan_session_limit_diff,
+                lan_session_limit_validate);
 
   add_keyvalue (this_section,
-		"SOL_Payload_Access",
-		"Possible values: Yes/No",
+                "SOL_Payload_Access",
+                "Possible values: Yes/No",
                 0,
-		sol_payload_access_checkout,
-		sol_payload_access_commit,
-		sol_payload_access_diff,
-		sol_payload_access_validate);
+                sol_payload_access_checkout,
+                sol_payload_access_commit,
+                sol_payload_access_diff,
+                sol_payload_access_validate);
 
   add_keyvalue (this_section,
-		"Serial_Enable_IPMI_Msgs",
-		"Possible values: Yes/No",
+                "Serial_Enable_IPMI_Msgs",
+                "Possible values: Yes/No",
                 0,
-		serial_enable_ipmi_msgs_checkout,
-		serial_enable_ipmi_msgs_commit,
-		serial_enable_ipmi_msgs_diff,
-		serial_enable_ipmi_msgs_validate);
+                serial_enable_ipmi_msgs_checkout,
+                serial_enable_ipmi_msgs_commit,
+                serial_enable_ipmi_msgs_diff,
+                serial_enable_ipmi_msgs_validate);
 
   add_keyvalue (this_section,
-		"Serial_Enable_Link_Auth",
-		"Possible values: Yes/No",
+                "Serial_Enable_Link_Auth",
+                "Possible values: Yes/No",
                 0,
-		serial_enable_link_auth_checkout,
-		serial_enable_link_auth_commit,
-		serial_enable_link_auth_diff,
-		serial_enable_link_auth_validate);
+                serial_enable_link_auth_checkout,
+                serial_enable_link_auth_commit,
+                serial_enable_link_auth_diff,
+                serial_enable_link_auth_validate);
 
   add_keyvalue (this_section,
-		"Serial_Enable_Restricted_to_Callback",
-		"Possible values: Yes/No",
+                "Serial_Enable_Restricted_to_Callback",
+                "Possible values: Yes/No",
                 0,
-		serial_enable_restricted_to_callback_checkout,
-		serial_enable_restricted_to_callback_commit,
-		serial_enable_restricted_to_callback_diff,
-		serial_enable_restricted_to_callback_validate);
+                serial_enable_restricted_to_callback_checkout,
+                serial_enable_restricted_to_callback_commit,
+                serial_enable_restricted_to_callback_diff,
+                serial_enable_restricted_to_callback_validate);
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
   add_keyvalue (this_section,
-		"Serial_Enable_Restrict_to_Callback",
-		"Possible values: Yes/No",
+                "Serial_Enable_Restrict_to_Callback",
+                "Possible values: Yes/No",
                 BMC_DO_NOT_CHECKOUT,
-		serial_enable_restricted_to_callback_checkout,
-		serial_enable_restricted_to_callback_commit,
-		serial_enable_restricted_to_callback_diff,
-		serial_enable_restricted_to_callback_validate);
+                serial_enable_restricted_to_callback_checkout,
+                serial_enable_restricted_to_callback_commit,
+                serial_enable_restricted_to_callback_diff,
+                serial_enable_restricted_to_callback_validate);
 
   add_keyvalue (this_section,
-		"Serial_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                "Serial_Privilege_Limit",
+                "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                 0,
-		serial_privilege_limit_checkout,
-		serial_privilege_limit_commit,
-		serial_privilege_limit_diff,
-		serial_privilege_limit_validate);
+                serial_privilege_limit_checkout,
+                serial_privilege_limit_commit,
+                serial_privilege_limit_diff,
+                serial_privilege_limit_validate);
 
   add_keyvalue (this_section,
-		"Serial_Session_Limit",
-		"Possible values: 0-255, 0 is unlimited",
+                "Serial_Session_Limit",
+                "Possible values: 0-255, 0 is unlimited",
                 BMC_DO_NOT_CHECKOUT,
-		serial_session_limit_checkout,
-		serial_session_limit_commit,
-		serial_session_limit_diff,
-		serial_session_limit_validate);
+                serial_session_limit_checkout,
+                serial_session_limit_commit,
+                serial_session_limit_diff,
+                serial_session_limit_validate);
 
   return this_section;
 }
@@ -1764,13 +1890,13 @@ bmc_user_sections_get (struct arguments *args)
 {
   struct section * user_sections = NULL;
   int num_users = get_num_users (args);
-
+  
   int i;
-
-  for (i=0; i<num_users; i++) {
-    add_section (user_sections, get_user_section (i, args));
-  }
-
+  
+  for (i=0; i<num_users; i++) 
+    {
+      add_section (user_sections, get_user_section (i, args));
+    }
+  
   return user_sections;
 }
-

@@ -119,7 +119,12 @@ bmc_section_set_value (const char *section_name,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (value);
+  
+  if (!(kv->value = strdup (value)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return 0;
 }
@@ -149,7 +154,12 @@ bmc_section_commit_value (const char *section_name,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (value);
+
+  if (!(kv->value = strdup (value)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return kv->commit (arguments, sect, kv);
 }
@@ -179,7 +189,12 @@ bmc_section_diff_value (const char *section_name,
 
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (value);
+
+  if (!(kv->value = strdup (value)))
+    {
+      perror("strdup");
+      exit(1);
+    }
 
   return kv->diff (arguments, sect, kv);
 }

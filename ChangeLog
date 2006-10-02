@@ -1,8 +1,11 @@
+2006-10-02  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/: Fix non-return value calls to strdup.
+
 2006-09-26  Anand V. Avati <avati@zreesarch.com>
 
 	* bmc-config/bmc-autoconfig: command line arguments are now 
 	handled (passwd on to bmc-config)
-
 	
 2006-09-19  Albert Chu <chu11@llnl.gov>
 
