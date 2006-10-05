@@ -51,47 +51,29 @@ _init ()
 
 bmc_autoconfig_display_usage ()
 {
-    cat <<EOF
-Usage: ${ME} [-?V] [-h IPMIHOST] [-u USERNAME] [-p PASSWORD]
-                      [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]
-                      [--driver-poll-interval=USEC]
-                      [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]
-                      [--username=USERNAME] [--password=PASSWORD]
-                      [--auth-type=AUTHTYPE]
-                      [--priv-level=PRIVILEGE-LEVEL] [--help]
-                      [--usage] [--version]
-EOF
+  bmc-config --usage | \
+      sed -e 's/\[--commit\] //g' \
+          -e 's/\[--diff\] //g' \
+          -e 's/\[--checkout\]//g' \
+          -e 's/\[--filename=FILENAME\] //g' \
+          -e 's/\[--key-pair=KEY-PAIR\]//g' \
+          -e 's/\[--section=SECTION\] //g' \
+          -e 's/\[--listsections\] //g'
 }
 
 bmc_autoconfig_display_help ()
 {
-    cat <<EOF
-Usage: ${ME} [OPTION...] 
-${ME} is an autoconfiguration tool and wrapper around bmc-config.
+  bmc-config --help | \
+      grep -v -- --checkout | \
+      grep -v -- --commit | \
+      grep -v -- --diff | \
+      grep -v -- --filename | \
+      grep -v -- --key-pair | \
+      grep -v -- --section= | \
+      grep -v -- --listsections | \
+      sed -e 's/Usage: bmc-config/Usage: bmc-autoconfig/g' \
+          -e 's/GNU FreeIPMI (bmc-config) -- BMC config tool/bmc-autoconfig is an autoconfiguration tool and wrapper around bmc-config./g'
 
-      --driver-poll-interval=USEC
-                             User USEC driver poll interval.
-      --sms-io-base=SMS-IO-BASE   SMS IO Base address.
-  -h, --host=IPMIHOST        Connect to IPMIHOST.
-  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME
-                             length is 16.
-  -p, --password=PASSWORD    Use PASSWORD instead of NULL.  Maximum PASSWORD
-                             length is 16.
-  -a, --auth-type=AUTHTYPE   Use AUTHTYPE instead of MD5.  Allowed values are
-                             NONE, MD2, MD5, and PLAIN.
-  -l, --priv-level=PRIVILEGE-LEVEL
-                             Use this PRIVILEGE-LEVEL instead of ADMIN.  Allowed
-                             values are CALLBACK, USER, OPERATOR, ADMIN and
-                             OEM.
-  -?, --help                 Give this help list.
-      --usage                Give a short usage message.
-  -V, --version              Print program version.
-
-Mandatory or optional arguments to long options are also mandatory or optional
-for any corresponding short options.
-
-Report bugs to <freeipmi-devel@gnu.org>.
-EOF
 }
 
 bmc_autoconfig_display_version ()
