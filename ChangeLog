@@ -1,3 +1,7 @@
+2006-10-14  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Add ipmi-pef.
+	
 2006-10-06  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-pef/Makefile.am, ipmi-pef/ipmi-pef.8.pre.in,
