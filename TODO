@@ -25,22 +25,6 @@ libfreeipmi:
 ------------
 [MEDIUM PRIORITY]
   * Missing IPMI commands.
-  * Modify system boot priority table.
-
-[LOW PRIORITY]
-  * FRU Commands (SDR Repo does a similar job).
-  * Command to Switch MUX between BMC and ttyS1
-
-documentation
--------------
-ipmi-sensors options and output once C version is done
-
-Al's TODO list
-==============
-libfreeipmi:
-------------
-  * how to support xRC4
-  * missing cmds
     - lan-cmds 
     - msg-support-cmds
     - chassis-cmds
@@ -52,8 +36,18 @@ libfreeipmi:
     - sdr-record-types
     - sel record-types
     - sensor-cmds
+  * Modify system boot priority table.
+
+[LOW PRIORITY]
+  * FRU Commands (SDR Repo does a similar job).
+  * Command to Switch MUX between BMC and ttyS1
+
+Al's TODO list
+==============
+libfreeipmi:
+------------
+  * how to support xRC4
   * get event messages function that is passed fiids
-  * inband OpenIPMI support
 
 ipmipower
 ---------
@@ -68,15 +62,3 @@ Autoconf/Portability
   * socklet_t, doesn't exist on all OSes.
   * stdarg.h, other OSes use varargs.h
          
-Bala's TODO List:
-=================
-  * convert ipmi-sensors to C based tool
-
-Ian's TODO List:
-================
-  * Event Messaging and PEF Subsystem.
-
-Later on:
-=========
-  * Host monitoring support: Ganglia integration.
-  * Additional libfreeipmi examples.
