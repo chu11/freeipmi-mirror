@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.36 2006-09-13 21:23:56 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.37 2006-10-19 17:48:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -622,7 +622,7 @@ _cmd_config(void)
 #endif /* NDEBUG */
     }
   else
-    cbuf_printf(ttyout, "Hostnames:                     NONE\n");
+    cbuf_printf(ttyout, "Hostnames:                    NONE\n");
 
   cbuf_printf(ttyout, "Username:                     %s\n", 
               (strlen(conf->username)) ? conf->username : "NULL");
