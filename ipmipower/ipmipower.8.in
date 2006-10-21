@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.51 2006-09-09 04:25:20 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.52 2006-10-21 01:36:27 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -211,7 +211,14 @@ option will force
 to issue a power on command instead of a power cycle or hard reset
 command if the remote machine's power is currently off.
 .TP
-.I "-e, --wait-until-off"
+.I "-A, --wait-until-on"
+The IPMI specification allows power on commands to return prior the
+power on actually taking place.  This option will force
+.B ipmipower 
+to regularly query the remote BMC and return only after the machine
+has powered on.
+.TP
+.I "-B, --wait-until-off"
 The IPMI specification allows power off commands to return prior the
 power off actually taking place.  This option will force
 .B ipmipower 
@@ -311,11 +318,9 @@ packet within the IPMI protocol has to complete.
 .TP
 .I "-q, --retry-wait-timeout ms"
 Sets the retry-wait-timeout in milliseconds.  The retry-wait-timeout
-is similar to the 'retry-timeout' above, but is used specifically with the
-"--wait-until-off" option.  It is used during the period in which
-.B ipmipower
-is querying the remote machine to determine if it has properly turned
-off.
+is similar to the 'retry-timeout' above, but is used specifically for
+power completion verification in the "--wait-until-on" and
+"--wait-until-off" options.
 .TP
 .I "-b, --retry-backoff-count num"
 After every retry-backoff-count retransmissions, 
@@ -411,26 +416,26 @@ specify a new password, no str for null password
 .I "k_g [str]"
 specify a new K_g BMC Key, no str for null
 .TP
-.I "on [host]"
-turns on all hosts, or only the specified host.
+.I "on [host(s)]"
+turns on all hosts, or only the specified host(s).
 .TP
-.I "off [host]"
-turns off all hosts, or only the specified host.
+.I "off [host(s)]"
+turns off all hosts, or only the specified host(s).
 .TP
-.I "cycle [host]"
-power cycle all hosts, or specified host.
+.I "cycle [host(s)]"
+power cycle all hosts, or specified host(s).
 .TP
-.I "reset [host]"
-hard reset all hosts or specified host.
+.I "reset [host(s)]"
+hard reset all hosts or specified host(s).
 .TP
-.I "stat [host]"
-queries power status for all hosts, or only the specified host.
+.I "stat [host(s)]"
+queries power status for all hosts, or only the specified host(s).
 .TP
-.I "pulse [host]"
-send pulse diagnostic interrupt to all hosts, or only the specified host.
+.I "pulse [host(s)]"
+send pulse diagnostic interrupt to all hosts, or only the specified host(s).
 .TP
-.I "soft [host]"
-Initiate a soft-shutdown of the OS via ACPI to all hosts, or only the specified host.
+.I "soft [host(s)]"
+Initiate a soft-shutdown of the OS via ACPI to all hosts, or only the specified host(s).
 .TP
 .I help
 output help menu
@@ -459,6 +464,9 @@ specify the cipher suite id, auto, 0, 1, 2, 3, 6, 7, 8, 11, 12.
 .TP
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
+.TP
+.I "wait-until-on [on|off]"
+toggle wait-until-on functionality.
 .TP
 .I "wait-until-off [on|off]"
 toggle wait-until-off functionality.

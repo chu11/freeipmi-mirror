@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.43 2006-09-14 20:49:56 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.44 2006-10-21 01:36:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,6 +98,7 @@ ipmipower_config_setup(void)
   conf->ipmi_version = IPMI_VERSION_AUTO;
   conf->cipher_suite_id = CIPHER_SUITE_ID_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
+  conf->wait_until_on = IPMIPOWER_FALSE;
   conf->wait_until_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
   conf->force_permsg_authentication = IPMIPOWER_FALSE;
@@ -116,7 +117,7 @@ ipmipower_config_setup(void)
 #endif /* NDEBUG */
   conf->timeout_len = 20000;     /* 20 seconds */
   conf->retry_timeout_len = 400; /* .4 seconds  */
-  conf->retry_wait_timeout_len = 800; /* .8 seconds  */
+  conf->retry_wait_timeout_len = 500; /* .5 seconds  */
   conf->retry_backoff_count = 8;
   conf->ping_interval_len = 5000; /* 5 seconds */
   conf->ping_timeout_len = 30000; /* 30 seconds */
@@ -133,6 +134,7 @@ ipmipower_config_setup(void)
   conf->ipmi_version_set = IPMIPOWER_FALSE;
   conf->cipher_suite_id_set = IPMIPOWER_FALSE;
   conf->on_if_off_set = IPMIPOWER_FALSE;
+  conf->wait_until_on_set = IPMIPOWER_FALSE;
   conf->wait_until_off_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
   conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
@@ -263,14 +265,14 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
   /* achu: Here's are what options are left and available
-     lower case: d
-     upper case: ABEGJKNOQWZ
+     lower case: de
+     upper case: EGJKNOQWZ
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:geo:PSUXYDIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:gABo:PSUXYDIMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:geo:PSUXYt:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:gABo:PSUXYt:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -295,7 +297,8 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"ipmi-version",                 1, NULL, 'R'},
       {"cipher-suite-id",              1, NULL, 'T'},
       {"on-if-off",                    0, NULL, 'g'},
-      {"wait-until-off",               0, NULL, 'e'},
+      {"wait-until-on",                0, NULL, 'A'},
+      {"wait-until-off",               0, NULL, 'B'},
       {"outputtype",                   1, NULL, 'o'},
       {"force-permsg-authentication",  0, NULL, 'P'},
       {"accept-session-id-zero",       0, NULL, 'S'},
@@ -412,7 +415,11 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->on_if_off = !conf->on_if_off;
           conf->on_if_off_set = IPMIPOWER_TRUE;
           break;
-        case 'e':       /* --wait-until-off */
+        case 'A':       /* --wait-until-on */
+          conf->wait_until_on = !conf->wait_until_on;
+          conf->wait_until_on_set = IPMIPOWER_TRUE;
+          break;
+        case 'B':       /* --wait-until-off */
           conf->wait_until_off = !conf->wait_until_off;
           conf->wait_until_off_set = IPMIPOWER_TRUE;
           break;
@@ -705,7 +712,7 @@ ipmipower_config_conffile_parse(char *configfile)
 {
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
-    wait_until_off_flag, outputtype_flag, force_permsg_authentication_flag, 
+    wait_until_on_flag, wait_until_off_flag, outputtype_flag, force_permsg_authentication_flag, 
     accept_session_id_zero_flag, check_unexpected_authcode_flag, intel_2_0_session_flag, 
     supermicro_2_0_session_flag, timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
     retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, 
@@ -731,6 +738,8 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &cipher_suite_id_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
+      {"wait-until-on", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &wait_until_on_flag, &(conf->wait_until_on), conf->wait_until_on_set},
       {"wait-until-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &wait_until_off_flag, &(conf->wait_until_off), conf->wait_until_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 

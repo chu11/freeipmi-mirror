@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.97 2006-09-09 04:25:20 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.98 2006-10-21 01:36:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -308,6 +308,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->cipher_suite_record_data_bytes = 0;
       memset(ip->cipher_suite_ids, '\0', IPMI_CIPHER_SUITE_IDS_LENGTH);
       ip->cipher_suite_ids_num = 0;
+      ip->wait_until_on_state = 0;
       ip->wait_until_off_state = 0;
     }
 
@@ -805,14 +806,18 @@ _retry_packets(ipmipower_powercmd_t ip)
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
       || conf->retry_timeout_len == 0             /* no retransmissions */
-      || (conf->wait_until_off == IPMIPOWER_TRUE
-	  && ip->cmd == POWER_CMD_POWER_OFF
+      || (((conf->wait_until_on == IPMIPOWER_TRUE
+            && ip->cmd == POWER_CMD_POWER_ON)
+           || (conf->wait_until_off == IPMIPOWER_TRUE
+               && ip->cmd == POWER_CMD_POWER_OFF))
 	  && conf->retry_wait_timeout_len == 0))
     return 0;
 
   /* Did we timeout on this packet? */
-  if (conf->wait_until_off == IPMIPOWER_TRUE
-      && ip->cmd == POWER_CMD_POWER_OFF)
+  if ((conf->wait_until_on == IPMIPOWER_TRUE
+       && ip->cmd == POWER_CMD_POWER_ON)
+      || (conf->wait_until_off == IPMIPOWER_TRUE
+          && ip->cmd == POWER_CMD_POWER_OFF))
     retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_wait_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_wait_timeout_len;
   else
     retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
@@ -2221,7 +2226,18 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    "current_power_state.power_is_on",
                    &power_state);
 
-      if (conf->wait_until_off == IPMIPOWER_TRUE
+      if (conf->wait_until_on == IPMIPOWER_TRUE
+          && ip->cmd == POWER_CMD_POWER_ON
+	  && ip->wait_until_on_state)
+	{
+          if (power_state)
+	    {
+	      ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
+	      ip->wait_until_on_state = 0;
+	      _send_packet(ip, CLOSE_SESSION_REQ);
+	    }
+	}
+      else if (conf->wait_until_off == IPMIPOWER_TRUE
           && ip->cmd == POWER_CMD_POWER_OFF
 	  && ip->wait_until_off_state)
 	{
@@ -2261,10 +2277,15 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
         
-      if (conf->wait_until_off == IPMIPOWER_TRUE
-          && ip->cmd == POWER_CMD_POWER_OFF)
+      if ((conf->wait_until_on == IPMIPOWER_TRUE
+           && ip->cmd == POWER_CMD_POWER_ON)
+          || (conf->wait_until_off == IPMIPOWER_TRUE
+              && ip->cmd == POWER_CMD_POWER_OFF))
 	{
-	  ip->wait_until_off_state++;
+          if (ip->cmd == POWER_CMD_POWER_ON)
+            ip->wait_until_on_state++;
+          else
+            ip->wait_until_off_state++;
 	  _send_packet(ip, GET_CHASSIS_STATUS_REQ);
 	}
       else

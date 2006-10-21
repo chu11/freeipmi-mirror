@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.37 2006-10-19 17:48:17 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.38 2006-10-21 01:36:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -72,13 +72,13 @@ _cmd_help(void)
               "username [str]                  - set a new username (no str for null)\n"
               "password [str]                  - set a new password (no str for null)\n"
               "k_g [str]                       - set a new k_g (no str for null)\n"
-              "on [node]                       - turn on all nodes, or listed node\n"
-              "off [node]                      - turn off all nodes, or listed node\n"
-              "cycle [node]                    - power cycle all nodes, or listed node\n"
-              "reset [node]                    - hard reset all nodes, or listed node\n"
-              "stat [node]                     - list power of all nodes, or listed node\n"
-              "pulse [node]                    - send pulse diagnostic interrupt to all nodes, or listed nodes\n"
-              "soft [node]                     - soft shutdown all nodes, or listed nodes\n"
+              "on [node(s)]                    - turn on all nodes, or listed node\n"
+              "off [node(s)]                   - turn off all nodes, or listed node\n"
+              "cycle [node(s)]                 - power cycle all nodes, or listed node\n"
+              "reset [node(s)]                 - hard reset all nodes, or listed node\n"
+              "stat [node(s)]                  - list power of all nodes, or listed node\n"
+              "pulse [node(s)]                 - send pulse diagnostic interrupt to all nodes, or listed nodes\n"
+              "soft [node(s)]                  - soft shutdown all nodes, or listed nodes\n"
               "help                            - output this help menu\n"
               "advanced                        - output advanced help menu\n"
               "network                         - output network help menu\n"
@@ -95,6 +95,7 @@ _cmd_advanced(void)
 	      "ipmi_version str                      - set a new ipmi version\n"
               "cipher_suite_id str                   - set a new cipher suite id\n"
               "on-if-off [on|off]                    - toggle on-if-off functionality\n"
+              "wait-until-on [on|off]                - toggle wait-until-on functionality\n"
               "wait-until-off [on|off]               - toggle wait-until-off functionality\n"
               "outputtype str                        - set a new output type\n"
               "force-permsg-authentication [on|off]  - toggle force-permsg-auth functionality\n"
@@ -247,27 +248,46 @@ _cmd_power(char **argv, power_cmd_t cmd)
         ipmipower_output_finish();
     } 
   else 
-    {                                /* single node */
-      if (hostlist_find(conf->hosts, argv[1]) >= 0) {
-        i = ipmipower_connection_hostname_index(ics, conf->hosts_count, 
-                                                argv[1]);
-        if (i < 0)
-          ipmipower_output(MSG_TYPE_UNKNOWNNODE, ics[i].hostname);
-        if (conf->ping_interval_len 
-            && ics[i].discover_state == STATE_UNDISCOVERED)
-          ipmipower_output(MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
-        else if (conf->ping_interval_len 
-                 && conf->ping_packet_count 
-                 && conf->ping_percent 
-                 && ics[i].discover_state == STATE_BADCONNECTION)
-          ipmipower_output(MSG_TYPE_BADCONNECTION, ics[i].hostname);
-        else {
-          ipmipower_connection_clear(&ics[i]);
-          ipmipower_powercmd_queue(cmd, &ics[i]);
+    {
+      hostlist_t h;
+      hostlist_iterator_t itr;
+      char *node;
+
+      if (!(h = hostlist_create(argv[1]))) 
+        {
+          cbuf_printf(ttyout, "invalid hostnames specified");
+          return;
         }
-      }
-      else
-        cbuf_printf(ttyout, "%s: unknown node name\n", argv[1]);
+
+      if (!(itr = hostlist_iterator_create(h)))
+        err_exit("hostlist_iterator_create() error");
+
+      while ((node = hostlist_next(itr)))
+        {
+          i = ipmipower_connection_hostname_index(ics, 
+                                                  conf->hosts_count, 
+                                                  node);
+
+          if (i < 0)
+            ipmipower_output(MSG_TYPE_UNKNOWNNODE, node);
+          else if (conf->ping_interval_len 
+                   && ics[i].discover_state == STATE_UNDISCOVERED)
+            ipmipower_output(MSG_TYPE_NOTDISCOVERED, ics[i].hostname);
+          else if (conf->ping_interval_len 
+                   && conf->ping_packet_count 
+                   && conf->ping_percent 
+                   && ics[i].discover_state == STATE_BADCONNECTION)
+            ipmipower_output(MSG_TYPE_BADCONNECTION, ics[i].hostname);
+          else 
+            {
+              ipmipower_connection_clear(&ics[i]);
+              ipmipower_powercmd_queue(cmd, &ics[i]);
+            }
+          free(node);
+        }
+
+      hostlist_iterator_destroy(itr);
+      hostlist_destroy(h);
     }
 }
 
@@ -647,6 +667,8 @@ _cmd_config(void)
 	      ipmipower_cipher_suite_id_string(conf->cipher_suite_id));
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Wait-Until-On:                %s\n",
+              (conf->wait_until_on) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Wait-Until-Off:               %s\n",
               (conf->wait_until_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:                   %s\n",
@@ -830,6 +852,8 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_cipher_suite_id(argv);
               else if (strcmp(argv[0], "on-if-off") == 0)
                 _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
+              else if (strcmp(argv[0], "wait-until-on") == 0)
+                _cmd_set_flag(argv, &conf->wait_until_on, "wait-until-on");
               else if (strcmp(argv[0], "wait-until-off") == 0)
                 _cmd_set_flag(argv, &conf->wait_until_off, "wait-until-off");
               else if (strcmp(argv[0], "outputtype") == 0)
