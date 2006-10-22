@@ -3,25 +3,24 @@
 @subsection Core team
 @multitable @columnfractions 0.03 0.25 0.35
 @item 1. @tab Albert Chu @tab <chu11(@@)llnl.gov>
-@item 2. @tab Anand Avati @tab <avati(@@)hardcodecafe.com>
-@item 3. @tab Anand Babu @tab <ab(@@)gnu.org.in>
-@item 4. @tab Balamurugan @tab <bala.a(@@)californiadigital.com>
-@item 5. @tab Ian Zimmerman @tab <itz(@@)californiadigital.com>
+@item 2. @tab Anand Avati @tab <avati(@@)zresearch.com>
+@item 3. @tab Anand Babu @tab <ab(@@)zresearch.com>
+@item 4. @tab Balamurugan @tab <bala.a(@@)zresearch.com>
+@item 5. @tab Ian Zimmerman @tab <itz(@@)buug.org>
 @item 6. @tab Jim Garlick @tab <garlick(@@)llnl.gov>
 @end multitable
 
 @subsection Documentation
 @multitable @columnfractions 0.03 0.25 0.35
-@item 1. @tab Anand Babu @tab <ab(@@)gnu.org.in>
+@item 1. @tab Anand Babu @tab <ab(@@)zresearch.com>
 @end multitable
 
 @subsection Packaging
 @multitable @columnfractions 0.03 0.25 0.40 0.35
 @item 1. @tab Albert Chu @tab <chu11(@@)llnl.gov> @tab RedHat GNU/Linux
-@item 2. @tab Ian Zimmerman @tab <itz(@@)buug.org> @tab Debian GNU/Linux
 @end multitable
 
 @subsection contact point
 @multitable @columnfractions 0.03 0.25 0.35
-@item 1. @tab Anand Babu @tab <ab(@@)gnu.org.in>
+@item 1. @tab Anand Babu @tab <ab(@@)zresearch.com>
 @end multitable
