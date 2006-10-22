@@ -62,7 +62,7 @@ enum argp_common_option_keys
      "Connect to IPMIHOST.", 5},					   \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			   \
      "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 6},  \
-    {"password",       PASSWORD_KEY, "PASSWORD", 0, 			   \
+    {"password",       PASSWORD_KEY, "PASSWORD", 1, 			   \
      "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 7},  \
     {"retry-timeout", RETRY_TIMEOUT_KEY, "RETRY_TIMEOUT", 0,               \
      "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 8},  \

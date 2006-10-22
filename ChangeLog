@@ -1,3 +1,8 @@
+2006-10-22  Anand V. Avati <avati@zresearch.com>
+
+	* common/src/argp-common.c: -p takes optional password argument.
+	If not given, does getpass()
+	
 2006-10-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Added support for --wait-until-on option.
