@@ -1,3 +1,27 @@
+2006-11-01  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-pef/src/Makefile.am: updated.
+
+	* ipmi-pef/src/ipmi-pef-argp.[ch]: added --checkout and --commit
+	options.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.[ch] (get_event_filter_table,
+	set_event_filter_table, get_number_of_event_filters,
+	get_evt_list): new functions.
+
+	* ipmi-pef/src/ipmi-pef.c (checkout_pef_evt, commit_pef_evt): new
+	functions.
+
+	* ipmi-pef/src/ipmi-pef.c (run_cmd_args): updated.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_event_filter_table):
+	ipmi_cmd_set_event_filter_table() renamed.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_):
+	ipmi_cmd_set_filter_table_data1_() renamed.
+
 2006-10-22  Anand V. Avati <avati@zresearch.com>
 
 	* common/src/argp-common.c: -p takes optional password argument.

@@ -102,6 +102,101 @@ display_pef_info (ipmi_device_t dev)
 }
 
 int 
+checkout_pef_evt (ipmi_device_t dev, FILE *fp)
+{
+  int rv = 0;
+  int num_event_filters;
+  int filter;
+  
+  if (get_number_of_event_filters (dev, &num_event_filters) != 0)
+    return (-1);
+  
+  for (filter = 1; filter < num_event_filters; filter++)
+    {
+      pef_event_filter_table_t evt;
+      
+      memset (&evt, 0, sizeof (pef_event_filter_table_t));
+      
+      if (get_event_filter_table (dev, filter, &evt) != 0)
+	{
+	  fprintf (stderr, "unable to get event filter table #%d\n", filter);
+	  rv = -1;
+	  continue;
+	}
+      fprintf (fp, "Filter_Number = %d\n", evt.filter_number);
+      /* fprintf (fp, "# manufacturer pre-configured filter = 2, software configurable filter = 0, reserved = 1 or 3.\n"); */
+      fprintf (fp, "Filter_Type = %d\n", evt.filter_type);
+      fprintf (fp, "Enable_Filter = %s\n", 
+	       (evt.enable_filter ? "Yes" : "No"));
+      fprintf (fp, "Event_filter_Action_Alert = %s\n", 
+	       (evt.event_filter_action_alert ? "Yes" : "No"));
+      fprintf (fp, "Event_Filter_Action_Power_Off = %s\n", 
+	       (evt.event_filter_action_power_off ? "Yes" : "No"));
+      fprintf (fp, "Event_Filter_Action_Reset = %s\n", 
+	       (evt.event_filter_action_reset ? "Yes" : "No"));
+      fprintf (fp, "Event_Filter_Action_Power_Cycle = %s\n", 
+	       (evt.event_filter_action_power_cycle ? "Yes" : "No"));
+      fprintf (fp, "Event_Filter_Action_OEM = %s\n", 
+	       (evt.event_filter_action_oem ? "Yes" : "No"));
+      fprintf (fp, "Event_Filter_Action_Diagnostic_Interrupt = %s\n", 
+	       (evt.event_filter_action_diagnostic_interrupt ? "Yes" : "No"));
+      fprintf (fp, "Event_Filter_Action_Group_Control_Operation = %s\n", 
+	       (evt.event_filter_action_group_control_operation ? "Yes" : "No"));
+      fprintf (fp, "Alert_Policy_Number = %d\n", evt.alert_policy_number);
+      fprintf (fp, "Group_Control_Selector = %d\n", evt.group_control_selector);
+      /* fprintf (fp, "# 0x0 = unspecified, 0x1 = Monitor, 0x2 = Information, 0x4 = OK (return to OK condition), 0x8 = Non-critical condition, 0x10 = Critical condition, 0x20 = Non-recoverable condition\n"); */
+      fprintf (fp, "Event_Severity = 0x%X\n", evt.event_severity);
+      /* fprintf (fp, "# 0xFF = Match any\n"); */
+      fprintf (fp, "Generator_ID_Byte1 = 0x%X\n", evt.generator_id_byte1);
+      /* fprintf (fp, "# 0xFF = Match any\n"); */
+      fprintf (fp, "Generator_ID_Byte2 = 0x%X\n", evt.generator_id_byte2);
+      /* fprintf (fp, "# 0xFF = Match any\n"); */
+      fprintf (fp, "Sensor_Type = 0x%X\n", evt.sensor_type);
+      /* fprintf (fp, "# 0xFF = Match any\n"); */
+      fprintf (fp, "Sensor_Number = 0x%X\n", evt.sensor_number);
+      /* fprintf (fp, "# 0xFF = Match any\n"); */
+      fprintf (fp, "Event_Trigger = 0x%X\n", evt.event_trigger);
+      fprintf (fp, "Event_Data1_Offset_Mask = 0x%X\n", evt.event_data1_offset_mask);
+      fprintf (fp, "Event_Data1_AND_Mask = 0x%X\n", evt.event_data1_AND_mask);
+      fprintf (fp, "Event_Data1_Compare1 = 0x%X\n", evt.event_data1_compare1);
+      fprintf (fp, "Event_Data1_Compare2 = 0x%X\n", evt.event_data1_compare2);
+      fprintf (fp, "Event_Data2_AND_Mask = 0x%X\n", evt.event_data2_AND_mask);
+      fprintf (fp, "Event_Data2_Compare1 = 0x%X\n", evt.event_data2_compare1);
+      fprintf (fp, "Event_Data2_Compare2 = 0x%X\n", evt.event_data2_compare2);
+      fprintf (fp, "Event_Data3_AND_Mask = 0x%X\n", evt.event_data3_AND_mask);
+      fprintf (fp, "Event_Data3_Compare1 = 0x%X\n", evt.event_data3_compare1);
+      fprintf (fp, "Event_Data3_Compare2 = 0x%X\n", evt.event_data3_compare2);
+      fprintf (fp, "\n");
+    }
+  
+  return rv;
+}
+
+int 
+commit_pef_evt (ipmi_device_t dev, FILE *fp)
+{
+  pef_event_filter_table_t *evt_list = NULL;
+  int count = 0;
+  int i = 0;
+  int rv = 0;
+  
+  get_evt_list (fp, &evt_list, &count);
+  
+  for (i = 0; i < count; i++)
+    {
+      if (set_event_filter_table (dev, &evt_list[i]) != 0)
+	{
+	  fprintf (stderr, "unable to set event filter table #%d\n", 
+		   evt_list[i].filter_number);
+	  rv = -1;
+	  continue;
+	}
+    }
+  
+  return rv;
+}
+
+int 
 run_cmd_args (ipmi_device_t dev, struct arguments *args)
 {
   int retval = 0;
@@ -112,6 +207,49 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
   if (args->info_wanted)
     {
       retval = display_pef_info (dev);
+      return retval;
+    }
+  
+  if (args->checkout_wanted)
+    {
+      FILE *fp = stdout;
+      
+      if (args->checkout_filename)
+	{
+	  fp = fopen (args->checkout_filename, "w");
+	  if (fp == NULL)
+	    {
+	      fprintf (stderr, "unable to open file [%s] for writing.  using stdout\n", 
+		       args->checkout_filename);
+	      fp = stdout;
+	    }
+	}
+      
+      retval = checkout_pef_evt (dev, fp);
+      
+      if (fp != stdout)
+	fclose (fp);
+      
+      return retval;
+    }
+  
+  if (args->commit_wanted)
+    {
+      FILE *fp = NULL;
+      
+      fp = fopen (args->commit_filename, "r");
+      if (fp)
+	{
+	  retval = commit_pef_evt (dev, fp);
+	  fclose (fp);
+	}
+      else       
+	{
+	  fprintf (stderr, "unable to open file [%s] for reading.  aborting...\n", 
+		   args->commit_filename);
+	  retval = -1;
+	}
+      
       return retval;
     }
   
@@ -241,3 +379,4 @@ main (int argc, char **argv)
   
   return (retval);
 }
+

@@ -4,7 +4,8 @@ ipmi_pef_SOURCES=ipmi-pef-argp.c ipmi-pef-wrapper.c ipmi-pef.c
 ipmi_pef_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libipmicommon.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
-		 ../../common/src/libfreeipmiportability.la
+		 ../../common/src/libfreeipmiportability.la \
+		 ../../common/src/libsdr.la 
  
 noinst_HEADERS=ipmi-pef-argp.h ipmi-pef-wrapper.h
  

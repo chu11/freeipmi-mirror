@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.1 2006-10-06 14:18:04 balamurugan Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.2 2006-10-31 19:31:39 balamurugan Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -59,6 +59,10 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS, 
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about PEF.", 13},
+    {"checkout",   CHECKOUT_KEY,   "FILE", OPTION_ARG_OPTIONAL,
+     "Action is to GET the PEF event filter tables", 14},
+    {"commit",     COMMIT_KEY,     "FILE", 0,
+     "Action is to UPDATE the PEF event filter tables", 15},
     { 0 }
   };
 
@@ -73,6 +77,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case INFO_KEY:
       cmd_args->info_wanted = 1;
+      break;
+    case CHECKOUT_KEY:
+      cmd_args->checkout_wanted = 1;
+      if (arg)
+	cmd_args->checkout_filename = strdup (arg);
+      break;
+    case COMMIT_KEY:
+      cmd_args->commit_wanted = 1;
+      cmd_args->commit_filename = strdup (arg);
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -93,6 +106,10 @@ ipmi_pef_argp_parse (int argc, char **argv)
 {
   init_common_cmd_args (&(cmd_args.common));
   cmd_args.info_wanted = 0;
+  cmd_args.checkout_wanted = 0;
+  cmd_args.checkout_filename = NULL;
+  cmd_args.commit_wanted = 0;
+  cmd_args.commit_filename = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
 }
