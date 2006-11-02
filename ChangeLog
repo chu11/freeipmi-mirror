@@ -1,3 +1,10 @@
+2006-11-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in: Fix
+	manpage typos.
+
+	* doc/freeipmi.texi: Update with new ipmipower options.
+	
 2006-11-02  A Balamurugan  <bala@zresearch.com>
 
 	* doc/freeipmi.texi, ipmi-sel/ipmi-sel.8.pre.in,

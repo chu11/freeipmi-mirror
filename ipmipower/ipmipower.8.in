@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.52 2006-10-21 01:36:27 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.53 2006-11-02 19:36:45 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -262,7 +262,7 @@ compliance issue.  For more information, see WORKAROUNDS below.
 Modifies the IPMI 2.0 session protocol for non-compliant Intel
 machines.  For more information, see WORKAROUNDS below.
 .TP
--I "-Y, --supermicro-2-0-session"
+.I "-Y, --supermicro-2-0-session"
 Modifies the IPMI 2.0 session protocol for non-compliant Supermicro
 machines.  For more information, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{

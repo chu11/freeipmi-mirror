@@ -1836,6 +1836,18 @@ powered off.  This option will force @command{ipmipower} to issue a
 power on command instead of a power cycle or hard reset command if the
 remote machine's power is currently off.
 
+@item -A,  ---wait-until-on @*
+      The IPMI specification allows power on commands to return prior
+the power on actually taking place.  This option will force
+@command{ipmipower} to regularly query the remote BMC and return only
+after the machine has powered on.
+
+@item -B,  ---wait-until-off @*
+      The IPMI specification allows power off commands to return prior
+the power off actually taking place.  This option will force
+@command{ipmipower} to regularly query the remote BMC and return only
+after the machine has powered off.
+
 @item -o, ---outputtype @var{str} @*
        Sets the output type to use with @command{ipmipower}@.  The
 currently available output types are: 
@@ -1866,8 +1878,12 @@ authcode should be received.  This option has been specifically
 implemented to get around a compliance issue.
 
 @item -X,  ---intel-2-0-session @*
-Modifies the IPMI 2.0 session protocol for non-compliant Intel
+      Modifies the IPMI 2.0 session protocol for non-compliant Intel
 machines.
+
+@item -Y,  ---supermicro-2-0-session @*
+      Modifies the IPMI 2.0 session protocol for non-compliant
+Supermicro machines.
 
 @end itemize
 
@@ -1883,16 +1899,23 @@ uses the @var{time-out} value to determine when to give up on a power
 command.  If not specified, a default @var{time-out} of 20000
 milliseconds (20 seconds) is used.
 
+@item -q, ---retry-wait-timeout @var{ms} @*
+      Sets the @var{retry-wait-timeout} in milliseconds.  The
+@var{retry-wait-timeout} is similar to the @var{retry-timeout} above,
+but is used specifically for power completion verification in the
+@option{--wait-until-on} and @option{--wait-until-off} options.
+
 @item -y, ---retry-timeout @var{ms} @*
-      Sets the retry-timeout in milliseconds.  The @acronym{IPMI} protocol sends
-a series of packets back and forth to a remote host BMC in order to
-perform a power control operation.  When a response to any individual
-packet is not received after @var{retry-timeout} milliseconds,
-@command{ipmipower} will retry sending that packet.  If not specified,
-packet retransmissions will occur after @samp{400} milliseconds (0.4
-seconds).  The value @var{ms} must be less than the time out length
-specified with @option{--timeout}@.  Packet retransmissions can be
-disabled by setting the @var{retry-timeout} length to @samp{0}@.
+      Sets the @var{retry-timeout} in milliseconds.  The
+@acronym{IPMI} protocol sends a series of packets back and forth to a
+remote host BMC in order to perform a power control operation.  When a
+response to any individual packet is not received after
+@var{retry-timeout} milliseconds, @command{ipmipower} will retry
+sending that packet.  If not specified, packet retransmissions will
+occur after @samp{400} milliseconds (0.4 seconds).  The value @var{ms}
+must be less than the time out length specified with
+@option{--timeout}@.  Packet retransmissions can be disabled by
+setting the @var{retry-timeout} length to @samp{0}@.
 
        Note how this option differs from the @option{--timeout} option
 above.  The @option{--timeout} option refers to the entire amount of
@@ -2071,6 +2094,10 @@ currently supports the following Cipher Suite IDs:
 
 @item on-if-off enable|disable @*
 
+@item wait-until-on enable|disable @*
+
+@item wait-until-off enable|disable @*
+
 @item outputtype @var{outputtype} @*
 Specify the default outputtype type to use.  @command{ipmipower}
 currently supports the following output types:  
@@ -2089,8 +2116,13 @@ currently supports the following output types:
 
 @item intel_2_0_session enable|disable @*
 
+@item supermicro_2_0_session enable|disable @*
+
 @item timeout @var{timeout} @*
 Specify the @var{timeout} in ms.
+
+@item retry_wait_timeout @var{timeout} @*
+Specify the retry wait @var{timeout} in ms. 
 
 @item retry-timeout @var{timeout} @*
 Specify the retry @var{timeout} in ms.  See @ref{ipmipower} for an
@@ -2213,6 +2245,12 @@ specified host.
         @samp{12}
 @end example
 
+@item on-if-off on|off @*
+
+@item wait-until-on on|off @*
+
+@item wait-until-off on|off @*
+
 @item outputtype @var{str} @*
       Specify a new output type:
 @example
@@ -2228,6 +2266,8 @@ specified host.
 @item check-unexpected-authcode on|off @*
 
 @item intel-2-0-session on|off @*
+
+@item supermicro-2-0-session on|off @*
 
 @item config @*
       Output the current configuration.
@@ -2398,6 +2438,11 @@ option.  The workrarounds include padding of usernames, automatic
 acceptance of a RAKP 4 response integrity check when using the
 integrity algorith MD5-128, and password truncation if the
 authentication algorithm is HMAC-MD5-128.
+
+Supermicro H8QME with SIMSO daughter card: There are several
+Supermicro IPMI 2.0 bugs on early firmware revisions which can be
+worked around using the @option{-Y}
+(@option{--supermicro-2-0-session}) option.
 
 @node ipmipower known issues,  , ipmipower workarounds, ipmipower
 @section Known issues with the ipmipower command
