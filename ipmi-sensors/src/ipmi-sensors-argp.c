@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.3 2006-09-13 21:23:56 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.4 2006-11-02 17:35:55 balamurugan Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -32,6 +32,9 @@
 #include <argp.h>
 #include <ctype.h>
 #include <errno.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 
 #include "argp-common.h"
 #include "ipmi-sensor-api.h"
@@ -71,6 +74,8 @@ static struct argp_option options[] =
      "Show sensors belongs to this GROUP."}, 
     {"sensors",     SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
      "Show listed sensors."}, 
+    {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
+     "Use DIRECTORY for sensor cache."}, 
     { 0 }
   };
 
@@ -243,6 +248,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
 			 cmd_args->sensors_list_length);
       }
       break;
+    case SDR_CACHE_DIR_KEY:
+      cmd_args->sdr_cache_dir_wanted = 1;
+      cmd_args->sdr_cache_dir = strdup (arg);
+      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
+	{
+	  fprintf (stderr, "insufficient permission on sensor cache directory [%s]\n", 
+		   cmd_args->sdr_cache_dir);
+	  argp_usage (state);
+	}
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -271,6 +286,8 @@ ipmi_sensors_argp_parse (int argc, char **argv)
   cmd_args.sensors_list_wanted = 0;
   cmd_args.sensors_list = NULL;
   cmd_args.sensors_list_length = 0;
+  cmd_args.sdr_cache_dir_wanted = 0;
+  cmd_args.sdr_cache_dir = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
 }

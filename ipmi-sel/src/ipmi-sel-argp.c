@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.7 2006-09-19 17:08:02 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.8 2006-11-02 17:35:55 balamurugan Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -32,6 +32,9 @@
 #include <argp.h>
 #include <ctype.h>
 #include <errno.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 
 #include "argp-common.h"
 #include "ipmi-sel-argp.h"
@@ -69,6 +72,8 @@ static struct argp_option options[] =
      "Hex-dump SEL entries optionally to FILE.", 17},
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,
      "Flush sensor SDR cache.", 18},
+    {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
+     "Use DIRECTORY for sensor cache."}, 
     { 0 }
   };
 
@@ -344,6 +349,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case FLUSH_CACHE_KEY:
       cmd_args->flush_cache_wanted = 1;
       break;
+    case SDR_CACHE_DIR_KEY:
+      cmd_args->sdr_cache_dir_wanted = 1;
+      cmd_args->sdr_cache_dir = strdup (arg);
+      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
+	{
+	  fprintf (stderr, "insufficient permission on sensor cache directory [%s]\n", 
+		   cmd_args->sdr_cache_dir);
+	  argp_usage (state);
+	}
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -372,6 +387,8 @@ ipmi_sel_argp_parse (int argc, char **argv)
   cmd_args.delete_range2 = 0;
   cmd_args.hex_dump_wanted = 0;
   cmd_args.hex_dump_filename = NULL;
+  cmd_args.sdr_cache_dir_wanted = 0;
+  cmd_args.sdr_cache_dir = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
 }

@@ -297,7 +297,7 @@ get_sdr_repository_info (ipmi_device_t dev, sdr_repository_info_t *sdr_info)
 }
 
 char *
-get_sdr_cache_filename (char *host)
+get_sdr_cache_filename (char *host, char *user_cache_dir)
 {
   char *ipmi_host_ip_address = NULL;
   char *cache_dir = NULL;
@@ -318,15 +318,28 @@ get_sdr_cache_filename (char *host)
   
   if ((ipmi_host_ip_address = _get_ipmi_host_ip_address (host)))
     {
-      if ((cache_dir = _get_sdr_cache_directory ()))
+      char *sdr_cache_dir = NULL;
+      
+      if (user_cache_dir != NULL)
+	{
+	  sdr_cache_dir = user_cache_dir;
+	}
+      else
+	{
+	  cache_dir = _get_sdr_cache_directory ();
+	  sdr_cache_dir = cache_dir;
+	}
+      
+      if (sdr_cache_dir != NULL)
 	{
 	  asprintf (&cache_filename, 
 		    "%s/%s-%s.%s", 
-		    cache_dir, 
+		    sdr_cache_dir, 
 		    SDR_CACHE_FILENAME_PREFIX, 
                     hostbuf,
 		    ipmi_host_ip_address);
-	  free (cache_dir);
+	  if (cache_dir)
+	    free (cache_dir);
 	  free (ipmi_host_ip_address);
 	  return cache_filename;
 	}
@@ -377,12 +390,12 @@ setup_sdr_cache_directory ()
 }
 
 int 
-flush_sdr_cache_file (char *host)
+flush_sdr_cache_file (char *host, char *user_cache_dir)
 {
   char *cache_file = NULL;
   int rv = -1;
   
-  if ((cache_file = get_sdr_cache_filename (host)))
+  if ((cache_file = get_sdr_cache_filename (host, user_cache_dir)))
     {
       rv = unlink (cache_file);
       free (cache_file);

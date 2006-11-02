@@ -1,3 +1,18 @@
+2006-11-02  A Balamurugan  <bala@zresearch.com>
+
+	* common/src/ipmi-sdr-api.c (get_sdr_cache_filename,
+	flush_sdr_cache_file): added user defined sdr cache directory.
+
+	* ipmi-sel/src/ipmi-sel.c (init_sdr_cache, run_cmd_args): updated
+	according to above function call changes.
+
+	* ipmi-sel/src/ipmi-sensors.c (init_sdr_cache, run_cmd_args): like
+	wise.
+
+	* ipmi-sel/src/ipmi-sel-argp.c,
+	ipmi-sensors/src/ipmi-sensors-argp.c: added --sdr-cache-directory
+	argument.  Fixed bug #18034.
+
 2006-11-02  Anand Babu  <ab@zresearch.com>
 
 	* doc/freeipmi.texi: added cross reference for bmc-config command

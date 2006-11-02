@@ -178,11 +178,11 @@ typedef struct sdr_record sdr_record_t;
 
 int get_sdr_repository_info (ipmi_device_t dev, sdr_repository_info_t *sdr_info);
 
-char *get_sdr_cache_filename (char *host);
+char *get_sdr_cache_filename (char *host, char *user_cache_dir);
 
 int setup_sdr_cache_directory ();
 
-int flush_sdr_cache_file (char *host);
+int flush_sdr_cache_file (char *host, char *user_cache_dir);
 
 int create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose);
 

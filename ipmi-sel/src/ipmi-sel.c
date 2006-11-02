@@ -65,7 +65,8 @@ init_sdr_cache (ipmi_device_t dev, struct arguments *args)
   FILE *fp = NULL;
   int rv = -1;
 
-  if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host)) == NULL)
+  if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host, 
+						    args->sdr_cache_dir)) == NULL)
     return (-1);
 
   if ((fp = fopen (sdr_cache_filename, "r")))
@@ -283,7 +284,7 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
   if (args->flush_cache_wanted)
     {
       printf ("flushing cache... ");
-      retval = flush_sdr_cache_file (args->common.host);
+      retval = flush_sdr_cache_file (args->common.host, args->sdr_cache_dir);
       printf ("%s\n", (retval ? "FAILED" : "done"));
       return retval;
     }
