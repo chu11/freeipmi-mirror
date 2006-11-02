@@ -2432,7 +2432,7 @@ option will force Per Message Authentication to be used no matter what
 is advertised by the remote BMC.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
-Edition): There are a num- ber of Intel IPMI 2.0 bugs which can be
+Edition): There are a number of Intel IPMI 2.0 bugs which can be
 worked around using the the @option{-X} (@option{--intel-2-0-session})
 option.  The workrarounds include padding of usernames, automatic
 acceptance of a RAKP 4 response integrity check when using the
