@@ -6,6 +6,10 @@
 	* doc/freeipmi.texi: Update with new ipmipower options.
 
 	* NEWS: Updated with 0.3.0 additions.
+
+	* AUTHORS: Added Anand Avati.
+
+	* doc/freeipmi-faq.texi: Added LLNL as co-maintainer.
 	
 2006-11-02  A Balamurugan  <bala@zresearch.com>
 

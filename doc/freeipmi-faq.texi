@@ -120,9 +120,11 @@ FreeIPMI project.  In October 2004, FreeIPMI 0.1.0 was officially
 released.  Around same time, FreeIPMI project was accepted by the Free
 Software Foundation as a GNU project.
 
-In September 2005, Supercomputing team of California Digital moved out to
-form Z RESEARCH Inc. Maintenance of the GNU FreeIPMI also moved along from
-California Digital Corp. to Z RESEARCH Inc.
+In September 2005, Supercomputing team of California Digital moved out
+to form Z RESEARCH Inc. 
+
+Maintenance and development of GNU FreeIPMI is now shared between Z
+RESEARCH Inc. and Lawrence Livermore National Laboratory (LLNL).
 
 @node Intended Audience, GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
 @section Who should refer to this FAQ?
