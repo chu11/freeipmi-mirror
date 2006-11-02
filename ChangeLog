@@ -1,5 +1,11 @@
 2006-11-02  A Balamurugan  <bala@zresearch.com>
 
+	* doc/freeipmi.texi, ipmi-sel/ipmi-sel.8.pre.in,
+	ipmi-sensors/ipmi-sensors.8.pre.in: updated for
+	--sdr-cache-directory argument addition.
+
+2006-11-02  A Balamurugan  <bala@zresearch.com>
+
 	* common/src/ipmi-sdr-api.c (get_sdr_cache_filename,
 	flush_sdr_cache_file): added user defined sdr cache directory.
 

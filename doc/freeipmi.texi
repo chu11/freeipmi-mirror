@@ -1112,6 +1112,9 @@ nominal, threshold max/min readings and status descriptions.
 @item -s, ---sensors=@var{SENSORS-LIST} @* 
       Show listed sensors.
 
+@item ---sdr-cache-directory=@var{DIRECTORY} @*
+      Use DIRECTORY for sensor cache.
+
 @item -?, ---help @*
       Give this help list.
 
@@ -1281,6 +1284,9 @@ you view and manage system event log.
 
 @item -f, ---flush-cache @*
       Flush SDR cache.
+
+@item ---sdr-cache-directory=@var{DIRECTORY} @*
+      Use DIRECTORY for sensor cache.
 
 @end itemize
 

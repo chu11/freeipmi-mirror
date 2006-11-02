@@ -30,6 +30,9 @@ Delete records from START to END in SEL
 .TP
 \fB\-f\fR, \fB\-\-flush\-cache\fR
 Flush SDR cache
+.TP
+\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
+Use DIRECTORY for sensor cache
 .LP
 .SH "EXAMPLES"
 .B # ipmi-sel 
