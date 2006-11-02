@@ -1,1 +1,30 @@
-No real news, but this shuts up lintian. :-)
+0.3.0
+-----
+
+o IPMI 2.0 support added to libfreeipmi.
+o IPMI 2.0 connection support added to ipmipower.
+o IPMI 2.0 ping support added to ipmiping.
+o IPMI 2.0 and Serial-Over-LAN (SOL) configuration added to bmc-config.
+o Added ipmiconsole.
+o Added libipmiconsole.
+o Added sectional input/output support to bmc-config.
+o ipmi-sensors, ipmi-sel, and bmc-config re-written in C.
+o Added OpenIPMI driver support to libfreeipmi.
+o Added OpenIPMI driver support to bmc-info, ipmi-raw, ipmi-sel, ipmi-sensors.
+o ipmi-raw raw input/output style change to support luns and network functions.
+o bmc-info, ipmi-raw, ipmi-sel, ipmi-sensors out-of-band communication made more reliable.
+o Libfreeipmi Fiid interface re-implemented.
+o Libfreeipmi code significantly cleaned up.
+o Sensor reading added to ipmi-sel for better output
+o Intel 2.0 workarounds added to ipmipower.
+o Supermicro 2.0 workarounds added to ipmipower.
+o --wait-until-on, --wait-until-off, --retry-wait-timeout options added to ipmipower.
+o --delete-range option added to ipmi-sel
+o --flush-cache option added to ipmi-sel.
+o --sdr-cache-directory option added to ipmi-sel and ipmi-sensors.
+o In debug mode, packet dump, function trace, and various debugging added to libfreeipmi.
+o Removed fish
+o Removed garpd
+o Various bug fixes throughout FreeIPMI.
+
+
