@@ -1,3 +1,8 @@
+2006-11-02  Anand Babu  <ab@zresearch.com>
+
+	* doc/freeipmi.texi: added cross reference for bmc-config command
+	line options under bmc-autoconfig section.
+
 2006-11-01  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-pef/src/Makefile.am: updated.

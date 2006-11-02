@@ -398,6 +398,7 @@ replicate the configuration.
 @node Options, Sample Configuration File, bmc-config, bmc-config
 @section Command-line arguments to bmc-config
 
+@anchor{bmc-config Command-line options}
 @itemize @bullet
 @item ---no-probing @*
       Do not probe IPMI devices.
@@ -965,25 +966,16 @@ ipmitest:~#
 @node bmc-autoconfig, ipmi-raw, bmc-info, Top
 @chapter bmc-autoconfig
 @pindex bmc-autoconfig
-@command{bmc-autoconfig} utility is a wizard-like frontend to the
-@command{bmc-config} command, which has a curses/text based interfaced
-questionaire asking for IP/Netmask/Gateway to be committed.
+@command{bmc-autoconfig} utility is a wizard-like high-level frontend
+to the @command{bmc-config} command, which has a curses/text user
+interface prompting for IP/Netmask/Gateway.
 
 @section Command-line options
 
-@command{bmc-autoconfig} accepts all the common options accepted by 
-bmc-config related to driver configuration. For more details refer -
-
-@itemize @bullet
-@item -u, --usage @*
-      Show short usage message.
-
-@item -h, --help @*
-      Show help.
-
-@item -V, --version @*
-      Show version information.
-@end itemize
+@command{bmc-autoconfig} command-line options are as same as
+@command{bmc-config} utility. If no arguments are passed, wizard interface is
+shown. For a complete list of options, refer here
+@xref{bmc-config Command-line options}.
 
 @node ipmi-raw, ipmi-sensors, bmc-autoconfig, Top
 @chapter ipmi-raw
