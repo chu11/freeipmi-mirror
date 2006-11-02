@@ -14,10 +14,8 @@ X H) OpenIPMI inband driver suppport (done by achu)
 X I-1) ipmi-sensors update (done by achu)
 X I-2) bmc-config update (done by achu)
 X       - --section && --listsections stuff
-  I-3) bmc-autoconfig options (assigned: anyone)
-? J) Legacy Pad issue - not needed for ipmi 2.0
-  K) ipmi-pef (assigned: ?)
-  L) run through memory debugger (assigned: ?)
+X I-3) bmc-autoconfig options (assigned: anyone)
+  J) run through memory debugger (assigned: anand)
 
 AB's TODO list
 ==============
