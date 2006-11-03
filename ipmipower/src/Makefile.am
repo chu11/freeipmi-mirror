@@ -28,6 +28,11 @@ ipmipower_SOURCES= \
  
 ipmipower_LDADD = ../../libfreeipmi/src/libfreeipmi.la
  
+ipmipower_CFLAGS = \
+	-I$(srcdir)/../../libfreeipmi/include \
+	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
+	-DWITH_LSD_NOMEM_ERROR_FUNC=1	
+
 noinst_HEADERS= \
 	argv.h \
 	cbuf.h \
@@ -54,11 +59,6 @@ noinst_HEADERS= \
 	secure.h \
 	timeval.h \
 	wrappers.h
- 
-AM_CFLAGS = -Wall
-AM_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
-	-DWITH_LSD_FATAL_ERROR_FUNC=1 -DWITH_LSD_NOMEM_ERROR_FUNC=1
  
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

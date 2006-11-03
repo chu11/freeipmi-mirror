@@ -1,13 +1,14 @@
-sbin_PROGRAMS=ipmiping
-ipmiping_SOURCES=ipmiping.c
+sbin_PROGRAMS = ipmiping
+
+ipmiping_SOURCES = ipmiping.c
  
-ipmiping_LDADD = ../../libfreeipmi/src/libfreeipmi.la \
-		 ../../common/src/libipmiping.la 
+ipmiping_LDADD = \
+	../../libfreeipmi/src/libfreeipmi.la \
+	 ../../common/src/libipmiping.la
  
-AM_CFLAGS = -Wall
-AM_CPPFLAGS = -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"
+ipmiping_CFLAGS = \
+	-I$(srcdir)/../../libfreeipmi/include \
+	-I$(srcdir)/../../common/src
  
 ../../libfreeipmi/src/libfreeipmie.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

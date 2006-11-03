@@ -1,3 +1,12 @@
+2006-11-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/Makefile.am, ipmiping/src/Makefile.am,
+	rmcpping/src/Makefile.am, bmc-watchdog/src/Makefile.am,
+	bmc-info/src/Makefile.am, doc/examples/Makefile.am,
+	ipmi-locate/src/Makefile.am, ipmi-pef/src/Makefile.am,
+	ipmi-raw/src/Makefile.am, ipmi-sel/src/Makefile.am,
+	ipmi-sensors/src/Makefile.am: Cleanup.
+	
 2006-11-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in: Fix
