@@ -1644,6 +1644,7 @@ get_bmc_max_users (ipmi_device_t dev, uint8_t *max_users)
     return -1;
   }
 
+  fiid_obj_destroy (obj_cmd_rs);
   *max_users = (uint8_t) val;
   return 0;
 }
