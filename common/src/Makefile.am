@@ -13,7 +13,13 @@ noinst_HEADERS = \
 	ipmi-sdr-cache-reads.h \
 	ipmi-sdr-api.h \
 	ipmi-sensor-api.h \
-	xmalloc.h
+	xmalloc.h \
+	cbuf.h \
+	conffile.h \
+	fd.h \
+	list.h \
+	secure.h \
+	timeval.h
 
 noinst_LTLIBRARIES = \
 	libargpcommon.la \
