@@ -2,6 +2,8 @@
 
 	* NEWS: Split news for users and developers.
 
+	* commons/rc/Makefile.am: Dist missing .h files.
+
 2006-11-06 Anand V. Avati <avati@zresearch.com>
 
 	* bmc-config/src/bmc-config-api.c:
