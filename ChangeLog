@@ -1,3 +1,9 @@
+2006-11-06  Albert Chu <chu11@llnl.gov>
+
+	* Tagged Release-0_3_0_base.
+
+	* Branched Release-0_3_0_branch.
+
 2006-11-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src: Move common files to common/src.
