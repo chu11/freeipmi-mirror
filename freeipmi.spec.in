@@ -16,7 +16,7 @@ Release: %{release}
 License: GPL
 Group: Development/System
 URL: http://www.gnu.org/software/freeipmi/
-Source: ftp://ftp.zresearch.com/pub/freeipmi/LATEST/%{name}-%{version}.tar.gz
+Source: ftp://ftp.zresearch.com/pub/freeipmi/0.3.beta0/%{name}-%{version}.tar.gz
 BuildRoot: %{_localstatedir}/tmp/%{name}-%{version}
 BuildRequires: guile-devel readline-devel libgcrypt-devel
 Summary: FreeIPMI
