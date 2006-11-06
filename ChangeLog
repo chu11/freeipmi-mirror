@@ -1,5 +1,10 @@
 2006-11-06  Albert Chu <chu11@llnl.gov>
 
+	* configure.ac, Makefile.am, freeipmi.spec.in, ipmi-pef/: Remove
+	ipmi-pef for 0.3.0 release line.
+	
+2006-11-06  Albert Chu <chu11@llnl.gov>
+
 	* Tagged Release-0_3_0_base.
 
 	* Branched Release-0_3_0_branch.

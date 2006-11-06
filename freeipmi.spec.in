@@ -142,7 +142,6 @@ fi
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
 %{_sbindir}/ipmi-locate
-%{_sbindir}/ipmi-pef
 %{_sbindir}/ipmi-raw
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors
@@ -155,7 +154,6 @@ fi
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man8/bmc-info.8*
 %{_mandir}/man8/ipmi-locate.8*
-%{_mandir}/man8/ipmi-pef.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*
 %{_mandir}/man8/ipmi-sensors.8*
