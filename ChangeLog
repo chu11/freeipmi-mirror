@@ -1,5 +1,7 @@
 2006-11-06  Albert Chu <chu11@llnl.gov>
 
+	* freeipmi.spec.in: Fix URL for release.
+
 	* Tagged Release-0_3_0-beta0
 	
 2006-11-06  Albert Chu <chu11@llnl.gov>
