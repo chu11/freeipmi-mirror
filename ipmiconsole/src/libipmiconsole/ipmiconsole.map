@@ -1,0 +1,14 @@
+{
+  global:
+    ipmiconsole_engine_init;
+    ipmiconsole_engine_submit;
+    ipmiconsole_engine_teardown;
+    ipmiconsole_ctx_create;
+    ipmiconsole_ctx_errnum;
+    ipmiconsole_ctx_strerror;
+    ipmiconsole_ctx_fd;
+    ipmiconsole_ctx_generate_break;
+    ipmiconsole_ctx_destroy;
+  local:
+    *;
+};
