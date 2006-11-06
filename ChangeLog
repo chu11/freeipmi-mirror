@@ -1,3 +1,7 @@
+2006-11-06  Albert Chu <chu11@llnl.gov>
+
+	* NEWS: Split news for users and developers.
+
 2006-11-06 Anand V. Avati <avati@zresearch.com>
 
 	* bmc-config/src/bmc-config-api.c:
