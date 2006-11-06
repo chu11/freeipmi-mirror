@@ -1,5 +1,9 @@
 2006-11-06  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.texi: Various updates.
+	
+2006-11-06  Albert Chu <chu11@llnl.gov>
+
 	* NEWS: Split news for users and developers.
 
 	* commons/rc/Makefile.am: Dist missing .h files.

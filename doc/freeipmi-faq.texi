@@ -46,12 +46,12 @@ release @value{VERSION} of the GNU FreeIPMI.
 * What is IPMI::                
 * What is GNU FreeIPMI?::       
 * How did it start?::           
-* Intended Audience::           
+* Who maintains FreeIPMI?::
+* Who should refer to this FAQ?::           
 * GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
 * What is special about GNU FreeIPMI::  
 * SSIF Driver Configuration::   
 * x86-64 Compilation::          
-* libguile-srfi-srfi dynamic-link error::  
 @end menu
 
 @c Output the table of contents at the beginning.
@@ -90,7 +90,7 @@ GNU FreeIPMI User's Guide concentrates installation, usage,
 troubleshooting and bug reporting.  It corresponds to @value{VERSION}
 release. 
 
-@node How did it start?, Intended Audience, What is GNU FreeIPMI?, Top
+@node How did it start?, Who maintains FreeIPMI?, What is GNU FreeIPMI?, Top
 @section How did it start?
 In 2002 Anand Babu at California Digital Corp. began working on a set
 of IPMI tools for the GNU system. This work formed the basis of
@@ -120,25 +120,26 @@ FreeIPMI project.  In October 2004, FreeIPMI 0.1.0 was officially
 released.  Around same time, FreeIPMI project was accepted by the Free
 Software Foundation as a GNU project.
 
-In September 2005, Supercomputing team of California Digital moved out
-to form Z RESEARCH Inc. 
+@node Who maintains FreeIPMI?, Who should refer to this FAQ?, How did it start?, Top
+@section Who maintains FreeIPMI?
 
-Maintenance and development of GNU FreeIPMI is now shared between Z
+Maintenance and development of GNU FreeIPMI is shared between Z
 RESEARCH Inc. and Lawrence Livermore National Laboratory (LLNL).
 
-@node Intended Audience, GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
+(Z RESEARCH Inc. was founded by former members for California Digital Corp.)
+
+@node Who should refer to this FAQ?, GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Who maintains FreeIPMI?, Top
 @section Who should refer to this FAQ?
 If you want to use the @emph{Intelligent Platform Management Interface}
 functionalities available on modern motherboards running GNU or any
 POSIX compliant operating systems, this guide is right for you.
 
-@node GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about GNU FreeIPMI, Intended Audience, Top
+@node GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about GNU FreeIPMI, Who should refer to this FAQ?, Top
 @section What is the relationship between GNU FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
 There are multiple implementations, APIs, interfaces, end user
 requirements, etc. that one can choose when developing IPMI drivers,
-libraries, and tools.  GNU FreeIPMI has taken one approach towards
-developing them while other open-source projects have taken other
-approaches.
+libraries, and tools.  GNU FreeIPMI has taken some different
+approaches towards development thatn other open-source projects.
 
 Some examples of the differences in approaches:
 
@@ -152,14 +153,8 @@ implements a kernel module for its in-band IPMI driver.
 
 OpenIPMI (to our knowledge) concentrates on higher level APIs to use
 the IPMI driver.  GNU FreeIPMI primarily concentrates on APIs for IPMI
-packet construction, although APIs for drivers and higher level
-management are also provided.
-
-3) Command-Line Interface
-
-GNU FreeIPMI provides a set of independent tools.  
-
-Ipmitool offers a single tool for all IPMI features it supports.
+packet construction.  Some higher level management are provided although
+they are not considered the primary focus of libfreeipmi.
 
 The GNU FreeIPMI developers have contributed patches to the other projects
 on multiple occassions.
@@ -172,17 +167,23 @@ In our eyes, there are several reasons why GNU FreeIPMI is particularly special.
 1) Support for HPC
 
 Ipmipower is capable of scaling to very large numbers of nodes.  At
-LLNL, in conjunction with Powerman, ipmipower currently power controls
-a 1024 node cluster in about 0.3 seconds. Without Powerman it can
-power control 1024 nodes in about 5 seconds. 
+LLNL, in conjunction with Powerman, ipmipower is used for power
+control on clusters ranging from sizes of 8 to 1152.  It is capable of
+power controlling several of the largest clusters in under a second.
 
-At LLNL, bmc-config's configuration file and command-line interface
-are used to configure BMCs of 1024 nodes in under 1 minute.
+Libipmiconsole is capable of setting up and maintaining SOL
+connections to a large number of nodes simultaneously.
+
+The bmc-config configuration file and command-line interface are used
+to easily copy the BMC configuration from one node to every other node
+in a cluster quickly.
+
+HPC support for other components in FreeIPMI is scheduled.
 
 2) Easy setup
 
 By implementing drivers in userspace libraries, there is no need to
-build/setup/manage any Linux kernel modules/drivers.
+build/setup/manage any kernel modules/drivers.
 
 3) Portability
 
@@ -232,7 +233,7 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
-@node x86-64 Compilation, libguile-srfi-srfi dynamic-link error, SSIF Driver Configuration, Top
+@node x86-64 Compilation, , SSIF Driver Configuration, Top
 @section x86-64 Compilation
 
 Under some x86-64 platforms such as SUSE GNU/Linux, native 64
@@ -247,33 +248,4 @@ Example:
   # ./configure  --prefix=/usr --libdir=/usr/lib64
 @end example
 
-@node libguile-srfi-srfi dynamic-link error,  , x86-64 Compilation, Top
-@section libguile-srfi-srfi dynamic-link error
-If you see error messages like these under ``RedHat'' x86-64 platform,
-@example
-/usr/share/guile/1.6/srfi/srfi-13.scm:159:1: In procedure dynamic-link
-in 
-expression (load-extension "libguile-srfi-srfi-13-14-v-1" 
-"scm_init_srfi_13"):
-/usr/share/guile/1.6/srfi/srfi-13.scm:159:1: file: 
-"libguile-srfi-srfi-13-14-v-1", message:
-"libguile-srfi-srfi-13-14-v-1.so: 
-cannot open shared object file: No such file or directory"
-@end example
-It may be because 
-@itemize @bullet
-@item Duplicate Installation
-1) you have installed both the 32bit (guile-1.6.4-14.i386.rpm) and
-64bit (guile-1.6.4-14.x86-64.rpm) packages. To verify 
-  # rpm -qf /usr/bin/guile
-     guile-1.6.4-14 
-     guile-1.6.4-14 
-
-Will list guile twice. Fix is, just remove the i386 version.
-  # rpm -e guile-1.6.4-14.i386
-@item LTDL_LIBRARY_PATH
-2) Guile installed in a non standard path. ``ltdl'' guile dynamic
-module loader doesn't use ld.so.conf. Instead set LTDL_LIBRARY_PATH
-path properly.
-@end itemize
 @bye
