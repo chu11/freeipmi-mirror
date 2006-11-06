@@ -1,3 +1,19 @@
+<<<<<<< ChangeLog
+2006-11-06 Anand V. Avati <avati@zresearch.com>
+
+	* bmc-config/src/bmc-config-api.c:
+	free fiid_obj after using to get max_channel_users_id
+
+	* bmc-config/src/bmc-config.c:
+	free argugments.filename if exists after using it
+
+	* common/src/ipmi-sdr-api.c:
+	use getpwuid_r in _get_home_directory() instead of getpwuid
+	to avoid mem leak
+
+	* ipmi-sel/src/ipmi-sel.c:
+	free sdr_record_list in run_cmd_args after its use
+	
 2006-11-06  Albert Chu <chu11@llnl.gov>
 
 	* Tagged Release-0_3_0_base.

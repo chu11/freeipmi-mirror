@@ -163,20 +163,25 @@ static char *
 _get_home_directory ()
 {
   uid_t user_id;
-  struct passwd *user_passwd = NULL;
+  struct passwd *user_passwd = alloca (sizeof (*user_passwd));
   char *home_dir = NULL;
-  
+  long int buf_len = sysconf (_SC_GETPW_R_SIZE_MAX);
+  char *buf = alloca (buf_len);
+
   user_id = getuid ();
-  user_passwd = getpwuid (user_id);
-  
+  if (getpwuid_r (user_id, user_passwd, buf, buf_len, &user_passwd) != 0)
+    return NULL;
+
   if (user_passwd->pw_dir)
     {
-      if (access (user_passwd->pw_dir, R_OK|W_OK|X_OK) == 0)
-	return strdup (user_passwd->pw_dir);
+      if (access (user_passwd->pw_dir, R_OK|W_OK|X_OK) == 0) {
+        home_dir = strdup (user_passwd->pw_dir);
+        return home_dir;
+      }
     }
-  
-  asprintf (&home_dir, 
-	    "/tmp/.%s-%s", 
+
+  asprintf (&home_dir,
+            "/tmp/.%s-%s",
 	    PACKAGE_NAME, 
 	    user_passwd->pw_name);
   if (mkdir (home_dir, FREEIPMI_CONFIG_DIRECTORY_MODE) == 0)

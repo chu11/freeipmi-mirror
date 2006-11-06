@@ -364,7 +364,10 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
     }
 
   retval = display_sel_records (dev);
-  
+
+  if (sdr_record_list)
+    free (sdr_record_list);
+
   return retval;
 }
 
