@@ -1,10 +1,7 @@
 sbin_PROGRAMS=ipmipower
 ipmipower_SOURCES= \
 	argv.c \
-	cbuf.c \
-	conffile.c \
 	error.c \
-	fd.c \
 	hostlist.c \
 	ipmipower_authentication.c \
 	ipmipower_check.c \
@@ -21,24 +18,21 @@ ipmipower_SOURCES= \
 	ipmipower_prompt.c \
 	ipmipower_util.c \
 	ipmipower_wrappers.c \
-	list.c \
-	secure.c \
-	timeval.c \
 	wrappers.c
  
-ipmipower_LDADD = ../../libfreeipmi/src/libfreeipmi.la
+ipmipower_LDADD = \
+	../../common/src/libllnlcommon.la \
+	../../libfreeipmi/src/libfreeipmi.la
  
 ipmipower_CFLAGS = \
+	-I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1	
 
 noinst_HEADERS= \
 	argv.h \
-	cbuf.h \
-	conffile.h \
 	error.h \
-	fd.h \
 	hostlist.h \
 	ipmipower_authentication.h \
 	ipmipower_check.h \
@@ -55,11 +49,11 @@ noinst_HEADERS= \
 	ipmipower_prompt.h \
 	ipmipower_util.h \
 	ipmipower_wrappers.h \
-	list.h \
-	secure.h \
-	timeval.h \
 	wrappers.h
  
+../../common/src/libllnlcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  

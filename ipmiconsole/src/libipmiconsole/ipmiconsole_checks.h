@@ -1,0 +1,54 @@
+/*****************************************************************************\
+ *  $Id: ipmiconsole_checks.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *****************************************************************************
+ *  Copyright (C) 2006 The Regents of the University of California.
+ *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+ *  Written by Albert Chu <chu11@llnl.gov>
+ *  UCRL-CODE-221226
+ *  
+ *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
+ *  and utilities.  For details, see http://www.llnl.gov/linux/.
+ *  
+ *  Ipmiconsole is free software; you can redistribute it and/or modify 
+ *  it under the terms of the GNU General Public License as published by the 
+ *  Free Software Foundation; either version 2 of the License, or (at your 
+ *  option) any later version.
+ *  
+ *  Ipmiconsole is distributed in the hope that it will be useful, but 
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *  for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License along
+ *  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\*****************************************************************************/
+
+#ifndef _IPMICONSOLE_CHECKS_H
+#define _IPMICONSOLE_CHECKS_H
+
+#include <freeipmi/freeipmi.h>
+#include "ipmiconsole.h"
+#include "ipmiconsole_defs.h"
+
+int ipmiconsole_check_checksum(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
+					  ipmiconsole_packet_type_t p,
+					  uint8_t *buf,
+					  uint32_t buflen);
+int ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_session_id(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_network_function(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_command(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_requester_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_completion_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_payload_type(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_message_tag(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_rmcpplus_status_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_payload_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+int ipmiconsole_check_integrity_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p);
+
+#endif /* _IPMICONSOLE_CHECKS_H */

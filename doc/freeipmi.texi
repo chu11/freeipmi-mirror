@@ -59,6 +59,7 @@ release @value{VERSION} of the GNU FreeIPMI.
 * ipmi-sel::                    @acronym{IPMI} System Event Log.
 * bmc-watchdog::                Watchdog daemon.
 * ipmipower::                   @acronym{IPMI} power control utility.
+* ipmiconsole::                 @acronym{IPMI} SOL Console utility.
 * ipmiping::                    @acronym{IPMI} ping reachability test utility.
 * rmcpping::                    RMCP ping reachability test utility.
 * Trouble-shooting::            Trouble-shooting tips.
@@ -1671,7 +1672,7 @@ On some machines, the hardware based SMI Handler may disable a
 processor after a watchdog timer timeout if the timer use is set to
 something other than SMS/OS.
 
-@node ipmipower, ipmiping, bmc-watchdog, Top
+@node ipmipower, ipmiconsole, bmc-watchdog, Top
 @chapter IPMI power control utility
 @pindex ipmipower
 Remote out-of-band chassis control utility to perform power-up,
@@ -2470,7 +2471,200 @@ return a successful completion-code to ipmipower before the
 status queries may return @samp{on} for several seconds, until the BMC
 actually performs the @samp{power off} operation.
 
-@node ipmiping, rmcpping, ipmipower, Top
+@node ipmiconsole, ipmiping, ipmipower, Top
+@chapter IPMI SOL console utility
+@pindex ipmiconsole
+Serial-over-LAN (SOL) console utility.  It can be used to establish
+console sessions to remote machines using the IPMI 2.0 SOL protocol.
+
+@menu
+* ipmiconsole options::           Command-line arguments. 
+* ipmiconsole configuration file::  Configuration file.
+* ipmiconsole workarounds::       Workarounds.
+* ipmiconsole known issues::      Known issues.
+@end menu
+
+@node ipmiconsole options, ipmiconsole configuration file, ipmiconsole, ipmiconsole
+@section Command-line arguments
+
+@itemize @bullet
+@item -h, ---hostnames @var{host} @*
+      Specify the remote host to connect to.
+
+@item -u, ---username @var{name} @*
+      Specify the username to use to establish communication.  If not
+specified, the NULL user is assumed.  The user must have a high enough
+privilege to establish an SOL session.
+
+@item -p, ---password @var{pw} @*
+      Specify the password to use to establish communication.  If not
+specified, a NULL password is assumed.
+
+@item -k, ---k-g @var{str} @*
+      Specify the BMC key to use for authentication.  If not
+specified, a NULL key is assumed.
+
+@item -l, ---privilege @var{str} @*
+      Specify the privilege type to use.  The privilege must be
+atleast the minimum required by the remote BMC to establish a SOL
+session.
+@example
+        @samp{user}
+        @samp{operator} 
+        @samp{admin} => (default)
+@end example
+
+@item -T, ---cipher-suite-id @var{id} @*
+      Specify the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite
+ID identifies a set of authentication, integrity, and confidentiality
+algorithms to use for IPMI 2.0 communication.  The authentication
+algorithm identifies the algorithm to use for session setup, the
+integrity algorithm identifies the algorithm to use for session packet
+signatures, and the confidentiality algorithm identifies the algorithm
+to use for payload encryption.
+@example
+        @samp{0}
+        @samp{1}
+        @samp{2}
+        @samp{3} => (default)
+        @samp{6}
+        @samp{7}
+        @samp{8}
+        @samp{11}
+        @samp{12}
+@end example
+
+@item -H, ---help @*
+      Output help menu and exit.
+
+@item -V, ---version @*
+      Output version and exit.
+
+@item -C, ---config @var{file} @*
+      Specify an alternate configuration file.
+
+@item -I,  ---intel-2-0-session @*
+      Modifies the IPMI 2.0 session protocol for non-compliant Intel
+machines.
+
+@item -S,  ---supermicro-2-0-session @*
+      Modifies the IPMI 2.0 session protocol for non-compliant
+Supermicro machines.
+
+@end itemize
+
+@node ipmiconsole configuration file, ipmiconsole workarounds, ipmiconsole options, ipmiconsole
+@section ipmiconsole configuration file
+The @command{ipmiconsole} configuration file can be used to set default
+values to ipmiconsole when values aren't set on the command line.  This
+allows users to avoid typing in a long list of command line options
+everytime ipmiconsole is executed.  It can also be used to hide
+usernames and passwords from the @command{ps} command. See
+@ref{ipmiconsole known issues} for details.
+
+By default, the configuration file is stored at
+@file{/etc/ipmiconsole.conf}.  But users may select a different
+configuration file at the command line through the @option{--config}
+option.
+
+The user can still override the configuration file values by
+specifying the options on the command line.  The configuration file
+does not stop a user from specifying certain options. 
+
+@subsection Configuration options
+The following are a list of configuration options that can be
+specified in the configuration file.  Each configuration option must
+be listed on a separate line.  Arguments for an option are separated
+by any amount of whitespace.  Multiple arguments are also separated by
+whitespace.  Comments can be marked by using the pound sign ("#")
+character, and lines can be continued on the next using backslash
+("\").
+
+Note that it is possible to list the username and password in
+the configuration file.  If this data is stored in a configuration
+file, system administrators should limit access to this file.
+
+@itemize @bullet
+@item hostname @var{host} @*
+Specify the default hostname.
+
+@item username @var{username} @*
+Specify the default @var{username} to use.
+
+@item password @var{password} @*
+Specify the default @var{password} to use.
+
+@item k_g @var{k_g_str} @*
+Specify the BMC key @var{K_g} to use.
+
+@item privilege @var{privilege} @*
+Specify the default privilege type to use.  @command{ipmiconsole}
+currently supports the following privilege types: 
+@example
+        @samp{user}
+        @samp{operator}
+        @samp{admin}
+@end example
+
+@item cipher_suite_id @var{cipher_suite_id} @*
+Specify the default Cipher Suite ID to use.  @command{ipmiconsole}
+currently supports the following Cipher Suite IDs:
+@example
+        @samp{0}
+        @samp{1}
+        @samp{2}
+        @samp{3}
+        @samp{6}
+        @samp{7}
+        @samp{8}
+        @samp{11}
+        @samp{12}
+@end example
+
+@item intel_2_0_session enable|disable @*
+
+@item supermicro_2_0_session enable|disable @*
+
+@end itemize
+
+@node ipmiconsole workarounds, ipmiconsole known issues, ipmiconsole configuration file, ipmiconsole
+@section ipmiconsole workarounds
+As can be expected, with so many different vendors implementing their
+own IPMI solutions, different vendors may implement their IPMI
+protocols slightly differently.  The following lists the handful of
+compliance issues discovered and the workarounds currently used in
+@command{ipmiconsole}.
+
+Note that the following only indicates the hardware that a problem was
+discovered on.  Newer versions of a vendors firmware may fix the
+problems indicated below.  Similar machines from vendors may or may
+not exhibit the same problems.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): There are a number of Intel IPMI 2.0 bugs which can be
+worked around using the the @option{-I} (@option{--intel-2-0-session})
+option.  The workrarounds include padding of usernames, automatic
+acceptance of a RAKP 4 response integrity check when using the
+integrity algorith MD5-128, and password truncation if the
+authentication algorithm is HMAC-MD5-128.
+
+Supermicro H8QME with SIMSO daughter card: There are several
+Supermicro IPMI 2.0 bugs on early firmware revisions which can be
+worked around using the @option{-S}
+(@option{--supermicro-2-0-session}) option.
+
+@node ipmiconsole known issues,  , ipmiconsole workarounds, ipmiconsole
+@section Known issues with the ipmiconsole command
+On certain operating systems, if you input your username and password
+on the command line, the username and password may be discovered by
+other users when using the @command{ps} command or looking in the
+@file{/proc} file system.  The most secure solution is to enter the
+username and password while in interactive mode.  If administrators do
+not wish to type in their username and password at the interactive
+prompt, they can be listed in a configuration file, in which the
+access to this file can be limited. 
+
+@node ipmiping, rmcpping, ipmiconsole, Top
 @chapter ipmiping
 @pindex ipmiping
 @acronym{IPMI} discovery and reachability test tool. 

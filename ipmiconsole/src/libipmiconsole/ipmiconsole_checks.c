@@ -1,0 +1,957 @@
+/*****************************************************************************\
+ *  $Id: ipmiconsole_checks.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *****************************************************************************
+ *  Copyright (C) 2006 The Regents of the University of California.
+ *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+ *  Written by Albert Chu <chu11@llnl.gov>
+ *  UCRL-CODE-221226
+ *  
+ *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
+ *  and utilities.  For details, see http://www.llnl.gov/linux/.
+ *  
+ *  Ipmiconsole is free software; you can redistribute it and/or modify 
+ *  it under the terms of the GNU General Public License as published by the 
+ *  Free Software Foundation; either version 2 of the License, or (at your 
+ *  option) any later version.
+ *  
+ *  Ipmiconsole is distributed in the hope that it will be useful, but 
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *  for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License along
+ *  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\*****************************************************************************/
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#ifdef WITH_PTHREADS
+#include <pthread.h>
+#endif /* WITH_PTHREADS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#include <assert.h>
+#include <errno.h>
+
+#include "ipmiconsole.h"
+#include "ipmiconsole_defs.h"
+
+#include "ipmiconsole_checks.h"
+#include "ipmiconsole_debug.h"
+#include "ipmiconsole_fiid_wrappers.h"
+#include "ipmiconsole_packet.h"
+
+int
+ipmiconsole_check_checksum(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  fiid_obj_t obj_cmd;
+  int8_t rv;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+
+  s = &(c->session);
+
+  obj_cmd = ipmiconsole_packet_object(c, p);
+  if ((rv = ipmi_lan_check_checksum(s->obj_lan_msg_hdr_rs,
+				    obj_cmd,
+				    s->obj_lan_msg_trlr_rs)) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("ipmi_lan_check_checksum: p = %d; %s", p, strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("checksum check failed; p = %d", p));
+
+  return ((int)rv);
+}
+
+int
+ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c, 
+				       ipmiconsole_packet_type_t p,
+				       uint8_t *buf,
+				       uint32_t buflen)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t *password;
+  int8_t rv;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+         || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+  assert(buf);
+  assert(buflen);
+
+  s = &(c->session);
+
+  if (strlen((char *)c->password))
+    password = c->password;
+  else
+    password = NULL;
+
+  if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(s->integrity_algorithm,
+                                                                   buf,
+                                                                   buflen,
+                                                                   s->integrity_key_ptr,
+                                                                   s->integrity_key_len,
+                                                                   password,
+                                                                   (password) ? strlen((char *)password) : 0,
+                                                                   s->obj_rmcpplus_session_trlr_rs)) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_packet_session_authentication_code: p = %d; %s", p, strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("authentication code check failed; p = %d", p));
+  
+  return ((int)rv);
+}
+
+int 
+ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint32_t shift_num, wrap_val, max_sequence_number = 0xFFFFFFFF;
+  uint32_t session_sequence_number;
+  uint64_t val;
+  int rv = 0;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+         || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+  
+  s = &(c->session);
+
+  /* HACK TEST */
+  return 1;
+
+  if (Fiid_obj_get(c,
+		   s->obj_rmcpplus_session_hdr_rs,
+		   "session_sequence_number", 
+		   &val) < 0)
+    return -1;
+  session_sequence_number = val;
+
+  /* Sequence Number Zero is special and shouldn't be possible */
+  if (!session_sequence_number)
+    goto out;
+
+  /* Drop duplicate packet */
+  if (session_sequence_number == s->highest_received_sequence_number)
+    goto out;
+
+  /* Check if sequence number is greater than highest received and is
+   * within range 
+   */
+  if (s->highest_received_sequence_number > (max_sequence_number - IPMI_SESSION_SEQUENCE_NUMBER_WINDOW))
+    {
+      wrap_val = IPMI_SESSION_SEQUENCE_NUMBER_WINDOW - (max_sequence_number - s->highest_received_sequence_number);
+
+      if (session_sequence_number > s->highest_received_sequence_number || session_sequence_number <= wrap_val)
+	{
+	  if (session_sequence_number > s->highest_received_sequence_number && session_sequence_number <= max_sequence_number)
+	    shift_num = session_sequence_number - s->highest_received_sequence_number;
+	  else
+	    shift_num = session_sequence_number + (max_sequence_number - s->highest_received_sequence_number);
+          
+	  s->highest_received_sequence_number = session_sequence_number;
+	  s->previously_received_list <<= shift_num;
+	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  rv++;
+	}
+    }
+  else
+    {
+      if (session_sequence_number > s->highest_received_sequence_number
+	  && (session_sequence_number - s->highest_received_sequence_number) <= IPMI_SESSION_SEQUENCE_NUMBER_WINDOW)
+	{
+	  shift_num = (session_sequence_number - s->highest_received_sequence_number);
+	  s->highest_received_sequence_number = session_sequence_number;
+	  s->previously_received_list <<= shift_num;
+	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  rv++;
+	}
+    }
+  
+  /* Check if sequence number is lower than highest received, is
+   * within range, and hasn't been seen yet
+   */
+  if (s->highest_received_sequence_number < IPMI_SESSION_SEQUENCE_NUMBER_WINDOW)
+    {
+      wrap_val = max_sequence_number - (IPMI_SESSION_SEQUENCE_NUMBER_WINDOW - s->highest_received_sequence_number);
+
+      if (session_sequence_number < s->highest_received_sequence_number || session_sequence_number >= wrap_val)
+	{
+	  if (session_sequence_number > s->highest_received_sequence_number && session_sequence_number <= max_sequence_number)
+	    shift_num = s->highest_received_sequence_number + (max_sequence_number - session_sequence_number);
+	  else
+	    shift_num = s->highest_received_sequence_number - session_sequence_number;
+          
+	  /* Duplicate packet check*/
+	  if (s->previously_received_list & (0x1 << (shift_num - 1)))
+	    goto out;
+          
+	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  rv++;
+	}
+    }
+  else
+    {
+      if (session_sequence_number < s->highest_received_sequence_number
+	  && session_sequence_number >= (s->highest_received_sequence_number - IPMI_SESSION_SEQUENCE_NUMBER_WINDOW))
+	{
+	  shift_num = s->highest_received_sequence_number - session_sequence_number;
+          
+	  /* Duplicate packet check */
+	  if (s->previously_received_list & (0x1 << (shift_num - 1)))
+	    goto out;
+          
+	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  rv++;
+	}
+    }
+  
+ out:
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("session sequence number check failed; p = %d; session_sequence_number = %u; highest_received_sequence_number = %u", p, session_sequence_number, s->highest_received_sequence_number));
+  
+  return rv;
+}
+
+int 
+ipmiconsole_check_session_id(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
+{
+  struct ipmiconsole_ctx_session *s;
+  uint32_t session_id, expected_session_id; 
+  uint64_t val;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
+         || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
+         || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+         || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+         || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+         || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+         || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS
+         || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+         || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+         || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+
+  s = &(c->session);
+
+  if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
+      || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2 
+      || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
+    {
+      fiid_obj_t obj_cmd;
+
+      obj_cmd = ipmiconsole_packet_object(c, p);
+      
+      if (Fiid_obj_get(c,
+		       obj_cmd,
+		       "remote_console_session_id", 
+		       &val) < 0)
+        return -1;
+      session_id = val;
+      expected_session_id = s->remote_console_session_id;
+    }
+  else 
+    {
+      if (Fiid_obj_get(c,
+		       s->obj_rmcpplus_session_hdr_rs,
+		       "session_id", 
+		       &val) < 0)
+        return -1;
+      session_id = val;
+      expected_session_id = s->remote_console_session_id;
+    }
+  
+  if (session_id != expected_session_id)
+    IPMICONSOLE_CTX_DEBUG(c, ("session id check failed; p = %d; session_id = %X; expected_session_id = %X", p, session_id, expected_session_id));
+  
+  return ((session_id == expected_session_id) ? 1 : 0);
+}
+
+int 
+ipmiconsole_check_network_function(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t netfn, expected_netfn;
+  uint64_t val;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+         || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+  
+  s = &(c->session);
+
+  if (Fiid_obj_get(c,
+		   s->obj_lan_msg_hdr_rs, 
+		   "net_fn",
+		   &val) < 0)
+    return -1;
+  netfn = val;
+  expected_netfn = IPMI_NET_FN_APP_RS;
+  
+  if (netfn != expected_netfn)
+    IPMICONSOLE_CTX_DEBUG(c, ("network function check failed; p = %d; netfn = %X; expected_netfn = %X", p, netfn, expected_netfn));
+
+  return ((netfn == expected_netfn) ? 1 : 0);
+}
+
+int 
+ipmiconsole_check_command(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t cmd, expected_cmd;
+  fiid_obj_t obj_cmd;
+  uint64_t val;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+  
+  s = &(c->session);
+
+  obj_cmd = ipmiconsole_packet_object(c, p);
+  if (Fiid_obj_get(c,
+		   obj_cmd, 
+		   "cmd",
+		   &val) < 0)
+    return -1;
+  cmd = val;
+  
+  if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
+    expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
+  else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS)
+    expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS) 
+    expected_cmd = IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT;
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS) 
+    expected_cmd = IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS;
+  else if (p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS) 
+    expected_cmd = IPMI_CMD_ACTIVATE_PAYLOAD;
+  else if (p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS) 
+    expected_cmd = IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION;
+  else if (p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS) 
+    expected_cmd = IPMI_CMD_DEACTIVATE_PAYLOAD;
+  else /* p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS */  
+    expected_cmd = IPMI_CMD_CLOSE_SESSION;
+    
+  if (cmd != expected_cmd)
+    IPMICONSOLE_CTX_DEBUG(c, ("command check failed; p = %d; cmd = %X; expected_cmd = %X", p, cmd, expected_cmd));
+  
+  return ((cmd == expected_cmd) ? 1 : 0);
+}
+
+int 
+ipmiconsole_check_requester_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t req_seq, expected_req_seq;
+  uint64_t val;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+    
+  s = &(c->session);
+
+  if (Fiid_obj_get(c,
+		   s->obj_lan_msg_hdr_rs, 
+		   "rq_seq",
+		   &val) < 0)
+    return -1;
+  req_seq = val;
+  expected_req_seq = s->requester_sequence_number;
+
+  if (req_seq != expected_req_seq)
+    IPMICONSOLE_CTX_DEBUG(c, ("requester sequence number check failed; p = %d; req_seq = %X; expected_req_seq = %X", p, req_seq, expected_req_seq));
+  
+  return ((req_seq == expected_req_seq) ? 1 : 0);
+}
+
+int 
+ipmiconsole_check_completion_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t comp_code;
+  fiid_obj_t obj_cmd;
+  uint64_t val;
+  
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+	 
+  s = &(c->session);
+
+  obj_cmd = ipmiconsole_packet_object(c, p);
+  if (Fiid_obj_get(c,
+		   obj_cmd, 
+		   "comp_code",
+		   &val) < 0)
+    return -1;
+  comp_code = val;
+
+  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
+    IPMICONSOLE_CTX_DEBUG(c, ("completion code check failed; p = %d; comp_code = %X", p, comp_code));
+
+  return ((comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
+}
+
+int
+ipmiconsole_check_payload_type(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t payload_type, expected_payload_type;
+  uint64_t val;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
+	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
+	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+         || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+
+  s = &(c->session);
+
+  if (Fiid_obj_get(c,
+		   s->obj_rmcpplus_session_hdr_rs, 
+		   "payload_type",
+		   &val) < 0)
+    return -1;
+  payload_type = val;
+
+  if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE)
+    expected_payload_type = IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE;
+  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2)
+    expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2;
+  else if (p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
+    expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4;
+  else if (p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS)
+    expected_payload_type = IPMI_PAYLOAD_TYPE_SOL;
+  else
+    expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
+
+  if (payload_type != expected_payload_type)
+    IPMICONSOLE_CTX_DEBUG(c, ("payload type check failed; p = %d; payload_type = %X; expected_payload_type = %X", p, payload_type, expected_payload_type));
+
+  return ((payload_type == expected_payload_type) ? 1 : 0);
+}
+
+int
+ipmiconsole_check_message_tag(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t message_tag, expected_message_tag;
+  fiid_obj_t obj_cmd;
+  uint64_t val;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
+	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
+	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
+
+  s = &(c->session);
+
+  obj_cmd = ipmiconsole_packet_object(c, p);
+  if (Fiid_obj_get(c,
+		   obj_cmd,
+		   "message_tag",
+		   &val) < 0)
+    return -1;
+  message_tag = val;
+  expected_message_tag = s->message_tag;
+
+  if (message_tag != expected_message_tag)
+    IPMICONSOLE_CTX_DEBUG(c, ("message tag check failed; p = %d", p));
+
+  return ((message_tag == expected_message_tag) ? 1 : 0);
+}
+
+int
+ipmiconsole_check_rmcpplus_status_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t rmcpplus_status_code;
+  uint64_t val;
+  fiid_obj_t obj_cmd;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
+	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
+	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
+
+  s = &(c->session);
+
+  obj_cmd = ipmiconsole_packet_object(c, p); 
+  if (Fiid_obj_get(c,
+		   obj_cmd,
+		   "rmcpplus_status_code",
+		   &val) < 0)
+    return -1;
+  rmcpplus_status_code = val;
+
+  if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
+    IPMICONSOLE_CTX_DEBUG(c, ("rmcpplus status code check failed; p = %d", p));
+
+  return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
+}
+
+int
+ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t privilege;
+  uint64_t val;
+  int rv;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE);
+
+  s = &(c->session);
+
+  if (Fiid_obj_get(c,
+		   s->obj_open_session_response,
+		   "maximum_privilege_level",
+		   &val) < 0)
+    return -1;
+  privilege = val;
+  
+  /* IPMI Workaround
+   *
+   * Intel IPMI 2.0 implementations don't support the highest level privilege.
+   */
+  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+    rv = (privilege == c->privilege_level) ? 1 : 0;
+  else
+    {
+      if (c->privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+          && (privilege == IPMI_PRIVILEGE_LEVEL_USER
+              || privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
+              || privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
+	      || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
+        rv = 1;
+      else if (c->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+               && (privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
+                   || privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
+		   || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
+        rv = 1;
+      else if (c->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+               && (privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
+		   || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
+        rv = 1;
+      else
+        rv = 0;
+    }
+
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("open session response privilege check failed; p = %d", p));
+  
+  return rv; 
+}
+
+int
+ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
+  int32_t managed_system_random_number_len;
+  uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
+  int32_t managed_system_guid_len;
+  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  uint8_t *username;
+  uint32_t username_len;
+  uint8_t *password;
+  uint32_t password_len;
+  uint32_t managed_system_session_id;
+  uint64_t val;
+  int8_t rv;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2);
+
+  s = &(c->session);
+  
+  /* IPMI Workaround
+   *
+   * Intel IPMI 2.0 implementations pad their usernames.
+   */
+  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+    {
+      memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
+      if (strlen((char *)c->username))
+        strcpy((char *)username_buf, (char *)c->username);
+      username = username_buf;
+      username_len = IPMI_MAX_USER_NAME_LENGTH;
+    }
+  else
+    {
+      if (strlen((char *)c->username))
+        username = c->username;
+      else
+        username = NULL;
+      username_len = (username) ? strlen((char *)username) : 0;
+    }
+
+  /* IPMI Workaround
+   * 
+   * Supermicro IPMI 2.0 implementations may have invalid payload lengths
+   * on the RAKP response packet.
+   */
+  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0)
+    {
+      uint8_t keybuf[IPMICONSOLE_PACKET_BUFLEN];
+      int32_t keybuf_len;
+
+      if ((keybuf_len = Fiid_obj_get_data(c,
+					  s->obj_rakp_message_2,
+					  "key_exchange_authentication_code",
+					  keybuf,
+					  IPMICONSOLE_PACKET_BUFLEN)) < 0)
+	return -1;
+
+      if (s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+          && keybuf_len == 1)
+	{
+	  if (Fiid_obj_clear_field(c,
+				   s->obj_rakp_message_2, 
+				   "key_exchange_authentication_code") < 0)
+	    return -1;
+	}
+      else if (s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+               && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
+	{
+	  if (Fiid_obj_set_data(c,
+				s->obj_rakp_message_2,
+				"key_exchange_authentication_code",
+				keybuf,
+				IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
+	    return -1;
+	}
+      else if (s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+               && keybuf_len == (IPMI_HMAC_MD5_DIGEST_LENGTH + 1))
+	{
+	  if (Fiid_obj_set_data(c,
+				s->obj_rakp_message_2,
+				"key_exchange_authentication_code",
+				keybuf,
+				IPMI_HMAC_MD5_DIGEST_LENGTH) < 0)
+	    return -1;
+	}
+    }
+
+  if (strlen((char *)c->password))
+    password = c->password;
+  else
+    password = NULL;
+  password_len = (password) ? strlen((char *)password) : 0;
+
+  /* IPMI Workaround
+   *
+   * Intel IPMI 2.0 implementations improperly calculate HMAC-MD5-128 hashes
+   * when the passwords are > 16 bytes long.  The BMCs probably assume
+   * all keys are <= 16 bytes in length.  So we have to adjust.
+   */
+  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+      && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
+    password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
+
+  if (Fiid_obj_get(c,
+		   s->obj_open_session_response,
+		   "managed_system_session_id",
+		   &val) < 0)
+    return -1;
+  managed_system_session_id = val;
+  
+  if ((managed_system_random_number_len = Fiid_obj_get_data(c,
+							    s->obj_rakp_message_2,
+							    "managed_system_random_number",
+							    managed_system_random_number,
+							    IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+    return -1;
+  if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system random number length: %d", managed_system_random_number_len));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
+  if ((managed_system_guid_len = Fiid_obj_get_data(c,
+						   s->obj_rakp_message_2,
+						   "managed_system_guid",
+						   managed_system_guid,
+						   IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
+    return -1;
+  if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+  
+  if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(s->authentication_algorithm,
+                                                                        password,
+                                                                        password_len,
+                                                                        s->remote_console_session_id,
+                                                                        managed_system_session_id,
+                                                                        s->remote_console_random_number,
+                                                                        IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+                                                                        managed_system_random_number,
+                                                                        managed_system_random_number_len,
+                                                                        managed_system_guid,
+                                                                        managed_system_guid_len,
+                                                                        s->name_only_lookup,
+                                                                        c->privilege_level,
+                                                                        username,
+                                                                        username_len,
+                                                                        s->obj_rakp_message_2)) < 0)
+    IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code: p = %d; %s", p, strerror(errno)));
+  
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("rakp 2 key exchanged authentication code check failed; p = %d", p));
+
+  return ((int)rv);
+}
+
+int
+ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
+  int32_t managed_system_guid_len;
+  uint32_t managed_system_session_id;
+  uint8_t authentication_algorithm = 0;
+  uint64_t val;
+  int8_t rv;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
+
+  s = &(c->session);
+
+  /* IPMI Workaround
+   *
+   * Intel IPMI 2.0 implementations respond with the integrity check
+   * value based on the integrity algorithm rather than the
+   * authentication algorithm.
+   */
+  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+    {
+      if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+        authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
+      else if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+        authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1;
+      else if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+        authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
+      else if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+        /* achu: I have not been able to reverse engineer this.  So accept it */
+        return 1;
+    }
+  else
+    authentication_algorithm = s->authentication_algorithm;
+
+  if (Fiid_obj_get(c,
+		   s->obj_open_session_response,
+		   "managed_system_session_id",
+		   &val) < 0)
+    return -1;
+  managed_system_session_id = val;
+
+  if ((managed_system_guid_len = Fiid_obj_get_data(c,
+						   s->obj_rakp_message_2,
+						   "managed_system_guid",
+						   managed_system_guid,
+						   IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+    return -1;
+  if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
+  if ((rv = ipmi_rmcpplus_check_rakp_4_integrity_check_value(authentication_algorithm,
+                                                             s->sik_key_ptr,
+                                                             s->sik_key_len,
+                                                             s->remote_console_random_number,
+                                                             IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+                                                             managed_system_session_id,
+                                                             managed_system_guid,
+                                                             managed_system_guid_len,
+                                                             s->obj_rakp_message_4)) < 0)
+    IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_rakp_4_integrity_check_value: p = %d; %s", p, strerror(errno)));
+
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("rakp 4 integrity check value check failed; p = %d", p));
+
+  return ((int)rv);
+}
+
+int
+ipmiconsole_check_payload_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  int8_t rv;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+         || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+
+  s = &(c->session);
+
+  if ((rv = ipmi_rmcpplus_check_payload_pad(s->confidentiality_algorithm,
+					    s->obj_rmcpplus_payload_rs)) < 0)
+    IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_payload_pad: p = %d; %s", p, strerror(errno)));
+
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("payload pad check failed; p = %d", p));
+
+  return ((int)rv);
+}
+
+int
+ipmiconsole_check_integrity_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+{
+  struct ipmiconsole_ctx_session *s;
+  int8_t rv;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+  assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
+  assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS 
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS
+         || p == IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
+	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
+
+  s = &(c->session);
+
+  if ((rv = ipmi_rmcpplus_check_integrity_pad(s->obj_rmcpplus_session_trlr_rs)) < 0)
+
+    IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_integrity_pad: p = %d; %s", p, strerror(errno)));
+
+  if (!rv)
+    IPMICONSOLE_CTX_DEBUG(c, ("integrity pad check failed; p = %d", p));
+
+  return ((int)rv);
+}
+

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: secure.h,v 1.1 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: secure.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

@@ -133,6 +133,9 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
 %doc %{_datadir}/doc/%{name}/COPYING.rmcpping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
+%doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
+%{_libdir}/*so.0*
 %{_libdir}/*so.3*
 /var/lib/*
 %{_sbindir}/bmc-autoconfig
@@ -146,6 +149,7 @@ fi
 %{_sbindir}/ipmiping
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
+%{_sbindir}/ipmiconsole
 %{_mandir}/man8/bmc-autoconfig.8*
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
@@ -159,6 +163,8 @@ fi
 %{_mandir}/man8/ipmipower.8*
 %{_mandir}/man5/ipmipower.conf.5*
 %{_mandir}/man8/rmcpping.8*
+%{_mandir}/man8/ipmiconsole.8*
+%{_mandir}/man5/ipmiconsole.conf.5*
 
 %files devel
 %defattr(-,root,root)
@@ -171,6 +177,7 @@ fi
 %{_libdir}/*.so
 %dir %{_includedir}/freeipmi
 %dir %{_includedir}/freeipmi/udm
+%{_includedir}/*.h
 %{_includedir}/freeipmi/*.h
 %{_includedir}/freeipmi/udm/*.h
 

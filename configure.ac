@@ -1,7 +1,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.68 2006-10-06 14:18:04 balamurugan Exp $])
+AC_REVISION([$Id: configure.ac,v 1.69 2006-11-06 00:13:12 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -21,6 +21,8 @@ AC_CONFIG_FILES([
 	libfreeipmi/src/Makefile libfreeipmi/src/udm/Makefile
         bmc-watchdog/Makefile bmc-watchdog/src/Makefile
         ipmipower/Makefile ipmipower/src/Makefile
+	ipmiconsole/Makefile ipmiconsole/src/Makefile
+	ipmiconsole/src/libipmiconsole/Makefile ipmiconsole/src/ipmiconsole/Makefile
         ipmi-raw/Makefile ipmi-raw/src/Makefile 
 	ipmi-raw/ipmi-raw.8.pre
         ipmi-sel/Makefile ipmi-sel/src/Makefile 
@@ -35,6 +37,7 @@ AC_CONFIG_FILES([
         ipmiping/Makefile ipmiping/src/Makefile
         rmcpping/Makefile rmcpping/src/Makefile
         bmc-watchdog/bmc-watchdog.8 ipmipower/ipmipower.8 ipmipower/ipmipower.conf.5
+	ipmiconsole/ipmiconsole.8 ipmiconsole/ipmiconsole.conf.5
         ipmiping/ipmiping.8 rmcpping/rmcpping.8
 	bmc-config/Makefile bmc-config/src/Makefile
 	bmc-config/bmc-config.8.pre bmc-config/bmc-config.conf.5 
@@ -52,6 +55,24 @@ LIBFREEIPMI_VERSION=$LIBFREEIPMI_CURRENT.$LIBFREEIPMI_REVISION.$LIBFREEIPMI_AGE
 AC_SUBST([LIBFREEIPMI_VERSION])
 LIBFREEIPMI_VERSION_INFO=$LIBFREEIPMI_CURRENT:$LIBFREEIPMI_REVISION:$LIBFREEIPMI_AGE
 AC_SUBST([LIBFREEIPMI_VERSION_INFO])
+
+# libipmiconsole versioning
+#
+# If library source code has changed at all increment rev
+# (current:rev:age) = (current:rev+1:age)
+#
+# If any interfaces have been added,removed, or changed increment current
+#  and set rev = 0;
+#
+# If any interfaces have been added increment age
+#
+# If any interfaces have been removed, set age = 0
+#
+LIBIPMICONSOLE_CURRENT=0
+LIBIPMICONSOLE_REVISION=0
+LIBIPMICONSOLE_AGE=0
+LIBIPMICONSOLE_VERSION_INFO=$LIBIPMICONSOLE_CURRENT:$LIBIPMICONSOLE_REVISION:$LIBIPMICONSOLE_AGE
+AC_SUBST([LIBIPMICONSOLE_VERSION_INFO])
 
 AC_CANONICAL_HOST
 
@@ -167,6 +188,8 @@ dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
 AC_CHECK_LIB([m], [exp10])
 AC_CHECK_LIB([m], [exp2])
 AC_CHECK_LIB([m], [log2])
+
+ACX_PTHREAD([], AC_MSG_ERROR([Posix threads required to build libipmiconsole]))
 
 dnl Checks for header files.
 AC_HEADER_STDC

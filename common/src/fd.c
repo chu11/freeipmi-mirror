@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: fd.c,v 1.7 2006-06-26 21:34:57 chu11 Exp $
+ *  $Id: fd.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with ConMan; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  *****************************************************************************
  *  Refer to "fd.h" for documentation on public functions.
  *****************************************************************************/
@@ -35,14 +35,14 @@
 #include <errno.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif /* HAVE_FCNTL_H */
+#endif
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif /* STDC_HEADERS */
+#endif
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif /* HAVE_UNISTD_H */
+#endif
 #include "fd.h"
 
 

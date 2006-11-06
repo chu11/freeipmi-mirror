@@ -1,0 +1,220 @@
+\."#############################################################################
+\."$Id: ipmiconsole.8.in,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2006 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-221226
+\."  
+\."  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL librarie
+\."  and utilities.  For details, see http://www.llnl.gov/linux/.
+\."
+\."  Ipmiconsole is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."  
+\."  Ipmiconsole is distributed in the hope that it will be useful, but WITHOUT 
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+\."  for more details.
+\."  
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
+\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."############################################################################
+.TH ipmiconsole 8 "@ISODATE@" "ipmiconsole @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmiconsole \- IPMI power control utility
+.SH "SYNOPSIS"
+.B ipmiconsole
+.I "[OPTIONS]"
+.SH "DESCRIPTION"
+.B ipmiconsole
+is a Serial-over-LAN (SOL) console utility.  It can be used to establish
+console sessions to remote machines using the IPMI 2.0 SOL protocol.
+
+.SH "IPMI 2.0 SOL"
+.B Ipmiconsole 
+communicates with a remote machine's Baseboard Management Controller
+(BMC) to establish a console session.  Before any SOL communication
+can take place, the remote machine's BMC must be configured properly.
+Of primary importance, the IP address, MAC address, subnet, usernames,
+passwords, privileges, SOL availability, SOL privilege, and SOL user
+access must be configured and enabled.  The FreeIPMI tool
+.B bmc-config(1) 
+may be used to do this configuration.  A BMC configuration tool may
+have also been distributed with the machine.
+
+Often (although not always), console redirection must be directed to
+an alternate COM port.  This is typically configured in the BIOS.
+
+.SH "OPTIONS"
+.TP
+.I "-h, --hostname host"
+Specify the remote host to connect to.
+.TP
+.I "-u, --username name"
+Specify the username to use to establish communication.  If not
+specified, the NULL user is assumed.  The user must have a high enough
+privilege to establish an SOL session.
+.TP
+.I "-p, --password pw"
+Specify the password to use to establish communication.  If not
+specified, a NULL password is assumed.
+.TP
+.I "-k, --k-g str"
+Specify the BMC key to use for authentication.  If not specified, a
+NULL key is assumed.
+.TP
+.I "-l, --privilege str"
+Specify the privilege type to use.  The currently available privilege
+types are "user", "operator", and "admin".  If not specified, a
+privilege of "admin" is assumed.  The privilege must be atleast the
+minimum required by the remote BMC to establish a SOL session.
+.TP
+.I "-c, --cipher-suite-id id"
+Specify the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite ID
+identifies a set of authentication, integrity, and confidentiality
+algorithms to use for IPMI 2.0 communication.  The authentication
+algorithm identifies the algorithm to use for session setup, the
+integrity algorithm identifies the algorithm to use for session packet
+signatures, and the confidentiality algorithm identifies the algorithm
+to use for payload encryption.  If not specified, cipher suite id 3 is
+assumed.
+.sp
+0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
+.sp
+3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
+.sp
+6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
+.sp
+8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
+.sp
+11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None
+.sp
+12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128
+.TP
+.I "-H, --help"
+Output help menu and exit.
+.TP
+.I "-V, --version"
+Output version and exit.
+.TP
+.I "-C, --config file"
+Specify an alternate configuration file.
+.TP
+.I "-I, --intel-2-0-session"
+Modifies the IPMI 2.0 session protocol for non-compliant Intel
+machines.  For more information, see WORKAROUNDS below.
+.TP
+.I "-S, --supermicro-2-0-session"
+Modifies the IPMI 2.0 session protocol for non-compliant Supermicro
+machines.  For more information, see WORKAROUNDS below.
+.if @MANPAGE_DEBUG@ \{
+.TP
+.I "-D, --debug"
+Turn on debugging.
+.TP
+.I "-E, --debugfile"
+Output debugging to the debugfile rather than to standard output.
+.TP
+.I "-F, --debugdump"
+Turn on packet dumps for debugging.
+.TP
+.I "-G, --noraw"
+Don't enter terminal raw mode.
+\}
+.LP
+
+.SH "ESCAPE CHARACTERS"
+The following escape sequences are supported.  The currently supported
+escape character is '&'.
+.TP
+.I &?
+Display a list of currently available escape sequences.
+.TP
+.I &.
+Terminate the connection.
+.TP
+.I &B
+Send a "serial-break" to the remote console.
+.TP
+.I &D
+Send a DEL character.
+.TP
+.I &&
+Send a single escape character.
+
+.SH "WORKAROUNDS"
+As can be expected, with so many different vendors implementing their
+own IPMI solutions, different vendors may implement their IPMI
+protocols slightly differently.  The following lists the handful of
+compliance issues discovered and the workarounds available in 
+.B Ipmiconsole. 
+
+Note that the following only indicates the hardware that a problem was
+discovered on.  Newer versions of a vendors firmware may fix the
+problems indicated below.  Similar machines from vendors may or may
+not exhibit the same problems.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): There are a number of Intel IPMI 2.0 bugs which can be
+worked around using the the -I (--intel-2-0-session) option.  The
+workrarounds include padding of usernames, automatic acceptance of a
+RAKP 4 response integrity check when using the integrity algorith
+MD5-128, and password truncation if the authentication algorithm is
+HMAC-MD5-128.
+
+Supermicro H8QME with SIMSO daughter card: There are several
+Supermicro IPMI 2.0 bugs on early firmware revisions which can be
+worked around using the -S (--supermicro-2-0-session) option.
+
+.SH "TROUBLESHOOTING"
+Most often, problems with ipmiconsole involve a misconfiguration of
+the remote machine's BMC.  Double check to make sure the following are
+configured properly in the remote machine's BMC: IP address, MAC
+address, subnet mask, username(s), password(s), allowed authentication
+type(s), SOL availability, SOL privilege, and SOL access for the
+username you are using.
+
+.SH "KNOWN ISSUES"
+On certain operating systems, if you input your username and password
+on the command line, the username and password may be discovered by
+other users when using the
+.B ps(1) 
+command or looking in the /proc file system.  The most secure solution
+is to leave the username and password in the 
+.B Ipmiconsole
+configuration file.
+
+.if @MANPAGE_DEBUG@ \{
+
+This version of ipmiconsole was compiled with debugging.  When compiled
+with debugging,
+.B ipmiconsole 
+is insecure.  The following were intentionally
+left in
+.B ipmiconsole
+for debugging purposes:
+
+.IP o 2
+Command line arguments are not cleared from memory.
+.IP o
+Core dumps are enabled.
+
+Before placing ipmiconsole in a production system, it is recommended
+that the program be compiled with debugging turned off.
+\}
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.
+.SH "SEE ALSO"
+bmc-config(1), ipmiconsole.conf(5)

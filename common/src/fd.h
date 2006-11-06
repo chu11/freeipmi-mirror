@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: fd.h,v 1.7 2006-09-13 21:23:56 chu11 Exp $
+ *  $Id: fd.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with ConMan; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  *****************************************************************************/
 
 
@@ -33,9 +33,7 @@
 #  include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif

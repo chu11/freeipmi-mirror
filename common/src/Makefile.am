@@ -25,7 +25,8 @@ noinst_LTLIBRARIES = \
 	libmd5.la \
 	libsdr.la \
 	libsensor.la \
-	libxmalloc.la
+	libxmalloc.la \
+	libllnlcommon.la
 
 libargpcommon_la_SOURCES = argp-common.c
 libargpcommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
@@ -58,4 +59,13 @@ libsensor_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 libxmalloc_la_SOURCES = xmalloc.c
 libxmalloc_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
+
+libllnlcommon_la_SOURCES = \
+	cbuf.c \
+	conffile.c \
+	fd.c \
+	list.c \
+	secure.c \
+	timeval.c
+
 

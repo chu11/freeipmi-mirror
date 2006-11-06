@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.c,v 1.10 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: conffile.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,7 +26,7 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif /* HAVE_CONFIG_H */
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
