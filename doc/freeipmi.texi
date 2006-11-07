@@ -49,7 +49,7 @@ release @value{VERSION} of the GNU FreeIPMI.
 @menu
 * Introduction::                Introduction to the GNU FreeIPMI system.
 * Installation::                Installing the software.
-* libfreeipmi::                 High-level C library for @acronym{IPMI}
+* libfreeipmi::                 C library for @acronym{IPMI}
 * ipmi-locate::                 @acronym{IPMI} device probing tool.
 * bmc-config::                  Baseboard Management Controller configurator.
 * bmc-info::                    Baseboard Management Controller information.
@@ -269,14 +269,14 @@ please refer to @ref{Trouble-shooting}@.
 @chapter @acronym{IPMI} C library (libfreeipmi)
 @pindex libfreeipmi
 
-The Core of GNU FreeIPMI system consists of LAN, KCS, and SSIF system
-interface device drivers, all packaged in a single portable C
+The Core of the GNU FreeIPMI system consists of LAN, OpenIPMI, KCS, and SSIF 
+interface drivers, all packaged in a single portable C
 library.  Management applications can access the BMC at various levels 
-using higher level @acronym{IPMI} command APIs or raw read/write interface to
-the driver. 
+using higher level @acronym{IPMI} command APIs or raw read/write interfaces to
+the drivers.
 
-Library internally uses DMI, SMBIOS, PCI, and ACPI drivers to locate
-the system interfaces.
+The library internally uses DMI, SMBIOS, PCI, and ACPI drivers to
+locate the system interfaces.
 
 @c If you want to develop your own remote-console or
 @c system-management-software or integrate @acronym{IPMI} functionality into your
@@ -286,7 +286,7 @@ the system interfaces.
 @node ipmi-locate, bmc-config, libfreeipmi, Top
 @chapter @acronym{ipmi-locate} IPMI device probing tool
 @pindex ipmi-locate
-@command{ipmi-locate} tool tries to probe and display
+The @command{ipmi-locate} tool tries to probe and display
 @acronym{KCS}/@acronym{SMIC}/@acronym{BT}/@acronym{SSIF}
 @acronym{IPMI} device interface informations by using various probing
 techniques.  The tool also displays default values of @acronym{IPMI}
@@ -2956,8 +2956,9 @@ debian-ia64:~#
 @node Kernel Driver conflict,  , IPC key conflict, Trouble-shooting
 @section Kernel Driver conflict
 @cindex Kernel Driver conflict
-All the device drivers are completely written in user-space.  If you
-already have any in-kernel @acronym{IPMI} drivers loaded, unload them
+Many of the the device drivers are completely written in user-space.  If you
+already have in-kernel @acronym{IPMI} drivers loaded, they may conflict
+with FreeIPMI's drivers.  You may need unload them
 before you launch any GNU FreeIPMI utility.
 
 @node Contact us, Authors, Trouble-shooting, Top
