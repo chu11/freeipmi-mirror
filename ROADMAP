@@ -1,46 +1,22 @@
-Release 0.3.0
--------------
-Zresearch team:
-   Scheme -> C ipmi-sel
-   Scheme -> C ipmi-sensors
-   Scheme -> C bmc-config
-
-Al:
-   * libfreeipmi audit/cleanup
-   * libfreeipmi ipmi 2.0 support
-   * libfreeipmi kcs/ssif api
-   * ipmipower ipmi 2.0 support
-   * rmcpping ipmi 2.0 support
-   * bmc-config ipmi 2.0 support  
-
 Release 0.4.0
 -------------
-AB:
-   * Yet to start:
-     - BT driver.
-Bala:
-   * Yet to start:
-     - FRU sub system
-     - SDR utility to checkout, manipulate and commit.
-     - SOL daemon (sold) for IPMI-2.0.
-     - PEF primitives and PEF utility.
 
-Release 0.1.0
--------------
-AB:
-   Hackers Guide.
+ipmi-pef
+- assignement: Bala
+- Blocker for Release: Yes
 
-Release 0.2.0
--------------
-AB:
-    - SMBus/SSIF Driver.
-    - Unified Driver Model: Single API set for all in-band and
-      out-of-band drivers.
-Bala:
-    - Sensors rewrite.
-    - bmc-config code cleanup.
-    - old bmc-config code removal.
-    - bmc-config --auto and --expert modes.
-    - Adopt the the unified driver model for all APIs. This will make
-      all GNU FreeIPMI tools work for both in-band and out-of-band
-      interfaces.
+block transfer interface
+- assignment: A.B. (?)
+- Blocker for Release: (?)
+- Deadline for Inclusion: (?)
+
+FRU sub-system
+- assignment: (?)
+- Blocker for Release: (?)
+- Deadline for Inclusion: (?)
+
+Testsuite
+- assignment: (?)
+- Blocker for Release: No
+- Deadline for Inclusion: (?)
+

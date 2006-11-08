@@ -1,22 +1,3 @@
-0.3.0
-=====
-X A) ipmi-sensors: scheme to C conversion (done by bala)
-X A-1): SDR cache format (done by bala)
-X B) bmc-autoconfig: fixed for new bmc-config (assigned: anand)
-X C) ipmi-sel: proper trigger output fix (done by achu)
-X D) Remove Fish (done by achu)
-X E) debug dumping for all tools (done by achu)
-  F) including ipmiconsole + libipmiconsole (assigned: achu)
-X G) RPM repackaging (done by achu)
-  G-1) ipmiconsole/libipmiconsole (assigned: achu)
-X H) OpenIPMI inband driver suppport (done by achu)
-- I) doc/freeipmi.texi
-X I-1) ipmi-sensors update (done by achu)
-X I-2) bmc-config update (done by achu)
-X       - --section && --listsections stuff
-X I-3) bmc-autoconfig options (assigned: anyone)
-  J) run through memory debugger (assigned: anand)
-
 AB's TODO list
 ==============
 libfreeipmi:
@@ -47,13 +28,9 @@ libfreeipmi:
   * how to support xRC4
   * get event messages function that is passed fiids
 
-ipmipower
----------
-  * compile options to make workarounds automatic for ipmipower
-
-General:
---------
-  * sel aggregator
+Vendor Workarounds
+------------------
+  * compile options to make workarounds automatic for ipmipower/ipmiconsole
 
 Autoconf/Portability
 --------------------
