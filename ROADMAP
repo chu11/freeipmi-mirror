@@ -4,16 +4,26 @@ Release 0.4.0
 ipmi-pef
 - assignement: Bala
 - Blocker for Release: Yes
-
-block transfer interface
-- assignment: A.B. (?)
-- Blocker for Release: (?)
-- Deadline for Inclusion: (?)
+- Tasks:
+  - Better --checkout options/capability
+  - Commit check rules
 
 FRU sub-system
 - assignment: (?)
-- Blocker for Release: (?)
+- Blocker for Release: Yes (?)
+
+block transfer interface
+- assignment: A.B. (?)
+- Blocker for Release: No (?)
 - Deadline for Inclusion: (?)
+
+Hostrange Support to tools
+- assigned: (?)
+- Blocker for Release: No (?)
+- Deadline for Inclusion: (?)
+- Tasks:
+  - Remove globals from ipmi-sensors, ipmi-sel
+  - Create thread-library and integrate
 
 Testsuite
 - assignment: (?)
