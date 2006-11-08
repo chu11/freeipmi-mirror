@@ -9,7 +9,11 @@ ipmi-pef
   - Commit check rules
 
 FRU sub-system
-- assignment: (?)
+- assignment: Bala (?)
+- Blocker for Release: Yes (?)
+
+SDR manipulation utility
+- assignment: Bala (?)
 - Blocker for Release: Yes (?)
 
 block transfer interface
@@ -18,7 +22,7 @@ block transfer interface
 - Deadline for Inclusion: (?)
 
 Hostrange Support to tools
-- assigned: (?)
+- assigned: Al (?)
 - Blocker for Release: No (?)
 - Deadline for Inclusion: (?)
 - Tasks:
