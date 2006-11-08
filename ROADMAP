@@ -8,13 +8,15 @@ ipmi-pef
   - Better --checkout options/capability
   - Commit check rules
 
-FRU sub-system
-- assignment: Bala (?)
-- Blocker for Release: Yes (?)
-
 SDR manipulation utility
 - assignment: Bala (?)
-- Blocker for Release: Yes (?)
+- Blocker for Release: No (?)
+- Deadline for Inclusion: (?)
+
+FRU sub-system
+- assignment: Bala (?)
+- Blocker for Release: No (?)
+- Deadline for Inclusion: (?)
 
 block transfer interface
 - assignment: A.B. (?)
