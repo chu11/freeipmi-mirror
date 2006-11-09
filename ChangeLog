@@ -1,3 +1,10 @@
+2006-11-09  Anand Babu  <ab@zresearch.com>
+
+	* doc/freeipmi.texi, doc/freeipmi-faq.texi: updated copying
+	section as per latest GNU Evaluation Team's recommendation.
+	
+	* doc/permissions.texi: removed.
+
 2006-11-06  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi.texi, doc/freeipmi-faq.texi: Various updates.

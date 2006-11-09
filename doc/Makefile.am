@@ -4,8 +4,8 @@ EXTRA_DIST = BUGS freeipmi-hackers-intro.odp ipmi-network-layout.fig ipmi-over-t
 
 #  build and install the .info pages
 info_TEXINFOS = freeipmi.texi freeipmi-faq.texi
-freeipmi_TEXINFOS = authors.texi gpl.texi fdl.texi permissions.texi
-freeipmi_faq_TEXINFOS = permissions.texi
+freeipmi_TEXINFOS = authors.texi gpl.texi fdl.texi
+freeipmi_faq_TEXINFOS = 
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 
