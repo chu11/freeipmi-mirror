@@ -8,15 +8,34 @@
 
 @include version-doc.texi
 
+@copying
+This manual is for GNU Garpd (version @value{VERSION}, @value{UPDATED}).
+Copyright @copyright{} 2006 Z RESEARCH, Inc.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
+and with the Back-Cover Texts as in (a) below.  A copy of the license
+is included in the section entitled ``GNU Free Documentation
+License.''
+
+(a) The FSF's Back-Cover Text is: ``You have freedom to copy and
+modify this GNU Manual, like GNU software.  Copies published by the
+Free Software Foundation raise funds for GNU development.''
+@end quotation
+@end copying
+
 @dircategory Platform Management
 @direntry
 * GNU FreeIPMI: (freeipmi).  GNU FreeIPMI User's Guide 
 @end direntry
 
 @ifinfo
-Copyright @copyright{} 2002-2004 FreeIPMI Core Team.
+Copyright @copyright{} 2002-2006 FreeIPMI Core Team.
 
-@include permissions.texi
+@insertcopying
 @end ifinfo
 
 @titlepage
@@ -27,9 +46,7 @@ Copyright @copyright{} 2002-2004 FreeIPMI Core Team.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2004 FreeIPMI Core Team
-
-@include permissions.texi
+@insertcopying
 @end titlepage
 
 @node Top, Introduction, (dir), (dir)
