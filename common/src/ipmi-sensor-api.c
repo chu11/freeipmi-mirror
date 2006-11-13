@@ -384,7 +384,8 @@ get_sensor_reading (ipmi_device_t dev,
       
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, "sensor_reading", &val);
 
-      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
+	  && sdr_record->record_type != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
 	{
 	  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent, 
 						   b_exponent, 
@@ -440,7 +441,8 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, "sensor_reading", &val);
 
-      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
+	  && sdr_record->record_type != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
 	{
 	  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent, 
 						   b_exponent, 
@@ -496,7 +498,8 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, "sensor_reading", &val);
 
-      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
+      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
+	  && sdr_record->record_type != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
 	{
 	  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent, 
 						   b_exponent, 

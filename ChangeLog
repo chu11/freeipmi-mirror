@@ -2,9 +2,11 @@
 
 	* configure.ac: We are now at 0.4.beta0.
 
-	* ipmi-sensors/src/Makefile.am: Add libsdr dependency check.
+	* ipmi-sensors/src/Makefile.am: Add libsdr and libsensor dependency check.
 
 	* common/src/ipmi-sdr-api.c (_get_sdr_full_record): Fix corner case.
+
+	* common/src/ipmi-sensor-api.c (get_sensor_reading): Fix corner cases.
 
 	* include/freeipmi/ipmi-sdr-record-types.h: Add additional analog
 	format define.
