@@ -5,6 +5,9 @@
 	* ipmi-sensors/src/Makefile.am: Add libsdr dependency check.
 
 	* common/src/ipmi-sdr-api.c (_get_sdr_full_record): Fix corner case.
+
+	* include/freeipmi/ipmi-sdr-record-types.h: Add additional analog
+	format define.
 	
 2006-11-09  Anand Babu  <ab@zresearch.com>
 
