@@ -1,3 +1,7 @@
+2006-11-13  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: We are now at 0.4.beta0.
+	
 2006-11-09  Anand Babu  <ab@zresearch.com>
 
 	* doc/freeipmi.texi, doc/freeipmi-faq.texi: updated copying
