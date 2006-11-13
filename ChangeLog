@@ -1,5 +1,7 @@
 2006-11-13  Albert Chu <chu11@llnl.gov>
 
+	* configure.ac, freeipmi.spec.in: Prepare for release.
+
 	* Release-0_3_0
 	
 2006-11-09  Anand Babu  <ab@zresearch.com>
