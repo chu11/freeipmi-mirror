@@ -1068,7 +1068,6 @@ _get_sdr_record (ipmi_device_t dev,
   FIID_OBJ_GET_CLEANUP (obj_sdr_record, "record_type", &val);
   sdr_record->record_type = val;
 
-  printf("record_type = %X\n", sdr_record->record_type);
   switch (sdr_record->record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
