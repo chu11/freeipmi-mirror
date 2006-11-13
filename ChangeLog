@@ -1,5 +1,16 @@
 2006-11-13  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/src/Makefile.am: Add libsdr and libsensor dependency check.
+
+        * common/src/ipmi-sdr-api.c (_get_sdr_full_record): Fix corner case.
+
+	* common/src/ipmi-sensor-api.c (get_sensor_reading): Fix corner cases.
+
+        * include/freeipmi/ipmi-sdr-record-types.h: Add additional analog
+        format define.
+	
+2006-11-13  Albert Chu <chu11@llnl.gov>
+
 	* configure.ac, freeipmi.spec.in: Prepare for release.
 
 	* Release-0_3_0

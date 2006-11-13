@@ -493,7 +493,7 @@ _get_sdr_full_record (uint8_t *sdr_record_data,
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_full_sensor_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj,sdr_record_data, sdr_record_data_len);
- 
+
   ERR_CLEANUP (!(_get_decode_parameters (obj,
                                          &analog_data_format,
                                          &r_exponent,
@@ -524,59 +524,64 @@ _get_sdr_full_record (uint8_t *sdr_record_data,
   sdr_full_record->sensor_unit = val;
   
   FIID_OBJ_GET_CLEANUP (obj, "nominal_reading", &val);
-  
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->nominal_reading)) < 0));
+
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->nominal_reading)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "normal_minimum", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->normal_minimum)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->normal_minimum)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "normal_maximum", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->normal_maximum)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->normal_maximum)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "sensor_minimum_reading", &val);
   
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->sensor_minimum_reading)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->sensor_minimum_reading)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "sensor_maximum_reading", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->sensor_maximum_reading)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->sensor_maximum_reading)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "negative_going_threshold_hysteresis", &val);
   sdr_full_record->negative_going_threshold_hysteresis = val;
@@ -586,69 +591,75 @@ _get_sdr_full_record (uint8_t *sdr_record_data,
   
   FIID_OBJ_GET_CLEANUP (obj, "lower_non_recoverable_threshold", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->lower_non_recoverable_threshold)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->lower_non_recoverable_threshold)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "upper_non_recoverable_threshold", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->upper_non_recoverable_threshold)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->upper_non_recoverable_threshold)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "lower_critical_threshold", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->lower_critical_threshold)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->lower_critical_threshold)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "upper_critical_threshold", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->upper_critical_threshold)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->upper_critical_threshold)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "lower_non_critical_threshold", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->lower_non_critical_threshold)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->lower_non_critical_threshold)) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj, "upper_non_critical_threshold", &val);
 
-  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
-					   b_exponent,
-					   m,
-					   b,
-					   linear,
-					   analog_data_format,
-					   val,
-					   &(sdr_full_record->upper_non_critical_threshold)) < 0));
+  if (analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
+    ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent,
+					     b_exponent,
+					     m,
+					     b,
+					     linear,
+					     analog_data_format,
+					     val,
+					     &(sdr_full_record->upper_non_critical_threshold)) < 0));
 
   memset(sdr_full_record->sensor_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
