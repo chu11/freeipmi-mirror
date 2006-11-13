@@ -1,3 +1,8 @@
+0.3.1
+-----
+
+o ipmi-sensors: Fix SDR parsing corner case bugs.
+
 0.3.0
 -----
 

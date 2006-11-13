@@ -8,6 +8,8 @@
 
         * include/freeipmi/ipmi-sdr-record-types.h: Add additional analog
         format define.
+
+	* NEWS: Updated with merge changes.
 	
 2006-11-13  Albert Chu <chu11@llnl.gov>
 
