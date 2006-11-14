@@ -441,22 +441,7 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, "sensor_reading", &val);
 
-      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
-	  && analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
-	{
-	  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent, 
-						   b_exponent, 
-						   m, 
-						   b, 
-						   linear, 
-						   analog_data_format, 
-						   (uint8_t) val,
-						   &(sensor_reading->current_reading)) < 0));
-	}
-      else 
-	{
-	  sensor_reading->current_reading = val;
-	}
+      sensor_reading->current_reading = val;
       
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
 			    "reading_state", 
@@ -498,22 +483,7 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, "sensor_reading", &val);
 
-      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
-	  && analog_data_format != IPMI_SDR_ANALOG_DATA_FORMAT_NOT_ANALOG)
-	{
-	  ERR_CLEANUP (!(ipmi_sensor_decode_value (r_exponent, 
-						   b_exponent, 
-						   m, 
-						   b, 
-						   linear, 
-						   analog_data_format, 
-						   (uint8_t) val,
-						   &(sensor_reading->current_reading)) < 0));
-	}
-      else 
-	{
-	  sensor_reading->current_reading = val;
-	}
+      sensor_reading->current_reading = val;
       
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
 			    "reading_state", 
