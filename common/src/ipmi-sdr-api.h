@@ -184,7 +184,7 @@ int setup_sdr_cache_directory ();
 
 int flush_sdr_cache_file (char *host, char *user_cache_dir);
 
-int create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose);
+int create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose, int debug);
 
 int load_sdr_cache (FILE *fp, sdr_repository_info_t *sdr_info, 
 		    sdr_record_t **sdr_record_list, int *count);

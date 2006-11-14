@@ -1,5 +1,11 @@
 2006-11-13  Albert Chu <chu11@llnl.gov>
 
+	* common/src/ipmi-sdr-api.h, common/src/ipmi-sdr-api.c,
+	ipmi-sel/src/ipmi-sel.c, ipmi-sensors/src/ipmi-sensors.c: Add SDR
+	debugging.
+	
+2006-11-13  Albert Chu <chu11@llnl.gov>
+
 	* configure.ac: We are now at 0.4.beta0.
 
 	* ipmi-sensors/src/Makefile.am: Add libsdr and libsensor dependency check.

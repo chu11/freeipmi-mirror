@@ -476,7 +476,8 @@ _get_decode_parameters (fiid_obj_t obj,
 static void 
 _get_sdr_full_record (uint8_t *sdr_record_data, 
                       uint32_t sdr_record_data_len,
-                      sdr_full_record_t *sdr_full_record)
+                      sdr_full_record_t *sdr_full_record,
+                      int debug)
 {
   uint64_t val;
   
@@ -493,6 +494,18 @@ _get_sdr_full_record (uint8_t *sdr_record_data,
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_full_sensor_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj,sdr_record_data, sdr_record_data_len);
+
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR FULL RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
 
   ERR_CLEANUP (!(_get_decode_parameters (obj,
                                          &analog_data_format,
@@ -675,7 +688,8 @@ _get_sdr_full_record (uint8_t *sdr_record_data,
 static void 
 _get_sdr_compact_record (uint8_t *sdr_record_data, 
                          uint32_t sdr_record_data_len,
-                         sdr_compact_record_t *sdr_compact_record)
+                         sdr_compact_record_t *sdr_compact_record,
+                         int debug)
 {
   uint64_t val;
   
@@ -686,6 +700,18 @@ _get_sdr_compact_record (uint8_t *sdr_record_data,
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_compact_sensor_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
+
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR COMPACT RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
 
   FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id", &val);
   sdr_compact_record->sensor_owner_id = val;
@@ -722,7 +748,8 @@ _get_sdr_compact_record (uint8_t *sdr_record_data,
 static void 
 _get_sdr_event_only_record (uint8_t *sdr_record_data, 
                             uint32_t sdr_record_data_len,
-                            sdr_event_only_record_t *sdr_event_only_record)
+                            sdr_event_only_record_t *sdr_event_only_record,
+                            int debug)
 {
   uint64_t val;  
   fiid_obj_t obj = NULL;
@@ -733,6 +760,18 @@ _get_sdr_event_only_record (uint8_t *sdr_record_data,
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
   
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR EVENT ONLY RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
+
   FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id", &val);
   sdr_event_only_record->sensor_owner_id = val;
   
@@ -759,7 +798,8 @@ _get_sdr_event_only_record (uint8_t *sdr_record_data,
 static void 
 _get_sdr_entity_association_record (uint8_t *sdr_record_data, 
                                     uint32_t sdr_record_data_len,
-                                    sdr_entity_association_record_t *sdr_entity_association_record)
+                                    sdr_entity_association_record_t *sdr_entity_association_record,
+                                    int debug)
 {
   uint64_t val;
   fiid_obj_t obj = NULL;
@@ -769,6 +809,18 @@ _get_sdr_entity_association_record (uint8_t *sdr_record_data,
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_entity_association_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
+
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR ENTITY ASSOCIATION RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
 
   FIID_OBJ_GET_CLEANUP (obj, "container_entity_id", &val);
   sdr_entity_association_record->container_entity_id = val;
@@ -784,7 +836,8 @@ _get_sdr_entity_association_record (uint8_t *sdr_record_data,
 static void 
 _get_sdr_generic_device_locator_record (uint8_t *sdr_record_data, 
                                         uint32_t sdr_record_data_len,
-                                        sdr_generic_device_locator_record_t *sdr_generic_device_locator_record)
+                                        sdr_generic_device_locator_record_t *sdr_generic_device_locator_record,
+                                        int debug)
 {
   uint64_t val;
   fiid_obj_t obj = NULL;
@@ -795,6 +848,18 @@ _get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
    
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR GENERIC DEVICE LOCATOR RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
+
   FIID_OBJ_GET_CLEANUP (obj, "direct_access_address", &val);
   sdr_generic_device_locator_record->direct_access_address = val;
   
@@ -839,7 +904,8 @@ _get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
 static void 
 _get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data, 
                                             uint32_t sdr_record_data_len,
-                                            sdr_logical_fru_device_locator_record_t *sdr_logical_fru_device_locator_record)
+                                            sdr_logical_fru_device_locator_record_t *sdr_logical_fru_device_locator_record,
+                                            int debug)
 {
   uint64_t val;
   fiid_obj_t obj = NULL;
@@ -850,6 +916,18 @@ _get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
   
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR LOGICAL FRU DEVICE LOCATOR RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
+
   FIID_OBJ_GET_CLEANUP (obj, "device_type", &val);
   sdr_logical_fru_device_locator_record->device_type = val;
   
@@ -876,7 +954,8 @@ _get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
 static void 
 _get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data, 
                                                       uint32_t sdr_record_data_len,
-                                                      sdr_management_controller_device_locator_record_t *sdr_management_controller_device_locator_record)
+                                                      sdr_management_controller_device_locator_record_t *sdr_management_controller_device_locator_record,
+                                                      int debug)
 {
   uint64_t val;
   fiid_obj_t obj = NULL;
@@ -886,6 +965,18 @@ _get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data,
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_management_controller_device_locator_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
+
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR MANAGEMENT CONTROLLER DEVICE LOCATOR RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
 
   FIID_OBJ_GET_CLEANUP (obj, "entity_id", &val);
   sdr_management_controller_device_locator_record->entity_id = val;
@@ -907,7 +998,8 @@ _get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data,
 static void 
 _get_sdr_oem_record (uint8_t *sdr_record_data, 
                      uint32_t sdr_record_data_len,
-                     sdr_oem_record_t *sdr_oem_record)
+                     sdr_oem_record_t *sdr_oem_record,
+                     int debug)
 {
   uint64_t val;
   fiid_obj_t obj = NULL;
@@ -918,6 +1010,18 @@ _get_sdr_oem_record (uint8_t *sdr_record_data,
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_oem_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
+
+#ifndef NDEBUG
+  if (debug)
+    {
+      char *hdr = 
+        "================================================\n"
+        "SDR OEM RECORD\n"
+        "================================================";
+
+      ipmi_obj_dump_perror(STDERR_FILENO, NULL, hdr, NULL, obj);
+    }
+#endif /* NDEBUG */
 
   FIID_OBJ_GET_CLEANUP (obj, "manufacturer_id", &val);
   sdr_oem_record->manufacturer_id = val;
@@ -1042,7 +1146,8 @@ static int
 _get_sdr_record (ipmi_device_t dev, 
                  uint16_t record_id, 
                  uint16_t *next_record_id, 
-                 sdr_record_t *sdr_record)
+                 sdr_record_t *sdr_record,
+                 int debug)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t obj_sdr_record = NULL;
@@ -1084,7 +1189,8 @@ _get_sdr_record (ipmi_device_t dev,
     case IPMI_SDR_FORMAT_FULL_RECORD:
       _get_sdr_full_record (sensor_record,
                             sensor_record_len,
-                            &(sdr_record->record.sdr_full_record));
+                            &(sdr_record->record.sdr_full_record),
+                            debug);
   
 
       /* 0x01 == THRESHOLD sensor class */
@@ -1128,37 +1234,44 @@ _get_sdr_record (ipmi_device_t dev,
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       _get_sdr_compact_record (sensor_record,
                                sensor_record_len,
-                               &(sdr_record->record.sdr_compact_record));
+                               &(sdr_record->record.sdr_compact_record),
+                               debug);
       break;
     case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
       _get_sdr_event_only_record (sensor_record,
                                   sensor_record_len,
-                                  &(sdr_record->record.sdr_event_only_record));
+                                  &(sdr_record->record.sdr_event_only_record),
+                                  debug);
       break;
     case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
       _get_sdr_entity_association_record (sensor_record,
                                           sensor_record_len,
-                                          &(sdr_record->record.sdr_entity_association_record));
+                                          &(sdr_record->record.sdr_entity_association_record),
+                                          debug);
       break;
     case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
       _get_sdr_generic_device_locator_record (sensor_record,
                                               sensor_record_len,
-                                              &(sdr_record->record.sdr_generic_device_locator_record));
+                                              &(sdr_record->record.sdr_generic_device_locator_record),
+                                              debug);
       break;
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
       _get_sdr_logical_fru_device_locator_record (sensor_record,
                                                   sensor_record_len,
-                                                  &(sdr_record->record.sdr_logical_fru_device_locator_record));
+                                                  &(sdr_record->record.sdr_logical_fru_device_locator_record),
+                                                  debug);
       break;
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       _get_sdr_management_controller_device_locator_record (sensor_record,
                                                             sensor_record_len,
-                                                            &(sdr_record->record.sdr_management_controller_device_locator_record));
+                                                            &(sdr_record->record.sdr_management_controller_device_locator_record),
+                                                            debug);
       break;
     case IPMI_SDR_FORMAT_OEM_RECORD:
       _get_sdr_oem_record (sensor_record,
                            sensor_record_len,
-                           &(sdr_record->record.sdr_oem_record));
+                           &(sdr_record->record.sdr_oem_record),
+                           debug);
       break;
     case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
@@ -1184,7 +1297,10 @@ _get_sdr_record (ipmi_device_t dev,
 }
 
 int 
-create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose)
+create_sdr_cache (ipmi_device_t dev, 
+                  FILE *fp, 
+                  int verbose,
+                  int debug)
 {
   sdr_repository_info_t sdr_info;
 
@@ -1238,7 +1354,8 @@ create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose)
 	if (_get_sdr_record (dev, 
 			     record_id, 
 			     &next_record_id, 
-			     &sdr_record) == -1)
+			     &sdr_record,
+                             debug) == -1)
 	  {
 	    if (verbose)
 	      {

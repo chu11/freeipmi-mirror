@@ -103,7 +103,11 @@ init_sdr_cache (ipmi_device_t dev, struct arguments *args)
   
   if ((fp = fopen (sdr_cache_filename, "w")))
     {
-      rv = create_sdr_cache (dev, fp, 1);
+#ifndef NDEBUG
+      rv = create_sdr_cache (dev, fp, 1, args->common.debug);
+#else  /* NDEBUG */
+      rv = create_sdr_cache (dev, fp, 1, 0);
+#endif /* NDEBUG */
       fclose (fp);
       if (rv)
         {
