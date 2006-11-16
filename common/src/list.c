@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: list.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: list.c,v 1.1.2.1 2006-11-16 21:31:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -776,15 +776,20 @@ list_alloc_aux (int size, void *pfreelist)
  *  Memory is added to the freelist in chunks of size LIST_ALLOC.
  *  Returns a ptr to the object, or NULL if the memory request fails.
  */
+#if 0
     void **px;
     void **pfree = pfreelist;
     void **plast;
+#else
+    void *ptr;
+#endif
 
     assert(sizeof(char) == 1);
     assert(size >= sizeof(void *));
     assert(pfreelist != NULL);
     assert(LIST_ALLOC > 0);
     list_mutex_lock(&list_free_lock);
+#if 0
     if (!*pfree) {
         if ((*pfree = malloc(LIST_ALLOC * size))) {
             px = *pfree;
@@ -798,8 +803,16 @@ list_alloc_aux (int size, void *pfreelist)
         *pfree = *px;
     else
         errno = ENOMEM;
+#else
+    if (!(ptr = malloc(size)))
+      errno = ENOMEM;
+#endif
     list_mutex_unlock(&list_free_lock);
+#if 0
     return(px);
+#else
+    return(ptr);
+#endif
 }
 
 
@@ -808,14 +821,20 @@ list_free_aux (void *x, void *pfreelist)
 {
 /*  Frees the object [x], returning it to the freelist [*pfreelist].
  */
+#if 0
     void **px = x;
     void **pfree = pfreelist;
+#endif
 
     assert(x != NULL);
     assert(pfreelist != NULL);
     list_mutex_lock(&list_free_lock);
+#if 0
     *px = *pfree;
     *pfree = px;
+#else
+    free(x);
+#endif
     list_mutex_unlock(&list_free_lock);
     return;
 }

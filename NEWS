@@ -3,6 +3,8 @@
 
 o ipmi-sensors: Fix SDR parsing corner case bugs.
 
+o ipmipower, ipmiconsole: Fix mem-leak possibility.
+
 0.3.0
 -----
 
