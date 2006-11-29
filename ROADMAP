@@ -19,10 +19,12 @@ ipmi-fru
 ipmi-device
 - Assignment: Avati
 
-Unknown/Future:
----------------
+Future
+------
 
 Hostrange Support in Tools
+- Assignment: Al
 
 Testsuite
+- Assignment: Al
 
