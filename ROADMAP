@@ -2,37 +2,27 @@ Release 0.4.0
 -------------
 
 ipmi-pef
-- assignement: Bala
-- Blocker for Release: Yes
+- Assignment: Bala
 - Tasks:
-  - Better --checkout options/capability
-  - Commit check rules
+  - Bmc-config like checkout/commit
+  - Commit check verification
 
-SDR manipulation utility
-- assignment: Bala (?)
-- Blocker for Release: No (?)
-- Deadline for Inclusion: (?)
 
-FRU sub-system
-- assignment: Bala (?)
-- Blocker for Release: No (?)
-- Deadline for Inclusion: (?)
+Release 0.5.0
+-------------
+ipmi-sdr
+- Assignment: Bala
 
-block transfer interface
-- assignment: A.B. (?)
-- Blocker for Release: No (?)
-- Deadline for Inclusion: (?)
+ipmi-fru
+- Assignment: Bala
 
-Hostrange Support to tools
-- assigned: Al (?)
-- Blocker for Release: No (?)
-- Deadline for Inclusion: (?)
-- Tasks:
-  - Remove globals from ipmi-sensors, ipmi-sel
-  - Create thread-library and integrate
+ipmi-device
+- Assignment: Avati
+
+Unknown/Future:
+---------------
+
+Hostrange Support in Tools
 
 Testsuite
-- assignment: (?)
-- Blocker for Release: No
-- Deadline for Inclusion: (?)
 
