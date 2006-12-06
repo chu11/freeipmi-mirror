@@ -10,8 +10,6 @@
 	* ipmiconsole/ipmiconsole.8.in: Fix typo in bmc-config manpage
 	section.
 
-	* ipmiconsole/src/ipmiconsole.c (main): Fix data clear bug.
-	
 2006-11-16  Albert Chu <chu11@llnl.gov>
 
 	* common/src/list.c (list_alloc_aux, list_free_aux): Fix potential
