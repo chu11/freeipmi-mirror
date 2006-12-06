@@ -1,3 +1,7 @@
+2006-12-06  Albert Chu <chu11@llnl.gov>
+	
+	* ipmiconsole/src/ipmiconsole.c (main): Fix data clear bug.
+	
 2006-11-16  Albert Chu <chu11@llnl.gov>
 
 	* common/src/list.c (list_alloc_aux, list_free_aux): Fix potential
