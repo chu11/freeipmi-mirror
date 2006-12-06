@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.2 2006-12-06 22:11:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -292,6 +292,12 @@ main(int argc, char **argv)
 
   _secure_initialization();
   ipmiconsole_config_setup(argc, argv);
+
+#ifdef NDEBUG
+  /* Clear out argv data for security purposes on ps(1). */
+  for (i = 1; i < argc; i++)
+    memset(argv[i], '\0', strlen(argv[i]));
+#endif /* NDEBUG */
 
 #ifndef NDEBUG
   if (conf->debug)
