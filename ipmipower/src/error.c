@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.c,v 1.8 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: error.c,v 1.9 2006-12-06 19:26:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -234,11 +234,13 @@ void err_output(const char *fmt, ...)
  */
 void dbg(const char *fmt, ...)
 {
+#ifndef NDEBUG
     va_list ap;
 
     va_start(ap, fmt);
     _verr(LOG_DEBUG, fmt, ap);
     va_end(ap);
+#endif /* !NDEBUG */
 }
 
 /* Error routines for cbuf.c, list.c, wrappers.c

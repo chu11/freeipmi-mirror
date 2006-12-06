@@ -1,3 +1,12 @@
+2006-12-06  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/error.c (dbg): Do not compile if debugging is not
+	compiled in.
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue),
+	ipmipower/src/ipmipower_util.c (get_rand): Errors from
+	ipmi_get_random should be error outputs, not debug outputs.
+	
 2006-11-16  Albert Chu <chu11@llnl.gov>
 
 	* common/src/list.c (list_alloc_aux, list_free_aux): Fix potential
