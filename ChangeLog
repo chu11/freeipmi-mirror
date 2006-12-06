@@ -6,6 +6,9 @@
 	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue),
 	ipmipower/src/ipmipower_util.c (get_rand): Errors from
 	ipmi_get_random should be error outputs, not debug outputs.
+
+	* ipmiconsole/ipmiconsole.8.in: Fix typo in bmc-config manpage
+	section.
 	
 2006-11-16  Albert Chu <chu11@llnl.gov>
 
