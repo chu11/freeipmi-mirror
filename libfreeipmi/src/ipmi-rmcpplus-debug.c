@@ -712,7 +712,7 @@ ipmi_dump_rmcpplus_packet (int fd,
                            fiid_template_t tmpl_cmd)
 {
   int32_t obj_rmcp_hdr_len, obj_len;
-  uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, ipmi_payload_len;
+  uint64_t payload_type=0, payload_authenticated=0, payload_encrypted, session_id=0, ipmi_payload_len=0;
   char prefix_buf[IPMI_MAX_PAYLOAD_LENGTH];
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;

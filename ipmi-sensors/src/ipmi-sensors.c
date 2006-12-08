@@ -158,7 +158,10 @@ init_sdr_cache (ipmi_device_t dev, struct arguments *args)
   
   if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host, 
 						    args->sdr_cache_dir)) == NULL)
-    return (-1);
+    {
+      perror ("error: get_sdr_cache_filename (): ");
+      return (-1);
+    }
   if ((fp = fopen (sdr_cache_filename, "r")))
     {
       rv = load_sdr_cache (fp, &sdr_info, &sdr_record_list, &sdr_record_count);

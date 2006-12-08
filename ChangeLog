@@ -1,3 +1,17 @@
+2006-12-08  Anand Babu  <ab@zresearch.com>
+
+	* common/src/ipmi-sdr-api.c: fixes the "SDR cache creation under
+	/tmp" bug reported by Tejram Meena <tejram@in.niksun.com>.
+
+	* ipmi-sensors/src/ipmi-sensors.c: give proper error message when
+	cache creation fails.
+
+	* DISCLAIMER.ZRESEARCH and COPYING.ZRESEARCH: newly added.
+
+	* libfreeipmi/src/ipmi-rmcpplus-debug.c
+	(ipmi_dump_rmcpplus_packet): initialized certain variables to zero
+	to avoid GCC warning.
+
 2006-12-07  Albert Chu <chu11@llnl.gov>
 
 	* common/src/argp-common.h, common/src/argp-common.c,

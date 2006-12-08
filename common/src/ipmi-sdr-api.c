@@ -180,14 +180,17 @@ _get_home_directory ()
       }
     }
 
-  asprintf (&home_dir,
-            "/tmp/.%s-%s",
-	    PACKAGE_NAME, 
-	    user_passwd->pw_name);
-  if (mkdir (home_dir, FREEIPMI_CONFIG_DIRECTORY_MODE) == 0)
-    return home_dir;
-  
-  free (home_dir);
+  if (asprintf (&home_dir, "/tmp/.%s-%s", PACKAGE_NAME, user_passwd->pw_name) != -1)
+    {
+      if (access (home_dir, R_OK|W_OK|X_OK) == 0)
+	return home_dir;
+      if (errno == ENOENT)
+	{
+	  if (mkdir (home_dir, FREEIPMI_CONFIG_DIRECTORY_MODE) == 0)
+	    return home_dir;
+	}
+      free (home_dir);
+    }
   return NULL;
 }
 
@@ -332,6 +335,8 @@ get_sdr_cache_filename (char *host, char *user_cache_dir)
       else
 	{
 	  cache_dir = _get_sdr_cache_directory ();
+	  if (cache_dir == NULL)
+	    return NULL;
 	  sdr_cache_dir = cache_dir;
 	}
       
