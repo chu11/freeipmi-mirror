@@ -11,6 +11,10 @@
 	* ipmiconsole/ipmiconsole.8.in,
 	ipmiconsole/src/ipmiconsole_config.c (_cmdline_parse, _usage):
 	Support -P option.
+
+	* ipmiconsole/libipmiconsole.3.in: New file.
+
+	* configure.ac, ipmiconsole/Makefile.am: Support new manpage.
 	
 2006-12-06  Albert Chu <chu11@llnl.gov>
 
