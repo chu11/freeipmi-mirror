@@ -14,7 +14,8 @@
 
 	* ipmiconsole/libipmiconsole.3.in: New file.
 
-	* configure.ac, ipmiconsole/Makefile.am: Support new manpage.
+	* configure.ac, ipmiconsole/Makefile.am, freeipmi.spec.in: Support
+	new manpage.
 	
 2006-12-06  Albert Chu <chu11@llnl.gov>
 
