@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.2 2006-12-08 01:10:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,6 +36,9 @@
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif /* HAVE_GETOPT_H */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -75,6 +78,7 @@ _usage(void)
 	  "-h --hostname str             Hostname\n"
           "-u --username name            Username\n"
           "-p --password pw              Password\n"
+          "-P --password-prompt          Prompt for Password\n"
           "-k --k-g str                  K_g Key\n"
 	  "-l --privilege str            Privilege\n"
 	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
@@ -102,6 +106,7 @@ static void
 _cmdline_parse(int argc, char **argv)
 { 
   char options[100];
+  char *pw;
   char *ptr;
   int c;
 
@@ -133,7 +138,7 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:k:l:c:C:IS");
+  strcat(options, "HVh:u:p:Pk:l:c:C:IS");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -172,6 +177,15 @@ _cmdline_parse(int argc, char **argv)
           if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(conf->password, optarg);
+          conf->password_set++;
+	  /* Args will be cleared in ipmiconsole_config_setup */
+          break;
+        case 'P':       /* --password-prompt */
+          if (!(pw = getpass("Password: ")))
+            err_exit("getpass: %s", strerror(errno));
+          if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+            err_exit("password too long");
+          strcpy(conf->password, pw);
           conf->password_set++;
 	  /* Args will be cleared in ipmiconsole_config_setup */
           break;

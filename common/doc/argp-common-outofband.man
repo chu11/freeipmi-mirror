@@ -8,4 +8,8 @@ length is 16.
 .TP
 \fB\-p\fR, \fB\-\-password\fR=\fIPASSWORD\fR
 Use PASSWORD instead of NULL.  Maximum PASSWORD
-length is 16.
+length is 16.  
+.TP
+\fB\-P\fR, \fB\-\-password-prompt\fR
+Prompt for password to avoid possibility of listing
+it in process lists.
