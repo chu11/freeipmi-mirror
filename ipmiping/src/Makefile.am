@@ -6,7 +6,7 @@ ipmiping_LDADD = \
 	../../libfreeipmi/src/libfreeipmi.la \
 	 ../../common/src/libipmiping.la
  
-ipmiping_CFLAGS = \
+ipmiping_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include \
 	-I$(srcdir)/../../common/src
  

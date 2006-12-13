@@ -135,6 +135,8 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
+%doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ZRESEARCH
 %{_libdir}/*so.0*
 %{_libdir}/*so.3*
 /var/lib/*

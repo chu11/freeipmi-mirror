@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+## $Id: Makefile.am,v 1.2 2006-12-13 00:22:31 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -29,21 +29,25 @@ libipmiconsole_la_SOURCES = ipmiconsole.c \
 			    ipmiconsole_packet.c \
 			    ipmiconsole_processing.c
 
-libipmiconsole_la_CFLAGS = -I$(srcdir)/../../../config \
-			   -I$(srcdir)/../../../common/src \
-			   -I$(srcdir)/../../../libfreeipmi/include \
-			   $(PTHREAD_CFLAGS) \
-			   -DWITH_SECURE_MALLOC=1 \
-			   -DWITH_PTHREADS=1
+libipmiconsole_la_CFLAGS = $(PTHREAD_CFLAGS)
+
+libipmiconsole_la_CPPFLAGS = -I$(srcdir)/../../../config \
+			     -I$(srcdir)/../../../common/src \
+			     -I$(srcdir)/../../../libfreeipmi/include \
+			     -DWITH_SECURE_MALLOC=1 \
+			     -DWITH_PTHREADS=1
 
 libipmiconsole_la_LDFLAGS = $(PTHREAD_LIBS) \
 			    -version-info @LIBIPMICONSOLE_VERSION_INFO@ \
 			    $(OTHER_FLAGS)
 
 libipmiconsole_la_LIBADD = ../../../common/src/libllnlcommon.la \
-			   ../../../libfreeipmi/src/libfreeipmi.la
+			   ../../../libfreeipmi/src/libfreeipmi.la \
+			   ../../../common/src/libfreeipmiportability.la
 
-install-data-hook:
+install-data-hook: $(INSTALL_LOGDIR)
+
+install-logdir:
 	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/var/log/ipmiconsole
 
 EXTRA_DIST = ipmiconsole.map

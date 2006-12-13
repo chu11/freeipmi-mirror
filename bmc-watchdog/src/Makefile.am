@@ -4,7 +4,7 @@ bmc_watchdog_SOURCES = bmc-watchdog.c
 
 bmc_watchdog_LDADD = ../../libfreeipmi/src/libfreeipmi.la
 
-bmc_watchdog_CFLAGS = \
+bmc_watchdog_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include \
 	-DBMC_WATCHDOG_LOGFILE=\"$(localstatedir)/log/freeipmi/bmc-watchdog.log\"
 

@@ -24,7 +24,7 @@ ipmipower_LDADD = \
 	../../common/src/libllnlcommon.la \
 	../../libfreeipmi/src/libfreeipmi.la
  
-ipmipower_CFLAGS = \
+ipmipower_CPPFLAGS = \
 	-I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
