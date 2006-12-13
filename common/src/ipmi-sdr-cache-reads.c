@@ -38,7 +38,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <sys/resource.h>
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>
@@ -49,6 +48,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/param.h>
 #include <arpa/inet.h>

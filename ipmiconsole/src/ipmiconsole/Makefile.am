@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+## $Id: Makefile.am,v 1.1.2.1 2006-12-13 00:42:06 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -15,9 +15,9 @@ ipmiconsole_SOURCES = \
 	ipmiconsole_config.c \
 	error.c
 
-ipmiconsole_CFLAGS = -I$(srcdir)/../libipmiconsole \
-		     -I$(srcdir)/../../../common/src \
-		     -I$(srcdir)/../../../libfreeipmi/include
+ipmiconsole_CPPFLAGS = -I$(srcdir)/../libipmiconsole \
+		       -I$(srcdir)/../../../common/src \
+		       -I$(srcdir)/../../../libfreeipmi/include
 
 ipmiconsole_LDADD = ../../../common/src/libllnlcommon.la \
 		    ../libipmiconsole/libipmiconsole.la
@@ -26,6 +26,6 @@ ipmiconsole_LDADD = ../../../common/src/libllnlcommon.la \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../libipmiconsole/libipmiconsole.la: force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

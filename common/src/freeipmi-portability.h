@@ -33,6 +33,7 @@ extern "C" {
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netdb.h>
 
 #if !defined(EBADMSG) && defined(ENOMSG)
 #define EBADMSG	ENOMSG
@@ -129,6 +130,21 @@ char *freeipmi_strndup(const char *, size_t);
 #define getline	freeipmi_getline
 ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
 #endif
+
+#ifndef HAVE_FUNC_GETHOSTBYNAME_R_6
+#define HAVE_FUNC_GETHOSTBYNAME_R_6	1
+#define LOCAL_GETHOSTBYNAME_R
+#ifdef gethostbyname_r
+#undef gethostbyname_r
+#endif
+#define gethostbyname_r	freeipmi_gethostbyname_r
+int freeipmi_gethostbyname_r(const char *name,
+	struct hostent *ret,
+	char *buf,
+	size_t buflen,
+	struct hostent **result,
+	int *h_errnop);
+#endif /* !HAVE_FUNC_GETHOSTBYNAME_R_6 */
 
 #ifdef __cplusplus
 }

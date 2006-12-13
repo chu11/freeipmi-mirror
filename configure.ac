@@ -1,7 +1,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.69.2.2 2006-11-13 19:31:07 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.69.2.3 2006-12-13 00:42:06 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -156,11 +156,6 @@ if test "x${have_gcrypt}" = "xno"; then
    AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
 fi
 
-dnl FreeBSD has argp as a separate library
-AC_CHECK_FUNC([argp_parse], ,
-	AC_CHECK_LIB([argp], [argp_parse], ,
-		AC_MSG_ERROR([argp library not found. argp-standalone required.])))
-
 dnl FreeBSD < 5 has getopt_long in a separate gnugetopt library
 AC_CHECK_FUNC([getopt_long], [have_getopt_long=yes],
 	AC_CHECK_LIB([gnugetopt], [getopt_long], [have_getopt_long=yes],
@@ -181,11 +176,42 @@ AC_FUNC_MMAP
 AC_CHECK_FUNCS([strchr memcpy memset mlock])
 AC_caolan_FUNC_WHICH_GETHOSTBYNAME_R
 dnl There is no error(), strndup() and getline() on FreeBSD
-AC_CHECK_FUNCS([error strndup getline strerror_r getprogname])
+AC_CHECK_FUNCS([error strndup getline strerror_r getprogname getpwuid_r])
 dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
 AC_CHECK_LIB([m], [exp10])
 AC_CHECK_LIB([m], [exp2])
 AC_CHECK_LIB([m], [log2])
+
+dnl Check for thread-safe gethostbyname()
+AC_MSG_CHECKING([for thread-safe gethostbyname()])
+have_thread_safe_gethostbyname=no
+case "$host_os" in
+*freebsd*)
+	AC_TRY_CPP([
+			#include <sys/param.h>
+			#if __FreeBSD_version < 505000
+			#error "gethostbyname() is not thread-safe"
+			#endif
+		], [have_thread_safe_gethostbyname=yes])
+	;;
+esac
+if test "x$have_thread_safe_gethostbyname" = "xyes"; then
+	AC_DEFINE([HAVE_THREAD_SAFE_GETHOSTBYNAME], [1],
+		[Define if you have thread-safe gethostbyname() implementation])
+	AC_MSG_RESULT([yes])
+else
+	AC_MSG_RESULT([no])
+fi
+
+dnl FreeBSD has argp as a separate library
+dnl CAVEAT: argp-standalone library exports it's own strndup() function,
+dnl not conforming to strndup(3). If we have no strndup() in libc (as
+dnl in FreeBSD), and strndup() check is placed after argp check, argp's
+dnl strndup() will be detected, which is wrong. So place argp check _after_
+dnl strndup() check.
+AC_CHECK_FUNC([argp_parse], ,
+	AC_CHECK_LIB([argp], [argp_parse], ,
+		AC_MSG_ERROR([argp library not found. argp-standalone required.])))
 
 ACX_PTHREAD([], AC_MSG_ERROR([Posix threads required to build libipmiconsole]))
 

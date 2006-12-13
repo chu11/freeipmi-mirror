@@ -165,12 +165,25 @@ _get_home_directory ()
   uid_t user_id;
   struct passwd *user_passwd = alloca (sizeof (*user_passwd));
   char *home_dir = NULL;
-  long int buf_len = sysconf (_SC_GETPW_R_SIZE_MAX);
-  char *buf = alloca (buf_len);
+  long int buf_len;
+  char *buf;
+
+#if defined(_SC_GETPW_R_SIZE_MAX)
+  buf_len = sysconf(_SC_GETPW_R_SIZE_MAX);
+  if (buf_len < 0)
+    /* Variable was not implemented */
+#endif
+    buf_len = 1024;	/* XXX */
+  buf = alloca (buf_len);
 
   user_id = getuid ();
   if (getpwuid_r (user_id, user_passwd, buf, buf_len, &user_passwd) != 0)
     return NULL;
+  if (user_passwd == NULL) {
+    /* User not found */
+    errno = ENOENT;
+    return NULL;
+  }
 
   if (user_passwd->pw_dir)
     {

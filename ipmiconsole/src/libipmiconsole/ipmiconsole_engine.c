@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.1.2.1 2006-12-13 00:42:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,6 +68,8 @@
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_fiid_wrappers.h"
 #include "ipmiconsole_processing.h"
+
+#include "freeipmi-portability.h"
 
 /* 
  * Locking notes:

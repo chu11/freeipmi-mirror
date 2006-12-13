@@ -6,7 +6,7 @@ rmcpping_LDADD = \
 	../../libfreeipmi/src/libfreeipmi.la \
 	../../common/src/libipmiping.la
 
-rmcpping_CFLAGS = \
+rmcpping_CPPFLAGS = \
 	-I$(srcdir)/../../libfreeipmi/include \
 	-I$(srcdir)/../../common/src
  
