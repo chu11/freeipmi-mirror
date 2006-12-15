@@ -10,6 +10,9 @@
 	* Globally remove HAVE_STDINT_H.
 
 	* libfreeipmi/include/: Various header file cleanup.
+
+	* Applied FreeBSD OpenIPMI support patch from Dmitry Frolov
+	<frolov at riss-telecom dot ru>.
 	
 2006-12-15  Anand Babu  <ab@zresearch.com>
 
