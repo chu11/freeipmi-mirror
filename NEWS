@@ -3,6 +3,7 @@
 
 For Users
 ---------
+o -Q option added for ipmi-sensors and ipmi-sel.
 o Various bug fixes throughout FreeIPMI.
 
 For Developers
