@@ -22,6 +22,10 @@
 #ifndef _UDM_H
 #define _UDM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <freeipmi/udm/ipmi-udm.h>
 #include <freeipmi/udm/ipmi-kcs-api-udm.h>
 #include <freeipmi/udm/ipmi-lan-interface-udm.h>
@@ -37,5 +41,9 @@
 #include <freeipmi/udm/ipmi-sel-cmds-udm.h>
 #include <freeipmi/udm/ipmi-serial-modem-cmds-udm.h>
 #include <freeipmi/udm/ipmi-sol-cmds-udm.h>
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _UDM_H */

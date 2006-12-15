@@ -25,9 +25,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 int8_t ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, 

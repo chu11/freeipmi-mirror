@@ -22,11 +22,11 @@
 #ifndef _IPMI_SENSOR_UTILS_H
 #define _IPMI_SENSOR_UTILS_H
 
-#include <sys/types.h>
-
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
 
 int ipmi_sensor_decode_value (int8_t r_exponent, 
 			      int8_t b_exponent, 
@@ -36,5 +36,9 @@ int ipmi_sensor_decode_value (int8_t r_exponent,
 			      uint8_t analog_data_format, 
 			      uint8_t raw_data,
 			      double *value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_SENSOR_UTILS_H */

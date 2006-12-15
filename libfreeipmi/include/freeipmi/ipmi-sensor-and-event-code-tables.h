@@ -21,9 +21,11 @@
 #ifndef _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
 #define _IPMI_SENSOR_AND_EVENT_CODE_TABLES_H
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
 
 int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 				    uint16_t offset,
@@ -47,5 +49,9 @@ int ipmi_get_event_data3_message (int sensor_type_code,
 				  uint8_t event_data3,
 				  char *buf,
 				  unsigned int buflen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

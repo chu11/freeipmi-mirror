@@ -2,6 +2,7 @@
 -----
 
 o FreeBSD Support
+o libfreeipmi: Header file include/C++ fixes.
 o ipmi-sensors, ipmi-sel: Fix SDR cache creation bug for /tmp.
 o ipmi-sensors: Fix SDR parsing corner case bugs.
 o ipmipower, ipmiconsole: Fix mem-leak possibility.

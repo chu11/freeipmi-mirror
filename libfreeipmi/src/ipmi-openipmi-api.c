@@ -100,8 +100,13 @@ struct openipmi_recv
 #define OPENIPMI_IOC_MAGIC             'i'
 #define OPENIPMICTL_RECEIVE_MSG_TRUNC  _IOWR(OPENIPMI_IOC_MAGIC, 11, struct openipmi_recv)
 #define OPENIPMICTL_RECEIVE_MSG        _IOWR(OPENIPMI_IOC_MAGIC, 12, struct openipmi_recv)
+#if defined(__FreeBSD__)
+#define OPENIPMICTL_SEND_COMMAND       _IOW(OPENIPMI_IOC_MAGIC,  13, struct openipmi_req)
+#define OPENIPMICTL_SET_MY_ADDRESS_CMD _IOW(OPENIPMI_IOC_MAGIC,  17, unsigned int)
+#else
 #define OPENIPMICTL_SEND_COMMAND       _IOR(OPENIPMI_IOC_MAGIC,  13, struct openipmi_req)
 #define OPENIPMICTL_SET_MY_ADDRESS_CMD _IOR(OPENIPMI_IOC_MAGIC,  17, unsigned int)
+#endif
 #define OPENIPMICTL_GET_MY_ADDRESS_CMD _IOR(OPENIPMI_IOC_MAGIC,  18, unsigned int)
 
 static char * ipmi_openipmi_ctx_errmsg[] =

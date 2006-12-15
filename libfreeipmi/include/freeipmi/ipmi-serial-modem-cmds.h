@@ -21,9 +21,11 @@
 #ifndef _IPMI_SERIAL_MODEM_CMDS_H
 #define	_IPMI_SERIAL_MODEM_CMDS_H
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
 #include <freeipmi/fiid.h>
 
 #define IPMI_BASIC_MODE_ENABLE                             0x1
@@ -90,10 +92,6 @@
 #define IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(__flag) \
         (((__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER \
           || (__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER_REVISION_ONLY) ? 1 : 0)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_rq;
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_rs;

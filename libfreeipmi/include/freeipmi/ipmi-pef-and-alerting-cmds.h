@@ -18,14 +18,16 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.5 2006-09-13 21:23:56 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.5.2.1 2006-12-15 23:37:11 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
 #include <freeipmi/fiid.h>
 
 #define IPMI_PEF_POSTPONE_TIMER_DISABLE                     0x00
@@ -227,10 +229,6 @@
 #define IPMI_GET_PEF_PARAMETER_VALID(__val) \
         (((__val) == IPMI_GET_PEF_PARAMETER \
           || (__val) == IPMI_GET_PEF_PARAMETER_REVISION_ONLY) ? 1 : 0)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rs;

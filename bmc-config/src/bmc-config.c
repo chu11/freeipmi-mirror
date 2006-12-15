@@ -46,9 +46,7 @@
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <sys/stat.h>
 #include <sys/select.h>
 #if TIME_WITH_SYS_TIME

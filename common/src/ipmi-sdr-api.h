@@ -21,9 +21,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #define _IPMI_SDR_API_H
 
 #include <stdio.h>
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 
 #define IPMI_SENSOR_NAME_MAX  17
 #define IPMI_DEVICE_NAME_MAX  IPMI_SENSOR_NAME_MAX

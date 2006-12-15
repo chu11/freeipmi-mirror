@@ -22,8 +22,12 @@
 #ifndef _IPMI_UDM_H
 #define _IPMI_UDM_H
 
-#include <sys/socket.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#include <stdint.h>
+#include <sys/socket.h>
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-kcs-api.h>
 #include <freeipmi/ipmi-locate.h>
@@ -80,5 +84,9 @@ int ipmi_cmd_raw (ipmi_device_t dev,
 		  size_t out_len);
 
 void ipmi_close_device (ipmi_device_t dev);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_UDM_H */

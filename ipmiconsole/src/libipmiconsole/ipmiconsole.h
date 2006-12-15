@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.1.2.1 2006-12-15 23:37:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,6 +26,10 @@
 
 #ifndef _IPMICONSOLE_H
 #define _IPMICONSOLE_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -386,5 +390,9 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
  * Returns 0 on success, -1 on error
  */
 int ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMICONSOLE_H */

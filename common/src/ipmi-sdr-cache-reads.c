@@ -23,9 +23,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */

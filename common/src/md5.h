@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md5.h,v 1.5 2006-09-13 21:23:56 chu11 Exp $
+ *  $Id: md5.h,v 1.5.2.1 2006-12-15 23:37:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,9 +31,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 
 #define MD5_BLOCK_LENGTH       64
 #define MD5_BLOCK_WORDS_LENGTH (MD5_BLOCK_LENGTH/4)

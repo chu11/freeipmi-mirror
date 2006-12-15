@@ -19,7 +19,11 @@
 */
 
 #ifndef _IPMI_LAN_PARAM_SPEC_H
-#define _IPMI_LAN_PARAM_SPEC_H
+#define _IPMI_LAN_PARAM_SPEC_H 1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES                      2 
 #define IPMI_LAN_PARAM_IP_ADDRESS                                       3 
@@ -49,5 +53,9 @@
 #define IPMI_LAN_PARAM_VALID(__lan_param) \
         (((__lan_param+1) >= IPMI_LAN_PARAM_IP_ADDRESS \
           && (__lan_param-1) <= IPMI_LAN_PARAM_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) ? 1 : 0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_LAN_PARAM_SPEC_H */

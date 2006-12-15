@@ -27,9 +27,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <errno.h>
 
 /* Return the integer composed of the START (inclusive) through END

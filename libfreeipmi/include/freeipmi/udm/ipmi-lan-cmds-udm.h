@@ -21,9 +21,11 @@
 #ifndef _IPMI_LAN_CMDS_UDM_H
 #define _IPMI_LAN_CMDS_UDM_H
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
@@ -261,6 +263,5 @@ int8_t ipmi_cmd_suspend_bmc_arps (ipmi_device_t dev,
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif

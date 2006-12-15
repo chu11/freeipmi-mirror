@@ -25,9 +25,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
@@ -41,7 +39,5 @@ int8_t ipmi_cmd_set_power_restore_policy (ipmi_device_t dev,
 #ifdef __cplusplus
 }
 #endif
-
-
 
 #endif

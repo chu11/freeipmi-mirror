@@ -22,6 +22,10 @@
 #ifndef _IPMI_SDR_RECORD_TYPES_H
 #define _IPMI_SDR_RECORD_TYPES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <freeipmi/fiid.h>
 
 #define IPMI_SDR_FORMAT_FULL_RECORD                                 0x01
@@ -180,10 +184,6 @@
 
 #define IPMI_SDR_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED     0x0
 #define IPMI_SDR_NO_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED  0x1
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_sdr_record_header;
 extern fiid_template_t tmpl_sdr_full_sensor_record;

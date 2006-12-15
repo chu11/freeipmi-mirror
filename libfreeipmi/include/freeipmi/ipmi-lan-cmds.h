@@ -21,9 +21,11 @@
 #ifndef _IPMI_LAN_CMDS_H
 #define _IPMI_LAN_CMDS_H
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
 #include <freeipmi/fiid.h>
 
 #define IPMI_AUTHENTICATION_TYPE_ENABLE                0x1
@@ -87,10 +89,6 @@
 #define IPMI_GET_LAN_PARAMETER_VALID(__val) \
         (((__val) == IPMI_GET_LAN_PARAMETER \
           || (__val) == IPMI_GET_LAN_PARAMETER_REVISION_ONLY) ? 1 : 0)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rs;
@@ -251,6 +249,5 @@ int8_t fill_cmd_suspend_bmc_arps (uint8_t channel_number,
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif

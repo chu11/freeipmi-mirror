@@ -21,12 +21,13 @@
 #ifndef _IPMI_CIPHER_SUITE_SPEC_H
 #define	_IPMI_CIPHER_SUITE_SPEC_H
 
-#include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-rmcpplus.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <stdint.h>
+#include <freeipmi/fiid.h>
+#include <freeipmi/ipmi-rmcpplus.h>
 
 /* Notes:
    Refer to IPMI 2.0 spec Table 22-18 and Table 22-19. 

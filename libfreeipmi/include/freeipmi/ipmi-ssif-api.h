@@ -27,9 +27,11 @@
 #ifndef IPMI_SSIF_API_H
 #define IPMI_SSIF_API_H
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#include <stdint.h>
 #include <freeipmi/fiid.h>
 
 #define IPMI_DEFAULT_I2C_DEVICE        "/dev/i2c-0"
@@ -86,5 +88,9 @@ int8_t ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
                       uint8_t net_fn,
                       fiid_obj_t obj_cmd_rq,
                       fiid_obj_t obj_cmd_rs);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* IPMI_SSIF_API_H */
