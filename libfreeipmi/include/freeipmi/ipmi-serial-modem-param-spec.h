@@ -23,7 +23,7 @@
 #define _IPMI_SERIAL_MODEM_PARAM_SPEC_H
 
 #ifdef __cplusplus
-}
+extern "C" {
 #endif
 
 #define IPMI_SERIAL_MODEM_PARAM_SET_IN_PROGRESS                       0
