@@ -25,6 +25,9 @@ Show SDR Info
 \fB\-f\fR, \fB\-\-flush\-cache\fR
 Flush sensor cache
 .TP
+\FB\-Q\fR, \fB\-\-\quiet\-cache\fR
+Do not output information about cache creation.
+.TP
 \fB\-L\fR, \fB\-\-list\-groups\fR
 List sensor groups
 .TP

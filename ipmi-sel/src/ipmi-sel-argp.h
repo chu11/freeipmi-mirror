@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.h,v 1.5 2006-11-02 17:35:55 balamurugan Exp $ 
+   $Id: ipmi-sel-argp.h,v 1.6 2006-12-15 22:23:19 chu11 Exp $ 
    
    ipmi-sel-argp.h - System Event Logger utility.
    
@@ -31,6 +31,7 @@ enum argp_option_keys
     HEX_DUMP_KEY = 'x', 
     DELETE_RANGE_KEY = 'R',
     FLUSH_CACHE_KEY = 'f', 
+    QUIET_CACHE_KEY = 'Q',
     SDR_CACHE_DIR_KEY = 200
   };
 
@@ -48,6 +49,7 @@ struct arguments
   int hex_dump_wanted;
   char *hex_dump_filename;
   int flush_cache_wanted;
+  int quiet_cache_wanted;
   int sdr_cache_dir_wanted;
   char *sdr_cache_dir;
 };

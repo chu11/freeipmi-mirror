@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.4 2006-11-02 17:35:55 balamurugan Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.5 2006-12-15 22:23:19 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -68,6 +68,8 @@ static struct argp_option options[] =
      "Show SDR Information."}, 
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0, 
      "Flush sensor cache."}, 
+    {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
+     "Do not output cache creation information."},
     {"list-groups", LIST_GROUPS_KEY,  0, 0, 
      "List sensor groups."}, 
     {"group",       GROUP_KEY,        "GROUP", 0, 
@@ -217,6 +219,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case FLUSH_CACHE_KEY:
       cmd_args->flush_cache_wanted = 1;
       break;
+    case QUIET_CACHE_KEY:
+      cmd_args->quiet_cache_wanted = 1;
+      break;
     case LIST_GROUPS_KEY:
       cmd_args->list_groups_wanted = 1;
       break;
@@ -280,6 +285,7 @@ ipmi_sensors_argp_parse (int argc, char **argv)
   cmd_args.verbose_count = 0;
   cmd_args.sdr_info_wanted = 0;
   cmd_args.flush_cache_wanted = 0;
+  cmd_args.quiet_cache_wanted = 0;
   cmd_args.list_groups_wanted = 0;
   cmd_args.group_wanted = 0;
   cmd_args.group = NULL;

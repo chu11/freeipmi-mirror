@@ -31,6 +31,9 @@ Delete records from START to END in SEL
 \fB\-f\fR, \fB\-\-flush\-cache\fR
 Flush SDR cache
 .TP
+\FB\-Q\fR, \fB\-\-\quiet\-cache\fR
+Do not output information about cache creation.
+.TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
 Use DIRECTORY for sensor cache
 .LP

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.8 2006-11-02 17:35:55 balamurugan Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.9 2006-12-15 22:23:19 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -72,6 +72,8 @@ static struct argp_option options[] =
      "Hex-dump SEL entries optionally to FILE.", 17},
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,
      "Flush sensor SDR cache.", 18},
+    {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
+     "Do not output cache creation information."},
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
      "Use DIRECTORY for sensor cache."}, 
     { 0 }
@@ -349,6 +351,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case FLUSH_CACHE_KEY:
       cmd_args->flush_cache_wanted = 1;
       break;
+    case QUIET_CACHE_KEY:
+      cmd_args->quiet_cache_wanted = 1;
+      break;
     case SDR_CACHE_DIR_KEY:
       cmd_args->sdr_cache_dir_wanted = 1;
       cmd_args->sdr_cache_dir = strdup (arg);
@@ -387,6 +392,7 @@ ipmi_sel_argp_parse (int argc, char **argv)
   cmd_args.delete_range2 = 0;
   cmd_args.hex_dump_wanted = 0;
   cmd_args.hex_dump_filename = NULL;
+  cmd_args.quiet_cache_wanted = 0;
   cmd_args.sdr_cache_dir_wanted = 0;
   cmd_args.sdr_cache_dir = NULL;
   

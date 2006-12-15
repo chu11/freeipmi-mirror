@@ -107,9 +107,15 @@ init_sdr_cache (ipmi_device_t dev, struct arguments *args)
   if ((fp = fopen (sdr_cache_filename, "w")))
     {
 #ifndef NDEBUG
-      rv = create_sdr_cache (dev, fp, 1, args->common.debug);
+      rv = create_sdr_cache (dev,
+                             fp,
+                             (args->quiet_cache_wanted) ? 0 : 1,
+                             args->common.debug);
 #else  /* NDEBUG */
-      rv = create_sdr_cache (dev, fp, 1, 0);
+      rv = create_sdr_cache (dev,
+                             fp,
+                             (args->quiet_cache_wanted) ? 0 : 1,
+                             0);
 #endif /* NDEBUG */
       fclose (fp);
       if (rv)
@@ -290,9 +296,11 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
   
   if (args->flush_cache_wanted)
     {
-      printf ("flushing cache... ");
+      if (!args->quiet_cache_wanted)
+        printf ("flushing cache... ");
       retval = flush_sdr_cache_file (args->common.host, args->sdr_cache_dir);
-      printf ("%s\n", (retval ? "FAILED" : "done"));
+      if (!args->quiet_cache_wanted)
+        printf ("%s\n", (retval ? "FAILED" : "done"));
       return retval;
     }
 

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.h,v 1.3 2006-11-02 17:35:55 balamurugan Exp $ 
+   $Id: ipmi-sensors-argp.h,v 1.4 2006-12-15 22:23:19 chu11 Exp $ 
    
    ipmi-sensors-argp.h - IPMI Sensors utility.
    
@@ -28,6 +28,7 @@ enum argp_option_keys
     VERBOSE_KEY = 'v', 
     SDR_INFO_KEY = 'i', 
     FLUSH_CACHE_KEY = 'f', 
+    QUIET_CACHE_KEY = 'Q',
     LIST_GROUPS_KEY = 'L', 
     GROUP_KEY = 'g', 
     SENSORS_LIST_KEY = 's', 
@@ -41,6 +42,7 @@ struct arguments
   int verbose_count;
   int sdr_info_wanted;
   int flush_cache_wanted;
+  int quiet_cache_wanted;
   int list_groups_wanted;
   int group_wanted;
   char *group;

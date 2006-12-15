@@ -18,6 +18,18 @@
 
 	* libfreeipmi/src/ipmi-openipmi-api.c: Load and use appropriate
 	headers when available.
+
+	* ipmi-sensors/src/ipmi-sensors.c (init_sdr_cache, run_cmd_args),
+	ipmi-sensors/src/ipmi-sensors-argp.h,
+	ipmi-sensors/src/ipmi-sensors-argp.c (parse_opt,
+	ipmi_sensors_argp_parse): Support -Q option.
+
+	* ipmi-sel/src/ipmi-sel.c (init_sdr_cache, run_cmd_args),
+	ipmi-sel/src/ipmi-sel-argp.h, ipmi-sel/src/ipmi-sel-argp.c
+	(parse_opt, ipmi_sel_argp_parse): Support -Q option.
+	
+	* ipmi-sensors/ipmi-sensors.8.pre.in, ipmi-sel/ipmi-sel.8.pre.in:
+	Updated with -Q option.
 	
 2006-12-15  Anand Babu  <ab@zresearch.com>
 
