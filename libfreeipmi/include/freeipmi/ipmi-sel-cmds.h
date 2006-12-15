@@ -21,6 +21,10 @@
 #ifndef _IPMI_SEL_CMDS_H
 #define _IPMI_SEL_CMDS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -40,10 +44,6 @@
 #define IPMI_SEL_CLEAR_ERASE_COMPLETED        0x1
 
 #define IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_cmd_get_sel_info_rq;
 extern fiid_template_t tmpl_cmd_get_sel_info_rs;

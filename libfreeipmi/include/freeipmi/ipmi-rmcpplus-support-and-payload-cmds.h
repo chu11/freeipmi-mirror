@@ -22,6 +22,10 @@
 #ifndef _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H
 #define _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -90,10 +94,6 @@
 #define IPMI_PAYLOAD_ACCESS_VALID(__val) \
         (((__val) == 0 \
 	  || (__val) == 1) ? 1 : 0)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_cmd_activate_payload_rq;
 extern fiid_template_t tmpl_cmd_activate_payload_sol_rq;

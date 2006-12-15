@@ -1,3 +1,7 @@
+2006-12-15  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/include/*/*: g++ compatibility definitions.
+
 2006-12-12  Albert Chu <chu11@llnl.gov>
 
 	* Applied FreeBSD support patch from Dmitry Frolov <frolov at

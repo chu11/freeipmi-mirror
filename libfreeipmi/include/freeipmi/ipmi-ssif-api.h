@@ -27,6 +27,10 @@
 #ifndef IPMI_SSIF_API_H
 #define IPMI_SSIF_API_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -86,5 +90,9 @@ int8_t ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
                       uint8_t net_fn,
                       fiid_obj_t obj_cmd_rq,
                       fiid_obj_t obj_cmd_rs);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* IPMI_SSIF_API_H */

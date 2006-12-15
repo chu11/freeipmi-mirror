@@ -21,6 +21,10 @@
 #ifndef _IPMI_SEL_RECORD_TYPES_H
 #define _IPMI_SEL_RECORD_TYPES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define IPMI_V1_0_EVENT_MESSAGE_FORMAT 0x03
 #define IPMI_V1_5_EVENT_MESSAGE_FORMAT 0x04
 
@@ -38,10 +42,6 @@
 
 #define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
 #define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_sel_record_header;
 

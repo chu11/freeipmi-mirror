@@ -15,10 +15,14 @@
 /* the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, */
 /* Boston, MA 02110-1301, USA. */
 
-/* $Id: ipmi-pef-param-spec.h,v 1.2 2006-03-07 07:25:59 chu11 Exp $ */
+/* $Id: ipmi-pef-param-spec.h,v 1.3 2006-12-15 09:22:28 ab Exp $ */
 
 #ifndef IPMI_PEF_PARAM_SPEC_H
 #define IPMI_PEF_PARAM_SPEC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define IPMI_PEF_PARAM_PEF_CONTROL			      1
 #define IPMI_PEF_PARAM_PEF_ACTION_GLOBAL_CONTROL              2
@@ -35,5 +39,9 @@
 #define IPMI_PEF_PARAM_ALERT_STRINGS                         13
 #define IPMI_PEF_PARAM_NUMBER_OF_GROUP_CONTROL_TABLE_ENTRIES 14
 #define IPMI_PEF_PARAM_GROUP_CONTROL_TABLE                   15
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

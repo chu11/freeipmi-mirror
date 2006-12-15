@@ -21,6 +21,10 @@
 #ifndef _IPMI_RMCPPLUS_H
 #define _IPMI_RMCPPLUS_H 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -163,10 +167,6 @@
 #define IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH      12
 #define IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH      16
 #define IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH           16
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_rmcpplus_session_hdr;
 extern fiid_template_t tmpl_rmcpplus_session_trlr;

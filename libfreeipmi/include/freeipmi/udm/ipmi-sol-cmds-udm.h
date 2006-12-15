@@ -130,5 +130,4 @@ int8_t ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (ipmi_d
 }
 #endif
 
-
 #endif

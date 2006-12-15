@@ -27,6 +27,10 @@
 #ifndef IPMI_SSIF_API_UDM_H
 #define IPMI_SSIF_API_UDM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -41,5 +45,9 @@ int32_t ipmi_ssif_cmd_raw_udm (ipmi_device_t dev,
                                size_t buf_rq_len, 
                                uint8_t *buf_rs, 
                                size_t buf_rs_len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* IPMI_SSIF_API_UDM_H */

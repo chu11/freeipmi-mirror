@@ -21,6 +21,10 @@
 #ifndef _IPMI_SOL_CMDS_H
 #define _IPMI_SOL_CMDS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -136,10 +140,6 @@
         (((__val) == IPMI_GET_SOL_PARAMETER \
           || (__val) == IPMI_GET_SOL_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern fiid_template_t tmpl_sol_payload_data;
 extern fiid_template_t tmpl_sol_payload_data_remote_console_to_bmc;
 extern fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console;
@@ -235,6 +235,5 @@ int8_t fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif

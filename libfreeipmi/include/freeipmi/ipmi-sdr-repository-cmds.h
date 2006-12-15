@@ -22,6 +22,10 @@
 #ifndef _IPMI_SDR_REPOSITORY_CMDS_H
 #define _IPMI_SDR_REPOSITORY_CMDS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -39,10 +43,6 @@
 #define IPMI_SDR_RECORD_ID_LAST  0xFFFF
 
 #define IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern fiid_template_t tmpl_cmd_get_sdr_repository_info_rq;
 extern fiid_template_t tmpl_cmd_get_sdr_repository_info_rs;

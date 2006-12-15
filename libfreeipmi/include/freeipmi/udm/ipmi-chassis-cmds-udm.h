@@ -42,6 +42,4 @@ int8_t ipmi_cmd_set_power_restore_policy (ipmi_device_t dev,
 }
 #endif
 
-
-
 #endif

@@ -22,6 +22,10 @@
 #ifndef _IPMI_SOL_PARAM_SPEC_H
 #define _IPMI_SOL_PARAM_SPEC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define IPMI_SOL_PARAM_SET_IN_PROGRESS                                  0
 #define IPMI_SOL_PARAM_SOL_ENABLE                                       1
 #define IPMI_SOL_PARAM_SOL_AUTHENTICATION                               2
@@ -31,5 +35,9 @@
 #define IPMI_SOL_PARAM_SOL_VOLATILE_BIT_RATE                            6 
 #define IPMI_SOL_PARAM_SOL_PAYLOAD_CHANNEL                              7
 #define IPMI_SOL_PARAM_SOL_PAYLOAD_PORT_NUMBER                          8
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IPMI_SOL_PARAM_SPEC_H */
