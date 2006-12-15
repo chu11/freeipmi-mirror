@@ -53,26 +53,30 @@
 #include "xmalloc.h"
 
 #define IPMI_OPENIPMI_BUFLEN    1024
+
+#if HAVE_LINUX_IPMI_H
+#include <linux.ipmi.h>
+#elif HAVE_SYS_IPMI_H
+#include <sys/ipmi.h>
+#else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_LINUX_H */
 /* 
- * achu: Most of the definitions below are taken from linux/ipmi.h
- * from the kernel, although "ipmi" was reworded to "openipmi", to
- * avoid any name conflicts that could arise in FreeIPMI
+ * achu: Most of the definitions below are taken from linux/ipmi.h.
  *
  * Thanks to the ipmitool folks, who's code made it easier for me to
  * figure out the OpenIPMI interface more quickly.
  */
 
-#define OPENIPMI_SYSTEM_INTERFACE_ADDR_TYPE 0x0c
-#define OPENIPMI_BMC_CHANNEL                0xf
+#define IPMI_SYSTEM_INTERFACE_ADDR_TYPE 0x0c
+#define IPMI_BMC_CHANNEL                0xf
 
-struct openipmi_system_interface_addr
+struct ipmi_system_interface_addr
 {
   int           addr_type;
   short         channel;
   unsigned char lun;
 };
 
-struct openipmi_msg
+struct ipmi_msg
 {
   unsigned char   netfn;
   unsigned char   cmd;
@@ -80,34 +84,35 @@ struct openipmi_msg
   unsigned char  *data;
 };
 
-struct openipmi_req
+struct ipmi_req
 {
   unsigned char      *addr;
   unsigned int        addr_len;
   long                msgid;
-  struct openipmi_msg msg;
+  struct ipmi_msg     msg;
 };
 
-struct openipmi_recv
+struct ipmi_recv
 {
   int                 recv_type; 
   unsigned char      *addr;
   unsigned int        addr_len;
   long                msgid; 
-  struct openipmi_msg msg;
+  struct ipmi_msg     msg;
 };
 
-#define OPENIPMI_IOC_MAGIC             'i'
-#define OPENIPMICTL_RECEIVE_MSG_TRUNC  _IOWR(OPENIPMI_IOC_MAGIC, 11, struct openipmi_recv)
-#define OPENIPMICTL_RECEIVE_MSG        _IOWR(OPENIPMI_IOC_MAGIC, 12, struct openipmi_recv)
+#define IPMI_IOC_MAGIC             'i'
+#define IPMICTL_RECEIVE_MSG_TRUNC  _IOWR(IPMI_IOC_MAGIC, 11, struct ipmi_recv)
+#define IPMICTL_RECEIVE_MSG        _IOWR(IPMI_IOC_MAGIC, 12, struct ipmi_recv)
 #if defined(__FreeBSD__)
-#define OPENIPMICTL_SEND_COMMAND       _IOW(OPENIPMI_IOC_MAGIC,  13, struct openipmi_req)
-#define OPENIPMICTL_SET_MY_ADDRESS_CMD _IOW(OPENIPMI_IOC_MAGIC,  17, unsigned int)
+#define IPMICTL_SEND_COMMAND       _IOW(IPMI_IOC_MAGIC,  13, struct ipmi_req)
+#define IPMICTL_SET_MY_ADDRESS_CMD _IOW(IPMI_IOC_MAGIC,  17, unsigned int)
 #else
-#define OPENIPMICTL_SEND_COMMAND       _IOR(OPENIPMI_IOC_MAGIC,  13, struct openipmi_req)
-#define OPENIPMICTL_SET_MY_ADDRESS_CMD _IOR(OPENIPMI_IOC_MAGIC,  17, unsigned int)
+#define IPMICTL_SEND_COMMAND       _IOR(IPMI_IOC_MAGIC,  13, struct ipmi_req)
+#define IPMICTL_SET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  17, unsigned int)
 #endif
-#define OPENIPMICTL_GET_MY_ADDRESS_CMD _IOR(OPENIPMI_IOC_MAGIC,  18, unsigned int)
+#define IPMICTL_GET_MY_ADDRESS_CMD _IOR(IPMI_IOC_MAGIC,  18, unsigned int)
+#endif /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_LINUX_H */
 
 static char * ipmi_openipmi_ctx_errmsg[] =
   {
@@ -299,7 +304,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       goto cleanup;
     }
   
-  if (ioctl(ctx->device_fd, OPENIPMICTL_SET_MY_ADDRESS_CMD, &addr) < 0) 
+  if (ioctl(ctx->device_fd, IPMICTL_SET_MY_ADDRESS_CMD, &addr) < 0) 
     {
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
@@ -332,8 +337,8 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   uint8_t rq_cmd;
   int32_t rq_buf_len;
   int32_t len;
-  struct openipmi_system_interface_addr rq_addr;
-  struct openipmi_req rq_packet;
+  struct ipmi_system_interface_addr rq_addr;
+  struct ipmi_req rq_packet;
 
   assert(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
   assert(IPMI_BMC_LUN_VALID(lun));
@@ -360,19 +365,19 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   else
     rq_buf_len = 0;
 
-  rq_addr.addr_type = OPENIPMI_SYSTEM_INTERFACE_ADDR_TYPE;
-  rq_addr.channel = OPENIPMI_BMC_CHANNEL;
+  rq_addr.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE;
+  rq_addr.channel = IPMI_BMC_CHANNEL;
   rq_addr.lun = lun;
 
   rq_packet.addr = (unsigned char *)&rq_addr;
-  rq_packet.addr_len = sizeof(struct openipmi_system_interface_addr);
+  rq_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
   rq_packet.msgid = 0;             
   rq_packet.msg.netfn = net_fn;
   rq_packet.msg.cmd = rq_cmd;
   rq_packet.msg.data_len = rq_buf_len;
   rq_packet.msg.data = rq_buf;
 
-  if (ioctl(ctx->device_fd, OPENIPMICTL_SEND_COMMAND, &rq_packet) < 0) 
+  if (ioctl(ctx->device_fd, IPMICTL_SEND_COMMAND, &rq_packet) < 0) 
     {
       ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);
@@ -387,13 +392,13 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
 {
   uint8_t rs_buf_temp[IPMI_OPENIPMI_BUFLEN];
   uint8_t rs_buf[IPMI_OPENIPMI_BUFLEN];
-  struct openipmi_system_interface_addr rs_addr;
-  struct openipmi_recv rs_packet;
+  struct ipmi_system_interface_addr rs_addr;
+  struct ipmi_recv rs_packet;
   fd_set read_fds;
   int n;
 
   rs_packet.addr = (unsigned char *)&rs_addr;
-  rs_packet.addr_len = sizeof(struct openipmi_system_interface_addr);
+  rs_packet.addr_len = sizeof(struct ipmi_system_interface_addr);
   rs_packet.msg.data = rs_buf_temp;
   rs_packet.msg.data_len = IPMI_OPENIPMI_BUFLEN;
 
@@ -416,7 +421,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ioctl(ctx->device_fd, OPENIPMICTL_RECEIVE_MSG_TRUNC, &rs_packet) < 0) 
+  if (ioctl(ctx->device_fd, IPMICTL_RECEIVE_MSG_TRUNC, &rs_packet) < 0) 
     {
       ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       return (-1);

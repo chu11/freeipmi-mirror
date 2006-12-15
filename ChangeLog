@@ -13,6 +13,11 @@
 
 	* Applied FreeBSD OpenIPMI support patch from Dmitry Frolov
 	<frolov at riss-telecom dot ru>.
+
+	* configure.ac: Search for linux/ipmi.h and sys/ipmi.h.
+
+	* libfreeipmi/src/ipmi-openipmi-api.c: Load and use appropriate
+	headers when available.
 	
 2006-12-15  Anand Babu  <ab@zresearch.com>
 
