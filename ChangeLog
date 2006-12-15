@@ -3,6 +3,9 @@
 	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h,
 	libfreeipmi/include/freeipmi/ipmi-device-global-cmds.h,
 	libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Include stdint.h.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Add g++
+	compatibility definitions.
 	
 2006-12-15  Anand Babu  <ab@zresearch.com>
 
