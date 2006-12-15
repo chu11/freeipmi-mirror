@@ -1,3 +1,14 @@
+0.4.0
+-----
+
+For Users
+---------
+o Various bug fixes throughout FreeIPMI.
+
+For Developers
+--------------
+o Added SDR debugging capabilities to ipmi-sdr and ipmi-sensors.
+
 0.3.0
 -----
 
