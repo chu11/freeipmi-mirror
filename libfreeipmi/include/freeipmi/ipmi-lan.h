@@ -25,9 +25,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_MAX_AUTHENTICATION_CODE_LENGTH 16

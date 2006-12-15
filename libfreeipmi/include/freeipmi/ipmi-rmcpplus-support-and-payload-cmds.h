@@ -26,9 +26,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
  
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED   0x0

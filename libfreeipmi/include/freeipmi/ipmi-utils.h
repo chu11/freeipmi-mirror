@@ -26,9 +26,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 uint8_t ipmi_checksum (uint8_t *buf, uint64_t len);

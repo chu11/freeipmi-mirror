@@ -1,7 +1,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.4.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.72 2006-12-13 00:22:31 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.73 2006-12-15 17:26:44 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -223,7 +223,7 @@ AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
-AC_CHECK_HEADERS([stdint.h linux/types.h error.h sys/io.h asm/io.h])
+AC_CHECK_HEADERS([linux/types.h error.h sys/io.h asm/io.h])
 
 dnl Check for variables
 

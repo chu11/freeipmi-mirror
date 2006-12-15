@@ -25,9 +25,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_DEVICE_ID_UNSPECIFIED        0x00

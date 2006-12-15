@@ -25,9 +25,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 int32_t assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm, 

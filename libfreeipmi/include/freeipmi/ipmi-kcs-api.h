@@ -26,9 +26,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_KCS_SMS_IO_BASE_DEFAULT    0x0CA2

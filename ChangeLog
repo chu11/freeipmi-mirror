@@ -6,6 +6,8 @@
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Add g++
 	compatibility definitions.
+
+	* Globally remove HAVE_STDINT_H.
 	
 2006-12-15  Anand Babu  <ab@zresearch.com>
 

@@ -26,9 +26,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_OPENIPMI_DRIVER_DEVICE_DEFAULT   "/dev/ipmi0"

@@ -25,9 +25,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 #include <freeipmi/fiid.h>
 
 #define IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY 0x0000

@@ -26,12 +26,8 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
-
 #include <sys/socket.h>
-
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-kcs-api.h>
 #include <freeipmi/ipmi-locate.h>

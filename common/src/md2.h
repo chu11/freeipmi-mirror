@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md2.h,v 1.5 2006-09-13 21:23:56 chu11 Exp $
+ *  $Id: md2.h,v 1.6 2006-12-15 17:26:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,9 +31,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 
 #define MD2_BLOCK_LENGTH   16
 #define MD2_BUFFER_LENGTH  48

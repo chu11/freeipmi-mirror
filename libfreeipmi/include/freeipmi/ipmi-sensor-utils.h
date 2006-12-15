@@ -26,11 +26,7 @@
 extern "C" {
 #endif
 
-#include <sys/types.h>
-
-#ifdef HAVE_STDINT_H
 #include <stdint.h>
-#endif
 
 int ipmi_sensor_decode_value (int8_t r_exponent, 
 			      int8_t b_exponent, 
