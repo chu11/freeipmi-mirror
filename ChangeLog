@@ -1,3 +1,7 @@
+2006-12-18  Albert Chu <chu11@llnl.gov>
+
+	* tagged Release-0_3_1.
+	
 2006-12-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h,
