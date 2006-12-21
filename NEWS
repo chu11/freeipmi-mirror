@@ -4,6 +4,7 @@
 For Users
 ---------
 o -Q option added for ipmi-sensors and ipmi-sel.
+o -P option added to allow for password prompting.
 o Various bug fixes throughout FreeIPMI.
 
 For Developers
