@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.54 2006-12-08 01:10:47 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.55 2006-12-28 19:27:21 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -594,7 +594,8 @@ Due to deficiences within powerman, the power control operations --on,
 errors that may occur.  The user should use the --query option to
 ensure that all remote hosts were successfully powered on or off.
 
-It is recommend that the --on-if-off option be used with
+It is recommend that the --on-if-off, --wait-until-on, and
+--wait-until-off options be used with
 .B ipmipower
 when it is used in conjunction with powerman.  This will ensure
 .B ipmipower
