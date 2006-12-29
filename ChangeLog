@@ -1,3 +1,8 @@
+2006-12-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/src/ipmi-pef.c, ipmi-sel/src/ipmi-sel.c,
+	ipmi-sensors/src/ipmi-sensors.c: Remove unused exit_status global.
+	
 2006-12-28  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Add some extra powerman info.

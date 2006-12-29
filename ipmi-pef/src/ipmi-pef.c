@@ -52,8 +52,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "freeipmi-portability.h"
 
-int exit_status = 0;
-
 int 
 display_pef_info (ipmi_device_t dev)
 {
@@ -65,7 +63,6 @@ display_pef_info (ipmi_device_t dev)
     {
       fprintf (stderr, "%s: unable to get PEF information\n", 
 	       program_invocation_short_name);
-      exit_status = -1;
       return (-1);
     }
 

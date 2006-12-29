@@ -57,7 +57,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "freeipmi-portability.h"
 
-int exit_status = 0;
 sdr_repository_info_t sdr_info;
 sdr_record_t *sdr_record_list = NULL;
 int sdr_record_count = 0;
@@ -76,7 +75,6 @@ display_sdr_repository_info (ipmi_device_t dev)
     {
       fprintf (stderr, "%s: unable to get SDR Repository information\n", 
 	       program_invocation_short_name);
-      exit_status = -1;
       return (-1);
     }
   
