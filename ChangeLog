@@ -1,3 +1,8 @@
+2006-01-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-udm.c (IPMI_SESSION_TIMEOUT): Change
+	default to 20 seconds.
+	
 2006-12-29  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/src/ipmi-pef.c, ipmi-sel/src/ipmi-sel.c,
