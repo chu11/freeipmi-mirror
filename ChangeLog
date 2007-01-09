@@ -1,3 +1,8 @@
+2006-01-09  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c (display_channel_info): Fix protocol
+	type output bug.
+	
 2006-01-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-udm.c (IPMI_SESSION_TIMEOUT): Change

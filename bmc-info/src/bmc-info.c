@@ -362,21 +362,21 @@ display_channel_info (ipmi_device_t dev)
 
       if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED(channel_info_list[i].protocol_type))
         printf ("    Protocol Type: %s\n", "Reserved");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
         printf ("    Protocol Type: %s\n", "IPMB-1.0");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
         printf ("    Protocol Type: %s\n", "ICMB-1.0");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
         printf ("    Protocol Type: %s\n", "IPMI-SMBus");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
         printf ("    Protocol Type: %s\n", "KCS");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
         printf ("    Protocol Type: %s\n", "SMIC");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
         printf ("    Protocol Type: %s\n", "BT-10");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
         printf ("    Protocol Type: %s\n", "BT-15");
-      else if (IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
+      else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
         printf ("    Protocol Type: %s\n", "TMODE");
       else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM(channel_info_list[i].protocol_type))
         printf ("    Protocol Type: %s\n", "OEM");
