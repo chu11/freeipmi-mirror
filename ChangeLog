@@ -1,3 +1,13 @@
+2006-01-12  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c: Cleanup/re-architect for later
+	hostrange support.
+
+        * bmc-config/src/bmc-config.c, bmc-info/src/bmc-info.c,
+        ipmi-pef/src/ipmi-pef.c, ipmi-raw/src/ipmi-raw.c,
+        ipmi-sel/src/ipmi-sel.c, ipmi-sensors/src/ipmi-sensors.c
+        (_disable_coredump): Make function static.
+	
 2006-01-09  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c (display_channel_info): Fix protocol

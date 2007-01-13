@@ -62,7 +62,16 @@ typedef struct channel_info
   uint8_t protocol_type;
 } channel_info_t;
 
-channel_info_t channel_info_list[8];
+#define NUM_CHANNELS 8
+
+typedef struct bmc_info_prog_data
+{
+  char *progname;
+  struct arguments *args;
+  uint32_t flags;
+} bmc_info_prog_data_t;
+
+
 
 #define _FIID_OBJ_GET(bytes, field, val)               \
 do {                                                   \
@@ -70,8 +79,11 @@ do {                                                   \
     _val_ptr = val;                                    \
     if (fiid_obj_get (bytes, field, &_val) < 0)        \
       {                                                \
-        err (1, "fiid_obj_get (%p, \"%s\", %p) error", \
-             bytes, field, val);                       \
+        fprintf (stderr,                               \
+                 "fiid_obj_get: %s: %s\n",             \
+                 field,                                \
+                 strerror(errno));                     \
+        return (-1);                                   \
       }                                                \
     *_val_ptr = _val;                                  \
 } while (0)
@@ -85,7 +97,7 @@ display_get_device_id (ipmi_device_t dev)
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
     {
       perror ("fiid_obj_create");
-      exit (EXIT_FAILURE);
+      return (-1);
     }
 
   if (ipmi_cmd_get_device_id (dev, cmd_rs) != 0)
@@ -226,19 +238,19 @@ display_get_device_id (ipmi_device_t dev)
 	      if (!(intel_rs = fiid_obj_create(tmpl_cmd_get_device_id_sr870bn4_rs)))
 		{
 		  perror ("fiid_obj_create");
-		  exit (EXIT_FAILURE);
+                  return (-1);
 		}
 
 	      if ((len = fiid_obj_get_all(cmd_rs, buf, 1024)) < 0)
 		{
 		  perror("fiid_obj_get_all");
-		  exit (EXIT_FAILURE);
+                  return (-1);
 		}
 
 	      if (fiid_obj_set_all(intel_rs, buf, len) < 0)
 		{
 		  perror("fiid_obj_set_all");
-		  exit (EXIT_FAILURE);
+                  return (-1);
 		}
 	      
 	      _FIID_OBJ_GET (intel_rs,
@@ -272,8 +284,8 @@ display_get_device_id (ipmi_device_t dev)
   return 0;
 }
 
-static channel_info_t *
-get_channel_info_list (ipmi_device_t dev)
+static int
+get_channel_info_list (ipmi_device_t dev, channel_info_t *channel_info_list)
 {
   fiid_obj_t data_rs = NULL; 
   uint8_t i;
@@ -283,109 +295,121 @@ get_channel_info_list (ipmi_device_t dev)
   if (!(data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
     {
       perror ("fiid_obj_create");
-      exit (EXIT_FAILURE);
+      return (-1);
     }
 
-  for (i = 0, ci = 0; i < 8; i++)
+  for (i = 0, ci = 0; i < NUM_CHANNELS; i++)
     {
       if (ipmi_cmd_get_channel_info (dev, 
 				     i, 
 				     data_rs) != 0)
 	continue;
       
-      fiid_obj_get (data_rs, 
-		    "actual_channel_number", 
-		    &val);
+      _FIID_OBJ_GET (data_rs, 
+                     "actual_channel_number", 
+                     &val);
       channel_info_list[ci].channel_number = (uint8_t) val;
       
-      fiid_obj_get (data_rs, 
-		    "channel_medium_type", 
-		    &val);
+      _FIID_OBJ_GET (data_rs, 
+                     "channel_medium_type", 
+                     &val);
       channel_info_list[ci].medium_type = (uint8_t) val;
       
-      fiid_obj_get (data_rs, 
-		    "channel_protocol_type", 
-		    &val);
+      _FIID_OBJ_GET (data_rs, 
+                     "channel_protocol_type", 
+                     &val);
       channel_info_list[ci].protocol_type = (uint8_t) val;
       
       ci++;
     }
 
   fiid_obj_destroy(data_rs);
-  return (channel_info_list);
+  return (0);
 }
 
 int 
 display_channel_info (ipmi_device_t dev)
 {
-  channel_info_t *channel_list;
+  channel_info_t channel_info_list[NUM_CHANNELS];
   uint8_t i;
   
-  channel_list = get_channel_info_list (dev);
-  
+  memset(channel_info_list, '\0', sizeof(channel_info_t) * NUM_CHANNELS);
+  if (get_channel_info_list (dev, channel_info_list) < 0)
+    return (-1);
+
   printf ("Channel Information:\n");
-  for (i = 0; i < 8; i++)
+  for (i = 0; i < NUM_CHANNELS; i++)
     {
+      char *medium_type = NULL;
+      char *protocol_type = NULL;
+
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
         continue;
       
-      printf ("       Channel No: %d\n", channel_list[i].channel_number);
+      printf ("       Channel No: %d\n", channel_info_list[i].channel_number);
       
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
-        printf ("      Medium Type: %s\n", "Reserved");
+        medium_type = "Reserved";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_IPMB)
-        printf ("      Medium Type: %s\n", "IPMB (I2C)");
+        medium_type = "IPMB (I2C)";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10)
-        printf ("      Medium Type: %s\n", "ICMB v1.0");
+        medium_type = "ICMB v1.0";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09)
-        printf ("      Medium Type: %s\n", "ICMB v0.9");
+        medium_type = "ICMB v0.9";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
-        printf ("      Medium Type: %s\n", "802.3 LAN");
+        medium_type = "802.3 LAN";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
-        printf ("      Medium Type: %s\n", "Asynch. Serial/Modem (RS-232)");
+        medium_type = "Asynch. Serial/Modem (RS-232)";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN)
-        printf ("      Medium Type: %s\n", "Other LAN");
+        medium_type = "Other LAN";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS)
-        printf ("      Medium Type: %s\n", "PCI SMBus");
+        medium_type = "PCI SMBus";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11)
-        printf ("      Medium Type: %s\n", "SMBus v1.0/1.1");
+        medium_type = "SMBus v1.0/1.1";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20)
-        printf ("      Medium Type: %s\n", "SMBus v2.0");
+        medium_type = "SMBus v2.0";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_1X)
-        printf ("      Medium Type: %s\n", "USB 1.x");
+        medium_type = "USB 1.x";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_2X)
-        printf ("      Medium Type: %s\n", "USB 2.x");
+        medium_type = "USB 2.x";
       else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE)
-        printf ("      Medium Type: %s\n", "System Interface (KCS, SMIC, or BT)");
+        medium_type = "System Interface (KCS, SMIC, or BT)";
       else if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM(channel_info_list[i].medium_type))
-        printf ("      Medium Type: %s\n", "OEM");
+        medium_type = "OEM";
 
       if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED(channel_info_list[i].protocol_type))
-        printf ("    Protocol Type: %s\n", "Reserved");
+        protocol_type = "Reserved";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
-        printf ("    Protocol Type: %s\n", "IPMB-1.0");
+        protocol_type = "IPMB-1.0";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
-        printf ("    Protocol Type: %s\n", "ICMB-1.0");
+        protocol_type = "ICMB-1.0";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
-        printf ("    Protocol Type: %s\n", "IPMI-SMBus");
+        protocol_type = "IPMI-SMBus";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
-        printf ("    Protocol Type: %s\n", "KCS");
+        protocol_type = "KCS";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
-        printf ("    Protocol Type: %s\n", "SMIC");
+        protocol_type = "SMIC";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
-        printf ("    Protocol Type: %s\n", "BT-10");
+        protocol_type = "BT-10";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
-        printf ("    Protocol Type: %s\n", "BT-15");
+        protocol_type = "BT-15";
       else if (channel_info_list[i].protocol_type == IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
-        printf ("    Protocol Type: %s\n", "TMODE");
+        protocol_type = "TMODE";
       else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM(channel_info_list[i].protocol_type))
-        printf ("    Protocol Type: %s\n", "OEM");
+        protocol_type = "OEM";
+
+      if (medium_type)
+        fprintf (stdout, "      Medium Type: %s\n", medium_type);
+      
+      if (protocol_type)
+        fprintf (stdout, "    Protocol Type: %s\n", protocol_type);
+                  
     }
   
   return 0;
 }
 
-void
+static void
 _disable_coredump(void)
 {
   /* Disable core dumping when not-debugging.  Do not want username,
@@ -403,12 +427,111 @@ _disable_coredump(void)
 #endif /* NDEBUG */
 }
 
+static int
+_bmc_info (void *arg)
+{
+  bmc_info_prog_data_t *prog_data;
+  ipmi_device_t dev = NULL;
+  int exit_code = -1;
+  
+  prog_data = (bmc_info_prog_data_t *)arg;
+
+  if (prog_data->args->common.host != NULL)
+    {
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
+                                       prog_data->args->common.host,
+                                       prog_data->args->common.username,
+                                       prog_data->args->common.password,
+                                       prog_data->args->common.authentication_type,
+                                       prog_data->args->common.privilege_level,
+                                       prog_data->args->common.session_timeout,
+                                       prog_data->args->common.retry_timeout,
+                                       prog_data->flags)))
+        {
+          perror ("ipmi_open_outofband()");
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if (!ipmi_is_root())
+        {
+          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (prog_data->args->common.driver_type == IPMI_DEVICE_UNKNOWN)
+        {
+          if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI,
+                                        prog_data->args->common.disable_auto_probe,
+                                        prog_data->args->common.driver_address,
+                                        prog_data->args->common.register_spacing,
+                                        prog_data->args->common.driver_device,
+                                        prog_data->flags)))
+            {
+              if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS,
+                                            prog_data->args->common.disable_auto_probe,
+                                            prog_data->args->common.driver_address,
+                                            prog_data->args->common.register_spacing,
+                                            prog_data->args->common.driver_device,
+                                            prog_data->flags)))
+                {
+                  if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
+                                                prog_data->args->common.disable_auto_probe,
+                                                prog_data->args->common.driver_address,
+                                                prog_data->args->common.register_spacing,
+                                                prog_data->args->common.driver_device,
+                                                prog_data->flags)))
+                    {
+                      perror ("ipmi_open_inband()");
+                      exit_code = EXIT_FAILURE;
+                      goto cleanup;
+                    }
+                }
+            }
+        }
+      else
+        {
+          if (!(dev = ipmi_open_inband (prog_data->args->common.driver_type,
+                                        prog_data->args->common.disable_auto_probe,
+                                        prog_data->args->common.driver_address,
+                                        prog_data->args->common.register_spacing,
+                                        prog_data->args->common.driver_device,
+                                        prog_data->flags)))
+            {
+              perror ("ipmi_open_inband()");
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+    }
+
+  if (display_get_device_id (dev) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  if (display_channel_info (dev) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  exit_code = 0;
+ cleanup:
+  if (dev)
+    ipmi_close_device (dev);
+  return exit_code;
+}
+
 int 
 main (int argc, char **argv)
 {
-  struct arguments *args = NULL;
-  ipmi_device_t dev = NULL;
-  uint32_t flags;
+  bmc_info_prog_data_t prog_data;
+  int exit_code;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
@@ -416,7 +539,7 @@ main (int argc, char **argv)
   _disable_coredump();
   
   bmc_info_argp_parse (argc, argv);
-  args = bmc_info_get_arguments ();
+  prog_data.args = bmc_info_get_arguments ();
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
@@ -425,86 +548,15 @@ main (int argc, char **argv)
 #endif /* NDEBUG */
   
 #ifndef NDEBUG
-  if (args->common.debug)
-    flags = IPMI_FLAGS_DEBUG_DUMP;
+  if (prog_data.args->common.debug)
+    prog_data.flags = IPMI_FLAGS_DEBUG_DUMP;
   else
-    flags = IPMI_FLAGS_DEFAULT;
+    prog_data.flags = IPMI_FLAGS_DEFAULT;
 #else  /* NDEBUG */
-  flags = IPMI_FLAGS_DEFAULT;
+  prog_data.flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
-
-  if (args->common.host != NULL)
-    {
-      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN, 
-				       args->common.host,
-                                       args->common.username, 
-                                       args->common.password, 
-                                       args->common.authentication_type, 
-                                       args->common.privilege_level,
-                                       args->common.session_timeout, 
-                                       args->common.retry_timeout, 
-                                       flags))) 
-	{
-	  perror ("ipmi_open_outofband()");
-	  exit (EXIT_FAILURE);
-	}
-    }
-  else 
-    {
-      if (!ipmi_is_root())
-        {
-          fprintf(stderr, "%s: Permission Denied\n", argv[0]);
-          exit(EXIT_FAILURE);
-        }
-
-      if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
-	{
-	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
-					args->common.disable_auto_probe, 
-                                        args->common.driver_address, 
-                                        args->common.register_spacing,
-                                        args->common.driver_device, 
-                                        flags)))
-	    {
-	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS, 
-					    args->common.disable_auto_probe, 
-					    args->common.driver_address, 
-					    args->common.register_spacing,
-					    args->common.driver_device, 
-					    flags)))
-		{
-		  if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF, 
-						args->common.disable_auto_probe, 
-						args->common.driver_address, 
-						args->common.register_spacing,
-						args->common.driver_device, 
-						flags)))
-		    {
-		      perror ("ipmi_open_inband()");
-		      return (-1);
-		    }
-		}
-	    }
-	}
-      else 
-	{
-	  if (!(dev = ipmi_open_inband (args->common.driver_type, 
-					args->common.disable_auto_probe, 
-					args->common.driver_address, 
-                                        args->common.register_spacing,
-                                        args->common.driver_device, 
-                                        flags)))
-	    {
-	      perror ("ipmi_open_inband()");
-	      return (-1);
-	    }
-	}
-    }
   
-  display_get_device_id (dev);
-  display_channel_info (dev);
+  exit_code = _bmc_info(&prog_data);
   
-  ipmi_close_device (dev);
-  
-  return (0);
+  return (exit_code);
 }

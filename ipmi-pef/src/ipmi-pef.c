@@ -253,7 +253,7 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
   return retval;
 }
 
-void
+static void
 _disable_coredump(void)
 {
   /* Disable core dumping when not-debugging.  Do not want username,

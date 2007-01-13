@@ -163,7 +163,7 @@ ipmi_core_init (char *progname, struct arguments *args)
   return 0;
 }
 
-void
+static void
 _disable_coredump(void)
 {
   /* Disable core dumping when not-debugging.  Do not want username,

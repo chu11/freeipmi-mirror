@@ -116,7 +116,7 @@ string2bytes (char *line, unsigned char **buf, int *len)
   return (0);
 }
 
-void
+static void
 _disable_coredump(void)
 {
   /* Disable core dumping when not-debugging.  Do not want username,
