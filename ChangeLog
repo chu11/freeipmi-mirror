@@ -1,4 +1,9 @@
-2006-01-12  Albert Chu <chu11@llnl.gov>
+2007-01-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo found by Dmitry
+	Frolov <frolov at riss-telecom dot ru>.
+	
+2007-01-12  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c: Cleanup/re-architect for later
 	hostrange support.
@@ -8,12 +13,12 @@
         ipmi-sel/src/ipmi-sel.c, ipmi-sensors/src/ipmi-sensors.c
         (_disable_coredump): Make function static.
 	
-2006-01-09  Albert Chu <chu11@llnl.gov>
+2007-01-09  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c (display_channel_info): Fix protocol
 	type output bug.
 	
-2006-01-08  Albert Chu <chu11@llnl.gov>
+2007-01-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-udm.c (IPMI_SESSION_TIMEOUT): Change
 	default to 20 seconds.

@@ -55,7 +55,7 @@
 #define IPMI_OPENIPMI_BUFLEN    1024
 
 #if HAVE_LINUX_IPMI_H
-#include <linux.ipmi.h>
+#include <linux/ipmi.h>
 #elif HAVE_SYS_IPMI_H
 #include <sys/ipmi.h>
 #else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_LINUX_H */
