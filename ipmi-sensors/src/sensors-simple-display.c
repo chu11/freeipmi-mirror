@@ -143,5 +143,5 @@ sensors_display_simple (sdr_record_t *sdr_record, sensor_reading_t *sensor_readi
 						    sensor_reading);
     }
   
-  return (-1);
+  return (0);
 }

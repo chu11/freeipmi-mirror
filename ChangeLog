@@ -1,3 +1,9 @@
+2007-01-21  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c: Rename 'flags' to 'debug_flags'.
+
+	* ipmi-sensors/: Cleanup/re-architect for later hostrange support.
+	
 2007-01-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-udm.c,

@@ -68,7 +68,7 @@ typedef struct bmc_info_prog_data
 {
   char *progname;
   struct arguments *args;
-  uint32_t flags;
+  uint32_t debug_flags;
 } bmc_info_prog_data_t;
 
 
@@ -446,7 +446,7 @@ _bmc_info (void *arg)
                                        prog_data->args->common.privilege_level,
                                        prog_data->args->common.session_timeout,
                                        prog_data->args->common.retry_timeout,
-                                       prog_data->flags)))
+                                       prog_data->debug_flags)))
         {
           perror ("ipmi_open_outofband()");
           exit_code = EXIT_FAILURE;
@@ -469,21 +469,21 @@ _bmc_info (void *arg)
                                         prog_data->args->common.driver_address,
                                         prog_data->args->common.register_spacing,
                                         prog_data->args->common.driver_device,
-                                        prog_data->flags)))
+                                        prog_data->debug_flags)))
             {
               if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS,
                                             prog_data->args->common.disable_auto_probe,
                                             prog_data->args->common.driver_address,
                                             prog_data->args->common.register_spacing,
                                             prog_data->args->common.driver_device,
-                                            prog_data->flags)))
+                                            prog_data->debug_flags)))
                 {
                   if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
                                                 prog_data->args->common.disable_auto_probe,
                                                 prog_data->args->common.driver_address,
                                                 prog_data->args->common.register_spacing,
                                                 prog_data->args->common.driver_device,
-                                                prog_data->flags)))
+                                                prog_data->debug_flags)))
                     {
                       perror ("ipmi_open_inband()");
                       exit_code = EXIT_FAILURE;
@@ -499,7 +499,7 @@ _bmc_info (void *arg)
                                         prog_data->args->common.driver_address,
                                         prog_data->args->common.register_spacing,
                                         prog_data->args->common.driver_device,
-                                        prog_data->flags)))
+                                        prog_data->debug_flags)))
             {
               perror ("ipmi_open_inband()");
               exit_code = EXIT_FAILURE;
@@ -550,11 +550,11 @@ main (int argc, char **argv)
   
 #ifndef NDEBUG
   if (prog_data.args->common.debug)
-    prog_data.flags = IPMI_FLAGS_DEBUG_DUMP;
+    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
   else
-    prog_data.flags = IPMI_FLAGS_DEFAULT;
+    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #else  /* NDEBUG */
-  prog_data.flags = IPMI_FLAGS_DEFAULT;
+  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
   
   exit_code = _bmc_info(&prog_data);

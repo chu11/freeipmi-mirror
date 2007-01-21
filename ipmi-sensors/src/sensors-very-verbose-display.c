@@ -393,5 +393,5 @@ sensors_display_very_verbose (sdr_record_t *sdr_record, sensor_reading_t *sensor
 						      sensor_reading);
     }
   
-  return (-1);
+  return (0);
 }
