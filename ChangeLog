@@ -3,6 +3,8 @@
 	* libfreeipmi/src/udm/ipmi-udm.c,
 	libfreeipmi/include/freeipmi/udm/ipmi-udm.h (ipmi_open_outofband):
 	Make char parameters const.
+
+	* bmc-info/src/bmc-info.c (main): Fix corner case.
 	
 2007-01-20  Albert Chu <chu11@llnl.gov>
 

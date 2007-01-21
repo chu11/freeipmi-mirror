@@ -538,6 +538,7 @@ main (int argc, char **argv)
   
   _disable_coredump();
   
+  prog_data.progname = argv[0];
   bmc_info_argp_parse (argc, argv);
   prog_data.args = bmc_info_get_arguments ();
 
