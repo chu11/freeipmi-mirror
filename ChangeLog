@@ -1,5 +1,11 @@
 2007-01-20  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/udm/ipmi-udm.c,
+	libfreeipmi/include/freeipmi/udm/ipmi-udm.h (ipmi_open_outofband):
+	Make char parameters const.
+	
+2007-01-20  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo found by Dmitry
 	Frolov <frolov at riss-telecom dot ru>.
 	

@@ -60,9 +60,9 @@ ipmi_device_t ipmi_open_inband (ipmi_driver_type_t driver_type,
                                 uint32_t flags);
 
 ipmi_device_t ipmi_open_outofband (ipmi_driver_type_t driver_type, 
-				   char *hostname,
-                                   char *username, 
-                                   char *password, 
+				   const char *hostname,
+                                   const char *username, 
+                                   const char *password, 
                                    uint8_t authentication_type, 
                                    uint8_t privilege_level,
                                    unsigned int session_timeout,
