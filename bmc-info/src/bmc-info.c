@@ -68,7 +68,7 @@ typedef struct channel_info
 typedef struct bmc_info_prog_data
 {
   char *progname;
-  struct arguments *args;
+  struct bmc_info_arguments *args;
   uint32_t debug_flags;
 } bmc_info_prog_data_t;
 
@@ -525,13 +525,13 @@ _bmc_info (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
-  if (display_get_device_id (dev) < 0)
+  if (display_get_device_id (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
   
-  if (display_channel_info (dev) < 0)
+  if (display_channel_info (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -547,6 +547,7 @@ _bmc_info (void *arg)
 int 
 main (int argc, char **argv)
 {
+  struct bmc_info_arguments cmd_args;
   bmc_info_prog_data_t prog_data;
   int exit_code;
 #ifdef NDEBUG
@@ -556,8 +557,8 @@ main (int argc, char **argv)
   _disable_coredump();
   
   prog_data.progname = argv[0];
-  bmc_info_argp_parse (argc, argv);
-  prog_data.args = bmc_info_get_arguments ();
+  bmc_info_argp_parse (argc, argv, &cmd_args);
+  prog_data.args = &cmd_args;
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */

@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.h,v 1.4 2006-03-07 07:25:59 chu11 Exp $ 
+   $Id: bmc-info-argp.h,v 1.5 2007-01-22 21:51:25 chu11 Exp $ 
    
    bmc-info-argp.h - displays BMC information.
    
@@ -23,12 +23,11 @@
 #ifndef _BMC_INFO_ARGP_H
 #define _BMC_INFO_ARGP_H
 
-struct arguments
+struct bmc_info_arguments
 {
   struct common_cmd_args common;
 };
 
-void bmc_info_argp_parse (int argc, char **argv);
-struct arguments *bmc_info_get_arguments ();
+void bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *args);
 
 #endif

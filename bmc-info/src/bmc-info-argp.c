@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.6 2006-03-07 07:25:59 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.7 2007-01-22 21:51:25 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -29,8 +29,6 @@
 #include "argp-common.h"
 #include "bmc-info-argp.h"
 
-static struct arguments cmd_args;
-
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
@@ -56,7 +54,7 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct arguments *cmd_args = state->input;
+  struct bmc_info_arguments *cmd_args = state->input;
   
   switch (key)
     {
@@ -75,16 +73,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void 
-bmc_info_argp_parse (int argc, char **argv)
+bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args.common));
+  init_common_cmd_args (&(cmd_args->common));
   
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }
-
-struct arguments *
-bmc_info_get_arguments ()
-{
-  return &cmd_args;
-}
-
