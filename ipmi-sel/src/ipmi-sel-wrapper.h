@@ -34,7 +34,9 @@ int get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info);
 int get_sel_record (ipmi_device_t dev, 
                     uint16_t record_id, 
                     sel_record_t *sel_rec, 
-                    uint16_t *next_record_id);
+                    uint16_t *next_record_id,
+                    sdr_record_t *sdr_record_list,
+                    int sdr_record_count);
 int get_sel_record_raw (ipmi_device_t dev, 
                         uint16_t record_id, 
                         uint8_t *record_data, 

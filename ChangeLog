@@ -2,7 +2,8 @@
 
 	* bmc-info/src/bmc-info.c: Rename 'flags' to 'debug_flags'.
 
-	* ipmi-sensors/: Cleanup/re-architect for later hostrange support.
+	* ipmi-sel/, ipmi-sensors/: Cleanup/re-architect for later
+	hostrange support.
 	
 2007-01-20  Albert Chu <chu11@llnl.gov>
 

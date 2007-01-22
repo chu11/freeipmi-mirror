@@ -28,6 +28,7 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <argp.h>
+#include <assert.h>
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sel-cmds.h"
@@ -43,10 +44,6 @@
 #include "ipmi-sensor-api.h"
 
 #include "ipmi-sel-wrapper.h"
-
-extern sdr_repository_info_t sdr_info;
-extern sdr_record_t *sdr_record_list;
-extern int sdr_record_count;
 
 int 
 get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info)
@@ -102,10 +99,16 @@ get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info)
 }
 
 static sdr_record_t *
-_find_sdr_record(uint8_t sensor_number)
+_find_sdr_record(uint8_t sensor_number,
+                 sdr_record_t *sdr_record_list,
+                 int sdr_record_count)
+
 {
   sdr_record_t *sdr_record;
   int i;
+  
+  assert(sdr_record_list);
+  assert(sdr_record_count);
 
   for (i = 0; i < sdr_record_count; i++)
     {
@@ -135,7 +138,9 @@ _round_double2 (double d)
 static int 
 _get_sel_system_event_record (uint8_t *record_data, 
                               uint32_t record_data_len,
-                              sel_record_t *sel_record)
+                              sel_record_t *sel_record,
+                              sdr_record_t *sdr_record_list,
+                              int sdr_record_count)
 {
   uint16_t record_id;
   uint32_t timestamp;
@@ -263,7 +268,7 @@ _get_sel_system_event_record (uint8_t *record_data,
 	  case IPMI_SEL_TRIGGER_READING:
 	    if (sdr_record_list 
 		&& sdr_record_count
-		&& (sdr_record = _find_sdr_record(sensor_number))
+		&& (sdr_record = _find_sdr_record(sensor_number, sdr_record_list, sdr_record_count))
 		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
 		&& sdr_record->record.sdr_full_record.event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
 	      {
@@ -319,7 +324,7 @@ _get_sel_system_event_record (uint8_t *record_data,
 	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
 	    if (sdr_record_list 
 		&& sdr_record_count
-		&& (sdr_record = _find_sdr_record(sensor_number))
+		&& (sdr_record = _find_sdr_record(sensor_number, sdr_record_list, sdr_record_count))
 		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
 		&& sdr_record->record.sdr_full_record.event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
 	      {
@@ -575,7 +580,9 @@ _get_sel_non_timestamped_oem_record (uint8_t *record_data,
 static int
 _parse_sel_record (uint8_t *record_data,
                    uint32_t record_data_len,
-                   sel_record_t *sel_record)
+                   sel_record_t *sel_record,
+                   sdr_record_t *sdr_record_list,
+                   int sdr_record_count)
 {
   fiid_obj_t obj = NULL;
   uint8_t record_type;
@@ -594,7 +601,7 @@ _parse_sel_record (uint8_t *record_data,
   switch (ipmi_get_sel_record_type (record_type))
     {
     case IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
-      rv = _get_sel_system_event_record (record_data, record_data_len, sel_record);
+      rv = _get_sel_system_event_record (record_data, record_data_len, sel_record, sdr_record_list, sdr_record_count);
       break;
     case IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
       rv = _get_sel_timestamped_oem_record (record_data, record_data_len, sel_record);
@@ -613,7 +620,9 @@ int
 get_sel_record (ipmi_device_t dev, 
                 uint16_t record_id, 
                 sel_record_t *sel_rec, 
-                uint16_t *next_record_id)
+                uint16_t *next_record_id,
+                sdr_record_t *sdr_record_list,
+                int sdr_record_count)
 {
   fiid_obj_t obj_cmd_rs;
   uint64_t val;
@@ -649,7 +658,7 @@ get_sel_record (ipmi_device_t dev,
   FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
   if (rv == 0)
     {
-      return (_parse_sel_record (record_data, record_data_len, sel_rec));
+      return (_parse_sel_record (record_data, record_data_len, sel_rec, sdr_record_list, sdr_record_count));
     }
   else
     {

@@ -44,6 +44,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <argp.h>
+#include <assert.h>
 
 #include "argp-common.h"
 #include "ipmi-common.h"
@@ -53,96 +54,135 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "freeipmi-portability.h"
 
-sdr_repository_info_t sdr_info;
-sdr_record_t *sdr_record_list = NULL;
-int sdr_record_count = 0;
+typedef struct ipmi_sel_prog_data
+{
+  char *progname;
+  struct arguments *args;
+  uint32_t debug_flags;
+} ipmi_sel_prog_data_t;
+
+typedef struct ipmi_sel_state_data
+{
+  ipmi_sel_prog_data_t *prog_data;
+  ipmi_device_t dev;
+  sdr_repository_info_t sdr_info;
+  sdr_record_t *sdr_record_list;
+  int sdr_record_count;
+} ipmi_sel_state_data_t;
+
+void
+cleanup_sdr_cache (ipmi_sel_state_data_t *state_data)
+{
+  assert (state_data);
+
+  memset(&(state_data->sdr_info), '\0', sizeof(sdr_repository_info_t));
+  if (state_data->sdr_record_list)
+    {
+      free(state_data->sdr_record_list);
+      state_data->sdr_record_list = NULL;
+      state_data->sdr_record_count = 0;
+    }
+}
 
 int
-init_sdr_cache (ipmi_device_t dev, struct arguments *args)
+init_sdr_cache (ipmi_sel_state_data_t *state_data)
 {
+  struct arguments *args = NULL;
   char *sdr_cache_filename = NULL;
   FILE *fp = NULL;
   int rv = -1;
 
-  if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host, 
-						    args->sdr_cache_dir)) == NULL)
-	{
+  assert(state_data);
+
+  args = state_data->prog_data->args;
+
+  if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host,
+                                                    args->sdr_cache_dir)) == NULL)
+    {
       perror ("error: get_sdr_cache_filename (): ");
       return (-1);
-	}
+    }
 
   if ((fp = fopen (sdr_cache_filename, "r")))
     {
-      rv = load_sdr_cache (fp, &sdr_info, &sdr_record_list, &sdr_record_count);
-      fclose (fp);
-      
-      if (rv == 0)
+      sdr_repository_info_t l_sdr_info;
+
+      if (load_sdr_cache (fp,
+                          &(state_data->sdr_info),
+                          &(state_data->sdr_record_list),
+                          &(state_data->sdr_record_count)) < 0)
+        goto cleanup;
+
+      memset (&l_sdr_info, 0, sizeof (sdr_repository_info_t));
+      if (get_sdr_repository_info (state_data->dev, &l_sdr_info) == -1)
+        goto cleanup;
+
+      if (l_sdr_info.most_recent_addition_timestamp == state_data->sdr_info.most_recent_addition_timestamp && l_sdr_info.most_recent_erase_timestamp == state_data->sdr_info.most_recent_erase_timestamp)
         {
-          sdr_repository_info_t l_sdr_info;
-	  
-          memset (&l_sdr_info, 0, sizeof (sdr_repository_info_t));
-          if (get_sdr_repository_info (dev, &l_sdr_info) == -1)
-            {
-              free (sdr_cache_filename);
-              free (sdr_record_list);
-              sdr_record_list = NULL;
-              sdr_record_count = 0;
-              return (-1);
-            }
-	  
-          if (l_sdr_info.most_recent_addition_timestamp == sdr_info.most_recent_addition_timestamp && l_sdr_info.most_recent_erase_timestamp == sdr_info.most_recent_erase_timestamp)
-            {
-              free (sdr_cache_filename);
-              return 0;
-            }
-	  
-          free (sdr_cache_filename);
-          free (sdr_record_list);
-          sdr_record_list = NULL;
-          sdr_record_count = 0;
+          rv = 0;
+          goto cleanup;
         }
+
+      fclose(fp);
+      fp = NULL;
     }
-  
+
   if ((fp = fopen (sdr_cache_filename, "w")))
     {
+      int rc;
 #ifndef NDEBUG
-      rv = create_sdr_cache (dev,
+      rc = create_sdr_cache (state_data->dev,
                              fp,
                              (args->quiet_cache_wanted) ? 0 : 1,
-                             args->common.debug);
+                             state_data->prog_data->debug_flags);
 #else  /* NDEBUG */
-      rv = create_sdr_cache (dev,
+      rc = create_sdr_cache (state_data->dev,
                              fp,
                              (args->quiet_cache_wanted) ? 0 : 1,
                              0);
 #endif /* NDEBUG */
+      if (rc < 0)
+        goto cleanup;
       fclose (fp);
-      if (rv)
-        {
-          return (-1);
-        }
+      fp = NULL;
     }
-  
+
   if ((fp = fopen (sdr_cache_filename, "r")))
     {
-      rv = load_sdr_cache (fp, &sdr_info, &sdr_record_list, &sdr_record_count);
+      if (load_sdr_cache (fp,
+                          &(state_data->sdr_info),
+                          &(state_data->sdr_record_list),
+                          &(state_data->sdr_record_count)) < 0)
+        goto cleanup;
+
       fclose (fp);
+      fp = NULL;
     }
-  
-  return rv;
+
+  rv = 0;
+ cleanup:
+  if (fp)
+    fclose (fp);
+  if (sdr_cache_filename)
+    free(sdr_cache_filename);
+  if (rv < 0)
+    cleanup_sdr_cache(state_data);
+  return (rv);
 }
 
 int 
-display_sel_info (ipmi_device_t dev)
+display_sel_info (ipmi_sel_state_data_t *state_data)
 {
   local_sel_info_t sel_info;
   char str[512];
   time_t t;
   struct tm *tmp;
   
+  assert(state_data);
+
   memset (&sel_info, 0, sizeof (local_sel_info_t));
   
-  if (get_sel_info (dev, &sel_info) != 0)
+  if (get_sel_info (state_data->dev, &sel_info) != 0)
     {
       fprintf (stderr, "%s: unable to get SEL information\n", 
 	       program_invocation_short_name);
@@ -182,21 +222,25 @@ display_sel_info (ipmi_device_t dev)
 }
 
 int 
-display_sel_records (ipmi_device_t dev)
+display_sel_records (ipmi_sel_state_data_t *state_data)
 {
   sel_record_t sel_rec;
   uint16_t record_id = 0;
   uint16_t next_record_id = 0;
   
+  assert(state_data);
+
   for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
       memset (&sel_rec, 0, sizeof (sel_record_t));
-      if (get_sel_record (dev, 
+      if (get_sel_record (state_data->dev, 
                           record_id, 
                           &sel_rec, 
-                          &next_record_id) != 0)
+                          &next_record_id,
+                          state_data->sdr_record_list,
+                          state_data->sdr_record_count) < 0)
 	{
 	  fprintf (stderr, "%s: unable to get SEL record\n", 
 		   program_invocation_short_name);
@@ -227,19 +271,22 @@ display_sel_records (ipmi_device_t dev)
 }
 
 int 
-hex_display_sel_records (ipmi_device_t dev, FILE *stream)
+hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
 {
   uint8_t record_data[SEL_RECORD_SIZE];
   uint32_t record_data_len = SEL_RECORD_SIZE;
   uint16_t record_id = 0;
   uint16_t next_record_id = 0;
   
+  assert(state_data);
+  assert(stream);
+
   for (record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
       memset (record_data, 0, record_data_len);
-      if (get_sel_record_raw (dev, 
+      if (get_sel_record_raw (state_data->dev, 
                               record_id, 
                               record_data, 
                               record_data_len, 
@@ -279,21 +326,21 @@ hex_display_sel_records (ipmi_device_t dev, FILE *stream)
 }
 
 int 
-run_cmd_args (ipmi_device_t dev, struct arguments *args)
+run_cmd_args (ipmi_sel_state_data_t *state_data)
 {
-  int retval = 0;
-  
-  if (args == NULL)
-    return (-1);
+  struct arguments *args;
+  int rv = -1;
+
+  assert(state_data);
+
+  args = state_data->prog_data->args;
   
   if (args->info_wanted)
-    {
-      retval = display_sel_info (dev);
-      return retval;
-    }
+    return display_sel_info (state_data);
   
   if (args->flush_cache_wanted)
     {
+      int retval;
       if (!args->quiet_cache_wanted)
         printf ("flushing cache... ");
       retval = flush_sdr_cache_file (args->common.host, args->sdr_cache_dir);
@@ -304,14 +351,15 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
 
   if (args->hex_dump_wanted)
     {
+      int retval = -1;
+
       if (args->hex_dump_filename)
 	{
 	  FILE *stream = NULL;
 	  
-	  stream = fopen (args->hex_dump_filename, "a+");
-	  if (stream != NULL)
+	  if ((stream = fopen (args->hex_dump_filename, "a+")))
 	    {
-	      retval = hex_display_sel_records (dev, stream);
+	      retval = hex_display_sel_records (state_data, stream);
 	      fclose (stream);
 	    }
 	  else 
@@ -322,9 +370,7 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
 	    }
 	}
       else 
-	{
-	  retval = hex_display_sel_records (dev, stdout);
-	}
+        retval = hex_display_sel_records (state_data, stdout);
       
       return retval;
     }
@@ -335,53 +381,43 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
       
       for (i = 0; i < args->delete_record_list_length; i++)
 	{
-	  int rval;
-	  
-	  rval = delete_sel_entry (dev, args->delete_record_list[i]);
-	  if (rval != 0)
-	    {
-	      fprintf (stderr, "deletion of record ID %d failed\n", 
-		       args->delete_record_list[i]);
-	    }
-	  
-	  if (!retval)
-	    retval = rval;
+	  if (delete_sel_entry (state_data->dev, args->delete_record_list[i]) < 0)
+            {
+              fprintf (stderr, "deletion of record ID %d failed\n", 
+                       args->delete_record_list[i]);
+              return (-1);
+            }
 	}
       
-      return retval;
+      return 0;
     }
   
   if (args->delete_all_wanted)
-    {
-      retval = clear_sel_entries (dev);
-      return retval;
-    }
+    return clear_sel_entries (state_data->dev);
   
   if (args->delete_range_wanted)
     {
       int i = 0;
       
       for (i = args->delete_range1; i <= args->delete_range2; i++)
-	{
-	  delete_sel_entry (dev, i);
-	}
+        /* ignore errors - some numbers may not exist */
+        delete_sel_entry (state_data->dev, i);
       
-      return retval;
+      return 0;
     }
   
-  if ((retval = init_sdr_cache (dev, args)))
-    {
-      fprintf (stderr, "%s: sdr cache initialization failed\n",
-               program_invocation_short_name);
-      return retval;
-    }
+  /* achu: ipmi-sel does not require the SDR cache, so if this fails, oh well */
+  if (init_sdr_cache (state_data) < 0)
+    fprintf (stderr, "%s: sdr cache initialization failed\n",
+             program_invocation_short_name);
 
-  retval = display_sel_records (dev);
+  if (display_sel_records (state_data) < 0)
+    goto cleanup;
 
-  if (sdr_record_list)
-    free (sdr_record_list);
-
-  return retval;
+  rv = 0;
+ cleanup:
+  cleanup_sdr_cache (state_data);
+  return (rv);
 }
 
 static void
@@ -402,108 +438,145 @@ _disable_coredump(void)
 #endif /* NDEBUG */
 }
 
+static int
+_ipmi_sel (void *arg)
+{
+  ipmi_sel_state_data_t state_data;
+  ipmi_sel_prog_data_t *prog_data;
+  ipmi_device_t dev = NULL;
+  int exit_code = -1;
+
+  prog_data = (ipmi_sel_prog_data_t *)arg;
+
+  if (prog_data->args->common.host != NULL)
+    {
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
+                                       prog_data->args->common.host,
+                                       prog_data->args->common.username,
+                                       prog_data->args->common.password,
+                                       prog_data->args->common.authentication_type,
+                                       prog_data->args->common.privilege_level,
+                                       prog_data->args->common.session_timeout,
+                                       prog_data->args->common.retry_timeout,
+                                       prog_data->debug_flags)))
+        {
+          perror ("ipmi_open_outofband()");
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if (!ipmi_is_root())
+        {
+          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (prog_data->args->common.driver_type == IPMI_DEVICE_UNKNOWN)
+        {
+          if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI,
+                                        prog_data->args->common.disable_auto_probe,
+                                        prog_data->args->common.driver_address,
+                                        prog_data->args->common.register_spacing,
+                                        prog_data->args->common.driver_device,
+                                        prog_data->debug_flags)))
+            {
+              if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS,
+                                            prog_data->args->common.disable_auto_probe,
+                                            prog_data->args->common.driver_address,
+                                            prog_data->args->common.register_spacing,
+                                            prog_data->args->common.driver_device,
+                                            prog_data->debug_flags)))
+                {
+                  if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
+                                                prog_data->args->common.disable_auto_probe,
+                                                prog_data->args->common.driver_address ,
+                                                prog_data->args->common.register_spacing,
+                                                prog_data->args->common.driver_device,
+                                                prog_data->debug_flags)))
+                    {
+                      perror ("ipmi_open_inband()");
+                      exit_code = EXIT_FAILURE;
+                      goto cleanup;
+                    }
+                }
+            }
+        }
+      else
+        {
+          if (!(dev = ipmi_open_inband (prog_data->args->common.driver_type,
+                                        prog_data->args->common.disable_auto_probe,
+                                        prog_data->args->common.driver_address,
+                                        prog_data->args->common.register_spacing,
+                                        prog_data->args->common.driver_device,
+                                        prog_data->debug_flags)))
+            {
+              perror ("ipmi_open_inband()");
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+    }
+  
+  memset(&state_data, '\0', sizeof(ipmi_sel_state_data_t));
+  state_data.dev = dev;
+  state_data.prog_data = prog_data;
+
+  if (run_cmd_args (&state_data) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = 0;
+ cleanup:
+  if (dev)
+    ipmi_close_device (dev);
+  return exit_code;
+}
+
+
 int 
 main (int argc, char **argv)
 {
-  struct arguments *args = NULL;
-  ipmi_device_t dev = NULL;
-  int retval = 0;
-  uint32_t flags;
+  ipmi_sel_prog_data_t prog_data;
+  int exit_code;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
-  
+
   _disable_coredump();
 
+  prog_data.progname = argv[0];
   ipmi_sel_argp_parse (argc, argv);
-  args = ipmi_sel_get_arguments ();
+  prog_data.args = ipmi_sel_get_arguments ();
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
   for (i = 1; i < argc; i++)
     memset(argv[i], '\0', strlen(argv[i]));
 #endif /* NDEBUG */
-  
+
 #ifndef NDEBUG
-  if (args->common.debug)
-    flags = IPMI_FLAGS_DEBUG_DUMP;
+  if (prog_data.args->common.debug)
+    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
   else
-    flags = IPMI_FLAGS_DEFAULT;
+    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #else  /* NDEBUG */
-  flags = IPMI_FLAGS_DEFAULT;
+  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
 
-  if (args->common.host != NULL)
+  if (setup_sdr_cache_directory () == -1)
     {
-      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-				       args->common.host,
-                                       args->common.username,
-                                       args->common.password,
-                                       args->common.authentication_type, 
-                                       args->common.privilege_level,
-                                       args->common.session_timeout, 
-                                       args->common.retry_timeout, 
-				       flags)))
-	{
-	  perror ("ipmi_open_outofband()");
-	  exit (EXIT_FAILURE);
-	}
+      fprintf (stderr, "%s: sdr cache directory setup failed\n",
+               program_invocation_short_name);
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
-  else
-    {
-      if (!ipmi_is_root())
-        {
-          fprintf(stderr, "%s: Permission Denied\n", argv[0]);
-          exit(EXIT_FAILURE);
-        }
 
-      if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
-	{
-	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
-					args->common.disable_auto_probe, 
-                                        args->common.driver_address, 
-                                        args->common.register_spacing,
-                                        args->common.driver_device, 
-                                        flags)))
-	    {
-	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS,
-					    args->common.disable_auto_probe,
-					    args->common.driver_address,
-					    args->common.register_spacing,
-					    args->common.driver_device,
-					    flags)))
-		{
-		  if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
-						args->common.disable_auto_probe,
-						args->common.driver_address,
-						args->common.register_spacing,
-						args->common.driver_device,
-						flags)))
-		    {
-		      perror ("ipmi_open_inband()");
-		      return (-1);
-		    }
-		}
-	    }
-	}
-      else
-	{
-	  if (!(dev = ipmi_open_inband (args->common.driver_type,
-					args->common.disable_auto_probe,
-					args->common.driver_address,
-                                        args->common.register_spacing,
-                                        args->common.driver_device,
-                                        flags)))
-	    {
-	      perror ("ipmi_open_inband()");
-	      return (-1);
-	    }
-	}
-    }
-  
-  retval = run_cmd_args (dev, args);
-  
-  ipmi_close_device (dev);
-  
-  return (retval);
+  exit_code = _ipmi_sel(&prog_data);
+ cleanup:
+  return (exit_code);
 }
