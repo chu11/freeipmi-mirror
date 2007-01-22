@@ -172,6 +172,20 @@ display_group_list (ipmi_sensors_state_data_t *state_data)
   return 0;
 }
 
+void
+cleanup_sdr_cache (ipmi_sensors_state_data_t *state_data)
+{
+  assert (state_data);
+
+  memset(&(state_data->sdr_info), '\0', sizeof(sdr_repository_info_t));
+  if (state_data->sdr_record_list)
+    {
+      free(state_data->sdr_record_list);
+      state_data->sdr_record_list = NULL;
+      state_data->sdr_record_count = 0;
+    }
+}
+
 int 
 init_sdr_cache (ipmi_sensors_state_data_t *state_data)
 {
@@ -193,67 +207,69 @@ init_sdr_cache (ipmi_sensors_state_data_t *state_data)
 
   if ((fp = fopen (sdr_cache_filename, "r")))
     {
-      rv = load_sdr_cache (fp, 
-                           &(state_data->sdr_info),
-                           &(state_data->sdr_record_list), 
-                           &(state_data->sdr_record_count));
-      fclose (fp);
-      
-      if (rv == 0)
-	{
-	  sdr_repository_info_t l_sdr_info;
+      sdr_repository_info_t l_sdr_info;
+
+      if (load_sdr_cache (fp, 
+                          &(state_data->sdr_info),
+                          &(state_data->sdr_record_list), 
+                          &(state_data->sdr_record_count)) < 0)
+        goto cleanup;
+
+      memset (&l_sdr_info, 0, sizeof (sdr_repository_info_t));
+      if (get_sdr_repository_info (state_data->dev, &l_sdr_info) == -1)
+        goto cleanup;
 	  
-	  memset (&l_sdr_info, 0, sizeof (sdr_repository_info_t));
-	  if (get_sdr_repository_info (state_data->dev, &l_sdr_info) == -1)
-	    {
-	      free (sdr_cache_filename);
-	      free (state_data->sdr_record_list);
-	      state_data->sdr_record_list = NULL;
-	      state_data->sdr_record_count = 0;
-	      return (-1);
-	    }
-	  
-	  if (l_sdr_info.most_recent_addition_timestamp == state_data->sdr_info.most_recent_addition_timestamp && l_sdr_info.most_recent_erase_timestamp == state_data->sdr_info.most_recent_erase_timestamp)
-	    {
-	      free (sdr_cache_filename);
-	      return 0;
-	    }
-	  
-	  free (sdr_cache_filename);
-	  free (state_data->sdr_record_list);
-	  state_data->sdr_record_list = NULL;
-	  state_data->sdr_record_count = 0;
-	}
+      if (l_sdr_info.most_recent_addition_timestamp == state_data->sdr_info.most_recent_addition_timestamp && l_sdr_info.most_recent_erase_timestamp == state_data->sdr_info.most_recent_erase_timestamp)
+        {
+          rv = 0;
+          goto cleanup;
+        }
+
+      fclose(fp);
+      fp = NULL;
     }
   
   if ((fp = fopen (sdr_cache_filename, "w")))
     {
+      int rc;
 #ifndef NDEBUG
-      rv = create_sdr_cache (state_data->dev, 
+      rc = create_sdr_cache (state_data->dev, 
                              fp, 
                              (args->quiet_cache_wanted) ? 0 : 1,
                              state_data->prog_data->debug_flags);
 #else  /* NDEBUG */
-      rv = create_sdr_cache (state_data->dev, 
+      rc = create_sdr_cache (state_data->dev, 
                              fp, 
                              (args->quiet_cache_wanted) ? 0 : 1,
                              0);
 #endif /* NDEBUG */
+      if (rc < 0)
+        goto cleanup;
       fclose (fp);
-      if (rv < 0)
-        return (-1);
+      fp = NULL;
     }
   
   if ((fp = fopen (sdr_cache_filename, "r")))
     {
-      rv = load_sdr_cache (fp,
-                           &(state_data->sdr_info), 
-                           &(state_data->sdr_record_list), 
-                           &(state_data->sdr_record_count));
+      if (load_sdr_cache (fp,
+                          &(state_data->sdr_info), 
+                          &(state_data->sdr_record_list), 
+                          &(state_data->sdr_record_count)) < 0)
+        goto cleanup;
+
       fclose (fp);
+      fp = NULL;
     }
   
-  return rv;
+  rv = 0;
+ cleanup:
+  if (fp)
+    fclose (fp);
+  if (sdr_cache_filename)
+    free(sdr_cache_filename);
+  if (rv < 0)
+    cleanup_sdr_cache(state_data);
+  return (rv);
 }
 
 int 
@@ -436,6 +452,7 @@ int
 run_cmd_args (ipmi_sensors_state_data_t *state_data)
 {
   struct arguments *args;
+  int rv = -1;
 
   assert(state_data);
 
@@ -462,10 +479,16 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
     {
       fprintf (stderr, "%s: sdr cache initialization failed\n", 
 	       program_invocation_short_name);
-      return (-1);
+      goto cleanup;
     }
   
-  return display_sensors (state_data);
+  if (display_sensors (state_data) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  cleanup_sdr_cache (state_data);
+  return (rv);
 }
 
 static void
