@@ -58,7 +58,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 typedef struct ipmi_raw_prog_data
 {
   char *progname;
-  struct arguments *args;
+  struct ipmi_raw_arguments *args;
   uint32_t debug_flags;
 } ipmi_raw_prog_data_t;
 
@@ -71,7 +71,7 @@ typedef struct ipmi_raw_state_data
 int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
 {
-  struct arguments *args;
+  struct ipmi_raw_arguments *args;
   uint8_t *bytes_rq = NULL;
   int send_len;
   int i;
@@ -180,7 +180,7 @@ string2bytes (char *line, unsigned char **buf, int *len)
 int
 ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 {
-  struct arguments *args;
+  struct ipmi_raw_arguments *args;
   char *line = NULL;
   unsigned int line_count = 0;
   size_t n = 0;
@@ -257,7 +257,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 int
 run_cmd_args (ipmi_raw_state_data_t *state_data)
 {
-  struct arguments *args;
+  struct ipmi_raw_arguments *args;
   FILE *infile = NULL;
   int rv = -1;
 
@@ -419,6 +419,7 @@ int
 main (int argc, char **argv)
 {
   ipmi_raw_prog_data_t prog_data;
+  struct ipmi_raw_arguments cmd_args;
   int exit_code;
 #ifdef NDEBUG
   int i;
@@ -427,8 +428,8 @@ main (int argc, char **argv)
   _disable_coredump();
 
   prog_data.progname = argv[0];
-  ipmi_raw_argp_parse (argc, argv);
-  prog_data.args = ipmi_raw_get_arguments ();
+  ipmi_raw_argp_parse (argc, argv, &cmd_args);
+  prog_data.args = &cmd_args;
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */

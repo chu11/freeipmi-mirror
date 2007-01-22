@@ -61,7 +61,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 typedef struct ipmi_sensors_prog_data
 {
   char *progname;
-  struct arguments *args;
+  struct ipmi_sensors_arguments *args;
   uint32_t debug_flags;
 } ipmi_sensors_prog_data_t;
 
@@ -189,7 +189,7 @@ cleanup_sdr_cache (ipmi_sensors_state_data_t *state_data)
 int 
 init_sdr_cache (ipmi_sensors_state_data_t *state_data)
 {
-  struct arguments *args = NULL;
+  struct ipmi_sensors_arguments *args = NULL;
   char *sdr_cache_filename = NULL;
   FILE *fp = NULL;
   int rv = -1;
@@ -387,7 +387,7 @@ display_sensor_list (ipmi_sensors_state_data_t *state_data)
 int 
 display_sensors (ipmi_sensors_state_data_t *state_data)
 {
-  struct arguments *args = NULL;
+  struct ipmi_sensors_arguments *args = NULL;
   
   assert(state_data);
 
@@ -451,7 +451,7 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
 int 
 run_cmd_args (ipmi_sensors_state_data_t *state_data)
 {
-  struct arguments *args;
+  struct ipmi_sensors_arguments *args;
   int rv = -1;
 
   assert(state_data);
@@ -612,6 +612,7 @@ int
 main (int argc, char **argv)
 {
   ipmi_sensors_prog_data_t prog_data;
+  struct ipmi_sensors_arguments cmd_args;
   int exit_code;
 #ifdef NDEBUG
   int i;
@@ -620,8 +621,8 @@ main (int argc, char **argv)
   _disable_coredump();
   
   prog_data.progname = argv[0];
-  ipmi_sensors_argp_parse (argc, argv);
-  prog_data.args = ipmi_sensors_get_arguments ();
+  ipmi_sensors_argp_parse (argc, argv, &cmd_args);
+  prog_data.args = &cmd_args;
    
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */

@@ -57,7 +57,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 typedef struct ipmi_sel_prog_data
 {
   char *progname;
-  struct arguments *args;
+  struct ipmi_sel_arguments *args;
   uint32_t debug_flags;
 } ipmi_sel_prog_data_t;
 
@@ -87,7 +87,7 @@ cleanup_sdr_cache (ipmi_sel_state_data_t *state_data)
 int
 init_sdr_cache (ipmi_sel_state_data_t *state_data)
 {
-  struct arguments *args = NULL;
+  struct ipmi_sel_arguments *args = NULL;
   char *sdr_cache_filename = NULL;
   FILE *fp = NULL;
   int rv = -1;
@@ -328,7 +328,7 @@ hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
 int 
 run_cmd_args (ipmi_sel_state_data_t *state_data)
 {
-  struct arguments *args;
+  struct ipmi_sel_arguments *args;
   int rv = -1;
 
   assert(state_data);
@@ -542,6 +542,7 @@ int
 main (int argc, char **argv)
 {
   ipmi_sel_prog_data_t prog_data;
+  struct ipmi_sel_arguments cmd_args;
   int exit_code;
 #ifdef NDEBUG
   int i;
@@ -550,8 +551,8 @@ main (int argc, char **argv)
   _disable_coredump();
 
   prog_data.progname = argv[0];
-  ipmi_sel_argp_parse (argc, argv);
-  prog_data.args = ipmi_sel_get_arguments ();
+  ipmi_sel_argp_parse (argc, argv, &cmd_args);
+  prog_data.args = &cmd_args;
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.h,v 1.6 2006-12-15 22:23:19 chu11 Exp $ 
+   $Id: ipmi-sel-argp.h,v 1.7 2007-01-22 22:12:02 chu11 Exp $ 
    
    ipmi-sel-argp.h - System Event Logger utility.
    
@@ -35,7 +35,7 @@ enum argp_option_keys
     SDR_CACHE_DIR_KEY = 200
   };
 
-struct arguments
+struct ipmi_sel_arguments
 {
   struct common_cmd_args common;
   int info_wanted;
@@ -54,7 +54,6 @@ struct arguments
   char *sdr_cache_dir;
 };
 
-void ipmi_sel_argp_parse (int argc, char **argv);
-struct arguments *ipmi_sel_get_arguments ();
+void ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args);
 
 #endif

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.h,v 1.4 2006-12-15 22:23:19 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.h,v 1.5 2007-01-22 22:12:02 chu11 Exp $ 
    
    ipmi-sensors-argp.h - IPMI Sensors utility.
    
@@ -35,7 +35,7 @@ enum argp_option_keys
     SDR_CACHE_DIR_KEY = 200
   };
 
-struct arguments
+struct ipmi_sensors_arguments
 {
   struct common_cmd_args common;
   int verbose_wanted;
@@ -53,7 +53,6 @@ struct arguments
   char *sdr_cache_dir;
 };
 
-void ipmi_sensors_argp_parse (int argc, char **argv);
-struct arguments *ipmi_sensors_get_arguments ();
+void ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *cmd_args);
 
 #endif

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.9 2006-12-15 22:23:19 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.10 2007-01-22 22:12:02 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -40,8 +40,6 @@
 #include "ipmi-sel-argp.h"
 
 #include "freeipmi-portability.h"
-
-static struct arguments cmd_args;
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
@@ -216,7 +214,7 @@ get_delete_record_list (char *delete_list_string, int *records, int count)
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct arguments *cmd_args = state->input;
+  struct ipmi_sel_arguments *cmd_args = state->input;
   
   switch (key)
     {
@@ -379,29 +377,22 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void 
-ipmi_sel_argp_parse (int argc, char **argv)
+ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args.common));
-  cmd_args.info_wanted = 0;
-  cmd_args.delete_wanted = 0;
-  cmd_args.delete_record_list = NULL;
-  cmd_args.delete_record_list_length = 0;
-  cmd_args.delete_all_wanted = 0;
-  cmd_args.delete_range_wanted = 0;
-  cmd_args.delete_range1 = 0;
-  cmd_args.delete_range2 = 0;
-  cmd_args.hex_dump_wanted = 0;
-  cmd_args.hex_dump_filename = NULL;
-  cmd_args.quiet_cache_wanted = 0;
-  cmd_args.sdr_cache_dir_wanted = 0;
-  cmd_args.sdr_cache_dir = NULL;
+  init_common_cmd_args (&(cmd_args->common));
+  cmd_args->info_wanted = 0;
+  cmd_args->delete_wanted = 0;
+  cmd_args->delete_record_list = NULL;
+  cmd_args->delete_record_list_length = 0;
+  cmd_args->delete_all_wanted = 0;
+  cmd_args->delete_range_wanted = 0;
+  cmd_args->delete_range1 = 0;
+  cmd_args->delete_range2 = 0;
+  cmd_args->hex_dump_wanted = 0;
+  cmd_args->hex_dump_filename = NULL;
+  cmd_args->quiet_cache_wanted = 0;
+  cmd_args->sdr_cache_dir_wanted = 0;
+  cmd_args->sdr_cache_dir = NULL;
   
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }
-
-struct arguments *
-ipmi_sel_get_arguments ()
-{
-  return &cmd_args;
-}
-

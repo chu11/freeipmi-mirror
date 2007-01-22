@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.11 2006-09-13 21:23:56 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.12 2007-01-22 22:12:02 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -36,8 +36,6 @@
 
 #include "freeipmi-portability.h"
 
-static struct arguments cmd_args;
-
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
@@ -65,7 +63,7 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct arguments *cmd_args = state->input;
+  struct ipmi_raw_arguments *cmd_args = state->input;
   
   switch (key)
     {
@@ -112,19 +110,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void 
-ipmi_raw_argp_parse (int argc, char **argv)
+ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args.common));
-  cmd_args.cmd_file = NULL;
-  memset (cmd_args.cmd, 0, sizeof(cmd_args.cmd));
-  cmd_args.cmd_length = 0;
+  init_common_cmd_args (&(cmd_args->common));
+  cmd_args->cmd_file = NULL;
+  memset (cmd_args->cmd, 0, sizeof(cmd_args->cmd));
+  cmd_args->cmd_length = 0;
   
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }
 
-struct arguments *
-ipmi_raw_get_arguments ()
-{
-  return &cmd_args;
-}
 

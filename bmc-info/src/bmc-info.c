@@ -547,8 +547,8 @@ _bmc_info (void *arg)
 int 
 main (int argc, char **argv)
 {
-  struct bmc_info_arguments cmd_args;
   bmc_info_prog_data_t prog_data;
+  struct bmc_info_arguments cmd_args;
   int exit_code;
 #ifdef NDEBUG
   int i;
