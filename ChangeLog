@@ -2,10 +2,14 @@
 
 	* ipmi-raw/: Cleanup/re-architect for later hostrange support.
 	
-	* bmc-info/src/bmc-info.c: Cleanup code.
+	* bmc-info/src/bmc-info.h, ipmi-sensors/src/ipmi-sensors.h,
+	ipmi-sel/src/ipmi-sel.h: New files.
 
-	* bmc-info/, ipmi-sensors/, ipmi-raw/ ipmi-sel/: Re-work/cleanup
-	argp code.
+	* bmc-info/src/Makefile.am, ipmi-sensors/src/Makefile.am,
+	ipmi-sel/src/Makefile.am: Update for new files respectively.
+
+	* bmc-info/, ipmi-sensors/, ipmi-raw/ ipmi-sel/: Continue
+	cleanup/re-architecture.
 
 2007-01-21  Albert Chu <chu11@llnl.gov>
 

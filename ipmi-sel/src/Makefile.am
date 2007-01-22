@@ -8,7 +8,7 @@ ipmi_sel_LDADD = ../../common/src/libargpcommon.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
 		 ../../common/src/libfreeipmiportability.la
  
-noinst_HEADERS=ipmi-sel-argp.h ipmi-sel-wrapper.h
+noinst_HEADERS=ipmi-sel-argp.h ipmi-sel-wrapper.h ipmi-sel.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \

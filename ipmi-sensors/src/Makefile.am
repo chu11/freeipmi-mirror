@@ -9,7 +9,7 @@ ipmi_sensors_LDADD = ../../common/src/libargpcommon.la \
 	../../libfreeipmi/src/libfreeipmi.la \
 	../../common/src/libfreeipmiportability.la
  
-noinst_HEADERS=ipmi-sensors-utils.h sensors-verbose-display.h \
+noinst_HEADERS=ipmi-sensors.h ipmi-sensors-utils.h sensors-verbose-display.h \
 	ipmi-sensors-argp.h sensors-simple-display.h sensors-very-verbose-display.h
  
 AM_CFLAGS = -Wall

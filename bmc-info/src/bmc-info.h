@@ -1,9 +1,9 @@
 /* 
-   $Id: ipmi-sensors-argp.h,v 1.6 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: bmc-info.h,v 1.1 2007-01-22 23:39:27 chu11 Exp $ 
    
-   ipmi-sensors-argp.h - IPMI Sensors utility.
+   bmc-info.h - displays BMC information.
    
-   Copyright (C) 2006 FreeIPMI Core Team
+   Copyright (C) 2005 FreeIPMI Core Team
    
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,12 +17,28 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#ifndef _IPMI_SENSORS_ARGP_H
-#define _IPMI_SENSORS_ARGP_H
+#ifndef _BMC_INFO_H
+#define _BMC_INFO_H
 
-void ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *cmd_args);
+struct bmc_info_arguments
+{
+  struct common_cmd_args common;
+};
+
+typedef struct bmc_info_prog_data
+{
+  char *progname;
+  struct bmc_info_arguments *args;
+  uint32_t debug_flags;
+} bmc_info_prog_data_t;
+
+typedef struct bmc_info_state_data
+{
+  bmc_info_prog_data_t *prog_data;
+  ipmi_device_t dev;
+} bmc_info_state_data_t;
 
 #endif

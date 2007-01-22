@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.7 2007-01-22 21:51:25 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.8 2007-01-22 23:39:27 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -27,6 +27,7 @@
 #include <argp.h>
 
 #include "argp-common.h"
+#include "bmc-info.h"
 #include "bmc-info-argp.h"
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);

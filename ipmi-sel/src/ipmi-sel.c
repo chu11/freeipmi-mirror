@@ -49,26 +49,11 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "argp-common.h"
 #include "ipmi-common.h"
 #include "ipmi-sdr-api.h"
+#include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-wrapper.h"
 
 #include "freeipmi-portability.h"
-
-typedef struct ipmi_sel_prog_data
-{
-  char *progname;
-  struct ipmi_sel_arguments *args;
-  uint32_t debug_flags;
-} ipmi_sel_prog_data_t;
-
-typedef struct ipmi_sel_state_data
-{
-  ipmi_sel_prog_data_t *prog_data;
-  ipmi_device_t dev;
-  sdr_repository_info_t sdr_info;
-  sdr_record_t *sdr_record_list;
-  int sdr_record_count;
-} ipmi_sel_state_data_t;
 
 void
 cleanup_sdr_cache (ipmi_sel_state_data_t *state_data)

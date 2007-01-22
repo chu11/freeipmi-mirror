@@ -53,6 +53,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <freeipmi/udm/udm.h>
 
 #include "argp-common.h"
+#include "bmc-info.h"
 #include "bmc-info-argp.h"
 #include "ipmi-common.h"
 
@@ -64,19 +65,6 @@ typedef struct channel_info
 } channel_info_t;
 
 #define NUM_CHANNELS 8
-
-typedef struct bmc_info_prog_data
-{
-  char *progname;
-  struct bmc_info_arguments *args;
-  uint32_t debug_flags;
-} bmc_info_prog_data_t;
-
-typedef struct bmc_info_state_data
-{
-  bmc_info_prog_data_t *prog_data;
-  ipmi_device_t dev;
-} bmc_info_state_data_t;
 
 #define _FIID_OBJ_GET(bytes, field, val)               \
 do {                                                   \

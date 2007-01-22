@@ -50,6 +50,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-common.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sdr-api.h"
+#include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-utils.h"
 #include "sensors-simple-display.h"
@@ -57,22 +58,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "sensors-very-verbose-display.h"
 
 #include "freeipmi-portability.h"
-
-typedef struct ipmi_sensors_prog_data
-{
-  char *progname;
-  struct ipmi_sensors_arguments *args;
-  uint32_t debug_flags;
-} ipmi_sensors_prog_data_t;
-
-typedef struct ipmi_sensors_state_data
-{
-  ipmi_sensors_prog_data_t *prog_data;
-  ipmi_device_t dev;
-  sdr_repository_info_t sdr_info;
-  sdr_record_t *sdr_record_list;
-  int sdr_record_count;
-} ipmi_sensors_state_data_t;
 
 int 
 display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)

@@ -6,7 +6,7 @@ ipmi_raw_LDADD = ../../common/src/libargpcommon.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
 		 ../../common/src/libfreeipmiportability.la
  
-noinst_HEADERS=ipmi-raw-argp.h 
+noinst_HEADERS=ipmi-raw-argp.h ipmi-raw.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \

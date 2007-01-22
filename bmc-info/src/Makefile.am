@@ -5,7 +5,7 @@ bmc_info_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libipmicommon.la \
 	         ../../libfreeipmi/src/libfreeipmi.la
  
-noinst_HEADERS=bmc-info-argp.h 
+noinst_HEADERS=bmc-info-argp.h bmc-info.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \

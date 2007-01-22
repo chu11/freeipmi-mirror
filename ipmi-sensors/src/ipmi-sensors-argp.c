@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.6 2007-01-22 22:12:02 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.7 2007-01-22 23:39:27 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -38,6 +38,7 @@
 
 #include "argp-common.h"
 #include "ipmi-sensor-api.h"
+#include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
 #include "ipmi-sensors-utils.h"
 

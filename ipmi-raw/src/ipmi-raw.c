@@ -51,22 +51,10 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <freeipmi/udm/udm.h>
 
 #include "argp-common.h"
+#include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
 #include "ipmi-common.h"
 #include "freeipmi-portability.h"
-
-typedef struct ipmi_raw_prog_data
-{
-  char *progname;
-  struct ipmi_raw_arguments *args;
-  uint32_t debug_flags;
-} ipmi_raw_prog_data_t;
-
-typedef struct ipmi_raw_state_data
-{
-  ipmi_raw_prog_data_t *prog_data;
-  ipmi_device_t dev;
-} ipmi_raw_state_data_t;
 
 int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
