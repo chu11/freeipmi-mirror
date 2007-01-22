@@ -1,3 +1,9 @@
+2007-01-22  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/src/bmc-info.c: Cleanup code.
+
+	* ipmi-raw/: Cleanup/re-architect for later hostrange support.
+	
 2007-01-21  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c: Rename 'flags' to 'debug_flags'.

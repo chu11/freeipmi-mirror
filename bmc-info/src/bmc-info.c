@@ -47,6 +47,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <netinet/in.h>
 #include <err.h>
 #include <argp.h>
+#include <assert.h>
 
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
@@ -71,7 +72,11 @@ typedef struct bmc_info_prog_data
   uint32_t debug_flags;
 } bmc_info_prog_data_t;
 
-
+typedef struct bmc_info_state_data
+{
+  bmc_info_prog_data_t *prog_data;
+  ipmi_device_t dev;
+} bmc_info_state_data_t;
 
 #define _FIID_OBJ_GET(bytes, field, val)               \
 do {                                                   \
@@ -89,18 +94,20 @@ do {                                                   \
 } while (0)
 
 int 
-display_get_device_id (ipmi_device_t dev)
+display_get_device_id (bmc_info_state_data_t *state_data)
 {
   fiid_obj_t cmd_rs = NULL;
   uint64_t val = 0;
   
+  assert(state_data);
+
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
     {
       perror ("fiid_obj_create");
       return (-1);
     }
 
-  if (ipmi_cmd_get_device_id (dev, cmd_rs) != 0)
+  if (ipmi_cmd_get_device_id (state_data->dev, cmd_rs) != 0)
     {
       perror ("ipmi_cmd_get_device_id()");
       return (-1);
@@ -285,13 +292,16 @@ display_get_device_id (ipmi_device_t dev)
 }
 
 static int
-get_channel_info_list (ipmi_device_t dev, channel_info_t *channel_info_list)
+get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channel_info_list)
 {
   fiid_obj_t data_rs = NULL; 
   uint8_t i;
   uint8_t ci;
   uint64_t val;
   
+  assert(state_data);
+  assert(channel_info_list);
+
   if (!(data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
     {
       perror ("fiid_obj_create");
@@ -300,7 +310,7 @@ get_channel_info_list (ipmi_device_t dev, channel_info_t *channel_info_list)
 
   for (i = 0, ci = 0; i < NUM_CHANNELS; i++)
     {
-      if (ipmi_cmd_get_channel_info (dev, 
+      if (ipmi_cmd_get_channel_info (state_data->dev, 
 				     i, 
 				     data_rs) != 0)
 	continue;
@@ -328,13 +338,15 @@ get_channel_info_list (ipmi_device_t dev, channel_info_t *channel_info_list)
 }
 
 int 
-display_channel_info (ipmi_device_t dev)
+display_channel_info (bmc_info_state_data_t *state_data)
 {
   channel_info_t channel_info_list[NUM_CHANNELS];
   uint8_t i;
   
+  assert(state_data);
+
   memset(channel_info_list, '\0', sizeof(channel_info_t) * NUM_CHANNELS);
-  if (get_channel_info_list (dev, channel_info_list) < 0)
+  if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
   printf ("Channel Information:\n");
@@ -430,6 +442,7 @@ _disable_coredump(void)
 static int
 _bmc_info (void *arg)
 {
+  bmc_info_state_data_t state_data;
   bmc_info_prog_data_t *prog_data;
   ipmi_device_t dev = NULL;
   int exit_code = -1;
@@ -507,6 +520,10 @@ _bmc_info (void *arg)
             }
         }
     }
+
+  memset(&state_data, '\0', sizeof(bmc_info_state_data_t));
+  state_data.dev = dev;
+  state_data.prog_data = prog_data;
 
   if (display_get_device_id (dev) < 0)
     {
