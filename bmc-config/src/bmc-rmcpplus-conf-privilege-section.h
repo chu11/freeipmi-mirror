@@ -1,6 +1,6 @@
 /* 
 
-   bmc-checkout.h - function prototypes
+   bmc-rmcpplus-conf-privilege-section.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_CHECKOUT_H_
-#define _BMC_CHECKOUT_H_
+#ifndef _BMC_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_
+#define _BMC_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_
 
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-int bmc_checkout (struct arguments *args, struct section *sections);
+struct section * bmc_rmcpplus_conf_privilege_section_get (struct arguments *args);
 
-#endif /* _BMC_CHECKOUT_H_ */
+#endif /* _BMC_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_ */

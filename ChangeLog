@@ -3,6 +3,19 @@
 	* bmc-config/src/bmc-types.h: Move to bmc-config.h.  File is now
 	removed.
 
+	* bmc-config/src/bmc-lan-channel-section.h,
+	bmc-config/src/bmc-lan-conf-auth-section.h,
+	bmc-config/src/bmc-lan-conf-misc-section.h,
+	bmc-config/src/bmc-lan-conf-section.h,
+	bmc-config/src/bmc-lan-conf-security-keys-section.h,
+	bmc-config/src/bmc-user-sections.h,
+	bmc-config/src/bmc-rmcpplus-conf-privilege-section.h,
+	bmc-config/src/bmc-serial-channel-section.h,
+	bmc-config/src/bmc-serial-conf-section.h,
+	bmc-config/src/bmc-pef-conf-section.h,
+	bmc-config/src/bmc-sol-conf-section.h,
+	bmc-config/src/bmc-misc-section.h: New files.
+
 	* bmc-config/: Update for header file changes appropriately.
 
 	* libfreeipmi/include/freeipmi/ipmi-error.h: Add forgotten

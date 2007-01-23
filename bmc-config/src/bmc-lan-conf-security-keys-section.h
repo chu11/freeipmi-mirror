@@ -1,6 +1,6 @@
 /* 
 
-   bmc-checkout.h - function prototypes
+   bmc-lan-conf-security-keys-section.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_CHECKOUT_H_
-#define _BMC_CHECKOUT_H_
+#ifndef _BMC_LAN_CONF_SECURITY_KEYS_SECTION_H_
+#define _BMC_LAN_CONF_SECURITY_KEYS_SECTION_H_
 
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-int bmc_checkout (struct arguments *args, struct section *sections);
+struct section * bmc_lan_conf_security_keys_section_get (struct arguments *args);
 
-#endif /* _BMC_CHECKOUT_H_ */
+#endif /* _BMC_LAN_CONF_SECURITY_KEYS_SECTION_H_ */

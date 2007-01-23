@@ -41,6 +41,18 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-config-api.h \
 		 bmc-diff.h \
 		 bmc-ipmi-wrapper.h \
+		 bmc-user-sections.h \
+		 bmc-lan-channel-section.h \
+		 bmc-lan-conf-auth-section.h \
+		 bmc-lan-conf-misc-section.h \
+		 bmc-lan-conf-section.h \
+		 bmc-lan-conf-security-keys-section.h \
+		 bmc-rmcpplus-conf-privilege-section.h \
+		 bmc-serial-channel-section.h \
+		 bmc-serial-conf-section.h \
+		 bmc-pef-conf-section.h \
+		 bmc-sol-conf-section.h \
+		 bmc-misc-section.h \
 		 bmc-map.h \
 		 bmc-parser.h \
 		 bmc-sections.h

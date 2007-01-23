@@ -1,6 +1,6 @@
 /* 
 
-   bmc-checkout.h - function prototypes
+   bmc-user-sections.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_CHECKOUT_H_
-#define _BMC_CHECKOUT_H_
+#ifndef _BMC_USER_SECTIONS_H_
+#define _BMC_USER_SECTIONS_H_
 
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-int bmc_checkout (struct arguments *args, struct section *sections);
+struct section * bmc_user_sections_get (struct arguments *args);
 
-#endif /* _BMC_CHECKOUT_H_ */
+#endif /* _BMC_USER_SECTIONS_H_ */

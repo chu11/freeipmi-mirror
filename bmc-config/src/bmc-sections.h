@@ -89,19 +89,6 @@ int bmc_section_diff_value (const char *section_name,
 			    struct arguments *arguments,
 			    struct section *sections);
 
-struct section * bmc_user_sections_get (struct arguments *args);
-struct section * bmc_lan_channel_section_get (struct arguments *args);
-struct section * bmc_lan_conf_section_get (struct arguments *args);
-struct section * bmc_lan_conf_auth_section_get (struct arguments *args);
-struct section * bmc_lan_conf_security_keys_section_get (struct arguments *args);
-struct section * bmc_lan_conf_misc_section_get (struct arguments *args);
-struct section * bmc_rmcpplus_conf_privilege_section_get (struct arguments *args);
-struct section * bmc_serial_channel_section_get (struct arguments *args);
-struct section * bmc_serial_conf_section_get (struct arguments *args);
-struct section * bmc_pef_conf_section_get (struct arguments *args);
-struct section * bmc_sol_conf_section_get (struct arguments *args);
-struct section * bmc_misc_section_get (struct arguments *args);
-
 int bmc_sections_list (struct arguments *args, struct section *sections);
 
 #define same(a,b) (strcasecmp(a,b) == 0)

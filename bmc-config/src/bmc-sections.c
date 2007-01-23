@@ -22,6 +22,20 @@
 #include "bmc-common.h"
 #include "bmc-sections.h"
 
+#include "bmc-user-sections.h"
+
+#include "bmc-lan-channel-section.h"
+#include "bmc-lan-conf-section.h"
+#include "bmc-lan-conf-auth-section.h"
+#include "bmc-lan-conf-security-keys-section.h"
+#include "bmc-lan-conf-misc-section.h"
+#include "bmc-rmcpplus-conf-privilege-section.h"
+#include "bmc-serial-channel-section.h"
+#include "bmc-serial-conf-section.h"
+#include "bmc-pef-conf-section.h"
+#include "bmc-sol-conf-section.h"
+#include "bmc-misc-section.h"
+
 struct section *
 bmc_sections_init (struct arguments *args)
 {
