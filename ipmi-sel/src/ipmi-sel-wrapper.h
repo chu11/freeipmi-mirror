@@ -3,6 +3,8 @@
 
 #define SEL_RECORD_SIZE 16
 
+#include "ipmi-sel.h"
+
 struct local_sel_info 
 {
   int sel_version_major;
@@ -30,20 +32,21 @@ struct sel_record
 };
 typedef struct sel_record sel_record_t;
 
-int get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info);
-int get_sel_record (ipmi_device_t dev, 
+int get_sel_info (ipmi_sel_state_data_t *state_data,
+                  local_sel_info_t *sel_info);
+int get_sel_record (ipmi_sel_state_data_t *state_data,
                     uint16_t record_id, 
                     sel_record_t *sel_rec, 
-                    uint16_t *next_record_id,
-                    sdr_record_t *sdr_record_list,
-                    int sdr_record_count);
-int get_sel_record_raw (ipmi_device_t dev, 
+                    uint16_t *next_record_id);
+int get_sel_record_raw (ipmi_sel_state_data_t *state_data,
                         uint16_t record_id, 
                         uint8_t *record_data, 
                         uint32_t record_data_len, 
                         uint16_t *next_record_id);
-int delete_sel_entry (ipmi_device_t dev, uint16_t record_id);
-int clear_sel_entries (ipmi_device_t dev);
-int get_sel_clear_status (ipmi_device_t dev, int *status);
+int delete_sel_entry (ipmi_sel_state_data_t *state_data,
+                      uint16_t record_id);
+int clear_sel_entries (ipmi_sel_state_data_t *state_data);
+int get_sel_clear_status (ipmi_sel_state_data_t *state_data,
+                          int *status);
 
 #endif

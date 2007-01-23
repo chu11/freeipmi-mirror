@@ -46,17 +46,18 @@
 #include "ipmi-sel-wrapper.h"
 
 int 
-get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info)
+get_sel_info (ipmi_sel_state_data_t *state_data, 
+              local_sel_info_t *sel_info)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
   
-  ERR_EINVAL (dev && sel_info);
+  ERR_EINVAL (state_data && sel_info);
 
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
-  if (ipmi_cmd_get_sel_info (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sel_info (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sel_version_major", &val);
@@ -99,20 +100,20 @@ get_sel_info (ipmi_device_t dev, local_sel_info_t *sel_info)
 }
 
 static sdr_record_t *
-_find_sdr_record(uint8_t sensor_number,
-                 sdr_record_t *sdr_record_list,
-                 int sdr_record_count)
+_find_sdr_record(ipmi_sel_state_data_t *state_data,
+                 uint8_t sensor_number)
 
 {
   sdr_record_t *sdr_record;
   int i;
   
-  assert(sdr_record_list);
-  assert(sdr_record_count);
+  assert(state_data);
+  assert(state_data->sdr_record_list);
+  assert(state_data->sdr_record_count);
 
-  for (i = 0; i < sdr_record_count; i++)
+  for (i = 0; i < state_data->sdr_record_count; i++)
     {
-      sdr_record = sdr_record_list + i;
+      sdr_record = state_data->sdr_record_list + i;
       /* achu: It seems only threshold sensors can output Trigger data? */
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
 	  && sdr_record->record.sdr_full_record.sensor_number == sensor_number)
@@ -136,11 +137,10 @@ _round_double2 (double d)
 }
 
 static int 
-_get_sel_system_event_record (uint8_t *record_data, 
+_get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
+                              uint8_t *record_data, 
                               uint32_t record_data_len,
-                              sel_record_t *sel_record,
-                              sdr_record_t *sdr_record_list,
-                              int sdr_record_count)
+                              sel_record_t *sel_record)
 {
   uint16_t record_id;
   uint32_t timestamp;
@@ -163,7 +163,7 @@ _get_sel_system_event_record (uint8_t *record_data,
 
   sdr_record_t *sdr_record;
 
-  ERR_EINVAL (record_data && sel_record);
+  ERR_EINVAL (state_data && record_data && sel_record);
 
   FIID_OBJ_CREATE (obj, tmpl_sel_system_event_record);
 
@@ -266,9 +266,9 @@ _get_sel_system_event_record (uint8_t *record_data,
 	switch (event_data2_flag)
 	  {
 	  case IPMI_SEL_TRIGGER_READING:
-	    if (sdr_record_list 
-		&& sdr_record_count
-		&& (sdr_record = _find_sdr_record(sensor_number, sdr_record_list, sdr_record_count))
+	    if (state_data->sdr_record_list 
+		&& state_data->sdr_record_count
+		&& (sdr_record = _find_sdr_record(state_data, sensor_number))
 		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
 		&& sdr_record->record.sdr_full_record.event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
 	      {
@@ -322,9 +322,9 @@ _get_sel_system_event_record (uint8_t *record_data,
 	switch (event_data3_flag)
 	  {
 	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
-	    if (sdr_record_list 
-		&& sdr_record_count
-		&& (sdr_record = _find_sdr_record(sensor_number, sdr_record_list, sdr_record_count))
+	    if (state_data->sdr_record_list 
+		&& state_data->sdr_record_count
+		&& (sdr_record = _find_sdr_record(state_data, sensor_number))
 		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
 		&& sdr_record->record.sdr_full_record.event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
 	      {
@@ -578,18 +578,17 @@ _get_sel_non_timestamped_oem_record (uint8_t *record_data,
 }
 
 static int
-_parse_sel_record (uint8_t *record_data,
+_parse_sel_record (ipmi_sel_state_data_t *state_data, 
+                   uint8_t *record_data,
                    uint32_t record_data_len,
-                   sel_record_t *sel_record,
-                   sdr_record_t *sdr_record_list,
-                   int sdr_record_count)
+                   sel_record_t *sel_record)
 {
   fiid_obj_t obj = NULL;
   uint8_t record_type;
   uint64_t val;
   int rv = -1;
 
-  ERR_EINVAL (record_data && sel_record);
+  ERR_EINVAL (state_data && record_data && sel_record);
 
   FIID_OBJ_CREATE (obj, tmpl_sel_record_header);
 
@@ -601,7 +600,7 @@ _parse_sel_record (uint8_t *record_data,
   switch (ipmi_get_sel_record_type (record_type))
     {
     case IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
-      rv = _get_sel_system_event_record (record_data, record_data_len, sel_record, sdr_record_list, sdr_record_count);
+      rv = _get_sel_system_event_record (state_data, record_data, record_data_len, sel_record);
       break;
     case IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
       rv = _get_sel_timestamped_oem_record (record_data, record_data_len, sel_record);
@@ -617,12 +616,10 @@ _parse_sel_record (uint8_t *record_data,
 }
 
 int 
-get_sel_record (ipmi_device_t dev, 
+get_sel_record (ipmi_sel_state_data_t *state_data, 
                 uint16_t record_id, 
                 sel_record_t *sel_rec, 
-                uint16_t *next_record_id,
-                sdr_record_t *sdr_record_list,
-                int sdr_record_count)
+                uint16_t *next_record_id)
 {
   fiid_obj_t obj_cmd_rs;
   uint64_t val;
@@ -632,11 +629,11 @@ get_sel_record (ipmi_device_t dev,
   uint8_t record_data[SEL_RECORD_SIZE];
   uint32_t record_data_len = SEL_RECORD_SIZE;
   
-  ERR_EINVAL (dev && sel_rec && next_record_id);
+  ERR_EINVAL (state_data && sel_rec && next_record_id);
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
   
-  if (ipmi_cmd_get_sel_entry (dev, 
+  if (ipmi_cmd_get_sel_entry (state_data->dev, 
 			      0,
 			      record_id, 
 			      0,
@@ -658,7 +655,10 @@ get_sel_record (ipmi_device_t dev,
   FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
   if (rv == 0)
     {
-      return (_parse_sel_record (record_data, record_data_len, sel_rec, sdr_record_list, sdr_record_count));
+      return (_parse_sel_record (state_data,
+                                 record_data, 
+                                 record_data_len, 
+                                 sel_rec));
     }
   else
     {
@@ -667,7 +667,7 @@ get_sel_record (ipmi_device_t dev,
 }
 
 int 
-get_sel_record_raw (ipmi_device_t dev, 
+get_sel_record_raw (ipmi_sel_state_data_t *state_data, 
                     uint16_t record_id, 
                     uint8_t *record_data, 
                     uint32_t record_data_len, 
@@ -678,10 +678,10 @@ get_sel_record_raw (ipmi_device_t dev,
   int rv = -1;
   int32_t len;
   
-  ERR_EINVAL (dev && record_data && next_record_id);
+  ERR_EINVAL (state_data && record_data && next_record_id);
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
-  if (ipmi_cmd_get_sel_entry (dev, 
+  if (ipmi_cmd_get_sel_entry (state_data->dev, 
 			      0,
 			      record_id, 
 			      0,
@@ -705,7 +705,8 @@ get_sel_record_raw (ipmi_device_t dev,
 }
 
 int 
-delete_sel_entry (ipmi_device_t dev, uint16_t record_id)
+delete_sel_entry (ipmi_sel_state_data_t *state_data, 
+                  uint16_t record_id)
 {
   fiid_obj_t obj_cmd_rs;
   uint16_t reservation_id;
@@ -714,7 +715,7 @@ delete_sel_entry (ipmi_device_t dev, uint16_t record_id)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
@@ -727,7 +728,7 @@ delete_sel_entry (ipmi_device_t dev, uint16_t record_id)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_delete_sel_entry_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_delete_sel_entry (dev, 
+  if (ipmi_cmd_delete_sel_entry (state_data->dev, 
 				 reservation_id, 
 				 record_id, 
 				 obj_cmd_rs) != 0)
@@ -743,7 +744,7 @@ delete_sel_entry (ipmi_device_t dev, uint16_t record_id)
 }
 
 int 
-clear_sel_entries (ipmi_device_t dev)
+clear_sel_entries (ipmi_sel_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs;
   uint16_t reservation_id;
@@ -752,7 +753,7 @@ clear_sel_entries (ipmi_device_t dev)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
@@ -765,7 +766,7 @@ clear_sel_entries (ipmi_device_t dev)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_clear_sel (dev, 
+  if (ipmi_cmd_clear_sel (state_data->dev, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
 			  obj_cmd_rs) != 0)
@@ -779,7 +780,8 @@ clear_sel_entries (ipmi_device_t dev)
 }
 
 int 
-get_sel_clear_status (ipmi_device_t dev, int *status)
+get_sel_clear_status (ipmi_sel_state_data_t *state_data, 
+                      int *status)
 {
   fiid_obj_t obj_cmd_rs;
   uint16_t reservation_id;
@@ -788,7 +790,7 @@ get_sel_clear_status (ipmi_device_t dev, int *status)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
@@ -801,7 +803,7 @@ get_sel_clear_status (ipmi_device_t dev, int *status)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_clear_sel (dev, 
+  if (ipmi_cmd_clear_sel (state_data->dev, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
 			  obj_cmd_rs) != 0)

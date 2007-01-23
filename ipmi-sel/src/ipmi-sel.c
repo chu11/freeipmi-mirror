@@ -167,7 +167,7 @@ display_sel_info (ipmi_sel_state_data_t *state_data)
 
   memset (&sel_info, 0, sizeof (local_sel_info_t));
   
-  if (get_sel_info (state_data->dev, &sel_info) != 0)
+  if (get_sel_info (state_data, &sel_info) != 0)
     {
       fprintf (stderr, "%s: unable to get SEL information\n", 
 	       program_invocation_short_name);
@@ -220,12 +220,10 @@ display_sel_records (ipmi_sel_state_data_t *state_data)
        record_id = next_record_id)
     {
       memset (&sel_rec, 0, sizeof (sel_record_t));
-      if (get_sel_record (state_data->dev, 
+      if (get_sel_record (state_data, 
                           record_id, 
                           &sel_rec, 
-                          &next_record_id,
-                          state_data->sdr_record_list,
-                          state_data->sdr_record_count) < 0)
+                          &next_record_id) < 0)
 	{
 	  fprintf (stderr, "%s: unable to get SEL record\n", 
 		   program_invocation_short_name);
@@ -271,7 +269,7 @@ hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
        record_id = next_record_id)
     {
       memset (record_data, 0, record_data_len);
-      if (get_sel_record_raw (state_data->dev, 
+      if (get_sel_record_raw (state_data, 
                               record_id, 
                               record_data, 
                               record_data_len, 
@@ -366,7 +364,7 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
       
       for (i = 0; i < args->delete_record_list_length; i++)
 	{
-	  if (delete_sel_entry (state_data->dev, args->delete_record_list[i]) < 0)
+	  if (delete_sel_entry (state_data, args->delete_record_list[i]) < 0)
             {
               fprintf (stderr, "deletion of record ID %d failed\n", 
                        args->delete_record_list[i]);
@@ -378,7 +376,7 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
     }
   
   if (args->delete_all_wanted)
-    return clear_sel_entries (state_data->dev);
+    return clear_sel_entries (state_data);
   
   if (args->delete_range_wanted)
     {
@@ -386,7 +384,7 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
       
       for (i = args->delete_range1; i <= args->delete_range2; i++)
         /* ignore errors - some numbers may not exist */
-        delete_sel_entry (state_data->dev, i);
+        delete_sel_entry (state_data, i);
       
       return 0;
     }
