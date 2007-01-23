@@ -1,8 +1,8 @@
+#include "bmc-config.h"
 #include "bmc-common.h"
 #include "bmc-config-api.h"
 #include "bmc-diff.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 /* callback_none */
 

@@ -19,8 +19,8 @@
 #ifndef _BMC_DIFF_H
 #define _BMC_DIFF_H
 
+#include "bmc-config.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 int bmc_diff (struct arguments *arguments,
               struct section *sections);

@@ -23,7 +23,7 @@
 #ifndef _BMC_ARGP_H_
 #define _BMC_ARGP_H_
 
-#include "bmc-types.h"
+#include "bmc-config.h"
 
 int bmc_argp (int argc, char *argv[], struct arguments *args);
 

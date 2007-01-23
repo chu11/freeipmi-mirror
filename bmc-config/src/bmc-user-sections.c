@@ -1,9 +1,9 @@
+#include "bmc-config.h"
 #include "bmc-common.h"
 #include "bmc-config-api.h"
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 static int
 get_num_users (struct arguments *args)

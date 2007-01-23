@@ -63,7 +63,7 @@
 
 #include "bmc-argp.h"
 
-#include "bmc-types.h"
+#include "bmc-config.h"
 #include "bmc-sections.h"
 
 #include "freeipmi-portability.h"

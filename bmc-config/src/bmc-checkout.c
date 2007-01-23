@@ -1,9 +1,8 @@
 #include "bmc-checkout.h"
 
-#include "bmc-common.h"
 #include "bmc-config.h"
+#include "bmc-common.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 static int
 bmc_checkout_keypair (struct arguments *arguments,

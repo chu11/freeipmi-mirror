@@ -1,3 +1,13 @@
+2007-01-23  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-types.h: Move to bmc-config.h.  File is now
+	removed.
+
+	* bmc-config/: Update for header file changes appropriately.
+
+	* libfreeipmi/include/freeipmi/ipmi-error.h: Add forgotten
+	include.
+	
 2007-01-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/: Cleanup/re-architect for later hostrange support.

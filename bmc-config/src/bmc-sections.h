@@ -1,6 +1,6 @@
 /* 
 
-   bmc-types.h - BMC types
+   bmc-sections.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -23,9 +23,9 @@
 #ifndef _BMC_SECTIONS_H_
 #define _BMC_SECTIONS_H_
 
+#include "bmc-config.h"
 #include "bmc-common.h"
 #include "bmc-config-api.h"
-#include "bmc-types.h"
 
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT                  0x1
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x2

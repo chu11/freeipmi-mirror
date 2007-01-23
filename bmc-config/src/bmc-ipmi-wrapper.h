@@ -19,8 +19,8 @@
 #ifndef _BMC_IPMI_WRAPPER_H
 #define _BMC_IPMI_WRAPPER_H
 
+#include "bmc-config.h"
 #include "bmc-common.h"
-#include "bmc-types.h"
 
 int8_t get_lan_channel_number (ipmi_device_t dev);
 int8_t get_serial_channel_number (ipmi_device_t dev);

@@ -1,9 +1,9 @@
+#include "bmc-config.h"
 #include "bmc-common.h"
 #include "bmc-config-api.h"
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 int
 channel_access_mode (const char *string)

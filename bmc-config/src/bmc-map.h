@@ -19,9 +19,9 @@
 #ifndef _BMC_IPMI_MAP_H
 #define _BMC_IPMI_MAP_H
 
+#include "bmc-config.h"
 #include "bmc-common.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 int channel_access_mode (const char *string);
 

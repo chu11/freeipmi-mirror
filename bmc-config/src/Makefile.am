@@ -43,8 +43,7 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-ipmi-wrapper.h \
 		 bmc-map.h \
 		 bmc-parser.h \
-		 bmc-sections.h \
-		 bmc-types.h
+		 bmc-sections.h
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

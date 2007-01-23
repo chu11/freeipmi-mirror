@@ -1,6 +1,6 @@
 /* 
 
-   bmc-config.h - function prototypes
+   bmc-config.h 
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -22,6 +22,44 @@
 
 #ifndef _BMC_CONFIG_H_
 #define _BMC_CONFIG_H_
+
+#include <freeipmi/freeipmi.h>
+
+#include "argp-common.h"
+
+typedef enum
+  {
+    BMC_ACTION_CHECKOUT = 1,
+    BMC_ACTION_COMMIT,
+    BMC_ACTION_DIFF,
+    BMC_ACTION_LIST_SECTIONS,
+  } bmc_action_t;
+
+struct keypair
+{
+  char *keypair;
+  struct keypair *next;
+};
+
+struct sectionstr
+{
+  char *sectionstr;
+  struct sectionstr *next;
+};
+
+struct arguments
+{
+  struct common_cmd_args common;
+  ipmi_device_t dev;
+  unsigned char silent;
+  unsigned char verbose;
+
+  char *filename;
+  struct keypair *keypairs;
+  struct sectionstr *sectionstrs;
+
+  bmc_action_t action;
+};
 
 
 #endif /* _BMC_CONFIG_H_ */

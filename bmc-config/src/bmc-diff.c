@@ -1,9 +1,8 @@
-#include "bmc-common.h"
 #include "bmc-config.h"
+#include "bmc-common.h"
 #include "bmc-diff.h"
 #include "bmc-parser.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 static int
 bmc_diff_keypair (struct arguments *arguments,

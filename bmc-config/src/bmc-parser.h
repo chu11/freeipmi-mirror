@@ -23,7 +23,7 @@
 #ifndef _BMC_PARSER_H_
 #define _BMC_PARSER_H_
 
-#include "bmc-types.h"
+#include "bmc-config.h"
 #include "bmc-sections.h"
 
 int bmc_parser (struct arguments *args, struct section *sections, FILE *fp);

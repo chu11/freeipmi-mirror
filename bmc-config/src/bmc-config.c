@@ -72,12 +72,11 @@
 #include <sys/types.h>
 #include <sys/resource.h>
 
+#include "bmc-config.h"
 #include "bmc-argp.h"
 #include "bmc-commit.h"
 #include "bmc-checkout.h"
 #include "bmc-diff.h"
-#include "bmc-types.h"
-#include "bmc-config.h"
 #include "bmc-sections.h"
 
 #include "ipmi-common.h"

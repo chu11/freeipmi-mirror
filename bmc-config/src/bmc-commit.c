@@ -1,10 +1,9 @@
 #include "bmc-commit.h"
-#include "bmc-parser.h"
 
-#include "bmc-common.h"
 #include "bmc-config.h"
+#include "bmc-common.h"
+#include "bmc-parser.h"
 #include "bmc-sections.h"
-#include "bmc-types.h"
 
 static int
 bmc_commit_keypair (struct arguments *arguments,

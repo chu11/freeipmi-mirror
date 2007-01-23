@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <sys/types.h>
 #include <freeipmi/fiid.h>
 
 #define IPMI_ERR_STR_MAX_LEN                 0x0800
