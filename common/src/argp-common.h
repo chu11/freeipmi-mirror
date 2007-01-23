@@ -24,6 +24,8 @@
 #include "config.h"
 #endif
 
+#include <argp.h>
+
 #include "freeipmi/udm/ipmi-udm.h"
 
 enum argp_common_option_keys

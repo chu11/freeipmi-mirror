@@ -22,10 +22,12 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "freeipmi/ipmi-sensor-units-spec.h"
 #include "freeipmi/ipmi-sdr-record-types.h"
 
+#include "ipmi-sensors.h"
 #include "ipmi-sensors-utils.h"
 
 static int 
-sensors_display_simple_full_record (int record_id, 
+sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
+                                    int record_id, 
 				    sdr_full_record_t *record, 
 				    sensor_reading_t *sensor_reading)
 {
@@ -93,7 +95,8 @@ sensors_display_simple_full_record (int record_id,
 }
 
 static int 
-sensors_display_simple_compact_record (uint16_t record_id, 
+sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
+                                       uint16_t record_id, 
 				       sdr_compact_record_t *record, 
 				       sensor_reading_t *sensor_reading)
 {
@@ -129,16 +132,20 @@ sensors_display_simple_compact_record (uint16_t record_id,
 }
 
 int 
-sensors_display_simple (sdr_record_t *sdr_record, sensor_reading_t *sensor_reading)
+sensors_display_simple (ipmi_sensors_state_data_t *state_data,
+                        sdr_record_t *sdr_record, 
+                        sensor_reading_t *sensor_reading)
 {
   switch (sdr_record->record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
-      return sensors_display_simple_full_record (sdr_record->record_id, 
+      return sensors_display_simple_full_record (state_data,
+                                                 sdr_record->record_id, 
 						 &(sdr_record->record.sdr_full_record), 
 						 sensor_reading);
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
-      return sensors_display_simple_compact_record (sdr_record->record_id, 
+      return sensors_display_simple_compact_record (state_data,
+                                                    sdr_record->record_id, 
 						    &(sdr_record->record.sdr_compact_record), 
 						    sensor_reading);
     }

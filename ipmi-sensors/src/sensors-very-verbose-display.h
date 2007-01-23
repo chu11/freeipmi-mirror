@@ -20,7 +20,10 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #ifndef _SENSORS_VERY_VERBOSE_DISPLAY_H
 #define _SENSORS_VERY_VERBOSE_DISPLAY_H
 
-int sensors_display_very_verbose (sdr_record_t *sdr_record, 
+#include "ipmi-sensors.h"
+
+int sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
+                                  sdr_record_t *sdr_record, 
 				  sensor_reading_t *sensor_reading);
 
 #endif

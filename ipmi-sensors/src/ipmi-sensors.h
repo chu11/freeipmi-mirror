@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.1 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: ipmi-sensors.h,v 1.2 2007-01-23 00:53:16 chu11 Exp $ 
    
    ipmi-sensors.h - IPMI Sensors utility.
    
@@ -25,9 +25,10 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "argp-common.h"
 #include "ipmi-sdr-api.h"
 
-enum argp_option_keys
+enum ipmi_sensors_argp_option_keys
   { 
     VERBOSE_KEY = 'v', 
     SDR_INFO_KEY = 'i', 

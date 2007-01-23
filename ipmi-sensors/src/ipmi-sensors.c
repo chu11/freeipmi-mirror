@@ -293,16 +293,16 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
 	  switch (verbose_count)
 	    {
 	    case 0:
-	      if (sensors_display_simple (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_simple (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	      break;
 	    case 1:
-	      if (sensors_display_verbose (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_verbose (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	      break;
 	    case 2:
 	    default:
-	      if (sensors_display_very_verbose (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_very_verbose (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	    }
 	}
@@ -351,16 +351,16 @@ display_sensor_list (ipmi_sensors_state_data_t *state_data)
 	  switch (verbose_count)
 	    {
 	    case 0:
-	      if (sensors_display_simple (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_simple (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	      break;
 	    case 1:
-	      if (sensors_display_verbose (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_verbose (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	      break;
 	    case 2:
 	    default:
-	      if (sensors_display_very_verbose (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_very_verbose (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	    }
 	}
@@ -415,16 +415,16 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
 	  switch (args->verbose_count)
 	    {
 	    case 0:
-	      if (sensors_display_simple (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_simple (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	      break;
 	    case 1:
-	      if (sensors_display_verbose (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_verbose (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	      break;
 	    case 2:
 	    default:
-	      if (sensors_display_very_verbose (sdr_record, sensor_reading) < 0)
+	      if (sensors_display_very_verbose (state_data, sdr_record, sensor_reading) < 0)
                 return (-1);
 	    }
 	}

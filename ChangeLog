@@ -11,6 +11,8 @@
 	* bmc-info/, ipmi-sensors/, ipmi-raw/ ipmi-sel/: Continue
 	cleanup/re-architecture.
 
+	* common/src/argp-common.h: Add missing header file.
+
 2007-01-21  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c: Rename 'flags' to 'debug_flags'.

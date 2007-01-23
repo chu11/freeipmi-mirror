@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel.h,v 1.1 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: ipmi-sel.h,v 1.2 2007-01-23 00:53:16 chu11 Exp $ 
    
    ipmi-sel.h - System Event Logger utility.
    
@@ -25,9 +25,10 @@
 
 #include <freeipmi/freeipmi.h>
 
+#include "argp-common.h"
 #include "ipmi-sdr-api.h"
 
-enum argp_option_keys
+enum ipmi_sel_argp_option_keys
   { 
     INFO_KEY = 'i', 
     DELETE_KEY = 'd', 
