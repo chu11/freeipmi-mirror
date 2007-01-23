@@ -57,7 +57,7 @@ bmc_sections_init (struct bmc_config_arguments *args)
   return sections;
 }
 
-struct section *
+static struct section *
 bmc_section_find_section (const char *section_name,
 			  const struct section *sections)
 {

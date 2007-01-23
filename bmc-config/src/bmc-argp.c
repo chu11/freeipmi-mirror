@@ -75,7 +75,6 @@ static char doc[] =  "GNU FreeIPMI (bmc-config) -- BMC config tool";
 /* A description of the arguments we accept. */
 static char args_doc[] = "";
 
-
 /* The options we understand. */
 static struct argp_option options[] = {
   /* bmc-config should have a default privilege of ADMIN 
@@ -113,7 +112,8 @@ static struct argp_option options[] = {
   { 0, }
 };
 
-
+/* Our argp parser. */
+static struct argp argp = { options, parse_opt, args_doc, doc};
 
 static int
 args_validate (struct bmc_config_arguments *args)
@@ -192,12 +192,6 @@ args_validate (struct bmc_config_arguments *args)
     }
   
   return ret;
-}
-
-static void
-display (const struct bmc_config_arguments *args)
-{
-  return;
 }
 
 static struct keypair *
@@ -338,20 +332,26 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-/* Our argp parser. */
-static struct argp argp = { options, parse_opt, args_doc, doc};
-
 int
 bmc_argp (int argc, char *argv[], struct bmc_config_arguments *args)
 {
+  init_common_cmd_args (&(args->common));
+  args->silent = 0;
+  args->verbose = 0;
+  args->filename = NULL;
+  args->keypairs = NULL;
+  args->sectionstrs = NULL;
+  args->action = 0;
+
+  /* ADMIN is minimum for bmc-config b/c its needed for many of the
+   * ipmi cmds used
+   */
+  args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   
-  argp_parse (&argp, argc, argv, 0, 0, args);
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, args);
 
-  if (args_validate (args) == -1)
-    return (1);
-
-  if (args->verbose)
-    display (args);
+  if (args_validate (args) < 0)
+    return (-1);
 
   return (0);
 }

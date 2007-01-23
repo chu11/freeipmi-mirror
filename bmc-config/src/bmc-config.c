@@ -187,7 +187,7 @@ _disable_coredump(void)
 int
 main (int argc, char *argv[])
 {
-  struct bmc_config_arguments args;
+  struct bmc_config_arguments cmd_args;
   struct section *sections;
   int ret = 0;
 #ifdef NDEBUG
@@ -196,14 +196,8 @@ main (int argc, char *argv[])
 
   _disable_coredump();
 
-  /* Default values. */
-  memset (&args, 0, sizeof (args));
-  init_common_cmd_args (&(args.common));
-  /* ADMIN is minimum for bmc-config b/c its needed for many ipmi cmds */
-  args.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
-
-  if (bmc_argp (argc, argv,  &args) != 0)
-    return (1);
+  if (bmc_argp (argc, argv,  &cmd_args) < 0)
+    return (EXIT_FAILURE);
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
@@ -211,29 +205,29 @@ main (int argc, char *argv[])
     memset(argv[i], '\0', strlen(argv[i]));
 #endif /* NDEBUG */
 
-  ipmi_core_init (argv[0], &args);
+  ipmi_core_init (argv[0], &cmd_args);
 
   /* this should be after ipmi_core_init since
      user section refers to ipmi calls to get
      number of user profiles in this ipmi instance
   */
-  sections = bmc_sections_init (&args);
+  sections = bmc_sections_init (&cmd_args);
 
-  switch (args.action) {
+  switch (cmd_args.action) {
   case BMC_ACTION_CHECKOUT:
-    ret = bmc_checkout (&args, sections);
+    ret = bmc_checkout (&cmd_args, sections);
     break;
   case BMC_ACTION_COMMIT:
-    ret = bmc_commit (&args, sections);
+    ret = bmc_commit (&cmd_args, sections);
     break;
   case BMC_ACTION_DIFF:
-    ret = bmc_diff (&args, sections);
+    ret = bmc_diff (&cmd_args, sections);
     break;
   case BMC_ACTION_LIST_SECTIONS:
-    ret = bmc_sections_list (&args, sections);
+    ret = bmc_sections_list (&cmd_args, sections);
     break;
   }
   
-  ipmi_close_device(args.dev);
+  ipmi_close_device(cmd_args.dev);
   return (ret);
 }
