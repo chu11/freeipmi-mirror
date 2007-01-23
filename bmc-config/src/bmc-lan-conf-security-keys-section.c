@@ -6,7 +6,7 @@
 #include "bmc-sections.h"
 
 static int
-k_r_checkout (const struct arguments *args,
+k_r_checkout (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      struct keyvalue *kv)
 {
@@ -33,7 +33,7 @@ k_r_checkout (const struct arguments *args,
 }
 
 static int
-k_r_commit (const struct arguments *args,
+k_r_commit (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
@@ -43,7 +43,7 @@ k_r_commit (const struct arguments *args,
 }
 
 static int
-k_r_diff (const struct arguments *args,
+k_r_diff (const struct bmc_config_arguments *args,
 	  const struct section *sect,
 	  const struct keyvalue *kv)
 {
@@ -71,7 +71,7 @@ k_r_diff (const struct arguments *args,
 }
 
 static int
-k_r_validate (const struct arguments *args,
+k_r_validate (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const char *value)
 {
@@ -82,7 +82,7 @@ k_r_validate (const struct arguments *args,
 /* k_g */
 
 static int
-k_g_checkout (const struct arguments *args,
+k_g_checkout (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      struct keyvalue *kv)
 {
@@ -109,7 +109,7 @@ k_g_checkout (const struct arguments *args,
 }
 
 static int
-k_g_commit (const struct arguments *args,
+k_g_commit (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
@@ -119,7 +119,7 @@ k_g_commit (const struct arguments *args,
 }
 
 static int
-k_g_diff (const struct arguments *args,
+k_g_diff (const struct bmc_config_arguments *args,
 	  const struct section *sect,
 	  const struct keyvalue *kv)
 {
@@ -147,7 +147,7 @@ k_g_diff (const struct arguments *args,
 }
 
 static int
-k_g_validate (const struct arguments *args,
+k_g_validate (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const char *value)
 {
@@ -155,7 +155,7 @@ k_g_validate (const struct arguments *args,
 }
 
 struct section *
-bmc_lan_conf_security_keys_section_get (struct arguments *args)
+bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_security_keys_section = NULL;
 

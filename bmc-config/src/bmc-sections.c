@@ -37,7 +37,7 @@
 #include "bmc-misc-section.h"
 
 struct section *
-bmc_sections_init (struct arguments *args)
+bmc_sections_init (struct bmc_config_arguments *args)
 {
   struct section *sections = NULL;
 
@@ -111,7 +111,7 @@ int
 bmc_section_set_value (const char *section_name,
 		       const char *key_name,
 		       const char *value,
-		       struct arguments *arguments,
+		       struct bmc_config_arguments *args,
 		       struct section *sections)
 {
 
@@ -124,7 +124,7 @@ bmc_section_set_value (const char *section_name,
   if (!kv)
     return -1;
 
-  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) 
+  if (kv->validate && (kv->validate (args, sect, value) != 0)) 
     {
       fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                value, key_name);
@@ -147,7 +147,7 @@ int
 bmc_section_commit_value (const char *section_name,
 			  const char *key_name,
 			  const char *value,
-			  struct arguments *arguments,
+			  struct bmc_config_arguments *args,
 			  struct section *sections)
 {
   struct section *sect = bmc_section_find_section (section_name,
@@ -159,7 +159,7 @@ bmc_section_commit_value (const char *section_name,
   if (!kv)
     return -1;
 
-  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) 
+  if (kv->validate && (kv->validate (args, sect, value) != 0)) 
     {
       fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                value, key_name);
@@ -175,14 +175,14 @@ bmc_section_commit_value (const char *section_name,
       exit(1);
     }
 
-  return kv->commit (arguments, sect, kv);
+  return kv->commit (args, sect, kv);
 }
 
 int
 bmc_section_diff_value (const char *section_name,
 			const char *key_name,
 			const char *value,
-			struct arguments *arguments,
+			struct bmc_config_arguments *args,
 			struct section *sections)
 {
   struct section *sect = bmc_section_find_section (section_name,
@@ -194,7 +194,7 @@ bmc_section_diff_value (const char *section_name,
   if (!kv)
     return -1;
 
-  if (kv->validate && (kv->validate (arguments, sect, value) != 0)) 
+  if (kv->validate && (kv->validate (args, sect, value) != 0)) 
     {
       fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                value, key_name);
@@ -210,11 +210,11 @@ bmc_section_diff_value (const char *section_name,
       exit(1);
     }
 
-  return kv->diff (arguments, sect, kv);
+  return kv->diff (args, sect, kv);
 }
 
 int 
-bmc_sections_list (struct arguments *args, 
+bmc_sections_list (struct bmc_config_arguments *args, 
                    struct section *sections)
 {
   struct section *sect = sections;

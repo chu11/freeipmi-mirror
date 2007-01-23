@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-int bmc_parser (struct arguments *args, struct section *sections, FILE *fp);
+int bmc_parser (struct bmc_config_arguments *args, struct section *sections, FILE *fp);
 
 #endif /* _BMC_PARSER_H_ */

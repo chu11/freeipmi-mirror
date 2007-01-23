@@ -5,7 +5,7 @@
 #include "bmc-sections.h"
 
 static int
-bmc_checkout_keypair (struct arguments *arguments,
+bmc_checkout_keypair (struct bmc_config_arguments *args,
 		      struct section *sections,
                       struct keypair *kp)
 {
@@ -67,7 +67,7 @@ bmc_checkout_keypair (struct arguments *arguments,
       return -1;
     }
 
-  ret = kv->checkout (arguments, sect, kv);
+  ret = kv->checkout (args, sect, kv);
 
   if (ret == 0) 
     printf ("%s:%s=%s\n", key_name, section_name, kv->value);
@@ -80,15 +80,15 @@ bmc_checkout_keypair (struct arguments *arguments,
 }
 
 static int
-bmc_checkout_keypairs (struct arguments *arguments,
+bmc_checkout_keypairs (struct bmc_config_arguments *args,
                        struct section *sections)
 {
   struct keypair *kp;
 
-  kp = arguments->keypairs;
+  kp = args->keypairs;
   while (kp)
     {
-      bmc_checkout_keypair(arguments, sections, kp);
+      bmc_checkout_keypair(args, sections, kp);
       kp = kp->next;
     }
 
@@ -96,7 +96,7 @@ bmc_checkout_keypairs (struct arguments *arguments,
 }
 
 static int
-bmc_checkout_section_common (struct arguments *arguments,
+bmc_checkout_section_common (struct bmc_config_arguments *args,
                              struct section *sect, 
                              FILE *fp)
 {
@@ -123,11 +123,11 @@ bmc_checkout_section_common (struct arguments *arguments,
           continue;
         }
 
-      ret = ((this_ret = kv->checkout (arguments, sect, kv)) || ret);
+      ret = ((this_ret = kv->checkout (args, sect, kv)) || ret);
               
       if (this_ret != 0) 
         {
-          if (arguments->verbose)
+          if (args->verbose)
             fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
                      sect->section,
                      kv->key);
@@ -178,21 +178,21 @@ bmc_checkout_section_common (struct arguments *arguments,
 }
 
 static int
-bmc_checkout_section (struct arguments *arguments,
+bmc_checkout_section (struct bmc_config_arguments *args,
                       struct section *sections)
 {
   int ret = 0;
   FILE *fp;
-  struct sectionstr *sstr = arguments->sectionstrs;
+  struct sectionstr *sstr = args->sectionstrs;
 
-  if (arguments->filename && strcmp (arguments->filename, "-"))
-    fp = fopen (arguments->filename, "w");
+  if (args->filename && strcmp (args->filename, "-"))
+    fp = fopen (args->filename, "w");
   else
     fp = stdout;
 
   if (!fp) 
     {
-      perror (arguments->filename);
+      perror (args->filename);
       return -1;
     }
 
@@ -214,7 +214,7 @@ bmc_checkout_section (struct arguments *arguments,
               
               found++;
               
-              ret = ((this_ret = bmc_checkout_section_common (arguments, sect, fp)) || ret);
+              ret = ((this_ret = bmc_checkout_section_common (args, sect, fp)) || ret);
               
               break;
             }
@@ -235,21 +235,21 @@ bmc_checkout_section (struct arguments *arguments,
 }
 
 static int
-bmc_checkout_file (struct arguments *arguments,
+bmc_checkout_file (struct bmc_config_arguments *args,
 		   struct section *sections)
 {
   int ret = 0;
   FILE *fp;
   struct section *sect = sections;
 
-  if (arguments->filename && strcmp (arguments->filename, "-"))
-    fp = fopen (arguments->filename, "w");
+  if (args->filename && strcmp (args->filename, "-"))
+    fp = fopen (args->filename, "w");
   else
     fp = stdout;
 
   if (!fp) 
     {
-      perror (arguments->filename);
+      perror (args->filename);
       return -1;
     }
 
@@ -260,7 +260,7 @@ bmc_checkout_file (struct arguments *arguments,
          fields */
       int this_ret = 0;
       
-      ret = ((this_ret = bmc_checkout_section_common (arguments, sect, fp)) || ret);
+      ret = ((this_ret = bmc_checkout_section_common (args, sect, fp)) || ret);
 
       sect = sect->next;
     }
@@ -268,17 +268,17 @@ bmc_checkout_file (struct arguments *arguments,
 }
 
 int
-bmc_checkout (struct arguments *arguments,
+bmc_checkout (struct bmc_config_arguments *args,
 	      struct section *sections)
 {
   int ret = 0;
 
-  if (arguments->keypairs) 
-    ret = bmc_checkout_keypairs (arguments, sections);
-  else if (arguments->sectionstrs)
-    ret = bmc_checkout_section (arguments, sections);
+  if (args->keypairs) 
+    ret = bmc_checkout_keypairs (args, sections);
+  else if (args->sectionstrs)
+    ret = bmc_checkout_section (args, sections);
   else
-    ret = bmc_checkout_file (arguments, sections);
+    ret = bmc_checkout_file (args, sections);
 
   return ret;
 }

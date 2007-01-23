@@ -25,6 +25,6 @@
 
 #include "bmc-config.h"
 
-int bmc_argp (int argc, char *argv[], struct arguments *args);
+int bmc_argp (int argc, char *argv[], struct bmc_config_arguments *args);
 
 #endif /* _BMC_ARGP_H_ */

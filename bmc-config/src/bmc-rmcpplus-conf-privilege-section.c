@@ -6,7 +6,7 @@
 #include "bmc-sections.h"
 
 static int
-id_checkout (const struct arguments *args,
+id_checkout (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     struct keyvalue *kv,
 	     int id)
@@ -33,7 +33,7 @@ id_checkout (const struct arguments *args,
 
 
 static int
-id_commit (const struct arguments *args,
+id_commit (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv,
 	   int id)
@@ -44,7 +44,7 @@ id_commit (const struct arguments *args,
 }
 
 static int
-id_diff (const struct arguments *args,
+id_diff (const struct bmc_config_arguments *args,
 	 const struct section *sect,
 	 const struct keyvalue *kv,
 	 int id)
@@ -72,7 +72,7 @@ id_diff (const struct arguments *args,
 }
 
 static int
-id_validate (const struct arguments *args,
+id_validate (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const char *value)
 {
@@ -81,7 +81,7 @@ id_validate (const struct arguments *args,
 
 
 static int
-id_0_checkout (const struct arguments *args,
+id_0_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -89,7 +89,7 @@ id_0_checkout (const struct arguments *args,
 }
 
 static int
-id_0_commit (const struct arguments *args,
+id_0_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -97,7 +97,7 @@ id_0_commit (const struct arguments *args,
 }
 
 static int
-id_0_diff (const struct arguments *args,
+id_0_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -107,7 +107,7 @@ id_0_diff (const struct arguments *args,
 
 
 static int
-id_1_checkout (const struct arguments *args,
+id_1_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -115,7 +115,7 @@ id_1_checkout (const struct arguments *args,
 }
 
 static int
-id_1_commit (const struct arguments *args,
+id_1_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -123,7 +123,7 @@ id_1_commit (const struct arguments *args,
 }
 
 static int
-id_1_diff (const struct arguments *args,
+id_1_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -132,7 +132,7 @@ id_1_diff (const struct arguments *args,
 
 
 static int
-id_2_checkout (const struct arguments *args,
+id_2_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -140,7 +140,7 @@ id_2_checkout (const struct arguments *args,
 }
 
 static int
-id_2_commit (const struct arguments *args,
+id_2_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -148,7 +148,7 @@ id_2_commit (const struct arguments *args,
 }
 
 static int
-id_2_diff (const struct arguments *args,
+id_2_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -158,7 +158,7 @@ id_2_diff (const struct arguments *args,
 
 
 static int
-id_3_checkout (const struct arguments *args,
+id_3_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -166,7 +166,7 @@ id_3_checkout (const struct arguments *args,
 }
 
 static int
-id_3_commit (const struct arguments *args,
+id_3_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -174,7 +174,7 @@ id_3_commit (const struct arguments *args,
 }
 
 static int
-id_3_diff (const struct arguments *args,
+id_3_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -184,7 +184,7 @@ id_3_diff (const struct arguments *args,
 
 
 static int
-id_4_checkout (const struct arguments *args,
+id_4_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -192,7 +192,7 @@ id_4_checkout (const struct arguments *args,
 }
 
 static int
-id_4_commit (const struct arguments *args,
+id_4_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -200,7 +200,7 @@ id_4_commit (const struct arguments *args,
 }
 
 static int
-id_4_diff (const struct arguments *args,
+id_4_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -210,7 +210,7 @@ id_4_diff (const struct arguments *args,
 
 
 static int
-id_5_checkout (const struct arguments *args,
+id_5_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -218,7 +218,7 @@ id_5_checkout (const struct arguments *args,
 }
 
 static int
-id_5_commit (const struct arguments *args,
+id_5_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -226,7 +226,7 @@ id_5_commit (const struct arguments *args,
 }
 
 static int
-id_5_diff (const struct arguments *args,
+id_5_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -236,7 +236,7 @@ id_5_diff (const struct arguments *args,
 
 
 static int
-id_6_checkout (const struct arguments *args,
+id_6_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -244,7 +244,7 @@ id_6_checkout (const struct arguments *args,
 }
 
 static int
-id_6_commit (const struct arguments *args,
+id_6_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -252,7 +252,7 @@ id_6_commit (const struct arguments *args,
 }
 
 static int
-id_6_diff (const struct arguments *args,
+id_6_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -261,7 +261,7 @@ id_6_diff (const struct arguments *args,
 
 
 static int
-id_7_checkout (const struct arguments *args,
+id_7_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -269,7 +269,7 @@ id_7_checkout (const struct arguments *args,
 }
 
 static int
-id_7_commit (const struct arguments *args,
+id_7_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -277,7 +277,7 @@ id_7_commit (const struct arguments *args,
 }
 
 static int
-id_7_diff (const struct arguments *args,
+id_7_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -286,7 +286,7 @@ id_7_diff (const struct arguments *args,
 
 
 static int
-id_8_checkout (const struct arguments *args,
+id_8_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -294,7 +294,7 @@ id_8_checkout (const struct arguments *args,
 }
 
 static int
-id_8_commit (const struct arguments *args,
+id_8_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -302,7 +302,7 @@ id_8_commit (const struct arguments *args,
 }
 
 static int
-id_8_diff (const struct arguments *args,
+id_8_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -311,7 +311,7 @@ id_8_diff (const struct arguments *args,
 
 
 static int
-id_9_checkout (const struct arguments *args,
+id_9_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -319,7 +319,7 @@ id_9_checkout (const struct arguments *args,
 }
 
 static int
-id_9_commit (const struct arguments *args,
+id_9_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -327,7 +327,7 @@ id_9_commit (const struct arguments *args,
 }
 
 static int
-id_9_diff (const struct arguments *args,
+id_9_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -337,7 +337,7 @@ id_9_diff (const struct arguments *args,
 
 
 static int
-id_10_checkout (const struct arguments *args,
+id_10_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
@@ -345,7 +345,7 @@ id_10_checkout (const struct arguments *args,
 }
 
 static int
-id_10_commit (const struct arguments *args,
+id_10_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -353,7 +353,7 @@ id_10_commit (const struct arguments *args,
 }
 
 static int
-id_10_diff (const struct arguments *args,
+id_10_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
@@ -363,7 +363,7 @@ id_10_diff (const struct arguments *args,
 
 
 static int
-id_11_checkout (const struct arguments *args,
+id_11_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
@@ -371,7 +371,7 @@ id_11_checkout (const struct arguments *args,
 }
 
 static int
-id_11_commit (const struct arguments *args,
+id_11_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -379,7 +379,7 @@ id_11_commit (const struct arguments *args,
 }
 
 static int
-id_11_diff (const struct arguments *args,
+id_11_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
@@ -389,7 +389,7 @@ id_11_diff (const struct arguments *args,
 
 
 static int
-id_12_checkout (const struct arguments *args,
+id_12_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
@@ -397,7 +397,7 @@ id_12_checkout (const struct arguments *args,
 }
 
 static int
-id_12_commit (const struct arguments *args,
+id_12_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -405,7 +405,7 @@ id_12_commit (const struct arguments *args,
 }
 
 static int
-id_12_diff (const struct arguments *args,
+id_12_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
@@ -415,7 +415,7 @@ id_12_diff (const struct arguments *args,
 
 
 static int
-id_13_checkout (const struct arguments *args,
+id_13_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
@@ -423,7 +423,7 @@ id_13_checkout (const struct arguments *args,
 }
 
 static int
-id_13_commit (const struct arguments *args,
+id_13_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -431,7 +431,7 @@ id_13_commit (const struct arguments *args,
 }
 
 static int
-id_13_diff (const struct arguments *args,
+id_13_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
@@ -440,7 +440,7 @@ id_13_diff (const struct arguments *args,
 
 
 static int
-id_14_checkout (const struct arguments *args,
+id_14_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
@@ -448,7 +448,7 @@ id_14_checkout (const struct arguments *args,
 }
 
 static int
-id_14_commit (const struct arguments *args,
+id_14_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -456,7 +456,7 @@ id_14_commit (const struct arguments *args,
 }
 
 static int
-id_14_diff (const struct arguments *args,
+id_14_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
@@ -465,7 +465,7 @@ id_14_diff (const struct arguments *args,
 
 
 struct section *
-bmc_rmcpplus_conf_privilege_section_get (struct arguments *args)
+bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 {
   struct section *rmcpplus_conf_privilege_section = NULL;
   

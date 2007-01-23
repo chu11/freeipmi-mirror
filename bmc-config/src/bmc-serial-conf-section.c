@@ -86,7 +86,7 @@ serial_conf_commit (ipmi_device_t dev,
 }
 
 static int
-enable_basic_mode_checkout (const struct arguments *args,
+enable_basic_mode_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
@@ -126,7 +126,7 @@ enable_basic_mode_checkout (const struct arguments *args,
 }
 
 static int
-enable_basic_mode_commit (const struct arguments *args,
+enable_basic_mode_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -138,7 +138,7 @@ enable_basic_mode_commit (const struct arguments *args,
 }
 
 static int
-enable_basic_mode_diff (const struct arguments *args,
+enable_basic_mode_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -171,7 +171,7 @@ enable_basic_mode_diff (const struct arguments *args,
 }
 
 static int
-enable_basic_mode_validate (const struct arguments *args,
+enable_basic_mode_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
@@ -182,7 +182,7 @@ enable_basic_mode_validate (const struct arguments *args,
 /* ppp */
 
 static int
-enable_ppp_mode_checkout (const struct arguments *args,
+enable_ppp_mode_checkout (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  struct keyvalue *kv)
 {
@@ -222,7 +222,7 @@ enable_ppp_mode_checkout (const struct arguments *args,
 }
 
 static int
-enable_ppp_mode_commit (const struct arguments *args,
+enable_ppp_mode_commit (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -234,7 +234,7 @@ enable_ppp_mode_commit (const struct arguments *args,
 }
 
 static int
-enable_ppp_mode_diff (const struct arguments *args,
+enable_ppp_mode_diff (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
@@ -267,7 +267,7 @@ enable_ppp_mode_diff (const struct arguments *args,
 }
 
 static int
-enable_ppp_mode_validate (const struct arguments *args,
+enable_ppp_mode_validate (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const char *value)
 {
@@ -277,7 +277,7 @@ enable_ppp_mode_validate (const struct arguments *args,
 /* terminal */
 
 static int
-enable_terminal_mode_checkout (const struct arguments *args,
+enable_terminal_mode_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -317,7 +317,7 @@ enable_terminal_mode_checkout (const struct arguments *args,
 }
 
 static int
-enable_terminal_mode_commit (const struct arguments *args,
+enable_terminal_mode_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -329,7 +329,7 @@ enable_terminal_mode_commit (const struct arguments *args,
 }
 
 static int
-enable_terminal_mode_diff (const struct arguments *args,
+enable_terminal_mode_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -362,7 +362,7 @@ enable_terminal_mode_diff (const struct arguments *args,
 }
 
 static int
-enable_terminal_mode_validate (const struct arguments *args,
+enable_terminal_mode_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
@@ -372,7 +372,7 @@ enable_terminal_mode_validate (const struct arguments *args,
 
 
 static int
-connect_mode_checkout (const struct arguments *args,
+connect_mode_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
@@ -397,7 +397,7 @@ connect_mode_checkout (const struct arguments *args,
 }
 
 static int
-connect_mode_commit (const struct arguments *args,
+connect_mode_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
@@ -409,7 +409,7 @@ connect_mode_commit (const struct arguments *args,
 }
 
 static int
-connect_mode_diff (const struct arguments *args,
+connect_mode_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -441,7 +441,7 @@ connect_mode_diff (const struct arguments *args,
 }
 
 static int
-connect_mode_validate (const struct arguments *args,
+connect_mode_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
@@ -450,7 +450,7 @@ connect_mode_validate (const struct arguments *args,
 
 
 static int
-page_blackout_interval_checkout (const struct arguments *args,
+page_blackout_interval_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
@@ -472,7 +472,7 @@ page_blackout_interval_checkout (const struct arguments *args,
 }
 
 static int
-page_blackout_interval_commit (const struct arguments *args,
+page_blackout_interval_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -481,7 +481,7 @@ page_blackout_interval_commit (const struct arguments *args,
 }
 
 static int
-page_blackout_interval_diff (const struct arguments *args,
+page_blackout_interval_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -513,7 +513,7 @@ page_blackout_interval_diff (const struct arguments *args,
 }
 
 static int
-page_blackout_interval_validate (const struct arguments *args,
+page_blackout_interval_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
@@ -530,7 +530,7 @@ page_blackout_interval_validate (const struct arguments *args,
 /* retry time */
 
 static int
-call_retry_interval_checkout (const struct arguments *args,
+call_retry_interval_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
@@ -552,7 +552,7 @@ call_retry_interval_checkout (const struct arguments *args,
 }
 
 static int
-call_retry_interval_commit (const struct arguments *args,
+call_retry_interval_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -561,7 +561,7 @@ call_retry_interval_commit (const struct arguments *args,
 }
 
 static int
-call_retry_interval_diff (const struct arguments *args,
+call_retry_interval_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -593,7 +593,7 @@ call_retry_interval_diff (const struct arguments *args,
 }
 
 static int
-call_retry_interval_validate (const struct arguments *args,
+call_retry_interval_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
@@ -670,7 +670,7 @@ serial_conf_comm_commit (ipmi_device_t dev,
 }
 
 static int
-enable_dtr_hangup_checkout (const struct arguments *args,
+enable_dtr_hangup_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
@@ -709,7 +709,7 @@ enable_dtr_hangup_checkout (const struct arguments *args,
 }
 
 static int
-enable_dtr_hangup_commit (const struct arguments *args,
+enable_dtr_hangup_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -722,7 +722,7 @@ enable_dtr_hangup_commit (const struct arguments *args,
 }
 
 static int
-enable_dtr_hangup_diff (const struct arguments *args,
+enable_dtr_hangup_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -754,7 +754,7 @@ enable_dtr_hangup_diff (const struct arguments *args,
 }
 
 static int
-enable_dtr_hangup_validate (const struct arguments *args,
+enable_dtr_hangup_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
@@ -762,7 +762,7 @@ enable_dtr_hangup_validate (const struct arguments *args,
 }
 
 static int
-flow_control_checkout (const struct arguments *args,
+flow_control_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
@@ -790,7 +790,7 @@ flow_control_checkout (const struct arguments *args,
 }
 
 static int
-flow_control_commit (const struct arguments *args,
+flow_control_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
@@ -802,7 +802,7 @@ flow_control_commit (const struct arguments *args,
 }
 
 static int
-flow_control_diff (const struct arguments *args,
+flow_control_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -834,7 +834,7 @@ flow_control_diff (const struct arguments *args,
 }
 
 static int
-flow_control_validate (const struct arguments *args,
+flow_control_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
@@ -842,7 +842,7 @@ flow_control_validate (const struct arguments *args,
 }
 
 static int
-bit_rate_checkout (const struct arguments *args,
+bit_rate_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
@@ -870,7 +870,7 @@ bit_rate_checkout (const struct arguments *args,
 }
 
 static int
-bit_rate_commit (const struct arguments *args,
+bit_rate_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -882,7 +882,7 @@ bit_rate_commit (const struct arguments *args,
 }
 
 static int
-bit_rate_diff (const struct arguments *args,
+bit_rate_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
@@ -914,7 +914,7 @@ bit_rate_diff (const struct arguments *args,
 }
 
 static int
-bit_rate_validate (const struct arguments *args,
+bit_rate_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
@@ -922,7 +922,7 @@ bit_rate_validate (const struct arguments *args,
 }
 
 struct section *
-bmc_serial_conf_section_get (struct arguments *args)
+bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section *bmc_serial_conf_section = NULL;
 

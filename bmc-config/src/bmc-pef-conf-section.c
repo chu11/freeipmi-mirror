@@ -84,7 +84,7 @@ pef_control_commit (ipmi_device_t dev,
 }
 
 static int
-enable_pef_checkout (const struct arguments *args,
+enable_pef_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
@@ -123,7 +123,7 @@ enable_pef_checkout (const struct arguments *args,
 }
 
 static int
-enable_pef_commit (const struct arguments *args,
+enable_pef_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -136,7 +136,7 @@ enable_pef_commit (const struct arguments *args,
 }
 
 static int
-enable_pef_diff (const struct arguments *args,
+enable_pef_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -169,7 +169,7 @@ enable_pef_diff (const struct arguments *args,
 }
 
 static int
-enable_pef_validate (const struct arguments *args,
+enable_pef_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
@@ -179,7 +179,7 @@ enable_pef_validate (const struct arguments *args,
 /* event_messages */
 
 static int
-enable_pef_event_messages_checkout (const struct arguments *args,
+enable_pef_event_messages_checkout (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    struct keyvalue *kv)
 {
@@ -218,7 +218,7 @@ enable_pef_event_messages_checkout (const struct arguments *args,
 }
 
 static int
-enable_pef_event_messages_commit (const struct arguments *args,
+enable_pef_event_messages_commit (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
@@ -231,7 +231,7 @@ enable_pef_event_messages_commit (const struct arguments *args,
 }
 
 static int
-enable_pef_event_messages_diff (const struct arguments *args,
+enable_pef_event_messages_diff (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
@@ -264,7 +264,7 @@ enable_pef_event_messages_diff (const struct arguments *args,
 }
 
 static int
-enable_pef_event_messages_validate (const struct arguments *args,
+enable_pef_event_messages_validate (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const char *value)
 {
@@ -275,7 +275,7 @@ enable_pef_event_messages_validate (const struct arguments *args,
 
 
 static int
-enable_pef_startup_delay_checkout (const struct arguments *args,
+enable_pef_startup_delay_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
@@ -313,7 +313,7 @@ enable_pef_startup_delay_checkout (const struct arguments *args,
 }
 
 static int
-enable_pef_startup_delay_commit (const struct arguments *args,
+enable_pef_startup_delay_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -326,7 +326,7 @@ enable_pef_startup_delay_commit (const struct arguments *args,
 }
 
 static int
-enable_pef_startup_delay_diff (const struct arguments *args,
+enable_pef_startup_delay_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -359,7 +359,7 @@ enable_pef_startup_delay_diff (const struct arguments *args,
 }
 
 static int
-enable_pef_startup_delay_validate (const struct arguments *args,
+enable_pef_startup_delay_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
@@ -370,7 +370,7 @@ enable_pef_startup_delay_validate (const struct arguments *args,
 
 
 static int
-enable_pef_alert_startup_delay_checkout (const struct arguments *args,
+enable_pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 struct keyvalue *kv)
 {
@@ -409,7 +409,7 @@ enable_pef_alert_startup_delay_checkout (const struct arguments *args,
 }
 
 static int
-enable_pef_alert_startup_delay_commit (const struct arguments *args,
+enable_pef_alert_startup_delay_commit (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
 {
@@ -422,7 +422,7 @@ enable_pef_alert_startup_delay_commit (const struct arguments *args,
 }
 
 static int
-enable_pef_alert_startup_delay_diff (const struct arguments *args,
+enable_pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
 {
@@ -455,7 +455,7 @@ enable_pef_alert_startup_delay_diff (const struct arguments *args,
 }
 
 static int
-enable_pef_alert_startup_delay_validate (const struct arguments *args,
+enable_pef_alert_startup_delay_validate (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 const char *value)
 {
@@ -563,7 +563,7 @@ pef_global_control_commit (ipmi_device_t dev,
 /* alert_action */
 			   
 static int
-enable_alert_action_checkout (const struct arguments *args,
+enable_alert_action_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
@@ -604,7 +604,7 @@ enable_alert_action_checkout (const struct arguments *args,
 }
 
 static int
-enable_alert_action_commit (const struct arguments *args,
+enable_alert_action_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -619,7 +619,7 @@ enable_alert_action_commit (const struct arguments *args,
 }
 
 static int
-enable_alert_action_diff (const struct arguments *args,
+enable_alert_action_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -654,7 +654,7 @@ enable_alert_action_diff (const struct arguments *args,
 }
 
 static int
-enable_alert_action_validate (const struct arguments *args,
+enable_alert_action_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
@@ -664,7 +664,7 @@ enable_alert_action_validate (const struct arguments *args,
 /* power_down_action */
 
 static int
-enable_power_down_action_checkout (const struct arguments *args,
+enable_power_down_action_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
@@ -705,7 +705,7 @@ enable_power_down_action_checkout (const struct arguments *args,
 }
 
 static int
-enable_power_down_action_commit (const struct arguments *args,
+enable_power_down_action_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -720,7 +720,7 @@ enable_power_down_action_commit (const struct arguments *args,
 }
 
 static int
-enable_power_down_action_diff (const struct arguments *args,
+enable_power_down_action_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -754,7 +754,7 @@ enable_power_down_action_diff (const struct arguments *args,
 }
 
 static int
-enable_power_down_action_validate (const struct arguments *args,
+enable_power_down_action_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
@@ -764,7 +764,7 @@ enable_power_down_action_validate (const struct arguments *args,
 /* reset_action */
 
 static int
-enable_reset_action_checkout (const struct arguments *args,
+enable_reset_action_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
@@ -805,7 +805,7 @@ enable_reset_action_checkout (const struct arguments *args,
 }
 
 static int
-enable_reset_action_commit (const struct arguments *args,
+enable_reset_action_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -820,7 +820,7 @@ enable_reset_action_commit (const struct arguments *args,
 }
 
 static int
-enable_reset_action_diff (const struct arguments *args,
+enable_reset_action_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -854,7 +854,7 @@ enable_reset_action_diff (const struct arguments *args,
 }
 
 static int
-enable_reset_action_validate (const struct arguments *args,
+enable_reset_action_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
@@ -864,7 +864,7 @@ enable_reset_action_validate (const struct arguments *args,
 /* power_cycle_action */
 
 static int
-enable_power_cycle_action_checkout (const struct arguments *args,
+enable_power_cycle_action_checkout (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    struct keyvalue *kv)
 {
@@ -905,7 +905,7 @@ enable_power_cycle_action_checkout (const struct arguments *args,
 }
 
 static int
-enable_power_cycle_action_commit (const struct arguments *args,
+enable_power_cycle_action_commit (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
@@ -920,7 +920,7 @@ enable_power_cycle_action_commit (const struct arguments *args,
 }
 
 static int
-enable_power_cycle_action_diff (const struct arguments *args,
+enable_power_cycle_action_diff (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
@@ -954,7 +954,7 @@ enable_power_cycle_action_diff (const struct arguments *args,
 }
 
 static int
-enable_power_cycle_action_validate (const struct arguments *args,
+enable_power_cycle_action_validate (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const char *value)
 {
@@ -964,7 +964,7 @@ enable_power_cycle_action_validate (const struct arguments *args,
 /* OEM_action */
 
 static int
-enable_oem_action_checkout (const struct arguments *args,
+enable_oem_action_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
@@ -1005,7 +1005,7 @@ enable_oem_action_checkout (const struct arguments *args,
 }
 
 static int
-enable_oem_action_commit (const struct arguments *args,
+enable_oem_action_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -1020,7 +1020,7 @@ enable_oem_action_commit (const struct arguments *args,
 }
 
 static int
-enable_oem_action_diff (const struct arguments *args,
+enable_oem_action_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -1055,7 +1055,7 @@ enable_oem_action_diff (const struct arguments *args,
 }
 
 static int
-enable_oem_action_validate (const struct arguments *args,
+enable_oem_action_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
@@ -1065,7 +1065,7 @@ enable_oem_action_validate (const struct arguments *args,
 /* diagnostic_interrupt */
 
 static int
-enable_diagnostic_interrupt_checkout (const struct arguments *args,
+enable_diagnostic_interrupt_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
@@ -1106,7 +1106,7 @@ enable_diagnostic_interrupt_checkout (const struct arguments *args,
 }
 
 static int
-enable_diagnostic_interrupt_commit (const struct arguments *args,
+enable_diagnostic_interrupt_commit (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
@@ -1121,7 +1121,7 @@ enable_diagnostic_interrupt_commit (const struct arguments *args,
 }
 
 static int
-enable_diagnostic_interrupt_diff (const struct arguments *args,
+enable_diagnostic_interrupt_diff (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
@@ -1157,7 +1157,7 @@ enable_diagnostic_interrupt_diff (const struct arguments *args,
 
 
 static int
-enable_diagnostic_interrupt_validate (const struct arguments *args,
+enable_diagnostic_interrupt_validate (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const char *value)
 {
@@ -1166,7 +1166,7 @@ enable_diagnostic_interrupt_validate (const struct arguments *args,
 
 /* pef_startup_delay */
 static int
-pef_startup_delay_checkout (const struct arguments *args,
+pef_startup_delay_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
@@ -1186,7 +1186,7 @@ pef_startup_delay_checkout (const struct arguments *args,
 }
 
 static int
-pef_startup_delay_commit (const struct arguments *args,
+pef_startup_delay_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -1196,7 +1196,7 @@ pef_startup_delay_commit (const struct arguments *args,
 }
 
 static int
-pef_startup_delay_diff (const struct arguments *args,
+pef_startup_delay_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -1227,7 +1227,7 @@ pef_startup_delay_diff (const struct arguments *args,
 }
 
 static int
-pef_startup_delay_validate (const struct arguments *args,
+pef_startup_delay_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
@@ -1247,7 +1247,7 @@ pef_startup_delay_validate (const struct arguments *args,
 /* alert_startup_delay */
 
 static int
-pef_alert_startup_delay_checkout (const struct arguments *args,
+pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
@@ -1267,7 +1267,7 @@ pef_alert_startup_delay_checkout (const struct arguments *args,
 }
 
 static int
-pef_alert_startup_delay_commit (const struct arguments *args,
+pef_alert_startup_delay_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
@@ -1277,7 +1277,7 @@ pef_alert_startup_delay_commit (const struct arguments *args,
 }
 
 static int
-pef_alert_startup_delay_diff (const struct arguments *args,
+pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
@@ -1308,7 +1308,7 @@ pef_alert_startup_delay_diff (const struct arguments *args,
 }
 
 static int
-pef_alert_startup_delay_validate (const struct arguments *args,
+pef_alert_startup_delay_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
@@ -1327,7 +1327,7 @@ pef_alert_startup_delay_validate (const struct arguments *args,
 
 
 struct section *
-bmc_pef_conf_section_get (struct arguments *args)
+bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section *pef_section;
   if (!(pef_section = (void *) calloc (1, sizeof (struct section))))

@@ -5,7 +5,7 @@
 #include "bmc-sections.h"
 
 int
-bmc_parser (struct arguments *arguments,
+bmc_parser (struct bmc_config_arguments *args,
 	    struct section *sections,
 	    FILE *fp)
 { 
@@ -26,7 +26,7 @@ bmc_parser (struct arguments *arguments,
       if (! first_word) 
         {
 #ifndef NDEBUG 
-          if (arguments->common.debug)
+          if (args->common.debug)
             fprintf (stderr, "%d: empty line\n", line_num);
 #endif /* NDEBUG */
           continue;
@@ -35,7 +35,7 @@ bmc_parser (struct arguments *arguments,
     if (first_word[0] == '#') 
       {
 #ifndef NDEBUG 
-        if (arguments->common.debug)
+        if (args->common.debug)
 	  fprintf (stderr, "Comment on line %d\n", line_num);
 #endif /* NDEBUG */
         continue;
@@ -67,7 +67,7 @@ bmc_parser (struct arguments *arguments,
             exit(1);
           }
 #ifndef NDEBUG 
-        if (arguments->common.debug) 
+        if (args->common.debug) 
           fprintf (stderr, "Entering section `%s'\n", section_name);
 #endif /* NDEBUG */
       continue;
@@ -88,7 +88,7 @@ bmc_parser (struct arguments *arguments,
             break;
           }
 #ifndef NDEBUG 
-        if (arguments->common.debug)
+        if (args->common.debug)
 	  fprintf (stderr, "Leaving section `%s'\n", section_name);
 #endif /* NDEBUG */
         free (section_name);
@@ -138,13 +138,13 @@ bmc_parser (struct arguments *arguments,
       }
     
 #ifndef NDEBUG 
-    if (arguments->common.debug) 
+    if (args->common.debug) 
       fprintf (stderr, "Trying to set `%s:%s=%s'\n",
 	       section_name, key_name, value);
 #endif /* NDEBUG */
     
     if (bmc_section_set_value (section_name, key_name, value,
-			       arguments, sections) != 0) 
+			       args, sections) != 0) 
       {
         if (section_name) 
           free (section_name);

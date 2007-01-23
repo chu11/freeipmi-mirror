@@ -6,7 +6,7 @@
 #include "bmc-sections.h"
 
 static int
-bmc_commit_keypair (struct arguments *arguments,
+bmc_commit_keypair (struct bmc_config_arguments *args,
                     struct section *sections,
                     struct keypair *kp)
 {
@@ -38,22 +38,22 @@ bmc_commit_keypair (struct arguments *arguments,
   value = strtok (value, " \t");
 
   ret = bmc_section_commit_value (section_name, key_name, value,
-				  arguments, sections);
+				  args, sections);
 
   free (keypair);
   return ret;
 }
 
 static int
-bmc_commit_keypairs (struct arguments *arguments,
+bmc_commit_keypairs (struct bmc_config_arguments *args,
                      struct section *sections)
 {
   struct keypair *kp;
 
-  kp = arguments->keypairs;
+  kp = args->keypairs;
   while (kp)
     {
-      bmc_commit_keypair(arguments, sections, kp);
+      bmc_commit_keypair(args, sections, kp);
       kp = kp->next;
     }
 
@@ -61,10 +61,10 @@ bmc_commit_keypairs (struct arguments *arguments,
 }
 
 static int
-bmc_keypair_feed (struct arguments *arguments,
+bmc_keypair_feed (struct bmc_config_arguments *args,
                   struct section *sections)
 {
-  struct keypair *kp = arguments->keypairs;
+  struct keypair *kp = args->keypairs;
 
   while (kp)
     {
@@ -154,32 +154,32 @@ bmc_keypair_feed (struct arguments *arguments,
 }
 
 static int
-bmc_commit_file (struct arguments *arguments,
+bmc_commit_file (struct bmc_config_arguments *args,
 		 struct section *sections)
 {
   int ret = 0;
   FILE *fp;
 
-  if (arguments->filename && strcmp (arguments->filename, "-"))
-    fp = fopen (arguments->filename, "r");
+  if (args->filename && strcmp (args->filename, "-"))
+    fp = fopen (args->filename, "r");
   else
     fp = stdin;
 
   if (!fp) 
     {
-      perror (arguments->filename);
+      perror (args->filename);
       return -1;
     }
 
   /* 1st pass */
-  ret = bmc_parser (arguments, sections, fp);
+  ret = bmc_parser (args, sections, fp);
 
   if (fp != stdin)
     fclose (fp);
 
   /* 2nd pass - feed in keypair elements from the command line */
-  if (arguments->keypairs)
-    ret = bmc_keypair_feed (arguments, sections);
+  if (args->keypairs)
+    ret = bmc_keypair_feed (args, sections);
 
   if (!ret) 
     {
@@ -192,7 +192,7 @@ bmc_commit_file (struct arguments *arguments,
             {
               if (kv->value) 
                 {
-                  ret = kv->commit (arguments, sect, kv);
+                  ret = kv->commit (args, sect, kv);
                   if (ret != 0)
 		    fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section, kv->key);
                 }
@@ -206,14 +206,14 @@ bmc_commit_file (struct arguments *arguments,
 }
 
 int
-bmc_commit (struct arguments *arguments,
+bmc_commit (struct bmc_config_arguments *args,
 	      struct section *sections)
 {
   int ret = 0;
 
-  if (arguments->filename)
-    ret = bmc_commit_file (arguments, sections);
+  if (args->filename)
+    ret = bmc_commit_file (args, sections);
   else
-    ret = bmc_commit_keypairs (arguments, sections);
+    ret = bmc_commit_keypairs (args, sections);
   return ret;
 }

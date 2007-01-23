@@ -7,7 +7,7 @@
 
 
 static int
-enable_gratuitous_arps_checkout (const struct arguments *args,
+enable_gratuitous_arps_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
@@ -43,7 +43,7 @@ enable_gratuitous_arps_checkout (const struct arguments *args,
 }
 
 static int
-enable_gratuitous_arps_commit (const struct arguments *args,
+enable_gratuitous_arps_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -64,7 +64,7 @@ enable_gratuitous_arps_commit (const struct arguments *args,
 }
 
 static int
-enable_gratuitous_arps_diff (const struct arguments *args,
+enable_gratuitous_arps_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -81,7 +81,7 @@ enable_gratuitous_arps_diff (const struct arguments *args,
 }
 
 static int
-enable_gratuitous_arps_validate (const struct arguments *args,
+enable_gratuitous_arps_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
@@ -91,7 +91,7 @@ enable_gratuitous_arps_validate (const struct arguments *args,
 /* reply */
 
 static int
-enable_arp_response_checkout (const struct arguments *args,
+enable_arp_response_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
@@ -127,7 +127,7 @@ enable_arp_response_checkout (const struct arguments *args,
 }
 
 static int
-enable_arp_response_commit (const struct arguments *args,
+enable_arp_response_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -148,7 +148,7 @@ enable_arp_response_commit (const struct arguments *args,
 }
 
 static int
-enable_arp_response_diff (const struct arguments *args,
+enable_arp_response_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -165,7 +165,7 @@ enable_arp_response_diff (const struct arguments *args,
 }
 
 static int
-enable_arp_response_validate (const struct arguments *args,
+enable_arp_response_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
@@ -173,7 +173,7 @@ enable_arp_response_validate (const struct arguments *args,
 }
 
 static int
-gratuitous_arp_interval_checkout (const struct arguments *args,
+gratuitous_arp_interval_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
@@ -193,7 +193,7 @@ gratuitous_arp_interval_checkout (const struct arguments *args,
 }
 
 static int
-gratuitous_arp_interval_commit (const struct arguments *args,
+gratuitous_arp_interval_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
@@ -202,7 +202,7 @@ gratuitous_arp_interval_commit (const struct arguments *args,
 }
 
 static int
-gratuitous_arp_interval_diff (const struct arguments *args,
+gratuitous_arp_interval_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
@@ -218,7 +218,7 @@ gratuitous_arp_interval_diff (const struct arguments *args,
 }
 
 static int
-gratuitous_arp_interval_validate (const struct arguments *args,
+gratuitous_arp_interval_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
@@ -233,7 +233,7 @@ gratuitous_arp_interval_validate (const struct arguments *args,
 }
 
 struct section *
-bmc_lan_conf_misc_section_get (struct arguments *args)
+bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_misc_section = NULL;
 

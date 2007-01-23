@@ -116,7 +116,7 @@ static struct argp_option options[] = {
 
 
 static int
-args_validate (struct arguments *args)
+args_validate (struct bmc_config_arguments *args)
 {
   int ret = 0;
 
@@ -195,7 +195,7 @@ args_validate (struct arguments *args)
 }
 
 static void
-display (const struct arguments *args)
+display (const struct bmc_config_arguments *args)
 {
   return;
 }
@@ -244,7 +244,7 @@ _create_sectionstr(char *arg)
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct arguments *arguments = state->input;
+  struct bmc_config_arguments *args = state->input;
   struct keypair *kp;
   struct sectionstr *sstr;
 
@@ -252,15 +252,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case 'q': 
     case 's':
-      arguments->silent = 1;
+      args->silent = 1;
       break;
     case 'v':
-      arguments->verbose = 1;
+      args->verbose = 1;
       break;
     case 'f':
-      if (arguments->filename) /* If specified more than once */
-	free (arguments->filename);
-      if (!(arguments->filename = strdup (arg)))
+      if (args->filename) /* If specified more than once */
+	free (args->filename);
+      if (!(args->filename = strdup (arg)))
         {
           perror("strdup");
           exit(1);
@@ -270,62 +270,62 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'k':
 
       kp = _create_keypair(arg);
-      if (arguments->keypairs)
+      if (args->keypairs)
         {
           struct keypair *p = NULL;
           
-          p = arguments->keypairs;
+          p = args->keypairs;
           while (p->next)
             p = p->next;
           
           p->next = kp;
         }
       else
-        arguments->keypairs = kp;
+        args->keypairs = kp;
       break;
 
     case 'S':
       sstr = _create_sectionstr(arg);
-      if (arguments->sectionstrs)
+      if (args->sectionstrs)
         {
           struct sectionstr *p = NULL;
           
-          p = arguments->sectionstrs;
+          p = args->sectionstrs;
           while (p->next)
             p = p->next;
           
           p->next = sstr;
         }
       else
-        arguments->sectionstrs = sstr;
+        args->sectionstrs = sstr;
       break;
 
     case 'L':
-      if (! arguments->action)
-	arguments->action = BMC_ACTION_LIST_SECTIONS;
+      if (! args->action)
+	args->action = BMC_ACTION_LIST_SECTIONS;
       else
-	arguments->action = -1;
+	args->action = -1;
       break;
 
     case 'o':
-      if (! arguments->action)
-	arguments->action = BMC_ACTION_CHECKOUT;
+      if (! args->action)
+	args->action = BMC_ACTION_CHECKOUT;
       else
-	arguments->action = -1;
+	args->action = -1;
       break;
 
     case 'i':
-      if (! arguments->action)
-	arguments->action = BMC_ACTION_COMMIT;
+      if (! args->action)
+	args->action = BMC_ACTION_COMMIT;
       else
-	arguments->action = -1;
+	args->action = -1;
       break;
 
     case 'd':
-      if (! arguments->action)
-	arguments->action = BMC_ACTION_DIFF;
+      if (! args->action)
+	args->action = BMC_ACTION_DIFF;
       else
-	arguments->action = -1;
+	args->action = -1;
       break;
 
     case ARGP_KEY_ARG:
@@ -333,7 +333,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     default:
-      return common_parse_opt (key, arg, state, &arguments->common);
+      return common_parse_opt (key, arg, state, &args->common);
     }
   return 0;
 }
@@ -342,16 +342,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
 static struct argp argp = { options, parse_opt, args_doc, doc};
 
 int
-bmc_argp (int argc, char *argv[], struct arguments *arguments)
+bmc_argp (int argc, char *argv[], struct bmc_config_arguments *args)
 {
   
-  argp_parse (&argp, argc, argv, 0, 0, arguments);
+  argp_parse (&argp, argc, argv, 0, 0, args);
 
-  if (args_validate (arguments) == -1)
+  if (args_validate (args) == -1)
     return (1);
 
-  if (arguments->verbose)
-    display (arguments);
+  if (args->verbose)
+    display (args);
 
   return (0);
 }

@@ -82,7 +82,7 @@
 #include "ipmi-common.h"
 
 static int
-ipmi_core_init (char *progname, struct arguments *args)
+ipmi_core_init (char *progname, struct bmc_config_arguments *args)
 {
   uint32_t flags;
 
@@ -187,7 +187,7 @@ _disable_coredump(void)
 int
 main (int argc, char *argv[])
 {
-  struct arguments arguments;
+  struct bmc_config_arguments args;
   struct section *sections;
   int ret = 0;
 #ifdef NDEBUG
@@ -197,12 +197,12 @@ main (int argc, char *argv[])
   _disable_coredump();
 
   /* Default values. */
-  memset (&arguments, 0, sizeof (arguments));
-  init_common_cmd_args (&(arguments.common));
+  memset (&args, 0, sizeof (args));
+  init_common_cmd_args (&(args.common));
   /* ADMIN is minimum for bmc-config b/c its needed for many ipmi cmds */
-  arguments.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
+  args.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 
-  if (bmc_argp (argc, argv,  &arguments) != 0)
+  if (bmc_argp (argc, argv,  &args) != 0)
     return (1);
 
 #ifdef NDEBUG
@@ -211,29 +211,29 @@ main (int argc, char *argv[])
     memset(argv[i], '\0', strlen(argv[i]));
 #endif /* NDEBUG */
 
-  ipmi_core_init (argv[0], &arguments);
+  ipmi_core_init (argv[0], &args);
 
   /* this should be after ipmi_core_init since
      user section refers to ipmi calls to get
      number of user profiles in this ipmi instance
   */
-  sections = bmc_sections_init (&arguments);
+  sections = bmc_sections_init (&args);
 
-  switch (arguments.action) {
+  switch (args.action) {
   case BMC_ACTION_CHECKOUT:
-    ret = bmc_checkout (&arguments, sections);
+    ret = bmc_checkout (&args, sections);
     break;
   case BMC_ACTION_COMMIT:
-    ret = bmc_commit (&arguments, sections);
+    ret = bmc_commit (&args, sections);
     break;
   case BMC_ACTION_DIFF:
-    ret = bmc_diff (&arguments, sections);
+    ret = bmc_diff (&args, sections);
     break;
   case BMC_ACTION_LIST_SECTIONS:
-    ret = bmc_sections_list (&arguments, sections);
+    ret = bmc_sections_list (&args, sections);
     break;
   }
   
-  ipmi_close_device(arguments.dev);
+  ipmi_close_device(args.dev);
   return (ret);
 }

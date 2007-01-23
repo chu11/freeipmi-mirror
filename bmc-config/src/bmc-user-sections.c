@@ -6,7 +6,7 @@
 #include "bmc-sections.h"
 
 static int
-get_num_users (struct arguments *args)
+get_num_users (struct bmc_config_arguments *args)
 {
   int rv = -1;
   uint8_t users = 0;
@@ -20,7 +20,7 @@ get_num_users (struct arguments *args)
 
 
 static int
-username_checkout (const struct arguments *args,
+username_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
@@ -47,7 +47,7 @@ username_checkout (const struct arguments *args,
 }
 
 static int
-username_commit (const struct arguments *args,
+username_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -62,7 +62,7 @@ username_commit (const struct arguments *args,
 }
 
 static int
-username_diff (const struct arguments *args,
+username_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
@@ -101,7 +101,7 @@ username_diff (const struct arguments *args,
 }
 
 static int
-username_validate (const struct arguments *args,
+username_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
@@ -128,7 +128,7 @@ username_validate (const struct arguments *args,
 /* enable_user */
 
 static int
-enable_user_checkout (const struct arguments *args,
+enable_user_checkout (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      struct keyvalue *kv)
 {
@@ -190,7 +190,7 @@ enable_user_checkout (const struct arguments *args,
 }
 
 static int
-enable_user_commit (const struct arguments *args,
+enable_user_commit (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -201,7 +201,7 @@ enable_user_commit (const struct arguments *args,
 }
 
 static int
-enable_user_diff (const struct arguments *args,
+enable_user_diff (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
@@ -252,7 +252,7 @@ enable_user_diff (const struct arguments *args,
 }
 
 static int
-enable_user_validate (const struct arguments *args,
+enable_user_validate (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const char *value)
 {
@@ -260,7 +260,7 @@ enable_user_validate (const struct arguments *args,
 }
 
 static int
-password_checkout (const struct arguments *args,
+password_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
@@ -277,7 +277,7 @@ password_checkout (const struct arguments *args,
 }
 
 static int
-password_commit (const struct arguments *args,
+password_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -287,7 +287,7 @@ password_commit (const struct arguments *args,
 }
 
 static int
-password_diff (const struct arguments *args,
+password_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
@@ -305,7 +305,7 @@ password_diff (const struct arguments *args,
 }
 
 static int
-password_validate (const struct arguments *args,
+password_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
@@ -315,7 +315,7 @@ password_validate (const struct arguments *args,
 /* password20 */
 
 static int
-password20_checkout (const struct arguments *args,
+password20_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
@@ -342,7 +342,7 @@ password20_checkout (const struct arguments *args,
 }
 
 static int
-password20_commit (const struct arguments *args,
+password20_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -353,7 +353,7 @@ password20_commit (const struct arguments *args,
 }
 
 static int
-password20_diff (const struct arguments *args,
+password20_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -371,7 +371,7 @@ password20_diff (const struct arguments *args,
 }
 
 static int
-password20_validate (const struct arguments *args,
+password20_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
@@ -483,7 +483,7 @@ lan_channel_set (ipmi_device_t dev,
 /* lan_enable_ipmi_msgs */
 
 static int
-lan_enable_ipmi_msgs_checkout (const struct arguments *args,
+lan_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -526,7 +526,7 @@ lan_enable_ipmi_msgs_checkout (const struct arguments *args,
 }
 
 static int
-lan_enable_ipmi_msgs_commit (const struct arguments *args,
+lan_enable_ipmi_msgs_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -541,7 +541,7 @@ lan_enable_ipmi_msgs_commit (const struct arguments *args,
 }
 
 static int
-lan_enable_ipmi_msgs_diff (const struct arguments *args,
+lan_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -577,7 +577,7 @@ lan_enable_ipmi_msgs_diff (const struct arguments *args,
 }
   
 static int
-lan_enable_ipmi_msgs_validate (const struct arguments *args,
+lan_enable_ipmi_msgs_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
@@ -587,7 +587,7 @@ lan_enable_ipmi_msgs_validate (const struct arguments *args,
 /* lan_enable_link_auth */
 
 static int
-lan_enable_link_auth_checkout (const struct arguments *args,
+lan_enable_link_auth_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -630,7 +630,7 @@ lan_enable_link_auth_checkout (const struct arguments *args,
 }
 
 static int
-lan_enable_link_auth_commit (const struct arguments *args,
+lan_enable_link_auth_commit (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              const struct keyvalue *kv)
 {
@@ -645,7 +645,7 @@ lan_enable_link_auth_commit (const struct arguments *args,
 }
 
 static int
-lan_enable_link_auth_diff (const struct arguments *args,
+lan_enable_link_auth_diff (const struct bmc_config_arguments *args,
                            const struct section *sect,
                            const struct keyvalue *kv)
 {
@@ -681,7 +681,7 @@ lan_enable_link_auth_diff (const struct arguments *args,
 }
 
 static int
-lan_enable_link_auth_validate (const struct arguments *args,
+lan_enable_link_auth_validate (const struct bmc_config_arguments *args,
                                const struct section *sect,
                                const char *value)
 {
@@ -691,7 +691,7 @@ lan_enable_link_auth_validate (const struct arguments *args,
 /* lan_enable_restricted_to_callback */
 
 static int
-lan_enable_restricted_to_callback_checkout (const struct arguments *args,
+lan_enable_restricted_to_callback_checkout (const struct bmc_config_arguments *args,
                                             const struct section *sect,
                                             struct keyvalue *kv)
 {
@@ -734,7 +734,7 @@ lan_enable_restricted_to_callback_checkout (const struct arguments *args,
 }
 
 static int
-lan_enable_restricted_to_callback_commit (const struct arguments *args,
+lan_enable_restricted_to_callback_commit (const struct bmc_config_arguments *args,
                                           const struct section *sect,
                                           const struct keyvalue *kv)
 {
@@ -749,7 +749,7 @@ lan_enable_restricted_to_callback_commit (const struct arguments *args,
 }
 
 static int
-lan_enable_restricted_to_callback_diff (const struct arguments *args,
+lan_enable_restricted_to_callback_diff (const struct bmc_config_arguments *args,
                                         const struct section *sect,
                                         const struct keyvalue *kv)
 {
@@ -785,7 +785,7 @@ lan_enable_restricted_to_callback_diff (const struct arguments *args,
 }
 
 static int
-lan_enable_restricted_to_callback_validate (const struct arguments *args,
+lan_enable_restricted_to_callback_validate (const struct bmc_config_arguments *args,
                                             const struct section *sect,
                                             const char *value)
 {
@@ -795,7 +795,7 @@ lan_enable_restricted_to_callback_validate (const struct arguments *args,
 /* privilege_limit */
 
 static int
-lan_privilege_limit_checkout (const struct arguments *args,
+lan_privilege_limit_checkout (const struct bmc_config_arguments *args,
                               const struct section *sect,
                               struct keyvalue *kv)
 {
@@ -827,7 +827,7 @@ lan_privilege_limit_checkout (const struct arguments *args,
 }
 
 static int
-lan_privilege_limit_commit (const struct arguments *args,
+lan_privilege_limit_commit (const struct bmc_config_arguments *args,
                             const struct section *sect,
                             const struct keyvalue *kv)
 {
@@ -842,7 +842,7 @@ lan_privilege_limit_commit (const struct arguments *args,
 }
 
 static int
-lan_privilege_limit_diff (const struct arguments *args,
+lan_privilege_limit_diff (const struct bmc_config_arguments *args,
                           const struct section *sect,
                           const struct keyvalue *kv)
 {
@@ -879,7 +879,7 @@ lan_privilege_limit_diff (const struct arguments *args,
 
   
 static int
-lan_privilege_limit_validate (const struct arguments *args,
+lan_privilege_limit_validate (const struct bmc_config_arguments *args,
                               const struct section *sect,
                               const char *value)
 {
@@ -889,7 +889,7 @@ lan_privilege_limit_validate (const struct arguments *args,
 /* lan_session_limit */
 
 static int
-lan_session_limit_checkout (const struct arguments *args,
+lan_session_limit_checkout (const struct bmc_config_arguments *args,
                             const struct section *sect,
                             struct keyvalue *kv)
 {
@@ -917,7 +917,7 @@ lan_session_limit_checkout (const struct arguments *args,
 }
 
 static int
-lan_session_limit_commit (const struct arguments *args,
+lan_session_limit_commit (const struct bmc_config_arguments *args,
                           const struct section *sect,
                           const struct keyvalue *kv)
 {
@@ -932,7 +932,7 @@ lan_session_limit_commit (const struct arguments *args,
 }
 
 static int
-lan_session_limit_diff (const struct arguments *args,
+lan_session_limit_diff (const struct bmc_config_arguments *args,
                         const struct section *sect,
                         const struct keyvalue *kv)
 {
@@ -971,7 +971,7 @@ lan_session_limit_diff (const struct arguments *args,
 
   
 static int
-lan_session_limit_validate (const struct arguments *args,
+lan_session_limit_validate (const struct bmc_config_arguments *args,
                             const struct section *sect,
                             const char *value)
 {
@@ -989,7 +989,7 @@ lan_session_limit_validate (const struct arguments *args,
 
 
 static int
-sol_payload_access_checkout (const struct arguments *args,
+sol_payload_access_checkout (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              struct keyvalue *kv)
 {
@@ -1039,7 +1039,7 @@ sol_payload_access_checkout (const struct arguments *args,
 }
 
 static int
-sol_payload_access_commit (const struct arguments *args,
+sol_payload_access_commit (const struct bmc_config_arguments *args,
                            const struct section *sect,
                            const struct keyvalue *kv)
 {
@@ -1059,7 +1059,7 @@ sol_payload_access_commit (const struct arguments *args,
 }
 
 static int
-sol_payload_access_diff (const struct arguments *args,
+sol_payload_access_diff (const struct bmc_config_arguments *args,
                          const struct section *sect,
                          const struct keyvalue *kv)
 {
@@ -1104,7 +1104,7 @@ sol_payload_access_diff (const struct arguments *args,
 }
 
 static int
-sol_payload_access_validate (const struct arguments *args,
+sol_payload_access_validate (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              const char *value)
 {
@@ -1216,7 +1216,7 @@ serial_channel_set (ipmi_device_t dev,
 /* serial_enable_ipmi_msgs */
 
 static int
-serial_enable_ipmi_msgs_checkout (const struct arguments *args,
+serial_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
                                   const struct section *sect,
                                   struct keyvalue *kv)
 {
@@ -1259,7 +1259,7 @@ serial_enable_ipmi_msgs_checkout (const struct arguments *args,
 }
 
 static int
-serial_enable_ipmi_msgs_commit (const struct arguments *args,
+serial_enable_ipmi_msgs_commit (const struct bmc_config_arguments *args,
                                 const struct section *sect,
                                 const struct keyvalue *kv)
 {
@@ -1274,7 +1274,7 @@ serial_enable_ipmi_msgs_commit (const struct arguments *args,
 }
 
 static int
-serial_enable_ipmi_msgs_diff (const struct arguments *args,
+serial_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
                               const struct section *sect,
                               const struct keyvalue *kv)
 {
@@ -1310,7 +1310,7 @@ serial_enable_ipmi_msgs_diff (const struct arguments *args,
 }
   
 static int
-serial_enable_ipmi_msgs_validate (const struct arguments *args,
+serial_enable_ipmi_msgs_validate (const struct bmc_config_arguments *args,
                                   const struct section *sect,
                                   const char *value)
 {
@@ -1320,7 +1320,7 @@ serial_enable_ipmi_msgs_validate (const struct arguments *args,
 /* serial_enable_link_auth */
 
 static int
-serial_enable_link_auth_checkout (const struct arguments *args,
+serial_enable_link_auth_checkout (const struct bmc_config_arguments *args,
                                   const struct section *sect,
                                   struct keyvalue *kv)
 {
@@ -1363,7 +1363,7 @@ serial_enable_link_auth_checkout (const struct arguments *args,
 }
 
 static int
-serial_enable_link_auth_commit (const struct arguments *args,
+serial_enable_link_auth_commit (const struct bmc_config_arguments *args,
                                 const struct section *sect,
                                 const struct keyvalue *kv)
 {
@@ -1378,7 +1378,7 @@ serial_enable_link_auth_commit (const struct arguments *args,
 }
 
 static int
-serial_enable_link_auth_diff (const struct arguments *args,
+serial_enable_link_auth_diff (const struct bmc_config_arguments *args,
                               const struct section *sect,
                               const struct keyvalue *kv)
 {
@@ -1414,7 +1414,7 @@ serial_enable_link_auth_diff (const struct arguments *args,
 }
 
 static int
-serial_enable_link_auth_validate (const struct arguments *args,
+serial_enable_link_auth_validate (const struct bmc_config_arguments *args,
                                   const struct section *sect,
                                   const char *value)
 {
@@ -1424,7 +1424,7 @@ serial_enable_link_auth_validate (const struct arguments *args,
 /* serial_enable_restricted_to_callback */
 
 static int
-serial_enable_restricted_to_callback_checkout (const struct arguments *args,
+serial_enable_restricted_to_callback_checkout (const struct bmc_config_arguments *args,
                                                const struct section *sect,
                                                struct keyvalue *kv)
 {
@@ -1467,7 +1467,7 @@ serial_enable_restricted_to_callback_checkout (const struct arguments *args,
 }
 
 static int
-serial_enable_restricted_to_callback_commit (const struct arguments *args,
+serial_enable_restricted_to_callback_commit (const struct bmc_config_arguments *args,
                                              const struct section *sect,
                                              const struct keyvalue *kv)
 {
@@ -1482,7 +1482,7 @@ serial_enable_restricted_to_callback_commit (const struct arguments *args,
 }
 
 static int
-serial_enable_restricted_to_callback_diff (const struct arguments *args,
+serial_enable_restricted_to_callback_diff (const struct bmc_config_arguments *args,
                                            const struct section *sect,
                                            const struct keyvalue *kv)
 {
@@ -1518,7 +1518,7 @@ serial_enable_restricted_to_callback_diff (const struct arguments *args,
 }
 
 static int
-serial_enable_restricted_to_callback_validate (const struct arguments *args,
+serial_enable_restricted_to_callback_validate (const struct bmc_config_arguments *args,
                                                const struct section *sect,
                                                const char *value)
 {
@@ -1528,7 +1528,7 @@ serial_enable_restricted_to_callback_validate (const struct arguments *args,
 /* privilege_limit */
 
 static int
-serial_privilege_limit_checkout (const struct arguments *args,
+serial_privilege_limit_checkout (const struct bmc_config_arguments *args,
                                  const struct section *sect,
                                  struct keyvalue *kv)
 {
@@ -1560,7 +1560,7 @@ serial_privilege_limit_checkout (const struct arguments *args,
 }
 
 static int
-serial_privilege_limit_commit (const struct arguments *args,
+serial_privilege_limit_commit (const struct bmc_config_arguments *args,
                                const struct section *sect,
                                const struct keyvalue *kv)
 {
@@ -1575,7 +1575,7 @@ serial_privilege_limit_commit (const struct arguments *args,
 }
 
 static int
-serial_privilege_limit_diff (const struct arguments *args,
+serial_privilege_limit_diff (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              const struct keyvalue *kv)
 {
@@ -1612,7 +1612,7 @@ serial_privilege_limit_diff (const struct arguments *args,
 
   
 static int
-serial_privilege_limit_validate (const struct arguments *args,
+serial_privilege_limit_validate (const struct bmc_config_arguments *args,
                                  const struct section *sect,
                                  const char *value)
 {
@@ -1622,7 +1622,7 @@ serial_privilege_limit_validate (const struct arguments *args,
 /* serial_session_limit */
 
 static int
-serial_session_limit_checkout (const struct arguments *args,
+serial_session_limit_checkout (const struct bmc_config_arguments *args,
                                const struct section *sect,
                                struct keyvalue *kv)
 {
@@ -1650,7 +1650,7 @@ serial_session_limit_checkout (const struct arguments *args,
 }
 
 static int
-serial_session_limit_commit (const struct arguments *args,
+serial_session_limit_commit (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              const struct keyvalue *kv)
 {
@@ -1665,7 +1665,7 @@ serial_session_limit_commit (const struct arguments *args,
 }
 
 static int
-serial_session_limit_diff (const struct arguments *args,
+serial_session_limit_diff (const struct bmc_config_arguments *args,
                            const struct section *sect,
                            const struct keyvalue *kv)
 {
@@ -1704,7 +1704,7 @@ serial_session_limit_diff (const struct arguments *args,
 
   
 static int
-serial_session_limit_validate (const struct arguments *args,
+serial_session_limit_validate (const struct bmc_config_arguments *args,
                                const struct section *sect,
                                const char *value)
 {
@@ -1720,7 +1720,7 @@ serial_session_limit_validate (const struct arguments *args,
 
 
 static struct section *
-get_user_section (int num, struct arguments *args)
+get_user_section (int num, struct bmc_config_arguments *args)
 {
   struct section *this_section = NULL;
 
@@ -1886,7 +1886,7 @@ get_user_section (int num, struct arguments *args)
 }
 
 struct section *
-bmc_user_sections_get (struct arguments *args)
+bmc_user_sections_get (struct bmc_config_arguments *args)
 {
   struct section * user_sections = NULL;
   int num_users = get_num_users (args);

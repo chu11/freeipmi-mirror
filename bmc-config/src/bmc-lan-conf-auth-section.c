@@ -7,7 +7,7 @@
 /* callback_none */
 
 static int
-callback_none_checkout (const struct arguments *args,
+callback_none_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
@@ -43,7 +43,7 @@ callback_none_checkout (const struct arguments *args,
 }
 
 static int
-callback_none_commit (const struct arguments *args,
+callback_none_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
@@ -63,7 +63,7 @@ callback_none_commit (const struct arguments *args,
 }
 
 static int
-callback_none_diff (const struct arguments *args,
+callback_none_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -90,7 +90,7 @@ callback_none_diff (const struct arguments *args,
 }
 
 static int
-callback_none_validate (const struct arguments *args,
+callback_none_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
@@ -100,7 +100,7 @@ callback_none_validate (const struct arguments *args,
 /* callback_md2 */
 
 static int
-callback_md2_checkout (const struct arguments *args,
+callback_md2_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
@@ -136,7 +136,7 @@ callback_md2_checkout (const struct arguments *args,
 }
 
 static int
-callback_md2_commit (const struct arguments *args,
+callback_md2_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
@@ -156,7 +156,7 @@ callback_md2_commit (const struct arguments *args,
 }
 
 static int
-callback_md2_diff (const struct arguments *args,
+callback_md2_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -183,7 +183,7 @@ callback_md2_diff (const struct arguments *args,
 }
 
 static int
-callback_md2_validate (const struct arguments *args,
+callback_md2_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
@@ -193,7 +193,7 @@ callback_md2_validate (const struct arguments *args,
 /* callback_md5 */
 
 static int
-callback_md5_checkout (const struct arguments *args,
+callback_md5_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
@@ -229,7 +229,7 @@ callback_md5_checkout (const struct arguments *args,
 }
 
 static int
-callback_md5_commit (const struct arguments *args,
+callback_md5_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
@@ -249,7 +249,7 @@ callback_md5_commit (const struct arguments *args,
 }
 
 static int
-callback_md5_diff (const struct arguments *args,
+callback_md5_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -276,7 +276,7 @@ callback_md5_diff (const struct arguments *args,
 }
 
 static int
-callback_md5_validate (const struct arguments *args,
+callback_md5_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
@@ -286,7 +286,7 @@ callback_md5_validate (const struct arguments *args,
 /* callback_straight_password */
 
 static int
-callback_straight_password_checkout (const struct arguments *args,
+callback_straight_password_checkout (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     struct keyvalue *kv)
 {
@@ -322,7 +322,7 @@ callback_straight_password_checkout (const struct arguments *args,
 }
 
 static int
-callback_straight_password_commit (const struct arguments *args,
+callback_straight_password_commit (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
@@ -342,7 +342,7 @@ callback_straight_password_commit (const struct arguments *args,
 }
 
 static int
-callback_straight_password_diff (const struct arguments *args,
+callback_straight_password_diff (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -369,7 +369,7 @@ callback_straight_password_diff (const struct arguments *args,
 }
 
 static int
-callback_straight_password_validate (const struct arguments *args,
+callback_straight_password_validate (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const char *value)
 {
@@ -379,7 +379,7 @@ callback_straight_password_validate (const struct arguments *args,
 /* callback_oem_proprietary */
 
 static int
-callback_oem_proprietary_checkout (const struct arguments *args,
+callback_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
@@ -415,7 +415,7 @@ callback_oem_proprietary_checkout (const struct arguments *args,
 }
 
 static int
-callback_oem_proprietary_commit (const struct arguments *args,
+callback_oem_proprietary_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -435,7 +435,7 @@ callback_oem_proprietary_commit (const struct arguments *args,
 }
 
 static int
-callback_oem_proprietary_diff (const struct arguments *args,
+callback_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -462,7 +462,7 @@ callback_oem_proprietary_diff (const struct arguments *args,
 }
 
 static int
-callback_oem_proprietary_validate (const struct arguments *args,
+callback_oem_proprietary_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
@@ -474,7 +474,7 @@ callback_oem_proprietary_validate (const struct arguments *args,
 /* user_none */
 
 static int
-user_none_checkout (const struct arguments *args,
+user_none_checkout (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    struct keyvalue *kv)
 {
@@ -510,7 +510,7 @@ user_none_checkout (const struct arguments *args,
 }
 
 static int
-user_none_commit (const struct arguments *args,
+user_none_commit (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
@@ -530,7 +530,7 @@ user_none_commit (const struct arguments *args,
 }
 
 static int
-user_none_diff (const struct arguments *args,
+user_none_diff (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
@@ -557,7 +557,7 @@ user_none_diff (const struct arguments *args,
 }
 
 static int
-user_none_validate (const struct arguments *args,
+user_none_validate (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const char *value)
 {
@@ -567,7 +567,7 @@ user_none_validate (const struct arguments *args,
 /* user_md2 */
 
 static int
-user_md2_checkout (const struct arguments *args,
+user_md2_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
@@ -603,7 +603,7 @@ user_md2_checkout (const struct arguments *args,
 }
 
 static int
-user_md2_commit (const struct arguments *args,
+user_md2_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -623,7 +623,7 @@ user_md2_commit (const struct arguments *args,
 }
 
 static int
-user_md2_diff (const struct arguments *args,
+user_md2_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
@@ -650,7 +650,7 @@ user_md2_diff (const struct arguments *args,
 }
 
 static int
-user_md2_validate (const struct arguments *args,
+user_md2_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
@@ -660,7 +660,7 @@ user_md2_validate (const struct arguments *args,
 /* user_md5 */
 
 static int
-user_md5_checkout (const struct arguments *args,
+user_md5_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
@@ -696,7 +696,7 @@ user_md5_checkout (const struct arguments *args,
 }
 
 static int
-user_md5_commit (const struct arguments *args,
+user_md5_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -716,7 +716,7 @@ user_md5_commit (const struct arguments *args,
 }
 
 static int
-user_md5_diff (const struct arguments *args,
+user_md5_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
@@ -743,7 +743,7 @@ user_md5_diff (const struct arguments *args,
 }
 
 static int
-user_md5_validate (const struct arguments *args,
+user_md5_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
@@ -753,7 +753,7 @@ user_md5_validate (const struct arguments *args,
 /* user_straight_password */
 
 static int
-user_straight_password_checkout (const struct arguments *args,
+user_straight_password_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
@@ -789,7 +789,7 @@ user_straight_password_checkout (const struct arguments *args,
 }
 
 static int
-user_straight_password_commit (const struct arguments *args,
+user_straight_password_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -809,7 +809,7 @@ user_straight_password_commit (const struct arguments *args,
 }
 
 static int
-user_straight_password_diff (const struct arguments *args,
+user_straight_password_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -836,7 +836,7 @@ user_straight_password_diff (const struct arguments *args,
 }
 
 static int
-user_straight_password_validate (const struct arguments *args,
+user_straight_password_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
@@ -846,7 +846,7 @@ user_straight_password_validate (const struct arguments *args,
 /* user_oem_proprietary */
 
 static int
-user_oem_proprietary_checkout (const struct arguments *args,
+user_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -882,7 +882,7 @@ user_oem_proprietary_checkout (const struct arguments *args,
 }
 
 static int
-user_oem_proprietary_commit (const struct arguments *args,
+user_oem_proprietary_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -902,7 +902,7 @@ user_oem_proprietary_commit (const struct arguments *args,
 }
 
 static int
-user_oem_proprietary_diff (const struct arguments *args,
+user_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -929,7 +929,7 @@ user_oem_proprietary_diff (const struct arguments *args,
 }
 
 static int
-user_oem_proprietary_validate (const struct arguments *args,
+user_oem_proprietary_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
@@ -941,7 +941,7 @@ user_oem_proprietary_validate (const struct arguments *args,
 /* operator_none */
 
 static int
-operator_none_checkout (const struct arguments *args,
+operator_none_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
@@ -977,7 +977,7 @@ operator_none_checkout (const struct arguments *args,
 }
 
 static int
-operator_none_commit (const struct arguments *args,
+operator_none_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
@@ -997,7 +997,7 @@ operator_none_commit (const struct arguments *args,
 }
 
 static int
-operator_none_diff (const struct arguments *args,
+operator_none_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -1024,7 +1024,7 @@ operator_none_diff (const struct arguments *args,
 }
 
 static int
-operator_none_validate (const struct arguments *args,
+operator_none_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
@@ -1034,7 +1034,7 @@ operator_none_validate (const struct arguments *args,
 /* operator_md2 */
 
 static int
-operator_md2_checkout (const struct arguments *args,
+operator_md2_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
@@ -1070,7 +1070,7 @@ operator_md2_checkout (const struct arguments *args,
 }
 
 static int
-operator_md2_commit (const struct arguments *args,
+operator_md2_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
@@ -1090,7 +1090,7 @@ operator_md2_commit (const struct arguments *args,
 }
 
 static int
-operator_md2_diff (const struct arguments *args,
+operator_md2_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -1117,7 +1117,7 @@ operator_md2_diff (const struct arguments *args,
 }
 
 static int
-operator_md2_validate (const struct arguments *args,
+operator_md2_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
@@ -1127,7 +1127,7 @@ operator_md2_validate (const struct arguments *args,
 /* operator_md5 */
 
 static int
-operator_md5_checkout (const struct arguments *args,
+operator_md5_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
@@ -1163,7 +1163,7 @@ operator_md5_checkout (const struct arguments *args,
 }
 
 static int
-operator_md5_commit (const struct arguments *args,
+operator_md5_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
@@ -1183,7 +1183,7 @@ operator_md5_commit (const struct arguments *args,
 }
 
 static int
-operator_md5_diff (const struct arguments *args,
+operator_md5_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -1210,7 +1210,7 @@ operator_md5_diff (const struct arguments *args,
 }
 
 static int
-operator_md5_validate (const struct arguments *args,
+operator_md5_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
@@ -1220,7 +1220,7 @@ operator_md5_validate (const struct arguments *args,
 /* operator_straight_password */
 
 static int
-operator_straight_password_checkout (const struct arguments *args,
+operator_straight_password_checkout (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     struct keyvalue *kv)
 {
@@ -1256,7 +1256,7 @@ operator_straight_password_checkout (const struct arguments *args,
 }
 
 static int
-operator_straight_password_commit (const struct arguments *args,
+operator_straight_password_commit (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
@@ -1276,7 +1276,7 @@ operator_straight_password_commit (const struct arguments *args,
 }
 
 static int
-operator_straight_password_diff (const struct arguments *args,
+operator_straight_password_diff (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -1303,7 +1303,7 @@ operator_straight_password_diff (const struct arguments *args,
 }
 
 static int
-operator_straight_password_validate (const struct arguments *args,
+operator_straight_password_validate (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const char *value)
 {
@@ -1313,7 +1313,7 @@ operator_straight_password_validate (const struct arguments *args,
 /* operator_oem_proprietary */
 
 static int
-operator_oem_proprietary_checkout (const struct arguments *args,
+operator_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
@@ -1349,7 +1349,7 @@ operator_oem_proprietary_checkout (const struct arguments *args,
 }
 
 static int
-operator_oem_proprietary_commit (const struct arguments *args,
+operator_oem_proprietary_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -1369,7 +1369,7 @@ operator_oem_proprietary_commit (const struct arguments *args,
 }
 
 static int
-operator_oem_proprietary_diff (const struct arguments *args,
+operator_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -1396,7 +1396,7 @@ operator_oem_proprietary_diff (const struct arguments *args,
 }
 
 static int
-operator_oem_proprietary_validate (const struct arguments *args,
+operator_oem_proprietary_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
@@ -1409,7 +1409,7 @@ operator_oem_proprietary_validate (const struct arguments *args,
 /* admin_none */
 
 static int
-admin_none_checkout (const struct arguments *args,
+admin_none_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
@@ -1445,7 +1445,7 @@ admin_none_checkout (const struct arguments *args,
 }
 
 static int
-admin_none_commit (const struct arguments *args,
+admin_none_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -1465,7 +1465,7 @@ admin_none_commit (const struct arguments *args,
 }
 
 static int
-admin_none_diff (const struct arguments *args,
+admin_none_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -1492,7 +1492,7 @@ admin_none_diff (const struct arguments *args,
 }
 
 static int
-admin_none_validate (const struct arguments *args,
+admin_none_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
@@ -1502,7 +1502,7 @@ admin_none_validate (const struct arguments *args,
 /* admin_md2 */
 
 static int
-admin_md2_checkout (const struct arguments *args,
+admin_md2_checkout (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    struct keyvalue *kv)
 {
@@ -1538,7 +1538,7 @@ admin_md2_checkout (const struct arguments *args,
 }
 
 static int
-admin_md2_commit (const struct arguments *args,
+admin_md2_commit (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
@@ -1558,7 +1558,7 @@ admin_md2_commit (const struct arguments *args,
 }
 
 static int
-admin_md2_diff (const struct arguments *args,
+admin_md2_diff (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
@@ -1585,7 +1585,7 @@ admin_md2_diff (const struct arguments *args,
 }
 
 static int
-admin_md2_validate (const struct arguments *args,
+admin_md2_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
@@ -1595,7 +1595,7 @@ admin_md2_validate (const struct arguments *args,
 /* admin_md5 */
 
 static int
-admin_md5_checkout (const struct arguments *args,
+admin_md5_checkout (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    struct keyvalue *kv)
 {
@@ -1631,7 +1631,7 @@ admin_md5_checkout (const struct arguments *args,
 }
 
 static int
-admin_md5_commit (const struct arguments *args,
+admin_md5_commit (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
@@ -1651,7 +1651,7 @@ admin_md5_commit (const struct arguments *args,
 }
 
 static int
-admin_md5_diff (const struct arguments *args,
+admin_md5_diff (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
@@ -1678,7 +1678,7 @@ admin_md5_diff (const struct arguments *args,
 }
 
 static int
-admin_md5_validate (const struct arguments *args,
+admin_md5_validate (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const char *value)
 {
@@ -1688,7 +1688,7 @@ admin_md5_validate (const struct arguments *args,
 /* admin_straight_password */
 
 static int
-admin_straight_password_checkout (const struct arguments *args,
+admin_straight_password_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
@@ -1724,7 +1724,7 @@ admin_straight_password_checkout (const struct arguments *args,
 }
 
 static int
-admin_straight_password_commit (const struct arguments *args,
+admin_straight_password_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
@@ -1744,7 +1744,7 @@ admin_straight_password_commit (const struct arguments *args,
 }
 
 static int
-admin_straight_password_diff (const struct arguments *args,
+admin_straight_password_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
@@ -1771,7 +1771,7 @@ admin_straight_password_diff (const struct arguments *args,
 }
 
 static int
-admin_straight_password_validate (const struct arguments *args,
+admin_straight_password_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
@@ -1781,7 +1781,7 @@ admin_straight_password_validate (const struct arguments *args,
 /* admin_oem_proprietary */
 
 static int
-admin_oem_proprietary_checkout (const struct arguments *args,
+admin_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				struct keyvalue *kv)
 {
@@ -1817,7 +1817,7 @@ admin_oem_proprietary_checkout (const struct arguments *args,
 }
 
 static int
-admin_oem_proprietary_commit (const struct arguments *args,
+admin_oem_proprietary_commit (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
@@ -1837,7 +1837,7 @@ admin_oem_proprietary_commit (const struct arguments *args,
 }
 
 static int
-admin_oem_proprietary_diff (const struct arguments *args,
+admin_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -1864,7 +1864,7 @@ admin_oem_proprietary_diff (const struct arguments *args,
 }
 
 static int
-admin_oem_proprietary_validate (const struct arguments *args,
+admin_oem_proprietary_validate (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const char *value)
 {
@@ -1878,7 +1878,7 @@ admin_oem_proprietary_validate (const struct arguments *args,
 /* oem_none */
 
 static int
-oem_none_checkout (const struct arguments *args,
+oem_none_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
@@ -1914,7 +1914,7 @@ oem_none_checkout (const struct arguments *args,
 }
 
 static int
-oem_none_commit (const struct arguments *args,
+oem_none_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -1934,7 +1934,7 @@ oem_none_commit (const struct arguments *args,
 }
 
 static int
-oem_none_diff (const struct arguments *args,
+oem_none_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
@@ -1961,7 +1961,7 @@ oem_none_diff (const struct arguments *args,
 }
 
 static int
-oem_none_validate (const struct arguments *args,
+oem_none_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
@@ -1971,7 +1971,7 @@ oem_none_validate (const struct arguments *args,
 /* oem_md2 */
 
 static int
-oem_md2_checkout (const struct arguments *args,
+oem_md2_checkout (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  struct keyvalue *kv)
 {
@@ -2007,7 +2007,7 @@ oem_md2_checkout (const struct arguments *args,
 }
 
 static int
-oem_md2_commit (const struct arguments *args,
+oem_md2_commit (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
@@ -2027,7 +2027,7 @@ oem_md2_commit (const struct arguments *args,
 }
 
 static int
-oem_md2_diff (const struct arguments *args,
+oem_md2_diff (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -2054,7 +2054,7 @@ oem_md2_diff (const struct arguments *args,
 }
 
 static int
-oem_md2_validate (const struct arguments *args,
+oem_md2_validate (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const char *value)
 {
@@ -2064,7 +2064,7 @@ oem_md2_validate (const struct arguments *args,
 /* oem_md5 */
 
 static int
-oem_md5_checkout (const struct arguments *args,
+oem_md5_checkout (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  struct keyvalue *kv)
 {
@@ -2100,7 +2100,7 @@ oem_md5_checkout (const struct arguments *args,
 }
 
 static int
-oem_md5_commit (const struct arguments *args,
+oem_md5_commit (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
@@ -2120,7 +2120,7 @@ oem_md5_commit (const struct arguments *args,
 }
 
 static int
-oem_md5_diff (const struct arguments *args,
+oem_md5_diff (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -2147,7 +2147,7 @@ oem_md5_diff (const struct arguments *args,
 }
 
 static int
-oem_md5_validate (const struct arguments *args,
+oem_md5_validate (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const char *value)
 {
@@ -2157,7 +2157,7 @@ oem_md5_validate (const struct arguments *args,
 /* oem_straight_password */
 
 static int
-oem_straight_password_checkout (const struct arguments *args,
+oem_straight_password_checkout (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				struct keyvalue *kv)
 {
@@ -2193,7 +2193,7 @@ oem_straight_password_checkout (const struct arguments *args,
 }
 
 static int
-oem_straight_password_commit (const struct arguments *args,
+oem_straight_password_commit (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
@@ -2213,7 +2213,7 @@ oem_straight_password_commit (const struct arguments *args,
 }
 
 static int
-oem_straight_password_diff (const struct arguments *args,
+oem_straight_password_diff (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -2240,7 +2240,7 @@ oem_straight_password_diff (const struct arguments *args,
 }
 
 static int
-oem_straight_password_validate (const struct arguments *args,
+oem_straight_password_validate (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const char *value)
 {
@@ -2250,7 +2250,7 @@ oem_straight_password_validate (const struct arguments *args,
 /* oem_oem_proprietary */
 
 static int
-oem_oem_proprietary_checkout (const struct arguments *args,
+oem_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
@@ -2286,7 +2286,7 @@ oem_oem_proprietary_checkout (const struct arguments *args,
 }
 
 static int
-oem_oem_proprietary_commit (const struct arguments *args,
+oem_oem_proprietary_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -2306,7 +2306,7 @@ oem_oem_proprietary_commit (const struct arguments *args,
 }
 
 static int
-oem_oem_proprietary_diff (const struct arguments *args,
+oem_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -2333,7 +2333,7 @@ oem_oem_proprietary_diff (const struct arguments *args,
 }
 
 static int
-oem_oem_proprietary_validate (const struct arguments *args,
+oem_oem_proprietary_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
@@ -2341,7 +2341,7 @@ oem_oem_proprietary_validate (const struct arguments *args,
 }
 
 struct section *
-bmc_lan_conf_auth_section_get (struct arguments *args)
+bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_auth_section = NULL;
 

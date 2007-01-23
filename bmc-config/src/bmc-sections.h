@@ -46,50 +46,50 @@ struct keyvalue {
   char *value;
 
   /* checkout procedure fills the value into kv->value as printable string */
-  int (*checkout) (const struct arguments *args, 
+  int (*checkout) (const struct bmc_config_arguments *args, 
 		   const struct section *sect,
 		   struct keyvalue *kv);
 
   /* commit procedure takes string value from kv->value and converts and
      does ipmi calls to set it */
-  int (*commit) (const struct arguments *args,
+  int (*commit) (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv);
 
   /* diff procedure finds the difference with the ipmi actual value
      and kv->value */
-  int (*diff) (const struct arguments *args,
+  int (*diff) (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv);
 
   /* validate procedure finds if value is suitable to be set as kv->value */
-  int (*validate) (const struct arguments *args,
+  int (*validate) (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value);
 };
 
 
-struct section * bmc_sections_init (struct arguments *args);
+struct section * bmc_sections_init (struct bmc_config_arguments *args);
 struct keyvalue * bmc_section_find_keyvalue (const char *section_name,
 					     const char *key_name,
 					     const struct section *sections);
 int bmc_section_set_value (const char *section_name,
 			   const char *key_name,
 			   const char *value,
-			   struct arguments *arguments,
+			   struct bmc_config_arguments *args,
 			   struct section *sections);
 int bmc_section_commit_value (const char *section_name,
 			      const char *key_name,
 			      const char *value,
-			      struct arguments *arguments,
+			      struct bmc_config_arguments *args,
 			      struct section *sections);
 int bmc_section_diff_value (const char *section_name,
 			    const char *key_name,
 			    const char *value,
-			    struct arguments *arguments,
+			    struct bmc_config_arguments *args,
 			    struct section *sections);
 
-int bmc_sections_list (struct arguments *args, struct section *sections);
+int bmc_sections_list (struct bmc_config_arguments *args, struct section *sections);
 
 #define same(a,b) (strcasecmp(a,b) == 0)
 

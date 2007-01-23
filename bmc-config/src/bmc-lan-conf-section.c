@@ -9,7 +9,7 @@
 #define BMC_MAXIPADDRLEN 16
 
 static int
-ip_address_source_checkout (const struct arguments *args,
+ip_address_source_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
@@ -30,7 +30,7 @@ ip_address_source_checkout (const struct arguments *args,
 }
 
 static int
-ip_address_source_commit (const struct arguments *args,
+ip_address_source_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -39,7 +39,7 @@ ip_address_source_commit (const struct arguments *args,
 }
 
 static int
-ip_address_source_diff (const struct arguments *args,
+ip_address_source_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -67,7 +67,7 @@ ip_address_source_diff (const struct arguments *args,
 }
 
 static int
-ip_address_source_validate (const struct arguments *args,
+ip_address_source_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
@@ -75,7 +75,7 @@ ip_address_source_validate (const struct arguments *args,
 }
 
 static int
-ip_address_checkout (const struct arguments *args,
+ip_address_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
@@ -100,7 +100,7 @@ ip_address_checkout (const struct arguments *args,
 }
 
 static int
-ip_address_commit (const struct arguments *args,
+ip_address_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -113,7 +113,7 @@ ip_address_commit (const struct arguments *args,
 }
 
 static int
-ip_address_diff (const struct arguments *args,
+ip_address_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -140,7 +140,7 @@ ip_address_diff (const struct arguments *args,
 }
 
 static int
-ip_address_validate (const struct arguments *args,
+ip_address_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
@@ -149,7 +149,7 @@ ip_address_validate (const struct arguments *args,
 }
 
 static int
-mac_address_checkout (const struct arguments *args,
+mac_address_checkout (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      struct keyvalue *kv)
 {
@@ -172,7 +172,7 @@ mac_address_checkout (const struct arguments *args,
 }
 
 static int
-mac_address_commit (const struct arguments *args,
+mac_address_commit (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -182,7 +182,7 @@ mac_address_commit (const struct arguments *args,
 }
 
 static int
-mac_address_diff (const struct arguments *args,
+mac_address_diff (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
@@ -208,7 +208,7 @@ mac_address_diff (const struct arguments *args,
 }
 
 static int
-mac_address_validate (const struct arguments *args,
+mac_address_validate (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const char *value)
 {
@@ -218,7 +218,7 @@ mac_address_validate (const struct arguments *args,
 }
 
 static int
-subnet_mask_checkout (const struct arguments *args,
+subnet_mask_checkout (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      struct keyvalue *kv)
 {
@@ -243,7 +243,7 @@ subnet_mask_checkout (const struct arguments *args,
 }
 
 static int
-subnet_mask_commit (const struct arguments *args,
+subnet_mask_commit (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -256,7 +256,7 @@ subnet_mask_commit (const struct arguments *args,
 }
 
 static int
-subnet_mask_diff (const struct arguments *args,
+subnet_mask_diff (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
@@ -283,7 +283,7 @@ subnet_mask_diff (const struct arguments *args,
 }
 
 static int
-subnet_mask_validate (const struct arguments *args,
+subnet_mask_validate (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const char *value)
 {
@@ -294,7 +294,7 @@ subnet_mask_validate (const struct arguments *args,
 
 
 static int
-default_gateway_address_checkout (const struct arguments *args,
+default_gateway_address_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
@@ -319,7 +319,7 @@ default_gateway_address_checkout (const struct arguments *args,
 }
 
 static int
-default_gateway_address_commit (const struct arguments *args,
+default_gateway_address_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
@@ -332,7 +332,7 @@ default_gateway_address_commit (const struct arguments *args,
 }
 
 static int
-default_gateway_address_diff (const struct arguments *args,
+default_gateway_address_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
@@ -359,7 +359,7 @@ default_gateway_address_diff (const struct arguments *args,
 }
 
 static int
-default_gateway_address_validate (const struct arguments *args,
+default_gateway_address_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
@@ -368,7 +368,7 @@ default_gateway_address_validate (const struct arguments *args,
 }
 
 static int
-default_gateway_mac_address_checkout (const struct arguments *args,
+default_gateway_mac_address_checkout (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      struct keyvalue *kv)
 {
@@ -391,7 +391,7 @@ default_gateway_mac_address_checkout (const struct arguments *args,
 }
 
 static int
-default_gateway_mac_address_commit (const struct arguments *args,
+default_gateway_mac_address_commit (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
@@ -401,7 +401,7 @@ default_gateway_mac_address_commit (const struct arguments *args,
 }
 
 static int
-default_gateway_mac_address_diff (const struct arguments *args,
+default_gateway_mac_address_diff (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
@@ -417,7 +417,7 @@ default_gateway_mac_address_diff (const struct arguments *args,
 }
 
 static int
-default_gateway_mac_address_validate (const struct arguments *args,
+default_gateway_mac_address_validate (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const char *value)
 {
@@ -430,7 +430,7 @@ default_gateway_mac_address_validate (const struct arguments *args,
 
 
 static int
-backup_gateway_address_checkout (const struct arguments *args,
+backup_gateway_address_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
@@ -455,7 +455,7 @@ backup_gateway_address_checkout (const struct arguments *args,
 }
 
 static int
-backup_gateway_address_commit (const struct arguments *args,
+backup_gateway_address_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -468,7 +468,7 @@ backup_gateway_address_commit (const struct arguments *args,
 }
 
 static int
-backup_gateway_address_diff (const struct arguments *args,
+backup_gateway_address_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -495,7 +495,7 @@ backup_gateway_address_diff (const struct arguments *args,
 }
 
 static int
-backup_gateway_address_validate (const struct arguments *args,
+backup_gateway_address_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
@@ -504,7 +504,7 @@ backup_gateway_address_validate (const struct arguments *args,
 }
 
 static int
-backup_gateway_mac_address_checkout (const struct arguments *args,
+backup_gateway_mac_address_checkout (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     struct keyvalue *kv)
 {
@@ -527,7 +527,7 @@ backup_gateway_mac_address_checkout (const struct arguments *args,
 }
 
 static int
-backup_gateway_mac_address_commit (const struct arguments *args,
+backup_gateway_mac_address_commit (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
@@ -537,7 +537,7 @@ backup_gateway_mac_address_commit (const struct arguments *args,
 }
 
 static int
-backup_gateway_mac_address_diff (const struct arguments *args,
+backup_gateway_mac_address_diff (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -553,7 +553,7 @@ backup_gateway_mac_address_diff (const struct arguments *args,
 }
 
 static int
-backup_gateway_mac_address_validate (const struct arguments *args,
+backup_gateway_mac_address_validate (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const char *value)
 {
@@ -563,7 +563,7 @@ backup_gateway_mac_address_validate (const struct arguments *args,
 }
 
 static int
-vlan_id_checkout (const struct arguments *args,
+vlan_id_checkout (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  struct keyvalue *kv)
 {
@@ -585,7 +585,7 @@ vlan_id_checkout (const struct arguments *args,
 }
 
 static int
-vlan_id_commit (const struct arguments *args,
+vlan_id_commit (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
@@ -609,7 +609,7 @@ vlan_id_commit (const struct arguments *args,
 }
 
 static int
-vlan_id_diff (const struct arguments *args,
+vlan_id_diff (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
@@ -639,7 +639,7 @@ vlan_id_diff (const struct arguments *args,
 }
 
 static int
-vlan_id_validate (const struct arguments *args,
+vlan_id_validate (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const char *value)
 {
@@ -654,7 +654,7 @@ vlan_id_validate (const struct arguments *args,
 }
 
 static int
-vlan_id_enable_checkout (const struct arguments *args,
+vlan_id_enable_checkout (const struct bmc_config_arguments *args,
 			 const struct section *sect,
 			 struct keyvalue *kv)
 {
@@ -691,7 +691,7 @@ vlan_id_enable_checkout (const struct arguments *args,
 }
 
 static int
-vlan_id_enable_commit (const struct arguments *args,
+vlan_id_enable_commit (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const struct keyvalue *kv)
 {
@@ -715,7 +715,7 @@ vlan_id_enable_commit (const struct arguments *args,
 }
 
 static int
-vlan_id_enable_diff (const struct arguments *args,
+vlan_id_enable_diff (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
@@ -743,7 +743,7 @@ vlan_id_enable_diff (const struct arguments *args,
 }
 
 static int
-vlan_id_enable_validate (const struct arguments *args,
+vlan_id_enable_validate (const struct bmc_config_arguments *args,
 			 const struct section *sect,
 			 const char *value)
 {
@@ -751,7 +751,7 @@ vlan_id_enable_validate (const struct arguments *args,
 }
 
 static int
-vlan_priority_checkout (const struct arguments *args,
+vlan_priority_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
@@ -771,7 +771,7 @@ vlan_priority_checkout (const struct arguments *args,
 }
 
 static int
-vlan_priority_commit (const struct arguments *args,
+vlan_priority_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
@@ -780,7 +780,7 @@ vlan_priority_commit (const struct arguments *args,
 }
 
 static int
-vlan_priority_diff (const struct arguments *args,
+vlan_priority_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
@@ -808,7 +808,7 @@ vlan_priority_diff (const struct arguments *args,
 }
 
 static int
-vlan_priority_validate (const struct arguments *args,
+vlan_priority_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
@@ -823,7 +823,7 @@ vlan_priority_validate (const struct arguments *args,
 }
 
 struct section *
-bmc_lan_conf_section_get (struct arguments *args)
+bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_section = NULL;
   if (!(lan_conf_section = (void *) calloc (1, sizeof (struct section))))

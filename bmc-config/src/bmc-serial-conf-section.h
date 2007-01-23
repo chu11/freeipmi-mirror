@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-struct section * bmc_serial_conf_section_get (struct arguments *args);
+struct section * bmc_serial_conf_section_get (struct bmc_config_arguments *args);
 
 #endif /* _BMC_SERIAL_CONF_SECTION_H_ */

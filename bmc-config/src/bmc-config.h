@@ -47,7 +47,7 @@ struct sectionstr
   struct sectionstr *next;
 };
 
-struct arguments
+struct bmc_config_arguments
 {
   struct common_cmd_args common;
   ipmi_device_t dev;

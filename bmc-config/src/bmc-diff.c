@@ -5,7 +5,7 @@
 #include "bmc-sections.h"
 
 static int
-bmc_diff_keypair (struct arguments *arguments,
+bmc_diff_keypair (struct bmc_config_arguments *args,
 		  struct section *sections,
                   struct keypair *kp)
 {
@@ -37,22 +37,22 @@ bmc_diff_keypair (struct arguments *arguments,
   value = strtok (value, " \t");
 
   ret = bmc_section_diff_value (section_name, key_name, value,
-				arguments, sections);
+				args, sections);
 
   free (keypair);
   return ret;
 }
 
 static int
-bmc_diff_keypairs (struct arguments *arguments,
+bmc_diff_keypairs (struct bmc_config_arguments *args,
                    struct section *sections)
 {
   struct keypair *kp;
 
-  kp = arguments->keypairs;
+  kp = args->keypairs;
   while (kp)
     {
-      bmc_diff_keypair(arguments, sections, kp);
+      bmc_diff_keypair(args, sections, kp);
       kp = kp->next;
     }
 
@@ -60,25 +60,25 @@ bmc_diff_keypairs (struct arguments *arguments,
 }
 
 static int
-bmc_diff_file (struct arguments *arguments,
+bmc_diff_file (struct bmc_config_arguments *args,
 	       struct section *sections)
 {
   int ret = 0;
   FILE *fp;
 
-  if (arguments->filename && strcmp (arguments->filename, "-"))
-    fp = fopen (arguments->filename, "r");
+  if (args->filename && strcmp (args->filename, "-"))
+    fp = fopen (args->filename, "r");
   else
     fp = stdin;
 
   if (!fp) 
     {
-      perror (arguments->filename);
+      perror (args->filename);
       return -1;
     }
 
   /* 1st pass */
-  ret = bmc_parser (arguments, sections, fp);
+  ret = bmc_parser (args, sections, fp);
 
   if (fp != stdin)
     fclose (fp);
@@ -93,7 +93,7 @@ bmc_diff_file (struct arguments *arguments,
           while (kv) 
             {
               if (kv->value) 
-                ret = (kv->diff (arguments, sect, kv) || ret);
+                ret = (kv->diff (args, sect, kv) || ret);
               kv = kv->next;
             }
           sect = sect->next;
@@ -104,15 +104,15 @@ bmc_diff_file (struct arguments *arguments,
 }
 
 int
-bmc_diff (struct arguments *arguments,
+bmc_diff (struct bmc_config_arguments *args,
 	  struct section *sections)
 {
   int ret = 0;
 
-  if (arguments->keypairs)
-    ret = bmc_diff_keypairs (arguments, sections);
+  if (args->keypairs)
+    ret = bmc_diff_keypairs (args, sections);
   else
-    ret = bmc_diff_file (arguments, sections);
+    ret = bmc_diff_file (args, sections);
 
   return ret;
 }

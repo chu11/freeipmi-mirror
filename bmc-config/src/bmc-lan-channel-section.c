@@ -64,7 +64,7 @@ lan_channel_volatile_access_set (ipmi_device_t dev,
 /* access_mode */
 
 static int
-volatile_access_mode_checkout (const struct arguments *args,
+volatile_access_mode_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -91,7 +91,7 @@ volatile_access_mode_checkout (const struct arguments *args,
 }
 
 static int
-volatile_access_mode_commit (const struct arguments *args,
+volatile_access_mode_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -107,7 +107,7 @@ volatile_access_mode_commit (const struct arguments *args,
 }
 
 static int
-volatile_access_mode_diff (const struct arguments *args,
+volatile_access_mode_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -142,7 +142,7 @@ volatile_access_mode_diff (const struct arguments *args,
 }
 
 static int
-volatile_access_mode_validate (const struct arguments *args,
+volatile_access_mode_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
@@ -153,7 +153,7 @@ volatile_access_mode_validate (const struct arguments *args,
 /* enable_user_level_auth */
 
 static int
-volatile_enable_user_level_auth_checkout (const struct arguments *args,
+volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -192,7 +192,7 @@ volatile_enable_user_level_auth_checkout (const struct arguments *args,
 }
 
 static int
-volatile_enable_user_level_auth_commit (const struct arguments *args,
+volatile_enable_user_level_auth_commit (const struct bmc_config_arguments *args,
 					const struct section *sect,
 					const struct keyvalue *kv)
 {
@@ -209,7 +209,7 @@ volatile_enable_user_level_auth_commit (const struct arguments *args,
 }
 
 static int
-volatile_enable_user_level_auth_diff (const struct arguments *args,
+volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
@@ -243,7 +243,7 @@ volatile_enable_user_level_auth_diff (const struct arguments *args,
 }
 
 static int
-volatile_enable_user_level_auth_validate (const struct arguments *args,
+volatile_enable_user_level_auth_validate (const struct bmc_config_arguments *args,
 					  const struct section *sect,
 					  const char *value)
 {
@@ -254,7 +254,7 @@ volatile_enable_user_level_auth_validate (const struct arguments *args,
 /* enable_per_message_auth */
 
 static int
-volatile_enable_per_msg_auth_checkout (const struct arguments *args,
+volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       struct keyvalue *kv)
 {
@@ -294,7 +294,7 @@ volatile_enable_per_msg_auth_checkout (const struct arguments *args,
 }
 
 static int
-volatile_enable_per_msg_auth_commit (const struct arguments *args,
+volatile_enable_per_msg_auth_commit (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
 {
@@ -311,7 +311,7 @@ volatile_enable_per_msg_auth_commit (const struct arguments *args,
 }
 
 static int
-volatile_enable_per_msg_auth_diff (const struct arguments *args,
+volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
@@ -346,7 +346,7 @@ volatile_enable_per_msg_auth_diff (const struct arguments *args,
 }
 
 static int
-volatile_enable_per_msg_auth_validate (const struct arguments *args,
+volatile_enable_per_msg_auth_validate (const struct bmc_config_arguments *args,
 					  const struct section *sect,
 					  const char *value)
 {
@@ -358,7 +358,7 @@ volatile_enable_per_msg_auth_validate (const struct arguments *args,
 
 
 static int
-volatile_enable_pef_alerting_checkout (const struct arguments *args,
+volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       struct keyvalue *kv)
 {
@@ -397,7 +397,7 @@ volatile_enable_pef_alerting_checkout (const struct arguments *args,
 }
 
 static int
-volatile_enable_pef_alerting_commit (const struct arguments *args,
+volatile_enable_pef_alerting_commit (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
 {
@@ -414,7 +414,7 @@ volatile_enable_pef_alerting_commit (const struct arguments *args,
 }
 
 static int
-volatile_enable_pef_alerting_diff (const struct arguments *args,
+volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
@@ -449,7 +449,7 @@ volatile_enable_pef_alerting_diff (const struct arguments *args,
 }
 
 static int
-volatile_enable_pef_alerting_validate (const struct arguments *args,
+volatile_enable_pef_alerting_validate (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const char *value)
 {
@@ -460,7 +460,7 @@ volatile_enable_pef_alerting_validate (const struct arguments *args,
 
 
 static int
-volatile_channel_priv_limit_checkout (const struct arguments *args,
+volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      struct keyvalue *kv)
 {
@@ -489,7 +489,7 @@ volatile_channel_priv_limit_checkout (const struct arguments *args,
 }
 
 static int
-volatile_channel_priv_limit_commit (const struct arguments *args,
+volatile_channel_priv_limit_commit (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
@@ -505,7 +505,7 @@ volatile_channel_priv_limit_commit (const struct arguments *args,
 }
 
 static int
-volatile_channel_priv_limit_diff (const struct arguments *args,
+volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
@@ -540,7 +540,7 @@ volatile_channel_priv_limit_diff (const struct arguments *args,
 }
 
 static int
-volatile_channel_priv_limit_validate (const struct arguments *args,
+volatile_channel_priv_limit_validate (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const char *value)
 {
@@ -609,7 +609,7 @@ lan_channel_non_volatile_access_set (ipmi_device_t dev,
 /* access_mode */
 
 static int
-non_volatile_access_mode_checkout (const struct arguments *args,
+non_volatile_access_mode_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -636,7 +636,7 @@ non_volatile_access_mode_checkout (const struct arguments *args,
 }
 
 static int
-non_volatile_access_mode_commit (const struct arguments *args,
+non_volatile_access_mode_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -652,7 +652,7 @@ non_volatile_access_mode_commit (const struct arguments *args,
 }
 
 static int
-non_volatile_access_mode_diff (const struct arguments *args,
+non_volatile_access_mode_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -686,7 +686,7 @@ non_volatile_access_mode_diff (const struct arguments *args,
 }
 
 static int
-non_volatile_access_mode_validate (const struct arguments *args,
+non_volatile_access_mode_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
@@ -697,7 +697,7 @@ non_volatile_access_mode_validate (const struct arguments *args,
 /* enable_user_level_auth */
 
 static int
-non_volatile_enable_user_level_auth_checkout (const struct arguments *args,
+non_volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *args,
 					      const struct section *sect,
 					      struct keyvalue *kv)
 {
@@ -735,7 +735,7 @@ non_volatile_enable_user_level_auth_checkout (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_user_level_auth_commit (const struct arguments *args,
+non_volatile_enable_user_level_auth_commit (const struct bmc_config_arguments *args,
 					    const struct section *sect,
 					    const struct keyvalue *kv)
 {
@@ -751,7 +751,7 @@ non_volatile_enable_user_level_auth_commit (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_user_level_auth_diff (const struct arguments *args,
+non_volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
@@ -785,7 +785,7 @@ non_volatile_enable_user_level_auth_diff (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_user_level_auth_validate (const struct arguments *args,
+non_volatile_enable_user_level_auth_validate (const struct bmc_config_arguments *args,
 					      const struct section *sect,
 					      const char *value)
 {
@@ -796,7 +796,7 @@ non_volatile_enable_user_level_auth_validate (const struct arguments *args,
 /* enable_per_message_auth */
 
 static int
-non_volatile_enable_per_msg_auth_checkout (const struct arguments *args,
+non_volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
@@ -834,7 +834,7 @@ non_volatile_enable_per_msg_auth_checkout (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_per_msg_auth_commit (const struct arguments *args,
+non_volatile_enable_per_msg_auth_commit (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 const struct keyvalue *kv)
 {
@@ -850,7 +850,7 @@ non_volatile_enable_per_msg_auth_commit (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_per_msg_auth_diff (const struct arguments *args,
+non_volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
 {
@@ -885,7 +885,7 @@ non_volatile_enable_per_msg_auth_diff (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_per_msg_auth_validate (const struct arguments *args,
+non_volatile_enable_per_msg_auth_validate (const struct bmc_config_arguments *args,
 					  const struct section *sect,
 					  const char *value)
 {
@@ -897,7 +897,7 @@ non_volatile_enable_per_msg_auth_validate (const struct arguments *args,
 
 
 static int
-non_volatile_enable_pef_alerting_checkout (const struct arguments *args,
+non_volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
@@ -935,7 +935,7 @@ non_volatile_enable_pef_alerting_checkout (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_pef_alerting_commit (const struct arguments *args,
+non_volatile_enable_pef_alerting_commit (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 const struct keyvalue *kv)
 {
@@ -951,7 +951,7 @@ non_volatile_enable_pef_alerting_commit (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_pef_alerting_diff (const struct arguments *args,
+non_volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
 {
@@ -986,7 +986,7 @@ non_volatile_enable_pef_alerting_diff (const struct arguments *args,
 }
 
 static int
-non_volatile_enable_pef_alerting_validate (const struct arguments *args,
+non_volatile_enable_pef_alerting_validate (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   const char *value)
 {
@@ -997,7 +997,7 @@ non_volatile_enable_pef_alerting_validate (const struct arguments *args,
 
 
 static int
-non_volatile_channel_priv_limit_checkout (const struct arguments *args,
+non_volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
 					  const struct section *sect,
 					  struct keyvalue *kv)
 {
@@ -1026,7 +1026,7 @@ non_volatile_channel_priv_limit_checkout (const struct arguments *args,
 }
 
 static int
-non_volatile_channel_priv_limit_commit (const struct arguments *args,
+non_volatile_channel_priv_limit_commit (const struct bmc_config_arguments *args,
 					const struct section *sect,
 					const struct keyvalue *kv)
 {
@@ -1042,7 +1042,7 @@ non_volatile_channel_priv_limit_commit (const struct arguments *args,
 }
 
 static int
-non_volatile_channel_priv_limit_diff (const struct arguments *args,
+non_volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
@@ -1077,7 +1077,7 @@ non_volatile_channel_priv_limit_diff (const struct arguments *args,
 }
 
 static int
-non_volatile_channel_priv_limit_validate (const struct arguments *args,
+non_volatile_channel_priv_limit_validate (const struct bmc_config_arguments *args,
 					  const struct section *sect,
 					  const char *value)
 {
@@ -1087,7 +1087,7 @@ non_volatile_channel_priv_limit_validate (const struct arguments *args,
 
 
 struct section *
-bmc_lan_channel_section_get (struct arguments *args)
+bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 {
   struct section * lan_channel_section = NULL;
 

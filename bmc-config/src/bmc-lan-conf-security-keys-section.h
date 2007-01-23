@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-struct section * bmc_lan_conf_security_keys_section_get (struct arguments *args);
+struct section * bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args);
 
 #endif /* _BMC_LAN_CONF_SECURITY_KEYS_SECTION_H_ */

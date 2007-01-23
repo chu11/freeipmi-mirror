@@ -6,7 +6,7 @@
 #include "bmc-sections.h"
 
 static int
-power_restore_policy_checkout (const struct arguments *args,
+power_restore_policy_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -31,7 +31,7 @@ power_restore_policy_checkout (const struct arguments *args,
 }
 
 static int
-power_restore_policy_commit (const struct arguments *args,
+power_restore_policy_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
@@ -40,7 +40,7 @@ power_restore_policy_commit (const struct arguments *args,
 }
 
 static int
-power_restore_policy_diff (const struct arguments *args,
+power_restore_policy_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -70,7 +70,7 @@ power_restore_policy_diff (const struct arguments *args,
 }
 
 static int
-power_restore_policy_validate (const struct arguments *args,
+power_restore_policy_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
@@ -78,7 +78,7 @@ power_restore_policy_validate (const struct arguments *args,
 }
 
 struct section *
-bmc_misc_section_get (struct arguments *args)
+bmc_misc_section_get (struct bmc_config_arguments *args)
 {
   struct section *misc_section = NULL;
 

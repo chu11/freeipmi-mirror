@@ -72,7 +72,7 @@ sol_auth_commit (ipmi_device_t dev,
 }
 
 static int
-enable_sol_checkout (const struct arguments *args,
+enable_sol_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
@@ -109,7 +109,7 @@ enable_sol_checkout (const struct arguments *args,
 }
 
 static int
-enable_sol_commit (const struct arguments *args,
+enable_sol_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
@@ -118,7 +118,7 @@ enable_sol_commit (const struct arguments *args,
 }
 
 static int
-enable_sol_diff (const struct arguments *args,
+enable_sol_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
@@ -147,7 +147,7 @@ enable_sol_diff (const struct arguments *args,
 }
 
 static int
-enable_sol_validate (const struct arguments *args,
+enable_sol_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
@@ -155,7 +155,7 @@ enable_sol_validate (const struct arguments *args,
 }
 
 static int
-sol_privilege_level_checkout (const struct arguments *args,
+sol_privilege_level_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
@@ -182,7 +182,7 @@ sol_privilege_level_checkout (const struct arguments *args,
 }
 
 static int
-sol_privilege_level_commit (const struct arguments *args,
+sol_privilege_level_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -194,7 +194,7 @@ sol_privilege_level_commit (const struct arguments *args,
 }
 
 static int
-sol_privilege_level_diff (const struct arguments *args,
+sol_privilege_level_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -227,7 +227,7 @@ sol_privilege_level_diff (const struct arguments *args,
 
 
 static int
-sol_privilege_level_validate (const struct arguments *args,
+sol_privilege_level_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
@@ -239,7 +239,7 @@ sol_privilege_level_validate (const struct arguments *args,
 
 /* force_sol_payload_authentication */
 static int
-force_sol_payload_authentication_checkout (const struct arguments *args,
+force_sol_payload_authentication_checkout (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
@@ -278,7 +278,7 @@ force_sol_payload_authentication_checkout (const struct arguments *args,
 }
 
 static int
-force_sol_payload_authentication_commit (const struct arguments *args,
+force_sol_payload_authentication_commit (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 const struct keyvalue *kv)
 {
@@ -290,7 +290,7 @@ force_sol_payload_authentication_commit (const struct arguments *args,
 }
 
 static int
-force_sol_payload_authentication_diff (const struct arguments *args,
+force_sol_payload_authentication_diff (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
 {
@@ -323,7 +323,7 @@ force_sol_payload_authentication_diff (const struct arguments *args,
 
 
 static int
-force_sol_payload_authentication_validate (const struct arguments *args,
+force_sol_payload_authentication_validate (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   const char *value)
 {
@@ -333,7 +333,7 @@ force_sol_payload_authentication_validate (const struct arguments *args,
 /* force_sol_payload_encryption */
 
 static int
-force_sol_payload_encryption_checkout (const struct arguments *args,
+force_sol_payload_encryption_checkout (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
@@ -372,7 +372,7 @@ force_sol_payload_encryption_checkout (const struct arguments *args,
 }
 
 static int
-force_sol_payload_encryption_commit (const struct arguments *args,
+force_sol_payload_encryption_commit (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
 {
@@ -384,7 +384,7 @@ force_sol_payload_encryption_commit (const struct arguments *args,
 }
 
 static int
-force_sol_payload_encryption_diff (const struct arguments *args,
+force_sol_payload_encryption_diff (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
@@ -417,7 +417,7 @@ force_sol_payload_encryption_diff (const struct arguments *args,
 
 
 static int
-force_sol_payload_encryption_validate (const struct arguments *args,
+force_sol_payload_encryption_validate (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const char *value)
 {
@@ -427,7 +427,7 @@ force_sol_payload_encryption_validate (const struct arguments *args,
 /* character_accumulate_interval */
 
 static int
-character_accumulate_interval_checkout (const struct arguments *args,
+character_accumulate_interval_checkout (const struct bmc_config_arguments *args,
 					const struct section *sect,
 					struct keyvalue *kv)
 {
@@ -450,7 +450,7 @@ character_accumulate_interval_checkout (const struct arguments *args,
 }
 
 static int
-character_accumulate_interval_commit (const struct arguments *args,
+character_accumulate_interval_commit (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
@@ -473,7 +473,7 @@ character_accumulate_interval_commit (const struct arguments *args,
 }
 
 static int
-character_accumulate_interval_diff (const struct arguments *args,
+character_accumulate_interval_diff (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
@@ -507,7 +507,7 @@ character_accumulate_interval_diff (const struct arguments *args,
 }
 
 static int
-character_accumulate_interval_validate (const struct arguments *args,
+character_accumulate_interval_validate (const struct bmc_config_arguments *args,
 					const struct section *sect,
 					const char *value)
 {
@@ -528,7 +528,7 @@ character_accumulate_interval_validate (const struct arguments *args,
 /* character_send_threshold */
 
 static int
-character_send_threshold_checkout (const struct arguments *args,
+character_send_threshold_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
@@ -551,7 +551,7 @@ character_send_threshold_checkout (const struct arguments *args,
 }
 
 static int
-character_send_threshold_commit (const struct arguments *args,
+character_send_threshold_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
@@ -574,7 +574,7 @@ character_send_threshold_commit (const struct arguments *args,
 }
 
 static int
-character_send_threshold_diff (const struct arguments *args,
+character_send_threshold_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -608,7 +608,7 @@ character_send_threshold_diff (const struct arguments *args,
 }
 
 static int
-character_send_threshold_validate (const struct arguments *args,
+character_send_threshold_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
@@ -628,7 +628,7 @@ character_send_threshold_validate (const struct arguments *args,
 /* sol_retry_count */
 
 static int
-sol_retry_count_checkout (const struct arguments *args,
+sol_retry_count_checkout (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  struct keyvalue *kv)
 {
@@ -652,7 +652,7 @@ sol_retry_count_checkout (const struct arguments *args,
 
 
 static int
-sol_retry_count_commit (const struct arguments *args,
+sol_retry_count_commit (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -675,7 +675,7 @@ sol_retry_count_commit (const struct arguments *args,
 }
 
 static int
-sol_retry_count_diff (const struct arguments *args,
+sol_retry_count_diff (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
@@ -712,7 +712,7 @@ sol_retry_count_diff (const struct arguments *args,
 }
 
 static int
-sol_retry_count_validate (const struct arguments *args,
+sol_retry_count_validate (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const char *value)
 {
@@ -734,7 +734,7 @@ sol_retry_count_validate (const struct arguments *args,
 
 
 static int
-sol_retry_interval_checkout (const struct arguments *args,
+sol_retry_interval_checkout (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     struct keyvalue *kv)
 {
@@ -758,7 +758,7 @@ sol_retry_interval_checkout (const struct arguments *args,
 
 
 static int
-sol_retry_interval_commit (const struct arguments *args,
+sol_retry_interval_commit (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -781,7 +781,7 @@ sol_retry_interval_commit (const struct arguments *args,
 }
 
 static int
-sol_retry_interval_diff (const struct arguments *args,
+sol_retry_interval_diff (const struct bmc_config_arguments *args,
 			 const struct section *sect,
 			 const struct keyvalue *kv)
 {
@@ -818,7 +818,7 @@ sol_retry_interval_diff (const struct arguments *args,
 }
 
 static int
-sol_retry_interval_validate (const struct arguments *args,
+sol_retry_interval_validate (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const char *value)
 {
@@ -837,7 +837,7 @@ sol_retry_interval_validate (const struct arguments *args,
 }
 
 static int
-non_volatile_bit_rate_checkout (const struct arguments *args,
+non_volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				struct keyvalue *kv)
 {
@@ -862,7 +862,7 @@ non_volatile_bit_rate_checkout (const struct arguments *args,
 }
 
 static int
-non_volatile_bit_rate_commit (const struct arguments *args,
+non_volatile_bit_rate_commit (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
@@ -871,7 +871,7 @@ non_volatile_bit_rate_commit (const struct arguments *args,
 }
 
 static int
-non_volatile_bit_rate_diff (const struct arguments *args,
+non_volatile_bit_rate_diff (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
@@ -900,7 +900,7 @@ non_volatile_bit_rate_diff (const struct arguments *args,
 }
 
 static int
-non_volatile_bit_rate_validate (const struct arguments *args,
+non_volatile_bit_rate_validate (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const char *value)
 {
@@ -910,7 +910,7 @@ non_volatile_bit_rate_validate (const struct arguments *args,
 /* volatile_bit_rate */
 
 static int
-volatile_bit_rate_checkout (const struct arguments *args,
+volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
@@ -935,7 +935,7 @@ volatile_bit_rate_checkout (const struct arguments *args,
 }
 
 static int
-volatile_bit_rate_commit (const struct arguments *args,
+volatile_bit_rate_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
@@ -944,7 +944,7 @@ volatile_bit_rate_commit (const struct arguments *args,
 }
 
 static int
-volatile_bit_rate_diff (const struct arguments *args,
+volatile_bit_rate_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
@@ -974,7 +974,7 @@ volatile_bit_rate_diff (const struct arguments *args,
 }
 
 static int
-volatile_bit_rate_validate (const struct arguments *args,
+volatile_bit_rate_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
@@ -982,7 +982,7 @@ volatile_bit_rate_validate (const struct arguments *args,
 }
 
 static int
-port_checkout (const struct arguments *args,
+port_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
@@ -1003,7 +1003,7 @@ port_checkout (const struct arguments *args,
 
 
 static int
-port_commit (const struct arguments *args,
+port_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
@@ -1012,7 +1012,7 @@ port_commit (const struct arguments *args,
 }
 
 static int
-port_diff (const struct arguments *args,
+port_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
@@ -1043,7 +1043,7 @@ port_diff (const struct arguments *args,
 }
 
 static int
-port_validate (const struct arguments *args,
+port_validate (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const char *value)
 {
@@ -1060,7 +1060,7 @@ port_validate (const struct arguments *args,
 }
 
 struct section *
-bmc_sol_conf_section_get (struct arguments *args)
+bmc_sol_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section * sol_conf_section = NULL;
   
