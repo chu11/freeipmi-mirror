@@ -13,6 +13,12 @@
 
 	* common/src/argp-common.h: Add missing header file.
 
+	* bmc-config/src/bmc-argp.h, bmc-config/src/bmc-checkout.h,
+	bmc-config/src/bmc-commit.h, bmc-config/src/bmc-parser.h: New
+	files.
+
+	* bmc-config/: Cleanup for consistency w/ other tools.
+
 2007-01-21  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/src/bmc-info.c: Rename 'flags' to 'debug_flags'.

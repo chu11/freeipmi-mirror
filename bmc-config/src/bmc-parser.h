@@ -1,6 +1,6 @@
 /* 
 
-   bmc-config.h - function prototypes
+   bmc-parser.h - function prototypes
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,8 +20,12 @@
 */
 
 
-#ifndef _BMC_CONFIG_H_
-#define _BMC_CONFIG_H_
+#ifndef _BMC_PARSER_H_
+#define _BMC_PARSER_H_
 
+#include "bmc-types.h"
+#include "bmc-sections.h"
 
-#endif /* _BMC_CONFIG_H_ */
+int bmc_parser (struct arguments *args, struct section *sections, FILE *fp);
+
+#endif /* _BMC_PARSER_H_ */

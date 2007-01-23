@@ -1,3 +1,5 @@
+#include "bmc-checkout.h"
+
 #include "bmc-common.h"
 #include "bmc-config.h"
 #include "bmc-sections.h"

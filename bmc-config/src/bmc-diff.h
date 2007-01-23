@@ -1,5 +1,5 @@
 /* 
-   ipmi_diff.h: diff functions
+   bmd-diff.h: diff functions
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,10 +16,9 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 
-#ifndef _BMC_IPMI_DIFF_H
-#define _BMC_IPMI_DIFF_H
+#ifndef _BMC_DIFF_H
+#define _BMC_DIFF_H
 
-#include "bmc-common.h"
 #include "bmc-sections.h"
 #include "bmc-types.h"
 

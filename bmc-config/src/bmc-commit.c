@@ -1,3 +1,6 @@
+#include "bmc-commit.h"
+#include "bmc-parser.h"
+
 #include "bmc-common.h"
 #include "bmc-config.h"
 #include "bmc-sections.h"

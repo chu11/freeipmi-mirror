@@ -33,14 +33,18 @@ AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 		-I$(srcdir)/../../libfreeipmi/include 
 
-noinst_HEADERS = bmc-common.h \
-		bmc-config-api.h \
-		bmc-config.h \
-		bmc-diff.h \
-		bmc-ipmi-wrapper.h \
-		bmc-map.h \
-		bmc-sections.h \
-		bmc-types.h
+noinst_HEADERS = bmc-config.h \
+		 bmc-argp.h \
+		 bmc-checkout.h \
+		 bmc-commit.h \
+		 bmc-common.h \
+		 bmc-config-api.h \
+		 bmc-diff.h \
+		 bmc-ipmi-wrapper.h \
+		 bmc-map.h \
+		 bmc-parser.h \
+		 bmc-sections.h \
+		 bmc-types.h
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
