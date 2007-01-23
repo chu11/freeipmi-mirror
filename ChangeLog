@@ -16,11 +16,11 @@
 	bmc-config/src/bmc-sol-conf-section.h,
 	bmc-config/src/bmc-misc-section.h: New files.
 
-	* bmc-config/: Update for header file changes appropriately.
-
 	* libfreeipmi/include/freeipmi/ipmi-error.h: Add forgotten
 	include.
 	
+	* bmc-config/: Continue cleanup and re-architecture.
+
 2007-01-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/: Cleanup/re-architect for later hostrange support.
