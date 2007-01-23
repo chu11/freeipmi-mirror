@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info.h,v 1.2 2007-01-23 00:53:16 chu11 Exp $ 
+   $Id: bmc-info.h,v 1.3 2007-01-23 16:56:17 chu11 Exp $ 
    
    bmc-info.h - displays BMC information.
    
@@ -22,6 +22,8 @@
 
 #ifndef _BMC_INFO_H
 #define _BMC_INFO_H
+
+#include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
 
