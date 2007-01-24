@@ -40,8 +40,16 @@ struct section *
 bmc_sections_init (struct bmc_config_arguments *args)
 {
   struct section *sections = NULL;
+  int num_users, i;
 
-  add_section (sections, bmc_user_sections_get (args));
+  if ((num_users = bmc_get_num_users (args)) < 0)
+    return NULL;
+
+  for (i = 0; i < num_users; i++)
+    {
+      add_section (sections, bmc_user_section_get(args, i));
+    }
+  
   add_section (sections, bmc_lan_channel_section_get (args));
   add_section (sections, bmc_lan_conf_section_get (args));
   add_section (sections, bmc_lan_conf_auth_section_get (args));

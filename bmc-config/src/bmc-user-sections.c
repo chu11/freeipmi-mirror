@@ -5,19 +5,16 @@
 #include "bmc-map.h"
 #include "bmc-sections.h"
 
-static int
-get_num_users (struct bmc_config_arguments *args)
+int
+bmc_get_num_users (struct bmc_config_arguments *args)
 {
-  int rv = -1;
   uint8_t users = 0;
-  rv = get_bmc_max_users (args->dev, &users);
-  if (rv != 0)
-    return -1;
-  return users;
+  if (get_bmc_max_users (args->dev, &users) < 0)
+    return (-1);
+  return (int)users;
 }
 
 /* username */
-
 
 static int
 username_checkout (const struct bmc_config_arguments *args,
@@ -1719,13 +1716,23 @@ serial_session_limit_validate (const struct bmc_config_arguments *args,
 }
 
 
-static struct section *
-get_user_section (int num, struct bmc_config_arguments *args)
+struct section *
+bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 {
   struct section *this_section = NULL;
 
-  this_section = (void *) calloc (1, sizeof (*this_section));
-  asprintf ((char **)&this_section->section, "User%d", num + 1);
+  if (userid < 0)
+    {
+      fprintf(stderr, "Invalid Userid = %d\n", userid);
+      return NULL;
+    }
+
+  if (!(this_section = (void *) calloc (1, sizeof (*this_section))))
+    {
+      perror("calloc");
+      return NULL;
+    }
+  asprintf ((char **)&this_section->section, "User%d", userid + 1);
 
   add_keyvalue (this_section,
                 "Username",
@@ -1883,20 +1890,4 @@ get_user_section (int num, struct bmc_config_arguments *args)
                 serial_session_limit_validate);
 
   return this_section;
-}
-
-struct section *
-bmc_user_sections_get (struct bmc_config_arguments *args)
-{
-  struct section * user_sections = NULL;
-  int num_users = get_num_users (args);
-  
-  int i;
-  
-  for (i=0; i<num_users; i++) 
-    {
-      add_section (user_sections, get_user_section (i, args));
-    }
-  
-  return user_sections;
 }
