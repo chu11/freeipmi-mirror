@@ -1,3 +1,7 @@
+2007-01-24  Albert Chu <chu11@llnl.gov>
+	
+	* bmc-config/: Continue cleanup and re-architecture.
+
 2007-01-23  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-types.h: Move to bmc-config.h.  File is now
