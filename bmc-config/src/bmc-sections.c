@@ -36,10 +36,22 @@
 #include "bmc-sol-conf-section.h"
 #include "bmc-misc-section.h"
 
+#define add_section(db, extra) do { \
+  if (db) {                         \
+    struct section *trav = db;      \
+    while (trav->next)              \
+      trav = trav->next;            \
+    trav->next = extra;             \
+  } else {                          \
+    db = extra;                     \
+  }                                 \
+} while (0)
+
 struct section *
 bmc_sections_init (struct bmc_config_arguments *args)
 {
   struct section *sections = NULL;
+  struct section *sect = NULL;
   int num_users, i;
 
   if ((num_users = bmc_get_num_users (args)) < 0)
@@ -47,20 +59,54 @@ bmc_sections_init (struct bmc_config_arguments *args)
 
   for (i = 0; i < num_users; i++)
     {
-      add_section (sections, bmc_user_section_get(args, i));
+      if (!(sect = bmc_user_section_get(args, i)))
+	return NULL;
+      add_section (sections, sect);
     }
   
-  add_section (sections, bmc_lan_channel_section_get (args));
-  add_section (sections, bmc_lan_conf_section_get (args));
-  add_section (sections, bmc_lan_conf_auth_section_get (args));
-  add_section (sections, bmc_lan_conf_security_keys_section_get (args));
-  add_section (sections, bmc_lan_conf_misc_section_get (args));
-  add_section (sections, bmc_rmcpplus_conf_privilege_section_get (args));
-  add_section (sections, bmc_serial_channel_section_get (args));
-  add_section (sections, bmc_serial_conf_section_get (args));
-  add_section (sections, bmc_pef_conf_section_get (args));
-  add_section (sections, bmc_sol_conf_section_get (args));
-  add_section (sections, bmc_misc_section_get (args));
+  if (!(sect = bmc_lan_channel_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_lan_conf_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_lan_conf_auth_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_lan_conf_security_keys_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_lan_conf_misc_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_rmcpplus_conf_privilege_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_serial_channel_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_serial_conf_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_pef_conf_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_sol_conf_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
+
+  if (!(sect = bmc_misc_section_get (args)))
+    return NULL;
+  add_section (sections, sect);
 
   return sections;
 }

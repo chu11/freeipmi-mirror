@@ -93,7 +93,7 @@ enable_sol_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -101,7 +101,7 @@ enable_sol_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -176,7 +176,7 @@ sol_privilege_level_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (privilege_level_string (value))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
   return 0;
 }
@@ -262,7 +262,7 @@ force_sol_payload_authentication_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -270,7 +270,7 @@ force_sol_payload_authentication_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   
@@ -356,7 +356,7 @@ force_sol_payload_encryption_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -364,7 +364,7 @@ force_sol_payload_encryption_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   
@@ -856,7 +856,7 @@ non_volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
   return 0;
 }
@@ -929,7 +929,7 @@ volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
   return 0;
 }
@@ -1067,12 +1067,12 @@ bmc_sol_conf_section_get (struct bmc_config_arguments *args)
   if (!(sol_conf_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
   if (!(sol_conf_section->section = strdup ("SOL_Conf")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (sol_conf_section,

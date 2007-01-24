@@ -110,7 +110,7 @@ enable_basic_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -118,7 +118,7 @@ enable_basic_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -206,7 +206,7 @@ enable_ppp_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -214,7 +214,7 @@ enable_ppp_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -301,7 +301,7 @@ enable_terminal_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -309,7 +309,7 @@ enable_terminal_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -693,7 +693,7 @@ enable_dtr_hangup_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -701,7 +701,7 @@ enable_dtr_hangup_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -783,7 +783,7 @@ flow_control_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (flow_control_string (value))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -863,7 +863,7 @@ bit_rate_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (bit_rate_string (value))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -929,13 +929,13 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
   if (!(bmc_serial_conf_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
 
   if (!(bmc_serial_conf_section->section = strdup ("Serial_Conf")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (bmc_serial_conf_section,

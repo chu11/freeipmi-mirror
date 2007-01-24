@@ -28,7 +28,7 @@ enable_gratuitous_arps_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -36,7 +36,7 @@ enable_gratuitous_arps_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -112,7 +112,7 @@ enable_arp_response_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -120,7 +120,7 @@ enable_arp_response_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -240,12 +240,12 @@ bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
   if (!(lan_conf_misc_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
   if (!(lan_conf_misc_section->section = strdup ("Lan_Conf_Misc")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (lan_conf_misc_section,

@@ -27,7 +27,7 @@ callback_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -35,7 +35,7 @@ callback_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -120,7 +120,7 @@ callback_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -128,7 +128,7 @@ callback_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -213,7 +213,7 @@ callback_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -221,7 +221,7 @@ callback_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -306,7 +306,7 @@ callback_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -314,7 +314,7 @@ callback_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -399,7 +399,7 @@ callback_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -407,7 +407,7 @@ callback_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -494,7 +494,7 @@ user_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -502,7 +502,7 @@ user_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -587,7 +587,7 @@ user_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -595,7 +595,7 @@ user_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -680,7 +680,7 @@ user_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -688,7 +688,7 @@ user_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -773,7 +773,7 @@ user_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -781,7 +781,7 @@ user_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -866,7 +866,7 @@ user_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -874,7 +874,7 @@ user_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -961,7 +961,7 @@ operator_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -969,7 +969,7 @@ operator_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1054,7 +1054,7 @@ operator_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1062,7 +1062,7 @@ operator_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1147,7 +1147,7 @@ operator_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1155,7 +1155,7 @@ operator_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1240,7 +1240,7 @@ operator_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1248,7 +1248,7 @@ operator_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1333,7 +1333,7 @@ operator_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1341,7 +1341,7 @@ operator_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1429,7 +1429,7 @@ admin_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1437,7 +1437,7 @@ admin_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1522,7 +1522,7 @@ admin_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1530,7 +1530,7 @@ admin_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1615,7 +1615,7 @@ admin_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1623,7 +1623,7 @@ admin_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1708,7 +1708,7 @@ admin_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1716,7 +1716,7 @@ admin_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1801,7 +1801,7 @@ admin_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1809,7 +1809,7 @@ admin_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1898,7 +1898,7 @@ oem_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1906,7 +1906,7 @@ oem_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1991,7 +1991,7 @@ oem_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1999,7 +1999,7 @@ oem_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -2084,7 +2084,7 @@ oem_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -2092,7 +2092,7 @@ oem_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -2177,7 +2177,7 @@ oem_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -2185,7 +2185,7 @@ oem_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -2270,7 +2270,7 @@ oem_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -2278,7 +2278,7 @@ oem_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -2348,12 +2348,12 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
   if (!(lan_conf_auth_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
   if (!(lan_conf_auth_section->section = strdup ("Lan_Conf_Auth")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (lan_conf_auth_section,

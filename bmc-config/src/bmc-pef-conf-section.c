@@ -107,7 +107,7 @@ enable_pef_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -115,7 +115,7 @@ enable_pef_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -202,7 +202,7 @@ enable_pef_event_messages_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -210,7 +210,7 @@ enable_pef_event_messages_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -298,7 +298,7 @@ enable_pef_startup_delay_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -306,7 +306,7 @@ enable_pef_startup_delay_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -393,7 +393,7 @@ enable_pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -401,7 +401,7 @@ enable_pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -589,7 +589,7 @@ enable_alert_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -597,7 +597,7 @@ enable_alert_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -690,7 +690,7 @@ enable_power_down_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -698,7 +698,7 @@ enable_power_down_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -790,7 +790,7 @@ enable_reset_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -798,7 +798,7 @@ enable_reset_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -890,7 +890,7 @@ enable_power_cycle_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -898,7 +898,7 @@ enable_power_cycle_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -990,7 +990,7 @@ enable_oem_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -998,7 +998,7 @@ enable_oem_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -1091,7 +1091,7 @@ enable_diagnostic_interrupt_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1099,7 +1099,7 @@ enable_diagnostic_interrupt_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -1333,12 +1333,12 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
   if (!(pef_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
   if (!(pef_section->section = strdup ("PEF_Conf")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (pef_section,

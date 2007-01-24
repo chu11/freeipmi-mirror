@@ -85,7 +85,7 @@ volatile_access_mode_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
   return 0;
 }
@@ -177,7 +177,7 @@ volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *arg
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -185,7 +185,7 @@ volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *arg
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -279,7 +279,7 @@ volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -287,7 +287,7 @@ volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -382,7 +382,7 @@ volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -390,7 +390,7 @@ volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -482,7 +482,7 @@ volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -630,7 +630,7 @@ non_volatile_access_mode_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
   return 0;
 }
@@ -720,7 +720,7 @@ non_volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments 
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -728,7 +728,7 @@ non_volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments 
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -819,7 +819,7 @@ non_volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -827,7 +827,7 @@ non_volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -920,7 +920,7 @@ non_volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -928,7 +928,7 @@ non_volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -1019,7 +1019,7 @@ non_volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *arg
   if (!(kv->value = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -1094,13 +1094,13 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
   if (!(lan_channel_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
 
   if (!(lan_channel_section->section = strdup ("Lan_Channel")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (lan_channel_section,

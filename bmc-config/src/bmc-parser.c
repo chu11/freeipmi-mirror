@@ -64,7 +64,7 @@ bmc_parser (struct bmc_config_arguments *args,
         if (!(section_name = strdup (section_name)))
           {
             perror("strdup");
-            exit(1);
+	    exit(1);
           }
 #ifndef NDEBUG 
         if (args->common.debug) 
@@ -115,7 +115,7 @@ bmc_parser (struct bmc_config_arguments *args,
     if (!(key_name = strdup (first_word)))
       {
         perror("strdup");
-        exit(1);
+	exit(1);
       }
     if (value)
 	free (value);
@@ -125,7 +125,7 @@ bmc_parser (struct bmc_config_arguments *args,
         if (!(value = strdup (value)))
           {
             perror("strdup");
-            exit(1);
+	    exit(1);
           }
       }
     else
@@ -133,7 +133,7 @@ bmc_parser (struct bmc_config_arguments *args,
         if (!(value = strdup ("")))
           {
             perror("strdup");
-            exit(1);
+	    exit(1);
           }
       }
     

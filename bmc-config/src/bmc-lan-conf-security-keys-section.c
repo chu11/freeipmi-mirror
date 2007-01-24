@@ -26,7 +26,7 @@ k_r_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup ((char *)k_r)))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -102,7 +102,7 @@ k_g_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup ((char *)k_g)))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -162,12 +162,12 @@ bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
   if (!(lan_conf_security_keys_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
   if (!(lan_conf_security_keys_section->section = strdup ("Lan_Conf_Security_Keys")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (lan_conf_security_keys_section,

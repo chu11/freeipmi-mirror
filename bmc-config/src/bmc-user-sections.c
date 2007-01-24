@@ -37,7 +37,7 @@ username_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup ((char *)username)))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -163,7 +163,7 @@ enable_user_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
@@ -171,7 +171,7 @@ enable_user_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else /* tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
@@ -179,7 +179,7 @@ enable_user_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -267,7 +267,7 @@ password_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup ("")))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -332,7 +332,7 @@ password20_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup ("")))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -507,7 +507,7 @@ lan_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -515,7 +515,7 @@ lan_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -611,7 +611,7 @@ lan_enable_link_auth_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -619,7 +619,7 @@ lan_enable_link_auth_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   
@@ -715,7 +715,7 @@ lan_enable_restricted_to_callback_checkout (const struct bmc_config_arguments *a
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -723,7 +723,7 @@ lan_enable_restricted_to_callback_checkout (const struct bmc_config_arguments *a
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -817,7 +817,7 @@ lan_privilege_limit_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
@@ -1021,7 +1021,7 @@ sol_payload_access_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1029,7 +1029,7 @@ sol_payload_access_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   return 0;
@@ -1240,7 +1240,7 @@ serial_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1248,7 +1248,7 @@ serial_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1344,7 +1344,7 @@ serial_enable_link_auth_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1352,7 +1352,7 @@ serial_enable_link_auth_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1448,7 +1448,7 @@ serial_enable_restricted_to_callback_checkout (const struct bmc_config_arguments
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
   else
@@ -1456,7 +1456,7 @@ serial_enable_restricted_to_callback_checkout (const struct bmc_config_arguments
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          exit(1);
+          return -1;
         }
     }
 
@@ -1550,7 +1550,7 @@ serial_privilege_limit_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;

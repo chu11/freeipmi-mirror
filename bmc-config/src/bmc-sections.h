@@ -33,17 +33,6 @@
 
 #define same(a,b) (strcasecmp(a,b) == 0)
 
-#define add_section(db, extra) do { \
-  if (db) {                         \
-    struct section *trav = db;      \
-    while (trav->next)              \
-      trav = trav->next;            \
-    trav->next = extra;             \
-  } else {                          \
-    db = extra;                     \
-  }                                 \
-} while (0)
-
 #define add_keyvalue(_sect, _key, _doc, _f, _o, _i, _d, _v) do { \
   struct keyvalue *_new ;                                        \
   _new = (void *) calloc (1, sizeof (*_new));                    \

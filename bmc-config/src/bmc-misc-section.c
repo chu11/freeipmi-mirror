@@ -25,7 +25,7 @@ power_restore_policy_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (power_restore_policy_string (policy))))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
   return 0;
 }
@@ -85,12 +85,12 @@ bmc_misc_section_get (struct bmc_config_arguments *args)
   if (!(misc_section = (void *) calloc (1, sizeof (struct section))))
     {
       perror("calloc");
-      exit(1);
+      return NULL;
     }
   if (!(misc_section->section = strdup ("Misc")))
     {
       perror("strdup");
-      exit(1);
+      return NULL;
     }
 
   add_keyvalue (misc_section,
