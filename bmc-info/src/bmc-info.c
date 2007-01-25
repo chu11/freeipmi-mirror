@@ -409,6 +409,25 @@ display_channel_info (bmc_info_state_data_t *state_data)
   return 0;
 }
 
+int
+run_cmd_args (bmc_info_state_data_t *state_data)
+{
+  int rv = -1;
+
+  assert(state_data);
+  
+  if (display_get_device_id (state_data) < 0)
+    goto cleanup;
+  
+  if (display_channel_info (state_data) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+
 static void
 _disable_coredump(void)
 {
@@ -513,18 +532,12 @@ _bmc_info (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
-  if (display_get_device_id (&state_data) < 0)
+  if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
-  
-  if (display_channel_info (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-  
+ 
   exit_code = 0;
  cleanup:
   if (dev)

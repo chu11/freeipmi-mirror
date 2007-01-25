@@ -61,5 +61,12 @@ struct bmc_config_arguments
   bmc_action_t action;
 };
 
+typedef struct bmc_config_prog_data
+{
+  char *progname;
+  struct bmc_config_arguments *args;
+  uint32_t debug_flags;
+} bmc_config_prog_data_t;
+
 
 #endif /* _BMC_CONFIG_H_ */

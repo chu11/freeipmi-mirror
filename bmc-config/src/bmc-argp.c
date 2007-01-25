@@ -117,85 +117,6 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state);
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc};
 
-static int
-args_validate (struct bmc_config_arguments *args)
-{
-  int ret = 0;
-
-  // action is non 0 and -1
-  if (! args->action || args->action == -1) 
-    {
-      fprintf (stderr, 
-               "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
-      return -1;
-    }
-
-  // filename and keypair both given for checkout or diff
-  if (args->filename && args->keypairs 
-      && (args->action == BMC_ACTION_CHECKOUT
-          || args->action == BMC_ACTION_DIFF))
-    {
-      fprintf (stderr, 
-               "Both --filename or --keypair cannot be used\n");
-      return -1;
-    }
-
-  // only one of keypairs or section can be given for checkout
-  if (args->action == BMC_ACTION_CHECKOUT
-      && (args->keypairs && args->sectionstrs))
-    {
-      fprintf (stderr, 
-               "Only one of --filename, --keypair, and --section can be used\n");
-      return -1;
-    }
-
-  // filename is readable if commit, writable/creatable if checkout
-
-  if (args->filename) 
-    {
-      switch (args->action) 
-        {
-        case BMC_ACTION_COMMIT: case BMC_ACTION_DIFF:
-          if (access (args->filename, R_OK) != 0) 
-            {
-              perror (args->filename);
-              return -1;
-            }
-          break;
-        case BMC_ACTION_CHECKOUT:
-          if (access (args->filename, F_OK) == 0) 
-            {
-              if (access (args->filename, W_OK) != 0) 
-                {
-                  perror (args->filename);
-                  return -1;
-                }
-            } 
-          else 
-            {
-              int fd;
-              fd = open (args->filename, O_CREAT);
-              if (fd == -1) 
-                {
-                  perror (args->filename);
-                  return -1;
-                } 
-              else 
-                {
-                  close (fd);
-                  unlink (args->filename);
-                }
-            }
-          break;
-        case BMC_ACTION_LIST_SECTIONS:
-          /* do nothing - here to remove compile warning */
-          break;
-        }
-    }
-  
-  return ret;
-}
-
 static struct keypair *
 _create_keypair(char *arg)
 {
@@ -334,8 +255,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
   return 0;
 }
 
-int
-bmc_argp (int argc, char *argv[], struct bmc_config_arguments *args)
+void
+bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *args)
 {
   init_common_cmd_args (&(args->common));
   args->silent = 0;
@@ -351,9 +272,83 @@ bmc_argp (int argc, char *argv[], struct bmc_config_arguments *args)
   args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, args);
+}
 
-  if (args_validate (args) < 0)
-    return (-1);
+int
+bmc_config_args_validate (struct bmc_config_arguments *args)
+{
+  int ret = 0;
 
-  return (0);
+  // action is non 0 and -1
+  if (! args->action || args->action == -1) 
+    {
+      fprintf (stderr, 
+               "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
+      return -1;
+    }
+
+  // filename and keypair both given for checkout or diff
+  if (args->filename && args->keypairs 
+      && (args->action == BMC_ACTION_CHECKOUT
+          || args->action == BMC_ACTION_DIFF))
+    {
+      fprintf (stderr, 
+               "Both --filename or --keypair cannot be used\n");
+      return -1;
+    }
+
+  // only one of keypairs or section can be given for checkout
+  if (args->action == BMC_ACTION_CHECKOUT
+      && (args->keypairs && args->sectionstrs))
+    {
+      fprintf (stderr, 
+               "Only one of --filename, --keypair, and --section can be used\n");
+      return -1;
+    }
+
+  // filename is readable if commit, writable/creatable if checkout
+
+  if (args->filename) 
+    {
+      switch (args->action) 
+        {
+        case BMC_ACTION_COMMIT: case BMC_ACTION_DIFF:
+          if (access (args->filename, R_OK) != 0) 
+            {
+              perror (args->filename);
+              return -1;
+            }
+          break;
+        case BMC_ACTION_CHECKOUT:
+          if (access (args->filename, F_OK) == 0) 
+            {
+              if (access (args->filename, W_OK) != 0) 
+                {
+                  perror (args->filename);
+                  return -1;
+                }
+            } 
+          else 
+            {
+              int fd;
+              fd = open (args->filename, O_CREAT);
+              if (fd == -1) 
+                {
+                  perror (args->filename);
+                  return -1;
+                } 
+              else 
+                {
+                  close (fd);
+                  unlink (args->filename);
+                }
+            }
+          break;
+        case BMC_ACTION_LIST_SECTIONS:
+          /* do nothing - here to remove compile warning */
+          break;
+        }
+    }
+  
+  return ret;
 }

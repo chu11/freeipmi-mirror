@@ -82,88 +82,124 @@
 #include "ipmi-common.h"
 
 static int
-ipmi_core_init (char *progname, struct bmc_config_arguments *args)
+_bmc_config (void *arg)
 {
-  uint32_t flags;
+  bmc_config_prog_data_t *prog_data;
+  struct section *sections;
+  int exit_code = -1;
+  int ret;
 
-#ifndef NDEBUG
-  if (args->common.debug)
-    flags = IPMI_FLAGS_DEBUG_DUMP;
-  else
-    flags = IPMI_FLAGS_DEFAULT;
-#else  /* NDEBUG */
-  flags = IPMI_FLAGS_DEFAULT;
-#endif /* NDEBUG */
-  
-  if (args->common.host != NULL) 
+  prog_data = (bmc_config_prog_data_t *)arg;
+
+  if (prog_data->args->common.host != NULL)
     {
-      if (!(args->dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-					     args->common.host,
-                                             args->common.username,
-                                             args->common.password,
-                                             args->common.authentication_type,
-                                             args->common.privilege_level,
-                                             args->common.session_timeout,
-                                             args->common.retry_timeout,
-                                             flags)))
+      if (!(prog_data->args->dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
+							prog_data->args->common.host,
+							prog_data->args->common.username,
+							prog_data->args->common.password,
+							prog_data->args->common.authentication_type,
+							prog_data->args->common.privilege_level,
+							prog_data->args->common.session_timeout,
+							prog_data->args->common.retry_timeout,
+							prog_data->debug_flags)))
         {
           perror ("ipmi_open_outofband()");
-          exit (EXIT_FAILURE);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
         }
-    } 
-  else 
+    }
+  else
     {
       if (!ipmi_is_root())
         {
-          fprintf(stderr, "%s: Permission Denied\n", progname);
-          exit(EXIT_FAILURE);
+          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
         }
-      
-      if (args->common.driver_type == IPMI_DEVICE_UNKNOWN) 
+
+      if (prog_data->args->common.driver_type == IPMI_DEVICE_UNKNOWN)
         {
-	  if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
-					      args->common.disable_auto_probe, 
-					      args->common.driver_address, 
-					      args->common.register_spacing,
-					      args->common.driver_device, 
-					      flags)))
-	    {
-	      if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_KCS,
-						  args->common.disable_auto_probe,
-						  args->common.driver_address,
-						  args->common.register_spacing,
-						  args->common.driver_device,
-						  flags)))
-		{
-		  if (!(args->dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
-						      args->common.disable_auto_probe,
-						      args->common.driver_address,
-						      args->common.register_spacing,
-						      args->common.driver_device,
-						      flags)))
-		    {
-		      perror ("ipmi_open_inband()");
-		      exit (EXIT_FAILURE);
-		    }
-		}
+          if (!(prog_data->args->dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI,
+							 prog_data->args->common.disable_auto_probe,
+							 prog_data->args->common.driver_address,
+							 prog_data->args->common.register_spacing,
+							 prog_data->args->common.driver_device,
+							 prog_data->debug_flags)))
+            {
+              if (!(prog_data->args->dev = ipmi_open_inband (IPMI_DEVICE_KCS,
+							     prog_data->args->common.disable_auto_probe,
+							     prog_data->args->common.driver_address,
+							     prog_data->args->common.register_spacing,
+							     prog_data->args->common.driver_device,
+							     prog_data->debug_flags)))
+                {
+                  if (!(prog_data->args->dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
+								 prog_data->args->common.disable_auto_probe,
+								 prog_data->args->common.driver_address,
+								 prog_data->args->common.register_spacing,
+								 prog_data->args->common.driver_device,
+								 prog_data->debug_flags)))
+                    {
+                      perror ("ipmi_open_inband()");
+                      exit_code = EXIT_FAILURE;
+                      goto cleanup;
+                    }
+                }
             }
-        } 
-      else 
+        }
+      else
         {
-          if (!(args->dev = ipmi_open_inband (args->common.driver_type,
-					      args->common.disable_auto_probe,
-					      args->common.driver_address,
-                                              args->common.register_spacing,
-                                              args->common.driver_device,
-                                              flags)))
+          if (!(prog_data->args->dev = ipmi_open_inband (prog_data->args->common.driver_type,
+							 prog_data->args->common.disable_auto_probe,
+							 prog_data->args->common.driver_address,
+							 prog_data->args->common.register_spacing,
+							 prog_data->args->common.driver_device,
+							 prog_data->debug_flags)))
             {
               perror ("ipmi_open_inband()");
-              exit (EXIT_FAILURE);
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
             }
         }
     }
 
-  return 0;
+  if (!(sections = bmc_sections_init (prog_data->args)))
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  switch (prog_data->args->action) {
+  case BMC_ACTION_CHECKOUT:
+    ret = bmc_checkout (prog_data->args, sections);
+    break;
+  case BMC_ACTION_COMMIT:
+    ret = bmc_commit (prog_data->args, sections);
+    break;
+  case BMC_ACTION_DIFF:
+    ret = bmc_diff (prog_data->args, sections);
+    break;
+  case BMC_ACTION_LIST_SECTIONS:
+    ret = bmc_sections_list (prog_data->args, sections);
+    break;
+  }
+  
+  if (ret < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = 0;
+ cleanup:
+#if 0
+  if (dev)
+    ipmi_close_device (dev);
+#else
+  if (prog_data->args->dev)
+    ipmi_close_device(prog_data->args->dev);
+#endif
+  return exit_code;
 }
 
 static void
@@ -187,17 +223,21 @@ _disable_coredump(void)
 int
 main (int argc, char *argv[])
 {
+  bmc_config_prog_data_t prog_data;
   struct bmc_config_arguments cmd_args;
-  struct section *sections;
-  int ret = 0;
+  int exit_code;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
 
   _disable_coredump();
 
-  if (bmc_argp (argc, argv,  &cmd_args) < 0)
+  bmc_config_argp (argc, argv, &cmd_args);
+
+  if (bmc_config_args_validate (&cmd_args) < 0)
     return (EXIT_FAILURE);
+
+  prog_data.args = &cmd_args;
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
@@ -205,29 +245,16 @@ main (int argc, char *argv[])
     memset(argv[i], '\0', strlen(argv[i]));
 #endif /* NDEBUG */
 
-  ipmi_core_init (argv[0], &cmd_args);
+#ifndef NDEBUG
+  if (prog_data.args->common.debug)
+    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
+  else
+    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
+#else  /* NDEBUG */
+  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
+#endif /* NDEBUG */
 
-  /* this should be after ipmi_core_init since
-     user section refers to ipmi calls to get
-     number of user profiles in this ipmi instance
-  */
-  sections = bmc_sections_init (&cmd_args);
+  exit_code = _bmc_config(&prog_data);
 
-  switch (cmd_args.action) {
-  case BMC_ACTION_CHECKOUT:
-    ret = bmc_checkout (&cmd_args, sections);
-    break;
-  case BMC_ACTION_COMMIT:
-    ret = bmc_commit (&cmd_args, sections);
-    break;
-  case BMC_ACTION_DIFF:
-    ret = bmc_diff (&cmd_args, sections);
-    break;
-  case BMC_ACTION_LIST_SECTIONS:
-    ret = bmc_sections_list (&cmd_args, sections);
-    break;
-  }
-  
-  ipmi_close_device(cmd_args.dev);
-  return (ret);
+  return (exit_code);
 }
