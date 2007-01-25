@@ -33,31 +33,33 @@
 
 #define same(a,b) (strcasecmp(a,b) == 0)
 
-#define add_keyvalue(_sect, _key, _doc, _f, _o, _i, _d, _v) do { \
-  struct keyvalue *_new ;                                        \
-  _new = (void *) calloc (1, sizeof (*_new));                    \
-  _new->key = _key;                                              \
-  _new->desc = _doc;                                             \
-  _new->flags = _f;                                              \
-  _new->commit = _i;                                             \
-  _new->checkout = _o;                                           \
-  _new->diff = _d;                                               \
-  _new->validate = _v;                                           \
-  if (_sect->keyvalues) {                                        \
-    struct keyvalue *trav = _sect->keyvalues;                    \
-    while (trav->next)                                           \
-      trav = trav->next;                                         \
-    trav->next = _new;                                           \
-  } else {                                                       \
-    _sect->keyvalues = _new;                                     \
-  }                                                              \
-} while (0)
-
 struct section {
   struct section *next;
   char *section_name;
   struct keyvalue *keyvalues;
 };
+
+/* checkout procedure fills the value into kv->value as printable string */
+typedef int (*Keyvalue_Checkout) (const struct bmc_config_arguments *args,
+				  const struct section *sect,
+				  struct keyvalue *kv);
+
+/* commit procedure takes string value from kv->value and converts and
+   does ipmi calls to set it */
+typedef int (*Keyvalue_Commit) (const struct bmc_config_arguments *args,
+				const struct section *sect,
+				const struct keyvalue *kv);
+
+/* diff procedure finds the difference with the ipmi actual value
+   and kv->value */
+typedef int (*Keyvalue_Diff) (const struct bmc_config_arguments *args,
+			      const struct section *sect,
+			      const struct keyvalue *kv);
+
+/* validate procedure finds if value is suitable to be set as kv->value */
+typedef int (*Keyvalue_Validate) (const struct bmc_config_arguments *args,
+				  const struct section *sect,
+				  const char *value);
 
 struct keyvalue {
   struct keyvalue *next;
@@ -65,28 +67,10 @@ struct keyvalue {
   const char *desc;
   unsigned int flags;
   char *value;
-
-  /* checkout procedure fills the value into kv->value as printable string */
-  int (*checkout) (const struct bmc_config_arguments *args, 
-		   const struct section *sect,
-		   struct keyvalue *kv);
-
-  /* commit procedure takes string value from kv->value and converts and
-     does ipmi calls to set it */
-  int (*commit) (const struct bmc_config_arguments *args,
-		 const struct section *sect,
-		 const struct keyvalue *kv);
-
-  /* diff procedure finds the difference with the ipmi actual value
-     and kv->value */
-  int (*diff) (const struct bmc_config_arguments *args,
-	       const struct section *sect,
-	       const struct keyvalue *kv);
-
-  /* validate procedure finds if value is suitable to be set as kv->value */
-  int (*validate) (const struct bmc_config_arguments *args,
-		   const struct section *sect,
-		   const char *value);
+  Keyvalue_Checkout checkout;
+  Keyvalue_Commit commit;
+  Keyvalue_Diff diff;
+  Keyvalue_Validate validate;
 };
 
 struct section * bmc_config_sections_create (struct bmc_config_arguments *args);
@@ -96,6 +80,15 @@ void bmc_config_sections_destroy (struct section *sections);
 struct section * bmc_section_create (char *section_name);
 
 void bmc_section_destroy (struct section *section);
+
+int bmc_section_add_keyvalue (struct section *section,
+			      const char *key,
+			      const char *desc,
+			      unsigned int flags,
+			      Keyvalue_Checkout checkout,
+			      Keyvalue_Commit commit,
+			      Keyvalue_Diff diff,
+			      Keyvalue_Validate validate);
 
 struct keyvalue * bmc_section_find_keyvalue (const char *section_name,
 					     const char *key_name,

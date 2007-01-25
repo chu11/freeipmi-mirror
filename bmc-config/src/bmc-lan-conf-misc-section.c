@@ -240,32 +240,35 @@ bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
   if (!(lan_conf_misc_section = bmc_section_create ("Lan_Conf_Misc")))
     goto cleanup;
 
-  add_keyvalue (lan_conf_misc_section,
-		"Enable_Gratuitous_ARPs",
-		"Possible values: Yes/No",
-                0,
-		enable_gratuitous_arps_checkout,
-		enable_gratuitous_arps_commit,
-		enable_gratuitous_arps_diff,
-		enable_gratuitous_arps_validate);
+  if (bmc_section_add_keyvalue (lan_conf_misc_section,
+				"Enable_Gratuitous_ARPs",
+				"Possible values: Yes/No",
+				0,
+				enable_gratuitous_arps_checkout,
+				enable_gratuitous_arps_commit,
+				enable_gratuitous_arps_diff,
+				enable_gratuitous_arps_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (lan_conf_misc_section,
-		"Enable_ARP_Response",
-		"Possible values: Yes/No",
-                0,
-		enable_arp_response_checkout,
-		enable_arp_response_commit,
-		enable_arp_response_diff,
-		enable_arp_response_validate);
+  if (bmc_section_add_keyvalue (lan_conf_misc_section,
+				"Enable_ARP_Response",
+				"Possible values: Yes/No",
+				0,
+				enable_arp_response_checkout,
+				enable_arp_response_commit,
+				enable_arp_response_diff,
+				enable_arp_response_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (lan_conf_misc_section,
-		"Gratuitous_ARP_Interval",
-		"Give a number (x 500ms)",
-                0,
-		gratuitous_arp_interval_checkout,
-		gratuitous_arp_interval_commit,
-		gratuitous_arp_interval_diff,
-		gratuitous_arp_interval_validate);
+  if (bmc_section_add_keyvalue (lan_conf_misc_section,
+				"Gratuitous_ARP_Interval",
+				"Give a number (x 500ms)",
+				0,
+				gratuitous_arp_interval_checkout,
+				gratuitous_arp_interval_commit,
+				gratuitous_arp_interval_diff,
+				gratuitous_arp_interval_validate) < 0)
+    goto cleanup;
 
   return lan_conf_misc_section;
 

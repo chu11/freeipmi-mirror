@@ -198,6 +198,58 @@ bmc_section_destroy (struct section *section)
     }
 }
 
+int 
+bmc_section_add_keyvalue (struct section *section,
+			  const char *key,
+			  const char *desc,
+			  unsigned int flags,
+			  Keyvalue_Checkout checkout,
+			  Keyvalue_Commit commit,
+			  Keyvalue_Diff diff,
+			  Keyvalue_Validate validate)
+{
+  struct keyvalue *kv;
+
+  if (!section
+      || !key
+      || !desc
+      || !checkout
+      || !commit
+      || !diff
+      || !validate)
+    return -1;
+
+  if (!(kv = (struct keyvalue *) calloc (1, sizeof(*kv))))
+    {
+      perror ("calloc");
+      goto cleanup;
+    }
+
+  kv->key = key;
+  kv->desc = desc;
+  kv->flags = flags;
+  kv->checkout = checkout;
+  kv->commit = commit;
+  kv->diff = diff;
+  kv->validate = validate;
+
+  if (section->keyvalues)
+    {
+      struct keyvalue *trav = section->keyvalues;
+      while (trav->next)
+	trav = trav->next;
+      trav->next = kv;
+    }
+  else
+    section->keyvalues = kv;
+
+  return 0;
+ cleanup:
+  if (kv)
+    free(kv);
+  return -1;
+}
+
 static struct section *
 bmc_section_find_section (const char *section_name,
 			  const struct section *sections)

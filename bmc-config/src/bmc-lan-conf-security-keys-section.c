@@ -162,23 +162,25 @@ bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
   if (!(lan_conf_security_keys_section = bmc_section_create ("Lan_Conf_Security_Keys")))
     goto cleanup;
 
-  add_keyvalue (lan_conf_security_keys_section,
-		"K_R",
-		"Give string or blank to clear. Max 20 chars",
-                0,
-		k_r_checkout,
-		k_r_commit,
-		k_r_diff,
-		k_r_validate);
+  if (bmc_section_add_keyvalue (lan_conf_security_keys_section,
+				"K_R",
+				"Give string or blank to clear. Max 20 chars",
+				0,
+				k_r_checkout,
+				k_r_commit,
+				k_r_diff,
+				k_r_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (lan_conf_security_keys_section,
-		"K_G",
-		"Give string or blank to clear. Max 20 chars",
-                0,
-		k_g_checkout,
-		k_g_commit,
-		k_g_diff,
-		k_g_validate);
+  if (bmc_section_add_keyvalue (lan_conf_security_keys_section,
+				"K_G",
+				"Give string or blank to clear. Max 20 chars",
+				0,
+				k_g_checkout,
+				k_g_commit,
+				k_g_diff,
+				k_g_validate) < 0)
+    goto cleanup;
 
   return lan_conf_security_keys_section;
 

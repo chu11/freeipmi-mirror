@@ -1076,95 +1076,105 @@ bmc_serial_channel_section_get (struct bmc_config_arguments *args)
   if (!(serial_channel_section = bmc_section_create ("Serial_Channel")))
     goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Volatile_Access_Mode",
-		"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-                0,
-		volatile_access_mode_checkout,
-		volatile_access_mode_commit,
-		volatile_access_mode_diff,
-		volatile_access_mode_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Volatile_Access_Mode",
+				"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
+				0,
+				volatile_access_mode_checkout,
+				volatile_access_mode_commit,
+				volatile_access_mode_diff,
+				volatile_access_mode_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Volatile_Enable_User_Level_Auth",
-		"Possible values: Yes/No",
-                0,
-		volatile_enable_user_level_auth_checkout,
-		volatile_enable_user_level_auth_commit,
-		volatile_enable_user_level_auth_diff,
-		volatile_enable_user_level_auth_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Volatile_Enable_User_Level_Auth",
+				"Possible values: Yes/No",
+				0,
+				volatile_enable_user_level_auth_checkout,
+				volatile_enable_user_level_auth_commit,
+				volatile_enable_user_level_auth_diff,
+				volatile_enable_user_level_auth_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Volatile_Enable_Per_Message_Auth",
-		"Possible values: Yes/No",
-                0,
-		volatile_enable_per_msg_auth_checkout,
-		volatile_enable_per_msg_auth_commit,
-		volatile_enable_per_msg_auth_diff,
-		volatile_enable_per_msg_auth_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Volatile_Enable_Per_Message_Auth",
+				"Possible values: Yes/No",
+				0,
+				volatile_enable_per_msg_auth_checkout,
+				volatile_enable_per_msg_auth_commit,
+				volatile_enable_per_msg_auth_diff,
+				volatile_enable_per_msg_auth_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Volatile_Enable_Pef_Alerting",
-		"Possible values: Yes/No",
-                0,
-		volatile_enable_pef_alerting_checkout,
-		volatile_enable_pef_alerting_commit,
-		volatile_enable_pef_alerting_diff,
-		volatile_enable_pef_alerting_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Volatile_Enable_Pef_Alerting",
+				"Possible values: Yes/No",
+				0,
+				volatile_enable_pef_alerting_checkout,
+				volatile_enable_pef_alerting_commit,
+				volatile_enable_pef_alerting_diff,
+				volatile_enable_pef_alerting_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Volatile_Channel_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                0,
-		volatile_channel_priv_limit_checkout,
-		volatile_channel_priv_limit_commit,
-		volatile_channel_priv_limit_diff,
-		volatile_channel_priv_limit_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Volatile_Channel_Privilege_Limit",
+				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+				0,
+				volatile_channel_priv_limit_checkout,
+				volatile_channel_priv_limit_commit,
+				volatile_channel_priv_limit_diff,
+				volatile_channel_priv_limit_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Non_Volatile_Access_Mode",
-		"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-                0,
-		non_volatile_access_mode_checkout,
-		non_volatile_access_mode_commit,
-		non_volatile_access_mode_diff,
-		non_volatile_access_mode_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Non_Volatile_Access_Mode",
+				"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
+				0,
+				non_volatile_access_mode_checkout,
+				non_volatile_access_mode_commit,
+				non_volatile_access_mode_diff,
+				non_volatile_access_mode_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Non_Volatile_Enable_User_Level_Auth",
-		"Possible values: Yes/No",
-                0,
-		non_volatile_enable_user_level_auth_checkout,
-		non_volatile_enable_user_level_auth_commit,
-		non_volatile_enable_user_level_auth_diff,
-		non_volatile_enable_user_level_auth_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Non_Volatile_Enable_User_Level_Auth",
+				"Possible values: Yes/No",
+				0,
+				non_volatile_enable_user_level_auth_checkout,
+				non_volatile_enable_user_level_auth_commit,
+				non_volatile_enable_user_level_auth_diff,
+				non_volatile_enable_user_level_auth_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Non_Volatile_Enable_Per_Message_Auth",
-		"Possible values: Yes/No",
-                0,
-		non_volatile_enable_per_msg_auth_checkout,
-		non_volatile_enable_per_msg_auth_commit,
-		non_volatile_enable_per_msg_auth_diff,
-		non_volatile_enable_per_msg_auth_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Non_Volatile_Enable_Per_Message_Auth",
+				"Possible values: Yes/No",
+				0,
+				non_volatile_enable_per_msg_auth_checkout,
+				non_volatile_enable_per_msg_auth_commit,
+				non_volatile_enable_per_msg_auth_diff,
+				non_volatile_enable_per_msg_auth_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Non_Volatile_Enable_Pef_Alerting",
-		"Possible values: Yes/No",
-                0,
-		non_volatile_enable_pef_alerting_checkout,
-		non_volatile_enable_pef_alerting_commit,
-		non_volatile_enable_pef_alerting_diff,
-		non_volatile_enable_pef_alerting_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Non_Volatile_Enable_Pef_Alerting",
+				"Possible values: Yes/No",
+				0,
+				non_volatile_enable_pef_alerting_checkout,
+				non_volatile_enable_pef_alerting_commit,
+				non_volatile_enable_pef_alerting_diff,
+				non_volatile_enable_pef_alerting_validate) < 0)
+    goto cleanup;
 
-  add_keyvalue (serial_channel_section,
-		"Non_Volatile_Channel_Privilege_Limit",
-		"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                0,
-		non_volatile_channel_priv_limit_checkout,
-		non_volatile_channel_priv_limit_commit,
-		non_volatile_channel_priv_limit_diff,
-		non_volatile_channel_priv_limit_validate);
+  if (bmc_section_add_keyvalue (serial_channel_section,
+				"Non_Volatile_Channel_Privilege_Limit",
+				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+				0,
+				non_volatile_channel_priv_limit_checkout,
+				non_volatile_channel_priv_limit_commit,
+				non_volatile_channel_priv_limit_diff,
+				non_volatile_channel_priv_limit_validate) < 0)
+    goto cleanup;
 
   return serial_channel_section;
 

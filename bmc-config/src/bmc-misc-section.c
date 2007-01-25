@@ -85,14 +85,15 @@ bmc_misc_section_get (struct bmc_config_arguments *args)
   if (!(misc_section = bmc_section_create ("Misc")))
     goto cleanup;
 
-  add_keyvalue (misc_section,
-		"Power_Restore_Policy",
-		"Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-		BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-		power_restore_policy_checkout,
-		power_restore_policy_commit,
-		power_restore_policy_diff,
-		power_restore_policy_validate);
+  if (bmc_section_add_keyvalue (misc_section,
+				"Power_Restore_Policy",
+				"Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+				BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+				power_restore_policy_checkout,
+				power_restore_policy_commit,
+				power_restore_policy_diff,
+				power_restore_policy_validate) < 0)
+    goto cleanup;
 
   return misc_section;
 

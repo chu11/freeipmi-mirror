@@ -834,104 +834,115 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
   if (!(lan_conf_section = bmc_section_create ("Lan_Conf")))
     goto cleanup;
   
-  add_keyvalue (lan_conf_section,
-		"IP_Address_Source",
-		"Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
-                0,
-		ip_address_source_checkout,
-		ip_address_source_commit,
-		ip_address_source_diff,
-		ip_address_source_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"IP_Address_Source",
+				"Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
+				0,
+				ip_address_source_checkout,
+				ip_address_source_commit,
+				ip_address_source_diff,
+				ip_address_source_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"IP_Address",
-		"Give valid IP address",
-                0,
-		ip_address_checkout,
-		ip_address_commit,
-		ip_address_diff,
-		ip_address_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"IP_Address",
+				"Give valid IP address",
+				0,
+				ip_address_checkout,
+				ip_address_commit,
+				ip_address_diff,
+				ip_address_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"MAC_Address",
-		"Give valid MAC address",
-                0,
-		mac_address_checkout,
-		mac_address_commit,
-		mac_address_diff,
-		mac_address_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"MAC_Address",
+				"Give valid MAC address",
+				0,
+				mac_address_checkout,
+				mac_address_commit,
+				mac_address_diff,
+				mac_address_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Subnet_Mask",
-		"Give valid Subnet Mask",
-                0,
-		subnet_mask_checkout,
-		subnet_mask_commit,
-		subnet_mask_diff,
-		subnet_mask_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Subnet_Mask",
+				"Give valid Subnet Mask",
+				0,
+				subnet_mask_checkout,
+				subnet_mask_commit,
+				subnet_mask_diff,
+				subnet_mask_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Default_Gateway_IP_Address",
-		"Give valid IP address",
-                0,
-		default_gateway_address_checkout,
-		default_gateway_address_commit,
-		default_gateway_address_diff,
-		default_gateway_address_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Default_Gateway_IP_Address",
+				"Give valid IP address",
+				0,
+				default_gateway_address_checkout,
+				default_gateway_address_commit,
+				default_gateway_address_diff,
+				default_gateway_address_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Default_Gateway_MAC_Address",
-		"Give valid MAC address",
-                0,
-		default_gateway_mac_address_checkout,
-		default_gateway_mac_address_commit,
-		default_gateway_mac_address_diff,
-		default_gateway_mac_address_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Default_Gateway_MAC_Address",
+				"Give valid MAC address",
+				0,
+				default_gateway_mac_address_checkout,
+				default_gateway_mac_address_commit,
+				default_gateway_mac_address_diff,
+				default_gateway_mac_address_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Backup_Gateway_IP_Address",
-		"Give valid IP address",
-                0,
-		backup_gateway_address_checkout,
-		backup_gateway_address_commit,
-		backup_gateway_address_diff,
-		backup_gateway_address_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Backup_Gateway_IP_Address",
+				"Give valid IP address",
+				0,
+				backup_gateway_address_checkout,
+				backup_gateway_address_commit,
+				backup_gateway_address_diff,
+				backup_gateway_address_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Backup_Gateway_MAC_Address",
-		"Give valid MAC address",
-                0,
-		backup_gateway_mac_address_checkout,
-		backup_gateway_mac_address_commit,
-		backup_gateway_mac_address_diff,
-		backup_gateway_mac_address_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Backup_Gateway_MAC_Address",
+				"Give valid MAC address",
+				0,
+				backup_gateway_mac_address_checkout,
+				backup_gateway_mac_address_commit,
+				backup_gateway_mac_address_diff,
+				backup_gateway_mac_address_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Vlan_id",
-		"Give valid number",
-                0,
-		vlan_id_checkout,
-		vlan_id_commit,
-		vlan_id_diff,
-		vlan_id_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Vlan_id",
+				"Give valid number",
+				0,
+				vlan_id_checkout,
+				vlan_id_commit,
+				vlan_id_diff,
+				vlan_id_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Vlan_Id_Enable",
-		"Possible values: Yes/No",
-                0,
-		vlan_id_enable_checkout,
-		vlan_id_enable_commit,
-		vlan_id_enable_diff,
-		vlan_id_enable_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Vlan_Id_Enable",
+				"Possible values: Yes/No",
+				0,
+				vlan_id_enable_checkout,
+				vlan_id_enable_commit,
+				vlan_id_enable_diff,
+				vlan_id_enable_validate) < 0) 
+    goto cleanup;
 
-  add_keyvalue (lan_conf_section,
-		"Vlan_Priority",
-		"Give valid number",
-                0,
-		vlan_priority_checkout,
-		vlan_priority_commit,
-		vlan_priority_diff,
-		vlan_priority_validate);
+  if (bmc_section_add_keyvalue (lan_conf_section,
+				"Vlan_Priority",
+				"Give valid number",
+				0,
+				vlan_priority_checkout,
+				vlan_priority_commit,
+				vlan_priority_diff,
+				vlan_priority_validate) < 0) 
+    goto cleanup;
 
   return lan_conf_section;
 
