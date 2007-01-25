@@ -61,7 +61,7 @@
 
 #include "argp-common.h"
 
-#include "bmc-argp.h"
+#include "bmc-config-argp.h"
 
 #include "bmc-config.h"
 #include "bmc-sections.h"

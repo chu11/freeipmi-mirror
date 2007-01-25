@@ -73,7 +73,7 @@
 #include <sys/resource.h>
 
 #include "bmc-config.h"
-#include "bmc-argp.h"
+#include "bmc-config-argp.h"
 #include "bmc-commit.h"
 #include "bmc-checkout.h"
 #include "bmc-diff.h"

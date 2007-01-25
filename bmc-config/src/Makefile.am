@@ -3,7 +3,7 @@ sbin_PROGRAMS = bmc-config
 
 bmc_config_SOURCES = \
 	bmc-config.c \
-	bmc-argp.c \
+	bmc-config-argp.c \
 	bmc-map.c \
 	bmc-sections.c \
 	bmc-parser.c \
@@ -34,7 +34,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 		-I$(srcdir)/../../libfreeipmi/include 
 
 noinst_HEADERS = bmc-config.h \
-		 bmc-argp.h \
+		 bmc-config-argp.h \
 		 bmc-checkout.h \
 		 bmc-commit.h \
 		 bmc-common.h \

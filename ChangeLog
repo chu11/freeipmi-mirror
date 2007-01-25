@@ -2,6 +2,12 @@
 	
 	* bmc-config/: Continue cleanup and re-architecture.
 
+	* bmc-config/src/bmc-argp.h: Renamed to bmc-config-argp.h for
+	consistency.
+
+	* bmc-config/src/bmc-argp.c: Renamed to bmc-config-argp.c for
+	consistency.
+
 2007-01-23  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-types.h: Move to bmc-config.h.  File is now
