@@ -37,7 +37,7 @@ bmc_checkout_keypair (struct bmc_config_arguments *args,
 
   while (sect) 
     {
-      if (same (section_name, sect->section)) 
+      if (same (section_name, sect->section_name)) 
         break;
       sect = sect->next;
     }
@@ -103,7 +103,7 @@ bmc_checkout_section_common (struct bmc_config_arguments *args,
   struct keyvalue *kv = sect->keyvalues;
   int ret = 0;
 
-  fprintf (fp, "Section %s\n", sect->section);
+  fprintf (fp, "Section %s\n", sect->section_name);
   
   while (kv) 
     {
@@ -129,7 +129,7 @@ bmc_checkout_section_common (struct bmc_config_arguments *args,
         {
           if (args->verbose)
             fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
-                     sect->section,
+                     sect->section_name,
                      kv->key);
         } 
       else 
@@ -205,7 +205,7 @@ bmc_checkout_section (struct bmc_config_arguments *args,
       
       while (sect) 
         {
-          if (!strcasecmp(sect->section, sstr->sectionstr))
+          if (!strcasecmp(sect->section_name, sstr->sectionstr))
             {
               /* exit with non- zero if any field fails to
                  checkout, but continue to checkout other

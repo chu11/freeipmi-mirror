@@ -162,7 +162,7 @@ enable_basic_mode_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_value ? "Yes" : "No");
@@ -258,7 +258,7 @@ enable_ppp_mode_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_value ? "Yes" : "No");
@@ -353,7 +353,7 @@ enable_terminal_mode_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_value ? "Yes" : "No");
@@ -436,7 +436,7 @@ connect_mode_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    connect_mode_string (get_value));
@@ -508,7 +508,7 @@ page_blackout_interval_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", interval);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -588,7 +588,7 @@ call_retry_interval_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", interval);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -749,7 +749,7 @@ enable_dtr_hangup_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -829,7 +829,7 @@ flow_control_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    flow_control_string (got_value));
@@ -909,7 +909,7 @@ bit_rate_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    bit_rate_string (got_value));
@@ -930,17 +930,8 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section *bmc_serial_conf_section = NULL;
 
-  if (!(bmc_serial_conf_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-
-  if (!(bmc_serial_conf_section->section = strdup ("Serial_Conf")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+  if (!(bmc_serial_conf_section = bmc_section_create("Serial_Conf")))
+    goto cleanup;
 
   add_keyvalue (bmc_serial_conf_section,
 		"Enable_Basic_Mode",
@@ -1035,4 +1026,9 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 		bit_rate_validate);
 
   return bmc_serial_conf_section;
+
+ cleanup:
+  if (bmc_serial_conf_section)
+    bmc_section_destroy(bmc_serial_conf_section);
+  return NULL;
 }

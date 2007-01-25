@@ -62,7 +62,7 @@ ip_address_source_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    ip_address_source_string (get_val));
@@ -135,7 +135,7 @@ ip_address_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    ip);
@@ -203,7 +203,7 @@ mac_address_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    mac);
@@ -278,7 +278,7 @@ subnet_mask_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    mask);
@@ -354,7 +354,7 @@ default_gateway_address_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    ip);
@@ -490,7 +490,7 @@ backup_gateway_address_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    ip);
@@ -634,7 +634,7 @@ vlan_id_diff (const struct bmc_config_arguments *args,
       char num[32];
       sprintf (num, "%d", vlan_id);
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -738,7 +738,7 @@ vlan_id_enable_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    vlan_id_enable ? "Yes" : "No");
@@ -803,7 +803,7 @@ vlan_priority_diff (const struct bmc_config_arguments *args,
       char prio[32];
       ret = 1;
       sprintf (prio, "%d", priority);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    prio);
@@ -830,16 +830,9 @@ struct section *
 bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_section = NULL;
-  if (!(lan_conf_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(lan_conf_section->section = strdup ("Lan_Conf")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+
+  if (!(lan_conf_section = bmc_section_create ("Lan_Conf")))
+    goto cleanup;
   
   add_keyvalue (lan_conf_section,
 		"IP_Address_Source",
@@ -941,4 +934,9 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 		vlan_priority_validate);
 
   return lan_conf_section;
+
+ cleanup:
+  if (lan_conf_section)
+    bmc_section_destroy(lan_conf_section);
+  return NULL;
 }

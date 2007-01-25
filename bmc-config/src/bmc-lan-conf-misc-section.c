@@ -237,16 +237,8 @@ bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_misc_section = NULL;
 
-  if (!(lan_conf_misc_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(lan_conf_misc_section->section = strdup ("Lan_Conf_Misc")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+  if (!(lan_conf_misc_section = bmc_section_create ("Lan_Conf_Misc")))
+    goto cleanup;
 
   add_keyvalue (lan_conf_misc_section,
 		"Enable_Gratuitous_ARPs",
@@ -276,4 +268,9 @@ bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
 		gratuitous_arp_interval_validate);
 
   return lan_conf_misc_section;
+
+ cleanup:
+  if (lan_conf_misc_section)
+    bmc_section_destroy(lan_conf_misc_section);
+  return NULL;
 }

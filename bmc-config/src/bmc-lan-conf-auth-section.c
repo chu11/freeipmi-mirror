@@ -80,7 +80,7 @@ callback_none_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_none ? "Yes" : "No");
@@ -173,7 +173,7 @@ callback_md2_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_md2 ? "Yes" : "No");
@@ -266,7 +266,7 @@ callback_md5_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_md5 ? "Yes" : "No");
@@ -359,7 +359,7 @@ callback_straight_password_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_straight_password ? "Yes" : "No");
@@ -452,7 +452,7 @@ callback_oem_proprietary_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_oem_proprietary ? "Yes" : "No");
@@ -547,7 +547,7 @@ user_none_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_none ? "Yes" : "No");
@@ -640,7 +640,7 @@ user_md2_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_md2 ? "Yes" : "No");
@@ -733,7 +733,7 @@ user_md5_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_md5 ? "Yes" : "No");
@@ -826,7 +826,7 @@ user_straight_password_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_straight_password ? "Yes" : "No");
@@ -919,7 +919,7 @@ user_oem_proprietary_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_oem_proprietary ? "Yes" : "No");
@@ -1014,7 +1014,7 @@ operator_none_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_none ? "Yes" : "No");
@@ -1107,7 +1107,7 @@ operator_md2_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_md2 ? "Yes" : "No");
@@ -1200,7 +1200,7 @@ operator_md5_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_md5 ? "Yes" : "No");
@@ -1293,7 +1293,7 @@ operator_straight_password_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_straight_password ? "Yes" : "No");
@@ -1386,7 +1386,7 @@ operator_oem_proprietary_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_oem_proprietary ? "Yes" : "No");
@@ -1482,7 +1482,7 @@ admin_none_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_none ? "Yes" : "No");
@@ -1575,7 +1575,7 @@ admin_md2_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_md2 ? "Yes" : "No");
@@ -1668,7 +1668,7 @@ admin_md5_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_md5 ? "Yes" : "No");
@@ -1761,7 +1761,7 @@ admin_straight_password_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_straight_password ? "Yes" : "No");
@@ -1854,7 +1854,7 @@ admin_oem_proprietary_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_oem_proprietary ? "Yes" : "No");
@@ -1951,7 +1951,7 @@ oem_none_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_none ? "Yes" : "No");
@@ -2044,7 +2044,7 @@ oem_md2_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_md2 ? "Yes" : "No");
@@ -2137,7 +2137,7 @@ oem_md5_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_md5 ? "Yes" : "No");
@@ -2230,7 +2230,7 @@ oem_straight_password_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_straight_password ? "Yes" : "No");
@@ -2323,7 +2323,7 @@ oem_oem_proprietary_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_oem_proprietary ? "Yes" : "No");
@@ -2345,16 +2345,8 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_auth_section = NULL;
 
-  if (!(lan_conf_auth_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(lan_conf_auth_section->section = strdup ("Lan_Conf_Auth")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+  if (!(lan_conf_auth_section = bmc_section_create("Lan_Conf_Auth")))
+    goto cleanup;
 
   add_keyvalue (lan_conf_auth_section,
 		"Callback_Enable_Auth_Type_None",
@@ -2586,4 +2578,9 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 		oem_oem_proprietary_validate);
 
   return lan_conf_auth_section;
+
+ cleanup:
+  if (lan_conf_auth_section)
+    bmc_section_destroy(lan_conf_auth_section);
+  return NULL;
 }

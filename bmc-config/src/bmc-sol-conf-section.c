@@ -138,7 +138,7 @@ enable_sol_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -217,7 +217,7 @@ sol_privilege_level_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    privilege_level_string (got_value));
@@ -313,7 +313,7 @@ force_sol_payload_authentication_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -407,7 +407,7 @@ force_sol_payload_encryption_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -498,7 +498,7 @@ character_accumulate_interval_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -599,7 +599,7 @@ character_send_threshold_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -703,7 +703,7 @@ sol_retry_count_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -809,7 +809,7 @@ sol_retry_interval_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -891,7 +891,7 @@ non_volatile_bit_rate_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    sol_bit_rate_string (got_value));
@@ -965,7 +965,7 @@ volatile_bit_rate_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    sol_bit_rate_string (got_value));
@@ -1034,7 +1034,7 @@ port_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -1063,17 +1063,9 @@ struct section *
 bmc_sol_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section * sol_conf_section = NULL;
-  
-  if (!(sol_conf_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(sol_conf_section->section = strdup ("SOL_Conf")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+
+  if (!(sol_conf_section = bmc_section_create("SOL_Conf")))
+    goto cleanup;
 
   add_keyvalue (sol_conf_section,
 		"Enable_SOL",
@@ -1173,5 +1165,11 @@ bmc_sol_conf_section_get (struct bmc_config_arguments *args)
 		port_commit,
 		port_diff,
 		port_validate);
+
   return sol_conf_section;
+
+ cleanup:
+  if (sol_conf_section)
+    bmc_section_destroy(sol_conf_section);
+  return NULL;
 }

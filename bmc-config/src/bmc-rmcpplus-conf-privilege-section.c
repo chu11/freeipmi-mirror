@@ -63,7 +63,7 @@ id_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    rmcpplus_priv_string (priv));
@@ -468,17 +468,9 @@ struct section *
 bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 {
   struct section *rmcpplus_conf_privilege_section = NULL;
-  
-  if (!(rmcpplus_conf_privilege_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(rmcpplus_conf_privilege_section->section = strdup ("Rmcpplus_Conf_Privilege")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+
+  if (!(rmcpplus_conf_privilege_section = bmc_section_create ("Rmcpplus_Conf_Privilege")))
+    goto cleanup;
 
   add_keyvalue (rmcpplus_conf_privilege_section,
 		"Maximum_Privilege_Cipher_Suite_Id_0",
@@ -616,5 +608,10 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 		id_validate);
 
   return rmcpplus_conf_privilege_section;
+
+ cleanup:
+  if (rmcpplus_conf_privilege_section)
+    bmc_section_destroy (rmcpplus_conf_privilege_section);
+  return NULL;
 }
 

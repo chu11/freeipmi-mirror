@@ -24,7 +24,7 @@ username_checkout (const struct bmc_config_arguments *args,
   uint8_t userid;
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
 
-  userid = atoi (sect->section + strlen ("User"));
+  userid = atoi (sect->section_name + strlen ("User"));
   if (get_bmc_username (args->dev,
 			userid,
 			username,
@@ -49,7 +49,7 @@ username_commit (const struct bmc_config_arguments *args,
 		 const struct keyvalue *kv)
 {
   uint8_t userid;
-  userid = atoi (sect->section + strlen ("User"));
+  userid = atoi (sect->section_name + strlen ("User"));
 
   if (!kv->value)
     return -1;
@@ -67,7 +67,7 @@ username_diff (const struct bmc_config_arguments *args,
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
   int ret;
 
-  userid = atoi (sect->section + strlen ("User"));
+  userid = atoi (sect->section_name + strlen ("User"));
   if (get_bmc_username (args->dev,
 			userid,
 			username,
@@ -90,7 +90,7 @@ username_diff (const struct bmc_config_arguments *args,
     }
 
   if (ret == 1)
-    report_diff (sect->section,
+    report_diff (sect->section_name,
 		 kv->key,
 		 kv->value,
 		 (char *)username);
@@ -103,7 +103,7 @@ username_validate (const struct bmc_config_arguments *args,
 		   const char *value)
 {
   uint8_t userid;
-  userid = atoi (sect->section + strlen ("User"));
+  userid = atoi (sect->section_name + strlen ("User"));
 
   if (userid == 1) 
     {
@@ -129,7 +129,7 @@ enable_user_checkout (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      struct keyvalue *kv)
 {
-  int userid = atoi (sect->section + strlen ("User"));
+  int userid = atoi (sect->section_name + strlen ("User"));
   uint8_t tmp_user_ipmi_messaging;
   uint8_t tmp_user_link_authentication;
   uint8_t tmp_user_restricted_to_callback;
@@ -191,7 +191,7 @@ enable_user_commit (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
-  int userid = atoi (sect->section + strlen ("User"));
+  int userid = atoi (sect->section_name + strlen ("User"));
   return set_bmc_enable_user (args->dev,
 			      userid,
 			      same (kv->value, "yes"));
@@ -202,7 +202,7 @@ enable_user_diff (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
-  int userid = atoi (sect->section + strlen ("User"));
+  int userid = atoi (sect->section_name + strlen ("User"));
   uint8_t tmp_user_ipmi_messaging;
   uint8_t tmp_user_link_authentication;
   uint8_t tmp_user_restricted_to_callback;
@@ -238,7 +238,7 @@ enable_user_diff (const struct bmc_config_arguments *args,
       else
         {
           ret = 1;
-          report_diff (sect->section,
+          report_diff (sect->section_name,
                        kv->key,
                        kv->value,
                        (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED) ? "Yes" : "No");
@@ -278,7 +278,7 @@ password_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return set_bmc_user_password (args->dev,
 				userid, (uint8_t *)kv->value);
 }
@@ -288,13 +288,13 @@ password_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   int ret;
   ret = check_bmc_user_password (args->dev,
 				 userid,
 				 (uint8_t *)kv->value);
   if (!ret)
-    report_diff (sect->section,
+    report_diff (sect->section_name,
 		 kv->key,
 		 kv->value,
 		 "<something else>");
@@ -316,7 +316,7 @@ password20_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
 
   /* achu: password can't be checked out, but we should make sure IPMI
    * 2.0 exists on the system.
@@ -343,7 +343,7 @@ password20_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return set_bmc_user_password20 (args->dev,
 				  userid,
 				  (uint8_t *)kv->value);
@@ -354,13 +354,13 @@ password20_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   int ret = check_bmc_user_password20 (args->dev,
 				       userid,
 				       (uint8_t *)kv->value);
 
   if (!ret)
-    report_diff (sect->section,
+    report_diff (sect->section_name,
 		 kv->key,
 		 kv->value,
 		 "<something else>");
@@ -484,7 +484,7 @@ lan_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -527,7 +527,7 @@ lan_enable_ipmi_msgs_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return lan_channel_set (args->dev,
 			  userid,
 			  same (kv->value, "yes"), 1,
@@ -542,7 +542,7 @@ lan_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -565,7 +565,7 @@ lan_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -588,7 +588,7 @@ lan_enable_link_auth_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -631,7 +631,7 @@ lan_enable_link_auth_commit (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return lan_channel_set (args->dev,
                           userid,
                           0, 0,
@@ -646,7 +646,7 @@ lan_enable_link_auth_diff (const struct bmc_config_arguments *args,
                            const struct section *sect,
                            const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -669,7 +669,7 @@ lan_enable_link_auth_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -692,7 +692,7 @@ lan_enable_restricted_to_callback_checkout (const struct bmc_config_arguments *a
                                             const struct section *sect,
                                             struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -735,7 +735,7 @@ lan_enable_restricted_to_callback_commit (const struct bmc_config_arguments *arg
                                           const struct section *sect,
                                           const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return lan_channel_set (args->dev,
                           userid,
                           0, 0,
@@ -750,7 +750,7 @@ lan_enable_restricted_to_callback_diff (const struct bmc_config_arguments *args,
                                         const struct section *sect,
                                         const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -773,7 +773,7 @@ lan_enable_restricted_to_callback_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -796,7 +796,7 @@ lan_privilege_limit_checkout (const struct bmc_config_arguments *args,
                               const struct section *sect,
                               struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -828,7 +828,7 @@ lan_privilege_limit_commit (const struct bmc_config_arguments *args,
                             const struct section *sect,
                             const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return lan_channel_set (args->dev,
                           userid,
                           0, 0,
@@ -843,7 +843,7 @@ lan_privilege_limit_diff (const struct bmc_config_arguments *args,
                           const struct section *sect,
                           const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -866,7 +866,7 @@ lan_privilege_limit_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_privilege_limit_string (get_val));
@@ -890,7 +890,7 @@ lan_session_limit_checkout (const struct bmc_config_arguments *args,
                             const struct section *sect,
                             struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -918,7 +918,7 @@ lan_session_limit_commit (const struct bmc_config_arguments *args,
                           const struct section *sect,
                           const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return lan_channel_set (args->dev,
                           userid,
                           0, 0,
@@ -933,7 +933,7 @@ lan_session_limit_diff (const struct bmc_config_arguments *args,
                         const struct section *sect,
                         const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -958,7 +958,7 @@ lan_session_limit_diff (const struct bmc_config_arguments *args,
       char num[32];
       sprintf (num, "%d", get_val);
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -990,7 +990,7 @@ sol_payload_access_checkout (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              struct keyvalue *kv)
 {
-  int userid = atoi (sect->section + strlen ("User"));
+  int userid = atoi (sect->section_name + strlen ("User"));
   uint8_t have_access;
   int ret;
 
@@ -1040,7 +1040,7 @@ sol_payload_access_commit (const struct bmc_config_arguments *args,
                            const struct section *sect,
                            const struct keyvalue *kv)
 {
-  int userid = atoi (sect->section + strlen ("User"));
+  int userid = atoi (sect->section_name + strlen ("User"));
   uint8_t operation;
 
   if (same (kv->value, "yes"))
@@ -1060,7 +1060,7 @@ sol_payload_access_diff (const struct bmc_config_arguments *args,
                          const struct section *sect,
                          const struct keyvalue *kv)
 {
-  int userid = atoi (sect->section + strlen ("User"));
+  int userid = atoi (sect->section_name + strlen ("User"));
   uint8_t have_access;
   uint8_t passed_value;
   int ret;
@@ -1092,7 +1092,7 @@ sol_payload_access_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    have_access ? "Yes" : "No");
@@ -1217,7 +1217,7 @@ serial_enable_ipmi_msgs_checkout (const struct bmc_config_arguments *args,
                                   const struct section *sect,
                                   struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
   
@@ -1260,7 +1260,7 @@ serial_enable_ipmi_msgs_commit (const struct bmc_config_arguments *args,
                                 const struct section *sect,
                                 const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return serial_channel_set (args->dev,
                              userid,
                              same (kv->value, "yes"), 1,
@@ -1275,7 +1275,7 @@ serial_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
                               const struct section *sect,
                               const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -1298,7 +1298,7 @@ serial_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -1321,7 +1321,7 @@ serial_enable_link_auth_checkout (const struct bmc_config_arguments *args,
                                   const struct section *sect,
                                   struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -1364,7 +1364,7 @@ serial_enable_link_auth_commit (const struct bmc_config_arguments *args,
                                 const struct section *sect,
                                 const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return serial_channel_set (args->dev,
                              userid,
                              0, 0,
@@ -1379,7 +1379,7 @@ serial_enable_link_auth_diff (const struct bmc_config_arguments *args,
                               const struct section *sect,
                               const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -1402,7 +1402,7 @@ serial_enable_link_auth_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -1425,7 +1425,7 @@ serial_enable_restricted_to_callback_checkout (const struct bmc_config_arguments
                                                const struct section *sect,
                                                struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -1468,7 +1468,7 @@ serial_enable_restricted_to_callback_commit (const struct bmc_config_arguments *
                                              const struct section *sect,
                                              const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return serial_channel_set (args->dev,
                              userid,
                              0, 0,
@@ -1483,7 +1483,7 @@ serial_enable_restricted_to_callback_diff (const struct bmc_config_arguments *ar
                                            const struct section *sect,
                                            const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -1506,7 +1506,7 @@ serial_enable_restricted_to_callback_diff (const struct bmc_config_arguments *ar
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -1529,7 +1529,7 @@ serial_privilege_limit_checkout (const struct bmc_config_arguments *args,
                                  const struct section *sect,
                                  struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
 
@@ -1561,7 +1561,7 @@ serial_privilege_limit_commit (const struct bmc_config_arguments *args,
                                const struct section *sect,
                                const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return serial_channel_set (args->dev,
                              userid,
                              0, 0,
@@ -1576,7 +1576,7 @@ serial_privilege_limit_diff (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
   int ret;
@@ -1599,7 +1599,7 @@ serial_privilege_limit_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_privilege_limit_string (get_val));
@@ -1623,7 +1623,7 @@ serial_session_limit_checkout (const struct bmc_config_arguments *args,
                                const struct section *sect,
                                struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
   
@@ -1651,7 +1651,7 @@ serial_session_limit_commit (const struct bmc_config_arguments *args,
                              const struct section *sect,
                              const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   return serial_channel_set (args->dev,
                              userid,
                              0, 0,
@@ -1666,7 +1666,7 @@ serial_session_limit_diff (const struct bmc_config_arguments *args,
                            const struct section *sect,
                            const struct keyvalue *kv)
 {
-  uint8_t userid = atoi (sect->section + strlen ("User"));
+  uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   unsigned long int passed_val;
   int ret;
@@ -1691,7 +1691,7 @@ serial_session_limit_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", get_val);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -1720,6 +1720,7 @@ struct section *
 bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 {
   struct section *user_section = NULL;
+  char buf[64];
 
   if (userid < 0)
     {
@@ -1727,12 +1728,10 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
       return NULL;
     }
 
-  if (!(user_section = (void *) calloc (1, sizeof (*user_section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  asprintf ((char **)&user_section->section, "User%d", userid + 1);
+  snprintf(buf, 64, "User%d", userid + 1);
+
+  if (!(user_section = bmc_section_create(buf)))
+    goto cleanup;
 
   add_keyvalue (user_section,
                 "Username",
@@ -1890,4 +1889,8 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 serial_session_limit_validate);
 
   return user_section;
+
+ cleanup:
+  bmc_section_destroy(user_section);
+  return NULL;
 }

@@ -55,7 +55,7 @@ _add_section(struct section **sections, struct section *sect)
 }
 
 struct section *
-bmc_sections_create (struct bmc_config_arguments *args)
+bmc_config_sections_create (struct bmc_config_arguments *args)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
@@ -130,34 +130,71 @@ bmc_sections_create (struct bmc_config_arguments *args)
   return sections;
 
  cleanup:
-  bmc_sections_destroy(sections);
+  bmc_config_sections_destroy(sections);
   return NULL;
 }
 
 void 
-bmc_sections_destroy(struct section *sections)
+bmc_config_sections_destroy(struct section *sections)
 {
   if (sections)
     {
       while (sections)
 	{
 	  struct section *sections_next = sections->next;
-
-	  while (sections->keyvalues)
-	    {
-	      struct keyvalue *keyvalue_next = sections->keyvalues->next;
-
-	      if (sections->keyvalues->value)
-		free(sections->keyvalues->value);
-	      
-	      free(sections->keyvalues);
-	      sections->keyvalues = keyvalue_next;
-	    }
-
-	  free((char *)sections->section);
-	  free(sections);
+	  bmc_section_destroy(sections);
 	  sections = sections_next;
 	}
+    }
+}
+
+struct section * 
+bmc_section_create (char *section_name)
+{
+  struct section *section = NULL;
+
+  if (!section_name)
+    return NULL;
+
+  if (!(section = (struct section *) calloc (1, sizeof(*section))))
+    {
+      perror("calloc");
+      goto cleanup;
+    }
+
+  if (!(section->section_name = strdup(section_name)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+
+  return section;
+ cleanup:
+  if (section)
+    bmc_section_destroy (section);
+  return NULL;
+}
+
+void 
+bmc_section_destroy (struct section *section)
+{
+  if (section)
+    {
+      if (section->section_name)
+	free(section->section_name);
+      
+      while (section->keyvalues)
+	{
+	  struct keyvalue *keyvalue_next = section->keyvalues->next;
+
+	  if (section->keyvalues->value)
+	    free(section->keyvalues->value);
+
+	  free(section->keyvalues);
+	  section->keyvalues = keyvalue_next;
+	}
+
+      free(section);
     }
 }
 
@@ -169,7 +206,7 @@ bmc_section_find_section (const char *section_name,
 
   while (sect) 
     {
-      if (same (section_name, sect->section))
+      if (same (section_name, sect->section_name))
         break;
       sect = sect->next;
     }
@@ -325,7 +362,7 @@ bmc_sections_list (struct bmc_config_arguments *args,
 
   while (sect)
     {
-      printf("%s\n", sect->section); 
+      printf("%s\n", sect->section_name); 
       sect = sect->next;
     }
 

@@ -131,7 +131,7 @@ volatile_access_mode_diff (const struct bmc_config_arguments *args,
     ret = 0; 
   else
     {
-      report_diff (sect->section, 
+      report_diff (sect->section_name, 
                    kv->key,
                    kv->value,
                    channel_access_mode_string (get_val));
@@ -233,7 +233,7 @@ volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -335,7 +335,7 @@ volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -438,7 +438,7 @@ volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -529,7 +529,7 @@ volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    privilege_level_string (get_val));
@@ -675,7 +675,7 @@ non_volatile_access_mode_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -774,7 +774,7 @@ non_volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *arg
      ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -874,7 +874,7 @@ non_volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -975,7 +975,7 @@ non_volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -1066,7 +1066,7 @@ non_volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
     ret = 0;
   else 
     {
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    privilege_level_string (get_val));
@@ -1091,17 +1091,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 {
   struct section * lan_channel_section = NULL;
 
-  if (!(lan_channel_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-
-  if (!(lan_channel_section->section = strdup ("Lan_Channel")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+  if (!(lan_channel_section = bmc_section_create ("Lan_Channel")))
+    goto cleanup;
 
   add_keyvalue (lan_channel_section,
 		"Volatile_Access_Mode",
@@ -1194,5 +1185,10 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 		non_volatile_channel_priv_limit_validate);
 
   return lan_channel_section;
+
+ cleanup:
+  if (lan_channel_section)
+    bmc_section_destroy(lan_channel_section);
+  return NULL;
 }
 

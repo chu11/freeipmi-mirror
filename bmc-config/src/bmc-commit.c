@@ -100,7 +100,7 @@ bmc_keypair_feed (struct bmc_config_arguments *args,
       found_section = 0;
       while (sect) 
         {
-          if (!strcasecmp(sect->section, section_name))
+          if (!strcasecmp(sect->section_name, section_name))
             {
               struct keyvalue *kv = sect->keyvalues;
               int found_key = 0;
@@ -194,7 +194,7 @@ bmc_commit_file (struct bmc_config_arguments *args,
                 {
                   ret = kv->commit (args, sect, kv);
                   if (ret != 0)
-		    fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section, kv->key);
+		    fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key);
                 }
               kv = kv->next;
             }

@@ -163,7 +163,7 @@ _bmc_config (void *arg)
         }
     }
 
-  if (!(sections = bmc_sections_create (prog_data->args)))
+  if (!(sections = bmc_config_sections_create (prog_data->args)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -200,7 +200,7 @@ _bmc_config (void *arg)
     ipmi_close_device(prog_data->args->dev);
 #endif
   if (sections)
-    bmc_sections_destroy(sections);
+    bmc_config_sections_destroy(sections);
   return exit_code;
 }
 

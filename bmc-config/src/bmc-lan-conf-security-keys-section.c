@@ -59,7 +59,7 @@ k_r_diff (const struct bmc_config_arguments *args,
   if (strcmp (kv->value?kv->value:"", (char *)k_r)) 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    (char *)k_r);
@@ -135,7 +135,7 @@ k_g_diff (const struct bmc_config_arguments *args,
   if (strcmp (kv->value?kv->value:"", (char *)k_g)) 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    (char *)k_g);
@@ -159,16 +159,8 @@ bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
 {
   struct section *lan_conf_security_keys_section = NULL;
 
-  if (!(lan_conf_security_keys_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(lan_conf_security_keys_section->section = strdup ("Lan_Conf_Security_Keys")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+  if (!(lan_conf_security_keys_section = bmc_section_create ("Lan_Conf_Security_Keys")))
+    goto cleanup;
 
   add_keyvalue (lan_conf_security_keys_section,
 		"K_R",
@@ -189,4 +181,9 @@ bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
 		k_g_validate);
 
   return lan_conf_security_keys_section;
+
+ cleanup:
+  if (lan_conf_security_keys_section)
+    bmc_section_destroy(lan_conf_security_keys_section);
+  return NULL;
 }

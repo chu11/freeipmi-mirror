@@ -61,7 +61,7 @@ power_restore_policy_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    power_restore_policy_string (got_value));
@@ -82,16 +82,8 @@ bmc_misc_section_get (struct bmc_config_arguments *args)
 {
   struct section *misc_section = NULL;
 
-  if (!(misc_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(misc_section->section = strdup ("Misc")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+  if (!(misc_section = bmc_section_create ("Misc")))
+    goto cleanup;
 
   add_keyvalue (misc_section,
 		"Power_Restore_Policy",
@@ -103,4 +95,9 @@ bmc_misc_section_get (struct bmc_config_arguments *args)
 		power_restore_policy_validate);
 
   return misc_section;
+
+ cleanup:
+  if (misc_section)
+    bmc_section_destroy(misc_section);
+  return NULL;
 }

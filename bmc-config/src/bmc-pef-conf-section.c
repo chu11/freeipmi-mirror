@@ -160,7 +160,7 @@ enable_pef_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -255,7 +255,7 @@ enable_pef_event_messages_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -350,7 +350,7 @@ enable_pef_startup_delay_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -446,7 +446,7 @@ enable_pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -645,7 +645,7 @@ enable_alert_action_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -745,7 +745,7 @@ enable_power_down_action_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -845,7 +845,7 @@ enable_reset_action_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -945,7 +945,7 @@ enable_power_cycle_action_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -1046,7 +1046,7 @@ enable_oem_action_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -1147,7 +1147,7 @@ enable_diagnostic_interrupt_diff (const struct bmc_config_arguments *args,
   else 
     {
       ret = 1;
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -1218,7 +1218,7 @@ pef_startup_delay_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -1299,7 +1299,7 @@ pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
       char num[32];
       ret = 1;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section,
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    num);
@@ -1330,16 +1330,9 @@ struct section *
 bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 {
   struct section *pef_section;
-  if (!(pef_section = (void *) calloc (1, sizeof (struct section))))
-    {
-      perror("calloc");
-      return NULL;
-    }
-  if (!(pef_section->section = strdup ("PEF_Conf")))
-    {
-      perror("strdup");
-      return NULL;
-    }
+
+  if (!(pef_section = bmc_section_create ("PEF_Conf")))
+    goto cleanup;
 
   add_keyvalue (pef_section,
 		"Enable_PEF",
@@ -1449,7 +1442,11 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 		pef_alert_startup_delay_diff,
 		pef_alert_startup_delay_validate);
 
-
   return pef_section;
+
+ cleanup:
+  if (pef_section)
+    bmc_section_destroy(pef_section);
+  return NULL;
 }
 

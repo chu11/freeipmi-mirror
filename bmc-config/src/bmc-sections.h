@@ -55,7 +55,7 @@
 
 struct section {
   struct section *next;
-  const char *section;
+  char *section_name;
   struct keyvalue *keyvalues;
 };
 
@@ -89,9 +89,13 @@ struct keyvalue {
 		   const char *value);
 };
 
-struct section * bmc_sections_create (struct bmc_config_arguments *args);
+struct section * bmc_config_sections_create (struct bmc_config_arguments *args);
 
-void bmc_sections_destroy(struct section *sections);
+void bmc_config_sections_destroy (struct section *sections);
+
+struct section * bmc_section_create (char *section_name);
+
+void bmc_section_destroy (struct section *section);
 
 struct keyvalue * bmc_section_find_keyvalue (const char *section_name,
 					     const char *key_name,
