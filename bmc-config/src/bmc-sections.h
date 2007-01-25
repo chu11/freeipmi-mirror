@@ -89,7 +89,9 @@ struct keyvalue {
 		   const char *value);
 };
 
-struct section * bmc_sections_init (struct bmc_config_arguments *args);
+struct section * bmc_sections_create (struct bmc_config_arguments *args);
+
+void bmc_sections_destroy(struct section *sections);
 
 struct keyvalue * bmc_section_find_keyvalue (const char *section_name,
 					     const char *key_name,

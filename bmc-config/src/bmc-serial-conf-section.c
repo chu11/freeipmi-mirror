@@ -391,7 +391,11 @@ connect_mode_checkout (const struct bmc_config_arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = connect_mode_string (value);
+  if (!(kv->value = connect_mode_string (value)))
+    {
+      perror("strdup");
+      return -1;
+    }
 
   return 0;
 }

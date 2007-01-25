@@ -19,11 +19,10 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
+#include "bmc-config.h"
 #include "bmc-common.h"
 #include "bmc-sections.h"
-
 #include "bmc-user-sections.h"
-
 #include "bmc-lan-channel-section.h"
 #include "bmc-lan-conf-section.h"
 #include "bmc-lan-conf-auth-section.h"
@@ -36,19 +35,27 @@
 #include "bmc-sol-conf-section.h"
 #include "bmc-misc-section.h"
 
-#define add_section(db, extra) do { \
-  if (db) {                         \
-    struct section *trav = db;      \
-    while (trav->next)              \
-      trav = trav->next;            \
-    trav->next = extra;             \
-  } else {                          \
-    db = extra;                     \
-  }                                 \
-} while (0)
+static int
+_add_section(struct section **sections, struct section *sect)
+{
+  if (!sections || !sect)
+    return -1;
+  
+  if (*sections)
+    {
+      struct section *trav = *sections;
+      while (trav->next)
+	trav = trav->next;
+      trav->next = sect;
+    }
+  else
+    *sections = sect;
+
+  return 0;
+}
 
 struct section *
-bmc_sections_init (struct bmc_config_arguments *args)
+bmc_sections_create (struct bmc_config_arguments *args)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
@@ -60,55 +67,98 @@ bmc_sections_init (struct bmc_config_arguments *args)
   for (i = 0; i < num_users; i++)
     {
       if (!(sect = bmc_user_section_get(args, i)))
-	return NULL;
-      add_section (sections, sect);
+	goto cleanup;
+      if (_add_section (&sections, sect) < 0)
+	goto cleanup;
     }
   
   if (!(sect = bmc_lan_channel_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_lan_conf_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_lan_conf_auth_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_lan_conf_security_keys_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_lan_conf_misc_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_rmcpplus_conf_privilege_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_serial_channel_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_serial_conf_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_pef_conf_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_sol_conf_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   if (!(sect = bmc_misc_section_get (args)))
-    return NULL;
-  add_section (sections, sect);
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
 
   return sections;
+
+ cleanup:
+  bmc_sections_destroy(sections);
+  return NULL;
+}
+
+void 
+bmc_sections_destroy(struct section *sections)
+{
+  if (sections)
+    {
+      while (sections)
+	{
+	  struct section *sections_next = sections->next;
+
+	  while (sections->keyvalues)
+	    {
+	      struct keyvalue *keyvalue_next = sections->keyvalues->next;
+
+	      if (sections->keyvalues->value)
+		free(sections->keyvalues->value);
+	      
+	      free(sections->keyvalues);
+	      sections->keyvalues = keyvalue_next;
+	    }
+
+	  free((char *)sections->section);
+	  free(sections);
+	  sections = sections_next;
+	}
+    }
 }
 
 static struct section *

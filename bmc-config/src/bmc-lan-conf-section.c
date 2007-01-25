@@ -24,7 +24,11 @@ ip_address_source_checkout (const struct bmc_config_arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = ip_address_source_string (source);
+  if (!(kv->value = strdup (ip_address_source_string (source))))
+    {
+      perror("strdup");
+      return -1;
+    }
 
   return 0;
 }

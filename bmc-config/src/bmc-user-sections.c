@@ -1719,7 +1719,7 @@ serial_session_limit_validate (const struct bmc_config_arguments *args,
 struct section *
 bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 {
-  struct section *this_section = NULL;
+  struct section *user_section = NULL;
 
   if (userid < 0)
     {
@@ -1727,14 +1727,14 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
       return NULL;
     }
 
-  if (!(this_section = (void *) calloc (1, sizeof (*this_section))))
+  if (!(user_section = (void *) calloc (1, sizeof (*user_section))))
     {
       perror("calloc");
       return NULL;
     }
-  asprintf ((char **)&this_section->section, "User%d", userid + 1);
+  asprintf ((char **)&user_section->section, "User%d", userid + 1);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Username",
                 "Give Username",
                 0,
@@ -1743,7 +1743,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 username_diff,
                 username_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Enable_User",
                 "Possible values: Yes/No or blank to not set",
                 BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
@@ -1752,7 +1752,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 enable_user_diff,
                 enable_user_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Password",
                 "Give password or blank to clear. MAX 16 chars.",
                 BMC_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1761,7 +1761,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 password_diff,
                 password_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Password20",
                 "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
                 BMC_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1770,7 +1770,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 password20_diff,
                 password20_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Lan_Enable_IPMI_Msgs",
                 "Possible values: Yes/No",
                 0,
@@ -1779,7 +1779,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 lan_enable_ipmi_msgs_diff,
                 lan_enable_ipmi_msgs_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Lan_Enable_Link_Auth",
                 "Possible values: Yes/No",
                 0,
@@ -1788,7 +1788,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 lan_enable_link_auth_diff,
                 lan_enable_link_auth_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Lan_Enable_Restricted_to_Callback",
                 "Possible values: Yes/No",
                 0,
@@ -1798,7 +1798,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 lan_enable_restricted_to_callback_validate);
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Lan_Enable_Restrict_to_Callback",
                 "Possible values: Yes/No",
                 BMC_DO_NOT_CHECKOUT,
@@ -1807,7 +1807,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 lan_enable_restricted_to_callback_diff,
                 lan_enable_restricted_to_callback_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Lan_Privilege_Limit",
                 "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                 0,
@@ -1816,7 +1816,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 lan_privilege_limit_diff,
                 lan_privilege_limit_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Lan_Session_Limit",
                 "Possible values: 0-255, 0 is unlimited",
                 BMC_DO_NOT_CHECKOUT,
@@ -1825,7 +1825,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 lan_session_limit_diff,
                 lan_session_limit_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "SOL_Payload_Access",
                 "Possible values: Yes/No",
                 0,
@@ -1834,7 +1834,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 sol_payload_access_diff,
                 sol_payload_access_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Serial_Enable_IPMI_Msgs",
                 "Possible values: Yes/No",
                 0,
@@ -1843,7 +1843,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 serial_enable_ipmi_msgs_diff,
                 serial_enable_ipmi_msgs_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Serial_Enable_Link_Auth",
                 "Possible values: Yes/No",
                 0,
@@ -1852,7 +1852,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 serial_enable_link_auth_diff,
                 serial_enable_link_auth_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Serial_Enable_Restricted_to_Callback",
                 "Possible values: Yes/No",
                 0,
@@ -1862,7 +1862,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 serial_enable_restricted_to_callback_validate);
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Serial_Enable_Restrict_to_Callback",
                 "Possible values: Yes/No",
                 BMC_DO_NOT_CHECKOUT,
@@ -1871,7 +1871,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 serial_enable_restricted_to_callback_diff,
                 serial_enable_restricted_to_callback_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Serial_Privilege_Limit",
                 "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
                 0,
@@ -1880,7 +1880,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 serial_privilege_limit_diff,
                 serial_privilege_limit_validate);
 
-  add_keyvalue (this_section,
+  add_keyvalue (user_section,
                 "Serial_Session_Limit",
                 "Possible values: 0-255, 0 is unlimited",
                 BMC_DO_NOT_CHECKOUT,
@@ -1889,5 +1889,5 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
                 serial_session_limit_diff,
                 serial_session_limit_validate);
 
-  return this_section;
+  return user_section;
 }

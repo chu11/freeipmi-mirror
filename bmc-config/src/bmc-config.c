@@ -85,7 +85,7 @@ static int
 _bmc_config (void *arg)
 {
   bmc_config_prog_data_t *prog_data;
-  struct section *sections;
+  struct section *sections = NULL;
   int exit_code = -1;
   int ret;
 
@@ -163,7 +163,7 @@ _bmc_config (void *arg)
         }
     }
 
-  if (!(sections = bmc_sections_init (prog_data->args)))
+  if (!(sections = bmc_sections_create (prog_data->args)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -199,6 +199,8 @@ _bmc_config (void *arg)
   if (prog_data->args->dev)
     ipmi_close_device(prog_data->args->dev);
 #endif
+  if (sections)
+    bmc_sections_destroy(sections);
   return exit_code;
 }
 
