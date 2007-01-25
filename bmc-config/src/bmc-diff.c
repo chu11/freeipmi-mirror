@@ -117,10 +117,11 @@ bmc_diff (struct bmc_config_arguments *args,
   return ret;
 }
 
-void report_diff (const char *section, 
-		  const char *key, 
-		  const char *input_value,
-		  const char *actual_value)
+void 
+report_diff (const char *section, 
+	     const char *key, 
+	     const char *input_value,
+	     const char *actual_value)
 {
   printf ("%s:%s - input=`%s':actual=`%s'\n",
 	  section, key, input_value, actual_value);
