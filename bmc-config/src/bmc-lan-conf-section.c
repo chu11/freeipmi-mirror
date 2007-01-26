@@ -4,7 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
-
+#include "bmc-validate.h"
 
 #define BMC_MAXIPADDRLEN 16
 
@@ -73,16 +73,6 @@ ip_address_source_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-ip_address_source_validate (const struct bmc_config_arguments *args,
-			    const struct section *sect,
-			    const char *value)
-{
-  if (ip_address_source_number (value) >= 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 ip_address_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
@@ -145,18 +135,6 @@ ip_address_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-ip_address_validate (const struct bmc_config_arguments *args,
-		     const struct section *sect,
-		     const char *value)
-{
-  struct in_addr a;
-  
-  if (inet_aton (value, &a))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 mac_address_checkout (const struct bmc_config_arguments *args,
 		      const struct section *sect,
@@ -216,25 +194,6 @@ mac_address_diff (const struct bmc_config_arguments *args,
                    mac);
     }
   return ret;
-}
-
-static bmc_validate_t
-mac_address_validate (const struct bmc_config_arguments *args,
-		      const struct section *sect,
-		      const char *value)
-{
-  unsigned int foo;
-
-  if (sscanf (value, 
-              "%02x:%02x:%02x:%02x:%02x:%02x", 
-              &foo,
-              &foo,
-              &foo, 
-              &foo,
-              &foo, 
-              &foo) == 6)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 static bmc_err_t
@@ -299,19 +258,6 @@ subnet_mask_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-subnet_mask_validate (const struct bmc_config_arguments *args,
-		      const struct section *sect,
-		      const char *value)
-{
-  /* TODO: checking valid netmask is not same as checking valid IP */
-  struct in_addr a;
-  
-  if (inet_aton (value, &a))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 default_gateway_address_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
@@ -372,18 +318,6 @@ default_gateway_address_diff (const struct bmc_config_arguments *args,
                    ip);
     }
   return ret;
-}
-
-static bmc_validate_t
-default_gateway_address_validate (const struct bmc_config_arguments *args,
-				  const struct section *sect,
-				  const char *value)
-{
-  struct in_addr a;
-  
-  if (inet_aton (value, &a))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 static bmc_err_t
@@ -447,27 +381,7 @@ default_gateway_mac_address_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-default_gateway_mac_address_validate (const struct bmc_config_arguments *args,
-				      const struct section *sect,
-				      const char *value)
-{
-  unsigned int foo;
-
-  if (sscanf (value, 
-              "%02x:%02x:%02x:%02x:%02x:%02x", 
-              &foo,
-              &foo,
-              &foo, 
-              &foo,
-              &foo, 
-              &foo) == 6)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* backup */
-
 
 static bmc_err_t
 backup_gateway_address_checkout (const struct bmc_config_arguments *args,
@@ -531,18 +445,6 @@ backup_gateway_address_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-backup_gateway_address_validate (const struct bmc_config_arguments *args,
-				 const struct section *sect,
-				 const char *value)
-{
-  struct in_addr a;
-  
-  if (inet_aton (value, &a))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 backup_gateway_mac_address_checkout (const struct bmc_config_arguments *args,
 				     const struct section *sect,
@@ -602,25 +504,6 @@ backup_gateway_mac_address_diff (const struct bmc_config_arguments *args,
                    mac);
     }
   return ret;
-}
-
-static bmc_validate_t
-backup_gateway_mac_address_validate (const struct bmc_config_arguments *args,
-				     const struct section *sect,
-				     const char *value)
-{
-  unsigned int foo;
-
-  if (sscanf (value, 
-              "%02x:%02x:%02x:%02x:%02x:%02x", 
-              &foo,
-              &foo,
-              &foo, 
-              &foo,
-              &foo, 
-              &foo) == 6)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 static bmc_err_t
@@ -712,12 +595,15 @@ vlan_id_validate (const struct bmc_config_arguments *args,
 		  const char *value)
 {
   char *endptr;
-  uint32_t num = strtoul (value, &endptr, 0);
+  long int num;
+
+  num = strtol (value, &endptr, 0);
 
   if (*endptr)
     return BMC_VALIDATE_INVALID_VALUE;
 
-  if (num == UINT_MAX || num == (uint32_t)(INT_MIN))
+  /* Vlan ids are 12 bits */
+  if (num < 0 || num > 4095)
     return BMC_VALIDATE_INVALID_VALUE;
 
   return BMC_VALIDATE_VALID_VALUE;
@@ -818,16 +704,6 @@ vlan_id_enable_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-vlan_id_enable_validate (const struct bmc_config_arguments *args,
-			 const struct section *sect,
-			 const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 vlan_priority_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
@@ -892,23 +768,6 @@ vlan_priority_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-vlan_priority_validate (const struct bmc_config_arguments *args,
-			const struct section *sect,
-			const char *value)
-{
-  char *endptr;
-  uint32_t num = strtoul (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (num < 0 || num > 255)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
 struct section *
 bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 {
@@ -924,7 +783,7 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				ip_address_source_checkout,
 				ip_address_source_commit,
 				ip_address_source_diff,
-				ip_address_source_validate) < 0) 
+				ip_address_source_number_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_section,
@@ -947,6 +806,7 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				mac_address_validate) < 0) 
     goto cleanup;
 
+  /* TODO: checking valid netmask is not same as checking valid IP */
   if (bmc_section_add_keyvalue (lan_conf_section,
 				"Subnet_Mask",
 				"Give valid Subnet Mask",
@@ -954,7 +814,7 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				subnet_mask_checkout,
 				subnet_mask_commit,
 				subnet_mask_diff,
-				subnet_mask_validate) < 0) 
+				ip_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_section,
@@ -964,7 +824,7 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				default_gateway_address_checkout,
 				default_gateway_address_commit,
 				default_gateway_address_diff,
-				default_gateway_address_validate) < 0) 
+				ip_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_section,
@@ -974,7 +834,7 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				default_gateway_mac_address_checkout,
 				default_gateway_mac_address_commit,
 				default_gateway_mac_address_diff,
-				default_gateway_mac_address_validate) < 0) 
+				mac_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_section,
@@ -984,7 +844,7 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				backup_gateway_address_checkout,
 				backup_gateway_address_commit,
 				backup_gateway_address_diff,
-				backup_gateway_address_validate) < 0) 
+				ip_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_section,
@@ -994,12 +854,12 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				backup_gateway_mac_address_checkout,
 				backup_gateway_mac_address_commit,
 				backup_gateway_mac_address_diff,
-				backup_gateway_mac_address_validate) < 0) 
+				mac_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_section,
 				"Vlan_id",
-				"Give valid number",
+				"Give valid unsigned number",
 				0,
 				vlan_id_checkout,
 				vlan_id_commit,
@@ -1014,17 +874,17 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
 				vlan_id_enable_checkout,
 				vlan_id_enable_commit,
 				vlan_id_enable_diff,
-				vlan_id_enable_validate) < 0) 
+				yes_no_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_section,
 				"Vlan_Priority",
-				"Give valid number",
+				"Give valid unsigned number",
 				0,
 				vlan_priority_checkout,
 				vlan_priority_commit,
 				vlan_priority_diff,
-				vlan_priority_validate) < 0) 
+				number_range_one_byte) < 0) 
     goto cleanup;
 
   return lan_conf_section;
@@ -1034,3 +894,4 @@ bmc_lan_conf_section_get (struct bmc_config_arguments *args)
     bmc_section_destroy(lan_conf_section);
   return NULL;
 }
+

@@ -4,7 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
-
+#include "bmc-validate.h"
 
 static bmc_err_t
 enable_gratuitous_arps_checkout (const struct bmc_config_arguments *args,
@@ -94,16 +94,6 @@ enable_gratuitous_arps_diff (const struct bmc_config_arguments *args,
                    (enable_arp) ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-enable_gratuitous_arps_validate (const struct bmc_config_arguments *args,
-				 const struct section *sect,
-				 const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* reply */
@@ -198,16 +188,6 @@ enable_arp_response_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_arp_response_validate (const struct bmc_config_arguments *args,
-			      const struct section *sect,
-			      const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 gratuitous_arp_interval_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
@@ -268,25 +248,6 @@ gratuitous_arp_interval_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-gratuitous_arp_interval_validate (const struct bmc_config_arguments *args,
-				  const struct section *sect,
-				  const char *value)
-{
-  char *endptr;
-  long int num;
-
-  num = strtol (value, &endptr, 0);
-  
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (num < 0 || num > 255)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
 struct section *
 bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
 {
@@ -302,7 +263,7 @@ bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
 				enable_gratuitous_arps_checkout,
 				enable_gratuitous_arps_commit,
 				enable_gratuitous_arps_diff,
-				enable_gratuitous_arps_validate) < 0)
+                                yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_misc_section,
@@ -312,7 +273,7 @@ bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
 				enable_arp_response_checkout,
 				enable_arp_response_commit,
 				enable_arp_response_diff,
-				enable_arp_response_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_misc_section,
@@ -322,9 +283,8 @@ bmc_lan_conf_misc_section_get (struct bmc_config_arguments *args)
 				gratuitous_arp_interval_checkout,
 				gratuitous_arp_interval_commit,
 				gratuitous_arp_interval_diff,
-				gratuitous_arp_interval_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
-
   return lan_conf_misc_section;
 
  cleanup:

@@ -4,6 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 static bmc_err_t
 id_checkout (const struct bmc_config_arguments *args,
@@ -72,16 +73,6 @@ id_diff (const struct bmc_config_arguments *args,
                    rmcpplus_priv_string (priv));
     }
   return ret;
-}
-
-static bmc_validate_t
-id_validate (const struct bmc_config_arguments *args,
-	       const struct section *sect,
-	       const char *value)
-{
-  if (rmcpplus_priv_number (value) >= 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 static bmc_err_t
@@ -465,7 +456,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_0_checkout,
 				id_0_commit,
 				id_0_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -475,7 +466,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_1_checkout,
 				id_1_commit,
 				id_1_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -485,7 +476,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_2_checkout,
 				id_2_commit,
 				id_2_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -495,7 +486,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_3_checkout,
 				id_3_commit,
 				id_3_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -505,7 +496,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_4_checkout,
 				id_4_commit,
 				id_4_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -515,7 +506,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_5_checkout,
 				id_5_commit,
 				id_5_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -525,7 +516,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_6_checkout,
 				id_6_commit,
 				id_6_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -535,7 +526,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_7_checkout,
 				id_7_commit,
 				id_7_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -545,7 +536,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_8_checkout,
 				id_8_commit,
 				id_8_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -555,7 +546,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_9_checkout,
 				id_9_commit,
 				id_9_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -565,7 +556,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_10_checkout,
 				id_10_commit,
 				id_10_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -575,7 +566,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_11_checkout,
 				id_11_commit,
 				id_11_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -585,7 +576,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_12_checkout,
 				id_12_commit,
 				id_12_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -595,7 +586,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_13_checkout,
 				id_13_commit,
 				id_13_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
@@ -605,7 +596,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				id_14_checkout,
 				id_14_commit,
 				id_14_diff,
-				id_validate) < 0)
+				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   return rmcpplus_conf_privilege_section;

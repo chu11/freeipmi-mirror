@@ -3,6 +3,7 @@
 #include "bmc-config-api.h"
 #include "bmc-diff.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 /* callback_none */
 
@@ -87,16 +88,6 @@ callback_none_diff (const struct bmc_config_arguments *args,
                    auth.callback.type_none ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-callback_none_validate (const struct bmc_config_arguments *args,
-			const struct section *sect,
-			const char *value)
-{  
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* callback_md2 */
@@ -184,16 +175,6 @@ callback_md2_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-callback_md2_validate (const struct bmc_config_arguments *args,
-			const struct section *sect,
-			const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* callback_md5 */
 
 static bmc_err_t
@@ -277,16 +258,6 @@ callback_md5_diff (const struct bmc_config_arguments *args,
                    auth.callback.type_md5 ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-callback_md5_validate (const struct bmc_config_arguments *args,
-			const struct section *sect,
-			const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* callback_straight_password */
@@ -374,16 +345,6 @@ callback_straight_password_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-callback_straight_password_validate (const struct bmc_config_arguments *args,
-				     const struct section *sect,
-				     const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* callback_oem_proprietary */
 
 static bmc_err_t
@@ -467,16 +428,6 @@ callback_oem_proprietary_diff (const struct bmc_config_arguments *args,
                    auth.callback.type_oem_proprietary ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-callback_oem_proprietary_validate (const struct bmc_config_arguments *args,
-				   const struct section *sect,
-				   const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* user */
@@ -566,16 +517,6 @@ user_none_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-user_none_validate (const struct bmc_config_arguments *args,
-		    const struct section *sect,
-		    const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* user_md2 */
 
 static bmc_err_t
@@ -659,16 +600,6 @@ user_md2_diff (const struct bmc_config_arguments *args,
                    auth.user.type_md2 ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-user_md2_validate (const struct bmc_config_arguments *args,
-			const struct section *sect,
-			const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* user_md5 */
@@ -756,16 +687,6 @@ user_md5_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-user_md5_validate (const struct bmc_config_arguments *args,
-		   const struct section *sect,
-		   const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* user_straight_password */
 
 static bmc_err_t
@@ -851,16 +772,6 @@ user_straight_password_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-user_straight_password_validate (const struct bmc_config_arguments *args,
-				 const struct section *sect,
-				 const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* user_oem_proprietary */
 
 static bmc_err_t
@@ -944,16 +855,6 @@ user_oem_proprietary_diff (const struct bmc_config_arguments *args,
                    auth.user.type_oem_proprietary ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-user_oem_proprietary_validate (const struct bmc_config_arguments *args,
-			       const struct section *sect,
-			       const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* operator */
@@ -1043,16 +944,6 @@ operator_none_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-operator_none_validate (const struct bmc_config_arguments *args,
-			const struct section *sect,
-			const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* operator_md2 */
 
 static bmc_err_t
@@ -1136,16 +1027,6 @@ operator_md2_diff (const struct bmc_config_arguments *args,
                    auth.operator.type_md2 ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-operator_md2_validate (const struct bmc_config_arguments *args,
-		       const struct section *sect,
-		       const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* operator_md5 */
@@ -1233,16 +1114,6 @@ operator_md5_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-operator_md5_validate (const struct bmc_config_arguments *args,
-		       const struct section *sect,
-		       const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* operator_straight_password */
 
 static bmc_err_t
@@ -1328,16 +1199,6 @@ operator_straight_password_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-operator_straight_password_validate (const struct bmc_config_arguments *args,
-				     const struct section *sect,
-				     const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* operator_oem_proprietary */
 
 static bmc_err_t
@@ -1421,16 +1282,6 @@ operator_oem_proprietary_diff (const struct bmc_config_arguments *args,
                    auth.operator.type_oem_proprietary ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-operator_oem_proprietary_validate (const struct bmc_config_arguments *args,
-				   const struct section *sect,
-				   const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* admin */
@@ -1521,16 +1372,6 @@ admin_none_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-admin_none_validate (const struct bmc_config_arguments *args,
-		     const struct section *sect,
-		     const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* admin_md2 */
 
 static bmc_err_t
@@ -1614,16 +1455,6 @@ admin_md2_diff (const struct bmc_config_arguments *args,
                    auth.admin.type_md2 ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-admin_md2_validate (const struct bmc_config_arguments *args,
-			const struct section *sect,
-			const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* admin_md5 */
@@ -1711,16 +1542,6 @@ admin_md5_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-admin_md5_validate (const struct bmc_config_arguments *args,
-		    const struct section *sect,
-		    const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* admin_straight_password */
 
 static bmc_err_t
@@ -1806,16 +1627,6 @@ admin_straight_password_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-admin_straight_password_validate (const struct bmc_config_arguments *args,
-				  const struct section *sect,
-				  const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* admin_oem_proprietary */
 
 static bmc_err_t
@@ -1899,16 +1710,6 @@ admin_oem_proprietary_diff (const struct bmc_config_arguments *args,
                    auth.admin.type_oem_proprietary ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-admin_oem_proprietary_validate (const struct bmc_config_arguments *args,
-				const struct section *sect,
-				const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* oem */
@@ -1998,16 +1799,6 @@ oem_none_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-oem_none_validate (const struct bmc_config_arguments *args,
-		   const struct section *sect,
-		   const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* oem_md2 */
 
 static bmc_err_t
@@ -2091,16 +1882,6 @@ oem_md2_diff (const struct bmc_config_arguments *args,
                    auth.oem.type_md2 ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-oem_md2_validate (const struct bmc_config_arguments *args,
-		  const struct section *sect,
-		  const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* oem_md5 */
@@ -2188,16 +1969,6 @@ oem_md5_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-oem_md5_validate (const struct bmc_config_arguments *args,
-		  const struct section *sect,
-		  const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* oem_straight_password */
 
 static bmc_err_t
@@ -2281,16 +2052,6 @@ oem_straight_password_diff (const struct bmc_config_arguments *args,
                    auth.oem.type_straight_password ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-oem_straight_password_validate (const struct bmc_config_arguments *args,
-				const struct section *sect,
-				const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* oem_oem_proprietary */
@@ -2378,16 +2139,6 @@ oem_oem_proprietary_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t 
-oem_oem_proprietary_validate (const struct bmc_config_arguments *args,
-			      const struct section *sect,
-			      const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 struct section *
 bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 {
@@ -2403,7 +2154,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				callback_none_checkout,
 				callback_none_commit,
 				callback_none_diff,
-				callback_none_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2413,7 +2164,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				callback_md2_checkout,
 				callback_md2_commit,
 				callback_md2_diff,
-				callback_md2_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2423,7 +2174,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				callback_md5_checkout,
 				callback_md5_commit,
 				callback_md5_diff,
-				callback_md5_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2433,7 +2184,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				callback_straight_password_checkout,
 				callback_straight_password_commit,
 				callback_straight_password_diff,
-				callback_straight_password_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2443,7 +2194,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				callback_oem_proprietary_checkout,
 				callback_oem_proprietary_commit,
 				callback_oem_proprietary_diff,
-				callback_oem_proprietary_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2453,7 +2204,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				user_none_checkout,
 				user_none_commit,
 				user_none_diff,
-				user_none_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2463,7 +2214,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				user_md2_checkout,
 				user_md2_commit,
 				user_md2_diff,
-				user_md2_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2473,7 +2224,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				user_md5_checkout,
 				user_md5_commit,
 				user_md5_diff,
-				user_md5_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2483,7 +2234,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				user_straight_password_checkout,
 				user_straight_password_commit,
 				user_straight_password_diff,
-				user_straight_password_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2493,7 +2244,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				user_oem_proprietary_checkout,
 				user_oem_proprietary_commit,
 				user_oem_proprietary_diff,
-				user_oem_proprietary_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2503,7 +2254,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				operator_none_checkout,
 				operator_none_commit,
 				operator_none_diff,
-				operator_none_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2513,7 +2264,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				operator_md2_checkout,
 				operator_md2_commit,
 				operator_md2_diff,
-				operator_md2_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2523,7 +2274,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				operator_md5_checkout,
 				operator_md5_commit,
 				operator_md5_diff,
-				operator_md5_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2533,7 +2284,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				operator_straight_password_checkout,
 				operator_straight_password_commit,
 				operator_straight_password_diff,
-				operator_straight_password_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2543,7 +2294,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				operator_oem_proprietary_checkout,
 				operator_oem_proprietary_commit,
 				operator_oem_proprietary_diff,
-				operator_oem_proprietary_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2553,7 +2304,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				admin_none_checkout,
 				admin_none_commit,
 				admin_none_diff,
-				admin_none_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2563,7 +2314,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				admin_md2_checkout,
 				admin_md2_commit,
 				admin_md2_diff,
-				admin_md2_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2573,7 +2324,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				admin_md5_checkout,
 				admin_md5_commit,
 				admin_md5_diff,
-				admin_md5_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2583,7 +2334,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				admin_straight_password_checkout,
 				admin_straight_password_commit,
 				admin_straight_password_diff,
-				admin_straight_password_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2593,7 +2344,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				admin_oem_proprietary_checkout,
 				admin_oem_proprietary_commit,
 				admin_oem_proprietary_diff,
-				admin_oem_proprietary_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2603,7 +2354,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				oem_none_checkout,
 				oem_none_commit,
 				oem_none_diff,
-				oem_none_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2613,7 +2364,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				oem_md2_checkout,
 				oem_md2_commit,
 				oem_md2_diff,
-				oem_md2_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2623,7 +2374,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				oem_md5_checkout,
 				oem_md5_commit,
 				oem_md5_diff,
-				oem_md5_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2633,7 +2384,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				oem_straight_password_checkout,
 				oem_straight_password_commit,
 				oem_straight_password_diff,
-				oem_straight_password_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_conf_auth_section,
@@ -2643,7 +2394,7 @@ bmc_lan_conf_auth_section_get (struct bmc_config_arguments *args)
 				oem_oem_proprietary_checkout,
 				oem_oem_proprietary_commit,
 				oem_oem_proprietary_diff,
-				oem_oem_proprietary_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   return lan_conf_auth_section;

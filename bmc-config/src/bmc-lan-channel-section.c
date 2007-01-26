@@ -4,6 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 /* volatile */
 
@@ -143,17 +144,6 @@ volatile_access_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-volatile_access_mode_validate (const struct bmc_config_arguments *args,
-			       const struct section *sect,
-			       const char *value)
-{
-  if (channel_access_mode (value) >= 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
-
 /* enable_user_level_auth */
 
 static bmc_err_t
@@ -249,16 +239,6 @@ volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
                    get_val ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-volatile_enable_user_level_auth_validate (const struct bmc_config_arguments *args,
-					  const struct section *sect,
-					  const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* enable_per_message_auth */
@@ -359,19 +339,7 @@ volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-volatile_enable_per_msg_auth_validate (const struct bmc_config_arguments *args,
-                                       const struct section *sect,
-                                       const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
-
 /* enable_pef_alerting */
-
 
 static bmc_err_t
 volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
@@ -468,18 +436,7 @@ volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-volatile_enable_pef_alerting_validate (const struct bmc_config_arguments *args,
-				       const struct section *sect,
-				       const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* channel_privilege_level */
-
 
 static bmc_err_t
 volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
@@ -565,19 +522,7 @@ volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-volatile_channel_priv_limit_validate (const struct bmc_config_arguments *args,
-				      const struct section *sect,
-				      const char *value)
-{
-  if (privilege_level_number (value) > 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
-
 /* non volatile */
-
 
 static int
 lan_channel_non_volatile_access_set (ipmi_device_t dev,
@@ -713,17 +658,6 @@ non_volatile_access_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-non_volatile_access_mode_validate (const struct bmc_config_arguments *args,
-				   const struct section *sect,
-				   const char *value)
-{
-  if (channel_access_mode (value) >= 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
-
 /* enable_user_level_auth */
 
 static bmc_err_t
@@ -818,17 +752,6 @@ non_volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *arg
 
   return ret;
 }
-
-static bmc_validate_t
-non_volatile_enable_user_level_auth_validate (const struct bmc_config_arguments *args,
-					      const struct section *sect,
-					      const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 
 /* enable_per_message_auth */
 
@@ -926,19 +849,7 @@ non_volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-non_volatile_enable_per_msg_auth_validate (const struct bmc_config_arguments *args,
-                                           const struct section *sect,
-                                           const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
-
 /* enable_pef_alerting */
-
 
 static bmc_err_t
 non_volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
@@ -1034,18 +945,7 @@ non_volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-non_volatile_enable_pef_alerting_validate (const struct bmc_config_arguments *args,
-					   const struct section *sect,
-					   const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* channel_privilege_level */
-
 
 static bmc_err_t
 non_volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
@@ -1131,16 +1031,6 @@ non_volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-non_volatile_channel_priv_limit_validate (const struct bmc_config_arguments *args,
-					  const struct section *sect,
-					  const char *value)
-{
-  if (privilege_level_number (value) > 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 struct section *
 bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 {
@@ -1156,7 +1046,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				volatile_access_mode_checkout,
 				volatile_access_mode_commit,
 				volatile_access_mode_diff,
-				volatile_access_mode_validate) < 0)
+				channel_access_mode_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1166,7 +1056,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				volatile_enable_user_level_auth_checkout,
 				volatile_enable_user_level_auth_commit,
 				volatile_enable_user_level_auth_diff,
-				volatile_enable_user_level_auth_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1176,7 +1066,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				volatile_enable_per_msg_auth_checkout,
 				volatile_enable_per_msg_auth_commit,
 				volatile_enable_per_msg_auth_diff,
-				volatile_enable_per_msg_auth_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1186,7 +1076,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				volatile_enable_pef_alerting_checkout,
 				volatile_enable_pef_alerting_commit,
 				volatile_enable_pef_alerting_diff,
-				volatile_enable_pef_alerting_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1196,7 +1086,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				volatile_channel_priv_limit_checkout,
 				volatile_channel_priv_limit_commit,
 				volatile_channel_priv_limit_diff,
-				volatile_channel_priv_limit_validate) < 0)
+				privilege_level_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1206,7 +1096,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				non_volatile_access_mode_checkout,
 				non_volatile_access_mode_commit,
 				non_volatile_access_mode_diff,
-				non_volatile_access_mode_validate) < 0)
+				channel_access_mode_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1216,7 +1106,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				non_volatile_enable_user_level_auth_checkout,
 				non_volatile_enable_user_level_auth_commit,
 				non_volatile_enable_user_level_auth_diff,
-				non_volatile_enable_user_level_auth_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1226,7 +1116,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				non_volatile_enable_per_msg_auth_checkout,
 				non_volatile_enable_per_msg_auth_commit,
 				non_volatile_enable_per_msg_auth_diff,
-				non_volatile_enable_per_msg_auth_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1236,7 +1126,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				non_volatile_enable_pef_alerting_checkout,
 				non_volatile_enable_pef_alerting_commit,
 				non_volatile_enable_pef_alerting_diff,
-				non_volatile_enable_pef_alerting_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (lan_channel_section,
@@ -1246,7 +1136,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				non_volatile_channel_priv_limit_checkout,
 				non_volatile_channel_priv_limit_commit,
 				non_volatile_channel_priv_limit_diff,
-				non_volatile_channel_priv_limit_validate) < 0)
+				privilege_level_number_validate) < 0)
     goto cleanup;
 
   return lan_channel_section;

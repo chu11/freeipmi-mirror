@@ -4,6 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 static bmc_err_t
 power_restore_policy_checkout (const struct bmc_config_arguments *args,
@@ -71,16 +72,6 @@ power_restore_policy_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-power_restore_policy_validate (const struct bmc_config_arguments *args,
-			       const struct section *sect,
-			       const char *value)
-{
-  if (power_restore_policy_number (value) != -1)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 struct section *
 bmc_misc_section_get (struct bmc_config_arguments *args)
 {
@@ -96,7 +87,7 @@ bmc_misc_section_get (struct bmc_config_arguments *args)
 				power_restore_policy_checkout,
 				power_restore_policy_commit,
 				power_restore_policy_diff,
-				power_restore_policy_validate) < 0)
+				power_restore_policy_number_validate) < 0)
     goto cleanup;
 
   return misc_section;

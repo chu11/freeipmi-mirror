@@ -23,7 +23,8 @@ bmc_config_SOURCES = \
 	bmc-serial-conf-section.c \
 	bmc-pef-conf-section.c \
 	bmc-sol-conf-section.c \
-	bmc-misc-section.c
+	bmc-misc-section.c \
+	bmc-validate.c
 
 bmc_config_LDADD = ../../common/src/libargpcommon.la \
                  ../../common/src/libipmicommon.la \
@@ -55,7 +56,8 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-misc-section.h \
 		 bmc-map.h \
 		 bmc-parser.h \
-		 bmc-sections.h
+		 bmc-sections.h \
+		 bmc-validate.h
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

@@ -3,6 +3,12 @@
 	* bmc-config/: Re-architect for most of bmc-config to support
 	fatal and non-fatal errors, necessary for later hostrange support.
 	Fixed various bugs along the way.
+
+	* bmc-config/src/bmc-validate.h, bmc-config/src/bmc-validate.c:
+	New files.
+
+	* bmc-config/src/: Use new common validate functions throughout
+	code.
 	
 2007-01-24  Albert Chu <chu11@llnl.gov>
 	

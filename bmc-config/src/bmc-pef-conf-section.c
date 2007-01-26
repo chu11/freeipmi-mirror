@@ -3,6 +3,7 @@
 #include "bmc-config-api.h"
 #include "bmc-diff.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 static bmc_err_t
 pef_control_checkout (ipmi_device_t dev,
@@ -165,16 +166,6 @@ enable_pef_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_pef_validate (const struct bmc_config_arguments *args,
-		     const struct section *sect,
-		     const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* event_messages */
 
 static bmc_err_t
@@ -264,18 +255,7 @@ enable_pef_event_messages_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_pef_event_messages_validate (const struct bmc_config_arguments *args,
-				    const struct section *sect,
-				    const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* startup_delay */
-
 
 static bmc_err_t
 enable_pef_startup_delay_checkout (const struct bmc_config_arguments *args,
@@ -363,18 +343,7 @@ enable_pef_startup_delay_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_pef_startup_delay_validate (const struct bmc_config_arguments *args,
-				   const struct section *sect,
-				   const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* alert_startup_delay */
-
 
 static bmc_err_t
 enable_pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args,
@@ -462,17 +431,6 @@ enable_pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
     }
   return ret;
 }
-
-static bmc_validate_t
-enable_pef_alert_startup_delay_validate (const struct bmc_config_arguments *args,
-					 const struct section *sect,
-					 const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 
 static bmc_err_t
 pef_global_control_checkout (ipmi_device_t dev,
@@ -659,16 +617,6 @@ enable_alert_action_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_alert_action_validate (const struct bmc_config_arguments *args,
-			      const struct section *sect,
-			      const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* power_down_action */
 
 static bmc_err_t
@@ -760,16 +708,6 @@ enable_power_down_action_diff (const struct bmc_config_arguments *args,
                    got_value ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-enable_power_down_action_validate (const struct bmc_config_arguments *args,
-				   const struct section *sect,
-				   const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* reset_action */
@@ -865,16 +803,6 @@ enable_reset_action_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_reset_action_validate (const struct bmc_config_arguments *args,
-			      const struct section *sect,
-			      const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* power_cycle_action */
 
 static bmc_err_t
@@ -966,16 +894,6 @@ enable_power_cycle_action_diff (const struct bmc_config_arguments *args,
                    got_value ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-enable_power_cycle_action_validate (const struct bmc_config_arguments *args,
-				    const struct section *sect,
-				    const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* OEM_action */
@@ -1070,16 +988,6 @@ enable_oem_action_diff (const struct bmc_config_arguments *args,
                    got_value ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-enable_oem_action_validate (const struct bmc_config_arguments *args,
-			    const struct section *sect,
-			    const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* diagnostic_interrupt */
@@ -1177,17 +1085,8 @@ enable_diagnostic_interrupt_diff (const struct bmc_config_arguments *args,
 }
 
 
-static bmc_validate_t
-enable_diagnostic_interrupt_validate (const struct bmc_config_arguments *args,
-				      const struct section *sect,
-				      const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* pef_startup_delay */
+
 static bmc_err_t
 pef_startup_delay_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
@@ -1254,25 +1153,6 @@ pef_startup_delay_diff (const struct bmc_config_arguments *args,
                    num);
     }
   return ret;
-}
-
-static bmc_validate_t
-pef_startup_delay_validate (const struct bmc_config_arguments *args,
-			    const struct section *sect,
-			    const char *value)
-{
-  long int num;
-  char *endptr;
-
-  num = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (num < 0 || num > 255)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
 }
 
 /* alert_startup_delay */
@@ -1345,26 +1225,6 @@ pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-pef_alert_startup_delay_validate (const struct bmc_config_arguments *args,
-				  const struct section *sect,
-				  const char *value)
-{
-  long int num;
-  char *endptr;
-
-  num = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (num < 0 || num > 255)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
-
 struct section *
 bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 {
@@ -1380,7 +1240,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_pef_checkout,
 				enable_pef_commit,
 				enable_pef_diff,
-				enable_pef_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1390,7 +1250,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_pef_event_messages_checkout,
 				enable_pef_event_messages_commit,
 				enable_pef_event_messages_diff,
-				enable_pef_event_messages_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1400,7 +1260,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_pef_startup_delay_checkout,
 				enable_pef_startup_delay_commit,
 				enable_pef_startup_delay_diff,
-				enable_pef_startup_delay_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1410,7 +1270,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_pef_alert_startup_delay_checkout,
 				enable_pef_alert_startup_delay_commit,
 				enable_pef_alert_startup_delay_diff,
-				enable_pef_alert_startup_delay_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
   
   if (bmc_section_add_keyvalue (pef_section,
@@ -1420,7 +1280,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_alert_action_checkout,
 				enable_alert_action_commit,
 				enable_alert_action_diff,
-				enable_alert_action_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1430,7 +1290,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_power_down_action_checkout,
 				enable_power_down_action_commit,
 				enable_power_down_action_diff,
-				enable_power_down_action_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1440,7 +1300,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_reset_action_checkout,
 				enable_reset_action_commit,
 				enable_reset_action_diff,
-				enable_reset_action_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1450,7 +1310,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_power_cycle_action_checkout,
 				enable_power_cycle_action_commit,
 				enable_power_cycle_action_diff,
-				enable_power_cycle_action_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1460,7 +1320,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_oem_action_checkout,
 				enable_oem_action_commit,
 				enable_oem_action_diff,
-				enable_oem_action_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1470,7 +1330,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				enable_diagnostic_interrupt_checkout,
 				enable_diagnostic_interrupt_commit,
 				enable_diagnostic_interrupt_diff,
-				enable_diagnostic_interrupt_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1480,7 +1340,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				pef_startup_delay_checkout,
 				pef_startup_delay_commit,
 				pef_startup_delay_diff,
-				pef_startup_delay_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (pef_section,
@@ -1490,7 +1350,7 @@ bmc_pef_conf_section_get (struct bmc_config_arguments *args)
 				pef_alert_startup_delay_checkout,
 				pef_alert_startup_delay_commit,
 				pef_alert_startup_delay_diff,
-				pef_alert_startup_delay_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
 
   return pef_section;

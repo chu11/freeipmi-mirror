@@ -4,6 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 static bmc_err_t
 k_r_checkout (const struct bmc_config_arguments *args,

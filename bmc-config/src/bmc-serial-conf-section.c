@@ -4,6 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 static bmc_err_t
 serial_conf_checkout (ipmi_device_t dev,
@@ -166,17 +167,6 @@ enable_basic_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_basic_mode_validate (const struct bmc_config_arguments *args,
-			    const struct section *sect,
-			    const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
-
 /* ppp */
 
 static bmc_err_t
@@ -263,16 +253,6 @@ enable_ppp_mode_diff (const struct bmc_config_arguments *args,
                    get_value ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-enable_ppp_mode_validate (const struct bmc_config_arguments *args,
-			  const struct section *sect,
-			  const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* terminal */
@@ -363,18 +343,6 @@ enable_terminal_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_terminal_mode_validate (const struct bmc_config_arguments *args,
-			       const struct section *sect,
-			       const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
-
-
 static bmc_err_t
 connect_mode_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
@@ -449,16 +417,6 @@ connect_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-connect_mode_validate (const struct bmc_config_arguments *args,
-		       const struct section *sect,
-		       const char *value)
-{
-  if (connect_mode_number (value) != -1)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 page_blackout_interval_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
@@ -526,26 +484,6 @@ page_blackout_interval_diff (const struct bmc_config_arguments *args,
     }
   return ret;
 }
-
-static bmc_validate_t
-page_blackout_interval_validate (const struct bmc_config_arguments *args,
-				 const struct section *sect,
-				 const char *value)
-{
-  char *endptr;
-  long int num;
-
-  num = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (num < 0 || num > 255)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
 
 /* retry time */
 
@@ -615,25 +553,6 @@ call_retry_interval_diff (const struct bmc_config_arguments *args,
                    num);
     }
   return ret;
-}
-
-static bmc_validate_t
-call_retry_interval_validate (const struct bmc_config_arguments *args,
-			      const struct section *sect,
-			      const char *value)
-{
-  char *endptr;
-  long int num;
-
-  num = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (num < 0 || num > 255)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
 }
 
 static bmc_err_t
@@ -780,16 +699,6 @@ enable_dtr_hangup_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-enable_dtr_hangup_validate (const struct bmc_config_arguments *args,
-			    const struct section *sect,
-			    const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 static bmc_err_t
 flow_control_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
@@ -861,16 +770,6 @@ flow_control_diff (const struct bmc_config_arguments *args,
                    flow_control_string (got_value));
     }
   return ret;
-}
-
-static bmc_validate_t
-flow_control_validate (const struct bmc_config_arguments *args,
-		       const struct section *sect,
-		       const char *value)
-{
-  if (flow_control_number (value) > -1)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 static bmc_err_t
@@ -946,16 +845,6 @@ bit_rate_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-bit_rate_validate (const struct bmc_config_arguments *args,
-		   const struct section *sect,
-		   const char *value)
-{
-  if (bit_rate_number (value) > -1)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 struct section *
 bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 {
@@ -971,7 +860,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				enable_basic_mode_checkout,
 				enable_basic_mode_commit,
 				enable_basic_mode_diff,
-				enable_basic_mode_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -981,7 +870,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				enable_ppp_mode_checkout,
 				enable_ppp_mode_commit,
 				enable_ppp_mode_diff,
-				enable_ppp_mode_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -991,7 +880,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				enable_terminal_mode_checkout,
 				enable_terminal_mode_commit,
 				enable_terminal_mode_diff,
-				enable_terminal_mode_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -1001,7 +890,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				connect_mode_checkout,
 				connect_mode_commit,
 				connect_mode_diff,
-				connect_mode_validate) < 0)
+				connect_mode_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -1011,7 +900,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				page_blackout_interval_checkout,
 				page_blackout_interval_commit,
 				page_blackout_interval_diff,
-				page_blackout_interval_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -1021,7 +910,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				call_retry_interval_checkout,
 				call_retry_interval_commit,
 				call_retry_interval_diff,
-				call_retry_interval_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
@@ -1032,7 +921,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				call_retry_interval_checkout,
 				call_retry_interval_commit,
 				call_retry_interval_diff,
-				call_retry_interval_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -1042,7 +931,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				enable_dtr_hangup_checkout,
 				enable_dtr_hangup_commit,
 				enable_dtr_hangup_diff,
-				enable_dtr_hangup_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -1052,7 +941,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				flow_control_checkout,
 				flow_control_commit,
 				flow_control_diff,
-				flow_control_validate) < 0)
+				flow_control_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (bmc_serial_conf_section,
@@ -1062,7 +951,7 @@ bmc_serial_conf_section_get (struct bmc_config_arguments *args)
 				bit_rate_checkout,
 				bit_rate_commit,
 				bit_rate_diff,
-				bit_rate_validate) < 0)
+				bit_rate_number_validate) < 0)
     goto cleanup;
 
   return bmc_serial_conf_section;

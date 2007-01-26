@@ -4,6 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-map.h"
 #include "bmc-sections.h"
+#include "bmc-validate.h"
 
 int
 bmc_get_num_users (struct bmc_config_arguments *args)
@@ -249,16 +250,6 @@ enable_user_diff (const struct bmc_config_arguments *args,
     }
 
   return ret;
-}
-
-static bmc_validate_t
-enable_user_validate (const struct bmc_config_arguments *args,
-		      const struct section *sect,
-		      const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 static bmc_err_t
@@ -594,16 +585,6 @@ lan_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
   return ret;
 }
   
-static bmc_validate_t
-lan_enable_ipmi_msgs_validate (const struct bmc_config_arguments *args,
-			       const struct section *sect,
-			       const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* lan_enable_link_auth */
 
 static bmc_err_t
@@ -699,16 +680,6 @@ lan_enable_link_auth_diff (const struct bmc_config_arguments *args,
                    get_val ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-lan_enable_link_auth_validate (const struct bmc_config_arguments *args,
-                               const struct section *sect,
-                               const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* LAN_enable_restricted_to_callback */
@@ -808,16 +779,6 @@ lan_enable_restricted_to_callback_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static bmc_validate_t
-lan_enable_restricted_to_callback_validate (const struct bmc_config_arguments *args,
-                                            const struct section *sect,
-                                            const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* privilege_limit */
 
 static bmc_err_t
@@ -905,16 +866,6 @@ lan_privilege_limit_diff (const struct bmc_config_arguments *args,
 }
 
   
-static bmc_validate_t
-lan_privilege_limit_validate (const struct bmc_config_arguments *args,
-                              const struct section *sect,
-                              const char *value)
-{
-  if (get_privilege_limit_number (value) > 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* lan_session_limit */
 
 static bmc_err_t
@@ -1003,28 +954,7 @@ lan_session_limit_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-  
-static bmc_validate_t
-lan_session_limit_validate (const struct bmc_config_arguments *args,
-                            const struct section *sect,
-                            const char *value)
-{
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > 255)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
 /* sol_payload_access */
-
 
 static bmc_err_t
 sol_payload_access_checkout (const struct bmc_config_arguments *args,
@@ -1143,16 +1073,6 @@ sol_payload_access_diff (const struct bmc_config_arguments *args,
                    have_access ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-sol_payload_access_validate (const struct bmc_config_arguments *args,
-                             const struct section *sect,
-                             const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* serial_enable_ipmi_msgs */
@@ -1350,16 +1270,6 @@ serial_enable_ipmi_msgs_diff (const struct bmc_config_arguments *args,
   return ret;
 }
   
-static bmc_validate_t
-serial_enable_ipmi_msgs_validate (const struct bmc_config_arguments *args,
-                                  const struct section *sect,
-                                  const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* serial_enable_link_auth */
 
 static bmc_err_t
@@ -1455,16 +1365,6 @@ serial_enable_link_auth_diff (const struct bmc_config_arguments *args,
                    get_val ? "Yes" : "No");
     }
   return ret;
-}
-
-static bmc_validate_t
-serial_enable_link_auth_validate (const struct bmc_config_arguments *args,
-                                  const struct section *sect,
-                                  const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* serial_enable_restricted_to_callback */
@@ -1564,16 +1464,6 @@ serial_enable_restricted_to_callback_diff (const struct bmc_config_arguments *ar
   return ret;
 }
 
-static bmc_validate_t
-serial_enable_restricted_to_callback_validate (const struct bmc_config_arguments *args,
-                                               const struct section *sect,
-                                               const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* privilege_limit */
 
 static bmc_err_t
@@ -1661,16 +1551,6 @@ serial_privilege_limit_diff (const struct bmc_config_arguments *args,
 }
 
   
-static bmc_validate_t
-serial_privilege_limit_validate (const struct bmc_config_arguments *args,
-                                 const struct section *sect,
-                                 const char *value)
-{
-  if (get_privilege_limit_number (value) > 0)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
-}
-
 /* serial_session_limit */
 
 static bmc_err_t
@@ -1759,27 +1639,6 @@ serial_session_limit_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-  
-static bmc_validate_t
-serial_session_limit_validate (const struct bmc_config_arguments *args,
-                               const struct section *sect,
-                               const char *value)
-{
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > 255)
-    return BMC_VALIDATE_VALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
-
 struct section *
 bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 {
@@ -1814,7 +1673,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				enable_user_checkout,
 				enable_user_commit,
 				enable_user_diff,
-				enable_user_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1844,7 +1703,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				lan_enable_ipmi_msgs_checkout,
 				lan_enable_ipmi_msgs_commit,
 				lan_enable_ipmi_msgs_diff,
-				lan_enable_ipmi_msgs_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1854,7 +1713,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				lan_enable_link_auth_checkout,
 				lan_enable_link_auth_commit,
 				lan_enable_link_auth_diff,
-				lan_enable_link_auth_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1864,7 +1723,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				lan_enable_restricted_to_callback_checkout,
 				lan_enable_restricted_to_callback_commit,
 				lan_enable_restricted_to_callback_diff,
-				lan_enable_restricted_to_callback_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
@@ -1875,7 +1734,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				lan_enable_restricted_to_callback_checkout,
 				lan_enable_restricted_to_callback_commit,
 				lan_enable_restricted_to_callback_diff,
-				lan_enable_restricted_to_callback_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1885,7 +1744,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				lan_privilege_limit_checkout,
 				lan_privilege_limit_commit,
 				lan_privilege_limit_diff,
-				lan_privilege_limit_validate) < 0)
+				get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1895,7 +1754,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				lan_session_limit_checkout,
 				lan_session_limit_commit,
 				lan_session_limit_diff,
-				lan_session_limit_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1905,7 +1764,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				sol_payload_access_checkout,
 				sol_payload_access_commit,
 				sol_payload_access_diff,
-				sol_payload_access_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1915,7 +1774,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				serial_enable_ipmi_msgs_checkout,
 				serial_enable_ipmi_msgs_commit,
 				serial_enable_ipmi_msgs_diff,
-				serial_enable_ipmi_msgs_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1925,7 +1784,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				serial_enable_link_auth_checkout,
 				serial_enable_link_auth_commit,
 				serial_enable_link_auth_diff,
-				serial_enable_link_auth_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1935,7 +1794,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				serial_enable_restricted_to_callback_checkout,
 				serial_enable_restricted_to_callback_commit,
 				serial_enable_restricted_to_callback_diff,
-				serial_enable_restricted_to_callback_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
@@ -1946,7 +1805,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				serial_enable_restricted_to_callback_checkout,
 				serial_enable_restricted_to_callback_commit,
 				serial_enable_restricted_to_callback_diff,
-				serial_enable_restricted_to_callback_validate) < 0)
+				yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1956,7 +1815,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				serial_privilege_limit_checkout,
 				serial_privilege_limit_commit,
 				serial_privilege_limit_diff,
-				serial_privilege_limit_validate) < 0)
+				get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
   if (bmc_section_add_keyvalue (user_section,
@@ -1966,7 +1825,7 @@ bmc_user_section_get (struct bmc_config_arguments *args, int userid)
 				serial_session_limit_checkout,
 				serial_session_limit_commit,
 				serial_session_limit_diff,
-				serial_session_limit_validate) < 0)
+				number_range_one_byte) < 0)
     goto cleanup;
 
   return user_section;
