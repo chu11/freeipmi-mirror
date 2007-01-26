@@ -262,6 +262,7 @@ bmc_section_find_section (const char *section_name,
         break;
       sect = sect->next;
     }
+
   return (struct section *)sect;
 }
 
@@ -271,11 +272,10 @@ bmc_section_find_keyvalue (const char *section_name,
 			   const struct section *sections)
 {
 
-  const struct section *sect = bmc_section_find_section (section_name,
-							 sections);
+  const struct section *sect;
   struct keyvalue *kv = NULL;
 
-  if (!sect) 
+  if (!(sect = bmc_section_find_section (section_name, sections)))
     {
       fprintf (stderr, "Unknown section `%s'\n", section_name);
       return NULL;
@@ -307,21 +307,28 @@ bmc_section_set_value (const char *section_name,
 		       struct bmc_config_arguments *args,
 		       struct section *sections)
 {
+  struct section *sect;
+  struct keyvalue *kv;
 
-  struct section *sect = bmc_section_find_section (section_name,
-						    sections);
-  struct keyvalue *kv = bmc_section_find_keyvalue (section_name,
-						   key_name,
-						   sections);
-
-  if (!kv)
+  if (!(sect = bmc_section_find_section (section_name, sections)))
     return -1;
 
-  if (kv->validate && (kv->validate (args, sect, value) != 0)) 
+  if (!(kv = bmc_section_find_keyvalue (section_name, key_name, sections)))
+    return -1;
+
+  if (kv->validate)
     {
-      fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-               value, key_name);
-      return -1;
+      bmc_validate_t v;
+
+      if ((v = kv->validate (args, sect, value)) == BMC_VALIDATE_FATAL_ERROR)
+        return -1;
+      
+      if (v == BMC_VALIDATE_INVALID_VALUE)
+        {
+          fprintf (stderr, "Invalid value `%s' for key `%s'\n",
+                   value, key_name);
+          return -1;
+        }
     }
 
   if (kv->value)
@@ -330,33 +337,41 @@ bmc_section_set_value (const char *section_name,
   if (!(kv->value = strdup (value)))
     {
       perror("strdup");
-      exit(1);
+      return -1;
     }
 
   return 0;
 }
 
-int
+bmc_err_t
 bmc_section_commit_value (const char *section_name,
 			  const char *key_name,
 			  const char *value,
 			  struct bmc_config_arguments *args,
 			  struct section *sections)
 {
-  struct section *sect = bmc_section_find_section (section_name,
-						    sections);
-  struct keyvalue *kv = bmc_section_find_keyvalue (section_name,
-						   key_name,
-						   sections);
+  struct section *sect;
+  struct keyvalue *kv;
 
-  if (!kv)
-    return -1;
+  if (!(sect = bmc_section_find_section (section_name, sections)))
+    return BMC_ERR_FATAL_ERROR;
 
-  if (kv->validate && (kv->validate (args, sect, value) != 0)) 
+  if (!(kv = bmc_section_find_keyvalue (section_name, key_name, sections)))
+    return BMC_ERR_FATAL_ERROR;
+
+  if (kv->validate)
     {
-      fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-               value, key_name);
-      return -1;
+      bmc_validate_t v;
+
+      if ((v = kv->validate (args, sect, value)) == BMC_VALIDATE_FATAL_ERROR)
+        return BMC_ERR_FATAL_ERROR;
+      
+      if (v == BMC_VALIDATE_INVALID_VALUE)
+        {
+          fprintf (stderr, "Invalid value `%s' for key `%s'\n",
+                   value, key_name);
+          return BMC_ERR_NON_FATAL_ERROR;
+        }
     }
 
   if (kv->value)
@@ -365,7 +380,7 @@ bmc_section_commit_value (const char *section_name,
   if (!(kv->value = strdup (value)))
     {
       perror("strdup");
-      exit(1);
+      return BMC_ERR_FATAL_ERROR;
     }
 
   return kv->commit (args, sect, kv);
@@ -378,20 +393,28 @@ bmc_section_diff_value (const char *section_name,
 			struct bmc_config_arguments *args,
 			struct section *sections)
 {
-  struct section *sect = bmc_section_find_section (section_name,
-						    sections);
-  struct keyvalue *kv = bmc_section_find_keyvalue (section_name,
-						   key_name,
-						   sections);
+  struct section *sect;
+  struct keyvalue *kv;
 
-  if (!kv)
-    return -1;
+  if (!(sect = bmc_section_find_section (section_name, sections)))
+    return BMC_ERR_FATAL_ERROR;
 
-  if (kv->validate && (kv->validate (args, sect, value) != 0)) 
+  if (!(kv = bmc_section_find_keyvalue (section_name, key_name, sections)))
+    return BMC_ERR_FATAL_ERROR;
+
+  if (kv->validate)
     {
-      fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-               value, key_name);
-      return -1;
+      bmc_validate_t v;
+
+      if ((v = kv->validate (args, sect, value)) == BMC_VALIDATE_FATAL_ERROR)
+        return BMC_ERR_FATAL_ERROR;
+      
+      if (v == BMC_VALIDATE_INVALID_VALUE)
+        {
+          fprintf (stderr, "Invalid value `%s' for key `%s'\n",
+                   value, key_name);
+          return BMC_ERR_NON_FATAL_ERROR;
+        }
     }
 
   if (kv->value)
@@ -400,7 +423,7 @@ bmc_section_diff_value (const char *section_name,
   if (!(kv->value = strdup (value)))
     {
       perror("strdup");
-      exit(1);
+      return BMC_ERR_FATAL_ERROR;
     }
 
   return kv->diff (args, sect, kv);

@@ -4,27 +4,25 @@
 #include "bmc-diff.h"
 #include "bmc-sections.h"
 
-int
+static bmc_err_t
 pef_control_checkout (ipmi_device_t dev,
 		      uint8_t *pef,
 		      uint8_t *pef_event_messages,
 		      uint8_t *pef_startup_delay,
 		      uint8_t *pef_alert_startup_delay)
 {
-  int ret;
   uint8_t tmp_pef;
   uint8_t tmp_pef_event_messages;
   uint8_t tmp_pef_startup_delay;
   uint8_t tmp_pef_alert_startup_delay;
+  bmc_err_t ret;
 
-  ret = get_pef_control (dev,
-			 &tmp_pef,
-			 &tmp_pef_event_messages,
-			 &tmp_pef_startup_delay,
-			 &tmp_pef_alert_startup_delay);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_pef_control (dev,
+                              &tmp_pef,
+                              &tmp_pef_event_messages,
+                              &tmp_pef_startup_delay,
+                              &tmp_pef_alert_startup_delay)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (pef)
     *pef = tmp_pef;
@@ -38,31 +36,28 @@ pef_control_checkout (ipmi_device_t dev,
   if (pef_alert_startup_delay)
     *pef_alert_startup_delay = tmp_pef_alert_startup_delay;
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-
-int
+static bmc_err_t
 pef_control_commit (ipmi_device_t dev,
 		    uint8_t *pef,
 		    uint8_t *pef_event_messages,
 		    uint8_t *pef_startup_delay,
 		    uint8_t *pef_alert_startup_delay)
 {
-  int ret;
   uint8_t tmp_pef;
   uint8_t tmp_pef_event_messages;
   uint8_t tmp_pef_startup_delay;
   uint8_t tmp_pef_alert_startup_delay;
+  bmc_err_t ret;
 
-  ret = get_pef_control (dev,
-			 &tmp_pef,
-			 &tmp_pef_event_messages,
-			 &tmp_pef_startup_delay,
-			 &tmp_pef_alert_startup_delay);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_pef_control (dev,
+                              &tmp_pef,
+                              &tmp_pef_event_messages,
+                              &tmp_pef_startup_delay,
+                              &tmp_pef_alert_startup_delay)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (pef)
     tmp_pef = *pef;
@@ -83,21 +78,20 @@ pef_control_commit (ipmi_device_t dev,
 			  tmp_pef_alert_startup_delay);
 }
 
-static int
+static bmc_err_t
 enable_pef_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
   
-  ret = pef_control_checkout (args->dev,
-			      &value,
-			      NULL,
-			      NULL,
-			      NULL);
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_control_checkout (args->dev,
+                                   &value,
+                                   NULL,
+                                   NULL,
+                                   NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -107,7 +101,7 @@ enable_pef_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -115,14 +109,14 @@ enable_pef_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_pef_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
@@ -135,31 +129,34 @@ enable_pef_commit (const struct bmc_config_arguments *args,
 			     NULL);
 }
 
-static int
+static bmc_diff_t
 enable_pef_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = pef_control_checkout (args->dev,
-			      &got_value,
-			      NULL,
-			      NULL,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_control_checkout (args->dev,
+                                  &got_value,
+                                  NULL,
+                                  NULL,
+                                  NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes");
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -168,31 +165,32 @@ enable_pef_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_pef_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* event_messages */
 
-static int
+static bmc_err_t
 enable_pef_event_messages_checkout (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
   
-  ret = pef_control_checkout (args->dev,
-			      NULL,
-			      &value,
-			      NULL,
-			      NULL);
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_control_checkout (args->dev,
+                                   NULL,
+                                   &value,
+                                   NULL,
+                                   NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -202,7 +200,7 @@ enable_pef_event_messages_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -210,14 +208,14 @@ enable_pef_event_messages_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_pef_event_messages_commit (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
@@ -230,31 +228,34 @@ enable_pef_event_messages_commit (const struct bmc_config_arguments *args,
 			     NULL);
 }
 
-static int
+static bmc_diff_t
 enable_pef_event_messages_diff (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = pef_control_checkout (args->dev,
-			      NULL,
-			      &got_value,
-			      NULL,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_control_checkout (args->dev,
+                                  NULL,
+                                  &got_value,
+                                  NULL,
+                                  NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes");
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -263,32 +264,33 @@ enable_pef_event_messages_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_pef_event_messages_validate (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* startup_delay */
 
 
-static int
+static bmc_err_t
 enable_pef_startup_delay_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
   
-  ret = pef_control_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      &value,
-			      NULL);
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_control_checkout (args->dev,
+                                   NULL,
+                                   NULL,
+                                   &value,
+                                   NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -298,7 +300,7 @@ enable_pef_startup_delay_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -306,13 +308,13 @@ enable_pef_startup_delay_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_pef_startup_delay_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
@@ -325,31 +327,34 @@ enable_pef_startup_delay_commit (const struct bmc_config_arguments *args,
 			     NULL);
 }
 
-static int
+static bmc_diff_t
 enable_pef_startup_delay_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = pef_control_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      &got_value,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_control_checkout (args->dev,
+                                  NULL,
+                                  NULL,
+                                  &got_value,
+                                  NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes");
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -358,32 +363,33 @@ enable_pef_startup_delay_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_pef_startup_delay_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* alert_startup_delay */
 
 
-static int
+static bmc_err_t
 enable_pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
   
-  ret = pef_control_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      NULL,
-			      &value);
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_control_checkout (args->dev,
+                                   NULL,
+                                   NULL,
+                                   NULL,
+                                   &value)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -393,7 +399,7 @@ enable_pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -401,14 +407,14 @@ enable_pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_pef_alert_startup_delay_commit (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
@@ -421,31 +427,34 @@ enable_pef_alert_startup_delay_commit (const struct bmc_config_arguments *args,
 			     &value);
 }
 
-static int
+static bmc_diff_t
 enable_pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = pef_control_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      NULL,
-			      &got_value);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_control_checkout (args->dev,
+                                  NULL,
+                                  NULL,
+                                  NULL,
+                                  &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes");
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -454,16 +463,18 @@ enable_pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_pef_alert_startup_delay_validate (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 
-static int
+static bmc_err_t
 pef_global_control_checkout (ipmi_device_t dev,
 			     uint8_t *alert_action,
 			     uint8_t *power_down_action,
@@ -472,25 +483,22 @@ pef_global_control_checkout (ipmi_device_t dev,
 			     uint8_t *oem_action,
 			     uint8_t *diagnostic_interrupt)
 {
-  int ret;
-
   uint8_t tmp_alert_action;
   uint8_t tmp_power_down_action;
   uint8_t tmp_reset_action;
   uint8_t tmp_power_cycle_action;
   uint8_t tmp_oem_action;
   uint8_t tmp_diagnostic_interrupt;
+  bmc_err_t ret;
 
-  ret = get_pef_action_global_control (dev,
-				       &tmp_alert_action,
-				       &tmp_power_down_action,
-				       &tmp_reset_action,
-				       &tmp_power_cycle_action,
-				       &tmp_oem_action,
-				       &tmp_diagnostic_interrupt);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_pef_action_global_control (dev,
+                                            &tmp_alert_action,
+                                            &tmp_power_down_action,
+                                            &tmp_reset_action,
+                                            &tmp_power_cycle_action,
+                                            &tmp_oem_action,
+                                            &tmp_diagnostic_interrupt)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (alert_action)
     *alert_action = tmp_alert_action;
@@ -505,11 +513,11 @@ pef_global_control_checkout (ipmi_device_t dev,
   if (diagnostic_interrupt)
     *diagnostic_interrupt = tmp_diagnostic_interrupt;
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
 
-static int
+static bmc_err_t
 pef_global_control_commit (ipmi_device_t dev,
 			   uint8_t *alert_action,
 			   uint8_t *power_down_action,
@@ -518,25 +526,22 @@ pef_global_control_commit (ipmi_device_t dev,
 			   uint8_t *oem_action,
 			   uint8_t *diagnostic_interrupt)
 {
-  int ret;
-
   uint8_t tmp_alert_action;
   uint8_t tmp_power_down_action;
   uint8_t tmp_reset_action;
   uint8_t tmp_power_cycle_action;
   uint8_t tmp_oem_action;
   uint8_t tmp_diagnostic_interrupt;
+  bmc_err_t ret;
 
-  ret = get_pef_action_global_control (dev,
-				       &tmp_alert_action,
-				       &tmp_power_down_action,
-				       &tmp_reset_action,
-				       &tmp_power_cycle_action,
-				       &tmp_oem_action,
-				       &tmp_diagnostic_interrupt);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_pef_action_global_control (dev,
+                                            &tmp_alert_action,
+                                            &tmp_power_down_action,
+                                            &tmp_reset_action,
+                                            &tmp_power_cycle_action,
+                                            &tmp_oem_action,
+                                            &tmp_diagnostic_interrupt)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (alert_action)
     tmp_alert_action = *alert_action;
@@ -562,24 +567,22 @@ pef_global_control_commit (ipmi_device_t dev,
 
 /* alert_action */
 			   
-static int
+static bmc_err_t
 enable_alert_action_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = pef_global_control_checkout (args->dev,
-				     &value,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_global_control_checkout (args->dev,
+                                          &value,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -589,7 +592,7 @@ enable_alert_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -597,13 +600,13 @@ enable_alert_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_alert_action_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
@@ -618,33 +621,36 @@ enable_alert_action_commit (const struct bmc_config_arguments *args,
 				    NULL);
 }
 
-static int
+static bmc_diff_t
 enable_alert_action_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
-  
-  ret = pef_global_control_checkout (args->dev,
-				     &got_value,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL);
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_global_control_checkout (args->dev,
+                                         &got_value,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -653,34 +659,34 @@ enable_alert_action_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_alert_action_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* power_down_action */
 
-static int
+static bmc_err_t
 enable_power_down_action_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     &value,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_global_control_checkout (args->dev,
+                                          NULL,
+                                          &value,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -690,7 +696,7 @@ enable_power_down_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -698,13 +704,13 @@ enable_power_down_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_power_down_action_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
@@ -719,32 +725,35 @@ enable_power_down_action_commit (const struct bmc_config_arguments *args,
 				    NULL);
 }
 
-static int
+static bmc_diff_t
 enable_power_down_action_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     &got_value,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_global_control_checkout (args->dev,
+                                         NULL,
+                                         &got_value,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -753,34 +762,34 @@ enable_power_down_action_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_power_down_action_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* reset_action */
 
-static int
+static bmc_err_t
 enable_reset_action_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     &value,
-				     NULL,
-				     NULL,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_global_control_checkout (args->dev,
+                                          NULL,
+                                          NULL,
+                                          &value,
+                                          NULL,
+                                          NULL,
+                                          NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -790,7 +799,7 @@ enable_reset_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -798,13 +807,13 @@ enable_reset_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_reset_action_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
@@ -819,32 +828,35 @@ enable_reset_action_commit (const struct bmc_config_arguments *args,
 				    NULL);
 }
 
-static int
+static bmc_diff_t
 enable_reset_action_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     &got_value,
-				     NULL,
-				     NULL,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_global_control_checkout (args->dev,
+                                         NULL,
+                                         NULL,
+                                         &got_value,
+                                         NULL,
+                                         NULL,
+                                         NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -853,34 +865,34 @@ enable_reset_action_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_reset_action_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* power_cycle_action */
 
-static int
+static bmc_err_t
 enable_power_cycle_action_checkout (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     NULL,
-				     &value,
-				     NULL,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_global_control_checkout (args->dev,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          &value,
+                                          NULL,
+                                          NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -890,7 +902,7 @@ enable_power_cycle_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -898,13 +910,13 @@ enable_power_cycle_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_power_cycle_action_commit (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
@@ -919,32 +931,35 @@ enable_power_cycle_action_commit (const struct bmc_config_arguments *args,
 				    NULL);
 }
 
-static int
+static bmc_diff_t
 enable_power_cycle_action_diff (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     NULL,
-				     &got_value,
-				     NULL,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_global_control_checkout (args->dev,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         &got_value,
+                                         NULL,
+                                         NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -953,34 +968,34 @@ enable_power_cycle_action_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_power_cycle_action_validate (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* OEM_action */
 
-static int
+static bmc_err_t
 enable_oem_action_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     &value,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_global_control_checkout (args->dev,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          &value,
+                                          NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -990,7 +1005,7 @@ enable_oem_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -998,13 +1013,13 @@ enable_oem_action_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_oem_action_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -1019,33 +1034,36 @@ enable_oem_action_commit (const struct bmc_config_arguments *args,
 				    NULL);
 }
 
-static int
+static bmc_diff_t
 enable_oem_action_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     &got_value,
-				     NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_global_control_checkout (args->dev,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         &got_value,
+                                         NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -1054,34 +1072,34 @@ enable_oem_action_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_oem_action_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* diagnostic_interrupt */
 
-static int
+static bmc_err_t
 enable_diagnostic_interrupt_checkout (const struct bmc_config_arguments *args,
-			    const struct section *sect,
-			    struct keyvalue *kv)
+                                      const struct section *sect,
+                                      struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     &value);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = pef_global_control_checkout (args->dev,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          &value)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1091,7 +1109,7 @@ enable_diagnostic_interrupt_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1099,13 +1117,13 @@ enable_diagnostic_interrupt_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_diagnostic_interrupt_commit (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
@@ -1120,33 +1138,36 @@ enable_diagnostic_interrupt_commit (const struct bmc_config_arguments *args,
 				    &value);
 }
 
-static int
+static bmc_diff_t
 enable_diagnostic_interrupt_diff (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = pef_global_control_checkout (args->dev,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL,
-				     &got_value);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = pef_global_control_checkout (args->dev,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         NULL,
+                                         &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = (same (kv->value, "yes") ? 1 : 0);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -1156,36 +1177,41 @@ enable_diagnostic_interrupt_diff (const struct bmc_config_arguments *args,
 }
 
 
-static int
+static bmc_validate_t
 enable_diagnostic_interrupt_validate (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* pef_startup_delay */
-static int
+static bmc_err_t
 pef_startup_delay_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
-  int ret;
   uint8_t delay;
+  bmc_err_t ret;
   
-  ret = get_pef_startup_delay (args->dev,
-			       &delay);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_pef_startup_delay (args->dev,
+                                    &delay)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", delay);
-  return 0;
+  if (asprintf (&kv->value, "%d", delay) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 pef_startup_delay_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -1195,28 +1221,32 @@ pef_startup_delay_commit (const struct bmc_config_arguments *args,
 				value);
 }
 
-static int
+static bmc_diff_t
 pef_startup_delay_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
-  int ret;
   uint8_t got_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = get_pef_startup_delay (args->dev,
-			       &got_value);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_pef_startup_delay (args->dev,
+                                   &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = atoi (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
                    kv->key,
@@ -1226,47 +1256,51 @@ pef_startup_delay_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 pef_startup_delay_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
-  int num;
+  long int num;
   char *endptr;
 
   num = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return -1;
-  if (num < 0 || num > 255)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
-  return 0;
+  if (num < 0 || num > 255)
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 /* alert_startup_delay */
 
-static int
+static bmc_err_t
 pef_alert_startup_delay_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
-  int ret;
   uint8_t delay;
+  bmc_err_t ret;
   
-  ret = get_pef_alert_startup_delay (args->dev,
-				     &delay);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_pef_alert_startup_delay (args->dev,
+                                          &delay)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", delay);
-  return 0;
+  if (asprintf (&kv->value, "%d", delay) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 pef_alert_startup_delay_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
@@ -1276,28 +1310,32 @@ pef_alert_startup_delay_commit (const struct bmc_config_arguments *args,
 				      value);
 }
 
-static int
+static bmc_diff_t
 pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
-  int ret;
   uint8_t got_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = get_pef_alert_startup_delay (args->dev,
-			       &got_value);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_pef_alert_startup_delay (args->dev,
+                                         &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = atoi (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
                    kv->key,
@@ -1307,22 +1345,23 @@ pef_alert_startup_delay_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 pef_alert_startup_delay_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
-  int num;
+  long int num;
   char *endptr;
 
   num = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return -1;
-  if (num < 0 || num > 255)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
-  return 0;
+  if (num < 0 || num > 255)
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 

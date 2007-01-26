@@ -1,3 +1,9 @@
+2007-01-26  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Re-architect for most of bmc-config to support
+	fatal and non-fatal errors, necessary for later hostrange support.
+	Fixed various bugs along the way.
+	
 2007-01-24  Albert Chu <chu11@llnl.gov>
 	
 	* bmc-config/: Continue cleanup and re-architecture.
@@ -25,6 +31,12 @@
 	bmc-config/src/bmc-pef-conf-section.h,
 	bmc-config/src/bmc-sol-conf-section.h,
 	bmc-config/src/bmc-misc-section.h: New files.
+
+	* bmc-config/src/bmc-argp.h: Renamed to bmc-config-argp.h for
+	consistency.
+
+	* bmc-config/src/bmc-argpc.: Renamed to bmc-config-argp.c for
+	consistency.
 
 	* libfreeipmi/include/freeipmi/ipmi-error.h: Add forgotten
 	include.

@@ -40,26 +40,26 @@ struct section {
 };
 
 /* checkout procedure fills the value into kv->value as printable string */
-typedef int (*Keyvalue_Checkout) (const struct bmc_config_arguments *args,
-				  const struct section *sect,
-				  struct keyvalue *kv);
+typedef bmc_err_t (*Keyvalue_Checkout) (const struct bmc_config_arguments *args,
+                                        const struct section *sect,
+                                        struct keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
-typedef int (*Keyvalue_Commit) (const struct bmc_config_arguments *args,
-				const struct section *sect,
-				const struct keyvalue *kv);
+typedef bmc_err_t (*Keyvalue_Commit) (const struct bmc_config_arguments *args,
+                                      const struct section *sect,
+                                      const struct keyvalue *kv);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
-typedef int (*Keyvalue_Diff) (const struct bmc_config_arguments *args,
-			      const struct section *sect,
-			      const struct keyvalue *kv);
+typedef bmc_diff_t (*Keyvalue_Diff) (const struct bmc_config_arguments *args,
+                                     const struct section *sect,
+                                     const struct keyvalue *kv);
 
 /* validate procedure finds if value is suitable to be set as kv->value */
-typedef int (*Keyvalue_Validate) (const struct bmc_config_arguments *args,
-				  const struct section *sect,
-				  const char *value);
+typedef bmc_validate_t (*Keyvalue_Validate) (const struct bmc_config_arguments *args,
+                                             const struct section *sect,
+                                             const char *value);
 
 struct keyvalue {
   struct keyvalue *next;
@@ -100,11 +100,11 @@ int bmc_section_set_value (const char *section_name,
 			   struct bmc_config_arguments *args,
 			   struct section *sections);
 
-int bmc_section_commit_value (const char *section_name,
-			      const char *key_name,
-			      const char *value,
-			      struct bmc_config_arguments *args,
-			      struct section *sections);
+bmc_err_t bmc_section_commit_value (const char *section_name,
+                                    const char *key_name,
+                                    const char *value,
+                                    struct bmc_config_arguments *args,
+                                    struct section *sections);
 
 int bmc_section_diff_value (const char *section_name,
 			    const char *key_name,

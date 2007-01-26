@@ -87,7 +87,7 @@ _bmc_config (void *arg)
   bmc_config_prog_data_t *prog_data;
   struct section *sections = NULL;
   int exit_code = -1;
-  int ret;
+  bmc_err_t ret;
 
   prog_data = (bmc_config_prog_data_t *)arg;
 
@@ -184,7 +184,7 @@ _bmc_config (void *arg)
     break;
   }
   
-  if (ret < 0)
+  if (ret == BMC_ERR_FATAL_ERROR || ret == BMC_ERR_NON_FATAL_ERROR)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

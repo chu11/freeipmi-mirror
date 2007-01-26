@@ -43,7 +43,7 @@ static uint8_t cipher_suite_priv[CIPHER_SUITE_LEN] =
   };
 static int cipher_suite_priv_set = 0;
 
-static int8_t 
+static bmc_err_t 
 set_bmc_user_access (ipmi_device_t dev, 
 		     uint8_t channel_number, 
 		     uint8_t user_ipmi_messaging, 
@@ -54,10 +54,11 @@ set_bmc_user_access (ipmi_device_t dev,
 		     uint8_t session_limit)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_access_rs)))
     goto cleanup;
+
   if (ipmi_cmd_set_user_access (dev, 
 				channel_number, 
 				user_ipmi_messaging, 
@@ -66,17 +67,20 @@ set_bmc_user_access (ipmi_device_t dev,
 				userid, 
 				privilege_limit, 
 				session_limit, 
-				obj_cmd_rs) != 0)
-    goto cleanup;
+				obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-static int8_t 
+static bmc_err_t 
 set_bmc_channel_access (ipmi_device_t dev, 
 			uint8_t channel_number, 
 			uint8_t set_option, 
@@ -87,7 +91,7 @@ set_bmc_channel_access (ipmi_device_t dev,
 			uint8_t channel_privilege_limit)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_access_rs)))
     goto cleanup;
@@ -103,23 +107,26 @@ set_bmc_channel_access (ipmi_device_t dev,
 				   channel_privilege_limit, 
 				   (set_option ? IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VOLATILE : 
 				    IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE), 
-				   obj_cmd_rs) != 0)
-    goto cleanup;
+				   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
       
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_username (ipmi_device_t dev, 
 		  uint8_t userid, 
 		  uint8_t *username)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (userid == 1)
     return (0);
@@ -131,17 +138,20 @@ set_bmc_username (ipmi_device_t dev,
 			      userid, 
 			      username, 
 			      (username) ? strlen((char *)username) : 0,
-			      obj_cmd_rs) != 0)
-    goto cleanup;
+			      obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_enable_user (ipmi_device_t dev, 
 		     uint8_t userid, 
 		     int user_status)
@@ -155,26 +165,31 @@ set_bmc_enable_user (ipmi_device_t dev,
     goto cleanup;
   memset (password, 0, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 
-  ret = ipmi_cmd_set_user_password (dev, 
-				    userid, 
-				    (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
-				     IPMI_PASSWORD_OPERATION_DISABLE_USER), 
-				    (char *)password, 
-				    0,
-				    obj_cmd_rs);
-
-  if (ret != 0)
+  if (ipmi_cmd_set_user_password (dev, 
+                                  userid, 
+                                  (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
+                                   IPMI_PASSWORD_OPERATION_DISABLE_USER), 
+                                  (char *)password, 
+                                  0,
+                                  obj_cmd_rs) < 0)
     {
       /* 
        * Workaround: achu: the IPMI spec says you don't have to set a
        * password when you enable/disable a user.  But some BMCs care that
        * you do (even though the password will be ignored)
        */
-      if ((ret = ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID)) < 0)
-	goto cleanup;
+      if ((ret = ipmi_check_completion_code (obj_cmd_rs, 
+                                             IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID)) < 0)
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       if (!ret)
-	goto cleanup;
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_user_password_rq)))
 	goto cleanup;
@@ -188,7 +203,9 @@ set_bmc_enable_user (ipmi_device_t dev,
 	goto cleanup;
       
       /* Force the password to be filled in */
-      if (fiid_obj_set_data (obj_cmd_rq, "password", (char *)password, IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
+      if (fiid_obj_set_data (obj_cmd_rq, 
+                             "password", 
+                             (char *)password, IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
 	goto cleanup;
       
       if (ipmi_cmd (dev, 
@@ -196,13 +213,19 @@ set_bmc_enable_user (ipmi_device_t dev,
 		    IPMI_NET_FN_APP_RQ,
 		    obj_cmd_rq,
 		    obj_cmd_rs) < 0)
-	goto cleanup;
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
       
       if (ipmi_check_completion_code_success(obj_cmd_rs) != 1)
-	goto cleanup;
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
     }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rq)
     fiid_obj_destroy(obj_cmd_rq);
@@ -211,13 +234,13 @@ set_bmc_enable_user (ipmi_device_t dev,
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_user_password (ipmi_device_t dev, 
 		       uint8_t userid, 
 		       uint8_t *password)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
@@ -227,23 +250,26 @@ set_bmc_user_password (ipmi_device_t dev,
                                   IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
                                   (char *)password, 
                                   (password) ? strlen((char *)password) : 0,
-                                  obj_cmd_rs) != 0)
-    goto cleanup;
+                                  obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_user_password20 (ipmi_device_t dev, 
                          uint8_t userid, 
                          uint8_t *password)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
@@ -254,17 +280,20 @@ set_bmc_user_password20 (ipmi_device_t dev,
                                       IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
                                       (char *)password, 
                                       (password) ? strlen((char *)password) : 0,
-                                      obj_cmd_rs) != 0)
-    goto cleanup;
+                                      obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_user_lan_channel_access (ipmi_device_t dev, 
 				 uint8_t userid, 
 				 uint8_t lan_user_ipmi_messaging, 
@@ -283,7 +312,7 @@ set_bmc_user_lan_channel_access (ipmi_device_t dev,
 			      lan_session_limit);
 }
 
-int8_t
+bmc_err_t
 set_bmc_user_payload_access (ipmi_device_t dev,
                              uint8_t userid,
                              uint8_t operation,
@@ -305,7 +334,7 @@ set_bmc_user_payload_access (ipmi_device_t dev,
 {
 
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_payload_access_rs)))
     goto cleanup;
@@ -329,17 +358,20 @@ set_bmc_user_payload_access (ipmi_device_t dev,
                                         oem_payload_5,
                                         oem_payload_6,
                                         oem_payload_7,
-                                        obj_cmd_rs) != 0)
-    goto cleanup;
+                                        obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_user_serial_channel_access (ipmi_device_t dev, 
 				    uint8_t userid, 
 				    uint8_t serial_user_ipmi_messaging, 
@@ -358,7 +390,7 @@ set_bmc_user_serial_channel_access (ipmi_device_t dev,
 			      serial_session_limit);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_channel_volatile_access (ipmi_device_t dev, 
 				     uint8_t access_mode, 
 				     uint8_t user_level_authentication, 
@@ -376,7 +408,7 @@ set_bmc_lan_channel_volatile_access (ipmi_device_t dev,
 				 channel_privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_channel_non_volatile_access (ipmi_device_t dev, 
 					 uint8_t access_mode, 
 					 uint8_t user_level_authentication, 
@@ -394,12 +426,12 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t dev,
 				 channel_privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_ip_address_source (ipmi_device_t dev, 
 				    uint8_t ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -407,23 +439,26 @@ set_bmc_lan_conf_ip_address_source (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (dev, 
 								   get_lan_channel_number (dev), 
 								   ip_address_source, 
-								   obj_cmd_rs) != 0)
-    goto cleanup;
+								   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_ip_address (ipmi_device_t dev, 
 			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (ipmi_ipv4_address_string2int(ip_address, &ip_address_val) < 0)
     goto cleanup;
@@ -434,23 +469,26 @@ set_bmc_lan_conf_ip_address (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_ip_address (dev, 
 							    get_lan_channel_number (dev), 
 							    ip_address_val, 
-							    obj_cmd_rs) != 0)
-    goto cleanup;
+							    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
     
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_mac_address (ipmi_device_t dev, 
 			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (ipmi_mac_address_string2int(mac_address, &mac_address_val) < 0)
     goto cleanup;
@@ -461,23 +499,26 @@ set_bmc_lan_conf_mac_address (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_mac_address (dev, 
 							     get_lan_channel_number (dev), 
 							     mac_address_val, 
-							     obj_cmd_rs) != 0)
-    goto cleanup;
+							     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_subnet_mask (ipmi_device_t dev, 
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t subnet_mask_val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (ipmi_ipv4_address_string2int(subnet_mask, &subnet_mask_val) < 0)
     goto cleanup;
@@ -488,23 +529,26 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (dev, 
 							     get_lan_channel_number (dev), 
 							     subnet_mask_val, 
-							     obj_cmd_rs) != 0)
-    goto cleanup;
+							     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv); 
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_default_gateway_address (ipmi_device_t dev, 
 					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (ipmi_ipv4_address_string2int(default_gateway_address, &ip_address_val) < 0)
     goto cleanup;
@@ -515,23 +559,26 @@ set_bmc_lan_conf_default_gateway_address (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (dev, 
 									 get_lan_channel_number (dev), 
 									 ip_address_val, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev, 
 					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (ipmi_mac_address_string2int(default_gateway_mac_address, &mac_address_val) < 0)
     goto cleanup;
@@ -542,23 +589,26 @@ set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (dev, 
 									     get_lan_channel_number (dev), 
 									     mac_address_val, 
-									     obj_cmd_rs) != 0)
-    goto cleanup;
+									     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev, 
 					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (ipmi_ipv4_address_string2int(backup_gateway_address, &ip_address_val) < 0)
     goto cleanup;
@@ -569,23 +619,26 @@ set_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (dev, 
 									get_lan_channel_number (dev), 
 									ip_address_val, 
-									obj_cmd_rs) != 0)
-    goto cleanup;
+									obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev, 
 					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (ipmi_mac_address_string2int(backup_gateway_mac_address, &mac_address_val) < 0)
     goto cleanup;
@@ -596,23 +649,26 @@ set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (dev, 
 									    get_lan_channel_number (dev), 
 									    mac_address_val, 
-									    obj_cmd_rs) != 0)
-    goto cleanup;
+									    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_vlan_id (ipmi_device_t dev, 
 			  uint32_t vlan_id,
 			  uint8_t vlan_id_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -621,22 +677,25 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t dev,
 							 get_lan_channel_number (dev), 
                                                          vlan_id,
 							 vlan_id_enable, 
-							 obj_cmd_rs) != 0)
-    goto cleanup;
+							 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_vlan_priority (ipmi_device_t dev, 
 				uint8_t vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -644,17 +703,20 @@ set_bmc_lan_conf_vlan_priority (ipmi_device_t dev,
   if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (dev, 
 							       get_lan_channel_number (dev), 
 							       vlan_priority, 
-							       obj_cmd_rs) != 0)
-    goto cleanup;
+							       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-static int8_t
+static bmc_err_t
 _fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
 					   fiid_template_t l_tmpl_set_auth_authentication_type_enables,
 					   uint8_t channel_number,
@@ -666,85 +728,82 @@ _fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
 {
   if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return BMC_ERR_NON_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "cmd",
 		    IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS) < 0)
-    return (-1);
+    return BMC_ERR_NON_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "channel_number",
 		    channel_number) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "reserved1",
 		    0) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "parameter_selector",
 		    IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "callback_level",
 		    callback_level) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "callback_level.reserved2",
 		    0) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "user_level",
 		    user_level) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "user_level.reserved2",
 		    0) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "operator_level",
 		    operator_level) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "operator_level.reserved2",
 		    0) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "admin_level",
 		    admin_level) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "admin_level.reserved2",
 		    0) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "oem_level",
 		    oem_level) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
   if (fiid_obj_set (obj_data_rq,
 		    "oem_level.reserved2",
 		    0) < 0)
-    return (-1);
+    return BMC_ERR_FATAL_ERROR;
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
 					      struct bmc_authentication_level *bmc_authentication_level)
 {
@@ -773,7 +832,8 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
   uint8_t operator_level = 0;
   uint8_t admin_level = 0;
   uint8_t oem_level = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t rc;
 
   if (bmc_authentication_level->callback.type_none)
     callback_level = BIT_SET (callback_level, 0);
@@ -836,27 +896,36 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (_fill_lan_set_authentication_type_enables (obj_cmd_rq,
-						 l_tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq,
-						 get_lan_channel_number (dev), 
-						 callback_level,
-						 user_level,
-						 operator_level,
-						 admin_level,
-						 oem_level) < 0)
-    goto cleanup;
-
+  if ((rc = _fill_lan_set_authentication_type_enables (obj_cmd_rq,
+                                                       l_tmpl_cmd_set_lan_configuration_parameters_authentication_type_enables_rq,
+                                                       get_lan_channel_number (dev), 
+                                                       callback_level,
+                                                       user_level,
+                                                       operator_level,
+                                                       admin_level,
+                                                       oem_level)) != BMC_ERR_SUCCESS)
+    {
+      rv = rc;
+      goto cleanup;
+    }
+  
   if (ipmi_cmd (dev,
 		IPMI_BMC_IPMB_LUN_BMC,
 		IPMI_NET_FN_TRANSPORT_RQ,
 		obj_cmd_rq,
 		obj_cmd_rs) < 0)
-    goto cleanup;
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
   if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
-    goto cleanup;
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rq)
     fiid_obj_destroy(obj_cmd_rq);
@@ -865,13 +934,13 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
 					    uint8_t bmc_generated_gratuitous_arps, 
 					    uint8_t bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -880,10 +949,13 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev,
 									   get_lan_channel_number (dev), 
 									   bmc_generated_gratuitous_arps, 
 									   bmc_generated_arp_responses, 
-									   obj_cmd_rs) != 0)
-    goto cleanup;
+									   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
     
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
@@ -891,12 +963,12 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev,
 
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev, 
 					  uint8_t gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -904,17 +976,20 @@ set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev,
   if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (dev, 
 									 get_lan_channel_number (dev), 
 									 gratuitous_arp_interval, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
     
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_serial_channel_volatile_access (ipmi_device_t dev, 
 					uint8_t access_mode, 
 					uint8_t user_level_authentication, 
@@ -932,7 +1007,7 @@ set_bmc_serial_channel_volatile_access (ipmi_device_t dev,
 				 channel_privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_serial_channel_non_volatile_access (ipmi_device_t dev, 
 					    uint8_t access_mode, 
 					    uint8_t user_level_authentication, 
@@ -950,7 +1025,7 @@ set_bmc_serial_channel_non_volatile_access (ipmi_device_t dev,
 				 channel_privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_serial_conf_connection_mode (ipmi_device_t dev, 
 				     uint8_t basic_mode,
 				     uint8_t ppp_mode,
@@ -958,7 +1033,7 @@ set_bmc_serial_conf_connection_mode (ipmi_device_t dev,
 				     uint8_t connect_mode)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
@@ -969,22 +1044,25 @@ set_bmc_serial_conf_connection_mode (ipmi_device_t dev,
 							       ppp_mode,
 							       terminal_mode,
 							       connect_mode,
-							       obj_cmd_rs) != 0)
-    goto cleanup;
+							       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
    
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev, 
 					    uint8_t page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
@@ -992,22 +1070,25 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev,
   if (ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (dev, 
 								      get_serial_channel_number (dev), 
 								      page_blackout_interval, 
-								      obj_cmd_rs) != 0)
-    goto cleanup;
+								      obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_serial_conf_call_retry_interval (ipmi_device_t dev, 
 					 uint8_t call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
@@ -1015,24 +1096,27 @@ set_bmc_serial_conf_call_retry_interval (ipmi_device_t dev,
   if (ipmi_cmd_set_serial_modem_configuration_call_retry_interval (dev, 
 								   get_serial_channel_number (dev), 
 								   call_retry_interval, 
-								   obj_cmd_rs) != 0)
-    goto cleanup;
+								   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev, 
 						  uint8_t dtr_hangup, 
 						  uint8_t flow_control, 
 						  uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
@@ -1042,39 +1126,45 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev,
 									    dtr_hangup, 
 									    flow_control, 
 									    bit_rate, 
-									    obj_cmd_rs) != 0)
-    goto cleanup;
+									    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_bmc_power_restore_policy (ipmi_device_t dev, 
 			      uint8_t power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_power_restore_policy (dev, 
 					 power_restore_policy, 
-					 obj_cmd_rs) != 0)
-    goto cleanup;
+					 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_pef_control (ipmi_device_t dev, 
 		 uint8_t pef, 
 		 uint8_t pef_event_messages, 
@@ -1082,7 +1172,7 @@ set_pef_control (ipmi_device_t dev,
 		 uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
@@ -1092,17 +1182,20 @@ set_pef_control (ipmi_device_t dev,
 							     pef_event_messages, 
 							     pef_startup_delay, 
 							     pef_alert_startup_delay, 
-							     obj_cmd_rs) != 0)
-    goto cleanup;
+							     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_pef_action_global_control (ipmi_device_t dev, 
 			       uint8_t alert_action, 
 			       uint8_t power_down_action, 
@@ -1112,7 +1205,7 @@ set_pef_action_global_control (ipmi_device_t dev,
 			       uint8_t diagnostic_interrupt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
@@ -1124,66 +1217,75 @@ set_pef_action_global_control (ipmi_device_t dev,
 									   power_cycle_action, 
 									   oem_action, 
 									   diagnostic_interrupt, 
-									   obj_cmd_rs) != 0)
-    goto cleanup;
+									   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_pef_startup_delay (ipmi_device_t dev, 
 		       uint8_t pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (dev, 
 								   pef_startup_delay, 
-								   obj_cmd_rs) != 0)
-    goto cleanup;
+								   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);	
 }
 
-int8_t 
+bmc_err_t 
 set_pef_alert_startup_delay (ipmi_device_t dev, 
 			     uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
   if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (dev, 
 									 pef_alert_startup_delay, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_sol_sol_enable(ipmi_device_t dev,
 		   uint8_t sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -1191,24 +1293,27 @@ set_sol_sol_enable(ipmi_device_t dev,
   if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (dev, 
 							    get_sol_channel_number (dev),
 							    sol_enable, 
-							    obj_cmd_rs) != 0)
-    goto cleanup;
+							    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_sol_sol_authentication(ipmi_device_t dev,
 			   uint8_t sol_privilege_level,
 			   uint8_t force_sol_payload_authentication,
 			   uint8_t force_sol_payload_encryption)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -1218,23 +1323,26 @@ set_sol_sol_authentication(ipmi_device_t dev,
 								    sol_privilege_level,
 								    force_sol_payload_authentication,
 								    force_sol_payload_encryption,
-								    obj_cmd_rs) != 0)
-    goto cleanup;
+								    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t dev,
 							 uint8_t character_accumulate_interval,
 							 uint8_t character_send_threshold)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -1243,23 +1351,26 @@ set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t dev,
 												  get_sol_channel_number (dev),
 												  character_accumulate_interval,
 												  character_send_threshold,
-												  obj_cmd_rs) != 0)
-    goto cleanup;
+												  obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_sol_sol_retry(ipmi_device_t dev,
 		  uint8_t retry_count,
 		  uint8_t retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -1268,22 +1379,25 @@ set_sol_sol_retry(ipmi_device_t dev,
 							   get_sol_channel_number (dev),
 							   retry_count,
 							   retry_interval,
-							   obj_cmd_rs) != 0)
-    goto cleanup;
+							   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_sol_sol_non_volatile_bit_rate(ipmi_device_t dev,
 				  uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -1291,22 +1405,25 @@ set_sol_sol_non_volatile_bit_rate(ipmi_device_t dev,
   if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
 									   get_sol_channel_number (dev),
 									   bit_rate,
-									   obj_cmd_rs) != 0)
-    goto cleanup;
+									   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_sol_sol_volatile_bit_rate(ipmi_device_t dev,
 			      uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -1314,22 +1431,25 @@ set_sol_sol_volatile_bit_rate(ipmi_device_t dev,
   if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
 								       get_sol_channel_number (dev),
 								       bit_rate,
-								       obj_cmd_rs) != 0)
-    goto cleanup;
+								       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_sol_sol_payload_port_number(ipmi_device_t dev,
 				uint16_t port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;  
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;  
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -1337,24 +1457,28 @@ set_sol_sol_payload_port_number(ipmi_device_t dev,
   if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (dev, 
 									 get_sol_channel_number (dev),
                                                                          port_number,
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-static int
+static bmc_err_t
 _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
 {
   fiid_obj_t obj_cmd_count_rs = NULL;
   fiid_obj_t obj_cmd_id_rs = NULL;
   fiid_obj_t obj_cmd_priv_rs = NULL;
   uint64_t val;
-  int i, rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  int i;
 
   if (!cipher_suite_entry_count)
     {
@@ -1366,8 +1490,11 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
 												   IPMI_GET_LAN_PARAMETER, 
 												   SET_SELECTOR, 
 												   BLOCK_SELECTOR, 
-												   obj_cmd_count_rs) != 0)
-	goto cleanup;
+												   obj_cmd_count_rs) < 0)
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       if (fiid_obj_get (obj_cmd_count_rs, "cipher_suite_entry_count", &val) < 0)
 	goto cleanup;
@@ -1388,8 +1515,11 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
 											     IPMI_GET_LAN_PARAMETER, 
 											     SET_SELECTOR, 
 											     BLOCK_SELECTOR, 
-											     obj_cmd_id_rs) != 0)
-	goto cleanup;
+											     obj_cmd_id_rs) < 0)
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       for (i = 0; i < cipher_suite_entry_count; i++)
 	{
@@ -1447,8 +1577,11 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
 												      IPMI_GET_LAN_PARAMETER, 
 												      SET_SELECTOR, 
 												      BLOCK_SELECTOR, 
-												      obj_cmd_priv_rs) != 0)
-	goto cleanup;
+												      obj_cmd_priv_rs) < 0)
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       for (i = 0; i < CIPHER_SUITE_LEN; i++)
 	{
@@ -1496,7 +1629,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
       cipher_suite_priv_set++;
     }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_count_rs)
     fiid_obj_destroy(obj_cmd_count_rs);
@@ -1507,19 +1640,23 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 					uint8_t cipher_suite_id,
 					uint8_t privilege)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t rc;
 
   if (!(cipher_suite_id < CIPHER_SUITE_LEN))
     goto cleanup;
 
-  if (_rmcpplus_cipher_suite_id_privilege_setup(dev) < 0)
-    goto cleanup;
+  if ((rc = _rmcpplus_cipher_suite_id_privilege_setup(dev)) != BMC_ERR_SUCCESS)
+    {
+      rv = rc;
+      goto cleanup;
+    }
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -1551,11 +1688,16 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 												     privs[14],
 												     privs[15],
 												     obj_cmd_rs) < 0)
-	goto cleanup;
+        {
+          rv = BMC_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
       
       cipher_suite_priv[cipher_suite_id] = privilege;
-      rv = 0;
+      rv = BMC_ERR_SUCCESS;
     }
+  else
+    rv = BMC_ERR_NON_FATAL_ERROR;
   
  cleanup:
   if (obj_cmd_rs)
@@ -1563,13 +1705,13 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_k_r(ipmi_device_t dev,
         uint8_t *k_r,
         uint32_t k_r_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!k_r)
     goto cleanup;
@@ -1583,23 +1725,26 @@ set_k_r(ipmi_device_t dev,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
 					  k_r,
 					  k_r_len,
-                                          obj_cmd_rs) != 0)
-    goto cleanup;
+                                          obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 set_k_g(ipmi_device_t dev,
         uint8_t *k_g,
         uint32_t k_g_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
@@ -1610,10 +1755,13 @@ set_k_g(ipmi_device_t dev,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
 					  k_g,
 					  k_g_len,
-                                          obj_cmd_rs) != 0)
-    goto cleanup;
+                                          obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
@@ -1621,36 +1769,35 @@ set_k_g(ipmi_device_t dev,
 }
 
 
-int8_t
+int
 get_bmc_max_users (ipmi_device_t dev, uint8_t *max_users)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  
-  obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs);
-  if (!obj_cmd_rs)
-    return -1;
+  int rv = -1;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs)))
+    goto cleanup;
 
   if (ipmi_cmd_get_user_access (dev, 
 				get_lan_channel_number (dev), 
 				1, 
-				obj_cmd_rs) != 0) {
-    fiid_obj_destroy (obj_cmd_rs);
-    return -1;
-  }
+				obj_cmd_rs) < 0) 
+    goto cleanup;
 
-  if (fiid_obj_get (obj_cmd_rs, "max_channel_user_ids", &val) < 0) {
-    fiid_obj_destroy (obj_cmd_rs);
-    return -1;
-  }
+  if (fiid_obj_get (obj_cmd_rs, "max_channel_user_ids", &val) < 0) 
+    goto cleanup;
 
-  fiid_obj_destroy (obj_cmd_rs);
   *max_users = (uint8_t) val;
-  return 0;
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy (obj_cmd_rs);
+  return rv;
 }
 			      
 /* get_XXXX functions */
-static int8_t 
+static bmc_err_t 
 get_bmc_user_access (ipmi_device_t dev, 
 		     uint8_t userid, 
 		     uint8_t channel_number, 
@@ -1663,7 +1810,7 @@ get_bmc_user_access (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_access_rs)))
     goto cleanup;
@@ -1671,8 +1818,11 @@ get_bmc_user_access (ipmi_device_t dev,
   if (ipmi_cmd_get_user_access (dev, 
 				channel_number, 
 				userid, 
-				obj_cmd_rs) != 0)
-    goto cleanup;
+				obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "user_privilege_level_limit", &val) < 0)
     goto cleanup;
@@ -1697,14 +1847,14 @@ get_bmc_user_access (ipmi_device_t dev,
     goto cleanup;
   *user_id_enable_status = (uint8_t) val;
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-static int8_t 
+static bmc_err_t 
 get_bmc_channel_access (ipmi_device_t dev, 
 			uint8_t channel_number, 
 			uint8_t access_type, 
@@ -1716,7 +1866,7 @@ get_bmc_channel_access (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_access_rs)))
     goto cleanup;
@@ -1725,8 +1875,11 @@ get_bmc_channel_access (ipmi_device_t dev,
 				   channel_number, 
 				   (access_type ? IPMI_CHANNEL_ACCESS_GET_VOLATILE :
 				    IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE), 
-				   obj_cmd_rs) != 0)
-    goto cleanup;
+				   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "ipmi_messaging_access_mode", &val) < 0)
     goto cleanup;
@@ -1748,29 +1901,32 @@ get_bmc_channel_access (ipmi_device_t dev,
     goto cleanup;
   *privilege_limit = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_username (ipmi_device_t dev, 
 		  uint8_t userid, 
 		  uint8_t *username,
 		  uint32_t username_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_name_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_user_name (dev, 
 			      userid, 
-			      obj_cmd_rs) != 0)
-    goto cleanup;
+			      obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   /* achu: after get_user_name call to ensure the command can succeed */
   if (userid == 1)
@@ -1784,14 +1940,14 @@ get_bmc_username (ipmi_device_t dev,
 	goto cleanup;
     }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_user_lan_channel_access (ipmi_device_t dev, 
 				 uint8_t userid, 
 				 uint8_t *user_ipmi_messaging, 
@@ -1812,7 +1968,7 @@ get_bmc_user_lan_channel_access (ipmi_device_t dev,
                               user_id_enable_status);
 }
 
-int8_t
+bmc_err_t
 get_bmc_user_payload_access (ipmi_device_t dev,
                              uint8_t userid,
                              uint8_t *standard_payload_1,
@@ -1833,7 +1989,7 @@ get_bmc_user_payload_access (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_payload_access_rs)))
     goto cleanup;
@@ -1841,8 +1997,11 @@ get_bmc_user_payload_access (ipmi_device_t dev,
   if (ipmi_cmd_get_user_payload_access (dev, 
                                         get_lan_channel_number (dev),
                                         userid, 
-                                        obj_cmd_rs) != 0)
-    goto cleanup;
+                                        obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
   if (standard_payload_1)
     {
@@ -1949,14 +2108,14 @@ get_bmc_user_payload_access (ipmi_device_t dev,
       *oem_payload_7 = val;
     }
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_user_serial_channel_access (ipmi_device_t dev, 
 				    uint8_t userid, 
 				    uint8_t *user_ipmi_messaging, 
@@ -1977,7 +2136,7 @@ get_bmc_user_serial_channel_access (ipmi_device_t dev,
                               user_id_enable_status);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_channel_volatile_access (ipmi_device_t dev, 
 				     uint8_t *access_mode, 
 				     uint8_t *user_level_authentication, 
@@ -1995,7 +2154,7 @@ get_bmc_lan_channel_volatile_access (ipmi_device_t dev,
 				 privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_channel_non_volatile_access (ipmi_device_t dev, 
 					 uint8_t *access_mode, 
 					 uint8_t *user_level_authentication, 
@@ -2013,13 +2172,13 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t dev,
 				 privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_ip_address_source (ipmi_device_t dev, 
 				    uint8_t *ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs)))
     goto cleanup;
@@ -2029,27 +2188,30 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t dev,
 								   IPMI_GET_LAN_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
-								   obj_cmd_rs) != 0)
-    goto cleanup;
+								   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "ip_address_source", &val) < 0)
     goto cleanup;
   *ip_address_source = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_ip_address (ipmi_device_t dev, 
 			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_rs)))
     goto cleanup;
@@ -2059,8 +2221,11 @@ get_bmc_lan_conf_ip_address (ipmi_device_t dev,
 							    IPMI_GET_LAN_PARAMETER, 
 							    SET_SELECTOR, 
 							    BLOCK_SELECTOR, 
-							    obj_cmd_rs) != 0)
-    goto cleanup;
+							    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get_data (obj_cmd_rs, 
 			 "ip_address", 
@@ -2074,20 +2239,20 @@ get_bmc_lan_conf_ip_address (ipmi_device_t dev,
 	   ip_address_bytes[2], 
 	   ip_address_bytes[3]);
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_mac_address (ipmi_device_t dev, 
 			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_mac_address_rs)))
     goto cleanup;
@@ -2097,14 +2262,18 @@ get_bmc_lan_conf_mac_address (ipmi_device_t dev,
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
-							     obj_cmd_rs) != 0)
-    goto cleanup;
+							     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get_data (obj_cmd_rs, 
 			 "mac_address", 
 			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
+
   sprintf (mac_address, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
 	   mac_address_bytes[0], 
@@ -2114,20 +2283,20 @@ get_bmc_lan_conf_mac_address (ipmi_device_t dev,
 	   mac_address_bytes[4], 
 	   mac_address_bytes[5]);
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_subnet_mask (ipmi_device_t dev, 
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t subnet_mask_bytes[4];
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs)))
     goto cleanup;
@@ -2137,14 +2306,18 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t dev,
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
-							     obj_cmd_rs) != 0)
-    goto cleanup;
+							     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get_data (obj_cmd_rs, 
 			 "subnet_mask", 
 			 subnet_mask_bytes,
 			 4) < 0)
     goto cleanup;
+
   sprintf (subnet_mask, 
 	   "%u.%u.%u.%u", 
 	   subnet_mask_bytes[0], 
@@ -2152,20 +2325,20 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t dev,
 	   subnet_mask_bytes[2], 
 	   subnet_mask_bytes[3]);
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_default_gateway_address (ipmi_device_t dev, 
 					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs)))
     goto cleanup;
@@ -2175,14 +2348,18 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t dev,
 									 IPMI_GET_LAN_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get_data (obj_cmd_rs, 
 			 "ip_address", 
 			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
+
   sprintf (default_gateway_address, 
 	   "%u.%u.%u.%u", 
 	   ip_address_bytes[0], 
@@ -2190,20 +2367,20 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t dev,
 	   ip_address_bytes[2], 
 	   ip_address_bytes[3]);
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev, 
 					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
     goto cleanup;
@@ -2213,8 +2390,11 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev,
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
-									     obj_cmd_rs) != 0)
-    goto cleanup;
+									     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get_data (obj_cmd_rs, 
 			 "mac_address", 
@@ -2230,20 +2410,20 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev,
 	   mac_address_bytes[4], 
 	   mac_address_bytes[5]);
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev, 
 					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs)))
     goto cleanup;
@@ -2253,14 +2433,18 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev,
 									IPMI_GET_LAN_PARAMETER, 
 									SET_SELECTOR, 
 									BLOCK_SELECTOR, 
-									obj_cmd_rs) != 0)
-    goto cleanup;
+									obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get_data (obj_cmd_rs, 
 			 "ip_address", 
 			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
+
   sprintf (backup_gateway_address, 
 	   "%u.%u.%u.%u", 
 	   ip_address_bytes[0], 
@@ -2268,20 +2452,20 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev,
 	   ip_address_bytes[2], 
 	   ip_address_bytes[3]);
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev, 
 					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
     goto cleanup;
@@ -2291,14 +2475,18 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev,
 									    IPMI_GET_LAN_PARAMETER, 
 									    SET_SELECTOR, 
 									    BLOCK_SELECTOR, 
-									    obj_cmd_rs) != 0)
-    goto cleanup;
+									    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get_data (obj_cmd_rs, 
 			 "mac_address", 
 			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
+
   sprintf (backup_gateway_mac_address, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
 	   mac_address_bytes[0], 
@@ -2308,21 +2496,21 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev,
 	   mac_address_bytes[4], 
 	   mac_address_bytes[5]);
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_vlan_id (ipmi_device_t dev, 
 			  uint32_t *vlan_id,
 			  uint8_t *vlan_id_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs)))
     goto cleanup;
@@ -2332,9 +2520,11 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t dev,
 							 IPMI_GET_LAN_PARAMETER, 
 							 SET_SELECTOR, 
 							 BLOCK_SELECTOR, 
-							 obj_cmd_rs) != 0) {
-    goto cleanup;
-  }
+							 obj_cmd_rs) < 0) 
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "vlan_id", &val) < 0)
     goto cleanup;
@@ -2344,20 +2534,20 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t dev,
     goto cleanup;
   *vlan_id_enable = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_vlan_priority (ipmi_device_t dev, 
 				uint8_t *vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs)))
     goto cleanup;
@@ -2367,27 +2557,30 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t dev,
 							       IPMI_GET_LAN_PARAMETER, 
 							       SET_SELECTOR, 
 							       BLOCK_SELECTOR, 
-							       obj_cmd_rs) != 0)
-    goto cleanup;
+							       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "vlan_priority", &val) < 0)
     goto cleanup;
   *vlan_priority = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
 					      struct bmc_authentication_level *bmc_authentication_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs)))
     goto cleanup;
@@ -2397,8 +2590,11 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
-									     obj_cmd_rs) != 0)
-    goto cleanup;
+									     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "callback_level.none", &val) < 0)
     goto cleanup;
@@ -2500,21 +2696,21 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
     goto cleanup;
   bmc_authentication_level->oem.type_oem_proprietary = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
 					    uint8_t *bmc_generated_gratuitous_arps, 
 					    uint8_t *bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs)))
     goto cleanup;
@@ -2524,8 +2720,11 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev,
 									   IPMI_GET_LAN_PARAMETER, 
 									   SET_SELECTOR, 
 									   BLOCK_SELECTOR, 
-									   obj_cmd_rs) != 0)
-    goto cleanup;
+									   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val) < 0)
     goto cleanup;
@@ -2535,20 +2734,20 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev,
     goto cleanup;
   *bmc_generated_arp_responses = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev, 
 					  uint8_t *gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
     goto cleanup;
@@ -2558,21 +2757,24 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev,
 									 IPMI_GET_LAN_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "gratuitous_arp_interval", &val) < 0)
     goto cleanup;
   *gratuitous_arp_interval = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_serial_channel_volatile_access (ipmi_device_t dev, 
 					uint8_t *access_mode, 
 					uint8_t *user_level_authentication, 
@@ -2590,7 +2792,7 @@ get_bmc_serial_channel_volatile_access (ipmi_device_t dev,
 				 privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_serial_channel_non_volatile_access (ipmi_device_t dev, 
 					    uint8_t *access_mode, 
 					    uint8_t *user_level_authentication, 
@@ -2608,7 +2810,7 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t dev,
 				 privilege_limit);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_serial_conf_connection_mode (ipmi_device_t dev, 
 				     uint8_t *basic_mode, 
 				     uint8_t *ppp_mode, 
@@ -2617,7 +2819,7 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_connection_mode_rs)))
     goto cleanup;
@@ -2627,8 +2829,11 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t dev,
 							       IPMI_GET_SERIAL_MODEM_PARAMETER, 
 							       SET_SELECTOR, 
 							       BLOCK_SELECTOR, 
-							       obj_cmd_rs) != 0)
-    goto cleanup;
+							       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "basic_mode", &val) < 0)
     goto cleanup;
@@ -2646,20 +2851,20 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t dev,
     goto cleanup;
   *connect_mode = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev, 
 					    uint8_t *page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs)))
     goto cleanup;
@@ -2669,27 +2874,30 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev,
 								      IPMI_GET_SERIAL_MODEM_PARAMETER, 
 								      SET_SELECTOR, 
 								      BLOCK_SELECTOR, 
-								      obj_cmd_rs) != 0)
-    goto cleanup;
+								      obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "page_blackout_interval", &val) < 0)
     goto cleanup;
   *page_blackout_interval = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_serial_conf_call_retry_interval (ipmi_device_t dev, 
 					 uint8_t *call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs)))
     goto cleanup;
@@ -2699,21 +2907,24 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t dev,
 								   IPMI_GET_SERIAL_MODEM_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
-								   obj_cmd_rs) != 0)
-    goto cleanup;
+								   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "call_retry_interval", &val) < 0)
     goto cleanup;
   *call_retry_interval = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev, 
 						  uint8_t *dtr_hangup, 
 						  uint8_t *flow_control, 
@@ -2721,7 +2932,7 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs)))
     goto cleanup;
@@ -2731,8 +2942,11 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev,
 									    IPMI_GET_SERIAL_MODEM_PARAMETER, 
 									    SET_SELECTOR, 
 									    BLOCK_SELECTOR, 
-									    obj_cmd_rs) != 0)
-    goto cleanup;
+									    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "dtr_hangup", &val) < 0)
     goto cleanup;
@@ -2746,39 +2960,42 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev,
     goto cleanup;
   *bit_rate = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_bmc_power_restore_policy (ipmi_device_t dev, 
 			      uint8_t *power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_chassis_status (dev, obj_cmd_rs) != 0)
-    goto cleanup;
+  if (ipmi_cmd_get_chassis_status (dev, obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
     goto cleanup;
   *power_restore_policy = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_pef_control (ipmi_device_t dev, 
 		 uint8_t *pef, 
 		 uint8_t *pef_event_messages, 
@@ -2787,7 +3004,7 @@ get_pef_control (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_control_rs)))
     goto cleanup;
@@ -2796,8 +3013,11 @@ get_pef_control (ipmi_device_t dev,
 							     IPMI_GET_PEF_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
-							     obj_cmd_rs) != 0)
-    goto cleanup;
+							     obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "pef", &val) < 0)
     goto cleanup;
@@ -2815,14 +3035,14 @@ get_pef_control (ipmi_device_t dev,
     goto cleanup;
   *pef_alert_startup_delay = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_pef_action_global_control (ipmi_device_t dev, 
 			       uint8_t *alert_action, 
 			       uint8_t *power_down_action, 
@@ -2833,7 +3053,7 @@ get_pef_action_global_control (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs)))
     goto cleanup;
@@ -2842,8 +3062,11 @@ get_pef_action_global_control (ipmi_device_t dev,
 									   IPMI_GET_PEF_PARAMETER, 
 									   SET_SELECTOR, 
 									   BLOCK_SELECTOR, 
-									   obj_cmd_rs) != 0)
-    goto cleanup;
+									   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "alert_action", &val) < 0)
     goto cleanup;
@@ -2869,20 +3092,20 @@ get_pef_action_global_control (ipmi_device_t dev,
     goto cleanup;
   *diagnostic_interrupt = val;
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_pef_startup_delay (ipmi_device_t dev, 
 		       uint8_t *pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs)))
     goto cleanup;
@@ -2891,27 +3114,30 @@ get_pef_startup_delay (ipmi_device_t dev,
 								   IPMI_GET_PEF_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
-								   obj_cmd_rs) != 0)
-    goto cleanup;
+								   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
     goto cleanup;
   *pef_startup_delay = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_pef_alert_startup_delay (ipmi_device_t dev, 
 			     uint8_t *pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
     goto cleanup;
@@ -2920,27 +3146,30 @@ get_pef_alert_startup_delay (ipmi_device_t dev,
 									 IPMI_GET_PEF_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
     goto cleanup;
   *pef_alert_startup_delay = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_sol_sol_enable (ipmi_device_t dev, 
 		    uint8_t *sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs)))
     goto cleanup;
@@ -2950,21 +3179,24 @@ get_sol_sol_enable (ipmi_device_t dev,
 							    IPMI_GET_SOL_PARAMETER, 
 							    SET_SELECTOR, 
 							    BLOCK_SELECTOR, 
-							    obj_cmd_rs) != 0)
-    goto cleanup;
+							    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "sol_enable", &val) < 0)
     goto cleanup;
   *sol_enable = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_sol_sol_authentication (ipmi_device_t dev, 
 			    uint8_t *sol_privilege_level,
 			    uint8_t *force_sol_payload_authentication,
@@ -2972,7 +3204,7 @@ get_sol_sol_authentication (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs)))
     goto cleanup;
@@ -2982,8 +3214,11 @@ get_sol_sol_authentication (ipmi_device_t dev,
 								    IPMI_GET_SOL_PARAMETER, 
 								    SET_SELECTOR, 
 								    BLOCK_SELECTOR, 
-								    obj_cmd_rs) != 0)
-    goto cleanup;
+								    obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "sol_privilege_level", &val) < 0)
     goto cleanup;
@@ -2997,21 +3232,21 @@ get_sol_sol_authentication (ipmi_device_t dev,
     goto cleanup;
   *force_sol_payload_encryption = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t dev, 
 							  uint8_t *character_accumulate_interval,
 							  uint8_t *character_send_threshold)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
     goto cleanup;
@@ -3021,8 +3256,11 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t dev,
 												  IPMI_GET_SOL_PARAMETER, 
 												  SET_SELECTOR, 
 												  BLOCK_SELECTOR, 
-												  obj_cmd_rs) != 0)
-    goto cleanup;
+												  obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "character_accumulate_interval", &val) < 0)
     goto cleanup;
@@ -3032,21 +3270,21 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t dev,
     goto cleanup;
   *character_send_threshold = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_sol_sol_retry (ipmi_device_t dev, 
 		   uint8_t *retry_count,
 		   uint8_t *retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs)))
     goto cleanup;
@@ -3056,8 +3294,11 @@ get_sol_sol_retry (ipmi_device_t dev,
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
-							   obj_cmd_rs) != 0)
-    goto cleanup;
+							   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "retry_count", &val) < 0)
     goto cleanup;
@@ -3067,20 +3308,20 @@ get_sol_sol_retry (ipmi_device_t dev,
     goto cleanup;
   *retry_interval = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_sol_sol_non_volatile_bit_rate (ipmi_device_t dev, 
 				   uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs)))
     goto cleanup;
@@ -3090,27 +3331,30 @@ get_sol_sol_non_volatile_bit_rate (ipmi_device_t dev,
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
-							   obj_cmd_rs) != 0)
-    goto cleanup;
+							   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
     goto cleanup;
   *bit_rate = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_sol_sol_volatile_bit_rate (ipmi_device_t dev, 
 			       uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs)))
     goto cleanup;
@@ -3120,27 +3364,30 @@ get_sol_sol_volatile_bit_rate (ipmi_device_t dev,
 								       IPMI_GET_SOL_PARAMETER, 
 								       SET_SELECTOR, 
 								       BLOCK_SELECTOR, 
-								       obj_cmd_rs) != 0)
-    goto cleanup;
+								       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
     goto cleanup;
   *bit_rate = val;
   
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_err_t 
 get_sol_sol_payload_port_number (ipmi_device_t dev, 
 				 uint16_t *port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs)))
     goto cleanup;
@@ -3150,32 +3397,39 @@ get_sol_sol_payload_port_number (ipmi_device_t dev,
 									 IPMI_GET_SOL_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
+									 obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "port_number", &val) < 0)
     goto cleanup;
   *port_number = val;
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t
+bmc_err_t
 get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 					uint8_t cipher_suite_id,
 					uint8_t *privilege)
 {
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t rc;
 
   if (!(cipher_suite_id < CIPHER_SUITE_LEN))
     goto cleanup;
 
-  if (_rmcpplus_cipher_suite_id_privilege_setup(dev) < 0)
-    goto cleanup;
+  if ((rc = _rmcpplus_cipher_suite_id_privilege_setup(dev)) != BMC_ERR_SUCCESS)
+    {
+      rv = rc;
+      goto cleanup;
+    }
 
   if (cipher_suite_entry_count && cipher_suite_id_supported_set && cipher_suite_priv_set)
     {
@@ -3192,14 +3446,18 @@ get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 	}
 
       if (id_found)
-	rv = 0;
+	rv = BMC_ERR_SUCCESS;
+      else
+        rv = BMC_ERR_NON_FATAL_ERROR;
     }
+  else
+    rv = BMC_ERR_NON_FATAL_ERROR;
   
  cleanup:
   return (rv);
 }
 
-int32_t
+bmc_err_t
 get_k_r(ipmi_device_t dev,
         uint8_t *k_r,
         uint32_t k_r_len)
@@ -3207,7 +3465,7 @@ get_k_r(ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t buf[1024];
   uint32_t buf_len;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
@@ -3218,8 +3476,11 @@ get_k_r(ipmi_device_t dev,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                                           NULL,
                                           0,
-                                          obj_cmd_rs) != 0)
-    goto cleanup;
+                                          obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
   if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
     goto cleanup;
@@ -3228,14 +3489,14 @@ get_k_r(ipmi_device_t dev,
     goto cleanup;
   memcpy(k_r, buf, buf_len);
  
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int32_t
+bmc_err_t
 get_k_g(ipmi_device_t dev,
         uint8_t *k_g,
         uint32_t k_g_len)
@@ -3243,7 +3504,7 @@ get_k_g(ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t buf[1024];
   uint32_t buf_len;
-  int8_t rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
@@ -3254,8 +3515,11 @@ get_k_g(ipmi_device_t dev,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                                           NULL,
                                           0,
-                                          obj_cmd_rs) != 0)
-    goto cleanup;
+                                          obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
   
   if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
     goto cleanup;
@@ -3264,7 +3528,7 @@ get_k_g(ipmi_device_t dev,
     goto cleanup;
   memcpy(k_g, buf, buf_len);
 
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
@@ -3272,13 +3536,13 @@ get_k_g(ipmi_device_t dev,
 }
 
 /***********************************************************/
-int8_t 
+bmc_diff_t
 check_bmc_user_password (ipmi_device_t dev, 
 			 uint8_t userid, 
 			 uint8_t *password)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
@@ -3288,33 +3552,38 @@ check_bmc_user_password (ipmi_device_t dev,
                                   IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
                                   (char *)password, 
                                   (password) ? strlen((char *)password) : 0,
-                                  obj_cmd_rs) != 0)
+                                  obj_cmd_rs) < 0)
     {
       uint64_t comp_code;
 
       if (fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
-	goto cleanup;
+        {
+          rv = BMC_DIFF_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
           || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
-	rv = 0; /* false */
+        rv = BMC_DIFF_DIFFERENT;
+      else
+        rv = BMC_DIFF_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  rv = 1; /* true */
+  rv = BMC_DIFF_SAME;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-int8_t 
+bmc_diff_t
 check_bmc_user_password20 (ipmi_device_t dev, 
                            uint8_t userid, 
                            uint8_t *password)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
+  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
@@ -3325,20 +3594,25 @@ check_bmc_user_password20 (ipmi_device_t dev,
                                       IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
                                       (char *)password, 
                                       (password) ? strlen((char *)password) : 0,
-                                      obj_cmd_rs) != 0)
+                                      obj_cmd_rs) < 0)
     {
       uint64_t comp_code;
 
       if (fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
-	goto cleanup;
+        {
+          rv = BMC_DIFF_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
           || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
-	rv = 0; /* false */
+	rv = BMC_DIFF_DIFFERENT;
+      else
+        rv = BMC_DIFF_NON_FATAL_ERROR;
       goto cleanup;
     }
   
-  rv = 1; /* true */
+  rv = BMC_DIFF_SAME;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);

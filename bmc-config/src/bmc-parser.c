@@ -4,7 +4,7 @@
 #include "bmc-diff.h"
 #include "bmc-sections.h"
 
-int
+bmc_err_t
 bmc_parser (struct bmc_config_arguments *args,
 	    struct section *sections,
 	    FILE *fp)
@@ -14,8 +14,8 @@ bmc_parser (struct bmc_config_arguments *args,
   char *section_name = NULL;
   char *key_name = NULL;
   char *value = NULL;
-  int ret = 0;
-
+  char *tok;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
 
   while (fgets (buf, 4096, fp)) 
     {
@@ -23,7 +23,7 @@ bmc_parser (struct bmc_config_arguments *args,
       buf[4095] = 0;
       char *first_word = strtok (buf, " \t\n");
       
-      if (! first_word) 
+      if (!first_word) 
         {
 #ifndef NDEBUG 
           if (args->common.debug)
@@ -32,130 +32,125 @@ bmc_parser (struct bmc_config_arguments *args,
           continue;
         }
     
-    if (first_word[0] == '#') 
-      {
+      if (first_word[0] == '#') 
+        {
 #ifndef NDEBUG 
-        if (args->common.debug)
-	  fprintf (stderr, "Comment on line %d\n", line_num);
+          if (args->common.debug)
+            fprintf (stderr, "Comment on line %d\n", line_num);
 #endif /* NDEBUG */
-        continue;
-      }
-    
-    if (same (first_word, "Section")) 
-      {
-        if (section_name)
-          free (section_name);
-        section_name = strtok (NULL, " \t\n");
-        
-        if (!section_name) 
-          {
-            fprintf (stderr, "FATAL: Error parsing line number %d\n",
-                     line_num);
-            if (section_name)
-              free (section_name);
-            if (key_name)
-              free (key_name);
-            if (value)
-              free (value);
-            ret = -1;
-            break;
-          }
+          continue;
+        }
       
-        if (!(section_name = strdup (section_name)))
-          {
-            perror("strdup");
-	    exit(1);
-          }
-#ifndef NDEBUG 
-        if (args->common.debug) 
-          fprintf (stderr, "Entering section `%s'\n", section_name);
-#endif /* NDEBUG */
-      continue;
-      } 
-    /* same (first_word, "Section") */
+      if (same (first_word, "Section")) 
+        {
+          if (!(tok = strtok (NULL, " \t\n")))
+            {
+              fprintf (stderr, "FATAL: Error parsing line number %d\n",
+                       line_num);
+              goto cleanup;
+            }
+          
+          if (section_name)
+            {
+              free (section_name);
+              section_name = NULL;
+            }
 
-    if (same (first_word, "EndSection")) 
-      {
-        if (!section_name) 
-          {
-            fprintf (stderr, "FATAL: encountered `%s' without a matching Section\n",
-                     first_word);
-            if (key_name)
-              free (key_name);
-            if (value)
-              free (value);
-            ret = -1;
-            break;
-          }
+          if (!(section_name = strdup (tok)))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
+
 #ifndef NDEBUG 
-        if (args->common.debug)
-	  fprintf (stderr, "Leaving section `%s'\n", section_name);
+          if (args->common.debug) 
+            fprintf (stderr, "Entering section `%s'\n", section_name);
 #endif /* NDEBUG */
-        free (section_name);
-        section_name = NULL;
-        
-        continue;
-      } 
-    /* same (first_word, "EndSection") */
-    
-    if (!section_name) 
-      {
-        fprintf (stderr, "FATAL: Key `%s' not inside any Section\n",
-                 first_word);
-        if (key_name)
-          free (key_name);
-	if (value)
-	  free (value);
-	ret = -1;
-	break;
-      }
-    
-    if (key_name)
-      free (key_name);
-    if (!(key_name = strdup (first_word)))
-      {
-        perror("strdup");
-	exit(1);
-      }
-    if (value)
-	free (value);
-    value = strtok (NULL, " \t\n");
-    if (value)
-      {
-        if (!(value = strdup (value)))
-          {
-            perror("strdup");
-	    exit(1);
-          }
-      }
-    else
-      {
-        if (!(value = strdup ("")))
-          {
-            perror("strdup");
-	    exit(1);
-          }
-      }
-    
+
+          continue;
+        } 
+      /* same (first_word, "Section") */
+      
+      if (same (first_word, "EndSection")) 
+        {
+          if (!section_name) 
+            {
+              fprintf (stderr, "FATAL: encountered `%s' without a matching Section\n",
+                       first_word);
+              goto cleanup;
+            }
 #ifndef NDEBUG 
-    if (args->common.debug) 
-      fprintf (stderr, "Trying to set `%s:%s=%s'\n",
-	       section_name, key_name, value);
+          if (args->common.debug)
+            fprintf (stderr, "Leaving section `%s'\n", section_name);
 #endif /* NDEBUG */
-    
-    if (bmc_section_set_value (section_name, key_name, value,
-			       args, sections) != 0) 
-      {
-        if (section_name) 
+
           free (section_name);
-        if (key_name)
+          section_name = NULL;
+          
+          continue;
+        } 
+      /* same (first_word, "EndSection") */
+      
+      if (!section_name) 
+        {
+          fprintf (stderr, "FATAL: Key `%s' not inside any Section\n",
+                 first_word);
+          goto cleanup;
+        }
+      
+      if (key_name)
+        {
           free (key_name);
-        if (value)
+          key_name = NULL;
+        }
+
+      if (!(key_name = strdup (first_word)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+
+      if (value)
+        {
           free (value);
-        ret = -1;
-        break;
-      }
+          value = NULL;
+        }
+
+      if ((tok = strtok (NULL, " \t\n")))
+        {
+          if (!(value = strdup (tok)))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
+        }
+      else
+        {
+          if (!(value = strdup ("")))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
+        }
+      
+#ifndef NDEBUG 
+      if (args->common.debug) 
+        fprintf (stderr, "Trying to set `%s:%s=%s'\n",
+                 section_name, key_name, value);
+#endif /* NDEBUG */
+      
+      if (bmc_section_set_value (section_name, key_name, value,
+                                 args, sections) < 0) 
+        goto cleanup;
     }
-  
-  return ret;
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (section_name)
+    free(section_name);
+  if (key_name)
+    free(key_name);
+  if (value)
+    free(value);
+  return rv;
 }

@@ -5,19 +5,20 @@
 #include "bmc-map.h"
 #include "bmc-sections.h"
 
-static int
+static bmc_err_t
 k_r_checkout (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      struct keyvalue *kv)
 {
-  int ret;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
+  bmc_err_t ret;
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
-  ret = get_k_r (args->dev, (uint8_t *)k_r, IPMI_MAX_K_R_LENGTH);
 
-  if (ret != 0)
-    return -1;
+  if ((ret = get_k_r (args->dev, 
+                      (uint8_t *)k_r, 
+                      IPMI_MAX_K_R_LENGTH)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -26,13 +27,13 @@ k_r_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup ((char *)k_r)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 k_r_commit (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
@@ -42,58 +43,60 @@ k_r_commit (const struct bmc_config_arguments *args,
 		  kv->value ? strlen (kv->value): 0);
 }
 
-static int
+static bmc_diff_t
 k_r_diff (const struct bmc_config_arguments *args,
 	  const struct section *sect,
 	  const struct keyvalue *kv)
 {
-  int ret;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
+  bmc_err_t ret;
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
-  ret = get_k_r (args->dev, k_r, IPMI_MAX_K_R_LENGTH);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_k_r (args->dev, 
+                      k_r, 
+                      IPMI_MAX_K_R_LENGTH)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (strcmp (kv->value?kv->value:"", (char *)k_r)) 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    (char *)k_r);
     } 
   else
-    ret = 0;
+    ret = BMC_DIFF_SAME;
 
   return ret;
 }
 
-static int
+static bmc_validate_t
 k_r_validate (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const char *value)
 {
-  return (value && strlen (value) <= IPMI_MAX_K_R_LENGTH) ? 0 : 1;
+  if (strlen (value) <= IPMI_MAX_K_R_LENGTH)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
-
 
 /* k_g */
 
-static int
+static bmc_err_t
 k_g_checkout (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      struct keyvalue *kv)
 {
-  int ret;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH + 1];
+  bmc_err_t ret;
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
-  ret = get_k_g (args->dev, k_g, IPMI_MAX_K_G_LENGTH);
-
-  if (ret != 0)
-    return -1;
+  
+  if ((ret = get_k_g (args->dev, 
+                      k_g, 
+                      IPMI_MAX_K_G_LENGTH)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -102,13 +105,13 @@ k_g_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup ((char *)k_g)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 k_g_commit (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
@@ -118,40 +121,42 @@ k_g_commit (const struct bmc_config_arguments *args,
 		  kv->value ? strlen (kv->value): 0);
 }
 
-static int
+static bmc_diff_t
 k_g_diff (const struct bmc_config_arguments *args,
 	  const struct section *sect,
 	  const struct keyvalue *kv)
 {
-  int ret;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH + 1];
+  bmc_err_t ret;
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
-  ret = get_k_g (args->dev, k_g, IPMI_MAX_K_G_LENGTH);
+  if ((ret = get_k_g (args->dev, 
+                      k_g, 
+                      IPMI_MAX_K_G_LENGTH)) != BMC_ERR_SUCCESS)
+    return ret;
 
-  if (ret != 0)
-    return -1;
-
-  if (strcmp (kv->value?kv->value:"", (char *)k_g)) 
+  if (strcmp (kv->value ? kv->value : "", (char *)k_g)) 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    (char *)k_g);
     }
   else
-    ret = 0;
+    ret = BMC_DIFF_SAME;
 
   return ret;
 }
 
-static int
+static bmc_validate_t
 k_g_validate (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const char *value)
 {
-  return (value && strlen (value) <= IPMI_MAX_K_G_LENGTH) ? 0 : 1;
+  if (strlen (value) <= IPMI_MAX_K_G_LENGTH)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 struct section *

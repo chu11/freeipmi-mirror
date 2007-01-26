@@ -6,18 +6,17 @@
 
 /* callback_none */
 
-static int
+static bmc_err_t
 callback_none_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -27,7 +26,7 @@ callback_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -35,26 +34,24 @@ callback_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 callback_none_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.callback.type_none = same (kv->value, "yes");
 
@@ -62,55 +59,59 @@ callback_none_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 callback_none_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.callback.type_none == same (kv->value, "yes")) 
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_none ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 callback_none_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
-{
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+{  
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* callback_md2 */
 
-static int
+static bmc_err_t
 callback_md2_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -120,7 +121,7 @@ callback_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -128,26 +129,24 @@ callback_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 callback_md2_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.callback.type_md2 = same (kv->value, "yes");
 
@@ -155,55 +154,59 @@ callback_md2_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 callback_md2_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.callback.type_md2 == same (kv->value, "yes")) 
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_md2 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 callback_md2_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* callback_md5 */
 
-static int
+static bmc_err_t
 callback_md5_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -213,7 +216,7 @@ callback_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -221,26 +224,24 @@ callback_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 callback_md5_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.callback.type_md5 = same (kv->value, "yes");
 
@@ -248,55 +249,59 @@ callback_md5_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 callback_md5_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.callback.type_md5 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_md5 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 callback_md5_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* callback_straight_password */
 
-static int
+static bmc_err_t
 callback_straight_password_checkout (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -306,7 +311,7 @@ callback_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -314,26 +319,24 @@ callback_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 callback_straight_password_commit (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.callback.type_straight_password = same (kv->value, "yes");
 
@@ -341,55 +344,59 @@ callback_straight_password_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 callback_straight_password_diff (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.callback.type_straight_password == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_straight_password ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 callback_straight_password_validate (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* callback_oem_proprietary */
 
-static int
+static bmc_err_t
 callback_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -399,7 +406,7 @@ callback_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -407,26 +414,24 @@ callback_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 callback_oem_proprietary_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.callback.type_oem_proprietary = same (kv->value, "yes");
 
@@ -434,57 +439,61 @@ callback_oem_proprietary_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 callback_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.callback.type_oem_proprietary == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.callback.type_oem_proprietary ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 callback_oem_proprietary_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* user */
 
 /* user_none */
 
-static int
+static bmc_err_t
 user_none_checkout (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS) 
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -494,7 +503,7 @@ user_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -502,26 +511,24 @@ user_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 user_none_commit (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.user.type_none = same (kv->value, "yes");
 
@@ -529,55 +536,59 @@ user_none_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 user_none_diff (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.user.type_none == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_none ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 user_none_validate (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* user_md2 */
 
-static int
+static bmc_err_t
 user_md2_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -587,7 +598,7 @@ user_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -595,26 +606,24 @@ user_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 user_md2_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.user.type_md2 = same (kv->value, "yes");
 
@@ -622,55 +631,59 @@ user_md2_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 user_md2_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.user.type_md2 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_md2 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 user_md2_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* user_md5 */
 
-static int
+static bmc_err_t
 user_md5_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -680,7 +693,7 @@ user_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -688,26 +701,24 @@ user_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 user_md5_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.user.type_md5 = same (kv->value, "yes");
 
@@ -715,55 +726,59 @@ user_md5_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 user_md5_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.user.type_md5 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_md5 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 user_md5_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* user_straight_password */
 
-static int
+static bmc_err_t
 user_straight_password_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -773,7 +788,7 @@ user_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -781,26 +796,24 @@ user_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 user_straight_password_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.user.type_straight_password = same (kv->value, "yes");
 
@@ -808,55 +821,59 @@ user_straight_password_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 user_straight_password_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.user.type_straight_password == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_straight_password ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 user_straight_password_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* user_oem_proprietary */
 
-static int
+static bmc_err_t
 user_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -866,7 +883,7 @@ user_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -874,26 +891,24 @@ user_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 user_oem_proprietary_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.user.type_oem_proprietary = same (kv->value, "yes");
 
@@ -901,57 +916,61 @@ user_oem_proprietary_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 user_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.user.type_oem_proprietary == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.user.type_oem_proprietary ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 user_oem_proprietary_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* operator */
 
 /* operator_none */
 
-static int
+static bmc_err_t
 operator_none_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -961,7 +980,7 @@ operator_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -969,26 +988,24 @@ operator_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 operator_none_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.operator.type_none = same (kv->value, "yes");
 
@@ -996,55 +1013,59 @@ operator_none_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 operator_none_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.operator.type_none == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_none ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 operator_none_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* operator_md2 */
 
-static int
+static bmc_err_t
 operator_md2_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1054,7 +1075,7 @@ operator_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1062,26 +1083,24 @@ operator_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 operator_md2_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.operator.type_md2 = same (kv->value, "yes");
 
@@ -1089,55 +1108,59 @@ operator_md2_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 operator_md2_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.operator.type_md2 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_md2 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 operator_md2_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* operator_md5 */
 
-static int
+static bmc_err_t
 operator_md5_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1147,7 +1170,7 @@ operator_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1155,26 +1178,24 @@ operator_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 operator_md5_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.operator.type_md5 = same (kv->value, "yes");
 
@@ -1182,55 +1203,59 @@ operator_md5_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 operator_md5_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.operator.type_md5 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_md5 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 operator_md5_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* operator_straight_password */
 
-static int
+static bmc_err_t
 operator_straight_password_checkout (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1240,7 +1265,7 @@ operator_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1248,26 +1273,24 @@ operator_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 operator_straight_password_commit (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.operator.type_straight_password = same (kv->value, "yes");
 
@@ -1275,55 +1298,59 @@ operator_straight_password_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 operator_straight_password_diff (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.operator.type_straight_password == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_straight_password ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 operator_straight_password_validate (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* operator_oem_proprietary */
 
-static int
+static bmc_err_t
 operator_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1333,7 +1360,7 @@ operator_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1341,26 +1368,24 @@ operator_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 operator_oem_proprietary_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.operator.type_oem_proprietary = same (kv->value, "yes");
 
@@ -1368,39 +1393,44 @@ operator_oem_proprietary_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 operator_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.operator.type_oem_proprietary == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.operator.type_oem_proprietary ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 operator_oem_proprietary_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* admin */
@@ -1408,18 +1438,17 @@ operator_oem_proprietary_validate (const struct bmc_config_arguments *args,
 
 /* admin_none */
 
-static int
+static bmc_err_t
 admin_none_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1429,7 +1458,7 @@ admin_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1437,26 +1466,24 @@ admin_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 admin_none_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.admin.type_none = same (kv->value, "yes");
 
@@ -1464,55 +1491,59 @@ admin_none_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 admin_none_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.admin.type_none == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_none ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 admin_none_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* admin_md2 */
 
-static int
+static bmc_err_t
 admin_md2_checkout (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1522,7 +1553,7 @@ admin_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1530,26 +1561,24 @@ admin_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 admin_md2_commit (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.admin.type_md2 = same (kv->value, "yes");
 
@@ -1557,55 +1586,59 @@ admin_md2_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 admin_md2_diff (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.admin.type_md2 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_md2 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 admin_md2_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* admin_md5 */
 
-static int
+static bmc_err_t
 admin_md5_checkout (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1615,7 +1648,7 @@ admin_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1623,26 +1656,24 @@ admin_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 admin_md5_commit (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.admin.type_md5 = same (kv->value, "yes");
 
@@ -1650,55 +1681,59 @@ admin_md5_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 admin_md5_diff (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.admin.type_md5 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_md5 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 admin_md5_validate (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* admin_straight_password */
 
-static int
+static bmc_err_t
 admin_straight_password_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1708,7 +1743,7 @@ admin_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1716,26 +1751,24 @@ admin_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 admin_straight_password_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.admin.type_straight_password = same (kv->value, "yes");
 
@@ -1743,55 +1776,59 @@ admin_straight_password_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 admin_straight_password_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.admin.type_straight_password == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_straight_password ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 admin_straight_password_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* admin_oem_proprietary */
 
-static int
+static bmc_err_t
 admin_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1801,7 +1838,7 @@ admin_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1809,26 +1846,24 @@ admin_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 admin_oem_proprietary_commit (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.admin.type_oem_proprietary = same (kv->value, "yes");
 
@@ -1836,59 +1871,61 @@ admin_oem_proprietary_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 admin_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.admin.type_oem_proprietary == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.admin.type_oem_proprietary ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 admin_oem_proprietary_validate (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
-
 
 /* oem */
 
-
 /* oem_none */
 
-static int
+static bmc_err_t
 oem_none_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1898,7 +1935,7 @@ oem_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1906,26 +1943,24 @@ oem_none_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 oem_none_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.oem.type_none = same (kv->value, "yes");
 
@@ -1933,55 +1968,59 @@ oem_none_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 oem_none_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.oem.type_none == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_none ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 oem_none_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* oem_md2 */
 
-static int
+static bmc_err_t
 oem_md2_checkout (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -1991,7 +2030,7 @@ oem_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1999,26 +2038,24 @@ oem_md2_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 oem_md2_commit (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.oem.type_md2 = same (kv->value, "yes");
 
@@ -2026,55 +2063,59 @@ oem_md2_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 oem_md2_diff (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.oem.type_md2 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_md2 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 oem_md2_validate (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* oem_md5 */
 
-static int
+static bmc_err_t
 oem_md5_checkout (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -2084,7 +2125,7 @@ oem_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -2092,26 +2133,24 @@ oem_md5_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 oem_md5_commit (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.oem.type_md5 = same (kv->value, "yes");
 
@@ -2119,55 +2158,59 @@ oem_md5_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 oem_md5_diff (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.oem.type_md5 == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_md5 ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 oem_md5_validate (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* oem_straight_password */
 
-static int
+static bmc_err_t
 oem_straight_password_checkout (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -2177,7 +2220,7 @@ oem_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -2185,26 +2228,24 @@ oem_straight_password_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 oem_straight_password_commit (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.oem.type_straight_password = same (kv->value, "yes");
 
@@ -2212,55 +2253,59 @@ oem_straight_password_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 oem_straight_password_diff (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.oem.type_straight_password == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_straight_password ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t
 oem_straight_password_validate (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* oem_oem_proprietary */
 
-static int
+static bmc_err_t
 oem_oem_proprietary_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -2270,7 +2315,7 @@ oem_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -2278,26 +2323,24 @@ oem_oem_proprietary_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 oem_oem_proprietary_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                           &auth)) != BMC_ERR_SUCCESS)
+    return ret;
 
   auth.oem.type_oem_proprietary = same (kv->value, "yes");
 
@@ -2305,39 +2348,44 @@ oem_oem_proprietary_commit (const struct bmc_config_arguments *args,
 						       &auth);
 }
 
-static int
+static bmc_diff_t
 oem_oem_proprietary_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
   struct bmc_authentication_level auth;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_authentication_type_enables (args->dev,
-						      &auth);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_authentication_type_enables (args->dev,
+                                                          &auth)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (auth.oem.type_oem_proprietary == same (kv->value, "yes"))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    auth.oem.type_oem_proprietary ? "Yes" : "No");
-      ret = 1;
     }
   return ret;
 }
 
-static int
+static bmc_validate_t 
 oem_oem_proprietary_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 struct section *

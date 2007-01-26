@@ -8,18 +8,17 @@
 
 #define BMC_MAXIPADDRLEN 16
 
-static int
+static bmc_err_t
 ip_address_source_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
   uint8_t source;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_ip_address_source (args->dev,
-					     &source);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_ip_address_source (args->dev,
+                                                 &source)) != BMC_ERR_SUCCESS) 
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -27,13 +26,13 @@ ip_address_source_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (ip_address_source_string (source))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 ip_address_source_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -42,26 +41,30 @@ ip_address_source_commit (const struct bmc_config_arguments *args,
 					     ip_address_source_number (kv->value));
 }
 
-static int
+static bmc_diff_t
 ip_address_source_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_ip_address_source (args->dev,
-					     &get_val);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_ip_address_source (args->dev,
+                                                &get_val)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_val = ip_address_source_number (kv->value);
   if (passed_val == get_val)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -70,71 +73,70 @@ ip_address_source_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 ip_address_source_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
-  return (ip_address_source_number (value) >= 0) ? 0 : 1;
+  if (ip_address_source_number (value) >= 0)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 ip_address_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
-  int ret;
+  bmc_err_t ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_ip_address (args->dev,
-				     (char *)&ip);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_ip_address (args->dev,
+                                          (char *)&ip)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
   if (!(kv->value = strdup (ip)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 ip_address_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
-  int ret;
-
-  ret = set_bmc_lan_conf_ip_address (args->dev,
-				     kv->value);
-
-  return ret;
+  return set_bmc_lan_conf_ip_address (args->dev,
+                                      kv->value);
 }
 
-static int
+static bmc_diff_t
 ip_address_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
-  int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_ip_address (args->dev,
-				     (char *)&ip);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_ip_address (args->dev,
+                                         (char *)&ip)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (same (ip, kv->value))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -143,66 +145,71 @@ ip_address_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 ip_address_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
   struct in_addr a;
-  return inet_aton (value, &a) ? 0 : 1;
+  
+  if (inet_aton (value, &a))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 mac_address_checkout (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      struct keyvalue *kv)
 {
-  int ret;
+  bmc_err_t ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_mac_address (args->dev,
-				      (char *)&mac);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_mac_address (args->dev,
+                                           (char *)&mac)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
   if (!(kv->value = strdup (mac)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 mac_address_commit (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
-
   return set_bmc_lan_conf_mac_address (args->dev,
 				       kv->value);
 }
 
-static int
+static bmc_diff_t
 mac_address_diff (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
-  int ret;
   char mac[25];
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_mac_address (args->dev,
-				      (char *)&mac);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_mac_address (args->dev,
+                                          (char *)&mac)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (same (mac, kv->value))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -211,73 +218,79 @@ mac_address_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 mac_address_validate (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const char *value)
 {
   unsigned int foo;
-  return (sscanf (value, "%02x:%02x:%02x:%02x:%02x:%02x", &foo, &foo,
-		  &foo, &foo, &foo, &foo) == 6) ? 0 : 1;
+
+  if (sscanf (value, 
+              "%02x:%02x:%02x:%02x:%02x:%02x", 
+              &foo,
+              &foo,
+              &foo, 
+              &foo,
+              &foo, 
+              &foo) == 6)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 subnet_mask_checkout (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      struct keyvalue *kv)
 {
-  int ret;
+  bmc_err_t ret;
   char mask[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_subnet_mask (args->dev,
-				      (char *)&mask);
-  
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_subnet_mask (args->dev,
+                                           (char *)&mask)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
   if (!(kv->value = strdup (mask)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 subnet_mask_commit (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
-  int ret;
-
-  ret = set_bmc_lan_conf_subnet_mask (args->dev,
-				      kv->value);
-
-  return ret;
+  return set_bmc_lan_conf_subnet_mask (args->dev,
+                                       kv->value);
 }
 
-static int
+static bmc_diff_t
 subnet_mask_diff (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const struct keyvalue *kv)
 {
-  int ret;
   char mask[BMC_MAXIPADDRLEN + 1];
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_subnet_mask (args->dev,
-				      (char *)&mask);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_subnet_mask (args->dev,
+                                          (char *)&mask)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (same (mask, kv->value))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -286,74 +299,73 @@ subnet_mask_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 subnet_mask_validate (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const char *value)
 {
-  struct in_addr a;
   /* TODO: checking valid netmask is not same as checking valid IP */
-  return inet_aton (value, &a) ? 0 : 1;
+  struct in_addr a;
+  
+  if (inet_aton (value, &a))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-
-static int
+static bmc_err_t
 default_gateway_address_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
-  int ret;
+  bmc_err_t ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_default_gateway_address (args->dev,
-						  (char *)&ip);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_default_gateway_address (args->dev,
+                                                       (char *)&ip)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
   if (!(kv->value = strdup (ip)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 default_gateway_address_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
-  int ret;
-
-  ret = set_bmc_lan_conf_default_gateway_address (args->dev,
-						  kv->value);
-
-  return ret;
+  return set_bmc_lan_conf_default_gateway_address (args->dev,
+                                                   kv->value);
 }
 
-static int
+static bmc_diff_t
 default_gateway_address_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
-  int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_default_gateway_address (args->dev,
-						  (char *)&ip);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_default_gateway_address (args->dev,
+                                                      (char *)&ip)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (same (ip, kv->value)) 
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -362,134 +374,155 @@ default_gateway_address_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 default_gateway_address_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
   struct in_addr a;
-  return inet_aton (value, &a) ? 0 : 1;
+  
+  if (inet_aton (value, &a))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 default_gateway_mac_address_checkout (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      struct keyvalue *kv)
 {
-  int ret;
+  bmc_err_t ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_default_gateway_mac_address (args->dev,
-						      (char *)&mac);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_default_gateway_mac_address (args->dev,
+                                                           (char *)&mac)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
   if (!(kv->value = strdup (mac)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 default_gateway_mac_address_commit (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
-
   return set_bmc_lan_conf_default_gateway_mac_address (args->dev,
 						       kv->value);
 }
 
-static int
+static bmc_diff_t
 default_gateway_mac_address_diff (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
-  int ret;
   char mac[25];
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_default_gateway_mac_address (args->dev,
-						      (char *)&mac);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_default_gateway_mac_address (args->dev,
+                                                          (char *)&mac)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
-  return same (mac, kv->value) ? 0 : 1;
+  if (same (mac, kv->value))
+    ret = BMC_DIFF_SAME;
+  else 
+    {
+      ret = BMC_DIFF_DIFFERENT;
+      report_diff (sect->section_name,
+                   kv->key,
+                   kv->value,
+                   mac);
+    }
+  return ret;
 }
 
-static int
+static bmc_validate_t
 default_gateway_mac_address_validate (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const char *value)
 {
   unsigned int foo;
-  return (sscanf (value, "%02x:%02x:%02x:%02x:%02x:%02x", &foo, &foo,
-		  &foo, &foo, &foo, &foo) == 6) ? 0 : 1;
+
+  if (sscanf (value, 
+              "%02x:%02x:%02x:%02x:%02x:%02x", 
+              &foo,
+              &foo,
+              &foo, 
+              &foo,
+              &foo, 
+              &foo) == 6)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* backup */
 
 
-static int
+static bmc_err_t
 backup_gateway_address_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
-  int ret;
+  bmc_err_t ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
-  ret = get_bmc_lan_conf_backup_gateway_address (args->dev,
-						 (char *)&ip);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_backup_gateway_address (args->dev,
+                                                      (char *)&ip)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
   if (!(kv->value = strdup (ip)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 backup_gateway_address_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
-  int ret;
-
-  ret = set_bmc_lan_conf_backup_gateway_address (args->dev,
-						 kv->value);
-
-  return ret;
+  return set_bmc_lan_conf_backup_gateway_address (args->dev,
+                                                  kv->value);
 }
 
-static int
+static bmc_diff_t
 backup_gateway_address_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
-  int ret;
   char ip[BMC_MAXIPADDRLEN + 1];
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_backup_gateway_address (args->dev,
-						 (char *)&ip);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_backup_gateway_address (args->dev,
+                                                     (char *)&ip)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (same (ip, kv->value))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -498,142 +531,173 @@ backup_gateway_address_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 backup_gateway_address_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
   struct in_addr a;
-  return inet_aton (value, &a) ? 0 : 1;
+  
+  if (inet_aton (value, &a))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 backup_gateway_mac_address_checkout (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     struct keyvalue *kv)
 {
-  int ret;
+  bmc_err_t ret;
   char mac[25];
 
-  ret = get_bmc_lan_conf_backup_gateway_mac_address (args->dev,
-						     (char *)&mac);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_backup_gateway_mac_address (args->dev,
+                                                          (char *)&mac)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
   if (!(kv->value = strdup (mac)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 backup_gateway_mac_address_commit (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
-
   return set_bmc_lan_conf_backup_gateway_mac_address (args->dev,
 						      kv->value);
 }
 
-static int
+static bmc_diff_t
 backup_gateway_mac_address_diff (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
-  int ret;
   char mac[25];
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_backup_gateway_mac_address (args->dev,
-						     (char *)&mac);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_backup_gateway_mac_address (args->dev,
+                                                         (char *)&mac)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
-  return same (mac, kv->value) ? 0 : 1;
+  if (same (mac, kv->value))
+    ret = BMC_DIFF_SAME;
+  else 
+    {
+      ret = BMC_DIFF_DIFFERENT;
+      report_diff (sect->section_name,
+                   kv->key,
+                   kv->value,
+                   mac);
+    }
+  return ret;
 }
 
-static int
+static bmc_validate_t
 backup_gateway_mac_address_validate (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const char *value)
 {
   unsigned int foo;
-  return (sscanf (value, "%02x:%02x:%02x:%02x:%02x:%02x", &foo, &foo,
-		  &foo, &foo, &foo, &foo) == 6) ? 0 : 1;
+
+  if (sscanf (value, 
+              "%02x:%02x:%02x:%02x:%02x:%02x", 
+              &foo,
+              &foo,
+              &foo, 
+              &foo,
+              &foo, 
+              &foo) == 6)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 vlan_id_checkout (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  struct keyvalue *kv)
 {
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
-  int ret;
+  bmc_err_t ret;
   
-  ret = get_bmc_lan_conf_vlan_id (args->dev,
-				  &vlan_id,
-				  &vlan_id_enable);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_vlan_id (args->dev,
+                                       &vlan_id,
+                                       &vlan_id_enable)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", vlan_id);
-  return 0;
+  if (asprintf (&kv->value, "%d", vlan_id) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 vlan_id_commit (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		const struct keyvalue *kv)
 {
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
-  int ret;
+  bmc_err_t ret;
   
-  ret = get_bmc_lan_conf_vlan_id (args->dev,
-				  &vlan_id,
-				  &vlan_id_enable);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_vlan_id (args->dev,
+                                       &vlan_id,
+                                       &vlan_id_enable)) != BMC_ERR_SUCCESS)
+    return ret;
 
   vlan_id = atoi (kv->value);
 
-  ret = set_bmc_lan_conf_vlan_id (args->dev,
-				  vlan_id,
-				  vlan_id_enable);
+  if ((ret = set_bmc_lan_conf_vlan_id (args->dev,
+                                       vlan_id,
+                                       vlan_id_enable)) != BMC_ERR_SUCCESS)
+    return ret;
 
-  return ret;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_diff_t
 vlan_id_diff (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
-  int ret;
-  
-  ret = get_bmc_lan_conf_vlan_id (args->dev,
-				  &vlan_id,
-				  &vlan_id_enable);
-  if (ret != 0)
-    return -1;
+  bmc_err_t rc;
+  bmc_diff_t ret;
+
+  if ((rc = get_bmc_lan_conf_vlan_id (args->dev,
+                                      &vlan_id,
+                                      &vlan_id_enable)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (vlan_id == atoi (kv->value))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
       sprintf (num, "%d", vlan_id);
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -642,7 +706,7 @@ vlan_id_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 vlan_id_validate (const struct bmc_config_arguments *args,
 		  const struct section *sect,
 		  const char *value)
@@ -651,26 +715,27 @@ vlan_id_validate (const struct bmc_config_arguments *args,
   uint32_t num = strtoul (value, &endptr, 0);
 
   if (*endptr)
-    return -1;
+    return BMC_VALIDATE_INVALID_VALUE;
+
   if (num == UINT_MAX || num == (uint32_t)(INT_MIN))
-    return 1;
-  return 0;
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
-static int
+static bmc_err_t
 vlan_id_enable_checkout (const struct bmc_config_arguments *args,
 			 const struct section *sect,
 			 struct keyvalue *kv)
 {
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
-  int ret;
+  bmc_err_t ret;
   
-  ret = get_bmc_lan_conf_vlan_id (args->dev,
-				  &vlan_id,
-				  &vlan_id_enable);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_vlan_id (args->dev,
+                                       &vlan_id,
+                                       &vlan_id_enable)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -680,7 +745,7 @@ vlan_id_enable_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -688,56 +753,63 @@ vlan_id_enable_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 vlan_id_enable_commit (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const struct keyvalue *kv)
 {
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
-  int ret;
+  bmc_err_t ret;
   
-  ret = get_bmc_lan_conf_vlan_id (args->dev,
-				  &vlan_id,
-				  &vlan_id_enable);
+  if ((ret = get_bmc_lan_conf_vlan_id (args->dev,
+                                       &vlan_id,
+                                       &vlan_id_enable)) != BMC_ERR_SUCCESS)
+    return ret;
+
   if (ret != 0)
     return -1;
 
   vlan_id_enable = same (kv->value, "yes");
 
-  ret = set_bmc_lan_conf_vlan_id (args->dev,
-				  vlan_id,
-				  vlan_id_enable);
+  if ((ret = set_bmc_lan_conf_vlan_id (args->dev,
+                                       vlan_id,
+                                       vlan_id_enable)) != BMC_ERR_SUCCESS)
+    return ret;
 
-  return ret;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_diff_t
 vlan_id_enable_diff (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
 {
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = get_bmc_lan_conf_vlan_id (args->dev,
-				  &vlan_id,
-				  &vlan_id_enable);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_vlan_id (args->dev,
+                                      &vlan_id,
+                                      &vlan_id_enable)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (vlan_id_enable == (same (kv->value, "yes")))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -746,35 +818,40 @@ vlan_id_enable_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 vlan_id_enable_validate (const struct bmc_config_arguments *args,
 			 const struct section *sect,
 			 const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 vlan_priority_checkout (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			struct keyvalue *kv)
 {
   uint8_t priority;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_vlan_priority (args->dev,
-					&priority);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_vlan_priority (args->dev,
+                                             &priority)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", priority);
-  return 0;
+  if (asprintf (&kv->value, "%d", priority) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 vlan_priority_commit (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
@@ -783,25 +860,29 @@ vlan_priority_commit (const struct bmc_config_arguments *args,
 					 atoi (kv->value));
 }
 
-static int
+static bmc_diff_t
 vlan_priority_diff (const struct bmc_config_arguments *args,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
 {
   uint8_t priority;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_vlan_priority (args->dev,
-					&priority);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_lan_conf_vlan_priority (args->dev,
+                                            &priority)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (priority == atoi (kv->value))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char prio[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (prio, "%d", priority);
       report_diff (sect->section_name,
                    kv->key,
@@ -811,7 +892,7 @@ vlan_priority_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 vlan_priority_validate (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const char *value)
@@ -820,10 +901,12 @@ vlan_priority_validate (const struct bmc_config_arguments *args,
   uint32_t num = strtoul (value, &endptr, 0);
 
   if (*endptr)
-    return -1;
+    return BMC_VALIDATE_INVALID_VALUE;
+
   if (num < 0 || num > 255)
-    return 1;
-  return 0;
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 struct section *

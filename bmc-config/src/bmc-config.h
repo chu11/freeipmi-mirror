@@ -35,6 +35,28 @@ typedef enum
     BMC_ACTION_LIST_SECTIONS,
   } bmc_action_t;
 
+typedef enum
+  {
+    BMC_ERR_FATAL_ERROR = -2,
+    BMC_ERR_NON_FATAL_ERROR = -1,
+    BMC_ERR_SUCCESS = 0,
+  } bmc_err_t;
+
+typedef enum
+  {
+    BMC_DIFF_FATAL_ERROR = -2,
+    BMC_DIFF_NON_FATAL_ERROR = -1,
+    BMC_DIFF_SAME = 0,
+    BMC_DIFF_DIFFERENT = 1,
+  } bmc_diff_t;
+
+typedef enum
+  {
+    BMC_VALIDATE_FATAL_ERROR = -2,
+    BMC_VALIDATE_INVALID_VALUE = -1,
+    BMC_VALIDATE_VALID_VALUE = 0,
+  } bmc_validate_t;
+
 struct keypair
 {
   char *keypair;

@@ -6,14 +6,15 @@
 #include "bmc-sections.h"
 
 
-static int
+static bmc_err_t
 enable_gratuitous_arps_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
-  int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
+  bmc_err_t ret;
+
   ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
 						    &enable_arp,
 						    &reply_arp);
@@ -39,10 +40,10 @@ enable_gratuitous_arps_checkout (const struct bmc_config_arguments *args,
           return -1;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_gratuitous_arps_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
@@ -63,46 +64,63 @@ enable_gratuitous_arps_commit (const struct bmc_config_arguments *args,
 						     reply_arp);
 }
 
-static int
+static bmc_diff_t
 enable_gratuitous_arps_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
-  int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
-						    &enable_arp,
-						    &reply_arp);
-  if (ret != 0)
-    return -1;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  return (enable_arp == same (kv->value, "yes")) ? 0 : 1;
+  if ((rc = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
+                                                        &enable_arp,
+                                                        &reply_arp)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
+
+  if (enable_arp == same (kv->value, "yes"))
+    ret = BMC_DIFF_SAME;
+  else
+    {
+      ret = BMC_DIFF_DIFFERENT; 
+      report_diff (sect->section_name,
+                   kv->key,
+                   kv->value,
+                   (enable_arp) ? "Yes" : "No");
+    }
+  return ret;
 }
 
-static int
+static bmc_validate_t
 enable_gratuitous_arps_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* reply */
 
-static int
+static bmc_err_t
 enable_arp_response_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
-  int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
-						    &enable_arp,
-						    &reply_arp);
-  if (ret != 0)
-    return -1;
+  bmc_err_t ret;
+
+  if ((ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
+                                                         &enable_arp,
+                                                         &reply_arp)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -112,7 +130,7 @@ enable_arp_response_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -120,25 +138,25 @@ enable_arp_response_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_arp_response_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
-  int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
-						    &enable_arp,
-						    &reply_arp);
-  if (ret != 0)
-    return -1;
+  bmc_err_t ret;
+  
+  if ((ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
+                                                         &enable_arp,
+                                                         &reply_arp)) != BMC_ERR_SUCCESS)
+    return ret;
 
   reply_arp = same (kv->value, "yes");
 
@@ -147,89 +165,126 @@ enable_arp_response_commit (const struct bmc_config_arguments *args,
 						     reply_arp);
 }
 
-static int
+static bmc_diff_t
 enable_arp_response_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
-  int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
-  ret = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
-						    &enable_arp,
-						    &reply_arp);
-  if (ret != 0)
-    return -1;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  return (reply_arp == same (kv->value, "yes")) ? 0 : 1;
+  if ((rc = get_bmc_lan_conf_bmc_generated_arp_control (args->dev,
+                                                        &enable_arp,
+                                                        &reply_arp)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
+
+  if (reply_arp == same (kv->value, "yes"))
+    ret = BMC_DIFF_SAME;
+  else
+    {
+      ret = BMC_DIFF_DIFFERENT; 
+      report_diff (sect->section_name,
+                   kv->key,
+                   kv->value,
+                   (reply_arp) ? "Yes" : "No");
+    }
+
+  return ret;
 }
 
-static int
+static bmc_validate_t
 enable_arp_response_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 gratuitous_arp_interval_checkout (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
+  bmc_err_t ret;
 
-  ret = get_bmc_lan_conf_gratuitous_arp_interval (args->dev,
-						  &interval);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_gratuitous_arp_interval (args->dev,
+                                                       &interval)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", interval);
-  return 0;
+  if (asprintf (&kv->value, "%d", interval) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 gratuitous_arp_interval_commit (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const struct keyvalue *kv)
 {
   return set_bmc_lan_conf_gratuitous_arp_interval (args->dev,
-						  atoi (kv->value));
+                                                   atoi (kv->value));
 }
 
-static int
+static bmc_diff_t
 gratuitous_arp_interval_diff (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_lan_conf_gratuitous_arp_interval (args->dev,
-						  &interval);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_gratuitous_arp_interval (args->dev,
+                                                       &interval)) != BMC_ERR_SUCCESS)
+    return ret;
 
-  return (interval == atoi (kv->value)) ? 0 : 1;
+  if (interval == atoi (kv->value))
+    ret = BMC_DIFF_SAME;
+  else
+    {
+      char num[32];
+      ret = BMC_DIFF_DIFFERENT; 
+      sprintf (num, "%d", interval);
+      report_diff (sect->section_name,
+                   kv->key,
+                   kv->value,
+                   num);
+    }
+  return ret;
 }
 
-static int
+static bmc_validate_t
 gratuitous_arp_interval_validate (const struct bmc_config_arguments *args,
 				  const struct section *sect,
 				  const char *value)
 {
   char *endptr;
-  int num = strtol (value, &endptr, 0);
+  long int num;
+
+  num = strtol (value, &endptr, 0);
   
   if (*endptr)
-    return -1;
+    return BMC_VALIDATE_INVALID_VALUE;
+
   if (num < 0 || num > 255)
-    return 1;
-  return 0;
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 struct section *

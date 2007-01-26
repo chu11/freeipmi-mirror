@@ -4,21 +4,21 @@
 #include "bmc-parser.h"
 #include "bmc-sections.h"
 
-static int
+static bmc_diff_t
 bmc_diff_keypair (struct bmc_config_arguments *args,
 		  struct section *sections,
                   struct keypair *kp)
 {
-  char *keypair;
+  char *keypair = NULL;
   char *section_name;
   char *key_name;
   char *value;
-  int ret = 0;
-
+  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
+  
   if (!(keypair = strdup (kp->keypair)))
     {
       perror("strdup");
-      exit(1);
+      goto cleanup;
     }
 
   section_name = strtok (keypair, ":");
@@ -28,62 +28,79 @@ bmc_diff_keypair (struct bmc_config_arguments *args,
   if (!(section_name && key_name && value)) 
     {
       fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      free (keypair);
-      return -1;
+      rv = BMC_DIFF_NON_FATAL_ERROR; 
+      goto cleanup;
     }
      
   section_name = strtok (section_name, " \t");
   key_name = strtok (key_name, " \t");
   value = strtok (value, " \t");
 
-  ret = bmc_section_diff_value (section_name, key_name, value,
-				args, sections);
-
-  free (keypair);
-  return ret;
+  rv = bmc_section_diff_value (section_name, key_name, value,
+                               args, sections);
+ cleanup:
+  if (keypair)
+    free (keypair);
+  return rv;
 }
 
-static int
+static bmc_diff_t
 bmc_diff_keypairs (struct bmc_config_arguments *args,
                    struct section *sections)
 {
   struct keypair *kp;
+  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
+  bmc_diff_t ret = BMC_DIFF_SAME;
 
   kp = args->keypairs;
   while (kp)
     {
-      bmc_diff_keypair(args, sections, kp);
+      bmc_diff_t this_ret;
+
+      if ((this_ret = bmc_diff_keypair (args, sections, kp)) == BMC_DIFF_FATAL_ERROR)
+        goto cleanup;
+
+      if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
+        ret = BMC_DIFF_NON_FATAL_ERROR;
+
       kp = kp->next;
     }
 
-  return 0;
+  rv = ret;
+ cleanup:
+  return rv;
 }
 
-static int
+static bmc_diff_t
 bmc_diff_file (struct bmc_config_arguments *args,
 	       struct section *sections)
 {
-  int ret = 0;
   FILE *fp;
+  int file_opened = 0;
+  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
+  bmc_diff_t ret = BMC_DIFF_SAME;
+  bmc_diff_t this_ret;
 
   if (args->filename && strcmp (args->filename, "-"))
-    fp = fopen (args->filename, "r");
+    {
+      if (!(fp = fopen (args->filename, "r")))
+        {
+          perror("fopen");
+          goto cleanup;
+        }
+      file_opened++;
+    }
   else
     fp = stdin;
 
-  if (!fp) 
-    {
-      perror (args->filename);
-      return -1;
-    }
-
   /* 1st pass */
-  ret = bmc_parser (args, sections, fp);
+  if ((this_ret = bmc_parser (args, sections, fp)) == BMC_DIFF_FATAL_ERROR)
+    goto cleanup;
 
-  if (fp != stdin)
-    fclose (fp);
+  if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
+    ret = BMC_DIFF_NON_FATAL_ERROR;
 
-  if (!ret) 
+  if (ret == BMC_DIFF_SAME) 
     {
       /* 2nd pass if 1st pass was successful */
       struct section *sect = sections;
@@ -93,28 +110,41 @@ bmc_diff_file (struct bmc_config_arguments *args,
           while (kv) 
             {
               if (kv->value) 
-                ret = (kv->diff (args, sect, kv) || ret);
+                {
+                  if ((this_ret = kv->diff (args, sect, kv)) == BMC_DIFF_FATAL_ERROR)
+                    goto cleanup;
+                  if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
+                    ret = BMC_DIFF_NON_FATAL_ERROR;
+                }
               kv = kv->next;
             }
           sect = sect->next;
         }
     }
 
-  return ret;
+  rv = ret;
+ cleanup:
+  if (file_opened)
+    fclose(fp);
+  return rv;
 }
 
-int
+bmc_err_t
 bmc_diff (struct bmc_config_arguments *args,
 	  struct section *sections)
 {
-  int ret = 0;
+  bmc_diff_t ret;
 
   if (args->keypairs)
     ret = bmc_diff_keypairs (args, sections);
   else
     ret = bmc_diff_file (args, sections);
 
-  return ret;
+  if (ret == BMC_DIFF_SAME)
+    return BMC_ERR_SUCCESS;
+  if (ret == BMC_DIFF_DIFFERENT || ret == BMC_DIFF_NON_FATAL_ERROR)
+    return BMC_ERR_NON_FATAL_ERROR;
+  return BMC_ERR_FATAL_ERROR;
 }
 
 void 

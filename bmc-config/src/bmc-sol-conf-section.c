@@ -5,24 +5,22 @@
 #include "bmc-map.h"
 #include "bmc-sections.h"
 
-static int
+static bmc_err_t
 sol_auth_checkout (ipmi_device_t dev,
 		   uint8_t *sol_privilege_level,
 		   uint8_t *force_sol_payload_authentication,
 		   uint8_t *force_sol_payload_encryption)
 {
-  int ret;
   uint8_t tmp_sol_privilege_level;
   uint8_t tmp_force_sol_payload_authentication;
   uint8_t tmp_force_sol_payload_encryption;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_authentication (dev,
-				    &tmp_sol_privilege_level,
-				    &tmp_force_sol_payload_authentication,
-				    &tmp_force_sol_payload_encryption);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_authentication (dev,
+                                         &tmp_sol_privilege_level,
+                                         &tmp_force_sol_payload_authentication,
+                                         &tmp_force_sol_payload_encryption)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (sol_privilege_level)
     *sol_privilege_level = tmp_sol_privilege_level;
@@ -33,28 +31,26 @@ sol_auth_checkout (ipmi_device_t dev,
   if (force_sol_payload_encryption)
     *force_sol_payload_encryption = tmp_force_sol_payload_encryption;
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
 
-static int
+static bmc_err_t
 sol_auth_commit (ipmi_device_t dev,
 		 uint8_t *sol_privilege_level,
 		 uint8_t *force_sol_payload_authentication,
 		 uint8_t *force_sol_payload_encryption)
 {
-  int ret;
   uint8_t tmp_sol_privilege_level;
   uint8_t tmp_force_sol_payload_authentication;
   uint8_t tmp_force_sol_payload_encryption;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_authentication (dev,
-				    &tmp_sol_privilege_level,
-				    &tmp_force_sol_payload_authentication,
-				    &tmp_force_sol_payload_encryption);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_authentication (dev,
+                                         &tmp_sol_privilege_level,
+                                         &tmp_force_sol_payload_authentication,
+                                         &tmp_force_sol_payload_encryption)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (sol_privilege_level)
     tmp_sol_privilege_level = *sol_privilege_level;
@@ -71,19 +67,17 @@ sol_auth_commit (ipmi_device_t dev,
 				     tmp_force_sol_payload_encryption);
 }
 
-static int
+static bmc_err_t
 enable_sol_checkout (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
   uint8_t enable;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_enable (args->dev,
-			    &enable);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_enable (args->dev,
+                                 &enable)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -93,7 +87,7 @@ enable_sol_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -101,14 +95,14 @@ enable_sol_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_sol_commit (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
@@ -117,27 +111,31 @@ enable_sol_commit (const struct bmc_config_arguments *args,
 			     same (kv->value, "yes"));
 }
 
-static int
+static bmc_diff_t
 enable_sol_diff (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
-  int ret;
-
-  ret = get_sol_sol_enable (args->dev,
-			    &got_value);
-  if (ret != 0)
-    return -1;
+  bmc_err_t rc;
+  bmc_diff_t ret;
+  
+  if ((rc = get_sol_sol_enable (args->dev,
+                                &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -146,29 +144,29 @@ enable_sol_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_sol_validate (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 sol_privilege_level_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = sol_auth_checkout (args->dev,
-			   &value,
-			   NULL,
-			   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = sol_auth_checkout (args->dev,
+                                &value,
+                                NULL,
+                                NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -176,12 +174,12 @@ sol_privilege_level_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (privilege_level_string (value))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 sol_privilege_level_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
@@ -193,30 +191,33 @@ sol_privilege_level_commit (const struct bmc_config_arguments *args,
 			  NULL);
 }
 
-static int
+static bmc_diff_t
 sol_privilege_level_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
-  int ret;
   uint8_t passed_value;
   uint8_t got_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = sol_auth_checkout (args->dev,
-			   &got_value,
-			   NULL,
-			   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = sol_auth_checkout (args->dev,
+                               &got_value,
+                               NULL,
+                               NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = privilege_level_number (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -226,33 +227,30 @@ sol_privilege_level_diff (const struct bmc_config_arguments *args,
 }
 
 
-static int
+static bmc_validate_t
 sol_privilege_level_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
-  int num = privilege_level_number (value);
-
-  return (num == -1) ? 1 : 0;
+  if (privilege_level_number (value) != -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-
 /* force_sol_payload_authentication */
-static int
+static bmc_err_t
 force_sol_payload_authentication_checkout (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = sol_auth_checkout (args->dev,
-			   NULL,
-			   &value,
-			   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = sol_auth_checkout (args->dev,
+                                NULL,
+                                &value,
+                                NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -262,7 +260,7 @@ force_sol_payload_authentication_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -270,14 +268,14 @@ force_sol_payload_authentication_checkout (const struct bmc_config_arguments *ar
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 force_sol_payload_authentication_commit (const struct bmc_config_arguments *args,
 					 const struct section *sect,
 					 const struct keyvalue *kv)
@@ -289,30 +287,33 @@ force_sol_payload_authentication_commit (const struct bmc_config_arguments *args
 			  NULL);
 }
 
-static int
+static bmc_diff_t
 force_sol_payload_authentication_diff (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
 {
-  int ret;
   uint8_t passed_value;
   uint8_t got_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = sol_auth_checkout (args->dev,
-			   NULL,
-			   &got_value,
-			   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = sol_auth_checkout (args->dev,
+                               NULL,
+                               &got_value,
+                               NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -322,31 +323,31 @@ force_sol_payload_authentication_diff (const struct bmc_config_arguments *args,
 }
 
 
-static int
+static bmc_validate_t
 force_sol_payload_authentication_validate (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* force_sol_payload_encryption */
 
-static int
+static bmc_err_t
 force_sol_payload_encryption_checkout (const struct bmc_config_arguments *args,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = sol_auth_checkout (args->dev,
-			   NULL,
-			   NULL,
-			   &value);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = sol_auth_checkout (args->dev,
+                                NULL,
+                                NULL,
+                                &value)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -356,7 +357,7 @@ force_sol_payload_encryption_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -364,14 +365,14 @@ force_sol_payload_encryption_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 force_sol_payload_encryption_commit (const struct bmc_config_arguments *args,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
@@ -383,30 +384,33 @@ force_sol_payload_encryption_commit (const struct bmc_config_arguments *args,
 			  &value);
 }
 
-static int
+static bmc_diff_t
 force_sol_payload_encryption_diff (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
-  int ret;
   uint8_t passed_value;
   uint8_t got_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = sol_auth_checkout (args->dev,
-			   NULL,
-			   NULL,
-			   &got_value);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = sol_auth_checkout (args->dev,
+                               NULL,
+                               NULL,
+                               &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -416,54 +420,56 @@ force_sol_payload_encryption_diff (const struct bmc_config_arguments *args,
 }
 
 
-static int
+static bmc_validate_t
 force_sol_payload_encryption_validate (const struct bmc_config_arguments *args,
 				       const struct section *sect,
 				       const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* character_accumulate_interval */
 
-static int
+static bmc_err_t
 character_accumulate_interval_checkout (const struct bmc_config_arguments *args,
 					const struct section *sect,
 					struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
   uint8_t threshold;
+  bmc_err_t ret;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
-								  &interval,
-								  &threshold);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
+                                                                       &interval,
+                                                                       &threshold)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", interval);
-  return 0;
+  if (asprintf (&kv->value, "%d", interval) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 character_accumulate_interval_commit (const struct bmc_config_arguments *args,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
   uint8_t threshold;
+  bmc_err_t ret;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
-								  &interval,
-								  &threshold);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
+                                                                       &interval,
+                                                                       &threshold)) != BMC_ERR_SUCCESS)
+    return ret;
 
   interval = atoi (kv->value);
 
@@ -472,31 +478,36 @@ character_accumulate_interval_commit (const struct bmc_config_arguments *args,
 								   threshold);
 }
 
-static int
+static bmc_diff_t
 character_accumulate_interval_diff (const struct bmc_config_arguments *args,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
-  int ret;
   uint8_t got_value;
   uint8_t passed_value;
-
   uint8_t interval;
   uint8_t threshold;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
-								  &interval,
-								  &threshold);
+  if ((rc = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
+                                                                      &interval,
+                                                                      &threshold)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   got_value = interval;
   passed_value = atoi (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
                    kv->key,
@@ -506,65 +517,65 @@ character_accumulate_interval_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 character_accumulate_interval_validate (const struct bmc_config_arguments *args,
 					const struct section *sect,
 					const char *value)
 {
-  int num;
+  long int num;
   char *endptr;
 
   num = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
   if (num < 0 || num > 255)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
-  return 0;
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 /* character_send_threshold */
 
-static int
+static bmc_err_t
 character_send_threshold_checkout (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
   uint8_t threshold;
+  bmc_err_t ret;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
-								  &interval,
-								  &threshold);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
+                                                                       &interval,
+                                                                       &threshold)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", threshold);
-  return 0;
+  if (asprintf (&kv->value, "%d", threshold) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 character_send_threshold_commit (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
   uint8_t threshold;
+  bmc_err_t ret;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
-								  &interval,
-								  &threshold);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
+                                                                       &interval,
+                                                                       &threshold)) != BMC_ERR_SUCCESS)
+    return ret;
 
   threshold = atoi (kv->value);
 
@@ -573,31 +584,36 @@ character_send_threshold_commit (const struct bmc_config_arguments *args,
 								   threshold);
 }
 
-static int
+static bmc_diff_t
 character_send_threshold_diff (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
-  int ret;
   uint8_t got_value;
   uint8_t passed_value;
-
   uint8_t interval;
   uint8_t threshold;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
-								  &interval,
-								  &threshold);
+  if ((rc = get_sol_character_accumulate_interval_and_send_threshold (args->dev,
+                                                                      &interval,
+                                                                      &threshold)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   got_value = threshold;
   passed_value = atoi (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
                    kv->key,
@@ -607,65 +623,66 @@ character_send_threshold_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 character_send_threshold_validate (const struct bmc_config_arguments *args,
 				   const struct section *sect,
 				   const char *value)
 {
-  int num;
+  long int num;
   char *endptr;
 
   num = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
   if (num < 0 || num > 255)
-    return 1;
-  return 0;
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 /* sol_retry_count */
 
-static int
+static bmc_err_t
 sol_retry_count_checkout (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_retry (args->dev,
-			   &count,
-			   &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_retry (args->dev,
+                                &count,
+                                &interval)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", count);
-  return 0;
+  if (asprintf (&kv->value, "%d", count) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
 
-static int
+static bmc_err_t
 sol_retry_count_commit (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_retry (args->dev,
-			   &count,
-			   &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_retry (args->dev,
+                                &count,
+                                &interval)) != BMC_ERR_SUCCESS)
+    return ret;
 
   count = atoi (kv->value);
 
@@ -674,34 +691,36 @@ sol_retry_count_commit (const struct bmc_config_arguments *args,
 			    interval);
 }
 
-static int
+static bmc_diff_t
 sol_retry_count_diff (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-
-  int ret;
   uint8_t count;
   uint8_t interval;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_sol_sol_retry (args->dev,
-			   &count,
-			   &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_sol_sol_retry (args->dev,
+                               &count,
+                               &interval)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   got_value = count;
   passed_value = atoi (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
                    kv->key,
@@ -711,67 +730,67 @@ sol_retry_count_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 sol_retry_count_validate (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const char *value)
 {
-  int num;
+  long int num;
   char *endptr;
 
   num = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return -1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
   if (num < 0 || num > 255)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
-  return 0;
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 /* sol_retry_interval */
 
 
-static int
+static bmc_err_t
 sol_retry_interval_checkout (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_retry (args->dev,
-			   &count,
-			   &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_retry (args->dev,
+                                &count,
+                                &interval)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", interval);
-  return 0;
+  if (asprintf (&kv->value, "%d", interval) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
 
-static int
+static bmc_err_t
 sol_retry_interval_commit (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_retry (args->dev,
-			   &count,
-			   &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_retry (args->dev,
+                                &count,
+                                &interval)) != BMC_ERR_SUCCESS)
+    return ret;
 
   interval = atoi (kv->value);
 
@@ -780,34 +799,36 @@ sol_retry_interval_commit (const struct bmc_config_arguments *args,
 			    interval);
 }
 
-static int
+static bmc_diff_t
 sol_retry_interval_diff (const struct bmc_config_arguments *args,
 			 const struct section *sect,
 			 const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-
-  int ret;
   uint8_t count;
   uint8_t interval;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_sol_sol_retry (args->dev,
-			   &count,
-			   &interval);
-
-  if (ret != 0)
-    return -1;
-
+  if ((rc = get_sol_sol_retry (args->dev,
+                               &count,
+                               &interval)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
+       
   got_value = interval;
   passed_value = atoi (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
                    kv->key,
@@ -817,38 +838,36 @@ sol_retry_interval_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 sol_retry_interval_validate (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const char *value)
 {
-  int num;
+  long int num;
   char *endptr;
 
   num = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return -1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
   if (num < 0 || num > 255)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
 
-  return 0;
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
-static int
+static bmc_err_t
 non_volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				struct keyvalue *kv)
 {
-  int ret;
   uint8_t bitrate;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_non_volatile_bit_rate (args->dev,
-					   &bitrate);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_non_volatile_bit_rate (args->dev,
+                                                &bitrate)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -856,12 +875,12 @@ non_volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 non_volatile_bit_rate_commit (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
@@ -870,27 +889,31 @@ non_volatile_bit_rate_commit (const struct bmc_config_arguments *args,
 					    sol_bit_rate_number (kv->value));
 }
 
-static int
+static bmc_diff_t
 non_volatile_bit_rate_diff (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
-  int ret;
   uint8_t got_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_sol_sol_non_volatile_bit_rate (args->dev,
-					   &got_value);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_sol_sol_non_volatile_bit_rate (args->dev,
+                                               &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = sol_bit_rate_number (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -899,29 +922,29 @@ non_volatile_bit_rate_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 non_volatile_bit_rate_validate (const struct bmc_config_arguments *args,
 				const struct section *sect,
 				const char *value)
 {
-  return sol_bit_rate_number (value) == -1 ? 1 : 0;
+  if (sol_bit_rate_number (value) != -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* volatile_bit_rate */
 
-static int
+static bmc_err_t
 volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
-  int ret;
   uint8_t bitrate;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_volatile_bit_rate (args->dev,
-				       &bitrate);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_volatile_bit_rate (args->dev,
+                                            &bitrate)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -929,12 +952,12 @@ volatile_bit_rate_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 volatile_bit_rate_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -943,28 +966,32 @@ volatile_bit_rate_commit (const struct bmc_config_arguments *args,
 					sol_bit_rate_number (kv->value));
 }
 
-static int
+static bmc_diff_t
 volatile_bit_rate_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
-  int ret;
   uint8_t got_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_sol_sol_volatile_bit_rate (args->dev,
-					   &got_value);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_sol_sol_volatile_bit_rate (args->dev,
+					   &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = sol_bit_rate_number (kv->value);
 
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -973,36 +1000,41 @@ volatile_bit_rate_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 volatile_bit_rate_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
-  return sol_bit_rate_number (value) == -1 ? 1 : 0;
+  if (sol_bit_rate_number (value) != -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 port_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  int ret;
   uint16_t port;
+  bmc_err_t ret;
 
-  ret = get_sol_sol_payload_port_number (args->dev,
-					 &port);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_sol_sol_payload_port_number (args->dev,
+                                              &port)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", port);
-  return 0;
+  if (asprintf (&kv->value, "%d", port) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
+  return BMC_ERR_SUCCESS;
 }
 
 
-static int
+static bmc_err_t
 port_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -1011,28 +1043,32 @@ port_commit (const struct bmc_config_arguments *args,
 					  atoi (kv->value));
 }
 
-static int
+static bmc_diff_t
 port_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
   uint16_t got_value;
   uint16_t passed_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_sol_sol_payload_port_number (args->dev,
-					 &got_value);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_sol_sol_payload_port_number (args->dev,
+                                             &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = atoi (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
                    kv->key,
@@ -1042,21 +1078,23 @@ port_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 port_validate (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const char *value)
 {
-  int num;
+  long int num;
   char *endptr;
 
   num = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return -1;
+    return BMC_VALIDATE_INVALID_VALUE;
+
   if (num < -1 || num > 65535)
-    return 1;
-  return 0;
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 struct section *

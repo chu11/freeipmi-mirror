@@ -5,20 +5,19 @@
 #include "bmc-map.h"
 #include "bmc-sections.h"
 
-static int
+static bmc_err_t
 id_checkout (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     struct keyvalue *kv,
 	     int id)
 {
-  int ret;
   uint8_t priv;
+  bmc_err_t ret;
 
-  ret = get_rmcpplus_cipher_suite_id_privilege (args->dev,
-						id,
-						&priv);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_rmcpplus_cipher_suite_id_privilege (args->dev,
+                                                     id,
+                                                     &priv)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -26,13 +25,13 @@ id_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (rmcpplus_priv_string (priv))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+
+  return BMC_ERR_SUCCESS;
 }
 
-
-static int
+static bmc_err_t
 id_commit (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv,
@@ -43,26 +42,30 @@ id_commit (const struct bmc_config_arguments *args,
 						 rmcpplus_priv_number (kv->value));
 }
 
-static int
+static bmc_diff_t
 id_diff (const struct bmc_config_arguments *args,
 	 const struct section *sect,
 	 const struct keyvalue *kv,
 	 int id)
 {
-  int ret;
   uint8_t priv;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_rmcpplus_cipher_suite_id_privilege (args->dev,
-						id,
-						&priv);
-  if (ret != 0)
-    return -1;
+  if ((rc = get_rmcpplus_cipher_suite_id_privilege (args->dev,
+                                                    id,
+                                                    &priv)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   if (same (kv->value, rmcpplus_priv_string (priv)))
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -71,16 +74,17 @@ id_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 id_validate (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const char *value)
 {
-  return (rmcpplus_priv_number (value) >= 0) ? 0 : 1;
+  if (rmcpplus_priv_number (value) >= 0)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-
-static int
+static bmc_err_t
 id_0_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -88,7 +92,7 @@ id_0_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 0);
 }
 
-static int
+static bmc_err_t
 id_0_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -96,7 +100,7 @@ id_0_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 0);
 }
 
-static int
+static bmc_diff_t
 id_0_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -104,9 +108,7 @@ id_0_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 0);
 }
 
-
-
-static int
+static bmc_err_t
 id_1_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -114,7 +116,7 @@ id_1_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 1);
 }
 
-static int
+static bmc_err_t
 id_1_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -122,7 +124,7 @@ id_1_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 1);
 }
 
-static int
+static bmc_diff_t
 id_1_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -131,7 +133,7 @@ id_1_diff (const struct bmc_config_arguments *args,
 }
 
 
-static int
+static bmc_err_t
 id_2_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -139,7 +141,7 @@ id_2_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 2);
 }
 
-static int
+static bmc_err_t
 id_2_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -147,7 +149,7 @@ id_2_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 2);
 }
 
-static int
+static bmc_diff_t
 id_2_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -157,7 +159,7 @@ id_2_diff (const struct bmc_config_arguments *args,
 
 
 
-static int
+static bmc_err_t
 id_3_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -165,7 +167,7 @@ id_3_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 3);
 }
 
-static int
+static bmc_err_t
 id_3_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -173,7 +175,7 @@ id_3_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 3);
 }
 
-static int
+static bmc_diff_t
 id_3_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -181,9 +183,7 @@ id_3_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 3);
 }
 
-
-
-static int
+static bmc_err_t
 id_4_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -191,7 +191,7 @@ id_4_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 4);
 }
 
-static int
+static bmc_err_t
 id_4_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -199,7 +199,7 @@ id_4_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 4);
 }
 
-static int
+static bmc_diff_t
 id_4_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -209,7 +209,7 @@ id_4_diff (const struct bmc_config_arguments *args,
 
 
 
-static int
+static bmc_err_t
 id_5_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -217,7 +217,7 @@ id_5_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 5);
 }
 
-static int
+static bmc_err_t
 id_5_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -225,7 +225,7 @@ id_5_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 5);
 }
 
-static int
+static bmc_diff_t
 id_5_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -233,9 +233,7 @@ id_5_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 5);
 }
 
-
-
-static int
+static bmc_err_t
 id_6_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -243,7 +241,7 @@ id_6_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 6);
 }
 
-static int
+static bmc_err_t
 id_6_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -251,7 +249,7 @@ id_6_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 6);
 }
 
-static int
+static bmc_diff_t
 id_6_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -259,8 +257,7 @@ id_6_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 6);
 }
 
-
-static int
+static bmc_err_t
 id_7_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -268,7 +265,7 @@ id_7_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 7);
 }
 
-static int
+static bmc_err_t
 id_7_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -276,7 +273,7 @@ id_7_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 7);
 }
 
-static int
+static bmc_diff_t
 id_7_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -285,7 +282,7 @@ id_7_diff (const struct bmc_config_arguments *args,
 }
 
 
-static int
+static bmc_err_t
 id_8_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -293,7 +290,7 @@ id_8_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 8);
 }
 
-static int
+static bmc_err_t
 id_8_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -301,7 +298,7 @@ id_8_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 8);
 }
 
-static int
+static bmc_diff_t
 id_8_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -309,8 +306,7 @@ id_8_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 8);
 }
 
-
-static int
+static bmc_err_t
 id_9_checkout (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       struct keyvalue *kv)
@@ -318,7 +314,7 @@ id_9_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 9);
 }
 
-static int
+static bmc_err_t
 id_9_commit (const struct bmc_config_arguments *args,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -326,7 +322,7 @@ id_9_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 9);
 }
 
-static int
+static bmc_diff_t
 id_9_diff (const struct bmc_config_arguments *args,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
@@ -334,9 +330,7 @@ id_9_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 9);
 }
 
-
-
-static int
+static bmc_err_t
 id_10_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
@@ -344,7 +338,7 @@ id_10_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 10);
 }
 
-static int
+static bmc_err_t
 id_10_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
@@ -352,7 +346,7 @@ id_10_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 10);
 }
 
-static int
+static bmc_diff_t
 id_10_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
@@ -360,9 +354,7 @@ id_10_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 10);
 }
 
-
-
-static int
+static bmc_err_t
 id_11_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
@@ -370,7 +362,7 @@ id_11_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 11);
 }
 
-static int
+static bmc_err_t
 id_11_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
@@ -378,7 +370,7 @@ id_11_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 11);
 }
 
-static int
+static bmc_diff_t
 id_11_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
@@ -386,9 +378,7 @@ id_11_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 11);
 }
 
-
-
-static int
+static bmc_err_t
 id_12_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
@@ -396,7 +386,7 @@ id_12_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 12);
 }
 
-static int
+static bmc_err_t
 id_12_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
@@ -404,7 +394,7 @@ id_12_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 12);
 }
 
-static int
+static bmc_diff_t
 id_12_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
@@ -412,9 +402,7 @@ id_12_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 12);
 }
 
-
-
-static int
+static bmc_err_t
 id_13_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
@@ -422,7 +410,7 @@ id_13_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 13);
 }
 
-static int
+static bmc_err_t
 id_13_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
@@ -430,7 +418,7 @@ id_13_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 13);
 }
 
-static int
+static bmc_diff_t
 id_13_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
@@ -438,8 +426,7 @@ id_13_diff (const struct bmc_config_arguments *args,
   return id_diff (args, sect, kv, 13);
 }
 
-
-static int
+static bmc_err_t
 id_14_checkout (const struct bmc_config_arguments *args,
 		const struct section *sect,
 		struct keyvalue *kv)
@@ -447,7 +434,7 @@ id_14_checkout (const struct bmc_config_arguments *args,
   return id_checkout (args, sect, kv, 14);
 }
 
-static int
+static bmc_err_t
 id_14_commit (const struct bmc_config_arguments *args,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
@@ -455,14 +442,13 @@ id_14_commit (const struct bmc_config_arguments *args,
   return id_commit (args, sect, kv, 14);
 }
 
-static int
+static bmc_diff_t
 id_14_diff (const struct bmc_config_arguments *args,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
   return id_diff (args, sect, kv, 14);
 }
-
 
 struct section *
 bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)

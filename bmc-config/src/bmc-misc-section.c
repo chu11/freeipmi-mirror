@@ -5,19 +5,17 @@
 #include "bmc-map.h"
 #include "bmc-sections.h"
 
-static int
+static bmc_err_t
 power_restore_policy_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
   uint8_t policy;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_power_restore_policy (args->dev,
-				      &policy);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_power_restore_policy (args->dev,
+                                           &policy)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -25,12 +23,12 @@ power_restore_policy_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (power_restore_policy_string (policy))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 power_restore_policy_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
@@ -39,42 +37,48 @@ power_restore_policy_commit (const struct bmc_config_arguments *args,
 				       power_restore_policy_number (kv->value));
 }
 
-static int
+static bmc_diff_t
 power_restore_policy_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
-  int ret;
   uint8_t got_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
   
-  ret = get_bmc_power_restore_policy (args->dev,
-				      &got_value);
-  
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_power_restore_policy (args->dev,
+                                          &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
   
   passed_value = power_restore_policy_number (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    power_restore_policy_string (got_value));
     }
+
   return ret;
 }
 
-static int
+static bmc_validate_t
 power_restore_policy_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
-  return (power_restore_policy_number (value) == -1 ? 1 : 0);
+  if (power_restore_policy_number (value) != -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 struct section *

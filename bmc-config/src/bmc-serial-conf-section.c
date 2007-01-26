@@ -5,7 +5,7 @@
 #include "bmc-map.h"
 #include "bmc-sections.h"
 
-static int
+static bmc_err_t
 serial_conf_checkout (ipmi_device_t dev,
 		      uint8_t *basic_mode,
 		      uint8_t *ppp_mode,
@@ -16,16 +16,14 @@ serial_conf_checkout (ipmi_device_t dev,
   uint8_t tmp_ppp_mode;
   uint8_t tmp_terminal_mode;
   uint8_t tmp_connect_mode;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_serial_conf_connection_mode (dev,
-					     &tmp_basic_mode,
-					     &tmp_ppp_mode,
-					     &tmp_terminal_mode,
-					     &tmp_connect_mode);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_serial_conf_connection_mode (dev,
+                                                  &tmp_basic_mode,
+                                                  &tmp_ppp_mode,
+                                                  &tmp_terminal_mode,
+                                                  &tmp_connect_mode)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (basic_mode)
     *basic_mode = tmp_basic_mode;
@@ -39,11 +37,11 @@ serial_conf_checkout (ipmi_device_t dev,
   if (connect_mode)
     *connect_mode = tmp_connect_mode;
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
 
-static int
+static bmc_err_t
 serial_conf_commit (ipmi_device_t dev,
 		    uint8_t *basic_mode,
 		    uint8_t *ppp_mode,
@@ -54,16 +52,14 @@ serial_conf_commit (ipmi_device_t dev,
   uint8_t tmp_ppp_mode;
   uint8_t tmp_terminal_mode;
   uint8_t tmp_connect_mode;
-  int ret;
+  bmc_err_t ret;
 
-  ret = get_bmc_serial_conf_connection_mode (dev,
-					     &tmp_basic_mode,
-					     &tmp_ppp_mode,
-					     &tmp_terminal_mode,
-					     &tmp_connect_mode);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_serial_conf_connection_mode (dev,
+                                                  &tmp_basic_mode,
+                                                  &tmp_ppp_mode,
+                                                  &tmp_terminal_mode,
+                                                  &tmp_connect_mode)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (basic_mode)
     tmp_basic_mode = *basic_mode;
@@ -77,30 +73,27 @@ serial_conf_commit (ipmi_device_t dev,
   if (connect_mode)
     tmp_connect_mode = *connect_mode;
 
-  ret = set_bmc_serial_conf_connection_mode (dev,
-					     tmp_basic_mode,
-					     tmp_ppp_mode,
-					     tmp_terminal_mode,
-					     tmp_connect_mode);
-  return 0;
+  return set_bmc_serial_conf_connection_mode (dev,
+                                              tmp_basic_mode,
+                                              tmp_ppp_mode,
+                                              tmp_terminal_mode,
+                                              tmp_connect_mode);
 }
 
-static int
+static bmc_err_t
 enable_basic_mode_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = serial_conf_checkout (args->dev,
-			      &value,
-			      NULL,
-			      NULL,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = serial_conf_checkout (args->dev,
+                                   &value,
+                                   NULL,
+                                   NULL,
+                                   NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -110,7 +103,7 @@ enable_basic_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -118,14 +111,14 @@ enable_basic_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_basic_mode_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -137,31 +130,34 @@ enable_basic_mode_commit (const struct bmc_config_arguments *args,
 			     &value, NULL, NULL, NULL);
 }
 
-static int
+static bmc_diff_t
 enable_basic_mode_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
-  int ret;
   uint8_t get_value;
   uint8_t passed_value;
-
-  ret = serial_conf_checkout (args->dev,
-			      &get_value,
-			      NULL,
-			      NULL,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  bmc_err_t rc;
+  bmc_diff_t ret;
+  
+  if ((rc = serial_conf_checkout (args->dev,
+                                   &get_value,
+                                   NULL,
+                                   NULL,
+                                   NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes");
 
   if (passed_value == get_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -170,33 +166,33 @@ enable_basic_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_basic_mode_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 
 /* ppp */
 
-static int
+static bmc_err_t
 enable_ppp_mode_checkout (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = serial_conf_checkout (args->dev,
-			      NULL,
-			      &value,
-			      NULL,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = serial_conf_checkout (args->dev,
+                                   NULL,
+                                   &value,
+                                   NULL,
+                                   NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -206,7 +202,7 @@ enable_ppp_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -214,14 +210,14 @@ enable_ppp_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_ppp_mode_commit (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
@@ -233,31 +229,34 @@ enable_ppp_mode_commit (const struct bmc_config_arguments *args,
 			     NULL, &value, NULL, NULL);
 }
 
-static int
+static bmc_diff_t
 enable_ppp_mode_diff (const struct bmc_config_arguments *args,
 		      const struct section *sect,
 		      const struct keyvalue *kv)
 {
-  int ret;
   uint8_t get_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = serial_conf_checkout (args->dev,
-			      NULL,
-			      &get_value,
-			      NULL,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = serial_conf_checkout (args->dev,
+                                  NULL,
+                                  &get_value,
+                                  NULL,
+                                  NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes");
 
   if (passed_value == get_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -266,32 +265,32 @@ enable_ppp_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_ppp_mode_validate (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 /* terminal */
 
-static int
+static bmc_err_t
 enable_terminal_mode_checkout (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = serial_conf_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      &value,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = serial_conf_checkout (args->dev,
+                                   NULL,
+                                   NULL,
+                                   &value,
+                                   NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -301,7 +300,7 @@ enable_terminal_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -309,14 +308,14 @@ enable_terminal_mode_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_terminal_mode_commit (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
@@ -328,31 +327,34 @@ enable_terminal_mode_commit (const struct bmc_config_arguments *args,
 			     NULL, NULL, &value, NULL);
 }
 
-static int
+static bmc_diff_t
 enable_terminal_mode_diff (const struct bmc_config_arguments *args,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
-  int ret;
   uint8_t get_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = serial_conf_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      &get_value,
-			      NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = serial_conf_checkout (args->dev,
+                                  NULL,
+                                  NULL,
+                                  &get_value,
+                                  NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes");
 
   if (passed_value == get_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -361,32 +363,32 @@ enable_terminal_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_terminal_mode_validate (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 
 
-static int
+static bmc_err_t
 connect_mode_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
 
-  ret = serial_conf_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      NULL,
-			      &value);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = serial_conf_checkout (args->dev,
+                                   NULL,
+                                   NULL,
+                                   NULL,
+                                   &value)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -394,13 +396,13 @@ connect_mode_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = connect_mode_string (value)))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 connect_mode_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
@@ -412,30 +414,33 @@ connect_mode_commit (const struct bmc_config_arguments *args,
 			     NULL, NULL, NULL, &value);
 }
 
-static int
+static bmc_diff_t
 connect_mode_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
-  int ret;
   uint8_t get_value;
   uint8_t passed_value;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = serial_conf_checkout (args->dev,
-			      NULL,
-			      NULL,
-			      NULL,
-			      &get_value);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = serial_conf_checkout (args->dev,
+                                  NULL,
+                                  NULL,
+                                  NULL,
+                                  &get_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = connect_mode_number (kv->value);
   if (passed_value == get_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -444,38 +449,41 @@ connect_mode_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 connect_mode_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
-  return (connect_mode_number (value) != -1) ? 0 : 1;
+  if (connect_mode_number (value) != -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-
-static int
+static bmc_err_t
 page_blackout_interval_checkout (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
+  bmc_err_t ret;
 
-  ret = get_bmc_serial_conf_page_blackout_interval (args->dev,
-						    &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_serial_conf_page_blackout_interval (args->dev,
+                                                         &interval)) != BMC_ERR_SUCCESS)
+    return ret;
   
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", interval);
+  if (asprintf (&kv->value, "%d", interval) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 page_blackout_interval_commit (const struct bmc_config_arguments *args,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
@@ -484,29 +492,32 @@ page_blackout_interval_commit (const struct bmc_config_arguments *args,
 						     atoi (kv->value));
 }
 
-static int
+static bmc_diff_t
 page_blackout_interval_diff (const struct bmc_config_arguments *args,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
   uint8_t interval;
   int passed_interval;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_serial_conf_page_blackout_interval (args->dev,
-						    &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_serial_conf_page_blackout_interval (args->dev,
+                                                        &interval)) != BMC_ERR_SUCCESS) 
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_interval = atoi (kv->value);
 
   if (passed_interval == interval)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", interval);
       report_diff (sect->section_name,
                    kv->key,
@@ -516,46 +527,53 @@ page_blackout_interval_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 page_blackout_interval_validate (const struct bmc_config_arguments *args,
 				 const struct section *sect,
 				 const char *value)
 {
   char *endptr;
-  int num =  strtol (value, &endptr, 0);
+  long int num;
+
+  num = strtol (value, &endptr, 0);
+
   if (*endptr)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
+
   if (num < 0 || num > 255)
-    return 1;
-  return 0;
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 
 /* retry time */
 
-static int
+static bmc_err_t
 call_retry_interval_checkout (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
-  int ret;
   uint8_t interval;
+  bmc_err_t ret;
 
-  ret = get_bmc_serial_conf_call_retry_interval (args->dev,
-                                                 &interval);
-
-  if (ret != 0)
-    return -1;
-  
+  if ((ret = get_bmc_serial_conf_call_retry_interval (args->dev,
+                                                      &interval)) != BMC_ERR_SUCCESS)
+    return ret;
+       
   if (kv->value)
     free (kv->value);
 
-  asprintf (&kv->value, "%d", interval);
+  if (asprintf (&kv->value, "%d", interval) < 0)
+    {
+      perror("asprintf");
+      return BMC_ERR_FATAL_ERROR;
+    }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 call_retry_interval_commit (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
@@ -564,29 +582,32 @@ call_retry_interval_commit (const struct bmc_config_arguments *args,
                                                   atoi (kv->value));
 }
 
-static int
+static bmc_diff_t
 call_retry_interval_diff (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
   uint8_t interval;
   int passed_interval;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = get_bmc_serial_conf_call_retry_interval (args->dev,
-                                                 &interval);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = get_bmc_serial_conf_call_retry_interval (args->dev,
+                                                     &interval)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_interval = atoi (kv->value);
 
   if (passed_interval == interval)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
       char num[32];
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       sprintf (num, "%d", interval);
       report_diff (sect->section_name,
                    kv->key,
@@ -596,38 +617,41 @@ call_retry_interval_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 call_retry_interval_validate (const struct bmc_config_arguments *args,
 			      const struct section *sect,
 			      const char *value)
 {
   char *endptr;
-  int num =  strtol (value, &endptr, 0);
+  long int num;
+
+  num = strtol (value, &endptr, 0);
+
   if (*endptr)
-    return 1;
+    return BMC_VALIDATE_INVALID_VALUE;
+
   if (num < 0 || num > 255)
-    return 1;
-  return 0;
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
-static int
+static bmc_err_t
 serial_conf_comm_checkout (ipmi_device_t dev,
 			   uint8_t *dtr_hangup,
 			   uint8_t *flow_control,
 			   uint8_t *bit_rate)
 {
-  int ret;
   uint8_t tmp_dtr_hangup;
   uint8_t tmp_flow_control;
   uint8_t tmp_bit_rate;
+  bmc_err_t ret;
 
-  ret = get_bmc_serial_conf_ipmi_messaging_comm_settings (dev,
-							  &tmp_dtr_hangup,
-							  &tmp_flow_control,
-							  &tmp_bit_rate);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_serial_conf_ipmi_messaging_comm_settings (dev,
+                                                               &tmp_dtr_hangup,
+                                                               &tmp_flow_control,
+                                                               &tmp_bit_rate)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (dtr_hangup)
     *dtr_hangup = tmp_dtr_hangup;
@@ -638,27 +662,25 @@ serial_conf_comm_checkout (ipmi_device_t dev,
   if (bit_rate)
     *bit_rate = tmp_bit_rate;
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 serial_conf_comm_commit (ipmi_device_t dev,
 			 uint8_t *dtr_hangup,
 			 uint8_t *flow_control,
 			 uint8_t *bit_rate)
 {
-  int ret;
   uint8_t tmp_dtr_hangup;
   uint8_t tmp_flow_control;
   uint8_t tmp_bit_rate;
+  bmc_err_t ret;
 
-  ret = get_bmc_serial_conf_ipmi_messaging_comm_settings (dev,
-							  &tmp_dtr_hangup,
-							  &tmp_flow_control,
-							  &tmp_bit_rate);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_serial_conf_ipmi_messaging_comm_settings (dev,
+                                                               &tmp_dtr_hangup,
+                                                               &tmp_flow_control,
+                                                               &tmp_bit_rate)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (dtr_hangup)
     tmp_dtr_hangup = *dtr_hangup;
@@ -673,21 +695,19 @@ serial_conf_comm_commit (ipmi_device_t dev,
 							   tmp_bit_rate);
 }
 
-static int
+static bmc_err_t
 enable_dtr_hangup_checkout (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
   
-  ret = serial_conf_comm_checkout (args->dev,
-				   &value,
-				   NULL,
-				   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = serial_conf_comm_checkout (args->dev,
+                                        &value,
+                                        NULL,
+                                        NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -697,7 +717,7 @@ enable_dtr_hangup_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
   else
@@ -705,14 +725,14 @@ enable_dtr_hangup_checkout (const struct bmc_config_arguments *args,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return -1;
+          return BMC_ERR_FATAL_ERROR;
         }
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 enable_dtr_hangup_commit (const struct bmc_config_arguments *args,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -725,30 +745,33 @@ enable_dtr_hangup_commit (const struct bmc_config_arguments *args,
 				  NULL);
 }
 
-static int
+static bmc_diff_t
 enable_dtr_hangup_diff (const struct bmc_config_arguments *args,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = serial_conf_comm_checkout (args->dev,
-				   &got_value,
-				   NULL,
-				   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = serial_conf_comm_checkout (args->dev,
+                                       &got_value,
+                                       NULL,
+                                       NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = same (kv->value, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -757,29 +780,29 @@ enable_dtr_hangup_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 enable_dtr_hangup_validate (const struct bmc_config_arguments *args,
 			    const struct section *sect,
 			    const char *value)
 {
-  return (value && (same (value, "yes") || same (value, "no"))) ? 0 : 1;
+  if (value && (same (value, "yes") || same (value, "no")))
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 flow_control_checkout (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
   
-  ret = serial_conf_comm_checkout (args->dev,
-				   NULL,
-				   &value,
-				   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = serial_conf_comm_checkout (args->dev,
+                                        NULL,
+                                        &value,
+                                        NULL)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -787,13 +810,13 @@ flow_control_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (flow_control_string (value))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 flow_control_commit (const struct bmc_config_arguments *args,
 		     const struct section *sect,
 		     const struct keyvalue *kv)
@@ -805,30 +828,33 @@ flow_control_commit (const struct bmc_config_arguments *args,
 				  NULL);
 }
 
-static int
+static bmc_diff_t
 flow_control_diff (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = serial_conf_comm_checkout (args->dev,
-				   NULL,
-				   &got_value,
-				   NULL);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = serial_conf_comm_checkout (args->dev,
+                                       NULL,
+                                       &got_value,
+                                       NULL)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = flow_control_number (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -837,29 +863,29 @@ flow_control_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 flow_control_validate (const struct bmc_config_arguments *args,
 		       const struct section *sect,
 		       const char *value)
 {
-  return (flow_control_number (value) > -1 ) ? 0 : 1;
+  if (flow_control_number (value) > -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
-static int
+static bmc_err_t
 bit_rate_checkout (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
-  int ret;
   uint8_t value;
+  bmc_err_t ret;
   
-  ret = serial_conf_comm_checkout (args->dev,
-				   NULL,
-				   NULL,
-				   &value);
-
-  if (ret != 0)
-    return -1;
+  if ((ret = serial_conf_comm_checkout (args->dev,
+                                        NULL,
+                                        NULL,
+                                        &value)) != BMC_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -867,13 +893,13 @@ bit_rate_checkout (const struct bmc_config_arguments *args,
   if (!(kv->value = strdup (bit_rate_string (value))))
     {
       perror("strdup");
-      return -1;
+      return BMC_ERR_FATAL_ERROR;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }
 
-static int
+static bmc_err_t
 bit_rate_commit (const struct bmc_config_arguments *args,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
@@ -885,30 +911,33 @@ bit_rate_commit (const struct bmc_config_arguments *args,
 				  &value);
 }
 
-static int
+static bmc_diff_t
 bit_rate_diff (const struct bmc_config_arguments *args,
 	       const struct section *sect,
 	       const struct keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
-  int ret;
+  bmc_err_t rc;
+  bmc_diff_t ret;
 
-  ret = serial_conf_comm_checkout (args->dev,
-				   NULL,
-				   NULL,
-				   &got_value);
-
-  if (ret != 0)
-    return -1;
+  if ((rc = serial_conf_comm_checkout (args->dev,
+                                       NULL,
+                                       NULL,
+                                       &got_value)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
 
   passed_value = bit_rate_number (kv->value);
 
   if (passed_value == got_value)
-    ret = 0;
+    ret = BMC_DIFF_SAME;
   else 
     {
-      ret = 1;
+      ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -917,12 +946,14 @@ bit_rate_diff (const struct bmc_config_arguments *args,
   return ret;
 }
 
-static int
+static bmc_validate_t
 bit_rate_validate (const struct bmc_config_arguments *args,
 		   const struct section *sect,
 		   const char *value)
 {
-  return (bit_rate_number (value) > -1 ) ? 0 : 1;
+  if (bit_rate_number (value) > -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
 }
 
 struct section *
