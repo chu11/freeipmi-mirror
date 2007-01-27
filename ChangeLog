@@ -8,8 +8,8 @@
 	New files.
 
 	* bmc-config/src/: Use new common validate functions throughout
-	code.
-	
+	code.  Various continued code cleanup.
+
 2007-01-24  Albert Chu <chu11@llnl.gov>
 	
 	* bmc-config/: Continue cleanup and re-architecture.

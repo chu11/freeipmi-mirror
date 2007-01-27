@@ -22,24 +22,6 @@
 #include "bmc-config.h"
 #include "bmc-common.h"
 
-struct authentication_type
-{
-  uint8_t type_none;
-  uint8_t type_md2;
-  uint8_t type_md5;
-  uint8_t type_straight_password;
-  uint8_t type_oem_proprietary;
-};
-
-struct bmc_authentication_level
-{
-  struct authentication_type callback;
-  struct authentication_type user;
-  struct authentication_type operator;
-  struct authentication_type admin;
-  struct authentication_type oem;
-};
-
 int get_bmc_max_users (ipmi_device_t dev,
                        uint8_t *max_users);
 bmc_err_t set_bmc_username (ipmi_device_t dev, 
@@ -121,7 +103,32 @@ bmc_err_t set_bmc_lan_conf_vlan_priority (ipmi_device_t dev,
                                           uint8_t vlan_priority);
 
 bmc_err_t set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
-                                                        struct bmc_authentication_level *bmc_authentication_level);
+                                                        uint8_t callback_level_none,
+                                                        uint8_t callback_level_md2,
+                                                        uint8_t callback_level_md5,
+                                                        uint8_t callback_level_straight_password,
+                                                        uint8_t callback_level_oem_proprietary,
+                                                        uint8_t user_level_none,
+                                                        uint8_t user_level_md2,
+                                                        uint8_t user_level_md5,
+                                                        uint8_t user_level_straight_password,
+                                                        uint8_t user_level_oem_proprietary,
+                                                        uint8_t operator_level_none,
+                                                        uint8_t operator_level_md2,
+                                                        uint8_t operator_level_md5,
+                                                        uint8_t operator_level_straight_password,
+                                                        uint8_t operator_level_oem_proprietary,
+                                                        uint8_t admin_level_none,
+                                                        uint8_t admin_level_md2,
+                                                        uint8_t admin_level_md5,
+                                                        uint8_t admin_level_straight_password,
+                                                        uint8_t admin_level_oem_proprietary,
+                                                        uint8_t oem_level_none,
+                                                        uint8_t oem_level_md2,
+                                                        uint8_t oem_level_md5,
+                                                        uint8_t oem_level_straight_password,
+                                                        uint8_t oem_level_oem_proprietary);
+
 bmc_err_t set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
                                                       uint8_t bmc_generated_gratuitous_arps,
                                                       uint8_t bmc_generated_arp_responses);
@@ -269,7 +276,31 @@ bmc_err_t get_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev,
 bmc_err_t get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev, 
                                                        char *backup_gateway_mac_address);
 bmc_err_t get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
-                                                        struct bmc_authentication_level *bmc_authentication_level);
+                                                        uint8_t *callback_level_none,
+                                                        uint8_t *callback_level_md2,
+                                                        uint8_t *callback_level_md5,
+                                                        uint8_t *callback_level_straight_password,
+                                                        uint8_t *callback_level_oem_proprietary,
+                                                        uint8_t *user_level_none,
+                                                        uint8_t *user_level_md2,
+                                                        uint8_t *user_level_md5,
+                                                        uint8_t *user_level_straight_password,
+                                                        uint8_t *user_level_oem_proprietary,
+                                                        uint8_t *operator_level_none,
+                                                        uint8_t *operator_level_md2,
+                                                        uint8_t *operator_level_md5,
+                                                        uint8_t *operator_level_straight_password,
+                                                        uint8_t *operator_level_oem_proprietary,
+                                                        uint8_t *admin_level_none,
+                                                        uint8_t *admin_level_md2,
+                                                        uint8_t *admin_level_md5,
+                                                        uint8_t *admin_level_straight_password,
+                                                        uint8_t *admin_level_oem_proprietary,
+                                                        uint8_t *oem_level_none,
+                                                        uint8_t *oem_level_md2,
+                                                        uint8_t *oem_level_md5,
+                                                        uint8_t *oem_level_straight_password,
+                                                        uint8_t *oem_level_oem_proprietary);
 bmc_err_t get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
                                                       uint8_t *gratuitous_arps, 
                                                       uint8_t *arp_response);
