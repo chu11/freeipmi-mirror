@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2 2006-12-13 00:22:31 chu11 Exp $
+## $Id: Makefile.am,v 1.3 2007-01-30 21:52:57 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -31,8 +31,7 @@ libipmiconsole_la_SOURCES = ipmiconsole.c \
 
 libipmiconsole_la_CFLAGS = $(PTHREAD_CFLAGS)
 
-libipmiconsole_la_CPPFLAGS = -I$(srcdir)/../../../config \
-			     -I$(srcdir)/../../../common/src \
+libipmiconsole_la_CPPFLAGS = -I$(srcdir)/../../../common/src \
 			     -I$(srcdir)/../../../libfreeipmi/include \
 			     -DWITH_SECURE_MALLOC=1 \
 			     -DWITH_PTHREADS=1
@@ -56,6 +55,9 @@ EXTRA_DIST = ipmiconsole.map
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../../common/src/libfreeipmiportability.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

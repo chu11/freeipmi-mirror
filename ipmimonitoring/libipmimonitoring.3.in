@@ -1,0 +1,97 @@
+\."############################################################################
+\."  $Id: libipmimonitoring.3.in,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+\."############################################################################
+\."  Copyright (C) 2006 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-222073
+\."  
+\."  This file is part of Ipmimonitoring, an IPMI sensor monitoring
+\."  library.  For details, see http://www.llnl.gov/linux/.
+\."  
+\."  Ipmimonitoring is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."  
+\."  Ipmimonitoring is distributed in the hope that it will be useful, but WITHOUT ANY
+\."  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+\."  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+\."  details.
+\."  
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmimonitoring; if not, write to the Free Software Foundation, Inc.,
+\."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+\."############################################################################
+.TH LIBIPMIMONITORING 3 "December 2006" "LLNL" "LIBIPMIMONITORING"
+.SH NAME
+libipmimonitoring \- a library for IPMI sensor monitoring
+.SH SYNOPSIS
+.B #include <ipmi_monitoring.h>
+.sp
+.BI "int ipmi_monitoring_init(unsigned int debug_flags, int *errnum);"
+.sp
+.BI "ipmi_monitoring_ctx_t ipmi_monitoring_ctx_create(void);"
+.sp
+.BI "void ipmi_monitoring_ctx_destroy(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "int ipmi_monitoring_ctx_errnum(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "char *ipmi_monitoring_ctx_strerror(int errnum);"
+.sp
+.BI "int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *record_ids, unsigned int record_ids_len);"
+.sp
+.BI "int ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c, char *hostname, struct ipmi_monitoring_ipmi_config *config, unsigned int sensor_reading_flags, unsigned int *sensor_groups, unsigned int sensor_groups_len);"
+.sp
+.BI "int ipmi_monitoring_iterator_first(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "int ipmi_monitoring_iterator_next(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "int ipmi_monitoring_iterator_record_id(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "int ipmi_monitoring_iterator_sensor_group(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "char *ipmi_monitoring_iterator_sensor_name(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "int ipmi_monitoring_iterator_sensor_state(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "int ipmi_monitoring_iterator_sensor_units(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "int ipmi_monitoring_iterator_sensor_reading_type(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "void *ipmi_monitoring_iterator_sensor_reading(ipmi_monitoring_ctx_t c);"
+.sp
+.BI "void ipmi_monitoring_iterator_destroy(ipmi_monitoring_ctx_t c);"
+.sp
+.br
+.SH DESCRIPTION
+The ipmimonitoring library allows users to get IPMI sensor readings
+both in-band and out-of-band.  In addition, the sensor readings are
+interpreted into NOMINAL, WARNING, or CRITICAL states, so that
+monitoring software may take appropriate actions dependent on the
+sensor readings.
+
+In order to improve efficiency, SDR data will be cached on the host in
+@IPMI_MONITORING_SDR_CACHE_DIR@.
+
+Interpretation rules have not been written for all sensors yet.  If
+sensor interpretation rules are needed, please contact the authors
+listed below.
+
+.SH STATE CONFIGURATION 
+The interpretation of sensors is configurable via the configuration
+file stored at @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  Various
+states returnable by IPMI based sensors can be assigned NOMINAL,
+WARNING, or CRITICAL states to be returned by the libipmimonitoring
+library.  If multiple states are triggered on a sensor reading, the
+more sever state is returned to the user.
+
+.SH FILES
+@IPMI_MONITORING_SDR_CACHE_DIR@
+
+@IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
+
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.

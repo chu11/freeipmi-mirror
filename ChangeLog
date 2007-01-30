@@ -1,3 +1,12 @@
+2007-01-29  Albert Chu <chu11@llnl.gov>
+
+	* COPYING.ipmimonitoring, DISCLAIMER.ipmimonitoring, configure.ac,
+	Makefile.am, freeipmi.spec.in, ipmimonitoring/: Add ipmimonitoring
+	code.
+
+	* ipmiconsole/src/libipmiconsole/Makefile.am: Remove unneeded
+	compile options.
+	
 2007-01-26  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Re-architect for most of bmc-config to support

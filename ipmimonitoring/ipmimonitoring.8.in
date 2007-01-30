@@ -1,0 +1,102 @@
+\."#############################################################################
+\."$Id: ipmimonitoring.8.in,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2006 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-222073
+\."  
+\."  This file is part of Ipmimonitoring, an IPMI sensor monitoring
+\."  library.  For details, see http://www.llnl.gov/linux/.
+\."
+\."  Ipmimonitoring is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."  
+\."  Ipmimonitoring is distributed in the hope that it will be useful, but WITHOUT 
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+\."  for more details.
+\."  
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmimonitoring; if not, write to the Free Software Foundation, Inc.,
+\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."############################################################################
+.TH ipmimonitoring 8 "@ISODATE@" "ipmimonitoring @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmimonitoring \- IPMI monitoring tool
+.SH "SYNOPSIS"
+.B ipmimonitoring
+.I "[OPTIONS]"
+.SH "DESCRIPTION"
+.B ipmimonitoring
+is an IPMI sensor monitoring tool that utilizes the libipmimonitoring
+library to interpret sensor readings rather than just report them.
+The library and tool are primarily used for host monitoring
+activities.  For most users who wish to get sensor readings, it is
+recommended that they use
+.B ipmi-sensors(8).
+
+.SH "OPTIONS"
+.TP
+.I "-h, --hostname host"
+Specify the remote host to connect to.
+.TP
+.I "-u, --username name"
+Specify the username to use to establish communication.  If not
+specified, the NULL user is assumed.
+.TP
+.I "-p, --password pw"
+Specify the password to use to establish communication.  If not
+specified, a NULL password is assumed.
+.TP
+.I "-l, --privilege str"
+Specify the privilege type to use.  The currently available privilege
+types are "user", "operator", and "admin".  If not specified, a
+privilege of "admin" is assumed.  
+.TP
+.I "-a, --authentication-type str"
+Specify the authentication mechanism to use.  The currently available
+authentication mechanisms are "none", "straight_password_key", "md2",
+and "md5".  If not specified, "md5" is assumed.
+.TP
+.I "-H, --help"
+Output help menu and exit.
+.TP
+.I "-V, --version"
+Output version and exit.
+.if @MANPAGE_DEBUG@ \{
+.TP
+.I "-D, --debug"
+Turn on debugging.
+.TP
+.I "-E, --debugdump"
+Turn on packet dumps for debugging.
+\}
+.LP
+
+.if @MANPAGE_DEBUG@ \{
+.SH "KNOWN ISSUES"
+This version of ipmimonitoring was compiled with debugging.  When compiled
+with debugging,
+.B ipmimonitoring 
+is insecure.  The following were intentionally
+left in
+.B ipmimonitoring
+for debugging purposes:
+
+.IP o 2
+Command line arguments are not cleared from memory.
+.IP o
+Core dumps are enabled.
+
+Before placing ipmimonitoring in a production system, it is recommended
+that the program be compiled with debugging turned off.
+\}
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.
+.SH "SEE ALSO"
+ipmi-sensors(8), libipmimonitoring(3)

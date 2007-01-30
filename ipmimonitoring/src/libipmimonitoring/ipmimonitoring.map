@@ -1,0 +1,6 @@
+{
+  global:
+    ipmi_monitoring*;
+  local:
+    *;
+};

@@ -137,6 +137,7 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ZRESEARCH
+%config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
 %{_libdir}/*so.0*
 %{_libdir}/*so.3*
 /var/lib/*
@@ -152,6 +153,7 @@ fi
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
 %{_sbindir}/ipmiconsole
+%{_sbindir}/ipmimonitoring
 %{_mandir}/man8/bmc-autoconfig.8*
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
@@ -167,6 +169,7 @@ fi
 %{_mandir}/man8/rmcpping.8*
 %{_mandir}/man8/ipmiconsole.8*
 %{_mandir}/man5/ipmiconsole.conf.5*
+%{_mandir}/man8/ipmimonitoring.8*
 
 %files devel
 %defattr(-,root,root)
