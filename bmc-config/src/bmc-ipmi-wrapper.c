@@ -17,47 +17,39 @@
 
 #include "bmc-ipmi-wrapper.h"
 
-/* achu: caching to make bmc-config work more quickly */
-static uint8_t lan_channel_number_initialized = false;
-static int8_t lan_channel_number;
-static uint8_t serial_channel_number_initialized = false;
-static int8_t serial_channel_number;
-static uint8_t sol_channel_number_initialized = false;
-static int8_t sol_channel_number;
-
 bmc_err_t 
 get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
 {
-  if (lan_channel_number_initialized)
+  if (state_data->lan_channel_number_initialized)
     {
-      *channel_num = lan_channel_number;
+      *channel_num = state_data->lan_channel_number;
       return BMC_ERR_SUCCESS;
     }
   
-  if ((lan_channel_number = ipmi_get_channel_number (state_data->dev, 
-                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->dev, 
+                                                                 IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
 
-  lan_channel_number_initialized = true;
-  *channel_num = lan_channel_number;
+  state_data->lan_channel_number_initialized = true;
+  *channel_num = state_data->lan_channel_number;
   return BMC_ERR_SUCCESS;
 }
 
 bmc_err_t 
 get_serial_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
 {
-  if (serial_channel_number_initialized)
+  if (state_data->serial_channel_number_initialized)
     {
-      *channel_num = serial_channel_number;
+      *channel_num = state_data->serial_channel_number;
       return BMC_ERR_SUCCESS;
     }
   
-  if ((serial_channel_number = ipmi_get_channel_number (state_data->dev, 
-                                                        IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
+  if ((state_data->serial_channel_number = ipmi_get_channel_number (state_data->dev, 
+                                                                    IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
 
-  serial_channel_number_initialized = true;
-  *channel_num = serial_channel_number;
+  state_data->serial_channel_number_initialized = true;
+  *channel_num = state_data->serial_channel_number;
   return BMC_ERR_SUCCESS;
 }
 
@@ -70,9 +62,9 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
   uint64_t val;
   int8_t num;
 
-  if (sol_channel_number_initialized)
+  if (state_data->sol_channel_number_initialized)
     {
-      *channel_num = sol_channel_number;
+      *channel_num = state_data->sol_channel_number;
       return BMC_ERR_SUCCESS;
     }
   
@@ -104,10 +96,10 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
       goto cleanup;
     }
 
-  sol_channel_number_initialized = true;
-  sol_channel_number = val;
+  state_data->sol_channel_number_initialized = true;
+  state_data->sol_channel_number = val;
 
-  *channel_num = sol_channel_number;
+  *channel_num = state_data->sol_channel_number;
   rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)

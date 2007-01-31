@@ -26,6 +26,8 @@
 	(destroy_sel_record): New function.
 
 	* ipmi-sel/src/ipmi-sel.c (display_sel_records): Use adjusted API.
+
+	* bmc-config/src/: Re-architect to remove globals.
 	
 2007-01-30  Albert Chu <chu11@llnl.gov>
 

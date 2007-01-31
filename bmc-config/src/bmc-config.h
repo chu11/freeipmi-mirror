@@ -23,9 +23,12 @@
 #ifndef _BMC_CONFIG_H_
 #define _BMC_CONFIG_H_
 
+#include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
+
+#define CIPHER_SUITE_LEN 16
 
 typedef enum
   {
@@ -94,6 +97,21 @@ typedef struct bmc_config_state_data
   bmc_config_prog_data_t *prog_data;
   ipmi_device_t dev;
   struct section *sections;
+
+  /* achu: caching to make rmcpplus priv go faster */
+  int cipher_suite_entry_count;
+  int cipher_suite_id_supported[CIPHER_SUITE_LEN];
+  int cipher_suite_id_supported_set;
+  uint8_t cipher_suite_priv[CIPHER_SUITE_LEN];
+  int cipher_suite_priv_set;
+
+  /* achu: caching to make bmc-config work more quickly */
+  int lan_channel_number_initialized;
+  int8_t lan_channel_number;
+  int serial_channel_number_initialized;
+  int8_t serial_channel_number;
+  int sol_channel_number_initialized;
+  int8_t sol_channel_number;
 } bmc_config_state_data_t;
 
 #endif /* _BMC_CONFIG_H_ */

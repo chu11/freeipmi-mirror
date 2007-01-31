@@ -21,28 +21,6 @@
 
 #include "bit-ops.h"
 
-#define CIPHER_SUITE_LEN 16
-
-static int cipher_suite_entry_count = 0;
-
-static int cipher_suite_id_supported[CIPHER_SUITE_LEN] =
-  {
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-  };
-static int cipher_suite_id_supported_set = 0;
-
-static uint8_t cipher_suite_priv[CIPHER_SUITE_LEN] =
-  {
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-  };
-static int cipher_suite_priv_set = 0;
-
 static bmc_err_t 
 set_bmc_user_access (bmc_config_state_data_t *state_data, 
 		     uint8_t channel_number, 
@@ -1586,7 +1564,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!cipher_suite_entry_count)
+  if (!state_data->cipher_suite_entry_count)
     {
       if (!(obj_cmd_count_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs)))
 	goto cleanup;
@@ -1605,13 +1583,13 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
       if (fiid_obj_get (obj_cmd_count_rs, "cipher_suite_entry_count", &val) < 0)
 	goto cleanup;
 
-      cipher_suite_entry_count = val;
+      state_data->cipher_suite_entry_count = val;
 
-      if (cipher_suite_entry_count > CIPHER_SUITE_LEN)
-	cipher_suite_entry_count = CIPHER_SUITE_LEN;
+      if (state_data->cipher_suite_entry_count > CIPHER_SUITE_LEN)
+	state_data->cipher_suite_entry_count = CIPHER_SUITE_LEN;
     }
 
-  if (!cipher_suite_id_supported_set)
+  if (!state_data->cipher_suite_id_supported_set)
     {
       if (!(obj_cmd_id_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs)))
 	goto cleanup;
@@ -1627,7 +1605,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
           goto cleanup;
         }
 
-      for (i = 0; i < cipher_suite_entry_count; i++)
+      for (i = 0; i < state_data->cipher_suite_entry_count; i++)
 	{
 	  char *field = NULL;
 
@@ -1667,13 +1645,13 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 	  if (fiid_obj_get (obj_cmd_id_rs, field, &val) < 0)
 	    goto cleanup;
 	  
-	  cipher_suite_id_supported[i] = val;
+	  state_data->cipher_suite_id_supported[i] = val;
 	}
       
-      cipher_suite_id_supported_set++;
+      state_data->cipher_suite_id_supported_set++;
     }
   
-  if (!cipher_suite_priv_set)
+  if (!state_data->cipher_suite_priv_set)
     {
       if (!(obj_cmd_priv_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs)))
 	goto cleanup;
@@ -1729,10 +1707,10 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 	  if (fiid_obj_get (obj_cmd_priv_rs, field, &val) < 0)
 	    goto cleanup;
 	  
-	  cipher_suite_priv[i] = val;
+	  state_data->cipher_suite_priv[i] = val;
 	}
       
-      cipher_suite_priv_set++;
+      state_data->cipher_suite_priv_set++;
     }
 
   rv = BMC_ERR_SUCCESS;
@@ -1774,12 +1752,14 @@ set_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (cipher_suite_entry_count && cipher_suite_id_supported_set && cipher_suite_priv_set)
+  if (state_data->cipher_suite_entry_count
+      && state_data->cipher_suite_id_supported_set
+      && state_data->cipher_suite_priv_set)
     {
       uint8_t privs[CIPHER_SUITE_LEN];
 
       memset(privs, '\0', CIPHER_SUITE_LEN);
-      memcpy(privs, cipher_suite_priv, CIPHER_SUITE_LEN);
+      memcpy(privs, state_data->cipher_suite_priv, CIPHER_SUITE_LEN);
       privs[cipher_suite_id] = privilege;
 
       if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(state_data->dev,
@@ -1806,7 +1786,7 @@ set_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
           goto cleanup;
         }
       
-      cipher_suite_priv[cipher_suite_id] = privilege;
+      state_data->cipher_suite_priv[cipher_suite_id] = privilege;
       rv = BMC_ERR_SUCCESS;
     }
   else
@@ -3837,15 +3817,17 @@ get_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (cipher_suite_entry_count && cipher_suite_id_supported_set && cipher_suite_priv_set)
+  if (state_data->cipher_suite_entry_count
+      && state_data->cipher_suite_id_supported_set
+      && state_data->cipher_suite_priv_set)
     {
       int i, id_found = 0;
       
-      for (i = 0; i < cipher_suite_entry_count; i++)
+      for (i = 0; i < state_data->cipher_suite_entry_count; i++)
 	{
-	  if (cipher_suite_id_supported[i] == cipher_suite_id)
+	  if (state_data->cipher_suite_id_supported[i] == cipher_suite_id)
 	    {
-	      *privilege = cipher_suite_priv[cipher_suite_id];
+	      *privilege = state_data->cipher_suite_priv[cipher_suite_id];
 	      id_found++;
 	      break;
 	    }

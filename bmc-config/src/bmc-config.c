@@ -49,6 +49,7 @@
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/select.h>
+#include <assert.h>
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
@@ -65,6 +66,25 @@
 #include "bmc-sections.h"
 
 #include "ipmi-common.h"
+
+void
+_bmc_config_state_data_init(bmc_config_state_data_t *state_data)
+{
+  assert (state_data);
+
+  memset(state_data, '\0', sizeof(bmc_config_state_data_t));
+  state_data->prog_data = NULL;
+  state_data->dev = NULL;
+  state_data->sections = NULL;
+
+  state_data->cipher_suite_entry_count = 0;
+  state_data->cipher_suite_id_supported_set = 0;
+  state_data->cipher_suite_priv_set = 0;
+
+  state_data->lan_channel_number_initialized = 0;
+  state_data->serial_channel_number_initialized = 0;
+  state_data->sol_channel_number_initialized = 0;
+}
 
 static int
 _bmc_config (void *arg)
@@ -150,7 +170,7 @@ _bmc_config (void *arg)
         }
     }
 
-  memset(&state_data, '\0', sizeof(bmc_config_state_data_t));
+  _bmc_config_state_data_init(&state_data);
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
