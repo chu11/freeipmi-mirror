@@ -5,8 +5,7 @@
 #include "bmc-sections.h"
 
 static bmc_diff_t
-bmc_diff_keypair (struct bmc_config_arguments *args,
-		  struct section *sections,
+bmc_diff_keypair (bmc_config_state_data_t *state_data,
                   struct keypair *kp)
 {
   char *keypair = NULL;
@@ -36,8 +35,10 @@ bmc_diff_keypair (struct bmc_config_arguments *args,
   key_name = strtok (key_name, " \t");
   value = strtok (value, " \t");
 
-  rv = bmc_section_diff_value (section_name, key_name, value,
-                               args, sections);
+  rv = bmc_section_diff_value (state_data,
+                               section_name, 
+                               key_name,
+                               value);
  cleanup:
   if (keypair)
     free (keypair);
@@ -45,19 +46,22 @@ bmc_diff_keypair (struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-bmc_diff_keypairs (struct bmc_config_arguments *args,
-                   struct section *sections)
+bmc_diff_keypairs (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   struct keypair *kp;
   bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
   bmc_diff_t ret = BMC_DIFF_SAME;
+
+  args = state_data->prog_data->args;
 
   kp = args->keypairs;
   while (kp)
     {
       bmc_diff_t this_ret;
 
-      if ((this_ret = bmc_diff_keypair (args, sections, kp)) == BMC_DIFF_FATAL_ERROR)
+      if ((this_ret = bmc_diff_keypair (state_data, 
+                                        kp)) == BMC_DIFF_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
@@ -72,14 +76,16 @@ bmc_diff_keypairs (struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-bmc_diff_file (struct bmc_config_arguments *args,
-	       struct section *sections)
+bmc_diff_file (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   FILE *fp;
   int file_opened = 0;
   bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
   bmc_diff_t ret = BMC_DIFF_SAME;
   bmc_diff_t this_ret;
+
+  args = state_data->prog_data->args;
 
   if (args->filename && strcmp (args->filename, "-"))
     {
@@ -94,7 +100,7 @@ bmc_diff_file (struct bmc_config_arguments *args,
     fp = stdin;
 
   /* 1st pass */
-  if ((this_ret = bmc_parser (args, sections, fp)) == BMC_DIFF_FATAL_ERROR)
+  if ((this_ret = bmc_parser (state_data, fp)) == BMC_DIFF_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
@@ -103,7 +109,7 @@ bmc_diff_file (struct bmc_config_arguments *args,
   if (ret == BMC_DIFF_SAME) 
     {
       /* 2nd pass if 1st pass was successful */
-      struct section *sect = sections;
+      struct section *sect = state_data->sections;
       while (sect) 
         {
           struct keyvalue *kv = sect->keyvalues;
@@ -111,8 +117,9 @@ bmc_diff_file (struct bmc_config_arguments *args,
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->diff (args, sect, kv)) == BMC_DIFF_FATAL_ERROR)
+                  if ((this_ret = kv->diff (state_data, sect, kv)) == BMC_DIFF_FATAL_ERROR)
                     goto cleanup;
+
                   if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
                     ret = BMC_DIFF_NON_FATAL_ERROR;
                 }
@@ -130,15 +137,17 @@ bmc_diff_file (struct bmc_config_arguments *args,
 }
 
 bmc_err_t
-bmc_diff (struct bmc_config_arguments *args,
-	  struct section *sections)
+bmc_diff (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   bmc_diff_t ret;
 
+  args = state_data->prog_data->args;
+
   if (args->keypairs)
-    ret = bmc_diff_keypairs (args, sections);
+    ret = bmc_diff_keypairs (state_data);
   else
-    ret = bmc_diff_file (args, sections);
+    ret = bmc_diff_file (state_data);
 
   if (ret == BMC_DIFF_SAME)
     return BMC_ERR_SUCCESS;

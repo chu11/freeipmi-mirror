@@ -5,14 +5,13 @@
 #include "bmc-sections.h"
 
 static bmc_err_t
-bmc_checkout_keypair (struct bmc_config_arguments *args,
-		      struct section *sections,
+bmc_checkout_keypair (bmc_config_state_data_t *state_data,
                       struct keypair *kp)
 {
   char *keypair = NULL;
   char *section_name;
   char *key_name;
-  struct section *sect = sections;
+  struct section *sect;
   struct keyvalue *kv;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
@@ -36,6 +35,7 @@ bmc_checkout_keypair (struct bmc_config_arguments *args,
   section_name = strtok (section_name, " \t");
   key_name = strtok (key_name, " \t");
 
+  sect = state_data->sections;
   while (sect) 
     {
       if (same (section_name, sect->section_name)) 
@@ -67,7 +67,7 @@ bmc_checkout_keypair (struct bmc_config_arguments *args,
       goto cleanup;
     }
 
-  if ((ret = kv->checkout (args, sect, kv)) == BMC_ERR_FATAL_ERROR)
+  if ((ret = kv->checkout (state_data, sect, kv)) == BMC_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (ret == BMC_ERR_SUCCESS) 
@@ -83,19 +83,22 @@ bmc_checkout_keypair (struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-bmc_checkout_keypairs (struct bmc_config_arguments *args,
-                       struct section *sections)
+bmc_checkout_keypairs (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   struct keypair *kp;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
-  
+
+  args = state_data->prog_data->args;
+
   kp = args->keypairs;
   while (kp)
     {
       bmc_err_t this_ret;
 
-      if ((this_ret = bmc_checkout_keypair(args, sections, kp)) == BMC_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_checkout_keypair(state_data,
+                                           kp)) == BMC_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -110,15 +113,19 @@ bmc_checkout_keypairs (struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-bmc_checkout_section_common (struct bmc_config_arguments *args,
+bmc_checkout_section_common (bmc_config_state_data_t *state_data,
                              struct section *sect, 
                              FILE *fp)
 {
-  struct keyvalue *kv = sect->keyvalues;
+  struct bmc_config_arguments *args;
+  struct keyvalue *kv;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
 
   fprintf (fp, "Section %s\n", sect->section_name);
+
+  args = state_data->prog_data->args;
+  kv = sect->keyvalues;
   
   while (kv) 
     {
@@ -135,7 +142,9 @@ bmc_checkout_section_common (struct bmc_config_arguments *args,
           continue;
         }
 
-      if ((this_ret = kv->checkout (args, sect, kv)) == BMC_ERR_FATAL_ERROR)
+      if ((this_ret = kv->checkout (state_data, 
+                                    sect,
+                                    kv)) == BMC_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -196,14 +205,16 @@ bmc_checkout_section_common (struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-bmc_checkout_section (struct bmc_config_arguments *args,
-                      struct section *sections)
+bmc_checkout_section (bmc_config_state_data_t *state_data)
 {
-  struct sectionstr *sstr = args->sectionstrs;
+  struct bmc_config_arguments *args;
+  struct sectionstr *sstr;
   FILE *fp;
   int file_opened = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
+
+  args = state_data->prog_data->args;
 
   if (args->filename && strcmp (args->filename, "-"))
     {
@@ -217,9 +228,10 @@ bmc_checkout_section (struct bmc_config_arguments *args,
   else
     fp = stdout;
 
+  sstr = args->sectionstrs;
   while (sstr)
     {
-      struct section *sect = sections;
+      struct section *sect = state_data->sections;
       int found = 0;
       
       while (sect) 
@@ -230,7 +242,9 @@ bmc_checkout_section (struct bmc_config_arguments *args,
               
               found++;
 
-              if ((this_ret = bmc_checkout_section_common (args, sect, fp)) == BMC_ERR_FATAL_ERROR)
+              if ((this_ret = bmc_checkout_section_common (state_data, 
+                                                           sect, 
+                                                           fp)) == BMC_ERR_FATAL_ERROR)
                 goto cleanup;
               
               if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -259,14 +273,16 @@ bmc_checkout_section (struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-bmc_checkout_file (struct bmc_config_arguments *args,
-		   struct section *sections)
+bmc_checkout_file (bmc_config_state_data_t *state_data)
 {
-  struct section *sect = sections;
+  struct bmc_config_arguments *args;
+  struct section *sect;
   FILE *fp;
   int file_opened = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
+
+  args = state_data->prog_data->args;
 
   if (args->filename && strcmp (args->filename, "-"))
     {
@@ -280,11 +296,14 @@ bmc_checkout_file (struct bmc_config_arguments *args,
   else
     fp = stdout;
 
+  sect = state_data->sections;
   while (sect) 
     {
       bmc_err_t this_ret;
       
-      if ((this_ret = bmc_checkout_section_common (args, sect, fp)) == BMC_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_checkout_section_common (state_data,
+                                                   sect,
+                                                   fp)) == BMC_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -301,17 +320,19 @@ bmc_checkout_file (struct bmc_config_arguments *args,
 }
 
 bmc_err_t
-bmc_checkout (struct bmc_config_arguments *args,
-	      struct section *sections)
+bmc_checkout (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   bmc_err_t ret;
 
+  args = state_data->prog_data->args;
+
   if (args->keypairs) 
-    ret = bmc_checkout_keypairs (args, sections);
+    ret = bmc_checkout_keypairs (state_data);
   else if (args->sectionstrs)
-    ret = bmc_checkout_section (args, sections);
+    ret = bmc_checkout_section (state_data);
   else
-    ret = bmc_checkout_file (args, sections);
+    ret = bmc_checkout_file (state_data);
 
   return ret;
 }

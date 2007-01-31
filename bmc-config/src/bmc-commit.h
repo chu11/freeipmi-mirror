@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-bmc_err_t bmc_commit (struct bmc_config_arguments *args, struct section *sections);
+bmc_err_t bmc_commit (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_COMMIT_H_ */

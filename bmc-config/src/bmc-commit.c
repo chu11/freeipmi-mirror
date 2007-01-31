@@ -6,8 +6,7 @@
 #include "bmc-sections.h"
 
 static bmc_err_t
-bmc_commit_keypair (struct bmc_config_arguments *args,
-                    struct section *sections,
+bmc_commit_keypair (bmc_config_state_data_t *state_data,
                     struct keypair *kp)
 {
   char *keypair = NULL;
@@ -37,8 +36,10 @@ bmc_commit_keypair (struct bmc_config_arguments *args,
   key_name = strtok (key_name, " \t");
   value = strtok (value, " \t");
 
-  rv = bmc_section_commit_value (section_name, key_name, value,
-                                 args, sections);
+  rv = bmc_section_commit_value (state_data, 
+                                 section_name,
+                                 key_name, 
+                                 value);
  cleanup:
   if (keypair)
     free(keypair);
@@ -46,19 +47,21 @@ bmc_commit_keypair (struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-bmc_commit_keypairs (struct bmc_config_arguments *args,
-                     struct section *sections)
+bmc_commit_keypairs (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   struct keypair *kp;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
+
+  args = state_data->prog_data->args;
 
   kp = args->keypairs;
   while (kp)
     {
       bmc_err_t this_ret;
 
-      if ((this_ret = bmc_commit_keypair(args, sections, kp)) == BMC_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_commit_keypair(state_data, kp)) == BMC_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -73,13 +76,16 @@ bmc_commit_keypairs (struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-bmc_keypair_feed (struct bmc_config_arguments *args,
-                  struct section *sections)
+bmc_keypair_feed (bmc_config_state_data_t *state_data)
 {
-  struct keypair *kp = args->keypairs;
+  struct bmc_config_arguments *args;
+  struct keypair *kp;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
 
+  args = state_data->prog_data->args;
+
+  kp = args->keypairs;
   while (kp)
     {
       struct section *sect;
@@ -111,7 +117,7 @@ bmc_keypair_feed (struct bmc_config_arguments *args,
       key_name = strtok (key_name, " \t");
       value = strtok (value, " \t");
       
-      sect = sections;
+      sect = state_data->sections;
       found_section = 0;
       while (sect) 
         {
@@ -176,14 +182,16 @@ bmc_keypair_feed (struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-bmc_commit_file (struct bmc_config_arguments *args,
-		 struct section *sections)
+bmc_commit_file (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   int file_opened = 0;
   FILE *fp;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
   bmc_err_t this_ret;
+
+  args = state_data->prog_data->args;
 
   if (args->filename && strcmp (args->filename, "-"))
     {
@@ -198,7 +206,7 @@ bmc_commit_file (struct bmc_config_arguments *args,
     fp = stdin;
 
   /* 1st pass - read in input from file */
-  if ((this_ret = bmc_parser (args, sections, fp)) == BMC_ERR_FATAL_ERROR)
+  if ((this_ret = bmc_parser (state_data, fp)) == BMC_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -207,7 +215,7 @@ bmc_commit_file (struct bmc_config_arguments *args,
   /* 2nd pass - feed in keypair elements from the command line to override file keypairs */
   if (args->keypairs)
     {
-      if ((this_ret = bmc_keypair_feed (args, sections)) == BMC_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_keypair_feed (state_data)) == BMC_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -217,7 +225,7 @@ bmc_commit_file (struct bmc_config_arguments *args,
   if (ret == BMC_ERR_SUCCESS) 
     {
       /* 3rd pass */
-      struct section *sect = sections;
+      struct section *sect = state_data->sections;
       while (sect) 
         {
           struct keyvalue *kv = sect->keyvalues;
@@ -225,7 +233,7 @@ bmc_commit_file (struct bmc_config_arguments *args,
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->commit (args, sect, kv)) == BMC_ERR_FATAL_ERROR)
+                  if ((this_ret = kv->commit (state_data, sect, kv)) == BMC_ERR_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == BMC_ERR_NON_FATAL_ERROR)
@@ -249,15 +257,16 @@ bmc_commit_file (struct bmc_config_arguments *args,
 }
 
 bmc_err_t
-bmc_commit (struct bmc_config_arguments *args,
-	      struct section *sections)
+bmc_commit (bmc_config_state_data_t *state_data)
 {
+  struct bmc_config_arguments *args;
   bmc_err_t ret;
 
+  args = state_data->prog_data->args;
   if (args->filename)
-    ret = bmc_commit_file (args, sections);
+    ret = bmc_commit_file (state_data);
   else
-    ret = bmc_commit_keypairs (args, sections);
+    ret = bmc_commit_keypairs (state_data);
 
   return ret;
 }

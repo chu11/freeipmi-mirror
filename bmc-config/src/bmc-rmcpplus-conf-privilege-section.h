@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-struct section * bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args);
+struct section * bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_ */

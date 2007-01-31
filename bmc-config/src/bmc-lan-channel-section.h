@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-struct section * bmc_lan_channel_section_get (struct bmc_config_arguments *args);
+struct section * bmc_lan_channel_section_get (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_LAN_CHANNEL_SECTIONS_H_ */

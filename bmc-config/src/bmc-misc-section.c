@@ -7,14 +7,14 @@
 #include "bmc-validate.h"
 
 static bmc_err_t
-power_restore_policy_checkout (const struct bmc_config_arguments *args,
+power_restore_policy_checkout (bmc_config_state_data_t *state_data,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
   uint8_t policy;
   bmc_err_t ret;
 
-  if ((ret = get_bmc_power_restore_policy (args->dev,
+  if ((ret = get_bmc_power_restore_policy (state_data,
                                            &policy)) != BMC_ERR_SUCCESS)
     return ret;
 
@@ -30,16 +30,16 @@ power_restore_policy_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-power_restore_policy_commit (const struct bmc_config_arguments *args,
+power_restore_policy_commit (bmc_config_state_data_t *state_data,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
-  return set_bmc_power_restore_policy (args->dev,
+  return set_bmc_power_restore_policy (state_data,
 				       power_restore_policy_number (kv->value));
 }
 
 static bmc_diff_t
-power_restore_policy_diff (const struct bmc_config_arguments *args,
+power_restore_policy_diff (bmc_config_state_data_t *state_data,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -48,7 +48,7 @@ power_restore_policy_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
   
-  if ((rc = get_bmc_power_restore_policy (args->dev,
+  if ((rc = get_bmc_power_restore_policy (state_data,
                                           &got_value)) != BMC_ERR_SUCCESS)
     {
       if (rc == BMC_ERR_NON_FATAL_ERROR)
@@ -73,14 +73,15 @@ power_restore_policy_diff (const struct bmc_config_arguments *args,
 }
 
 struct section *
-bmc_misc_section_get (struct bmc_config_arguments *args)
+bmc_misc_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *misc_section = NULL;
 
-  if (!(misc_section = bmc_section_create ("Misc")))
+  if (!(misc_section = bmc_section_create (state_data, "Misc")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (misc_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                misc_section,
 				"Power_Restore_Policy",
 				"Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
 				BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
@@ -94,6 +95,6 @@ bmc_misc_section_get (struct bmc_config_arguments *args)
 
  cleanup:
   if (misc_section)
-    bmc_section_destroy(misc_section);
+    bmc_section_destroy(state_data, misc_section);
   return NULL;
 }

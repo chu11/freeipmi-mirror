@@ -26,8 +26,8 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-int bmc_get_num_users (struct bmc_config_arguments *args);
+int bmc_get_num_users (bmc_config_state_data_t *state_data);
 
-struct section * bmc_user_section_get (struct bmc_config_arguments *args, int userid);
+struct section * bmc_user_section_get (bmc_config_state_data_t *state_data, int userid);
 
 #endif /* _BMC_USER_SECTIONS_H_ */

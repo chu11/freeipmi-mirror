@@ -5,9 +5,7 @@
 #include "bmc-sections.h"
 
 bmc_err_t
-bmc_parser (struct bmc_config_arguments *args,
-	    struct section *sections,
-	    FILE *fp)
+bmc_parser (bmc_config_state_data_t *state_data, FILE *fp)
 { 
   char buf[4096];
   int line_num = 0;
@@ -16,6 +14,11 @@ bmc_parser (struct bmc_config_arguments *args,
   char *value = NULL;
   char *tok;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+#ifndef NDEBUG 
+  struct bmc_config_arguments *args;
+
+  args = state_data->prog_data->args;
+#endif /* NDEBUG */
 
   while (fgets (buf, 4096, fp)) 
     {
@@ -139,8 +142,10 @@ bmc_parser (struct bmc_config_arguments *args,
                  section_name, key_name, value);
 #endif /* NDEBUG */
       
-      if (bmc_section_set_value (section_name, key_name, value,
-                                 args, sections) < 0) 
+      if (bmc_section_set_value (state_data,
+                                 section_name,
+                                 key_name,
+                                 value) < 0) 
         goto cleanup;
     }
 

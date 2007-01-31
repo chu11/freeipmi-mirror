@@ -9,7 +9,7 @@
 /* volatile */
 
 static bmc_err_t
-lan_channel_volatile_access_set (ipmi_device_t dev,
+lan_channel_volatile_access_set (bmc_config_state_data_t *state_data,
 				 uint8_t access_mode,
 				 uint8_t access_mode_is_set,
 				 uint8_t user_level_authentication,
@@ -28,7 +28,7 @@ lan_channel_volatile_access_set (ipmi_device_t dev,
   uint8_t tmp_channel_privilege_limit;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_volatile_access (dev,
+  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
                                                   &tmp_access_mode,
                                                   &tmp_user_level_authentication,
                                                   &tmp_per_message_authentication,
@@ -47,7 +47,7 @@ lan_channel_volatile_access_set (ipmi_device_t dev,
   if (channel_privilege_limit_is_set)
     tmp_channel_privilege_limit = channel_privilege_limit;
 
-  if ((ret = set_bmc_lan_channel_volatile_access (dev,
+  if ((ret = set_bmc_lan_channel_volatile_access (state_data,
                                                   tmp_access_mode,
                                                   tmp_user_level_authentication,
                                                   tmp_per_message_authentication,
@@ -62,7 +62,7 @@ lan_channel_volatile_access_set (ipmi_device_t dev,
 /* access_mode */
 
 static bmc_err_t
-volatile_access_mode_checkout (const struct bmc_config_arguments *args,
+volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
@@ -70,7 +70,7 @@ volatile_access_mode_checkout (const struct bmc_config_arguments *args,
   uint8_t foo;
   bmc_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
                                                   &get_val,
                                                   &foo,
                                                   &foo,
@@ -90,14 +90,14 @@ volatile_access_mode_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-volatile_access_mode_commit (const struct bmc_config_arguments *args,
+volatile_access_mode_commit (bmc_config_state_data_t *state_data,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = channel_access_mode (kv->value);
-  return lan_channel_volatile_access_set (args->dev,
+  return lan_channel_volatile_access_set (state_data,
 					  commit_val, 1,
 					  0, 0,
 					  0, 0,
@@ -106,7 +106,7 @@ volatile_access_mode_commit (const struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-volatile_access_mode_diff (const struct bmc_config_arguments *args,
+volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
@@ -116,7 +116,7 @@ volatile_access_mode_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
                                                  &get_val,
                                                  &foo,
                                                  &foo,
@@ -147,7 +147,7 @@ volatile_access_mode_diff (const struct bmc_config_arguments *args,
 /* enable_user_level_auth */
 
 static bmc_err_t
-volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *args,
+volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
                                           const struct section *sect,
                                           struct keyvalue *kv)
 {
@@ -155,7 +155,7 @@ volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *arg
   uint8_t foo;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
                                                   &foo,
                                                   &get_val,
                                                   &foo,
@@ -187,7 +187,7 @@ volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *arg
 }
 
 static bmc_err_t
-volatile_enable_user_level_auth_commit (const struct bmc_config_arguments *args,
+volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
 					const struct section *sect,
 					const struct keyvalue *kv)
 {
@@ -195,7 +195,7 @@ volatile_enable_user_level_auth_commit (const struct bmc_config_arguments *args,
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set (args->dev,
+  return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  commit_val, 1,
 					  0, 0,
@@ -204,7 +204,7 @@ volatile_enable_user_level_auth_commit (const struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
+volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
@@ -214,7 +214,7 @@ volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
                                                  &foo,
                                                  &get_val,
                                                  &foo,
@@ -244,7 +244,7 @@ volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
 /* enable_per_message_auth */
 
 static bmc_err_t
-volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
+volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
 				       const struct section *sect,
 				       struct keyvalue *kv)
 {
@@ -252,7 +252,7 @@ volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
   uint8_t foo;
   bmc_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
                                                   &foo,
                                                   &foo,
                                                   &get_val,
@@ -284,7 +284,7 @@ volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-volatile_enable_per_msg_auth_commit (const struct bmc_config_arguments *args,
+volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
 {
@@ -292,7 +292,7 @@ volatile_enable_per_msg_auth_commit (const struct bmc_config_arguments *args,
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set (args->dev,
+  return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  0, 0,
 					  commit_val, 1,
@@ -301,7 +301,7 @@ volatile_enable_per_msg_auth_commit (const struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
+volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
@@ -311,7 +311,7 @@ volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
                                                  &foo,
                                                  &foo,
                                                  &get_val,
@@ -342,7 +342,7 @@ volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
 /* enable_pef_alerting */
 
 static bmc_err_t
-volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
+volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
 				       const struct section *sect,
 				       struct keyvalue *kv)
 {
@@ -350,7 +350,7 @@ volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
   uint8_t foo;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
                                                   &foo,
                                                   &foo,
                                                   &foo,
@@ -381,7 +381,7 @@ volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-volatile_enable_pef_alerting_commit (const struct bmc_config_arguments *args,
+volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
 {
@@ -389,7 +389,7 @@ volatile_enable_pef_alerting_commit (const struct bmc_config_arguments *args,
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set (args->dev,
+  return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  0, 0,
 					  0, 0,
@@ -398,7 +398,7 @@ volatile_enable_pef_alerting_commit (const struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
+volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
 				   const struct section *sect,
 				   const struct keyvalue *kv)
 {
@@ -408,7 +408,7 @@ volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
                                                  &foo,
                                                  &foo,
                                                  &foo,
@@ -439,7 +439,7 @@ volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
 /* channel_privilege_level */
 
 static bmc_err_t
-volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
+volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
 				      const struct section *sect,
 				      struct keyvalue *kv)
 {
@@ -447,7 +447,7 @@ volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
   uint8_t foo;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
                                                   &foo,
                                                   &foo,
                                                   &foo,
@@ -468,14 +468,14 @@ volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-volatile_channel_priv_limit_commit (const struct bmc_config_arguments *args,
+volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = privilege_level_number (kv->value);
-  return lan_channel_volatile_access_set (args->dev,
+  return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  0, 0,
 					  0, 0,
@@ -484,7 +484,7 @@ volatile_channel_priv_limit_commit (const struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
+volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
 {
@@ -494,7 +494,7 @@ volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
                                                  &foo,
                                                  &foo,
                                                  &foo,
@@ -525,7 +525,7 @@ volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
 /* non volatile */
 
 static int
-lan_channel_non_volatile_access_set (ipmi_device_t dev,
+lan_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
                                      uint8_t access_mode,
                                      uint8_t access_mode_is_set,
                                      uint8_t user_level_authentication,
@@ -544,7 +544,7 @@ lan_channel_non_volatile_access_set (ipmi_device_t dev,
   uint8_t tmp_channel_privilege_limit;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_non_volatile_access (dev,
+  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
                                                       &tmp_access_mode,
                                                       &tmp_user_level_authentication,
                                                       &tmp_per_message_authentication,
@@ -563,7 +563,7 @@ lan_channel_non_volatile_access_set (ipmi_device_t dev,
   if (channel_privilege_limit_is_set)
     tmp_channel_privilege_limit = channel_privilege_limit;
 
-  if ((ret = set_bmc_lan_channel_non_volatile_access (dev,
+  if ((ret = set_bmc_lan_channel_non_volatile_access (state_data,
                                                       tmp_access_mode,
                                                       tmp_user_level_authentication,
                                                       tmp_per_message_authentication,
@@ -578,7 +578,7 @@ lan_channel_non_volatile_access_set (ipmi_device_t dev,
 /* access_mode */
 
 static bmc_err_t
-non_volatile_access_mode_checkout (const struct bmc_config_arguments *args,
+non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
                                    const struct section *sect,
                                    struct keyvalue *kv)
 {
@@ -586,7 +586,7 @@ non_volatile_access_mode_checkout (const struct bmc_config_arguments *args,
   uint8_t foo;
   bmc_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
                                                       &get_val,
                                                       &foo,
                                                       &foo,
@@ -605,14 +605,14 @@ non_volatile_access_mode_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-non_volatile_access_mode_commit (const struct bmc_config_arguments *args,
+non_volatile_access_mode_commit (bmc_config_state_data_t *state_data,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = channel_access_mode (kv->value);
-  return lan_channel_non_volatile_access_set (args->dev,
+  return lan_channel_non_volatile_access_set (state_data,
                                               commit_val, 1,
                                               0, 0,
                                               0, 0,
@@ -621,7 +621,7 @@ non_volatile_access_mode_commit (const struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-non_volatile_access_mode_diff (const struct bmc_config_arguments *args,
+non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
 {
@@ -631,7 +631,7 @@ non_volatile_access_mode_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
                                                      &get_val,
                                                      &foo,
                                                      &foo,
@@ -661,7 +661,7 @@ non_volatile_access_mode_diff (const struct bmc_config_arguments *args,
 /* enable_user_level_auth */
 
 static bmc_err_t
-non_volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments *args,
+non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
 					      const struct section *sect,
 					      struct keyvalue *kv)
 {
@@ -669,7 +669,7 @@ non_volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments 
   uint8_t foo;
   bmc_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
                                                       &foo,
                                                       &get_val,
                                                       &foo,
@@ -700,14 +700,14 @@ non_volatile_enable_user_level_auth_checkout (const struct bmc_config_arguments 
 }
 
 static bmc_err_t
-non_volatile_enable_user_level_auth_commit (const struct bmc_config_arguments *args,
+non_volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
 					    const struct section *sect,
 					    const struct keyvalue *kv)
 {
   uint8_t commit_val;
   
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set (args->dev,
+  return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      commit_val, 1,
 					      0, 0,
@@ -716,7 +716,7 @@ non_volatile_enable_user_level_auth_commit (const struct bmc_config_arguments *a
 }
 
 static bmc_diff_t
-non_volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *args,
+non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
                                           const struct section *sect,
                                           const struct keyvalue *kv)
 {
@@ -726,7 +726,7 @@ non_volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *arg
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
                                                      &foo,
                                                      &get_val,
                                                      &foo,
@@ -756,7 +756,7 @@ non_volatile_enable_user_level_auth_diff (const struct bmc_config_arguments *arg
 /* enable_per_message_auth */
 
 static bmc_err_t
-non_volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *args,
+non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
@@ -764,7 +764,7 @@ non_volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *ar
   uint8_t foo;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
                                                       &foo,
                                                       &foo,
                                                       &get_val,
@@ -795,14 +795,14 @@ non_volatile_enable_per_msg_auth_checkout (const struct bmc_config_arguments *ar
 }
 
 static bmc_err_t
-non_volatile_enable_per_msg_auth_commit (const struct bmc_config_arguments *args,
+non_volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
 					 const struct section *sect,
 					 const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set (args->dev,
+  return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      0, 0,
 					      commit_val, 1,
@@ -811,7 +811,7 @@ non_volatile_enable_per_msg_auth_commit (const struct bmc_config_arguments *args
 }
 
 static bmc_diff_t
-non_volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
+non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
 {
@@ -821,7 +821,7 @@ non_volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
                                                      &foo,
                                                      &foo,
                                                      &get_val,
@@ -852,7 +852,7 @@ non_volatile_enable_per_msg_auth_diff (const struct bmc_config_arguments *args,
 /* enable_pef_alerting */
 
 static bmc_err_t
-non_volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *args,
+non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
@@ -860,7 +860,7 @@ non_volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *ar
   uint8_t foo;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
                                                       &foo,
                                                       &foo,
                                                       &foo,
@@ -891,14 +891,14 @@ non_volatile_enable_pef_alerting_checkout (const struct bmc_config_arguments *ar
 }
 
 static bmc_err_t
-non_volatile_enable_pef_alerting_commit (const struct bmc_config_arguments *args,
+non_volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
 					 const struct section *sect,
 					 const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set (args->dev,
+  return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      0, 0,
 					      0, 0,
@@ -907,7 +907,7 @@ non_volatile_enable_pef_alerting_commit (const struct bmc_config_arguments *args
 }
 
 static bmc_diff_t
-non_volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
+non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
 {
@@ -917,7 +917,7 @@ non_volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
                                                      &foo,
                                                      &foo,
                                                      &foo,
@@ -948,7 +948,7 @@ non_volatile_enable_pef_alerting_diff (const struct bmc_config_arguments *args,
 /* channel_privilege_level */
 
 static bmc_err_t
-non_volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *args,
+non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
 					  const struct section *sect,
 					  struct keyvalue *kv)
 {
@@ -956,7 +956,7 @@ non_volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *arg
   uint8_t foo;
   bmc_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
                                                       &foo,
                                                       &foo,
                                                       &foo,
@@ -977,14 +977,14 @@ non_volatile_channel_priv_limit_checkout (const struct bmc_config_arguments *arg
 }
 
 static bmc_err_t
-non_volatile_channel_priv_limit_commit (const struct bmc_config_arguments *args,
+non_volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
 					const struct section *sect,
 					const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = privilege_level_number (kv->value);
-  return lan_channel_non_volatile_access_set (args->dev,
+  return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      0, 0,
 					      0, 0,
@@ -993,7 +993,7 @@ non_volatile_channel_priv_limit_commit (const struct bmc_config_arguments *args,
 }
 
 static bmc_diff_t
-non_volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
+non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
@@ -1003,7 +1003,7 @@ non_volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (args->dev,
+  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
                                                      &foo,
                                                      &foo,
                                                      &foo,
@@ -1032,14 +1032,15 @@ non_volatile_channel_priv_limit_diff (const struct bmc_config_arguments *args,
 }
 
 struct section *
-bmc_lan_channel_section_get (struct bmc_config_arguments *args)
+bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
 {
   struct section * lan_channel_section = NULL;
 
-  if (!(lan_channel_section = bmc_section_create ("Lan_Channel")))
+  if (!(lan_channel_section = bmc_section_create (state_data, "Lan_Channel")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Volatile_Access_Mode",
 				"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
 				0,
@@ -1049,7 +1050,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Volatile_Enable_User_Level_Auth",
 				"Possible values: Yes/No",
 				0,
@@ -1059,7 +1061,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Volatile_Enable_Per_Message_Auth",
 				"Possible values: Yes/No",
 				0,
@@ -1069,7 +1072,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Volatile_Enable_Pef_Alerting",
 				"Possible values: Yes/No",
 				0,
@@ -1079,7 +1083,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Volatile_Channel_Privilege_Limit",
 				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -1089,7 +1094,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Non_Volatile_Access_Mode",
 				"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
 				0,
@@ -1099,7 +1105,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Non_Volatile_Enable_User_Level_Auth",
 				"Possible values: Yes/No",
 				0,
@@ -1109,7 +1116,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Non_Volatile_Enable_Per_Message_Auth",
 				"Possible values: Yes/No",
 				0,
@@ -1119,7 +1127,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Non_Volatile_Enable_Pef_Alerting",
 				"Possible values: Yes/No",
 				0,
@@ -1129,7 +1138,8 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 				yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_channel_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_channel_section,
 				"Non_Volatile_Channel_Privilege_Limit",
 				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -1143,7 +1153,7 @@ bmc_lan_channel_section_get (struct bmc_config_arguments *args)
 
  cleanup:
   if (lan_channel_section)
-    bmc_section_destroy(lan_channel_section);
+    bmc_section_destroy(state_data, lan_channel_section);
   return NULL;
 }
 

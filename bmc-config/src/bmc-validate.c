@@ -7,7 +7,7 @@
 #include "bmc-validate.h"
 
 bmc_validate_t 
-yes_no_validate (const struct bmc_config_arguments *args,
+yes_no_validate (bmc_config_state_data_t *state_data,
                  const struct section *sect,
                  const char *value)
 {
@@ -17,7 +17,7 @@ yes_no_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-number_range_one_byte (const struct bmc_config_arguments *args,
+number_range_one_byte (bmc_config_state_data_t *state_data,
                        const struct section *sect,
                        const char *value)
 {
@@ -36,7 +36,7 @@ number_range_one_byte (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t
-ip_address_validate (const struct bmc_config_arguments *args,
+ip_address_validate (bmc_config_state_data_t *state_data,
                      const struct section *sect,
                      const char *value)
 {
@@ -48,7 +48,7 @@ ip_address_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t
-mac_address_validate (const struct bmc_config_arguments *args,
+mac_address_validate (bmc_config_state_data_t *state_data,
                       const struct section *sect,
                       const char *value)
 {
@@ -67,7 +67,7 @@ mac_address_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-channel_access_mode_validate (const struct bmc_config_arguments *args,
+channel_access_mode_validate (bmc_config_state_data_t *state_data,
                               const struct section *sect,
                               const char *value)
 {
@@ -77,7 +77,7 @@ channel_access_mode_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-get_privilege_limit_number_validate (const struct bmc_config_arguments *args,
+get_privilege_limit_number_validate (bmc_config_state_data_t *state_data,
                                      const struct section *sect,
                                      const char *value)
 {
@@ -87,7 +87,7 @@ get_privilege_limit_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-privilege_level_number_validate (const struct bmc_config_arguments *args,
+privilege_level_number_validate (bmc_config_state_data_t *state_data,
                                  const struct section *sect,
                                  const char *value)
 {
@@ -97,7 +97,7 @@ privilege_level_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-rmcpplus_priv_number_validate (const struct bmc_config_arguments *args,
+rmcpplus_priv_number_validate (bmc_config_state_data_t *state_data,
                                const struct section *sect,
                                const char *value)
 {
@@ -107,7 +107,7 @@ rmcpplus_priv_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-ip_address_source_number_validate (const struct bmc_config_arguments *args,
+ip_address_source_number_validate (bmc_config_state_data_t *state_data,
                                    const struct section *sect,
                                    const char *value)
 {
@@ -117,7 +117,7 @@ ip_address_source_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-power_restore_policy_number_validate (const struct bmc_config_arguments *args,
+power_restore_policy_number_validate (bmc_config_state_data_t *state_data,
                                       const struct section *sect,
                                       const char *value)
 {
@@ -127,7 +127,7 @@ power_restore_policy_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-connect_mode_number_validate (const struct bmc_config_arguments *args,
+connect_mode_number_validate (bmc_config_state_data_t *state_data,
                               const struct section *sect,
                               const char *value)
 {
@@ -137,7 +137,7 @@ connect_mode_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-flow_control_number_validate (const struct bmc_config_arguments *args,
+flow_control_number_validate (bmc_config_state_data_t *state_data,
                               const struct section *sect,
                               const char *value)
 {
@@ -147,7 +147,7 @@ flow_control_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-bit_rate_number_validate (const struct bmc_config_arguments *args,
+bit_rate_number_validate (bmc_config_state_data_t *state_data,
                           const struct section *sect,
                           const char *value)
 {
@@ -157,7 +157,7 @@ bit_rate_number_validate (const struct bmc_config_arguments *args,
 }
 
 bmc_validate_t 
-sol_bit_rate_number_validate (const struct bmc_config_arguments *args,
+sol_bit_rate_number_validate (bmc_config_state_data_t *state_data,
                               const struct section *sect,
                               const char *value)
 {

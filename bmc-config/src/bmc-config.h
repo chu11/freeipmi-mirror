@@ -72,7 +72,6 @@ struct sectionstr
 struct bmc_config_arguments
 {
   struct common_cmd_args common;
-  ipmi_device_t dev;
   unsigned char silent;
   unsigned char verbose;
 
@@ -90,5 +89,11 @@ typedef struct bmc_config_prog_data
   uint32_t debug_flags;
 } bmc_config_prog_data_t;
 
+typedef struct bmc_config_state_data
+{
+  bmc_config_prog_data_t *prog_data;
+  ipmi_device_t dev;
+  struct section *sections;
+} bmc_config_state_data_t;
 
 #endif /* _BMC_CONFIG_H_ */

@@ -22,8 +22,7 @@
 #include "bmc-config.h"
 #include "bmc-sections.h"
 
-bmc_err_t bmc_diff (struct bmc_config_arguments *args,
-                    struct section *sections);
+bmc_err_t bmc_diff (bmc_config_state_data_t *state_data);
 
 void report_diff (const char *section,
                   const char *key,

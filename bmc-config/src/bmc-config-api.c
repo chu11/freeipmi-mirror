@@ -44,7 +44,7 @@ static uint8_t cipher_suite_priv[CIPHER_SUITE_LEN] =
 static int cipher_suite_priv_set = 0;
 
 static bmc_err_t 
-set_bmc_user_access (ipmi_device_t dev, 
+set_bmc_user_access (bmc_config_state_data_t *state_data, 
 		     uint8_t channel_number, 
 		     uint8_t user_ipmi_messaging, 
 		     uint8_t user_link_authentication, 
@@ -59,7 +59,7 @@ set_bmc_user_access (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_access (dev, 
+  if (ipmi_cmd_set_user_access (state_data->dev, 
 				channel_number, 
 				user_ipmi_messaging, 
 				user_link_authentication, 
@@ -81,7 +81,7 @@ set_bmc_user_access (ipmi_device_t dev,
 }
 
 static bmc_err_t 
-set_bmc_channel_access (ipmi_device_t dev, 
+set_bmc_channel_access (bmc_config_state_data_t *state_data, 
 			uint8_t channel_number, 
 			uint8_t set_option, 
 			uint8_t access_mode, 
@@ -96,7 +96,7 @@ set_bmc_channel_access (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_channel_access (dev, 
+  if (ipmi_cmd_set_channel_access (state_data->dev, 
 				   channel_number, 
 				   access_mode, 
 				   user_level_authentication, 
@@ -121,7 +121,7 @@ set_bmc_channel_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_username (ipmi_device_t dev, 
+set_bmc_username (bmc_config_state_data_t *state_data, 
 		  uint8_t userid, 
 		  uint8_t *username)
 {
@@ -134,7 +134,7 @@ set_bmc_username (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_name_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_name (dev, 
+  if (ipmi_cmd_set_user_name (state_data->dev, 
 			      userid, 
 			      username, 
 			      (username) ? strlen((char *)username) : 0,
@@ -152,7 +152,7 @@ set_bmc_username (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_enable_user (ipmi_device_t dev, 
+set_bmc_enable_user (bmc_config_state_data_t *state_data, 
 		     uint8_t userid, 
 		     int user_status)
 {
@@ -165,7 +165,7 @@ set_bmc_enable_user (ipmi_device_t dev,
     goto cleanup;
   memset (password, 0, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 
-  if (ipmi_cmd_set_user_password (dev, 
+  if (ipmi_cmd_set_user_password (state_data->dev, 
                                   userid, 
                                   (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
                                    IPMI_PASSWORD_OPERATION_DISABLE_USER), 
@@ -208,7 +208,7 @@ set_bmc_enable_user (ipmi_device_t dev,
                              (char *)password, IPMI_1_5_MAX_PASSWORD_LENGTH) < 0)
 	goto cleanup;
       
-      if (ipmi_cmd (dev, 
+      if (ipmi_cmd (state_data->dev, 
 		    IPMI_BMC_IPMB_LUN_BMC,
 		    IPMI_NET_FN_APP_RQ,
 		    obj_cmd_rq,
@@ -235,7 +235,7 @@ set_bmc_enable_user (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_user_password (ipmi_device_t dev, 
+set_bmc_user_password (bmc_config_state_data_t *state_data, 
 		       uint8_t userid, 
 		       uint8_t *password)
 {
@@ -245,7 +245,7 @@ set_bmc_user_password (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password (dev, 
+  if (ipmi_cmd_set_user_password (state_data->dev, 
                                   userid, 
                                   IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
                                   (char *)password, 
@@ -264,7 +264,7 @@ set_bmc_user_password (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_user_password20 (ipmi_device_t dev, 
+set_bmc_user_password20 (bmc_config_state_data_t *state_data, 
                          uint8_t userid, 
                          uint8_t *password)
 {
@@ -274,7 +274,7 @@ set_bmc_user_password20 (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password_v20 (dev, 
+  if (ipmi_cmd_set_user_password_v20 (state_data->dev, 
                                       userid, 
                                       IPMI_PASSWORD_SIZE_20_BYTES,
                                       IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
@@ -294,7 +294,7 @@ set_bmc_user_password20 (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_user_lan_channel_access (ipmi_device_t dev, 
+set_bmc_user_lan_channel_access (bmc_config_state_data_t *state_data, 
 				 uint8_t userid, 
 				 uint8_t lan_user_ipmi_messaging, 
 				 uint8_t lan_user_link_authentication, 
@@ -302,8 +302,15 @@ set_bmc_user_lan_channel_access (ipmi_device_t dev,
 				 uint8_t lan_privilege_limit, 
 				 uint8_t lan_session_limit)
 {
-  return set_bmc_user_access (dev, 
-			      get_lan_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_lan_channel_number (state_data, 
+                                     &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return set_bmc_user_access (state_data, 
+			      channel_number,
 			      lan_user_ipmi_messaging, 
 			      lan_user_link_authentication, 
 			      lan_user_restricted_to_callback, 
@@ -313,7 +320,7 @@ set_bmc_user_lan_channel_access (ipmi_device_t dev,
 }
 
 bmc_err_t
-set_bmc_user_payload_access (ipmi_device_t dev,
+set_bmc_user_payload_access (bmc_config_state_data_t *state_data,
                              uint8_t userid,
                              uint8_t operation,
                              uint8_t standard_payload_1,
@@ -335,12 +342,20 @@ set_bmc_user_payload_access (ipmi_device_t dev,
 
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  
+  bmc_err_t ret;
+  int8_t channel_number;
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_payload_access_rs)))
     goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
   
-  if (ipmi_cmd_set_user_payload_access (dev, 
-                                        get_lan_channel_number (dev),
+  if (ipmi_cmd_set_user_payload_access (state_data->dev, 
+                                        channel_number,
                                         userid, 
                                         operation,
                                         standard_payload_1,
@@ -372,7 +387,7 @@ set_bmc_user_payload_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_user_serial_channel_access (ipmi_device_t dev, 
+set_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data, 
 				    uint8_t userid, 
 				    uint8_t serial_user_ipmi_messaging, 
 				    uint8_t serial_user_link_authentication, 
@@ -380,8 +395,15 @@ set_bmc_user_serial_channel_access (ipmi_device_t dev,
 				    uint8_t serial_privilege_limit, 
 				    uint8_t serial_session_limit)
 {
-  return set_bmc_user_access (dev, 
-			      get_serial_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_serial_channel_number (state_data, 
+                                        &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return set_bmc_user_access (state_data, 
+			      channel_number, 
 			      serial_user_ipmi_messaging, 
 			      serial_user_link_authentication, 
 			      serial_user_restricted_to_callback, 
@@ -391,15 +413,22 @@ set_bmc_user_serial_channel_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_channel_volatile_access (ipmi_device_t dev, 
+set_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
 				     uint8_t access_mode, 
 				     uint8_t user_level_authentication, 
 				     uint8_t per_message_authentication, 
 				     uint8_t pef_alerting, 
 				     uint8_t channel_privilege_limit)
 {
-  return set_bmc_channel_access (dev, 
-				 get_lan_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_lan_channel_number (state_data, 
+                                     &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return set_bmc_channel_access (state_data, 
+				 channel_number, 
 				 1, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -409,15 +438,22 @@ set_bmc_lan_channel_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_channel_non_volatile_access (ipmi_device_t dev, 
+set_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
 					 uint8_t access_mode, 
 					 uint8_t user_level_authentication, 
 					 uint8_t per_message_authentication, 
 					 uint8_t pef_alerting, 
 					 uint8_t channel_privilege_limit)
 {
-  return set_bmc_channel_access (dev, 
-				 get_lan_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_lan_channel_number (state_data, 
+                                     &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return set_bmc_channel_access (state_data, 
+				 channel_number, 
 				 0, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -427,17 +463,25 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_ip_address_source (ipmi_device_t dev, 
+set_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
 				    uint8_t ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (dev, 
-								   get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (state_data->dev, 
+								   channel_number, 
 								   ip_address_source, 
 								   obj_cmd_rs) < 0)
     {
@@ -453,12 +497,14 @@ set_bmc_lan_conf_ip_address_source (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_ip_address (ipmi_device_t dev, 
+set_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
 			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (ipmi_ipv4_address_string2int(ip_address, &ip_address_val) < 0)
     goto cleanup;
@@ -466,8 +512,14 @@ set_bmc_lan_conf_ip_address (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (dev, 
-							    get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (state_data->dev, 
+							    channel_number, 
 							    ip_address_val, 
 							    obj_cmd_rs) < 0)
     {
@@ -483,21 +535,29 @@ set_bmc_lan_conf_ip_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_mac_address (ipmi_device_t dev, 
+set_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data, 
 			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  
+  bmc_err_t ret;
+  int8_t channel_number;
+
   if (ipmi_mac_address_string2int(mac_address, &mac_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_mac_address (dev, 
-							     get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_mac_address (state_data->dev, 
+							     channel_number, 
 							     mac_address_val, 
 							     obj_cmd_rs) < 0)
     {
@@ -513,12 +573,14 @@ set_bmc_lan_conf_mac_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_subnet_mask (ipmi_device_t dev, 
+set_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data, 
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t subnet_mask_val = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (ipmi_ipv4_address_string2int(subnet_mask, &subnet_mask_val) < 0)
     goto cleanup;
@@ -526,8 +588,14 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (dev, 
-							     get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (state_data->dev, 
+							     channel_number, 
 							     subnet_mask_val, 
 							     obj_cmd_rs) < 0)
     {
@@ -543,12 +611,14 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_default_gateway_address (ipmi_device_t dev, 
+set_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data, 
 					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (ipmi_ipv4_address_string2int(default_gateway_address, &ip_address_val) < 0)
     goto cleanup;
@@ -556,8 +626,14 @@ set_bmc_lan_conf_default_gateway_address (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (dev, 
-									 get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (state_data->dev, 
+									 channel_number, 
 									 ip_address_val, 
 									 obj_cmd_rs) < 0)
     {
@@ -573,12 +649,14 @@ set_bmc_lan_conf_default_gateway_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev, 
+set_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_data, 
 					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (ipmi_mac_address_string2int(default_gateway_mac_address, &mac_address_val) < 0)
     goto cleanup;
@@ -586,8 +664,14 @@ set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (dev, 
-									     get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (state_data->dev, 
+									     channel_number, 
 									     mac_address_val, 
 									     obj_cmd_rs) < 0)
     {
@@ -603,12 +687,14 @@ set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev, 
+set_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data, 
 					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (ipmi_ipv4_address_string2int(backup_gateway_address, &ip_address_val) < 0)
     goto cleanup;
@@ -616,8 +702,14 @@ set_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (dev, 
-									get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (state_data->dev, 
+									channel_number, 
 									ip_address_val, 
 									obj_cmd_rs) < 0)
     {
@@ -633,12 +725,14 @@ set_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev, 
+set_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
 					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (ipmi_mac_address_string2int(backup_gateway_mac_address, &mac_address_val) < 0)
     goto cleanup;
@@ -646,8 +740,14 @@ set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (dev, 
-									    get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (state_data->dev, 
+									    channel_number, 
 									    mac_address_val, 
 									    obj_cmd_rs) < 0)
     {
@@ -663,18 +763,26 @@ set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_vlan_id (ipmi_device_t dev, 
+set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
 			  uint32_t vlan_id,
 			  uint8_t vlan_id_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (dev, 
-							 get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (state_data->dev, 
+							 channel_number, 
                                                          vlan_id,
 							 vlan_id_enable, 
 							 obj_cmd_rs) < 0)
@@ -691,17 +799,25 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_vlan_priority (ipmi_device_t dev, 
+set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
 				uint8_t vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (dev, 
-							       get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (state_data->dev, 
+							       channel_number, 
 							       vlan_priority, 
 							       obj_cmd_rs) < 0)
     {
@@ -717,7 +833,7 @@ set_bmc_lan_conf_vlan_priority (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
+set_bmc_lan_conf_authentication_type_enables (bmc_config_state_data_t *state_data, 
                                               uint8_t callback_level_none,
                                               uint8_t callback_level_md2,
                                               uint8_t callback_level_md5,
@@ -746,12 +862,20 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (dev,
-                                                                             get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->dev,
+                                                                             channel_number, 
                                                                              callback_level_none,
                                                                              callback_level_md2,
                                                                              callback_level_md5,
@@ -791,18 +915,26 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
+set_bmc_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data, 
 					    uint8_t bmc_generated_gratuitous_arps, 
 					    uint8_t bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (dev, 
-									   get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (state_data->dev, 
+									   channel_number, 
 									   bmc_generated_gratuitous_arps, 
 									   bmc_generated_arp_responses, 
 									   obj_cmd_rs) < 0)
@@ -820,17 +952,25 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev, 
+set_bmc_lan_conf_gratuitous_arp_interval (bmc_config_state_data_t *state_data, 
 					  uint8_t gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (dev, 
-									 get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (state_data->dev, 
+									 channel_number, 
 									 gratuitous_arp_interval, 
 									 obj_cmd_rs) < 0)
     {
@@ -846,15 +986,22 @@ set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_serial_channel_volatile_access (ipmi_device_t dev, 
+set_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
 					uint8_t access_mode, 
 					uint8_t user_level_authentication, 
 					uint8_t per_message_authentication, 
 					uint8_t pef_alerting, 
 					uint8_t channel_privilege_limit)
 {
-  return set_bmc_channel_access (dev, 
-				 get_serial_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_serial_channel_number (state_data, 
+                                        &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return set_bmc_channel_access (state_data, 
+				 channel_number, 
 				 1, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -864,15 +1011,22 @@ set_bmc_serial_channel_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_serial_channel_non_volatile_access (ipmi_device_t dev, 
+set_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
 					    uint8_t access_mode, 
 					    uint8_t user_level_authentication, 
 					    uint8_t per_message_authentication, 
 					    uint8_t pef_alerting, 
 					    uint8_t channel_privilege_limit)
 {
-  return set_bmc_channel_access (dev, 
-				 get_serial_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_serial_channel_number (state_data, 
+                                        &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return set_bmc_channel_access (state_data, 
+				 channel_number, 
 				 0, 
 				 access_mode, 
 				 (user_level_authentication ? 0 : 1), 
@@ -882,7 +1036,7 @@ set_bmc_serial_channel_non_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_serial_conf_connection_mode (ipmi_device_t dev, 
+set_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
 				     uint8_t basic_mode,
 				     uint8_t ppp_mode,
 				     uint8_t terminal_mode,
@@ -890,12 +1044,20 @@ set_bmc_serial_conf_connection_mode (ipmi_device_t dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_connection_mode (dev, 
-							       get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_serial_modem_configuration_connection_mode (state_data->dev, 
+							       channel_number, 
 							       basic_mode,
 							       ppp_mode,
 							       terminal_mode,
@@ -914,17 +1076,25 @@ set_bmc_serial_conf_connection_mode (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev, 
+set_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data, 
 					    uint8_t page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (dev, 
-								      get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (state_data->dev, 
+								      channel_number, 
 								      page_blackout_interval, 
 								      obj_cmd_rs) < 0)
     {
@@ -940,17 +1110,25 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_serial_conf_call_retry_interval (ipmi_device_t dev, 
+set_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data, 
 					 uint8_t call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_call_retry_interval (dev, 
-								   get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_serial_modem_configuration_call_retry_interval (state_data->dev, 
+								   channel_number, 
 								   call_retry_interval, 
 								   obj_cmd_rs) < 0)
     {
@@ -966,19 +1144,27 @@ set_bmc_serial_conf_call_retry_interval (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev, 
+set_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
 						  uint8_t dtr_hangup, 
 						  uint8_t flow_control, 
 						  uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (dev, 
-									    get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (state_data->dev, 
+									    channel_number, 
 									    dtr_hangup, 
 									    flow_control, 
 									    bit_rate, 
@@ -996,7 +1182,7 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_bmc_power_restore_policy (ipmi_device_t dev, 
+set_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
 			      uint8_t power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1005,7 +1191,7 @@ set_bmc_power_restore_policy (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_power_restore_policy (dev, 
+  if (ipmi_cmd_set_power_restore_policy (state_data->dev, 
 					 power_restore_policy, 
 					 obj_cmd_rs) < 0)
     {
@@ -1021,7 +1207,7 @@ set_bmc_power_restore_policy (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_pef_control (ipmi_device_t dev, 
+set_pef_control (bmc_config_state_data_t *state_data, 
 		 uint8_t pef, 
 		 uint8_t pef_event_messages, 
 		 uint8_t pef_startup_delay, 
@@ -1033,7 +1219,7 @@ set_pef_control (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_control (dev, 
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_control (state_data->dev, 
 							     pef, 
 							     pef_event_messages, 
 							     pef_startup_delay, 
@@ -1052,7 +1238,7 @@ set_pef_control (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_pef_action_global_control (ipmi_device_t dev, 
+set_pef_action_global_control (bmc_config_state_data_t *state_data, 
 			       uint8_t alert_action, 
 			       uint8_t power_down_action, 
 			       uint8_t reset_action, 
@@ -1066,7 +1252,7 @@ set_pef_action_global_control (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (dev, 
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (state_data->dev, 
 									   alert_action, 
 									   power_down_action, 
 									   reset_action, 
@@ -1087,7 +1273,7 @@ set_pef_action_global_control (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_pef_startup_delay (ipmi_device_t dev, 
+set_pef_startup_delay (bmc_config_state_data_t *state_data, 
 		       uint8_t pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1096,7 +1282,7 @@ set_pef_startup_delay (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (dev, 
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (state_data->dev, 
 								   pef_startup_delay, 
 								   obj_cmd_rs) < 0)
     {
@@ -1112,7 +1298,7 @@ set_pef_startup_delay (ipmi_device_t dev,
 }
 
 bmc_err_t 
-set_pef_alert_startup_delay (ipmi_device_t dev, 
+set_pef_alert_startup_delay (bmc_config_state_data_t *state_data, 
 			     uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1121,7 +1307,7 @@ set_pef_alert_startup_delay (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (dev, 
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (state_data->dev, 
 									 pef_alert_startup_delay, 
 									 obj_cmd_rs) < 0)
     {
@@ -1137,17 +1323,25 @@ set_pef_alert_startup_delay (ipmi_device_t dev,
 }
 
 bmc_err_t
-set_sol_sol_enable(ipmi_device_t dev,
+set_sol_sol_enable(bmc_config_state_data_t *state_data,
 		   uint8_t sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  
+  bmc_err_t ret;
+  int8_t channel_number;
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (dev, 
-							    get_sol_channel_number (dev),
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (state_data->dev, 
+							    channel_number,
 							    sol_enable, 
 							    obj_cmd_rs) < 0)
     {
@@ -1163,19 +1357,27 @@ set_sol_sol_enable(ipmi_device_t dev,
 }
 
 bmc_err_t
-set_sol_sol_authentication(ipmi_device_t dev,
+set_sol_sol_authentication(bmc_config_state_data_t *state_data,
 			   uint8_t sol_privilege_level,
 			   uint8_t force_sol_payload_authentication,
 			   uint8_t force_sol_payload_encryption)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (dev, 
-								    get_sol_channel_number (dev),
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (state_data->dev, 
+								    channel_number,
 								    sol_privilege_level,
 								    force_sol_payload_authentication,
 								    force_sol_payload_encryption,
@@ -1193,18 +1395,26 @@ set_sol_sol_authentication(ipmi_device_t dev,
 }
 
 bmc_err_t
-set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t dev,
+set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_t *state_data,
 							 uint8_t character_accumulate_interval,
 							 uint8_t character_send_threshold)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-												  get_sol_channel_number (dev),
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->dev, 
+												  channel_number,
 												  character_accumulate_interval,
 												  character_send_threshold,
 												  obj_cmd_rs) < 0)
@@ -1221,18 +1431,26 @@ set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t dev,
 }
 
 bmc_err_t
-set_sol_sol_retry(ipmi_device_t dev,
+set_sol_sol_retry(bmc_config_state_data_t *state_data,
 		  uint8_t retry_count,
 		  uint8_t retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (dev, 
-							   get_sol_channel_number (dev),
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (state_data->dev, 
+							   channel_number,
 							   retry_count,
 							   retry_interval,
 							   obj_cmd_rs) < 0)
@@ -1249,17 +1467,25 @@ set_sol_sol_retry(ipmi_device_t dev,
 }
 
 bmc_err_t
-set_sol_sol_non_volatile_bit_rate(ipmi_device_t dev,
+set_sol_sol_non_volatile_bit_rate(bmc_config_state_data_t *state_data,
 				  uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-									   get_sol_channel_number (dev),
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->dev, 
+									   channel_number,
 									   bit_rate,
 									   obj_cmd_rs) < 0)
     {
@@ -1275,17 +1501,25 @@ set_sol_sol_non_volatile_bit_rate(ipmi_device_t dev,
 }
 
 bmc_err_t
-set_sol_sol_volatile_bit_rate(ipmi_device_t dev,
+set_sol_sol_volatile_bit_rate(bmc_config_state_data_t *state_data,
 			      uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-								       get_sol_channel_number (dev),
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (state_data->dev, 
+								       channel_number,
 								       bit_rate,
 								       obj_cmd_rs) < 0)
     {
@@ -1301,17 +1535,25 @@ set_sol_sol_volatile_bit_rate(ipmi_device_t dev,
 }
 
 bmc_err_t
-set_sol_sol_payload_port_number(ipmi_device_t dev,
+set_sol_sol_payload_port_number(bmc_config_state_data_t *state_data,
 				uint16_t port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;  
+  bmc_err_t ret;
+  int8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (dev, 
-									 get_sol_channel_number (dev),
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (state_data->dev, 
+									 channel_number,
                                                                          port_number,
 									 obj_cmd_rs) < 0)
     {
@@ -1327,22 +1569,30 @@ set_sol_sol_payload_port_number(ipmi_device_t dev,
 }
 
 static bmc_err_t
-_rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
+_rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_count_rs = NULL;
   fiid_obj_t obj_cmd_id_rs = NULL;
   fiid_obj_t obj_cmd_priv_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   int i;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
   if (!cipher_suite_entry_count)
     {
       if (!(obj_cmd_count_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (dev, 
-												   get_lan_channel_number (dev), 
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (state_data->dev, 
+												   channel_number, 
 												   IPMI_GET_LAN_PARAMETER, 
 												   SET_SELECTOR, 
 												   BLOCK_SELECTOR, 
@@ -1366,8 +1616,8 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
       if (!(obj_cmd_id_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (dev, 
-											     get_lan_channel_number (dev), 
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (state_data->dev, 
+											     channel_number, 
 											     IPMI_GET_LAN_PARAMETER, 
 											     SET_SELECTOR, 
 											     BLOCK_SELECTOR, 
@@ -1428,8 +1678,8 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
       if (!(obj_cmd_priv_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (dev, 
-												      get_lan_channel_number (dev), 
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (state_data->dev, 
+												      channel_number, 
 												      IPMI_GET_LAN_PARAMETER, 
 												      SET_SELECTOR, 
 												      BLOCK_SELECTOR, 
@@ -1497,25 +1747,32 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t dev)
 }
 
 bmc_err_t
-set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
+set_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
 					uint8_t cipher_suite_id,
 					uint8_t privilege)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  bmc_err_t rc;
+  bmc_err_t ret;
+  int8_t channel_number;
 
   if (!(cipher_suite_id < CIPHER_SUITE_LEN))
     goto cleanup;
 
-  if ((rc = _rmcpplus_cipher_suite_id_privilege_setup(dev)) != BMC_ERR_SUCCESS)
+  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup(state_data)) != BMC_ERR_SUCCESS)
     {
-      rv = rc;
+      rv = ret;
       goto cleanup;
     }
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
   if (cipher_suite_entry_count && cipher_suite_id_supported_set && cipher_suite_priv_set)
     {
@@ -1525,8 +1782,8 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
       memcpy(privs, cipher_suite_priv, CIPHER_SUITE_LEN);
       privs[cipher_suite_id] = privilege;
 
-      if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(dev,
-												     get_lan_channel_number(dev),
+      if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(state_data->dev,
+												     channel_number,
 												     privs[0],
 												     privs[1],
 												     privs[2],
@@ -1562,12 +1819,14 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 }
 
 bmc_err_t
-set_k_r(ipmi_device_t dev,
+set_k_r(bmc_config_state_data_t *state_data,
         uint8_t *k_r,
         uint32_t k_r_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!k_r)
     goto cleanup;
@@ -1575,8 +1834,14 @@ set_k_r(ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_channel_security_keys (state_data->dev, 
+                                          channel_number, 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
 					  k_r,
@@ -1595,18 +1860,26 @@ set_k_r(ipmi_device_t dev,
 }
 
 bmc_err_t
-set_k_g(ipmi_device_t dev,
+set_k_g(bmc_config_state_data_t *state_data,
         uint8_t *k_g,
         uint32_t k_g_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_channel_security_keys (state_data->dev, 
+                                          channel_number, 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
 					  k_g,
@@ -1625,27 +1898,38 @@ set_k_g(ipmi_device_t dev,
 }
 
 
-int
-get_bmc_max_users (ipmi_device_t dev, uint8_t *max_users)
+bmc_err_t
+get_bmc_max_users (bmc_config_state_data_t *state_data, uint8_t *max_users)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int rv = -1;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_user_access (dev, 
-				get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_user_access (state_data->dev, 
+				channel_number, 
 				1, 
 				obj_cmd_rs) < 0) 
-    goto cleanup;
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
 
   if (fiid_obj_get (obj_cmd_rs, "max_channel_user_ids", &val) < 0) 
     goto cleanup;
 
   *max_users = (uint8_t) val;
-  rv = 0;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy (obj_cmd_rs);
@@ -1654,7 +1938,7 @@ get_bmc_max_users (ipmi_device_t dev, uint8_t *max_users)
 			      
 /* get_XXXX functions */
 static bmc_err_t 
-get_bmc_user_access (ipmi_device_t dev, 
+get_bmc_user_access (bmc_config_state_data_t *state_data, 
 		     uint8_t userid, 
 		     uint8_t channel_number, 
 		     uint8_t *user_ipmi_messaging, 
@@ -1671,7 +1955,7 @@ get_bmc_user_access (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_user_access (dev, 
+  if (ipmi_cmd_get_user_access (state_data->dev, 
 				channel_number, 
 				userid, 
 				obj_cmd_rs) < 0)
@@ -1711,7 +1995,7 @@ get_bmc_user_access (ipmi_device_t dev,
 }
 
 static bmc_err_t 
-get_bmc_channel_access (ipmi_device_t dev, 
+get_bmc_channel_access (bmc_config_state_data_t *state_data, 
 			uint8_t channel_number, 
 			uint8_t access_type, 
 			uint8_t *access_mode, 
@@ -1727,7 +2011,7 @@ get_bmc_channel_access (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_channel_access (dev, 
+  if (ipmi_cmd_get_channel_access (state_data->dev, 
 				   channel_number, 
 				   (access_type ? IPMI_CHANNEL_ACCESS_GET_VOLATILE :
 				    IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE), 
@@ -1765,7 +2049,7 @@ get_bmc_channel_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_username (ipmi_device_t dev, 
+get_bmc_username (bmc_config_state_data_t *state_data, 
 		  uint8_t userid, 
 		  uint8_t *username,
 		  uint32_t username_len)
@@ -1776,7 +2060,7 @@ get_bmc_username (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_name_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_user_name (dev, 
+  if (ipmi_cmd_get_user_name (state_data->dev, 
 			      userid, 
 			      obj_cmd_rs) < 0)
     {
@@ -1804,7 +2088,7 @@ get_bmc_username (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_user_lan_channel_access (ipmi_device_t dev, 
+get_bmc_user_lan_channel_access (bmc_config_state_data_t *state_data, 
 				 uint8_t userid, 
 				 uint8_t *user_ipmi_messaging, 
 				 uint8_t *user_link_authentication, 
@@ -1813,9 +2097,16 @@ get_bmc_user_lan_channel_access (ipmi_device_t dev,
 				 uint8_t *session_limit,
                                  uint8_t *user_id_enable_status)
 {
-  return get_bmc_user_access (dev, 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_lan_channel_number (state_data, 
+                                     &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return get_bmc_user_access (state_data, 
 			      userid, 
-			      get_lan_channel_number (dev), 
+			      channel_number, 
 			      user_ipmi_messaging, 
 			      user_link_authentication, 
 			      user_restricted_to_callback, 
@@ -1825,7 +2116,7 @@ get_bmc_user_lan_channel_access (ipmi_device_t dev,
 }
 
 bmc_err_t
-get_bmc_user_payload_access (ipmi_device_t dev,
+get_bmc_user_payload_access (bmc_config_state_data_t *state_data,
                              uint8_t userid,
                              uint8_t *standard_payload_1,
                              uint8_t *standard_payload_2,
@@ -1846,12 +2137,20 @@ get_bmc_user_payload_access (ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_payload_access_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_get_user_payload_access (dev, 
-                                        get_lan_channel_number (dev),
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_user_payload_access (state_data->dev, 
+                                        channel_number,
                                         userid, 
                                         obj_cmd_rs) < 0)
     {
@@ -1972,7 +2271,7 @@ get_bmc_user_payload_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_user_serial_channel_access (ipmi_device_t dev, 
+get_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data, 
 				    uint8_t userid, 
 				    uint8_t *user_ipmi_messaging, 
 				    uint8_t *user_link_authentication, 
@@ -1981,9 +2280,16 @@ get_bmc_user_serial_channel_access (ipmi_device_t dev,
 				    uint8_t *session_limit,
                                     uint8_t *user_id_enable_status)
 {
-  return get_bmc_user_access (dev, 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_serial_channel_number (state_data, 
+                                        &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return get_bmc_user_access (state_data, 
 			      userid, 
-			      get_serial_channel_number (dev), 
+			      channel_number, 
 			      user_ipmi_messaging, 
 			      user_link_authentication, 
 			      user_restricted_to_callback, 
@@ -1993,15 +2299,22 @@ get_bmc_user_serial_channel_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_channel_volatile_access (ipmi_device_t dev, 
+get_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
 				     uint8_t *access_mode, 
 				     uint8_t *user_level_authentication, 
 				     uint8_t *per_message_authentication, 
 				     uint8_t *pef_alerting, 
 				     uint8_t *privilege_limit)
 {
-  return get_bmc_channel_access (dev, 
-				 get_lan_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_lan_channel_number (state_data, 
+                                     &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return get_bmc_channel_access (state_data, 
+				 channel_number, 
 				 1, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -2011,15 +2324,22 @@ get_bmc_lan_channel_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_channel_non_volatile_access (ipmi_device_t dev, 
+get_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
 					 uint8_t *access_mode, 
 					 uint8_t *user_level_authentication, 
 					 uint8_t *per_message_authentication, 
 					 uint8_t *pef_alerting, 
 					 uint8_t *privilege_limit)
 {
-  return get_bmc_channel_access (dev, 
-				 get_lan_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_lan_channel_number (state_data, 
+                                     &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return get_bmc_channel_access (state_data, 
+				 channel_number, 
 				 0, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -2029,18 +2349,26 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_ip_address_source (ipmi_device_t dev, 
+get_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
 				    uint8_t *ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (dev, 
-								   get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (state_data->dev, 
+								   channel_number, 
 								   IPMI_GET_LAN_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
@@ -2062,18 +2390,26 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_ip_address (ipmi_device_t dev, 
+get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
 			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address (dev, 
-							    get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address (state_data->dev, 
+							    channel_number, 
 							    IPMI_GET_LAN_PARAMETER, 
 							    SET_SELECTOR, 
 							    BLOCK_SELECTOR, 
@@ -2103,18 +2439,26 @@ get_bmc_lan_conf_ip_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_mac_address (ipmi_device_t dev, 
+get_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data, 
 			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (dev, 
-							     get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->dev, 
+							     channel_number, 
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
@@ -2147,18 +2491,26 @@ get_bmc_lan_conf_mac_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_subnet_mask (ipmi_device_t dev, 
+get_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data, 
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t subnet_mask_bytes[4];
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (dev, 
-							     get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (state_data->dev, 
+							     channel_number, 
 							     IPMI_GET_LAN_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
@@ -2189,18 +2541,26 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_default_gateway_address (ipmi_device_t dev, 
+get_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data, 
 					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (dev, 
-									 get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (state_data->dev, 
+									 channel_number, 
 									 IPMI_GET_LAN_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -2231,18 +2591,26 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev, 
+get_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_data, 
 					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  
+  bmc_err_t ret;
+  int8_t channel_number;
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (dev, 
-									     get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (state_data->dev, 
+									     channel_number, 
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
@@ -2274,18 +2642,26 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev, 
+get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data, 
 					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (dev, 
-									get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (state_data->dev, 
+									channel_number, 
 									IPMI_GET_LAN_PARAMETER, 
 									SET_SELECTOR, 
 									BLOCK_SELECTOR, 
@@ -2316,18 +2692,26 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev, 
+get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
 					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (dev, 
-									    get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (state_data->dev, 
+									    channel_number, 
 									    IPMI_GET_LAN_PARAMETER, 
 									    SET_SELECTOR, 
 									    BLOCK_SELECTOR, 
@@ -2360,19 +2744,27 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_vlan_id (ipmi_device_t dev, 
+get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
 			  uint32_t *vlan_id,
 			  uint8_t *vlan_id_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (dev, 
-							 get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (state_data->dev, 
+							 channel_number, 
 							 IPMI_GET_LAN_PARAMETER, 
 							 SET_SELECTOR, 
 							 BLOCK_SELECTOR, 
@@ -2398,18 +2790,26 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_vlan_priority (ipmi_device_t dev, 
+get_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
 				uint8_t *vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (dev, 
-							       get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (state_data->dev, 
+							       channel_number, 
 							       IPMI_GET_LAN_PARAMETER, 
 							       SET_SELECTOR, 
 							       BLOCK_SELECTOR, 
@@ -2431,7 +2831,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev, 
+get_bmc_lan_conf_authentication_type_enables (bmc_config_state_data_t *state_data, 
                                               uint8_t *callback_level_none,
                                               uint8_t *callback_level_md2,
                                               uint8_t *callback_level_md5,
@@ -2461,12 +2861,20 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (dev, 
-									     get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (state_data->dev, 
+									     channel_number, 
 									     IPMI_GET_LAN_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
@@ -2584,19 +2992,27 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev, 
+get_bmc_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data, 
 					    uint8_t *bmc_generated_gratuitous_arps, 
 					    uint8_t *bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (dev, 
-									   get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (state_data->dev, 
+									   channel_number, 
 									   IPMI_GET_LAN_PARAMETER, 
 									   SET_SELECTOR, 
 									   BLOCK_SELECTOR, 
@@ -2622,18 +3038,26 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev, 
+get_bmc_lan_conf_gratuitous_arp_interval (bmc_config_state_data_t *state_data, 
 					  uint8_t *gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (dev, 
-									 get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (state_data->dev, 
+									 channel_number, 
 									 IPMI_GET_LAN_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -2655,15 +3079,22 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_serial_channel_volatile_access (ipmi_device_t dev, 
+get_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
 					uint8_t *access_mode, 
 					uint8_t *user_level_authentication, 
 					uint8_t *per_message_authentication, 
 					uint8_t *pef_alerting, 
 					uint8_t *privilege_limit)
 {
-  return get_bmc_channel_access (dev, 
-				 get_serial_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_serial_channel_number (state_data, 
+                                        &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return get_bmc_channel_access (state_data, 
+				 channel_number, 
 				 1, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -2673,15 +3104,22 @@ get_bmc_serial_channel_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_serial_channel_non_volatile_access (ipmi_device_t dev, 
+get_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
 					    uint8_t *access_mode, 
 					    uint8_t *user_level_authentication, 
 					    uint8_t *per_message_authentication, 
 					    uint8_t *pef_alerting, 
 					    uint8_t *privilege_limit)
 {
-  return get_bmc_channel_access (dev, 
-				 get_serial_channel_number (dev), 
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if ((ret = get_serial_channel_number (state_data, 
+                                        &channel_number)) != BMC_ERR_SUCCESS)
+    return ret;
+
+  return get_bmc_channel_access (state_data, 
+				 channel_number, 
 				 0, 
 				 access_mode, 
 				 user_level_authentication, 
@@ -2691,7 +3129,7 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_serial_conf_connection_mode (ipmi_device_t dev, 
+get_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
 				     uint8_t *basic_mode, 
 				     uint8_t *ppp_mode, 
 				     uint8_t *terminal_mode, 
@@ -2700,12 +3138,20 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_connection_mode_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_connection_mode (dev, 
-							       get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_serial_modem_configuration_connection_mode (state_data->dev, 
+							       channel_number, 
 							       IPMI_GET_SERIAL_MODEM_PARAMETER, 
 							       SET_SELECTOR, 
 							       BLOCK_SELECTOR, 
@@ -2739,18 +3185,26 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev, 
+get_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data, 
 					    uint8_t *page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (dev, 
-								      get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (state_data->dev, 
+								      channel_number, 
 								      IPMI_GET_SERIAL_MODEM_PARAMETER, 
 								      SET_SELECTOR, 
 								      BLOCK_SELECTOR, 
@@ -2772,18 +3226,26 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_serial_conf_call_retry_interval (ipmi_device_t dev, 
+get_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data, 
 					 uint8_t *call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval (dev, 
-								   get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval (state_data->dev, 
+								   channel_number, 
 								   IPMI_GET_SERIAL_MODEM_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
@@ -2805,7 +3267,7 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev, 
+get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
 						  uint8_t *dtr_hangup, 
 						  uint8_t *flow_control, 
 						  uint8_t *bit_rate)
@@ -2813,12 +3275,20 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (dev, 
-									    get_serial_channel_number (dev), 
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (state_data->dev, 
+									    channel_number, 
 									    IPMI_GET_SERIAL_MODEM_PARAMETER, 
 									    SET_SELECTOR, 
 									    BLOCK_SELECTOR, 
@@ -2848,7 +3318,7 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_bmc_power_restore_policy (ipmi_device_t dev, 
+get_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
 			      uint8_t *power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2858,7 +3328,7 @@ get_bmc_power_restore_policy (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_chassis_status (dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_chassis_status (state_data->dev, obj_cmd_rs) < 0)
     {
       rv = BMC_ERR_NON_FATAL_ERROR;
       goto cleanup;
@@ -2876,7 +3346,7 @@ get_bmc_power_restore_policy (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_pef_control (ipmi_device_t dev, 
+get_pef_control (bmc_config_state_data_t *state_data, 
 		 uint8_t *pef, 
 		 uint8_t *pef_event_messages, 
 		 uint8_t *pef_startup_delay, 
@@ -2889,7 +3359,7 @@ get_pef_control (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_control (dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_control (state_data->dev, 
 							     IPMI_GET_PEF_PARAMETER, 
 							     SET_SELECTOR, 
 							     BLOCK_SELECTOR, 
@@ -2923,7 +3393,7 @@ get_pef_control (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_pef_action_global_control (ipmi_device_t dev, 
+get_pef_action_global_control (bmc_config_state_data_t *state_data, 
 			       uint8_t *alert_action, 
 			       uint8_t *power_down_action, 
 			       uint8_t *reset_action, 
@@ -2938,7 +3408,7 @@ get_pef_action_global_control (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (state_data->dev, 
 									   IPMI_GET_PEF_PARAMETER, 
 									   SET_SELECTOR, 
 									   BLOCK_SELECTOR, 
@@ -2980,7 +3450,7 @@ get_pef_action_global_control (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_pef_startup_delay (ipmi_device_t dev, 
+get_pef_startup_delay (bmc_config_state_data_t *state_data, 
 		       uint8_t *pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2990,7 +3460,7 @@ get_pef_startup_delay (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (state_data->dev, 
 								   IPMI_GET_PEF_PARAMETER, 
 								   SET_SELECTOR, 
 								   BLOCK_SELECTOR, 
@@ -3012,7 +3482,7 @@ get_pef_startup_delay (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_pef_alert_startup_delay (ipmi_device_t dev, 
+get_pef_alert_startup_delay (bmc_config_state_data_t *state_data, 
 			     uint8_t *pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -3022,7 +3492,7 @@ get_pef_alert_startup_delay (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (state_data->dev, 
 									 IPMI_GET_PEF_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -3044,18 +3514,26 @@ get_pef_alert_startup_delay (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_sol_sol_enable (ipmi_device_t dev, 
+get_sol_sol_enable (bmc_config_state_data_t *state_data, 
 		    uint8_t *sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (dev, 
-							    get_sol_channel_number (dev), 
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (state_data->dev, 
+							    channel_number, 
 							    IPMI_GET_SOL_PARAMETER, 
 							    SET_SELECTOR, 
 							    BLOCK_SELECTOR, 
@@ -3077,7 +3555,7 @@ get_sol_sol_enable (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_sol_sol_authentication (ipmi_device_t dev, 
+get_sol_sol_authentication (bmc_config_state_data_t *state_data, 
 			    uint8_t *sol_privilege_level,
 			    uint8_t *force_sol_payload_authentication,
 			    uint8_t *force_sol_payload_encryption)
@@ -3085,12 +3563,20 @@ get_sol_sol_authentication (ipmi_device_t dev,
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (dev, 
-								    get_sol_channel_number (dev), 
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (state_data->dev, 
+								    channel_number, 
 								    IPMI_GET_SOL_PARAMETER, 
 								    SET_SELECTOR, 
 								    BLOCK_SELECTOR, 
@@ -3120,19 +3606,27 @@ get_sol_sol_authentication (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t dev, 
+get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data_t *state_data, 
 							  uint8_t *character_accumulate_interval,
 							  uint8_t *character_send_threshold)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-												  get_sol_channel_number (dev), 
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->dev, 
+												  channel_number, 
 												  IPMI_GET_SOL_PARAMETER, 
 												  SET_SELECTOR, 
 												  BLOCK_SELECTOR, 
@@ -3158,19 +3652,27 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_sol_sol_retry (ipmi_device_t dev, 
+get_sol_sol_retry (bmc_config_state_data_t *state_data, 
 		   uint8_t *retry_count,
 		   uint8_t *retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (dev, 
-							   get_sol_channel_number (dev), 
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (state_data->dev, 
+							   channel_number, 
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
@@ -3196,18 +3698,26 @@ get_sol_sol_retry (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_sol_sol_non_volatile_bit_rate (ipmi_device_t dev, 
+get_sol_sol_non_volatile_bit_rate (bmc_config_state_data_t *state_data, 
 				   uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-							   get_sol_channel_number (dev), 
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->dev, 
+							   channel_number, 
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
@@ -3229,18 +3739,26 @@ get_sol_sol_non_volatile_bit_rate (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_sol_sol_volatile_bit_rate (ipmi_device_t dev, 
+get_sol_sol_volatile_bit_rate (bmc_config_state_data_t *state_data, 
 			       uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-								       get_sol_channel_number (dev), 
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (state_data->dev, 
+								       channel_number, 
 								       IPMI_GET_SOL_PARAMETER, 
 								       SET_SELECTOR, 
 								       BLOCK_SELECTOR, 
@@ -3262,18 +3780,26 @@ get_sol_sol_volatile_bit_rate (ipmi_device_t dev,
 }
 
 bmc_err_t 
-get_sol_sol_payload_port_number (ipmi_device_t dev, 
+get_sol_sol_payload_port_number (bmc_config_state_data_t *state_data, 
 				 uint16_t *port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (dev, 
-									 get_sol_channel_number (dev), 
+  if ((ret = get_sol_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (state_data->dev, 
+									 channel_number, 
 									 IPMI_GET_SOL_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -3295,7 +3821,7 @@ get_sol_sol_payload_port_number (ipmi_device_t dev,
 }
 
 bmc_err_t
-get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
+get_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
 					uint8_t cipher_suite_id,
 					uint8_t *privilege)
 {
@@ -3305,7 +3831,7 @@ get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
   if (!(cipher_suite_id < CIPHER_SUITE_LEN))
     goto cleanup;
 
-  if ((rc = _rmcpplus_cipher_suite_id_privilege_setup(dev)) != BMC_ERR_SUCCESS)
+  if ((rc = _rmcpplus_cipher_suite_id_privilege_setup(state_data)) != BMC_ERR_SUCCESS)
     {
       rv = rc;
       goto cleanup;
@@ -3338,7 +3864,7 @@ get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t dev,
 }
 
 bmc_err_t
-get_k_r(ipmi_device_t dev,
+get_k_r(bmc_config_state_data_t *state_data,
         uint8_t *k_r,
         uint32_t k_r_len)
 {
@@ -3346,12 +3872,20 @@ get_k_r(ipmi_device_t dev,
   uint8_t buf[1024];
   uint32_t buf_len;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_channel_security_keys (state_data->dev, 
+                                          channel_number, 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                                           NULL,
@@ -3377,7 +3911,7 @@ get_k_r(ipmi_device_t dev,
 }
 
 bmc_err_t
-get_k_g(ipmi_device_t dev,
+get_k_g(bmc_config_state_data_t *state_data,
         uint8_t *k_g,
         uint32_t k_g_len)
 {
@@ -3385,12 +3919,20 @@ get_k_g(ipmi_device_t dev,
   uint8_t buf[1024];
   uint32_t buf_len;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_channel_security_keys (dev, 
-                                          get_lan_channel_number (dev), 
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_channel_security_keys (state_data->dev, 
+                                          channel_number, 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                                           NULL,
@@ -3417,7 +3959,7 @@ get_k_g(ipmi_device_t dev,
 
 /***********************************************************/
 bmc_diff_t
-check_bmc_user_password (ipmi_device_t dev, 
+check_bmc_user_password (bmc_config_state_data_t *state_data, 
 			 uint8_t userid, 
 			 uint8_t *password)
 {
@@ -3427,7 +3969,7 @@ check_bmc_user_password (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password (dev, 
+  if (ipmi_cmd_set_user_password (state_data->dev, 
                                   userid, 
                                   IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
                                   (char *)password, 
@@ -3458,7 +4000,7 @@ check_bmc_user_password (ipmi_device_t dev,
 }
 
 bmc_diff_t
-check_bmc_user_password20 (ipmi_device_t dev, 
+check_bmc_user_password20 (bmc_config_state_data_t *state_data, 
                            uint8_t userid, 
                            uint8_t *password)
 {
@@ -3468,7 +4010,7 @@ check_bmc_user_password20 (ipmi_device_t dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password_v20 (dev, 
+  if (ipmi_cmd_set_user_password_v20 (state_data->dev, 
                                       userid, 
                                       IPMI_PASSWORD_SIZE_20_BYTES,
                                       IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 

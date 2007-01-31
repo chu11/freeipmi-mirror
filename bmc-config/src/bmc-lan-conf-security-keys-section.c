@@ -7,7 +7,7 @@
 #include "bmc-validate.h"
 
 static bmc_err_t
-k_r_checkout (const struct bmc_config_arguments *args,
+k_r_checkout (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      struct keyvalue *kv)
 {
@@ -16,7 +16,7 @@ k_r_checkout (const struct bmc_config_arguments *args,
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
 
-  if ((ret = get_k_r (args->dev, 
+  if ((ret = get_k_r (state_data, 
                       (uint8_t *)k_r, 
                       IPMI_MAX_K_R_LENGTH)) != BMC_ERR_SUCCESS)
     return ret;
@@ -35,17 +35,17 @@ k_r_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-k_r_commit (const struct bmc_config_arguments *args,
+k_r_commit (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return set_k_r (args->dev,
+  return set_k_r (state_data,
 		  (uint8_t *)kv->value, 
 		  kv->value ? strlen (kv->value): 0);
 }
 
 static bmc_diff_t
-k_r_diff (const struct bmc_config_arguments *args,
+k_r_diff (bmc_config_state_data_t *state_data,
 	  const struct section *sect,
 	  const struct keyvalue *kv)
 {
@@ -53,7 +53,7 @@ k_r_diff (const struct bmc_config_arguments *args,
   bmc_err_t ret;
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
-  if ((ret = get_k_r (args->dev, 
+  if ((ret = get_k_r (state_data, 
                       k_r, 
                       IPMI_MAX_K_R_LENGTH)) != BMC_ERR_SUCCESS)
     return ret;
@@ -73,7 +73,7 @@ k_r_diff (const struct bmc_config_arguments *args,
 }
 
 static bmc_validate_t
-k_r_validate (const struct bmc_config_arguments *args,
+k_r_validate (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const char *value)
 {
@@ -85,7 +85,7 @@ k_r_validate (const struct bmc_config_arguments *args,
 /* k_g */
 
 static bmc_err_t
-k_g_checkout (const struct bmc_config_arguments *args,
+k_g_checkout (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      struct keyvalue *kv)
 {
@@ -94,7 +94,7 @@ k_g_checkout (const struct bmc_config_arguments *args,
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
   
-  if ((ret = get_k_g (args->dev, 
+  if ((ret = get_k_g (state_data, 
                       k_g, 
                       IPMI_MAX_K_G_LENGTH)) != BMC_ERR_SUCCESS)
     return ret;
@@ -113,17 +113,17 @@ k_g_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-k_g_commit (const struct bmc_config_arguments *args,
+k_g_commit (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return set_k_g (args->dev,
+  return set_k_g (state_data,
 		  (uint8_t *)kv->value, 
 		  kv->value ? strlen (kv->value): 0);
 }
 
 static bmc_diff_t
-k_g_diff (const struct bmc_config_arguments *args,
+k_g_diff (bmc_config_state_data_t *state_data,
 	  const struct section *sect,
 	  const struct keyvalue *kv)
 {
@@ -131,7 +131,7 @@ k_g_diff (const struct bmc_config_arguments *args,
   bmc_err_t ret;
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
-  if ((ret = get_k_g (args->dev, 
+  if ((ret = get_k_g (state_data, 
                       k_g, 
                       IPMI_MAX_K_G_LENGTH)) != BMC_ERR_SUCCESS)
     return ret;
@@ -151,7 +151,7 @@ k_g_diff (const struct bmc_config_arguments *args,
 }
 
 static bmc_validate_t
-k_g_validate (const struct bmc_config_arguments *args,
+k_g_validate (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const char *value)
 {
@@ -161,14 +161,15 @@ k_g_validate (const struct bmc_config_arguments *args,
 }
 
 struct section *
-bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
+bmc_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *lan_conf_security_keys_section = NULL;
 
-  if (!(lan_conf_security_keys_section = bmc_section_create ("Lan_Conf_Security_Keys")))
+  if (!(lan_conf_security_keys_section = bmc_section_create (state_data, "Lan_Conf_Security_Keys")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_conf_security_keys_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_conf_security_keys_section,
 				"K_R",
 				"Give string or blank to clear. Max 20 chars",
 				0,
@@ -178,7 +179,8 @@ bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
 				k_r_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (lan_conf_security_keys_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_conf_security_keys_section,
 				"K_G",
 				"Give string or blank to clear. Max 20 chars",
 				0,
@@ -192,6 +194,6 @@ bmc_lan_conf_security_keys_section_get (struct bmc_config_arguments *args)
 
  cleanup:
   if (lan_conf_security_keys_section)
-    bmc_section_destroy(lan_conf_security_keys_section);
+    bmc_section_destroy(state_data, lan_conf_security_keys_section);
   return NULL;
 }

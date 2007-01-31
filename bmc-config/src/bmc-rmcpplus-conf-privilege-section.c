@@ -7,7 +7,7 @@
 #include "bmc-validate.h"
 
 static bmc_err_t
-id_checkout (const struct bmc_config_arguments *args,
+id_checkout (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     struct keyvalue *kv,
 	     int id)
@@ -15,7 +15,7 @@ id_checkout (const struct bmc_config_arguments *args,
   uint8_t priv;
   bmc_err_t ret;
 
-  if ((ret = get_rmcpplus_cipher_suite_id_privilege (args->dev,
+  if ((ret = get_rmcpplus_cipher_suite_id_privilege (state_data,
                                                      id,
                                                      &priv)) != BMC_ERR_SUCCESS)
     return ret;
@@ -33,18 +33,18 @@ id_checkout (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-id_commit (const struct bmc_config_arguments *args,
+id_commit (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv,
 	   int id)
 {
-  return set_rmcpplus_cipher_suite_id_privilege (args->dev,
+  return set_rmcpplus_cipher_suite_id_privilege (state_data,
 						 id,
 						 rmcpplus_priv_number (kv->value));
 }
 
 static bmc_diff_t
-id_diff (const struct bmc_config_arguments *args,
+id_diff (bmc_config_state_data_t *state_data,
 	 const struct section *sect,
 	 const struct keyvalue *kv,
 	 int id)
@@ -53,7 +53,7 @@ id_diff (const struct bmc_config_arguments *args,
   bmc_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_rmcpplus_cipher_suite_id_privilege (args->dev,
+  if ((rc = get_rmcpplus_cipher_suite_id_privilege (state_data,
                                                     id,
                                                     &priv)) != BMC_ERR_SUCCESS)
     {
@@ -76,380 +76,381 @@ id_diff (const struct bmc_config_arguments *args,
 }
 
 static bmc_err_t
-id_0_checkout (const struct bmc_config_arguments *args,
+id_0_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 0);
+  return id_checkout (state_data, sect, kv, 0);
 }
 
 static bmc_err_t
-id_0_commit (const struct bmc_config_arguments *args,
+id_0_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 0);
+  return id_commit (state_data, sect, kv, 0);
 }
 
 static bmc_diff_t
-id_0_diff (const struct bmc_config_arguments *args,
+id_0_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 0);
+  return id_diff (state_data, sect, kv, 0);
 }
 
 static bmc_err_t
-id_1_checkout (const struct bmc_config_arguments *args,
+id_1_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 1);
+  return id_checkout (state_data, sect, kv, 1);
 }
 
 static bmc_err_t
-id_1_commit (const struct bmc_config_arguments *args,
+id_1_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 1);
+  return id_commit (state_data, sect, kv, 1);
 }
 
 static bmc_diff_t
-id_1_diff (const struct bmc_config_arguments *args,
+id_1_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 1);
+  return id_diff (state_data, sect, kv, 1);
 }
 
 
 static bmc_err_t
-id_2_checkout (const struct bmc_config_arguments *args,
+id_2_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 2);
+  return id_checkout (state_data, sect, kv, 2);
 }
 
 static bmc_err_t
-id_2_commit (const struct bmc_config_arguments *args,
+id_2_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 2);
+  return id_commit (state_data, sect, kv, 2);
 }
 
 static bmc_diff_t
-id_2_diff (const struct bmc_config_arguments *args,
+id_2_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 2);
+  return id_diff (state_data, sect, kv, 2);
 }
 
 
 
 static bmc_err_t
-id_3_checkout (const struct bmc_config_arguments *args,
+id_3_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 3);
+  return id_checkout (state_data, sect, kv, 3);
 }
 
 static bmc_err_t
-id_3_commit (const struct bmc_config_arguments *args,
+id_3_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 3);
+  return id_commit (state_data, sect, kv, 3);
 }
 
 static bmc_diff_t
-id_3_diff (const struct bmc_config_arguments *args,
+id_3_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 3);
+  return id_diff (state_data, sect, kv, 3);
 }
 
 static bmc_err_t
-id_4_checkout (const struct bmc_config_arguments *args,
+id_4_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 4);
+  return id_checkout (state_data, sect, kv, 4);
 }
 
 static bmc_err_t
-id_4_commit (const struct bmc_config_arguments *args,
+id_4_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 4);
+  return id_commit (state_data, sect, kv, 4);
 }
 
 static bmc_diff_t
-id_4_diff (const struct bmc_config_arguments *args,
+id_4_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 4);
+  return id_diff (state_data, sect, kv, 4);
 }
 
 
 
 static bmc_err_t
-id_5_checkout (const struct bmc_config_arguments *args,
+id_5_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 5);
+  return id_checkout (state_data, sect, kv, 5);
 }
 
 static bmc_err_t
-id_5_commit (const struct bmc_config_arguments *args,
+id_5_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 5);
+  return id_commit (state_data, sect, kv, 5);
 }
 
 static bmc_diff_t
-id_5_diff (const struct bmc_config_arguments *args,
+id_5_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 5);
+  return id_diff (state_data, sect, kv, 5);
 }
 
 static bmc_err_t
-id_6_checkout (const struct bmc_config_arguments *args,
+id_6_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 6);
+  return id_checkout (state_data, sect, kv, 6);
 }
 
 static bmc_err_t
-id_6_commit (const struct bmc_config_arguments *args,
+id_6_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 6);
+  return id_commit (state_data, sect, kv, 6);
 }
 
 static bmc_diff_t
-id_6_diff (const struct bmc_config_arguments *args,
+id_6_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 6);
+  return id_diff (state_data, sect, kv, 6);
 }
 
 static bmc_err_t
-id_7_checkout (const struct bmc_config_arguments *args,
+id_7_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 7);
+  return id_checkout (state_data, sect, kv, 7);
 }
 
 static bmc_err_t
-id_7_commit (const struct bmc_config_arguments *args,
+id_7_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 7);
+  return id_commit (state_data, sect, kv, 7);
 }
 
 static bmc_diff_t
-id_7_diff (const struct bmc_config_arguments *args,
+id_7_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 7);
+  return id_diff (state_data, sect, kv, 7);
 }
 
 
 static bmc_err_t
-id_8_checkout (const struct bmc_config_arguments *args,
+id_8_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 8);
+  return id_checkout (state_data, sect, kv, 8);
 }
 
 static bmc_err_t
-id_8_commit (const struct bmc_config_arguments *args,
+id_8_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 8);
+  return id_commit (state_data, sect, kv, 8);
 }
 
 static bmc_diff_t
-id_8_diff (const struct bmc_config_arguments *args,
+id_8_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 8);
+  return id_diff (state_data, sect, kv, 8);
 }
 
 static bmc_err_t
-id_9_checkout (const struct bmc_config_arguments *args,
+id_9_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 9);
+  return id_checkout (state_data, sect, kv, 9);
 }
 
 static bmc_err_t
-id_9_commit (const struct bmc_config_arguments *args,
+id_9_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 9);
+  return id_commit (state_data, sect, kv, 9);
 }
 
 static bmc_diff_t
-id_9_diff (const struct bmc_config_arguments *args,
+id_9_diff (bmc_config_state_data_t *state_data,
 	   const struct section *sect,
 	   const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 9);
+  return id_diff (state_data, sect, kv, 9);
 }
 
 static bmc_err_t
-id_10_checkout (const struct bmc_config_arguments *args,
+id_10_checkout (bmc_config_state_data_t *state_data,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 10);
+  return id_checkout (state_data, sect, kv, 10);
 }
 
 static bmc_err_t
-id_10_commit (const struct bmc_config_arguments *args,
+id_10_commit (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 10);
+  return id_commit (state_data, sect, kv, 10);
 }
 
 static bmc_diff_t
-id_10_diff (const struct bmc_config_arguments *args,
+id_10_diff (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 10);
+  return id_diff (state_data, sect, kv, 10);
 }
 
 static bmc_err_t
-id_11_checkout (const struct bmc_config_arguments *args,
+id_11_checkout (bmc_config_state_data_t *state_data,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 11);
+  return id_checkout (state_data, sect, kv, 11);
 }
 
 static bmc_err_t
-id_11_commit (const struct bmc_config_arguments *args,
+id_11_commit (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 11);
+  return id_commit (state_data, sect, kv, 11);
 }
 
 static bmc_diff_t
-id_11_diff (const struct bmc_config_arguments *args,
+id_11_diff (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 11);
+  return id_diff (state_data, sect, kv, 11);
 }
 
 static bmc_err_t
-id_12_checkout (const struct bmc_config_arguments *args,
+id_12_checkout (bmc_config_state_data_t *state_data,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 12);
+  return id_checkout (state_data, sect, kv, 12);
 }
 
 static bmc_err_t
-id_12_commit (const struct bmc_config_arguments *args,
+id_12_commit (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 12);
+  return id_commit (state_data, sect, kv, 12);
 }
 
 static bmc_diff_t
-id_12_diff (const struct bmc_config_arguments *args,
+id_12_diff (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 12);
+  return id_diff (state_data, sect, kv, 12);
 }
 
 static bmc_err_t
-id_13_checkout (const struct bmc_config_arguments *args,
+id_13_checkout (bmc_config_state_data_t *state_data,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 13);
+  return id_checkout (state_data, sect, kv, 13);
 }
 
 static bmc_err_t
-id_13_commit (const struct bmc_config_arguments *args,
+id_13_commit (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 13);
+  return id_commit (state_data, sect, kv, 13);
 }
 
 static bmc_diff_t
-id_13_diff (const struct bmc_config_arguments *args,
+id_13_diff (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 13);
+  return id_diff (state_data, sect, kv, 13);
 }
 
 static bmc_err_t
-id_14_checkout (const struct bmc_config_arguments *args,
+id_14_checkout (bmc_config_state_data_t *state_data,
 		const struct section *sect,
 		struct keyvalue *kv)
 {
-  return id_checkout (args, sect, kv, 14);
+  return id_checkout (state_data, sect, kv, 14);
 }
 
 static bmc_err_t
-id_14_commit (const struct bmc_config_arguments *args,
+id_14_commit (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const struct keyvalue *kv)
 {
-  return id_commit (args, sect, kv, 14);
+  return id_commit (state_data, sect, kv, 14);
 }
 
 static bmc_diff_t
-id_14_diff (const struct bmc_config_arguments *args,
+id_14_diff (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return id_diff (args, sect, kv, 14);
+  return id_diff (state_data, sect, kv, 14);
 }
 
 struct section *
-bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
+bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *rmcpplus_conf_privilege_section = NULL;
 
-  if (!(rmcpplus_conf_privilege_section = bmc_section_create ("Rmcpplus_Conf_Privilege")))
+  if (!(rmcpplus_conf_privilege_section = bmc_section_create (state_data, "Rmcpplus_Conf_Privilege")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_0",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -459,7 +460,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_1",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -469,7 +471,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_2",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -479,7 +482,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_3",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -489,7 +493,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_4",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -499,7 +504,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_5",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -509,7 +515,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_6",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -519,7 +526,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_7",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -529,7 +537,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_8",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -539,7 +548,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_9",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -549,7 +559,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_10",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -559,7 +570,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_11",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -569,7 +581,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_12",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -579,7 +592,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_13",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -589,7 +603,8 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 				rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (rmcpplus_conf_privilege_section,
+  if (bmc_section_add_keyvalue (state_data,
+                                rmcpplus_conf_privilege_section,
 				"Maximum_Privilege_Cipher_Suite_Id_14",
 				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
 				0,
@@ -603,7 +618,7 @@ bmc_rmcpplus_conf_privilege_section_get (struct bmc_config_arguments *args)
 
  cleanup:
   if (rmcpplus_conf_privilege_section)
-    bmc_section_destroy (rmcpplus_conf_privilege_section);
+    bmc_section_destroy (state_data, rmcpplus_conf_privilege_section);
   return NULL;
 }
 

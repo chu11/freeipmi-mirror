@@ -40,24 +40,24 @@ struct section {
 };
 
 /* checkout procedure fills the value into kv->value as printable string */
-typedef bmc_err_t (*Keyvalue_Checkout) (const struct bmc_config_arguments *args,
+typedef bmc_err_t (*Keyvalue_Checkout) (bmc_config_state_data_t *state_data,
                                         const struct section *sect,
                                         struct keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
-typedef bmc_err_t (*Keyvalue_Commit) (const struct bmc_config_arguments *args,
+typedef bmc_err_t (*Keyvalue_Commit) (bmc_config_state_data_t *state_data,
                                       const struct section *sect,
                                       const struct keyvalue *kv);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
-typedef bmc_diff_t (*Keyvalue_Diff) (const struct bmc_config_arguments *args,
+typedef bmc_diff_t (*Keyvalue_Diff) (bmc_config_state_data_t *state_data,
                                      const struct section *sect,
                                      const struct keyvalue *kv);
 
 /* validate procedure finds if value is suitable to be set as kv->value */
-typedef bmc_validate_t (*Keyvalue_Validate) (const struct bmc_config_arguments *args,
+typedef bmc_validate_t (*Keyvalue_Validate) (bmc_config_state_data_t *state_data,
                                              const struct section *sect,
                                              const char *value);
 
@@ -73,15 +73,19 @@ struct keyvalue {
   Keyvalue_Validate validate;
 };
 
-struct section * bmc_config_sections_create (struct bmc_config_arguments *args);
+struct section * bmc_config_sections_create (bmc_config_state_data_t *state_data);
 
-void bmc_config_sections_destroy (struct section *sections);
+void bmc_config_sections_destroy (bmc_config_state_data_t *state_data,
+                                  struct section *sections);
 
-struct section * bmc_section_create (char *section_name);
+struct section * bmc_section_create (bmc_config_state_data_t *state_data, 
+                                     char *section_name);
 
-void bmc_section_destroy (struct section *section);
+void bmc_section_destroy (bmc_config_state_data_t *state_data, 
+                          struct section *section);
 
-int bmc_section_add_keyvalue (struct section *section,
+int bmc_section_add_keyvalue (bmc_config_state_data_t *state_data,
+                              struct section *section,
 			      const char *key,
 			      const char *desc,
 			      unsigned int flags,
@@ -90,29 +94,25 @@ int bmc_section_add_keyvalue (struct section *section,
 			      Keyvalue_Diff diff,
 			      Keyvalue_Validate validate);
 
-struct keyvalue * bmc_section_find_keyvalue (const char *section_name,
-					     const char *key_name,
-					     const struct section *sections);
+struct keyvalue * bmc_section_find_keyvalue (bmc_config_state_data_t *state_data,
+                                             const char *section_name,
+					     const char *key_name);
 
-int bmc_section_set_value (const char *section_name,
+int bmc_section_set_value (bmc_config_state_data_t *state_data,
+                           const char *section_name,
 			   const char *key_name,
-			   const char *value,
-			   struct bmc_config_arguments *args,
-			   struct section *sections);
+			   const char *value);
 
-bmc_err_t bmc_section_commit_value (const char *section_name,
+bmc_err_t bmc_section_commit_value (bmc_config_state_data_t *state_data,
+                                    const char *section_name,
                                     const char *key_name,
-                                    const char *value,
-                                    struct bmc_config_arguments *args,
-                                    struct section *sections);
+                                    const char *value);
 
-int bmc_section_diff_value (const char *section_name,
+int bmc_section_diff_value (bmc_config_state_data_t *state_data,
+                            const char *section_name,
 			    const char *key_name,
-			    const char *value,
-			    struct bmc_config_arguments *args,
-			    struct section *sections);
+			    const char *value);
 
-int bmc_sections_list (struct bmc_config_arguments *args, 
-                       struct section *sections);
+int bmc_sections_list (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_SECTIONS_H_ */

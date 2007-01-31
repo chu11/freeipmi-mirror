@@ -25,54 +25,74 @@ static int8_t serial_channel_number;
 static uint8_t sol_channel_number_initialized = false;
 static int8_t sol_channel_number;
 
-int8_t 
-get_lan_channel_number (ipmi_device_t dev)
+bmc_err_t 
+get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
 {
   if (lan_channel_number_initialized)
-    return lan_channel_number;
+    {
+      *channel_num = lan_channel_number;
+      return BMC_ERR_SUCCESS;
+    }
   
-  lan_channel_number = ipmi_get_channel_number (dev, 
-						IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  if ((lan_channel_number = ipmi_get_channel_number (state_data->dev, 
+                                                     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
 
-  if (!(lan_channel_number < 0))
-    lan_channel_number_initialized = true;
-  return lan_channel_number;
+  lan_channel_number_initialized = true;
+  *channel_num = lan_channel_number;
+  return BMC_ERR_SUCCESS;
 }
 
-int8_t 
-get_serial_channel_number (ipmi_device_t dev)
+bmc_err_t 
+get_serial_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
 {
   if (serial_channel_number_initialized)
-    return serial_channel_number;
+    {
+      *channel_num = serial_channel_number;
+      return BMC_ERR_SUCCESS;
+    }
   
-  serial_channel_number = ipmi_get_channel_number (dev, 
-						   IPMI_CHANNEL_MEDIUM_TYPE_RS232);
-  if (!(serial_channel_number < 0))
-    serial_channel_number_initialized = true;
-  return serial_channel_number;
+  if ((serial_channel_number = ipmi_get_channel_number (state_data->dev, 
+                                                        IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+
+  serial_channel_number_initialized = true;
+  *channel_num = serial_channel_number;
+  return BMC_ERR_SUCCESS;
 }
 
-int8_t 
-get_sol_channel_number (ipmi_device_t dev)
+bmc_err_t 
+get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t rc;
   uint64_t val;
+  int8_t num;
 
   if (sol_channel_number_initialized)
-    return sol_channel_number;
+    {
+      *channel_num = sol_channel_number;
+      return BMC_ERR_SUCCESS;
+    }
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (dev,
-								     get_lan_channel_number (dev),
+  if ((rc = get_lan_channel_number (state_data, &num)) != BMC_ERR_SUCCESS)
+    {
+      rv = rc;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->dev,
+                                                                     num,
 								     IPMI_GET_SOL_PARAMETER,
 								     SET_SELECTOR,
 								     BLOCK_SELECTOR,
-								     obj_cmd_rs) != 0)
+								     obj_cmd_rs) < 0)
     {
-      sol_channel_number = get_lan_channel_number (dev);
-      sol_channel_number_initialized = true;
+      rv = BMC_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
@@ -80,15 +100,17 @@ get_sol_channel_number (ipmi_device_t dev)
 		   "payload_channel",
 		   &val) < 0)
     {
-      sol_channel_number = get_lan_channel_number (dev);
-      sol_channel_number_initialized = true;
+      rv = BMC_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  sol_channel_number = val;
-  sol_channel_number_initialized = true;
 
+  sol_channel_number_initialized = true;
+  sol_channel_number = val;
+
+  *channel_num = sol_channel_number;
+  rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return sol_channel_number;
+  return rv;
 }
