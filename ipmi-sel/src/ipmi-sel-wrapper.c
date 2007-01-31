@@ -615,24 +615,26 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
   return (rv);
 }
 
-int 
+sel_record_t *
 get_sel_record (ipmi_sel_state_data_t *state_data, 
                 uint16_t record_id, 
-                sel_record_t *sel_rec, 
                 uint16_t *next_record_id)
 {
+  sel_record_t *sel_rec;
   fiid_obj_t obj_cmd_rs;
   uint64_t val;
-  int rv = -1;
   int32_t len;
   
   uint8_t record_data[SEL_RECORD_SIZE];
   uint32_t record_data_len = SEL_RECORD_SIZE;
   
-  ERR_EINVAL (state_data && sel_rec && next_record_id);
+  ERR_EINVAL_CLEANUP (state_data && next_record_id);
   
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
+  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
   
+  if (!(sel_rec = (sel_record_t *)malloc(sizeof(sel_record_t))))
+    goto cleanup;
+
   if (ipmi_cmd_get_sel_entry (state_data->dev, 
 			      0,
 			      record_id, 
@@ -650,19 +652,39 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
 				 record_data,
 				 record_data_len);
   record_data_len = len;
-  rv = 0;
+
+  if (_parse_sel_record (state_data,
+                         record_data, 
+                         record_data_len, 
+                         sel_rec) < 0)
+    goto cleanup;
+
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  return sel_rec;
+
  cleanup:
   FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
-  if (rv == 0)
+  if (sel_rec)
+    destroy_sel_record(sel_rec);
+  return NULL;
+}
+
+void
+destroy_sel_record (sel_record_t *sel_rec)
+{
+  if (sel_rec)
     {
-      return (_parse_sel_record (state_data,
-                                 record_data, 
-                                 record_data_len, 
-                                 sel_rec));
-    }
-  else
-    {
-      return (rv);
+      if (sel_rec->timestamp)
+        free (sel_rec->timestamp);
+      if (sel_rec->sensor_info) 
+        free (sel_rec->sensor_info);
+      if (sel_rec->event_message) 
+        free (sel_rec->event_message);
+      if (sel_rec->event_data2_message) 
+        free (sel_rec->event_data2_message);
+      if (sel_rec->event_data3_message) 
+        free (sel_rec->event_data3_message);
+      free(sel_rec);
     }
 }
 

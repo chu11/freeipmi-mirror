@@ -18,6 +18,14 @@
 	(ipmi_monitoring_bitmask_string),
 	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
 	(_get_digital_sensor_bitmask_type): Fix warnings.
+
+	* ipmi-sel/src/ipmi-sel-wrapper.h, ipmi-sel/src/ipmi-sel-wrapper.c
+	(get_sel_record): Cleaned up API.
+
+	* ipmi-sel/src/ipmi-sel-wrapper.h, ipmi-sel/src/ipmi-sel-wrapper.c
+	(destroy_sel_record): New function.
+
+	* ipmi-sel/src/ipmi-sel.c (display_sel_records): Use adjusted API.
 	
 2007-01-30  Albert Chu <chu11@llnl.gov>
 

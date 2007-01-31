@@ -202,7 +202,6 @@ display_sel_info (ipmi_sel_state_data_t *state_data)
 int 
 display_sel_records (ipmi_sel_state_data_t *state_data)
 {
-  sel_record_t sel_rec;
   uint16_t record_id = 0;
   uint16_t next_record_id = 0;
   
@@ -212,35 +211,31 @@ display_sel_records (ipmi_sel_state_data_t *state_data)
        record_id != IPMI_SEL_GET_RECORD_ID_LAST_ENTRY;
        record_id = next_record_id)
     {
-      memset (&sel_rec, 0, sizeof (sel_record_t));
-      if (get_sel_record (state_data, 
-                          record_id, 
-                          &sel_rec, 
-                          &next_record_id) < 0)
-	{
-	  fprintf (stderr, "%s: unable to get SEL record\n", 
-		   program_invocation_short_name);
-	  return (-1);
-	}
+      sel_record_t *sel_rec;
+
+      if (!(sel_rec = get_sel_record (state_data, 
+                                      record_id, 
+                                      &next_record_id)))
+        {
+          fprintf (stderr, "%s: unable to get SEL record\n", 
+                   program_invocation_short_name);
+          return (-1);
+        }
       
-      printf ("%d", sel_rec.record_id);
-      if (sel_rec.timestamp)
-	printf (":%s", sel_rec.timestamp);
-      if (sel_rec.sensor_info)
-	printf (":%s", sel_rec.sensor_info);
-      if (sel_rec.event_message)
-	printf (":%s", sel_rec.event_message);
-      if (sel_rec.event_data2_message)
-	printf (":%s", sel_rec.event_data2_message);
-      if (sel_rec.event_data3_message)
-	printf (":%s", sel_rec.event_data3_message);
+      printf ("%d", sel_rec->record_id);
+      if (sel_rec->timestamp)
+	printf (":%s", sel_rec->timestamp);
+      if (sel_rec->sensor_info)
+	printf (":%s", sel_rec->sensor_info);
+      if (sel_rec->event_message)
+	printf (":%s", sel_rec->event_message);
+      if (sel_rec->event_data2_message)
+	printf (":%s", sel_rec->event_data2_message);
+      if (sel_rec->event_data3_message)
+	printf (":%s", sel_rec->event_data3_message);
       printf ("\n");
-      
-      if (sel_rec.timestamp) free (sel_rec.timestamp);
-      if (sel_rec.sensor_info) free (sel_rec.sensor_info);
-      if (sel_rec.event_message) free (sel_rec.event_message);
-      if (sel_rec.event_data2_message) free (sel_rec.event_data2_message);
-      if (sel_rec.event_data3_message) free (sel_rec.event_data3_message);
+
+      destroy_sel_record(sel_rec);
     }
   
   return (0);

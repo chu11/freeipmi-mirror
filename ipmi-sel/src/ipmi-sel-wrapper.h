@@ -34,10 +34,10 @@ typedef struct sel_record sel_record_t;
 
 int get_sel_info (ipmi_sel_state_data_t *state_data,
                   local_sel_info_t *sel_info);
-int get_sel_record (ipmi_sel_state_data_t *state_data,
-                    uint16_t record_id, 
-                    sel_record_t *sel_rec, 
-                    uint16_t *next_record_id);
+sel_record_t *get_sel_record (ipmi_sel_state_data_t *state_data,
+                              uint16_t record_id, 
+                              uint16_t *next_record_id);
+void destroy_sel_record (sel_record_t *sel_rec);
 int get_sel_record_raw (ipmi_sel_state_data_t *state_data,
                         uint16_t record_id, 
                         uint8_t *record_data, 
