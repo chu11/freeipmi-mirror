@@ -1,3 +1,24 @@
+2007-01-31  Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-common.c, common/src/ipmi-common.h
+	(ipmi_disable_coredump): New function.
+
+	* bmc-config/src/bmc-config.c, bmc-info/src/bmc-info.c,
+	ipmi-pef/src/ipmi-pef.c, ipmi-sel/src/ipmi-sel.c,
+	ipmi-sensors/src/ipmi-sensors.c (_disable_coredump, main): Use new
+	common function.  Remove unnecessary includes.
+
+	* ipmi-locate/src/ipmi-locate.c (main): Cleanup for consistency
+	with other tools.
+
+	* Makefile.am: Add COPYING.ipmimonitoring and
+	DISCLAIMER.ipmimonitoring to dist.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.c
+	(ipmi_monitoring_bitmask_string),
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_digital_sensor_bitmask_type): Fix warnings.
+	
 2007-01-30  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Continue re-architecture w/ state data.

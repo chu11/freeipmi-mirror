@@ -35,6 +35,17 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #ifdef HAVE_ERROR_H
 #include <error.h>
 #endif
+#include <sys/resource.h>
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <argp.h>
 
 #include "ipmi-common.h"
@@ -102,4 +113,22 @@ void *guaranteed_memset(void *s, int c, size_t n)
     *p++=c;
 
   return s;
+}
+
+void
+ipmi_disable_coredump(void)
+{
+  /* Disable core dumping when not-debugging.  Do not want username,
+   * password or other important stuff to core dump.
+   */
+#ifdef NDEBUG
+  struct rlimit resource_limit;
+
+  if (!getrlimit(RLIMIT_CORE, &resource_limit))
+    {
+      resource_limit.rlim_cur = 0;
+      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+        perror ("warning: setrlimit()");
+    }
+#endif /* NDEBUG */
 }

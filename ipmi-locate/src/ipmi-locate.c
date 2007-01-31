@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.27 2006-07-29 17:05:22 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.28 2007-01-31 16:48:18 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -28,17 +28,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#include <sys/resource.h>
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else /* !TIME_WITH_SYS_TIME */
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else /* !HAVE_SYS_TIME_H */
-#include <time.h>
-#endif /* !HAVE_SYS_TIME_H */
-#endif /* !TIME_WITH_SYS_TIME */
 #include <errno.h>
 
 #include <freeipmi/freeipmi.h>
@@ -383,17 +372,14 @@ defaults_display ()
 int 
 main (int argc, char **argv)
 {
-  struct rlimit resource_limit;
-  
-  /* generate core dump on seg-fault */
-  if (ipmi_is_root ())
+  if (!ipmi_is_root())
     {
-      resource_limit.rlim_cur =
-	resource_limit.rlim_max = RLIM_INFINITY;
-      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
-	perror ("warning: setrlimit()");
+      fprintf(stderr, "%s: Permission Denied\n", argv[0]);
+      exit(1);
     }
-  
+
+  ipmi_disable_coredump();
+
   ipmi_locate_argp_parse (argc, argv);
   
   dmidecode_probe_display ();
