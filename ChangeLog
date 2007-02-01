@@ -1,3 +1,9 @@
+2007-02-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/src/ipmi-raw.c (string2bytes, ipmi_raw_stream): Pass
+	state_data to string2bytes from ipmi_raw_stream.  Fix memory
+	management issue.
+	
 2007-01-31  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-common.c, common/src/ipmi-common.h

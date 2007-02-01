@@ -87,7 +87,10 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
 }
 
 static int 
-string2bytes (char *line, unsigned char **buf, int *len)
+string2bytes (ipmi_raw_state_data_t *state_data,
+              char *line,
+              unsigned char **buf, 
+              int *len)
 {
   const char delim[] = " \t\f\v\r\n";
   char *str = NULL;
@@ -96,10 +99,17 @@ string2bytes (char *line, unsigned char **buf, int *len)
   int i = 0;
   int l = 0;
   int value = 0;
-  
-  if (line == NULL || buf == NULL || len == NULL)
+  int rv = -1;
+
+  if (state_data == NULL
+      || line == NULL 
+      || buf == NULL 
+      || len == NULL)
     return (-1);
   
+  *buf = NULL;
+  *len = 0;
+
   for (i = 0, count = 0; line[i]; i++)
     {
       if (strchr ((const char*)delim, (int) line[i]))
@@ -107,8 +117,17 @@ string2bytes (char *line, unsigned char **buf, int *len)
     }
   count++;
   
-  *buf = calloc ((strlen (line) - count), 1);
-  str = (char *) strdupa (line);
+  if (!(*buf = calloc ((strlen (line) - count), 1)))
+    {
+      perror ("calloc");
+      goto cleanup;
+    }
+
+  if (!(str = (char *) strdup (line)))
+    {
+      perror ("strdup");
+      goto cleanup;
+    }
   count = 0;
   while (1)
     {
@@ -122,20 +141,14 @@ string2bytes (char *line, unsigned char **buf, int *len)
       if (l > 2)
 	{
 	  fprintf (stderr, "invalid input\n");
-	  free (*buf);
-	  *buf = NULL;
-	  *len = 0;
-	  return (-1);
+          goto cleanup;
 	}
       for (i = 0; i < l; i++)
 	{
 	  if (isxdigit (token[i]) == 0)
 	    {
 	      fprintf (stderr, "invalid input\n");
-	      free (*buf);
-	      *buf = NULL;
-	      *len = 0;
-	      return (-1);
+              goto cleanup;
 	    }
 	}
       
@@ -144,8 +157,19 @@ string2bytes (char *line, unsigned char **buf, int *len)
     }
   
   *len = count;
-  
-  return (0);
+  rv = 0;
+
+ cleanup:
+  if (rv < 0)
+    {
+      if (*buf)
+        free(*buf);
+      *buf = NULL;
+      *len = 0;
+    }
+  if (str)
+    free(str);
+  return (rv);
 }
 
 int
@@ -175,7 +199,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 	}
       line_count++;
       
-      if (string2bytes (line, &bytes_rq, &send_len) < 0)
+      if (string2bytes (state_data, line, &bytes_rq, &send_len) < 0)
         goto cleanup;
       
       if (send_len <= 2)
