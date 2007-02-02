@@ -31,7 +31,7 @@ Delete records from START to END in SEL
 \fB\-f\fR, \fB\-\-flush\-cache\fR
 Flush SDR cache
 .TP
-\FB\-Q\fR, \fB\-\-\quiet\-cache\fR
+\fB\-Q\fR, \fB\-\-\quiet\-cache\fR
 Do not output information about cache creation/deletion.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
