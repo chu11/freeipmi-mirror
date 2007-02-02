@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.11 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.12 2007-02-02 23:34:37 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -72,9 +72,9 @@ static struct argp_option options[] =
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,
      "Flush sensor SDR cache.", 18},
     {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
-     "Do not output cache creation information."},
+     "Do not output cache creation information.", 19},
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
-     "Use DIRECTORY for sensor cache."}, 
+     "Use DIRECTORY for sensor cache.", 20}, 
     { 0 }
   };
 

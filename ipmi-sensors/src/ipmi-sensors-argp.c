@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.7 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.8 2007-02-02 23:34:37 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -62,21 +62,21 @@ static struct argp_option options[] =
   {
     ARGP_COMMON_OPTIONS, 
     {"verbose",     VERBOSE_KEY,      0, 0, 
-     "Increase verbosity in output.  More -v adds more verbosity.", 9}, 
+     "Increase verbosity in output.  More -v adds more verbosity.", 13}, 
     {"sdr-info",    SDR_INFO_KEY,     0, 0, 
-     "Show SDR Information."}, 
+     "Show SDR Information.", 14}, 
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0, 
-     "Flush sensor cache."}, 
+     "Flush sensor cache.", 15}, 
     {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
-     "Do not output cache creation information."},
+     "Do not output cache creation information.", 16},
     {"list-groups", LIST_GROUPS_KEY,  0, 0, 
-     "List sensor groups."}, 
+     "List sensor groups.", 17}, 
     {"group",       GROUP_KEY,        "GROUP", 0, 
-     "Show sensors belongs to this GROUP."}, 
+     "Show sensors belongs to this GROUP.", 18}, 
     {"sensors",     SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
-     "Show listed sensors."}, 
+     "Show listed sensors.", 19}, 
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
-     "Use DIRECTORY for sensor cache."}, 
+     "Use DIRECTORY for sensor cache.", 20}, 
     { 0 }
   };
 
