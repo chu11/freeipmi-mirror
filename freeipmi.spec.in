@@ -135,6 +135,8 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
+%doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ZRESEARCH
 %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf

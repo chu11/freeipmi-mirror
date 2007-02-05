@@ -1,3 +1,7 @@
+2007-02-05  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Add ipmimonitoring docs.
+	
 2007-02-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/ipmi-sel.8.pre.in, ipmi-sensors/ipmi-sensors.8.pre.in:
