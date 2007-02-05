@@ -1,6 +1,6 @@
 /*
 ipmi-pef.c: Platform Event Filtering utility.
-Copyright (C) 2005 FreeIPMI Core Team
+Copyright (C) 2005-2007 FreeIPMI Core Team
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,22 +30,24 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <error.h>
 #endif
 #include <argp.h>
+#include <assert.h>
 
 #include "argp-common.h"
 #include "ipmi-common.h"
 #include "ipmi-pef-argp.h"
 #include "ipmi-pef-wrapper.h"
+#include "ipmi-pef.h"
 
 #include "freeipmi-portability.h"
 
 int 
-display_pef_info (ipmi_device_t dev)
+display_pef_info (ipmi_pef_state_data_t *state_data)
 {
   pef_info_t pef_info;
   
   memset (&pef_info, 0, sizeof (pef_info_t));
   
-  if (get_pef_info (dev, &pef_info) != 0)
+  if (get_pef_info (state_data->dev, &pef_info) != 0)
     {
       fprintf (stderr, "%s: unable to get PEF information\n", 
 	       program_invocation_short_name);
@@ -85,13 +87,13 @@ display_pef_info (ipmi_device_t dev)
 }
 
 int 
-checkout_pef_evt (ipmi_device_t dev, FILE *fp)
+checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   int rv = 0;
   int num_event_filters;
   int filter;
   
-  if (get_number_of_event_filters (dev, &num_event_filters) != 0)
+  if (get_number_of_event_filters (state_data->dev, &num_event_filters) != 0)
     return (-1);
   
   for (filter = 1; filter < num_event_filters; filter++)
@@ -100,7 +102,7 @@ checkout_pef_evt (ipmi_device_t dev, FILE *fp)
       
       memset (&evt, 0, sizeof (pef_event_filter_table_t));
       
-      if (get_event_filter_table (dev, filter, &evt) != 0)
+      if (get_event_filter_table (state_data->dev, filter, &evt) != 0)
 	{
 	  fprintf (stderr, "unable to get event filter table #%d\n", filter);
 	  rv = -1;
@@ -156,7 +158,7 @@ checkout_pef_evt (ipmi_device_t dev, FILE *fp)
 }
 
 int 
-commit_pef_evt (ipmi_device_t dev, FILE *fp)
+commit_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   pef_event_filter_table_t *evt_list = NULL;
   int count = 0;
@@ -167,7 +169,7 @@ commit_pef_evt (ipmi_device_t dev, FILE *fp)
   
   for (i = 0; i < count; i++)
     {
-      if (set_event_filter_table (dev, &evt_list[i]) != 0)
+      if (set_event_filter_table (state_data->dev, &evt_list[i]) != 0)
 	{
 	  fprintf (stderr, "unable to set event filter table #%d\n", 
 		   evt_list[i].filter_number);
@@ -180,17 +182,19 @@ commit_pef_evt (ipmi_device_t dev, FILE *fp)
 }
 
 int 
-run_cmd_args (ipmi_device_t dev, struct arguments *args)
+run_cmd_args (ipmi_pef_state_data_t *state_data)
 {
-  int retval = 0;
+  struct ipmi_pef_arguments *args;
+  int rv = -1;
   
-  if (args == NULL)
-    return (-1);
-  
+  assert (state_data);
+
+  args = state_data->prog_data->args;
+
   if (args->info_wanted)
     {
-      retval = display_pef_info (dev);
-      return retval;
+      rv = display_pef_info (state_data);
+      return rv;
     }
   
   if (args->checkout_wanted)
@@ -208,12 +212,12 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
 	    }
 	}
       
-      retval = checkout_pef_evt (dev, fp);
+      rv = checkout_pef_evt (state_data, fp);
       
       if (fp != stdout)
 	fclose (fp);
       
-      return retval;
+      return rv;
     }
   
   if (args->commit_wanted)
@@ -223,37 +227,136 @@ run_cmd_args (ipmi_device_t dev, struct arguments *args)
       fp = fopen (args->commit_filename, "r");
       if (fp)
 	{
-	  retval = commit_pef_evt (dev, fp);
+	  rv = commit_pef_evt (state_data, fp);
 	  fclose (fp);
 	}
-      else       
+      else 
 	{
 	  fprintf (stderr, "unable to open file [%s] for reading.  aborting...\n", 
 		   args->commit_filename);
-	  retval = -1;
+	  rv = -1;
 	}
       
-      return retval;
+      return rv;
     }
   
-  return retval;
+  return rv;
+}
+
+static int 
+_ipmi_pef (void *arg)
+{
+  ipmi_pef_state_data_t state_data;
+  ipmi_pef_prog_data_t *prog_data;
+  ipmi_device_t dev = NULL;
+  int exit_code = -1;
+  
+  prog_data = (ipmi_pef_prog_data_t *) arg;
+  
+  if (prog_data->args->common.host != NULL)
+    {
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
+				       prog_data->args->common.host,
+                                       prog_data->args->common.username,
+                                       prog_data->args->common.password,
+                                       prog_data->args->common.authentication_type, 
+                                       prog_data->args->common.privilege_level,
+                                       prog_data->args->common.session_timeout, 
+                                       prog_data->args->common.retry_timeout, 
+				       prog_data->debug_flags)))
+	{
+	  perror ("ipmi_open_outofband()");
+	  exit_code = EXIT_FAILURE;
+	  goto cleanup;
+	}
+    }
+  else
+    {
+      if (!ipmi_is_root())
+        {
+          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+	  exit_code = EXIT_FAILURE;
+	  goto cleanup;
+        }
+
+      if (prog_data->args->common.driver_type == IPMI_DEVICE_UNKNOWN)
+	{
+	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
+					prog_data->args->common.disable_auto_probe, 
+                                        prog_data->args->common.driver_address, 
+                                        prog_data->args->common.register_spacing,
+                                        prog_data->args->common.driver_device, 
+                                        prog_data->debug_flags)))
+	    {
+	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS,
+					    prog_data->args->common.disable_auto_probe,
+					    prog_data->args->common.driver_address,
+					    prog_data->args->common.register_spacing,
+					    prog_data->args->common.driver_device,
+					    prog_data->debug_flags)))
+		{
+		  if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
+						prog_data->args->common.disable_auto_probe,
+						prog_data->args->common.driver_address,
+						prog_data->args->common.register_spacing,
+						prog_data->args->common.driver_device,
+						prog_data->debug_flags)))
+		    {
+		      perror ("ipmi_open_inband()");
+		      exit_code = EXIT_FAILURE;
+		      goto cleanup;
+		    }
+		}
+	    }
+	}
+      else
+	{
+	  if (!(dev = ipmi_open_inband (prog_data->args->common.driver_type,
+					prog_data->args->common.disable_auto_probe,
+					prog_data->args->common.driver_address,
+                                        prog_data->args->common.register_spacing,
+                                        prog_data->args->common.driver_device,
+                                        prog_data->debug_flags)))
+	    {
+	      perror ("ipmi_open_inband()");
+	      exit_code = EXIT_FAILURE;
+	      goto cleanup;
+	    }
+	}
+    }
+  
+  memset (&state_data, '\0', sizeof (ipmi_pef_state_data_t));
+  state_data.dev = dev;
+  state_data.prog_data = prog_data;
+  
+  if (run_cmd_args (&state_data) < 0)
+    { 
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  exit_code = 0;
+ cleanup:
+  if (dev)
+    ipmi_close_device (dev);
+  return exit_code;
 }
 
 int 
 main (int argc, char **argv)
 {
-  struct arguments *args = NULL;
-  ipmi_device_t dev = NULL;
-  int retval = 0;
-  uint32_t flags;
+  ipmi_pef_prog_data_t prog_data;
+  struct ipmi_pef_arguments cmd_args;
+  int exit_code;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
   
   ipmi_disable_coredump();
 
-  ipmi_pef_argp_parse (argc, argv);
-  args = ipmi_pef_get_arguments ();
+  prog_data.progname = argv[0];
+  ipmi_pef_argp_parse (argc, argv, &cmd_args);
+  prog_data.args = &cmd_args;
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
@@ -262,86 +365,16 @@ main (int argc, char **argv)
 #endif /* NDEBUG */
   
 #ifndef NDEBUG
-  if (args->common.debug)
-    flags = IPMI_FLAGS_DEBUG_DUMP;
+  if (prog_data.args->common.debug)
+    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
   else
-    flags = IPMI_FLAGS_DEFAULT;
+    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #else  /* NDEBUG */
-  flags = IPMI_FLAGS_DEFAULT;
+  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
-
-  if (args->common.host != NULL)
-    {
-      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-				       args->common.host,
-                                       args->common.username,
-                                       args->common.password,
-                                       args->common.authentication_type, 
-                                       args->common.privilege_level,
-                                       args->common.session_timeout, 
-                                       args->common.retry_timeout, 
-				       flags)))
-	{
-	  perror ("ipmi_open_outofband()");
-	  exit (EXIT_FAILURE);
-	}
-    }
-  else
-    {
-      if (!ipmi_is_root())
-        {
-          fprintf(stderr, "%s: Permission Denied\n", argv[0]);
-          exit(EXIT_FAILURE);
-        }
-
-      if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
-	{
-	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
-					args->common.disable_auto_probe, 
-                                        args->common.driver_address, 
-                                        args->common.register_spacing,
-                                        args->common.driver_device, 
-                                        flags)))
-	    {
-	      if (!(dev = ipmi_open_inband (IPMI_DEVICE_KCS,
-					    args->common.disable_auto_probe,
-					    args->common.driver_address,
-					    args->common.register_spacing,
-					    args->common.driver_device,
-					    flags)))
-		{
-		  if (!(dev = ipmi_open_inband (IPMI_DEVICE_SSIF,
-						args->common.disable_auto_probe,
-						args->common.driver_address,
-						args->common.register_spacing,
-						args->common.driver_device,
-						flags)))
-		    {
-		      perror ("ipmi_open_inband()");
-		      return (-1);
-		    }
-		}
-	    }
-	}
-      else
-	{
-	  if (!(dev = ipmi_open_inband (args->common.driver_type,
-					args->common.disable_auto_probe,
-					args->common.driver_address,
-                                        args->common.register_spacing,
-                                        args->common.driver_device,
-                                        flags)))
-	    {
-	      perror ("ipmi_open_inband()");
-	      return (-1);
-	    }
-	}
-    }
   
-  retval = run_cmd_args (dev, args);
+  exit_code = _ipmi_pef (&prog_data);
   
-  ipmi_close_device (dev);
-  
-  return (retval);
+  return exit_code;
 }
 

@@ -7,7 +7,7 @@ ipmi_pef_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libfreeipmiportability.la \
 		 ../../common/src/libsdr.la 
  
-noinst_HEADERS=ipmi-pef-argp.h ipmi-pef-wrapper.h
+noinst_HEADERS=ipmi-pef-argp.h ipmi-pef-wrapper.h ipmi-pef.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \

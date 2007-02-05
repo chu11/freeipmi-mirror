@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.2 2006-10-31 19:31:39 balamurugan Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.3 2007-02-05 21:26:01 balamurugan Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -38,8 +38,6 @@
 
 #include "freeipmi-portability.h"
 
-static struct arguments cmd_args;
-
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 const char *argp_program_version = 
@@ -71,7 +69,7 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct arguments *cmd_args = state->input;
+  struct ipmi_pef_arguments *cmd_args = state->input;
   
   switch (key)
     {
@@ -102,21 +100,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void 
-ipmi_pef_argp_parse (int argc, char **argv)
+ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
 {
-  init_common_cmd_args (&(cmd_args.common));
-  cmd_args.info_wanted = 0;
-  cmd_args.checkout_wanted = 0;
-  cmd_args.checkout_filename = NULL;
-  cmd_args.commit_wanted = 0;
-  cmd_args.commit_filename = NULL;
+  init_common_cmd_args (&(cmd_args->common));
+  cmd_args->info_wanted = 0;
+  cmd_args->checkout_wanted = 0;
+  cmd_args->checkout_filename = NULL;
+  cmd_args->commit_wanted = 0;
+  cmd_args->commit_filename = NULL;
   
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
-}
-
-struct arguments *
-ipmi_pef_get_arguments ()
-{
-  return &cmd_args;
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }
 
