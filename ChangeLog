@@ -1,3 +1,7 @@
+2007-02-05  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Add ipmimonitoring sdr cache directory.
+
 2007-02-05  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-pef/src/ipmi-pef.h: new file.
