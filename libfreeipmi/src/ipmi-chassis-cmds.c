@@ -33,6 +33,28 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
+fiid_template_t tmpl_cmd_get_chassis_capabilities_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_chassis_capabilities_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "capabilities_flags.intrusion_sensor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "capabilities_flags.front_panel_lockout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "capabilities_flags.diagnostic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "capabilities_flags.power_interlock", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "capabilities_flags.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "fru_info_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "sdr_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "sel_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "bridge_device_address", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_chassis_status_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -127,6 +149,17 @@ fiid_template_t tmpl_cmd_set_power_restore_policy_rs =
     {5, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
+
+int8_t
+fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq)
+{ 
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_chassis_capabilities_rq);
+
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_CAPABILITIES);
+  return 0;
+}
 
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)

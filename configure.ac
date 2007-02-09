@@ -1,7 +1,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.4.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.77 2007-02-02 23:09:11 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.78 2007-02-09 19:37:07 avati Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -47,6 +47,9 @@ AC_CONFIG_FILES([
 	bmc-config/Makefile bmc-config/src/Makefile
 	bmc-config/bmc-config.8.pre bmc-config/bmc-config.conf.5 
 	bmc-config/bmc-autoconfig/Makefile
+	ipmi-chassis/Makefile
+	ipmi-chassis/src/Makefile
+	ipmi-chassis/ipmi-chassis.8.pre
         freeipmi.spec])
 
 ISODATE=`date +%Y-%m-%d`

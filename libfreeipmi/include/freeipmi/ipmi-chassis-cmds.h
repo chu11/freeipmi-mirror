@@ -71,6 +71,8 @@ extern "C" {
           || (__policy) == IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST \
           || (__policy) == IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF) ? 1 : 0)
 
+extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rq;
+extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rq;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
 extern fiid_template_t tmpl_cmd_chassis_control_rq;
@@ -79,6 +81,8 @@ extern fiid_template_t tmpl_cmd_chassis_identify_rq;
 extern fiid_template_t tmpl_cmd_chassis_identify_rs;
 extern fiid_template_t tmpl_cmd_set_power_restore_policy_rq;
 extern fiid_template_t tmpl_cmd_set_power_restore_policy_rs;
+
+int8_t fill_cmd_get_chassis_capabilities (fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq);
 

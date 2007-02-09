@@ -29,6 +29,9 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
+int8_t ipmi_cmd_get_chassis_capabilities (ipmi_device_t dev, 
+					  fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_chassis_status (ipmi_device_t dev, 
 				    fiid_obj_t obj_cmd_rs);
 
