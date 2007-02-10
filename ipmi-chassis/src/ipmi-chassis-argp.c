@@ -46,6 +46,11 @@ static struct argp_option options[] =
   {
     ARGP_COMMON_OPTIONS,
     {"get-capabilities", 'c', NULL, 0, "Get the chassis capabilities", 13},
+    {"get-status", 's', NULL, 0, "Get the chassis status", 14},
+    {"chassis-control", 'C', NULL, 0, "Control the chassis", 15},
+    {"chassis-reset", 'R', NULL, 0, "Reset the chassis (Recommended to use --chassis-control)", 16},
+    {"chassis-identify", 'I', NULL, 0, "Chassis Identification", 17},
+    {"set-capabilities", 'S', NULL, 0, "Set the chassis capabilities", 18},
     { 0 }
   };
 
@@ -59,11 +64,18 @@ parse_opt (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case 'c':
-      if (cmd_args->cmd) {
-	fprintf (stderr, "Error: Only one command at a time");
+      if (cmd_args->cmd != -1) {
+	fprintf (stderr, "Error: Only one command at a time\n");
 	return -1;
       }
-      cmd_args->cmd = CMD_GET_CHASSIS_CAPABILITIES;
+      cmd_args->cmd = IPMI_CMD_GET_CHASSIS_CAPABILITIES;
+      break;
+    case 's':
+      if (cmd_args->cmd != -1) {
+	fprintf (stderr, "Error: Only one command at a time\n");
+	return -1;
+      }
+      cmd_args->cmd = IPMI_CMD_GET_CHASSIS_STATUS;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -83,7 +95,11 @@ void
 ipmi_chassis_argp_parse (int argc, char **argv,
 			 struct ipmi_chassis_arguments *cmd_args)
 {
+  error_t err;
   init_common_cmd_args (&(cmd_args->common));
-  
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  cmd_args->cmd = -1;
+  err = argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+
+  if (err != 0)
+    exit (EINVAL);
 }

@@ -29,10 +29,7 @@
 struct ipmi_chassis_arguments
 {
   struct common_cmd_args common;
-  enum {
-    CMD_GET_CHASSIS_CAPABILITIES = 1,
-    CMD_GET_CHASSIS_STATUS
-  } cmd;
+  int32_t cmd;
 };
 
 typedef struct ipmi_chassis_prog_data
