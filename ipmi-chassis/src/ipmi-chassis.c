@@ -135,10 +135,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   fprintf (stdout, "Sys Mgmt Device Address : %Xh\n",
 	   (unsigned char) val);
 
-  if (fiid_obj_len (cmd_rs) == 7) {
-    _FIID_OBJ_GET (cmd_rs,
-		   "bridge_device_address",
-		   &val);
+  if (fiid_obj_get (cmd_rs, "bridge_device_address", &val) >= 0) {
     fprintf (stdout, "Bridge Device Address   : %Xh\n",
 	     (unsigned char) val);
   } else {

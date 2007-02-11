@@ -47,10 +47,11 @@ fiid_template_t tmpl_cmd_get_chassis_capabilities_rs =
     {1, "capabilities_flags.front_panel_lockout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "capabilities_flags.diagnostic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "capabilities_flags.power_interlock", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {3, "capabilities_flags.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "capabilities_flags.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "fru_info_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "sdr_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "sel_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "system_management_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "bridge_device_address", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };

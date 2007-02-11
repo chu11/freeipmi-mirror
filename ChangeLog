@@ -1,6 +1,7 @@
 2007-02-09  Anand V. Avati <avati@zresearch.com>
 
 	* ipmi-chassis/ipmi-chassis.8.pre.in: added missing file
+	* ipmi-chassis/src/*: intermediary commit with bugfixes
 	
 2007-02-09  Anand V. Avati <avati@zresearch.com>
 
