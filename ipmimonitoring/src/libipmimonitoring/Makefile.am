@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+## $Id: Makefile.am,v 1.2 2007-02-14 19:36:39 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -30,6 +30,9 @@ libipmimonitoring_la_CFLAGS = \
 	-I$(srcdir)/../../../common/src \
 	-I$(srcdir)/../../../libfreeipmi/include \
 	-I$(srcdir)/../libipmisdrcache
+
+libipmimonitoring_la_CPPFLAGS = \
+	-D_REENTRANT
 
 libipmimonitoring_la_LDFLAGS = \
 	-version-info @LIBIPMIMONITORING_VERSION_INFO@ \

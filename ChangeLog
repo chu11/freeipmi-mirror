@@ -1,3 +1,9 @@
+2007-02-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/libipmimonitoring/Makefile.am,
+	ipmimonitoring/libipmisdrcache/Makefile.am,
+	ipmiconsole/libipmiconsole/Makefile.am: Compile with -D_REENTRANT.
+	
 2007-02-09  Anand V. Avati <avati@zresearch.com>
 
 	* ipmi-chassis/ipmi-chassis.8.pre.in: added missing file
