@@ -4,6 +4,7 @@
 	compile option.
 
 	* freeipmi.spec.in: Split of ipmimonitoring into a subpackage.
+	Add ipmi-chassis.
 
 	* configure.ac: Fix make dist issue w/ long filenames.
 	
