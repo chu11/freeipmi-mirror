@@ -42,6 +42,13 @@ Requires: logrotate
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
 
+%package ipmimonitoring
+Summary: Ipmimonitoring library
+Group: Development/System
+Requires: freeipmi = %{version}-%{release}
+%description ipmimonitoring
+Provides library for IPMI host monitoring.
+
 %if %{?_with_debug:1}%{!?_with_debug:0}
   %define _enable_debug --enable-debug --enable-trace --enable-syslog
 %endif
@@ -135,12 +142,9 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
-%doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
-%config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
-%{_libdir}/*so.0*
-%{_libdir}/*so.3*
+%{_libdir}/libipmiconsole*so*
+%{_libdir}/libfreeipmi*so*
 /var/lib/*
 %{_sbindir}/bmc-autoconfig
 %{_sbindir}/bmc-config
@@ -154,7 +158,6 @@ fi
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
 %{_sbindir}/ipmiconsole
-%{_sbindir}/ipmimonitoring
 %{_mandir}/man8/bmc-autoconfig.8*
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
@@ -170,8 +173,6 @@ fi
 %{_mandir}/man8/rmcpping.8*
 %{_mandir}/man8/ipmiconsole.8*
 %{_mandir}/man5/ipmiconsole.conf.5*
-%{_mandir}/man8/ipmimonitoring.8*
-%dir /var/cache/ipmimonitoringsdrcache
 
 %files devel
 %defattr(-,root,root)
@@ -179,9 +180,10 @@ fi
 %doc %{_datadir}/doc/%{name}/examples/udm-test.c
 %doc %{_datadir}/doc/%{name}/freeipmi-hackers-intro.odp
 %doc %{_datadir}/doc/%{name}/ipmi-network-layout.fig
-%{_libdir}/*.a
-%{_libdir}/*.la
-%{_libdir}/*.so
+%{_libdir}/libipmiconsole*.a
+%{_libdir}/libfreeipmi*.a
+%{_libdir}/libipmiconsole*.la
+%{_libdir}/libfreeipmi*.la
 %dir %{_includedir}/freeipmi
 %dir %{_includedir}/freeipmi/udm
 %{_includedir}/*.h
@@ -199,7 +201,19 @@ fi
 %{_mandir}/man8/bmc-watchdog.8*
 %dir /var/log/freeipmi
 
+%files ipmimonitoring
+%defattr(-,root,root)
+%doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
+%config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
+%{_libdir}/libipmimonitoring*
+%{_sbindir}/ipmimonitoring
+%{_mandir}/man8/ipmimonitoring.8*
+%dir /var/cache/ipmimonitoringsdrcache
+
 %changelog
+* Fri Feb 16 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
+- Add ipmimonitoring subpackage.
 * Sun Jul 30 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0-1
 - Re-architect for 0.3.X
 * Mon May 15 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0-1
