@@ -138,7 +138,6 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ZRESEARCH
 %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
 %{_libdir}/*so.0*
 %{_libdir}/*so.3*
