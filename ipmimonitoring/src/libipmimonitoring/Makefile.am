@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.2 2007-02-14 19:36:39 chu11 Exp $
+## $Id: Makefile.am,v 1.3 2007-02-16 20:23:31 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -48,6 +48,9 @@ libipmimonitoring_la_LIBADD = \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../libipmisdrcache/libipmisdrcache.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../../common/src/libfreeipmiportability.la: force-dependency-check

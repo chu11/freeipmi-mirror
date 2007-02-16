@@ -7,6 +7,12 @@
 	Add ipmi-chassis.
 
 	* configure.ac: Fix make dist issue w/ long filenames.
+
+	* ipmimonitoring/src/libipmimonitoring/: Fix flag bitmask bugs.
+	Add support for unlocked memory flag.  Fix build dependency bug.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c: Adjust code
+	appropriately for library changes.
 	
 2007-02-15  Albert Chu <chu11@llnl.gov>
 

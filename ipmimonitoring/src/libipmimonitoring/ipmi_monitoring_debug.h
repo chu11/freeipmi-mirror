@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.h,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.h,v 1.2 2007-02-16 20:23:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,8 +55,6 @@
       } \
       ipmi_monitoring_debug(__err); \
   } while(0)
-
-int ipmi_monitoring_debug_init(unsigned int debug_flags, int *errnum);
 
 void ipmi_monitoring_debug(const char *fmt, ...);
 

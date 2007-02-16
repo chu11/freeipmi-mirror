@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.c,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.c,v 1.2 2007-02-16 20:23:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,17 +48,7 @@
 
 #include "fd.h"
 
-static uint32_t _ipmi_monitoring_debug_flags = 0;
-
-int 
-ipmi_monitoring_debug_init(unsigned int debug_flags, int *errnum)
-{
-  assert(!(debug_flags & ~IPMI_MONITORING_DEBUG_FLAGS_MASK));
-
-  _ipmi_monitoring_debug_flags = debug_flags;
-
-  return 0;
-}
+extern uint32_t _ipmi_monitoring_flags;
 
 static void
 _debug(const char *fmt, va_list ap)
@@ -68,11 +58,11 @@ _debug(const char *fmt, va_list ap)
   assert(fmt);
 
   vsnprintf(errbuf, IPMI_MONITORING_DEBUG_ERROR_BUFLEN, fmt, ap);
-  if (_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_STDOUT)
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDOUT)
     fprintf(stdout, "%s\n", errbuf);
-  if (_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_STDERR)
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDERR)
     fprintf(stderr, "%s\n", errbuf);
-  if (_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_SYSLOG)
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_SYSLOG)
     syslog(LOG_DEBUG, "%s", errbuf);
 }
 
@@ -113,12 +103,12 @@ ipmi_monitoring_inband_dump(char *prefix, fiid_obj_t obj_cmd)
 
   assert(fiid_obj_valid(obj_cmd));
 
-  if (!(_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_IPMI_PACKETS))
+  if (!(_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS))
     return;
 
-  if (_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_STDOUT)
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDOUT)
     fd = STDOUT_FILENO;
-  else if (_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_STDERR)
+  else if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDERR)
     fd = STDERR_FILENO;
   else
     return;
@@ -157,12 +147,12 @@ ipmi_monitoring_outofband_dump(char *prefix,
     "--------------";
   int fd;
 
-  if (!(_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_IPMI_PACKETS))
+  if (!(_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS))
     return;
 
-  if (_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_STDOUT)
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDOUT)
     fd = STDOUT_FILENO;
-  else if (_ipmi_monitoring_debug_flags & IPMI_MONITORING_DEBUG_FLAGS_STDERR)
+  else if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDERR)
     fd = STDERR_FILENO;
   else
     return;

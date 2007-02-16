@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.2 2007-02-16 20:23:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -69,7 +69,7 @@ static int hostname_set = 0;
 static struct ipmi_monitoring_ipmi_config conf;
 static char *username = NULL;
 static char *password = NULL;
-static int debug_flags = 0;
+static int flags = 0;
 
 static void
 _config_init(void)
@@ -213,10 +213,10 @@ _cmdline_parse(int argc, char **argv)
           break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
-          debug_flags |= IPMI_MONITORING_DEBUG_FLAGS_STDERR;
+          flags |= IPMI_MONITORING_FLAGS_DEBUG_STDERR;
           break;
         case 'E':       /* --debugdump */
-          debug_flags |= IPMI_MONITORING_DEBUG_FLAGS_IPMI_PACKETS;
+          flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
           break;
 #endif /* NDEBUG */
         case '?':
@@ -296,7 +296,7 @@ main(int argc, char **argv)
     memset(argv[i], '\0', strlen(argv[i]));
 #endif /* NDEBUG */
 
-  if (ipmi_monitoring_init(debug_flags, &errnum) < 0)
+  if (ipmi_monitoring_init(flags, &errnum) < 0)
     {
       fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
       goto cleanup;

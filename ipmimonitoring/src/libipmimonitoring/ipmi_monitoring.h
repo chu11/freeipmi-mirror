@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.2 2007-02-16 20:23:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -156,13 +156,14 @@ enum ipmi_monitoring_authentication_type
     IPMI_MONITORING_AUTHENTICATION_TYPE_MD5                   = 0x03,
   };
 
-enum ipmi_monitoring_debug_flags
+enum ipmi_monitoring_flags
   {
-    IPMI_MONITORING_DEBUG_FLAGS_NONE         = 0x00,
-    IPMI_MONITORING_DEBUG_FLAGS_STDOUT       = 0x01,
-    IPMI_MONITORING_DEBUG_FLAGS_STDERR       = 0x02,
-    IPMI_MONITORING_DEBUG_FLAGS_SYSLOG       = 0x03,
-    IPMI_MONITORING_DEBUG_FLAGS_IPMI_PACKETS = 0x04,
+    IPMI_MONITORING_FLAGS_NONE               = 0x00,
+    IPMI_MONITORING_FLAGS_DEBUG_STDOUT       = 0x01,
+    IPMI_MONITORING_FLAGS_DEBUG_STDERR       = 0x02,
+    IPMI_MONITORING_FLAGS_DEBUG_SYSLOG       = 0x04,
+    IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS = 0x08,
+    IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY = 0x10,
   };
 
 enum ipmi_monitoring_workaround_flags
@@ -518,7 +519,7 @@ typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
  *
  * Returns 0 on success, -1 on error
  */
-int ipmi_monitoring_init(unsigned int debug_flags, int *errnum);
+int ipmi_monitoring_init(unsigned int flags, int *errnum);
 
 /* 
  * ipmi_monitoring_ctx_create

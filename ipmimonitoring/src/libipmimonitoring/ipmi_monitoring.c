@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.2 2007-01-31 16:48:18 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.3 2007-02-16 20:23:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,6 +78,8 @@ static char *ipmi_monitoring_errmsgs[] =
 
 static int _ipmi_monitoring_initialized = 0;
 
+uint32_t _ipmi_monitoring_flags = 0;
+
 static void
 _init_ctx(ipmi_monitoring_ctx_t c)
 {
@@ -115,7 +117,10 @@ _destroy_ctx(ipmi_monitoring_ctx_t c)
   c->current_sensor_reading = NULL; 
 
   c->magic = ~IPMI_MONITORING_MAGIC;
-  secure_free(c, sizeof(struct ipmi_monitoring_ctx));
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
+    free(c);
+  else
+    secure_free(c, sizeof(struct ipmi_monitoring_ctx));
 }
 
 ipmi_monitoring_ctx_t 
@@ -123,8 +128,16 @@ ipmi_monitoring_ctx_create(void)
 {
   struct ipmi_monitoring_ctx *c = NULL;
 
-  if (!(c = (ipmi_monitoring_ctx_t)secure_malloc(sizeof(struct ipmi_monitoring_ctx))))
-    return NULL;
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
+    {
+      if (!(c = (ipmi_monitoring_ctx_t)malloc(sizeof(struct ipmi_monitoring_ctx))))
+        return NULL;
+    }
+  else
+    {
+      if (!(c = (ipmi_monitoring_ctx_t)secure_malloc(sizeof(struct ipmi_monitoring_ctx))))
+        return NULL;
+    }
   c->magic = IPMI_MONITORING_MAGIC;
 
   if (!(c->sensor_readings = list_create((ListDelF)free)))
@@ -164,9 +177,9 @@ ipmi_monitoring_ctx_strerror(int errnum)
 }
 
 int 
-ipmi_monitoring_init(unsigned int debug_flags, int *errnum)
+ipmi_monitoring_init(unsigned int flags, int *errnum)
 {
-  if (debug_flags & ~IPMI_MONITORING_DEBUG_FLAGS_MASK)
+  if (flags & ~IPMI_MONITORING_FLAGS_MASK)
     {
       if (errnum)
         *errnum = IPMI_MONITORING_ERR_PARAMETERS;
@@ -176,14 +189,10 @@ ipmi_monitoring_init(unsigned int debug_flags, int *errnum)
   if (_ipmi_monitoring_initialized)
     return 0;
 
-  /* Do debug_init first, so sensor config can output debug info */
-  if (ipmi_monitoring_debug_init(debug_flags, errnum) < 0)
-    return -1;
-
   if (ipmi_monitoring_sensor_config(errnum) < 0)
     return -1;
 
-
+  _ipmi_monitoring_flags = flags;
   _ipmi_monitoring_initialized++;
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;

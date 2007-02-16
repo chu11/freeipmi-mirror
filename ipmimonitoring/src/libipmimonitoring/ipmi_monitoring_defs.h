@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.2 2007-02-16 20:23:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -87,12 +87,13 @@
           || (__val) == IPMI_MONITORING_AUTHENTICATION_TYPE_MD2 \
           || (__val) == IPMI_MONITORING_AUTHENTICATION_TYPE_MD5) ? 1 : 0)
 
-#define IPMI_MONITORING_DEBUG_FLAGS_MASK \
-  (IPMI_MONITORING_DEBUG_FLAGS_NONE \
-   | IPMI_MONITORING_DEBUG_FLAGS_STDOUT \
-   | IPMI_MONITORING_DEBUG_FLAGS_STDERR \
-   | IPMI_MONITORING_DEBUG_FLAGS_SYSLOG \
-   | IPMI_MONITORING_DEBUG_FLAGS_IPMI_PACKETS)
+#define IPMI_MONITORING_FLAGS_MASK \
+  (IPMI_MONITORING_FLAGS_NONE \
+   | IPMI_MONITORING_FLAGS_DEBUG_STDOUT \
+   | IPMI_MONITORING_FLAGS_DEBUG_STDERR \
+   | IPMI_MONITORING_FLAGS_DEBUG_SYSLOG \
+   | IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS \
+   | IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
 
 #define IPMI_MONITORING_WORKAROUND_FLAGS_MASK \
   (IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO)
