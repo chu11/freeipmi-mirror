@@ -1,3 +1,8 @@
+2007-02-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/ipmiconsole/Makefile.am: Remove unnecessary
+	compile option.
+	
 2007-02-15  Albert Chu <chu11@llnl.gov>
 
 	* DISCLAIMER.ZRESEARCH: Removed.
