@@ -188,7 +188,7 @@ fi
 %{_libdir}/libfreeipmi*.la
 %dir %{_includedir}/freeipmi
 %dir %{_includedir}/freeipmi/udm
-%{_includedir}/*.h
+%{_includedir}/ipmiconsole.h
 %{_includedir}/freeipmi/*.h
 %{_includedir}/freeipmi/udm/*.h
 %{_mandir}/man3/*
@@ -208,6 +208,7 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
 %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
+%{_includedir}/ipmi_monitoring.h
 %{_libdir}/libipmimonitoring*
 %{_sbindir}/ipmimonitoring
 %{_mandir}/man8/ipmimonitoring.8*
