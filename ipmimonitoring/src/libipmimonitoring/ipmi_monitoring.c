@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.4 2007-02-17 01:40:52 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.5 2007-02-17 03:14:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,11 +132,13 @@ ipmi_monitoring_ctx_create(void)
     {
       if (!(c = (ipmi_monitoring_ctx_t)malloc(sizeof(struct ipmi_monitoring_ctx))))
         return NULL;
+      secure_memset(c, '\0', sizeof(struct ipmi_monitoring_ctx));
     }
   else
     {
       if (!(c = (ipmi_monitoring_ctx_t)secure_malloc(sizeof(struct ipmi_monitoring_ctx))))
         return NULL;
+      /* secure_memset called in secure_malloc()*/
     }
   c->magic = IPMI_MONITORING_MAGIC;
 
