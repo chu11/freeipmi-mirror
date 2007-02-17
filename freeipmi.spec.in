@@ -182,10 +182,10 @@ fi
 %doc %{_datadir}/doc/%{name}/examples/udm-test.c
 %doc %{_datadir}/doc/%{name}/freeipmi-hackers-intro.odp
 %doc %{_datadir}/doc/%{name}/ipmi-network-layout.fig
-%{_libdir}/libipmiconsole*.a
-%{_libdir}/libfreeipmi*.a
-%{_libdir}/libipmiconsole*.la
-%{_libdir}/libfreeipmi*.la
+%{_libdir}/libipmiconsole.a
+%{_libdir}/libfreeipmi.a
+%{_libdir}/libipmiconsole.la
+%{_libdir}/libfreeipmi.la
 %dir %{_includedir}/freeipmi
 %dir %{_includedir}/freeipmi/udm
 %{_includedir}/ipmiconsole.h
