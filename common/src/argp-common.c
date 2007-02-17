@@ -128,7 +128,11 @@ common_parse_opt (int key,
     case DRIVER_DEVICE_KEY:
       if (cmd_args->driver_device != NULL)
 	free (cmd_args->driver_device);
-      cmd_args->driver_device = strdup (arg);
+      if (!(cmd_args->driver_device = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
     case REGISTER_SPACING_KEY:
       {
@@ -170,7 +174,11 @@ common_parse_opt (int key,
     case HOSTNAME_KEY:
       if (cmd_args->host != NULL)
 	free (cmd_args->host);
-      cmd_args->host = strdup (arg);
+      if (!(cmd_args->host = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
     case USERNAME_KEY:
       if (strlen (arg) > IPMI_MAX_USER_NAME_LENGTH)
@@ -179,7 +187,11 @@ common_parse_opt (int key,
 	{
 	  if (cmd_args->username != NULL)
 	    free (cmd_args->username);
-	  cmd_args->username = strdup (arg);
+	  if (!(cmd_args->username = strdup (arg)))
+            {
+              perror("strdup");
+              exit(1);
+            }
 	}
       break;
     case PASSWORD_KEY:
@@ -189,7 +201,11 @@ common_parse_opt (int key,
 	{
 	  if (cmd_args->password != NULL)
 	    free (cmd_args->password);
-	  cmd_args->password = strdup (arg);
+	  if (!(cmd_args->password = strdup (arg)))
+            {
+              perror("strdup");
+              exit(1);
+            }
 	}
       break;
     case PASSWORD_PROMPT_KEY:
@@ -198,7 +214,11 @@ common_parse_opt (int key,
       arg = getpass ("Password: ");
       if (arg && strlen (arg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
         argp_usage (state);
-      cmd_args->password = strdup (arg);
+      if (!(cmd_args->password = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
     case RETRY_TIMEOUT_KEY:
       {

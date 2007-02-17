@@ -2,6 +2,9 @@
 
 	* freeipmi.spec.in: Put ipmi_monitoring.h into the ipmimonitoring
 	subpackage. General cleanup.
+
+	* common/src/argp-common.c (common_parse_opt): Check for NULL on
+	strdup.
 		
 2007-02-16  Albert Chu <chu11@llnl.gov>
 
