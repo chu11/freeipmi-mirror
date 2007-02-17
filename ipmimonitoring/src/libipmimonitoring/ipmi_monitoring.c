@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.3 2007-02-16 20:23:31 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.4 2007-02-17 01:40:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -141,7 +141,13 @@ ipmi_monitoring_ctx_create(void)
   c->magic = IPMI_MONITORING_MAGIC;
 
   if (!(c->sensor_readings = list_create((ListDelF)free)))
-    return NULL;
+    {
+      if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
+        free(c);
+      else
+        secure_free(c, sizeof(struct ipmi_monitoring_ctx));
+      return NULL;
+    }
 
   _init_ctx(c);
   return c;
