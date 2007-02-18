@@ -68,6 +68,45 @@ get_token (char **line)
 }
 
 int 
+remove_newline (char *str)
+{
+  int rv = -1;
+  int len = 0;
+
+  if (str == NULL)
+    return 0;
+  if ((len = strlen (str)) == 0)
+    return 0;
+
+  if (str[len - 1] == '\n')
+    {
+      str[--len] = '\0';
+      rv = 0;
+    }
+  if (str[len - 1] == '\r')
+    {
+      str[--len] = '\0';
+      rv = 0;
+    }
+
+  return rv;
+}
+
+char *
+strsep_noempty (char **strp, char *delims)
+{
+  char *token = NULL;
+  
+  do
+    {
+      token = strsep (strp, delims);
+    }
+  while (token != NULL && token[0] == '\0');
+  
+  return token;
+}
+
+int 
 str2long (char *str, int base, long *l)
 {
   long value;

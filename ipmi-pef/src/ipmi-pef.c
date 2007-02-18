@@ -34,6 +34,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "argp-common.h"
 #include "ipmi-common.h"
+#include "ipmi-pef-utils.h"
 #include "ipmi-pef-argp.h"
 #include "ipmi-pef-wrapper.h"
 #include "ipmi-pef.h"
@@ -92,13 +93,36 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
   int rv = 0;
   int num_event_filters;
   int filter;
+  int i;
+  char *group;
   
   if (get_number_of_event_filters (state_data->dev, &num_event_filters) != 0)
     return (-1);
   
+  fprintf (fp, "### Sensor types:\n");
+  for (i = 0; ipmi_sensor_types[i]; i++)
+    {
+      if (!(group = strdupa (ipmi_sensor_types[i])))
+        {
+          fprintf (stderr, "strdupa: %s\n", strerror(errno));
+          return (-1);
+        }
+      strchr_replace (group, ' ', '_');
+      fprintf (fp, "## %s\n", group);
+    }
+  if (!(group = strdupa (ipmi_oem_sensor_type)))
+    {
+      fprintf (stderr, "strdupa: %s\n", strerror(errno));
+      return (-1);
+    }
+  strchr_replace (group, ' ', '_');
+  fprintf (fp, "## %s\n", group);
+  fprintf (fp, "### \n");
+  
   for (filter = 1; filter < num_event_filters; filter++)
     {
       pef_event_filter_table_t evt;
+      char *value_string = NULL;
       
       memset (&evt, 0, sizeof (pef_event_filter_table_t));
       
@@ -108,49 +132,263 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  rv = -1;
 	  continue;
 	}
-      fprintf (fp, "Filter_Number = %d\n", evt.filter_number);
-      /* fprintf (fp, "# manufacturer pre-configured filter = 2, software configurable filter = 0, reserved = 1 or 3.\n"); */
-      fprintf (fp, "Filter_Type = %d\n", evt.filter_type);
-      fprintf (fp, "Enable_Filter = %s\n", 
-	       (evt.enable_filter ? "Yes" : "No"));
-      fprintf (fp, "Event_filter_Action_Alert = %s\n", 
-	       (evt.event_filter_action_alert ? "Yes" : "No"));
-      fprintf (fp, "Event_Filter_Action_Power_Off = %s\n", 
-	       (evt.event_filter_action_power_off ? "Yes" : "No"));
-      fprintf (fp, "Event_Filter_Action_Reset = %s\n", 
-	       (evt.event_filter_action_reset ? "Yes" : "No"));
-      fprintf (fp, "Event_Filter_Action_Power_Cycle = %s\n", 
-	       (evt.event_filter_action_power_cycle ? "Yes" : "No"));
-      fprintf (fp, "Event_Filter_Action_OEM = %s\n", 
-	       (evt.event_filter_action_oem ? "Yes" : "No"));
-      fprintf (fp, "Event_Filter_Action_Diagnostic_Interrupt = %s\n", 
-	       (evt.event_filter_action_diagnostic_interrupt ? "Yes" : "No"));
-      fprintf (fp, "Event_Filter_Action_Group_Control_Operation = %s\n", 
-	       (evt.event_filter_action_group_control_operation ? "Yes" : "No"));
-      fprintf (fp, "Alert_Policy_Number = %d\n", evt.alert_policy_number);
-      fprintf (fp, "Group_Control_Selector = %d\n", evt.group_control_selector);
-      /* fprintf (fp, "# 0x0 = unspecified, 0x1 = Monitor, 0x2 = Information, 0x4 = OK (return to OK condition), 0x8 = Non-critical condition, 0x10 = Critical condition, 0x20 = Non-recoverable condition\n"); */
-      fprintf (fp, "Event_Severity = 0x%X\n", evt.event_severity);
-      /* fprintf (fp, "# 0xFF = Match any\n"); */
-      fprintf (fp, "Generator_ID_Byte1 = 0x%X\n", evt.generator_id_byte1);
-      /* fprintf (fp, "# 0xFF = Match any\n"); */
-      fprintf (fp, "Generator_ID_Byte2 = 0x%X\n", evt.generator_id_byte2);
-      /* fprintf (fp, "# 0xFF = Match any\n"); */
-      fprintf (fp, "Sensor_Type = 0x%X\n", evt.sensor_type);
-      /* fprintf (fp, "# 0xFF = Match any\n"); */
-      fprintf (fp, "Sensor_Number = 0x%X\n", evt.sensor_number);
-      /* fprintf (fp, "# 0xFF = Match any\n"); */
-      fprintf (fp, "Event_Trigger = 0x%X\n", evt.event_trigger);
-      fprintf (fp, "Event_Data1_Offset_Mask = 0x%X\n", evt.event_data1_offset_mask);
-      fprintf (fp, "Event_Data1_AND_Mask = 0x%X\n", evt.event_data1_AND_mask);
-      fprintf (fp, "Event_Data1_Compare1 = 0x%X\n", evt.event_data1_compare1);
-      fprintf (fp, "Event_Data1_Compare2 = 0x%X\n", evt.event_data1_compare2);
-      fprintf (fp, "Event_Data2_AND_Mask = 0x%X\n", evt.event_data2_AND_mask);
-      fprintf (fp, "Event_Data2_Compare1 = 0x%X\n", evt.event_data2_compare1);
-      fprintf (fp, "Event_Data2_Compare2 = 0x%X\n", evt.event_data2_compare2);
-      fprintf (fp, "Event_Data3_AND_Mask = 0x%X\n", evt.event_data3_AND_mask);
-      fprintf (fp, "Event_Data3_Compare1 = 0x%X\n", evt.event_data3_compare1);
-      fprintf (fp, "Event_Data3_Compare2 = 0x%X\n", evt.event_data3_compare2);
+      
+      if (filter_number_to_string (evt.filter_number, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   FILTER_NUMBER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (filter_type_to_string (evt.filter_type, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "## Possible values: Manufacturer_Pre_Configured/Software_Configurable\n");
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   FILTER_TYPE_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (enable_filter_to_string (evt.enable_filter, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   ENBALE_FILTER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_filter_action_alert_to_string (evt.event_filter_action_alert, 
+					       &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_filter_action_power_off_to_string (evt.event_filter_action_power_off, 
+						   &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_filter_action_reset_to_string (evt.event_filter_action_reset, 
+					       &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_FILTER_ACTION_RESET_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_filter_action_power_cycle_to_string (evt.event_filter_action_power_cycle, 
+						     &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_filter_action_oem_to_string (evt.event_filter_action_oem, 
+					     &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_FILTER_ACTION_OEM_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_filter_action_diagnostic_interrupt_to_string (evt.event_filter_action_diagnostic_interrupt, 
+							      &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_filter_action_group_control_operation_to_string (evt.event_filter_action_group_control_operation, 
+								 &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (alert_policy_number_to_string (evt.alert_policy_number, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   ALERT_POLICY_NUMBER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (group_control_selector_to_string (evt.group_control_selector, 
+					    &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   GROUP_CONTROL_SELECTOR_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_severity_to_string (evt.event_severity, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "## Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable\n");
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_SEVERITY_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (generator_id_byte1_to_string (evt.generator_id_byte1, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "## Possible values: Hex value or Match_Any\n");
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   GENERATOR_ID_BYTE1_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (generator_id_byte2_to_string (evt.generator_id_byte2, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "## Possible values: Hex value or Match_Any\n");
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   GENERATOR_ID_BYTE2_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (sensor_type_to_string (evt.sensor_type, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "## Possible values: Sensor type or Match_Any\n");
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   SENSOR_TYPE_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (sensor_number_to_string (evt.sensor_number, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "## Possible values: Sensor number or Match_Any\n");
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   SENSOR_NUMBER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_trigger_to_string (evt.event_trigger, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "## Possible values: Threshold/Generic_Discrete_0xXX/Sensor_Specific_Discrete/OEM_0xXX/Match_Any\n");
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_TRIGGER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data1_offset_mask_to_string (evt.event_data1_offset_mask, 
+					     &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data1_AND_mask_to_string (evt.event_data1_AND_mask, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA1_AND_MASK_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data1_compare1_to_string (evt.event_data1_compare1, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA1_COMPARE1_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data1_compare2_to_string (evt.event_data1_compare2, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA1_COMPARE2_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data2_AND_mask_to_string (evt.event_data2_AND_mask, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA2_AND_MASK_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data2_compare1_to_string (evt.event_data2_compare1, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA2_COMPARE1_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data2_compare2_to_string (evt.event_data2_compare2, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA2_COMPARE2_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data3_AND_mask_to_string (evt.event_data3_AND_mask, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA3_AND_MASK_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data3_compare1_to_string (evt.event_data3_compare1, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA3_COMPARE1_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      if (event_data3_compare2_to_string (evt.event_data3_compare2, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-40s %s\n", 
+		   EVENT_DATA3_COMPARE2_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
       fprintf (fp, "\n");
     }
   

@@ -20,8 +20,12 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #ifndef _COMMON_UTILS_H
 #define _COMMON_UTILS_H
 
+#define STRING_WHITESPACES    " \f\n\r\t\v"
+
 char *stripwhite (char *string);
 char *get_token (char **line);
+int remove_newline (char *str);
+char *strsep_noempty (char **strp, char *delims);
 int str2long (char *str, int base, long *l);
 int str2ulong (char *str, int base, unsigned long *ul);
 int str2int (char *str, int base, int *i);

@@ -41,239 +41,440 @@
 
 #include "common-utils.h"
 
+#include "ipmi-pef-utils.h"
 #include "ipmi-pef-wrapper.h"
 
-#define GET_INT_VALUE_BY_KEY(__cache_record, __key, __i) \
-do 							 \
-  {							 \
-    if (_get_int_value_by_key (__cache_record, 		 \
-			       __key, 			 \
-			       __i) == -1)      	 \
-      {							 \
-	return (-1);					 \
-      }							 \
-  }                                                      \
- while (0)
+#define COMMENT_CHAR    '#'
 
-
-#define GET_STRING_VALUE_BY_KEY(__cache_record, __key, __s)  \
-do 							     \
-  {							     \
-    if (_get_string_value_by_key (__cache_record, 	     \
-				  __key, 		     \
-				  __s) == -1)		     \
-      {							     \
-	return (-1);					     \
-      }							     \
-  }                                                          \
- while (0)
+#define GET_VALUE_STRING_BY_KEY_RETURN(__cache_record, __key, __value)  \
+  do									\
+    {									\
+      char *local_value_string = NULL;					\
+      if (_get_value_string_by_key (__cache_record,			\
+				    __key,				\
+				    &local_value_string) == -1)		\
+	{								\
+	  return (-1);							\
+	}								\
+      __value = strdupa (value_string);					\
+      free (value_string);						\
+    }									\
+  while (0)
 
 
 static int 
-_get_value_by_key (char *cache_record, 
-		   char *key, 
-		   char **value)
+_get_value_string_by_key (const char *cache_record, 
+			  const char *key, 
+			  char **value)
 {
-  char *skey = NULL;
-  char *start_pos = NULL;
-  char *value_ptr = NULL;
-  char *value_end_ptr = NULL;
+  const char *buf = NULL;
   
-  skey = alloca (strlen (key) + 3);
-  strcpy (skey, key);
-  strcat (skey, "=");
+  buf = cache_record;
   
-  start_pos = strcasestr (cache_record, skey);
-  if (start_pos != cache_record)
+  while (buf)
     {
-      strcpy (skey, "\n");
-      strcat (skey, key);
-      strcat (skey, "=");
-      start_pos = strcasestr (cache_record, skey);
+      char *line_pos = NULL;
+      char *line = NULL;
+      char *token = NULL;
+      
+      if ((line_pos = strchr (buf, '\n')) == NULL)
+	{
+	  line = strdupa (buf);
+	  buf = NULL;
+	}
+      else 
+	{
+	  int len = line_pos - buf;
+	  line = strndupa (buf, len);
+	  buf += (len + 1);
+	}
+      
+      if ((token = strsep_noempty (&line, STRING_WHITESPACES)) == NULL)
+	continue;
+      
+      if (strcasecmp (token, key) == 0)
+	{
+	  *value = strdup (stripwhite (line));
+	  return 0;
+	}
     }
   
-  if (start_pos == NULL)
-    return (-1);
-  
-  value_ptr = start_pos + strlen (skey);
-  value_end_ptr = strcasestr (value_ptr, "\n");
-  if (value_end_ptr == NULL)
-    {
-      *value = strdup (value_ptr);
-      return 0;
-    }
-  *value = strndup (value_ptr, (value_end_ptr - value_ptr));
-  return 0;
+  return -1;
 }
 
 static int 
-_get_int_value_by_key (char *cache_record, 
-		       char *key, 
-		       int *i)
-{
-  char *value_ptr = NULL;
-  int rv = 0;
-  
-  if (_get_value_by_key (cache_record, 
-			 key, 
-			 &value_ptr) == -1)
-    {
-      return (-1);
-    }
-  
-  rv = str2int (value_ptr, 0, i);
-  
-  free (value_ptr);
-  
-  return rv;
-}
-
-static int 
-_get_string_value_by_key (char *cache_record, 
-			  char *key, 
-			  char **s)
-{
-  char *value_ptr = NULL;
-  
-  if (_get_value_by_key (cache_record, 
-			 key, 
-			 &value_ptr) == -1)
-    {
-      return (-1);
-    }
-  
-  *s = value_ptr;
-  
-  return 0;
-}
-
-static int 
-_read_evt (char *record, pef_event_filter_table_t *evt)
+_record_string_to_evt (const char *record_string, 
+		       pef_event_filter_table_t *evt)
 {
   int int_value = 0;
-  char *string_value = NULL;
   
-  ERR_EINVAL (record && evt);
+  char *value_string = NULL;
   
-  GET_INT_VALUE_BY_KEY (record, 
-			"Filter_Number", 
-			&int_value);
+  ERR_EINVAL (record_string && evt);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  FILTER_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_filter_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       FILTER_NUMBER_KEY_STRING);
+      return -1;
+    }
   evt->filter_number = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Filter_Type", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  FILTER_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_filter_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       FILTER_TYPE_KEY_STRING);
+      return -1;
+    }
   evt->filter_type = int_value;
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Enable_Filter", 
-			   &string_value);
-  evt->enable_filter = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Event_filter_Action_Alert", 
-			   &string_value);
-  evt->event_filter_action_alert = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Event_Filter_Action_Power_Off", 
-			   &string_value);
-  evt->event_filter_action_power_off = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Event_Filter_Action_Reset", 
-			   &string_value);
-  evt->event_filter_action_reset = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Event_Filter_Action_Power_Cycle", 
-			   &string_value);
-  evt->event_filter_action_power_cycle = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Event_Filter_Action_OEM", 
-			   &string_value);
-  evt->event_filter_action_oem = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Event_Filter_Action_Diagnostic_Interrupt", 
-			   &string_value);
-  evt->event_filter_action_diagnostic_interrupt = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_STRING_VALUE_BY_KEY (record, 
-			   "Event_Filter_Action_Group_Control_Operation", 
-			   &string_value);
-  evt->event_filter_action_group_control_operation = (strcasecmp (string_value, "Yes") == 0) ? 1 : 0;
-  free (string_value);
-  GET_INT_VALUE_BY_KEY (record, 
-			"Alert_Policy_Number", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  ENBALE_FILTER_KEY_STRING, 
+				  value_string);
+  if (string_to_enable_filter (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       ENBALE_FILTER_KEY_STRING);
+      return -1;
+    }
+  evt->enable_filter = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_ALERT_KEY_STRING);
+      return -1;
+    }
+  evt->event_filter_action_alert = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING);
+      return -1;
+    }
+  evt->event_filter_action_power_off = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_RESET_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_RESET_KEY_STRING);
+      return -1;
+    }
+  evt->event_filter_action_reset = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING);
+      return -1;
+    }
+  evt->event_filter_action_power_cycle = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_OEM_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_oem (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_OEM_KEY_STRING);
+      return -1;
+    }
+  evt->event_filter_action_oem = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_diagnostic_interrupt (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING);
+      return -1;
+    }
+  evt->event_filter_action_diagnostic_interrupt = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_group_control_operation (value_string, 
+							     &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING);
+      return -1;
+    }
+  evt->event_filter_action_group_control_operation = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  ALERT_POLICY_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_policy_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       ALERT_POLICY_NUMBER_KEY_STRING);
+      return -1;
+    }
   evt->alert_policy_number = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Group_Control_Selector", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  GROUP_CONTROL_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_group_control_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       GROUP_CONTROL_SELECTOR_KEY_STRING);
+      return -1;
+    }
   evt->group_control_selector = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Severity", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_SEVERITY_KEY_STRING, 
+				  value_string);
+  if (string_to_event_severity (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_SEVERITY_KEY_STRING);
+      return -1;
+    }
   evt->event_severity = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Generator_ID_Byte1", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  GENERATOR_ID_BYTE1_KEY_STRING, 
+				  value_string);
+  if (string_to_generator_id_byte1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       GENERATOR_ID_BYTE1_KEY_STRING);
+      return -1;
+    }
   evt->generator_id_byte1 = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Generator_ID_Byte2", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  GENERATOR_ID_BYTE2_KEY_STRING, 
+				  value_string);
+  if (string_to_generator_id_byte2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       GENERATOR_ID_BYTE2_KEY_STRING);
+      return -1;
+    }
   evt->generator_id_byte2 = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Sensor_Type", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  SENSOR_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_sensor_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       SENSOR_TYPE_KEY_STRING);
+      return -1;
+    }
   evt->sensor_type = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Sensor_Number", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  SENSOR_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_sensor_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       SENSOR_NUMBER_KEY_STRING);
+      return -1;
+    }
   evt->sensor_number = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Trigger", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_TRIGGER_KEY_STRING, 
+				  value_string);
+  if (string_to_event_trigger (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_TRIGGER_KEY_STRING);
+      return -1;
+    }
   evt->event_trigger = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data1_Offset_Mask", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_offset_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_OFFSET_MASK_KEY_STRING);
+      return -1;
+    }
   evt->event_data1_offset_mask = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data1_AND_Mask", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_AND_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_AND_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_AND_MASK_KEY_STRING);
+      return -1;
+    }
   evt->event_data1_AND_mask = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data1_Compare1", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_COMPARE1_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_compare1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_COMPARE1_KEY_STRING);
+      return -1;
+    }
   evt->event_data1_compare1 = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data1_Compare2", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_COMPARE2_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_compare2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_COMPARE2_KEY_STRING);
+      return -1;
+    }
   evt->event_data1_compare2 = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data2_AND_Mask", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA2_AND_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data2_AND_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA2_AND_MASK_KEY_STRING);
+      return -1;
+    }
   evt->event_data2_AND_mask = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data2_Compare1", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA2_COMPARE1_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data2_compare1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA2_COMPARE1_KEY_STRING);
+      return -1;
+    }
   evt->event_data2_compare1 = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data2_Compare2", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA2_COMPARE2_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data2_compare2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA2_COMPARE2_KEY_STRING);
+      return -1;
+    }
   evt->event_data2_compare2 = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data3_AND_Mask", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA3_AND_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data3_AND_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA3_AND_MASK_KEY_STRING);
+      return -1;
+    }
   evt->event_data3_AND_mask = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data3_Compare1", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA3_COMPARE1_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data3_compare1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA3_COMPARE1_KEY_STRING);
+      return -1;
+    }
   evt->event_data3_compare1 = int_value;
-  GET_INT_VALUE_BY_KEY (record, 
-			"Event_Data3_Compare2", 
-			&int_value);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA3_COMPARE2_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data3_compare2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA3_COMPARE2_KEY_STRING);
+      return -1;
+    }
   evt->event_data3_compare2 = int_value;
   
   return 0;
@@ -310,6 +511,11 @@ _fread_record (FILE *fp, char **cache_record)
 	      *cache_record = strdup (record);
 	    }
 	  return 0;
+	}
+      
+      if (line[0] == COMMENT_CHAR)
+	{
+	  continue;
 	}
       
       {
@@ -621,7 +827,7 @@ get_evt_list (FILE *fp, pef_event_filter_table_t **evt_list, int *count)
   for (i = 0; i < l_count; i++)
     {
       _fread_record (fp, &record);
-      rv = _read_evt (record, (l_evt_list + i));
+      rv = _record_string_to_evt (record, &l_evt_list[i]);
       free (record);
       if (rv != 0)
 	{

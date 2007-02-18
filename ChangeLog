@@ -1,3 +1,17 @@
+2007-02-18  A Balamurugan  <bala@zresearch.com>
+
+	* configure.ac: fix of automake init.
+
+	* common/src/common-utils.c (remove_newline,strsep_noempty): new
+	functions.
+
+	* ipmi-pef/src/Makefile.am: updated.
+
+	* ipmi-pef/src/ipmi-pef-utils.[ch]: new files.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c, ipmi-pef/src/ipmi-pef.c:
+	changes made for new configuration format.
+
 2007-02-17  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Put ipmi_monitoring.h into the ipmimonitoring
