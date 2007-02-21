@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.15 2006-09-05 15:43:24 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.16 2007-02-21 19:43:47 balamurugan Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -218,6 +218,23 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "parameter_selector.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7, "alert_policy_entry_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "alert_policy_entry_number.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "policy_number.policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "policy_number.enabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "policy_number.policy_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_destination.destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_destination.channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7, "alert_string_key.alert_string_set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "alert_string_key.event_specific_alert_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_pef_configuration_parameters_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -406,6 +423,24 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs =
     {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {128, "string_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7, "alert_policy_entry_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "alert_policy_entry_number.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "policy_number.policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "policy_number.enabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "policy_number.policy_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_destination.destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_destination.channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7, "alert_string_key.alert_string_set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "alert_string_key.event_specific_alert_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -781,6 +816,41 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
 
   return 0; 
 } 
+
+
+int8_t 
+fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_policy_entry_number, 
+							      uint8_t policy, 
+							      uint8_t policy_enabled, 
+							      uint8_t policy_number, 
+							      uint8_t destination_selector, 
+							      uint8_t channel_number, 
+							      uint8_t alert_string_set_selector, 
+							      uint8_t event_specific_alert_string, 
+							      fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_ALERT_POLICY_TABLE_POLICY_VALID (policy) && 
+	      IPMI_ALERT_POLICY_ENABLED_DISABLED_VALID (policy_enabled) && 
+	      IPMI_ALERT_STRING_KEY_VALID (event_specific_alert_string) && 
+	      fiid_obj_valid (obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, 
+			     tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq);
+  
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_ALERT_POLICY_TABLE);
+  FIID_OBJ_SET (obj_cmd_rq, "alert_policy_entry_number", alert_policy_entry_number);
+  FIID_OBJ_SET (obj_cmd_rq, "policy_number.policy", policy);
+  FIID_OBJ_SET (obj_cmd_rq, "policy_number.enabled", policy_enabled);
+  FIID_OBJ_SET (obj_cmd_rq, "policy_number.policy_number", policy_number);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_destination.destination_selector", destination_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_destination.channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "alert_string_key.alert_string_set_selector", alert_string_set_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "alert_string_key.event_specific_alert_string", event_specific_alert_string);
+  
+  return 0;
+}
 
 
 int8_t

@@ -1,3 +1,20 @@
+2007-02-21  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/include/freeipmi/ipmi-pef-and-alerting-cmds.h: added
+	table policy table macros.
+
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c: added fiids
+	tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq
+	and
+	tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs,
+	and function
+	fill_cmd_set_pef_configuration_parameters_alert_policy_table().
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_alert_policy_table,
+	ipmi_cmd_get_pef_configuration_parameters_alert_policy_table): new
+	functions.
+
 2007-02-18  A Balamurugan  <bala@zresearch.com>
 
 	* configure.ac: fix of automake init.

@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.7 2006-12-15 17:26:44 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.8 2007-02-21 19:43:47 balamurugan Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -230,6 +230,32 @@ extern "C" {
         (((__val) == IPMI_GET_PEF_PARAMETER \
           || (__val) == IPMI_GET_PEF_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
+
+#define IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION                     0x0
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY                               0x1
+#define IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES                     0x2
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL             0x3
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE    0x4
+#define IPMI_ALERT_POLICY_TABLE_POLICY_VALID(__val) \
+  (((__val) == IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION ||	\
+    (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY ||		\
+    (__val) == IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES ||	\
+    (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL || \
+    (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE) ? 1 : 0)
+
+#define IPMI_ALERT_POLICY_DISABLED    0x0
+#define IPMI_ALERT_POLICY_ENABLED     0x1
+#define IPMI_ALERT_POLICY_ENABLED_DISABLED_VALID(__val) \
+  (((__val) == IPMI_ALERT_POLICY_DISABLED ||		\
+    (__val) == IPMI_ALERT_POLICY_ENABLED) ? 1 : 0)
+
+#define IPMI_ALERT_STRING_KEY_NOT_EVENT_SPECIFIC    0x0
+#define IPMI_ALERT_STRING_KEY_EVENT_SPECIFIC        0x1
+#define IPMI_ALERT_STRING_KEY_VALID(__val)			\
+  (((__val) == IPMI_ALERT_STRING_KEY_NOT_EVENT_SPECIFIC ||	\
+    (__val) == IPMI_ALERT_STRING_KEY_EVENT_SPECIFIC) ? 1 : 0)
+
+
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rs;
 
@@ -246,6 +272,7 @@ extern fiid_template_t tmpl_cmd_set_pef_configuration_parameters_event_filter_ta
 extern fiid_template_t tmpl_cmd_set_pef_configuration_parameters_event_filter_table_data1_rq;
 extern fiid_template_t tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq;
 extern fiid_template_t tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq;
+extern fiid_template_t tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq;
 
 extern fiid_template_t tmpl_cmd_get_pef_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_pef_configuration_parameters_rs;
@@ -260,6 +287,8 @@ extern fiid_template_t tmpl_cmd_get_pef_configuration_parameters_number_of_alert
 extern fiid_template_t tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs;
 extern fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs;
 extern fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs;
+extern fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs;
+
 
 extern fiid_template_t tmpl_cmd_set_last_processed_event_id_rq;
 extern fiid_template_t tmpl_cmd_set_last_processed_event_id_rs;
@@ -348,6 +377,17 @@ int8_t fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_s
                                                                 uint8_t *string_data,
                                                                 uint32_t string_data_len,
                                                                 fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_policy_entry_number, 
+								     uint8_t policy, 
+								     uint8_t policy_enabled, 
+								     uint8_t policy_number, 
+								     uint8_t destination_selector, 
+								     uint8_t channel_number, 
+								     uint8_t alert_string_set_selector, 
+								     uint8_t event_specific_alert_string, 
+								     fiid_obj_t obj_cmd_rq);
+
 
 int8_t fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
 						  uint8_t get_parameter,

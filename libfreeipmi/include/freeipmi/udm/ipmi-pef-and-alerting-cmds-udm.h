@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.6 2006-12-15 17:26:44 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.7 2007-02-21 19:43:47 balamurugan Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
@@ -98,6 +98,16 @@ int8_t ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi
 									    uint8_t filter_configuration_type,
 									    uint8_t filter_configuration_filter,
 									    fiid_obj_t obj_cmd_rs);
+uint8_t ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_device_t dev, 
+								      uint8_t alert_policy_entry_number, 
+								      uint8_t policy, 
+								      uint8_t policy_enabled, 
+								      uint8_t policy_number, 
+								      uint8_t destination_selector, 
+								      uint8_t channel_number, 
+								      uint8_t alert_string_set_selector, 
+								      uint8_t event_specific_alert_string, 
+								      fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_device_t dev, 
 							      uint8_t get_parameter, 
@@ -164,6 +174,11 @@ int8_t ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_device_t dev
 							       uint8_t set_selector,
 							       uint8_t block_selector, 
 							       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_device_t dev, 
+								     uint8_t get_parameter, 
+								     uint8_t set_selector, 
+								     uint8_t block_selector, 
+								     fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_last_processed_event_id (ipmi_device_t dev, 
 					     uint8_t set_record_id_for_last_record,
