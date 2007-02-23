@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.8 2007-02-21 19:43:47 balamurugan Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.9 2007-02-23 03:24:20 balamurugan Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -236,7 +236,7 @@ extern "C" {
 #define IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES                     0x2
 #define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL             0x3
 #define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE    0x4
-#define IPMI_ALERT_POLICY_TABLE_POLICY_VALID(__val) \
+#define IPMI_ALERT_POLICY_TABLE_POLICY_TYPE_VALID(__val) \
   (((__val) == IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION ||	\
     (__val) == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY ||		\
     (__val) == IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES ||	\
@@ -249,11 +249,11 @@ extern "C" {
   (((__val) == IPMI_ALERT_POLICY_DISABLED ||		\
     (__val) == IPMI_ALERT_POLICY_ENABLED) ? 1 : 0)
 
-#define IPMI_ALERT_STRING_KEY_NOT_EVENT_SPECIFIC    0x0
-#define IPMI_ALERT_STRING_KEY_EVENT_SPECIFIC        0x1
-#define IPMI_ALERT_STRING_KEY_VALID(__val)			\
-  (((__val) == IPMI_ALERT_STRING_KEY_NOT_EVENT_SPECIFIC ||	\
-    (__val) == IPMI_ALERT_STRING_KEY_EVENT_SPECIFIC) ? 1 : 0)
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO     0x0
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES    0x1
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_VALID(__val)		\
+  (((__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO ||		\
+    (__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES) ? 1 : 0)
 
 
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rq;
@@ -379,13 +379,13 @@ int8_t fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_s
                                                                 fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_policy_entry_number, 
-								     uint8_t policy, 
+								     uint8_t policy_type, 
 								     uint8_t policy_enabled, 
 								     uint8_t policy_number, 
 								     uint8_t destination_selector, 
 								     uint8_t channel_number, 
 								     uint8_t alert_string_set_selector, 
-								     uint8_t event_specific_alert_string, 
+								     uint8_t event_specific_alert_string_lookup, 
 								     fiid_obj_t obj_cmd_rq);
 
 

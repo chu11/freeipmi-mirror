@@ -1,3 +1,31 @@
+2007-02-22  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-pef/src/ipmi-pef-utils.c (policy_type_to_string,
+	string_to_policy_type, policy_enabled_to_string,
+	string_to_policy_enabled, policy_number_to_string,
+	string_to_policy_number, destination_selector_to_string,
+	string_to_destination_selector, channel_number_to_string,
+	string_to_channel_number, alert_string_set_selector_to_string,
+	string_to_alert_string_set_selector,
+	event_specific_alert_string_lookup_to_string,
+	string_to_event_specific_alert_string_lookup): new functions.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c
+	(get_number_of_alert_policy_entries, get_alert_policy_table): new
+	functions.
+
+	* ipmi-pef/src/ipmi-pef.c (checkout_alert_policy_table): new
+	functions.
+
+	* ipmi-pef/src/ipmi-pef.c (checkout_pef_evt): included alert
+	policy table data.
+
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c,
+	libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c: renamed fiid
+	entries "policy_number.policy" to "policy_number.policy_type" and,
+	"alert_string_key.event_specific_alert_string" to
+	"alert_string_key.event_specific_alert_string_lookup".
+
 2007-02-21  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/include/freeipmi/ipmi-pef-and-alerting-cmds.h: added

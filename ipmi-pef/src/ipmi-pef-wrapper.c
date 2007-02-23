@@ -842,3 +842,72 @@ get_evt_list (FILE *fp, pef_event_filter_table_t **evt_list, int *count)
   return 0;
 }
 
+int 
+get_number_of_alert_policy_entries (ipmi_device_t dev, int *num_alert_policy_entries)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (dev, 
+										IPMI_GET_PEF_PARAMETER, 
+										SET_SELECTOR, 
+										BLOCK_SELECTOR, 
+										obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_alert_policy_entries", &val);
+  *num_alert_policy_entries = val;
+  rv = 0;
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+int 
+get_alert_policy_table (ipmi_device_t dev, 
+			int policy_number, 
+			pef_alert_policy_table_t *apt)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  ERR_EINVAL (dev && apt);
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs);
+  
+  if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (dev, 
+								    IPMI_GET_PEF_PARAMETER,
+								    policy_number, 
+								    BLOCK_SELECTOR, 
+								    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_policy_entry_number", &val);
+  apt->alert_policy_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.policy_type", &val);
+  apt->policy_type = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.enabled", &val);
+  apt->policy_enabled = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.policy_number", &val);
+  apt->policy_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "channel_destination.destination_selector", &val);
+  apt->destination_selector = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "channel_destination.channel_number", &val);
+  apt->channel_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
+  apt->alert_string_set_selector = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.event_specific_alert_string_lookup", &val);
+  apt->event_specific_alert_string_lookup = val;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+

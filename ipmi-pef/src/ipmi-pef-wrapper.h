@@ -56,10 +56,27 @@ struct pef_event_filter_table
 };
 typedef struct pef_event_filter_table pef_event_filter_table_t;
 
+struct pef_alert_policy_table
+{
+  int alert_policy_number;
+  int policy_type;
+  int policy_enabled;
+  int policy_number;
+  int destination_selector;
+  int channel_number;
+  int alert_string_set_selector;
+  int event_specific_alert_string_lookup;
+};
+typedef struct pef_alert_policy_table pef_alert_policy_table_t;
+
 int get_pef_info (ipmi_device_t dev, pef_info_t *pef_info);
 int get_event_filter_table (ipmi_device_t dev, int filter, pef_event_filter_table_t *evt);
 int set_event_filter_table (ipmi_device_t dev, pef_event_filter_table_t *evt);
 int get_number_of_event_filters (ipmi_device_t dev, int *num_event_filters);
 int get_evt_list (FILE *fp, pef_event_filter_table_t **evt_list, int *count);
+int get_number_of_alert_policy_entries (ipmi_device_t dev, int *num_alert_policy_entries);
+int get_alert_policy_table (ipmi_device_t dev, 
+			    int policy_number, 
+			    pef_alert_policy_table_t *apt);
 
 #endif

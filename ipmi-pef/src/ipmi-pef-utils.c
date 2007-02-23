@@ -47,6 +47,16 @@
 #define NO_VALUE_STRING     "No"
 #define NO_VALUE            0
 
+#define IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION_STRING    "Always_Send_To_This_Destination"
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_STRING              "Proceed_To_Next_Entry"
+#define IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES_STRING    "Do_Not_Proceed_Any_More_Entries"
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL_STRING    "Proceed_To_Next_Entry_Different_Channel"
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE_STRING    "Proceed_To_Next_Entry_Different_Destination_Type"
+#define IPMI_ALERT_POLICY_DISABLED_STRING    "Yes"
+#define IPMI_ALERT_POLICY_ENABLED_STRING     "No"
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING     "No"
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING    "Yes"
+
 int 
 strchr_replace (char *str, char ch, char nch)
 {
@@ -1154,3 +1164,268 @@ string_to_event_data3_compare2 (const char *event_data3_compare2_string,
   return -1;
 }
 
+int 
+policy_type_to_string (int policy_type, char **policy_type_string)
+{
+  if (policy_type == IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION)
+    {
+      *policy_type_string = strdup (IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION_STRING);
+      return 0;
+    }
+  if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY)
+    {
+      *policy_type_string = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_STRING);
+      return 0;
+    }
+  if (policy_type == IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES)
+    {
+      *policy_type_string = strdup (IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES_STRING);
+      return 0;
+    }
+  if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL)
+    {
+      *policy_type_string = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL_STRING);
+      return 0;
+    }
+  if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE)
+    {
+      *policy_type_string = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE_STRING);
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_policy_type (const char *policy_type_string, int *policy_type)
+{
+  if (strcasecmp (policy_type_string, 
+		  IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION_STRING) == 0)
+    {
+      *policy_type = IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION;
+      return 0;
+    }
+  if (strcasecmp (policy_type_string, 
+		  IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_STRING) == 0)
+    {
+      *policy_type = IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY;
+      return 0;
+    }
+  if (strcasecmp (policy_type_string, 
+		  IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES_STRING) == 0)
+    {
+      *policy_type = IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES;
+      return 0;
+    }
+  if (strcasecmp (policy_type_string, 
+		  IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL_STRING) == 0)
+    {
+      *policy_type = IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL;
+      return 0;
+    }
+  if (strcasecmp (policy_type_string, 
+		  IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE_STRING) == 0)
+    {
+      *policy_type = IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+policy_enabled_to_string (int policy_enabled, char **policy_enabled_string)
+{
+  if (policy_enabled == IPMI_ALERT_POLICY_DISABLED)
+    {
+      *policy_enabled_string = strdup (IPMI_ALERT_POLICY_DISABLED_STRING);
+      return 0;
+    }
+  if (policy_enabled == IPMI_ALERT_POLICY_ENABLED)
+    {
+      *policy_enabled_string = strdup (IPMI_ALERT_POLICY_ENABLED_STRING);
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_policy_enabled (const char *policy_enabled_string, int *policy_enabled)
+{
+  if (strcasecmp (policy_enabled_string, IPMI_ALERT_POLICY_DISABLED_STRING) == 0)
+    {
+      *policy_enabled = IPMI_ALERT_POLICY_DISABLED;
+      return 0;
+    }
+  if (strcasecmp (policy_enabled_string, IPMI_ALERT_POLICY_ENABLED_STRING) == 0)
+    {
+      *policy_enabled = IPMI_ALERT_POLICY_ENABLED;
+      return 0;
+    }
+  return -1;
+}
+
+int 
+policy_number_to_string (int policy_number, char **policy_number_string)
+{
+  char *str = NULL;
+  
+  asprintf (&str, "%d", policy_number);
+  if (str)
+    {
+      *policy_number_string = str;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_policy_number (const char *policy_number_string, int *policy_number)
+{
+  int i = 0;
+  
+  if (str2int ((char *) policy_number_string, 0, &i) == 0)
+    {
+      *policy_number = i;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+destination_selector_to_string (int destination_selector, 
+				char **destination_selector_string)
+{
+  char *str = NULL;
+  
+  asprintf (&str, "%d", destination_selector);
+  if (str)
+    {
+      *destination_selector_string = str;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_destination_selector (const char *destination_selector_string, 
+				int *destination_selector)
+{
+  int i = 0;
+  
+  if (str2int ((char *) destination_selector_string, 0, &i) == 0)
+    {
+      *destination_selector = i;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+channel_number_to_string (int channel_number, char **channel_number_string)
+{
+  char *str = NULL;
+  
+  asprintf (&str, "%d", channel_number);
+  if (str)
+    {
+      *channel_number_string = str;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_channel_number (const char *channel_number_string, int *channel_number)
+{
+  int i = 0;
+  
+  if (str2int ((char *) channel_number_string, 0, &i) == 0)
+    {
+      *channel_number = i;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+alert_string_set_selector_to_string (int alert_string_set_selector, 
+				     char **alert_string_set_selector_string)
+{
+  char *str = NULL;
+  
+  asprintf (&str, "%d", alert_string_set_selector);
+  if (str)
+    {
+      *alert_string_set_selector_string = str;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_alert_string_set_selector (const char *alert_string_set_selector_string, 
+				     int *alert_string_set_selector)
+{
+  int i = 0;
+  
+  if (str2int ((char *) alert_string_set_selector_string, 0, &i) == 0)
+    {
+      *alert_string_set_selector = i;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lookup, 
+					      char **event_specific_alert_string_lookup_string)
+{
+  if (event_specific_alert_string_lookup == 
+      IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO)
+    {
+      *event_specific_alert_string_lookup_string = 
+	strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING);
+      return 0;
+    }
+  if (event_specific_alert_string_lookup == 
+      IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES)
+    {
+      *event_specific_alert_string_lookup_string = 
+	strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING);
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_event_specific_alert_string_lookup (const char *event_specific_alert_string_lookup_string, 
+					      int *event_specific_alert_string_lookup)
+{
+  if (strcasecmp (event_specific_alert_string_lookup_string, 
+		  IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING) == 0)
+    {
+      *event_specific_alert_string_lookup = 
+	IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO;
+      return 0;
+    }
+  if (strcasecmp (event_specific_alert_string_lookup_string, 
+		  IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING) == 0)
+    {
+      *event_specific_alert_string_lookup = 
+	IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES;
+      return 0;
+    }
+  
+  return -1;
+}

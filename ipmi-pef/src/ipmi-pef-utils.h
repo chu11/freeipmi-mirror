@@ -30,6 +30,14 @@
 #define EVENT_DATA3_COMPARE1_KEY_STRING       "Event_Data3_Compare1"
 #define EVENT_DATA3_COMPARE2_KEY_STRING       "Event_Data3_Compare2"
 
+#define APT_POLICY_TYPE_KEY_STRING                    "Policy_Type"
+#define APT_POLICY_ENABLED_KEY_STRING                 "Policy_Enabled"
+#define APT_POLICY_NUMBER_KEY_STRING                  "Policy_Number"
+#define APT_DESTINATION_SELECTOR_KEY_STRING           "Destination_Selector"
+#define APT_CHANNEL_NUMBER_KEY_STRING                 "Channel_Number"
+#define APT_ALERT_STRING_SET_SELECTOR_KEY_STRING      "Alert_String_Set_Selector"
+#define APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING    "Event_Specific_Alert_String"
+
 int strchr_replace (char *str, char ch, char nch);
 int filter_number_to_string (int filter_number, char **filter_number_string);
 int string_to_filter_number (const char *filter_number_string, int *filter_number);
@@ -129,5 +137,26 @@ int event_data3_compare2_to_string (int event_data3_compare2,
 				    char **event_data3_compare2_string);
 int string_to_event_data3_compare2 (const char *event_data3_compare2_string, 
 				    int *event_data3_compare2);
+
+int policy_type_to_string (int policy_type, char **policy_type_string);
+int string_to_policy_type (const char *policy_type_string, int *policy_type);
+int policy_enabled_to_string (int policy_enabled, char **policy_enabled_string);
+int string_to_policy_enabled (const char *policy_enabled_string, int *policy_enabled);
+int policy_number_to_string (int policy_number, char **policy_number_string);
+int string_to_policy_number (const char *policy_number_string, int *policy_number);
+int destination_selector_to_string (int destination_selector, 
+				    char **destination_selector_string);
+int string_to_destination_selector (const char *destination_selector_string, 
+				    int *destination_selector);
+int channel_number_to_string (int channel_number, char **channel_number_string);
+int string_to_channel_number (const char *channel_number_string, int *channel_number);
+int alert_string_set_selector_to_string (int alert_string_set_selector, 
+					 char **alert_string_set_selector_string);
+int string_to_alert_string_set_selector (const char *alert_string_set_selector_string, 
+					 int *alert_string_set_selector);
+int event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lookup, 
+						  char **event_specific_alert_string_lookup_string);
+int string_to_event_specific_alert_string_lookup (const char *event_specific_alert_string_lookup_string, 
+						  int *event_specific_alert_string_lookup);
 
 #endif
