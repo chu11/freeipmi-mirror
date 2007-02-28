@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.65 2006-10-21 01:36:27 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.66 2007-02-28 04:20:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,11 +57,6 @@
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
-
-/*
- * ipmipower config default
- */
-#define IPMIPOWER_CONFIGFILE_DEFAULT     "/etc/ipmipower.conf" 
 
 /* 
  * ipmipower limits 

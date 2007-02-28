@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.4.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.80 2007-02-18 23:06:04 balamurugan Exp $])
+AC_REVISION([$Id: configure.ac,v 1.81 2007-02-28 04:20:38 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -252,6 +252,7 @@ AC_CHECK_FUNC([argp_parse], ,
 ACX_PTHREAD([], AC_MSG_ERROR([Posix threads required to build libipmiconsole]))
 
 dnl Misc checks and build options
+AC_IPMIPOWER_CONFIG_FILE
 AC_IPMI_MONITORING_SDR_CACHE_DIR
 AC_IPMI_MONITORING_SENSOR_CONFIG_FILE
 

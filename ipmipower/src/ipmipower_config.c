@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.46 2006-12-15 17:26:44 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.47 2007-02-28 04:20:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -803,7 +803,7 @@ ipmipower_config_conffile_parse(char *configfile)
   if ((cf = conffile_handle_create()) == NULL)
     err_exit("Config File Error: cannot create conffile handle");
 
-  conffile = (strlen(configfile)) ? configfile : IPMIPOWER_CONFIGFILE_DEFAULT;
+  conffile = (strlen(configfile)) ? configfile : IPMIPOWER_CONFIG_FILE_DEFAULT;
   num = sizeof(options)/sizeof(struct conffile_option);
   if (conffile_parse(cf, conffile, options, num, NULL, 0, 0) < 0) 
     {

@@ -1,3 +1,11 @@
+2007-02-27  Albert Chu <chu11@llnl.gov>
+
+	* ac_ipmipower_config_file.m4: New file.
+
+	* configure.ac, ipmipower/ipmipower.conf.5.in,
+	ipmipower/src/ipmipower_config.c, ipmipower/src/ipmipower.h:
+	Support autoconfed ipmipower config file path.
+	
 2007-02-22  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-pef/src/ipmi-pef-utils.c (policy_type_to_string,
