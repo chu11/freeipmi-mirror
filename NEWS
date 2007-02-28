@@ -13,6 +13,7 @@ o Various bug fixes throughout FreeIPMI.
 For Developers
 --------------
 o Added SDR debugging capabilities to ipmi-sdr and ipmi-sensors.
+o Added libipmimonitoring
 
 0.3.0
 -----
