@@ -5,6 +5,7 @@ For Users
 ---------
 o Added ipmi-pef 
 o Added ipmi-chassis
+o Added ipmimonitoring
 o -Q option added for ipmi-sensors and ipmi-sel.
 o -P option added to allow for password prompting.
 o Various bug fixes throughout FreeIPMI.
