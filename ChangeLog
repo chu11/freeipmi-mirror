@@ -1,3 +1,7 @@
+2007-03-01  Albert Chu <chu11@llnl.gov>
+
+	* tagged pre_hostrange_support
+	
 2007-02-27  Albert Chu <chu11@llnl.gov>
 
 	* ac_ipmipower_config_file.m4: New file.
