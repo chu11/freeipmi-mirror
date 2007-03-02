@@ -38,6 +38,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-raw-argp.h"
 #include "ipmi-common.h"
 #include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "eliminate.h"
 
 int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
@@ -60,7 +62,9 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
 
   if (send_len <= 2)
     {
-      fprintf(stderr, "Invalid number of hex bytes\n");
+      pstdout_fprintf(state_data->pstate, 
+                      stderr, 
+                      "Invalid number of hex bytes\n");
       return (-1);
     }
 
@@ -72,14 +76,14 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                               bytes_rs, 
                               ARG_MAX)) >= 0)
     {
-      printf ("rcvd: ");
+      pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
-        printf ("%02X ", bytes_rs[i]);
-      printf ("\n");
+        pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
+      pstdout_printf (state_data->pstate, "\n");
     }
   else 
     {
-      perror ("ipmi_cmd_raw()");
+      pstdout_perror (state_data->pstate, "ipmi_cmd_raw()");
       return -1;
     }
 
@@ -119,13 +123,13 @@ string2bytes (ipmi_raw_state_data_t *state_data,
   
   if (!(*buf = calloc ((strlen (line) - count), 1)))
     {
-      perror ("calloc");
+      pstdout_perror (state_data->pstate, "calloc");
       goto cleanup;
     }
 
   if (!(str = (char *) strdup (line)))
     {
-      perror ("strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
   count = 0;
@@ -140,14 +144,18 @@ string2bytes (ipmi_raw_state_data_t *state_data,
       l = strlen (token);
       if (l > 2)
 	{
-	  fprintf (stderr, "invalid input\n");
+	  pstdout_fprintf (state_data->pstate, 
+                           stderr, 
+                           "invalid input\n");
           goto cleanup;
 	}
       for (i = 0; i < l; i++)
 	{
 	  if (isxdigit (token[i]) == 0)
 	    {
-	      fprintf (stderr, "invalid input\n");
+	      pstdout_fprintf (state_data->pstate, 
+                               stderr, 
+                               "invalid input\n");
               goto cleanup;
 	    }
 	}
@@ -204,7 +212,10 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
       
       if (send_len <= 2)
         {
-          fprintf(stderr, "Invalid number of hex bytes on line %d\n", line_count);
+          pstdout_fprintf(state_data->pstate,
+                          stderr, 
+                          "Invalid number of hex bytes on line %d\n", 
+                          line_count);
           goto end_loop;
         }
 
@@ -216,14 +227,14 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 				  bytes_rs, 
 				  ARG_MAX)) < 0)
         {
-          perror ("ipmi_cmd_raw()");
+          pstdout_perror (state_data->pstate, "ipmi_cmd_raw()");
           goto end_loop;
         }
       
-      printf ("rcvd: ");
+      pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
-	printf ("%02X ", bytes_rs[i]);
-      printf ("\n");
+	pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
+      pstdout_printf (state_data->pstate, "\n");
 
     end_loop:
       if (line)
@@ -270,7 +281,7 @@ run_cmd_args (ipmi_raw_state_data_t *state_data)
     {
       if (!(infile = fopen (args->cmd_file, "r")))
         {
-          perror ("fopen()");
+          pstdout_perror (state_data->pstate, "fopen()");
           goto cleanup;
         }
     }
@@ -294,7 +305,9 @@ run_cmd_args (ipmi_raw_state_data_t *state_data)
 }
 
 static int
-_ipmi_raw (void *arg)
+_ipmi_raw (pstdout_state_t pstate,
+           const char *hostname,
+           void *arg)
 {
   ipmi_raw_state_data_t state_data;
   ipmi_raw_prog_data_t *prog_data;
@@ -303,10 +316,10 @@ _ipmi_raw (void *arg)
 
   prog_data = (ipmi_raw_prog_data_t *)arg;
 
-  if (prog_data->args->common.host != NULL)
+  if (hostname && strcmp(hostname, "localhost") != 0)
     {
       if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-                                       prog_data->args->common.host,
+                                       hostname,
                                        prog_data->args->common.username,
                                        prog_data->args->common.password,
                                        prog_data->args->common.authentication_type,
@@ -315,7 +328,7 @@ _ipmi_raw (void *arg)
                                        prog_data->args->common.retry_timeout,
                                        prog_data->debug_flags)))
         {
-          perror ("ipmi_open_outofband()");
+          pstdout_perror (pstate, "ipmi_open_outofband()");
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
@@ -324,7 +337,10 @@ _ipmi_raw (void *arg)
     {
       if (!ipmi_is_root())
         {
-          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+          pstdout_fprintf(pstate,
+                          stderr, 
+                          "%s: Permission Denied\n", 
+                          prog_data->progname);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
@@ -352,7 +368,7 @@ _ipmi_raw (void *arg)
                                                 prog_data->args->common.driver_device,
                                                 prog_data->debug_flags)))
                     {
-                      perror ("ipmi_open_inband()");
+                      pstdout_perror(pstate, "ipmi_open_inband");
                       exit_code = EXIT_FAILURE;
                       goto cleanup;
                     }
@@ -368,7 +384,7 @@ _ipmi_raw (void *arg)
                                         prog_data->args->common.driver_device,
                                         prog_data->debug_flags)))
             {
-              perror ("ipmi_open_inband()");
+              pstdout_perror(pstate, "ipmi_open_inband");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -378,6 +394,7 @@ _ipmi_raw (void *arg)
   memset(&state_data, '\0', sizeof(ipmi_raw_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
 
   if (run_cmd_args (&state_data) < 0)
     {
@@ -398,6 +415,7 @@ main (int argc, char **argv)
   ipmi_raw_prog_data_t prog_data;
   struct ipmi_raw_arguments cmd_args;
   int exit_code;
+  int rv;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
@@ -407,6 +425,15 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_raw_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
+
+  if (pstdout_init() < 0)
+    {
+      fprintf(stderr,
+              "pstdout_init: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
@@ -423,7 +450,82 @@ main (int argc, char **argv)
   prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
 
-  exit_code = _ipmi_raw(&prog_data);
+  if (prog_data.args->common.host)
+    {
+      int count;
 
+      if ((count = pstdout_hostnames_count(prog_data.args->common.host)) < 0)
+        {
+          fprintf(stderr,
+                  "pstdout_hostnames_count: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (count > 1)
+        {
+          unsigned int output_flags;
+
+          if (prog_data.args->hostrange.buffer_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else if (prog_data.args->hostrange.consolidate_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          if (pstdout_set_output_flags(output_flags) < 0)
+            {
+              fprintf(stderr,
+                      "pstdout_set_output_flags: %s\n",
+                      pstdout_strerror(pstdout_errnum));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+
+          if (prog_data.args->hostrange.fanout)
+            {
+              if (pstdout_set_fanout(prog_data.args->hostrange.fanout) < 0)
+                {
+                  fprintf(stderr,
+                          "pstdout_set_fanout: %s\n",
+                          pstdout_strerror(pstdout_errnum));
+                  exit_code = EXIT_FAILURE;
+                  goto cleanup;
+                }
+            }
+
+          if (!(prog_data.args->cmd && prog_data.args->cmd_length)
+              && !prog_data.args->cmd_file)
+            {
+              fprintf(stderr,
+                      "Input via stdin not available for multiple hosts\n");
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+
+      if (prog_data.args->hostrange.eliminate)
+        {
+          if (eliminate_nodes(&(prog_data.args->common.host)) < 0)
+            {
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+    }
+
+  if ((rv = pstdout_launch(prog_data.args->common.host,
+                           _ipmi_raw,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = rv;
+ cleanup:
   return (exit_code);
 }

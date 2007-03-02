@@ -1,0 +1,67 @@
+\."#############################################################################
+\."$Id: libipmidetect.3.in,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2007 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-228523
+\."
+\."  This file is part of Ipmidetect, tools and libraries for detecting
+\."  IPMI nodes in a cluster. For details, see http://www.llnl.gov/linux/.
+\."
+\."  Ipmidetect is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."
+\."  Ipmidetect is distributed in the hope that it will be useful, but WITHOUT
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+\."  for more details.
+\."
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmidetect; if not, write to the Free Software Foundation, Inc.,
+\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."############################################################################
+.\"
+.TH LIBIPMIDETECT 3 "February 2007" "LIBIPMIDETECT @VERSION@" "LIBIPMIDETECT"
+.SH NAME
+libipmidetect \- a library of functions to determine if a node is detected
+or undetected
+.SH SYNOPSIS
+.B #include <ipmidetect.h>
+.sp
+.BI "ipmidetect_t ipmidetect_handle_create(void);"
+.sp
+.BI "int ipmidetect_handle_destroy(ipmidetect_t handle);"
+.sp
+.BI "int ipmidetect_load_data(ipmidetect_t handle, const char *hostname, int port, int timeout_len);"
+.sp
+.BI "int ipmidetect_errnum(ipmidetect_t handle);"
+.sp
+.BI "char *ipmidetect_strerror(int errnum);"
+.sp
+.BI "char *ipmidetect_errormsg(int errnum);"
+.sp
+.BI "void ipmidetect_perror(ipmidetect_t handle, const char *msg);"
+.sp
+.BI "int ipmidetect_get_detected_nodes_string(ipmidetect_t handle, char *buf, int buflen);"
+.sp
+.BI "int ipmidetect_get_undetected_nodes_string(ipmidetect_t handle, char *buf, int buflen);"
+.sp
+.BI "int ipmidetect_is_node_detected(ipmidetect_t handle, const char *node);"
+.sp
+.BI "int ipmidetect_is_node_undetected(ipmidetect_t handle, const char *node);"
+.br
+.SH DESCRIPTION
+The ipmidetect library functions are a set of functions that interacts
+with the
+.B ipmidetectd(8)
+daemon to determine if IPMI nodes in the cluster are detected or not.
+It can be used to determine which nodes are worth communicating with, 
+to avoid IPMI timeouts.
+
+.SH FILES
+/usr/include/ipmidetect.h
+.SH SEE ALSO
+ipmidetect(8), ipmidetectd(8)

@@ -1,0 +1,106 @@
+#!/bin/sh
+# $Id: freeipmi-ipmidetectd.init,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+#
+# chkconfig: 2345 70 40
+# description: ipmidetectd startup script
+#
+### BEGIN INIT INFO
+# Provides: ipmidetectd
+# Required-Start: $network $remote_fs $syslog
+# Required-Stop:  $network $remote_fs $syslog
+# Default-Start:  3 5
+# Default-Stop:   0 1 2 6
+# Description:    Start ipmidetectd-
+### END INIT INFO
+
+IPMIDETECTD=/usr/sbin/ipmidetectd
+
+[ -f $IPMIDETECTD ] || exit 1
+
+# Load Redhat or Suse appropriate libs
+if [ -f /etc/rc.d/init.d/functions ] ; then
+    . /etc/rc.d/init.d/functions
+    Xstart() {
+        daemon $IPMIDETECTD
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/ipmidetectd
+    }
+    Xstop() {
+        killproc ipmidetectd -TERM
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/ipmidetectd
+    }
+    Xstatus() {
+        status ipmidetectd
+	RETVAL=$?
+    }
+    Xcondrestart() {
+        if test -e /var/lock/subsys/ipmidetectd; then
+	    $0 stop
+	    $0 start
+   	    RETVAL=$?
+        fi
+    }
+    Xexit() {
+	exit $RETVAL
+    }
+elif [ -f /etc/rc.status ] ; then
+    . /etc/rc.status
+    Xstart() {
+        startproc $IPMIDETECTD
+        rc_status -v
+    }
+    Xstop() {
+        killproc -TERM $IPMIDETECTD
+        rc_status -v
+    }
+    Xstatus() {
+        echo -n "Checking for ipmidetectd: "
+        checkproc $IPMIDETECTD
+        rc_status -v
+    }
+    Xcondrestart() {
+        $0 status
+        if test $? = 0; then
+            $0 restart
+        else
+            rc_reset
+        fi
+        rc_status
+    }
+    Xexit() {
+	rc_exit
+    }
+else
+    echo "Unknown distribution type"
+    exit 1
+fi
+
+RETVAL=0
+
+case "$1" in
+   start)
+   	echo -n "Starting ipmidetectd: "
+        Xstart
+        ;;
+  stop)
+   	echo -n "Shutting down ipmidetectd: "
+	Xstop
+   	;;
+  restart|reload)
+   	$0 stop
+   	$0 start
+   	RETVAL=$?
+   	;;
+  status)
+        Xstatus
+   	;;
+  condrestart)
+        Xcondrestart
+   	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|status|condrestart}"
+	exit 1
+esac

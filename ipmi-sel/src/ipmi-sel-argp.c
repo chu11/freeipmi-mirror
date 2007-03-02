@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.12 2007-02-02 23:34:37 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.13 2007-03-02 00:56:26 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -58,23 +58,23 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS, 
+    ARGP_COMMON_OPTIONS_HOSTRANGED, 
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about SEL.", 13},
+     "Show general information about SEL.", 17},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete given SEL records entry.", 14},
+     "Delete given SEL records entry.", 18},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL entries.", 15},
+     "Delete all SEL entries.", 19},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete records from START to END in SEL.", 16},
+     "Delete records from START to END in SEL.", 20},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
-     "Hex-dump SEL entries optionally to FILE.", 17},
+     "Hex-dump SEL entries optionally to FILE.", 21},
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,
-     "Flush sensor SDR cache.", 18},
+     "Flush sensor SDR cache.", 22},
     {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
-     "Do not output cache creation information.", 19},
+     "Do not output cache creation information.", 23},
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
-     "Use DIRECTORY for sensor cache.", 20}, 
+     "Use DIRECTORY for sensor cache.", 24}, 
     { 0 }
   };
 
@@ -216,7 +216,8 @@ static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args = state->input;
-  
+  error_t ret;
+
   switch (key)
     {
     case INFO_KEY:
@@ -370,8 +371,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return common_parse_opt (key, arg, state, 
-			       &(cmd_args->common));
+      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+      return ret;
     }
   
   return 0;
@@ -381,6 +384,7 @@ void
 ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
+  init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->info_wanted = 0;
   cmd_args->delete_wanted = 0;
   cmd_args->delete_record_list = NULL;

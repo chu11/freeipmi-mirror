@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.13 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.14 2007-03-02 00:56:26 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -53,9 +53,9 @@ static char args_doc[] = "[COMMAND-HEX-BYTES]";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS, 
+    ARGP_COMMON_OPTIONS_HOSTRANGED, 
     {"file", CMD_FILE_KEY, "CMD-FILE", 0, 
-     "Read command requests from CMD-FILE.", 13}, 
+     "Read command requests from CMD-FILE.", 17}, 
     { 0 }
   };
 
@@ -65,6 +65,7 @@ static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_raw_arguments *cmd_args = state->input;
+  error_t ret;
   
   switch (key)
     {
@@ -103,8 +104,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return common_parse_opt (key, arg, state, 
-			       &(cmd_args->common));
+      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+      return ret;
     }
   
   return 0;
@@ -114,10 +117,12 @@ void
 ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
+  init_hostrange_cmd_args (&(cmd_args->hostrange));
+
   cmd_args->cmd_file = NULL;
   memset (cmd_args->cmd, 0, sizeof(cmd_args->cmd));
   cmd_args->cmd_length = 0;
-  
+
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }
 

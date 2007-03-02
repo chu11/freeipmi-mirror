@@ -1,0 +1,75 @@
+\."#############################################################################
+\."$Id: ipmidetectd.8.in,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2007 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-228523
+\."
+\."  This file is part of Ipmidetect, tools and libraries for detecting
+\."  IPMI nodes in a cluster. For details, see http://www.llnl.gov/linux/.
+\."
+\."  Ipmidetect is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."
+\."  Ipmidetect is distributed in the hope that it will be useful, but WITHOUT
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+\."  for more details.
+\."
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmidetect; if not, write to the Free Software Foundation, Inc.,
+\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."#############################################################################
+.TH pingd 8 "February 2007" "pingd @VERSION@" pingd
+.SH "NAME"
+ipmidetectd \- IPMI node detection monitoring daemon
+.SH "SYNOPSIS"
+.B pingd [OPTIONS]
+.br
+.SH "DESCRIPTION"
+The
+.B ipmidetectd
+daemon regularly sends out IPMI pings to determine if nodes have
+functioning IPMI interfaces or not.  It is primarily used to determine
+those nodes in the cluster that are not functioning properly, allowing
+IPMI commands to be executed across the cluster faster by skipping those
+nodes that would automatically timeout.
+
+The 
+.B ipmidetectd
+daemon must be configured using the 
+.B ipmidetectd 
+configuration file.  Until
+hosts to be pinged are configured, 
+.B ipmidetectd 
+will not function properly.
+
+See the
+.BR ipmidetectd.conf(5)
+manpage for additional information.
+
+.SH "OPTIONS"
+.TP
+.B  -h, --help
+Output help
+.TP
+.B  -v, --version
+Output version
+.if @MANPAGE_DEBUG@ \{
+.TP
+.B  -c, --config-file
+Specify alternate configuration file
+.TP
+.B  -d, --debug
+Turn on debugging and run daemon in foreground
+\}
+
+.SH "FILES"
+@PINGD_CONF_FILE@
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
+.SH "SEE ALSO"
+ipmidetectd.conf(5)

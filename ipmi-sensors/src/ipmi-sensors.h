@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.2 2007-01-23 00:53:16 chu11 Exp $ 
+   $Id: ipmi-sensors.h,v 1.3 2007-03-02 00:56:26 chu11 Exp $ 
    
    ipmi-sensors.h - IPMI Sensors utility.
    
@@ -27,6 +27,7 @@
 
 #include "argp-common.h"
 #include "ipmi-sdr-api.h"
+#include "pstdout.h"
 
 enum ipmi_sensors_argp_option_keys
   { 
@@ -37,12 +38,13 @@ enum ipmi_sensors_argp_option_keys
     LIST_GROUPS_KEY = 'L', 
     GROUP_KEY = 'g', 
     SENSORS_LIST_KEY = 's', 
-    SDR_CACHE_DIR_KEY = 200
+    SDR_CACHE_DIR_KEY = 200,
   };
 
 struct ipmi_sensors_arguments
 {
   struct common_cmd_args common;
+  struct hostrange_cmd_args hostrange;
   int verbose_wanted;
   int verbose_count;
   int sdr_info_wanted;
@@ -69,6 +71,8 @@ typedef struct ipmi_sensors_state_data
 {
   ipmi_sensors_prog_data_t *prog_data;
   ipmi_device_t dev;
+  pstdout_state_t pstate;
+  char *hostname;
   sdr_repository_info_t sdr_info;
   sdr_record_t *sdr_record_list;
   int sdr_record_count;

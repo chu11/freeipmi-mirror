@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.8 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.9 2007-03-02 00:56:26 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -24,7 +24,12 @@
 #include "config.h"
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <argp.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
 
 #include "argp-common.h"
 #include "bmc-info.h"
@@ -46,7 +51,7 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS, 
+    ARGP_COMMON_OPTIONS_HOSTRANGED, 
     { 0 }
   };
 
@@ -56,7 +61,8 @@ static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct bmc_info_arguments *cmd_args = state->input;
-  
+  error_t ret;
+
   switch (key)
     {
     case ARGP_KEY_ARG:
@@ -66,8 +72,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return common_parse_opt (key, arg, state, 
-			       &(cmd_args->common));
+      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+      return ret;
     }
   
   return 0;
@@ -77,6 +85,7 @@ void
 bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
+  init_hostrange_cmd_args (&(cmd_args->hostrange));
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }

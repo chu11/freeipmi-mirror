@@ -44,6 +44,10 @@ enum argp_common_option_keys
     PASSWORD_PROMPT_KEY = 'P',
     AUTHENTICATION_TYPE_KEY = 'a', 
     PRIVILEGE_LEVEL_KEY = 'l',
+    BUFFER_KEY = 'B',
+    CONSOLIDATE_KEY = 'C',
+    FANOUT_KEY = 'F',
+    ELIMINATE_KEY = 'E',
     DEBUG_KEY = 135
   };
 
@@ -60,9 +64,7 @@ enum argp_common_option_keys
     {"register-spacing", REGISTER_SPACING_KEY, "REGISTERSPACING", 0,       \
      "Use this REGISTERSPACING instead of the probed one", 4}
 
-#define ARGP_COMMON_OPTIONS_OUTOFBAND                                             \
-    {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			          \
-     "Connect to IPMIHOST.", 5},					          \
+#define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                      \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			          \
      "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 6},         \
     {"password",       PASSWORD_KEY, "PASSWORD", 0,	                          \
@@ -74,6 +76,16 @@ enum argp_common_option_keys
     {"session-timeout", SESSION_TIMEOUT_KEY, "SESSION_TIMEOUT", 0,                \
      "Use SESSION_TIMEOUT milliseconds before ending a session.", 10}
 
+#define ARGP_COMMON_OPTIONS_OUTOFBAND                                             \
+    {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			          \
+     "Connect to IPMIHOST.", 5},					          \
+    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
+
+#define ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED                                  \
+    {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			          \
+     "Connect to IPMIHOST.  IPMIHOST may include host ranges", 5},                \
+    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
+
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
     {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 		   \
      "Use AUTHTYPE instead of MD5.  "				           \
@@ -84,6 +96,16 @@ enum argp_common_option_keys
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 12}     
 
+#define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
+    {"buffer-output", BUFFER_KEY, 0, 0,                                    \
+      "Buffer hostranged output.", 13},                                    \
+    {"consolidate-output", CONSOLIDATE_KEY, 0, 0,                          \
+     "Consolidate hostranged output.", 14},                                \
+    {"fanout", FANOUT_KEY, "NUM", 0,                                       \
+     "Set multiple host fanout.", 15},                                     \
+    {"eliminate", ELIMINATE_KEY, 0, 0,                                     \
+     "Eliminate undetected nodes.", 16}
+
 #ifdef NDEBUG
 
 #define ARGP_COMMON_OPTIONS                                                \
@@ -92,17 +114,32 @@ enum argp_common_option_keys
        ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
        ARGP_COMMON_OPTIONS_PRIVLEVEL 
 
+#define ARGP_COMMON_OPTIONS_HOSTRANGED                                     \
+       ARGP_COMMON_OPTIONS_INBAND,                                         \
+       ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,                           \
+       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
+       ARGP_COMMON_OPTIONS_PRIVLEVEL,                                      \
+       ARGP_COMMON_HOSTRANGED_OPTIONS
+
 #else  /* !NDEBUG */
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     DEBUG_KEY, 0, 0, 	                                   \
-     "Turn on debugging.", 12}                                             
+     "Turn on debugging.", 17}                                             
 
 #define ARGP_COMMON_OPTIONS                                                \
        ARGP_COMMON_OPTIONS_INBAND,                                         \
        ARGP_COMMON_OPTIONS_OUTOFBAND,                                      \
        ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
        ARGP_COMMON_OPTIONS_PRIVLEVEL,                                      \
+       ARGP_COMMON_OPTIONS_DEBUG
+
+#define ARGP_COMMON_OPTIONS_HOSTRANGED                                     \
+       ARGP_COMMON_OPTIONS_INBAND,                                         \
+       ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,                           \
+       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
+       ARGP_COMMON_OPTIONS_PRIVLEVEL,                                      \
+       ARGP_COMMON_HOSTRANGED_OPTIONS,                                     \
        ARGP_COMMON_OPTIONS_DEBUG
 #endif /* !NDEBUG */
 
@@ -125,11 +162,26 @@ struct common_cmd_args
 #endif /* NDEBUG */
 };
 
+struct hostrange_cmd_args
+{
+  int buffer_hostrange_output;
+  int consolidate_hostrange_output;
+  int fanout;
+  int eliminate;
+};
+
 error_t common_parse_opt (int key, 
 			  char *arg, 
 			  struct argp_state *state, 
 			  struct common_cmd_args *common_cmd_args);
+error_t hostrange_parse_opt (int key, 
+                             char *arg, 
+                             struct argp_state *state, 
+                             struct hostrange_cmd_args *hostrange_cmd_args);
 void init_common_cmd_args (struct common_cmd_args *cmd_args);
 void free_common_cmd_args (struct common_cmd_args *cmd_args);
+
+void init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
+void free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
 
 #endif

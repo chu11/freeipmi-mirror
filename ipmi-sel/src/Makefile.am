@@ -1,10 +1,13 @@
 sbin_PROGRAMS=ipmi-sel
 ipmi_sel_SOURCES=ipmi-sel-argp.c ipmi-sel-wrapper.c ipmi-sel.c 
- 
 ipmi_sel_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libipmicommon.la \
 		 ../../common/src/libsensor.la \
 		 ../../common/src/libsdr.la \
+		 ../../common/src/libpstdout.la \
+		 ../../common/src/libeliminate.la \
+		 ../../common/src/libllnlcommon.la \
+		 ../../ipmidetect/src/libipmidetect/libipmidetect.la \
 		 ../../libfreeipmi/src/libfreeipmi.la \
 		 ../../common/src/libfreeipmiportability.la
  
@@ -13,8 +16,9 @@ noinst_HEADERS=ipmi-sel-argp.h ipmi-sel-wrapper.h ipmi-sel.h
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"
- 
+	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
+	-D_REENTRANT
+
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
@@ -30,7 +34,19 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libsdr.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
+../../common/src/libpstdout.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 ../../common/src/libfreeipmiportability.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libeliminate.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libllnlcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

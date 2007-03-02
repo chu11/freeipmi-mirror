@@ -39,6 +39,7 @@
 
 #include "argp-common.h"
 #include "freeipmi-portability.h"
+#include "pstdout.h"
 
 error_t 
 common_parse_opt (int key, 
@@ -365,6 +366,44 @@ common_parse_opt (int key,
   return 0;
 }
 
+error_t 
+hostrange_parse_opt (int key, 
+		  char *arg, 
+		  struct argp_state *state, 
+		  struct hostrange_cmd_args *cmd_args)
+{
+  char *ptr;
+  
+  switch (key)
+    {
+    case BUFFER_KEY:
+      cmd_args->buffer_hostrange_output = 1;
+      break;
+    case CONSOLIDATE_KEY:
+      cmd_args->consolidate_hostrange_output = 1;
+      break;
+    case FANOUT_KEY:
+      cmd_args->fanout = strtol(arg, &ptr, 10);
+      if ((ptr != (arg + strlen(arg)))
+          || (cmd_args->fanout < PSTDOUT_FANOUT_MIN)
+          || (cmd_args->fanout > PSTDOUT_FANOUT_MAX))
+        {
+          fprintf (stderr, "invalid fanout\n");
+          argp_usage (state);
+          break;
+        }
+      break;
+    case ELIMINATE_KEY:
+      cmd_args->eliminate = 1;
+      break;
+
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  
+  return 0;
+}
+
 void 
 init_common_cmd_args (struct common_cmd_args *cmd_args)
 {
@@ -413,5 +452,20 @@ free_common_cmd_args (struct common_cmd_args *cmd_args)
     }
   cmd_args->authentication_type = 0;
   cmd_args->privilege_level = 0;
+}
+
+void 
+init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
+{
+  cmd_args->buffer_hostrange_output = 0;
+  cmd_args->consolidate_hostrange_output = 0;
+  cmd_args->fanout = 0;
+  cmd_args->eliminate = 0;
+}
+
+void 
+free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
+{
+  /* nothing right now */
 }
 

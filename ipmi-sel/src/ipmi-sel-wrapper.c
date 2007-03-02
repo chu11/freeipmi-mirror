@@ -36,14 +36,65 @@
 #include "freeipmi/ipmi-sensor-and-event-code-tables.h"
 #include "freeipmi/udm/ipmi-sel-cmds-udm.h"
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 #include "ipmi-common.h"
 #include "ipmi-sdr-api.h"
 #include "ipmi-sensor-api.h"
 
 #include "ipmi-sel-wrapper.h"
+
+#define _FIID_OBJ_CREATE(__obj, __tmpl)         \
+do {                                            \
+  if (!((__obj) = fiid_obj_create(__tmpl)))     \
+    {                                           \
+      pstdout_fprintf(state_data->pstate,       \
+                      stderr,                   \
+                      "fiid_obj_create: %s\n",  \
+                      strerror(errno));         \
+      goto cleanup;                             \
+    }                                           \
+} while (0)
+
+#define _FIID_OBJ_GET(__obj, __field, __val)                    \
+do {                                                            \
+    uint64_t __localval = 0, *__localval_ptr;                   \
+    __localval_ptr = (__val);                                   \
+    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)     \
+      {                                                         \
+        pstdout_fprintf(state_data->pstate,                     \
+                        stderr,                                 \
+                        "fiid_obj_get: %s: %s\n",               \
+                        __field,                                \
+                        fiid_strerror(fiid_obj_errnum(__obj))); \
+         goto cleanup;                                          \
+      }                                                         \
+    *__localval_ptr = __localval;                               \
+} while (0)
+
+#define _FIID_OBJ_SET_ALL(__obj, __data, __data_len)                        \
+do {                                                                        \
+    if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)             \
+      {                                                                     \
+         pstdout_fprintf(state_data->pstate,                                \
+                        stderr,                                             \
+                        "fiid_obj_set_all: %s\n",                           \
+                        fiid_strerror(fiid_obj_errnum(__obj)));             \
+         goto cleanup;                                                      \
+      }                                                                     \
+} while (0)
+
+#define _FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __data_len)               \
+do {                                                                                    \
+    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
+      {                                                                                 \
+         pstdout_fprintf(state_data->pstate,                                            \
+                        stderr,                                                         \
+                        "fiid_obj_get_data: %s: %s\n",                                  \
+                        __field,                                                        \
+                        fiid_strerror(fiid_obj_errnum(__obj)));                         \
+         goto cleanup;                                                                  \
+      }                                                                                 \
+} while (0)
 
 int 
 get_sel_info (ipmi_sel_state_data_t *state_data, 
@@ -53,49 +104,51 @@ get_sel_info (ipmi_sel_state_data_t *state_data,
   uint64_t val;
   int rv = -1;
   
-  ERR_EINVAL (state_data && sel_info);
+  assert(state_data);
+  assert(sel_info);
 
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
   if (ipmi_cmd_get_sel_info (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sel_version_major", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val);
   sel_info->sel_version_major = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sel_version_minor", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "sel_version_minor", &val);
   sel_info->sel_version_minor = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "entries", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "entries", &val);
   sel_info->log_entry_count = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "free_space", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "free_space", &val);
   sel_info->free_space = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "most_recent_addition_timestamp", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val);
   sel_info->recent_addition_timestamp = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "most_recent_erase_timestamp", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val);
   sel_info->recent_erase_timestamp = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val);
   sel_info->get_sel_alloc_info_cmd_support = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "reserve_sel_command_supported", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val);
   sel_info->reserve_sel_cmd_support = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "partial_add_sel_entry_command_supported", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "partial_add_sel_entry_command_supported", &val);
   sel_info->partial_add_sel_entry_cmd_support = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "delete_sel_command_supported", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "delete_sel_command_supported", &val);
   sel_info->delete_sel_cmd_support = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "overflow_flag", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val);
   sel_info->overflow_flag = val;
   
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
@@ -163,52 +216,54 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 
   sdr_record_t *sdr_record;
 
-  ERR_EINVAL (state_data && record_data && sel_record);
+  assert(state_data);
+  assert(record_data);
+  assert(sel_record);
 
-  FIID_OBJ_CREATE (obj, tmpl_sel_system_event_record);
+  _FIID_OBJ_CREATE (obj, tmpl_sel_system_event_record);
 
-  FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
+  _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, "record_id", &val);
+  _FIID_OBJ_GET (obj, "record_id", &val);
   record_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "timestamp", &val);
+  _FIID_OBJ_GET (obj, "timestamp", &val);
   timestamp = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "generator_id.id_type", &val);
+  _FIID_OBJ_GET (obj, "generator_id.id_type", &val);
   generator_id_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "generator_id.id", &val);
+  _FIID_OBJ_GET (obj, "generator_id.id", &val);
   generator_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "channel_number", &val);
+  _FIID_OBJ_GET (obj, "channel_number", &val);
   channel_number = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "sensor_type", &val);
+  _FIID_OBJ_GET (obj, "sensor_type", &val);
   sensor_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "sensor_number", &val);
+  _FIID_OBJ_GET (obj, "sensor_number", &val);
   sensor_number = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "event_type_code", &val);
+  _FIID_OBJ_GET (obj, "event_type_code", &val);
   event_type_code = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "event_dir", &val);
+  _FIID_OBJ_GET (obj, "event_dir", &val);
   event_dir = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "offset_from_event_reading_type_code", &val);
+  _FIID_OBJ_GET (obj, "offset_from_event_reading_type_code", &val);
   offset_from_event_reading_type_code = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "event_data2_flag", &val);
+  _FIID_OBJ_GET (obj, "event_data2_flag", &val);
   event_data2_flag = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "event_data3_flag", &val);
+  _FIID_OBJ_GET (obj, "event_data3_flag", &val);
   event_data3_flag = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "event_data2", &val);
+  _FIID_OBJ_GET (obj, "event_data2", &val);
   event_data2 = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "event_data3", &val);
+  _FIID_OBJ_GET (obj, "event_data3", &val);
   event_data3 = val;
   
   sel_record->record_id = record_id;
@@ -253,7 +308,13 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
       }
 
     if (!rv)
-      ERR_CLEANUP ((sel_record->event_message = strdup(buffer)));
+      {
+        if (!(sel_record->event_message = strdup(buffer)))
+          {
+            pstdout_perror (state_data->pstate, "strdup");
+            goto cleanup;
+          }
+      }
     else
       sel_record->event_message = NULL;
   }
@@ -274,14 +335,21 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 	      {
 		double current_reading;
 
-		ERR_CLEANUP (!(ipmi_sensor_decode_value (sdr_record->record.sdr_full_record.r_exponent,
-							 sdr_record->record.sdr_full_record.b_exponent,
-							 sdr_record->record.sdr_full_record.m,
-							 sdr_record->record.sdr_full_record.b,
-							 sdr_record->record.sdr_full_record.linear,
-							 sdr_record->record.sdr_full_record.analog_data_format,
-							 event_data2,
-							 &current_reading) < 0));
+		if (ipmi_sensor_decode_value (sdr_record->record.sdr_full_record.r_exponent,
+                                              sdr_record->record.sdr_full_record.b_exponent,
+                                              sdr_record->record.sdr_full_record.m,
+                                              sdr_record->record.sdr_full_record.b,
+                                              sdr_record->record.sdr_full_record.linear,
+                                              sdr_record->record.sdr_full_record.analog_data_format,
+                                              event_data2,
+                                              &current_reading) < 0)
+                  {
+                    pstdout_fprintf (state_data->pstate,
+                                     stderr,
+                                     "ipmi_sensor_decode_value: %s\n",
+                                     strerror(errno));
+                    goto cleanup;
+                  }
 		
 		asprintf (&(sel_record->event_data2_message),
 			  "Reading = %.2f %s",
@@ -311,7 +379,13 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 buffer,
 						 1024);
 	      if (!rv)
-		ERR_CLEANUP ((sel_record->event_data2_message = strdup(buffer)));
+                {
+                  if (!(sel_record->event_data2_message = strdup(buffer)))
+                    {
+                      pstdout_perror (state_data->pstate, "strdup");
+                      goto cleanup;
+                    }
+                }
 	      else
 		sel_record->event_data2_message = NULL;
 	    }
@@ -330,14 +404,21 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 	      {
 		double current_reading;
 
-		ERR_CLEANUP (!(ipmi_sensor_decode_value (sdr_record->record.sdr_full_record.r_exponent,
-							 sdr_record->record.sdr_full_record.b_exponent,
-							 sdr_record->record.sdr_full_record.m,
-							 sdr_record->record.sdr_full_record.b,
-							 sdr_record->record.sdr_full_record.linear,
-							 sdr_record->record.sdr_full_record.analog_data_format,
-							 event_data3,
-							 &current_reading) < 0));
+		if (ipmi_sensor_decode_value (sdr_record->record.sdr_full_record.r_exponent,
+                                              sdr_record->record.sdr_full_record.b_exponent,
+                                              sdr_record->record.sdr_full_record.m,
+                                              sdr_record->record.sdr_full_record.b,
+                                              sdr_record->record.sdr_full_record.linear,
+                                              sdr_record->record.sdr_full_record.analog_data_format,
+                                              event_data3,
+                                              &current_reading) < 0)
+                  {
+                    pstdout_fprintf (state_data->pstate,
+                                     stderr,
+                                     "ipmi_sensor_decode_value: %s\n",
+                                     strerror(errno));
+                    goto cleanup;
+                  }
 		
 		asprintf (&(sel_record->event_data3_message),
 			  "Threshold = %.2f %s",
@@ -368,7 +449,13 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 buffer,
 						 1024);
 	      if (!rv)
-		ERR_CLEANUP ((sel_record->event_data3_message = strdup(buffer)));
+                {
+                  if (!(sel_record->event_data3_message = strdup(buffer)))
+                    {
+                      pstdout_perror (state_data->pstate, "strdup");
+                      goto cleanup;
+                    }
+                }
 	      else
 		sel_record->event_data3_message = NULL;
 	    }
@@ -400,7 +487,13 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 buffer,
 						 1024);
 	      if (!rv)
-		ERR_CLEANUP ((sel_record->event_data2_message = strdup(buffer)));
+                {
+                  if (!(sel_record->event_data2_message = strdup(buffer)))
+                    {
+                      pstdout_perror (state_data->pstate, "strdup");
+                      goto cleanup;
+                    }
+                }
 	      else
 		sel_record->event_data2_message = NULL;
 	    }
@@ -426,7 +519,13 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 						 buffer,
 						 1024);
 	      if (!rv)
-		ERR_CLEANUP ((sel_record->event_data3_message = strdup(buffer)));
+                {
+                  if (!(sel_record->event_data3_message = strdup(buffer)))
+                    {
+                      pstdout_perror (state_data->pstate, "strdup");
+                      goto cleanup;
+                    }
+                }
 	      else
 		sel_record->event_data3_message = NULL;
 	    }
@@ -452,12 +551,14 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  if (obj)
+    fiid_obj_destroy(obj);
   return (rv);
 }
 
 static int 
-_get_sel_timestamped_oem_record (uint8_t *record_data, 
+_get_sel_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
+                                 uint8_t *record_data, 
                                  uint32_t record_data_len,
                                  sel_record_t *sel_record)
 {
@@ -469,22 +570,24 @@ _get_sel_timestamped_oem_record (uint8_t *record_data,
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
 
-  ERR_EINVAL (record_data && sel_record);
+  assert (state_data);
+  assert (record_data);
+  assert (sel_record);
 
-  FIID_OBJ_CREATE (obj, tmpl_sel_timestamped_oem_record);
+  _FIID_OBJ_CREATE (obj, tmpl_sel_timestamped_oem_record);
   
-  FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
+  _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, "record_id", &val);
+  _FIID_OBJ_GET (obj, "record_id", &val);
   record_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "timestamp", &val);
+  _FIID_OBJ_GET (obj, "timestamp", &val);
   timestamp = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "manufacturer_id", &val);
+  _FIID_OBJ_GET (obj, "manufacturer_id", &val);
   manufacturer_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, "oem_defined", &val);
+  _FIID_OBJ_GET (obj, "oem_defined", &val);
   oem_defined = val;
   
   sel_record->record_id = record_id;
@@ -509,12 +612,14 @@ _get_sel_timestamped_oem_record (uint8_t *record_data,
   
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  if (obj)
+    fiid_obj_destroy(obj);
   return (rv);
 }
 
 static int
-_get_sel_non_timestamped_oem_record (uint8_t *record_data, 
+_get_sel_non_timestamped_oem_record (ipmi_sel_state_data_t *state_data,
+                                     uint8_t *record_data, 
                                      uint32_t record_data_len, 
                                      sel_record_t *sel_record)
 {
@@ -528,21 +633,23 @@ _get_sel_non_timestamped_oem_record (uint8_t *record_data,
   char *tmp_str = NULL;
   int i;
 
-  ERR_EINVAL (record_data && sel_record);
+  assert (state_data);
+  assert (record_data);
+  assert (sel_record);
 
-  FIID_OBJ_CREATE (obj, tmpl_sel_non_timestamped_oem_record);
+  _FIID_OBJ_CREATE (obj, tmpl_sel_non_timestamped_oem_record);
 
-  FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
+  _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, "record_id", &val);
+  _FIID_OBJ_GET (obj, "record_id", &val);
   record_id = val;
 
   memset(buf, '\0', 1024);
-  FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
-                                 obj,
-                                 "oem_defined",
-                                 buf,
-                                 1024);
+  _FIID_OBJ_GET_DATA_LEN (len,
+                          obj,
+                          "oem_defined",
+                          buf,
+                          1024);
 
   sel_record->record_id = record_id;
   sel_record->timestamp = NULL;
@@ -573,7 +680,8 @@ _get_sel_non_timestamped_oem_record (uint8_t *record_data,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  if (obj)
+    fiid_obj_destroy(obj);
   return (rv);
 }
 
@@ -588,13 +696,15 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
   uint64_t val;
   int rv = -1;
 
-  ERR_EINVAL (state_data && record_data && sel_record);
+  assert (state_data);
+  assert (record_data);
+  assert (sel_record);
 
-  FIID_OBJ_CREATE (obj, tmpl_sel_record_header);
+  _FIID_OBJ_CREATE (obj, tmpl_sel_record_header);
 
-  FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
+  _FIID_OBJ_SET_ALL(obj, record_data, record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, "record_type", &val);
+  _FIID_OBJ_GET (obj, "record_type", &val);
   record_type = val;
 
   switch (ipmi_get_sel_record_type (record_type))
@@ -603,15 +713,16 @@ _parse_sel_record (ipmi_sel_state_data_t *state_data,
       rv = _get_sel_system_event_record (state_data, record_data, record_data_len, sel_record);
       break;
     case IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
-      rv = _get_sel_timestamped_oem_record (record_data, record_data_len, sel_record);
+      rv = _get_sel_timestamped_oem_record (state_data, record_data, record_data_len, sel_record);
       break;
     case IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
-      rv = _get_sel_non_timestamped_oem_record (record_data, record_data_len, sel_record);
+      rv = _get_sel_non_timestamped_oem_record (state_data, record_data, record_data_len, sel_record);
       break;
     }
 
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  if (obj)
+    fiid_obj_destroy(obj);
   return (rv);
 }
 
@@ -628,9 +739,10 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
   uint8_t record_data[SEL_RECORD_SIZE];
   uint32_t record_data_len = SEL_RECORD_SIZE;
   
-  ERR_EINVAL_CLEANUP (state_data && next_record_id);
+  assert (state_data);
+  assert (next_record_id);
   
-  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
   
   if (!(sel_rec = (sel_record_t *)malloc(sizeof(sel_record_t))))
     goto cleanup;
@@ -643,14 +755,14 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
 			      obj_cmd_rs) != 0)
     goto cleanup;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
   *next_record_id = val;
   
-  FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
-				 obj_cmd_rs, 
-				 "record_data", 
-				 record_data,
-				 record_data_len);
+  _FIID_OBJ_GET_DATA_LEN (len,
+                          obj_cmd_rs, 
+                          "record_data", 
+                          record_data,
+                          record_data_len);
   record_data_len = len;
 
   if (_parse_sel_record (state_data,
@@ -659,11 +771,12 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
                          sel_rec) < 0)
     goto cleanup;
 
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  fiid_obj_destroy(obj_cmd_rs);
   return sel_rec;
 
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   if (sel_rec)
     destroy_sel_record(sel_rec);
   return NULL;
@@ -700,9 +813,12 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
   int rv = -1;
   int32_t len;
   
-  ERR_EINVAL (state_data && record_data && next_record_id);
+  assert (state_data);
+  assert (record_data);
+  assert (next_record_id);
   
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
+  _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
+
   if (ipmi_cmd_get_sel_entry (state_data->dev, 
 			      0,
 			      record_id, 
@@ -711,18 +827,19 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
 			      obj_cmd_rs) != 0)
     goto cleanup;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
+  _FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
   *next_record_id = val;
   
-  FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
-				 obj_cmd_rs, 
-				 "record_data", 
-				 record_data,
-				 record_data_len);
+  _FIID_OBJ_GET_DATA_LEN (len,
+                          obj_cmd_rs, 
+                          "record_data", 
+                          record_data,
+                          record_data_len);
   record_data_len = len;
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 

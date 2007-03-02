@@ -28,6 +28,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #endif /* STDC_HEADERS */
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
 #include <err.h>
 #include <argp.h>
 #include <assert.h>
@@ -39,6 +40,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 #include "ipmi-common.h"
+#include "pstdout.h"
+#include "eliminate.h"
 
 typedef struct channel_info 
 {
@@ -49,19 +52,20 @@ typedef struct channel_info
 
 #define NUM_CHANNELS 8
 
-#define _FIID_OBJ_GET(bytes, field, val)               \
-do {                                                   \
-    uint64_t _val = 0, *_val_ptr;                      \
-    _val_ptr = val;                                    \
-    if (fiid_obj_get (bytes, field, &_val) < 0)        \
-      {                                                \
-        fprintf (stderr,                               \
-                 "fiid_obj_get: %s: %s\n",             \
-                 field,                                \
-                 strerror(errno));                     \
-        return (-1);                                   \
-      }                                                \
-    *_val_ptr = _val;                                  \
+#define _FIID_OBJ_GET(obj, field, val)                        \
+do {                                                          \
+    uint64_t _val = 0, *_val_ptr;                             \
+    _val_ptr = val;                                           \
+    if (fiid_obj_get (obj, field, &_val) < 0)                 \
+      {                                                       \
+        pstdout_fprintf(state_data->pstate,                   \
+                        stderr,                               \
+                        "fiid_obj_get: %s: %s\n",             \
+                        field,                                \
+                        fiid_strerror(fiid_obj_errnum(obj))); \
+        return (-1);                                          \
+      }                                                       \
+    *_val_ptr = _val;                                         \
 } while (0)
 
 int 
@@ -74,128 +78,114 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
     {
-      perror ("fiid_obj_create");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return (-1);
     }
 
   if (ipmi_cmd_get_device_id (state_data->dev, cmd_rs) != 0)
     {
-      perror ("ipmi_cmd_get_device_id()");
+      pstdout_perror(state_data->pstate, "ipmi_cmd_get_device_id");
       return (-1);
     }
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "device_id", 
-                 &val);
-  fprintf (stdout, "Device ID:         %X\n", (unsigned int) val);
+  _FIID_OBJ_GET (cmd_rs, "device_id", &val);
+  pstdout_printf(state_data->pstate, 
+                 "Device ID:         %X\n", (unsigned int) val);
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "device_revision.revision", 
-                 &val);
-  fprintf (stdout, "Device Revision:   %d\n", (unsigned int) val);
+  _FIID_OBJ_GET (cmd_rs, "device_revision.revision", &val);
+  pstdout_printf(state_data->pstate, 
+                 "Device Revision:   %d\n", (unsigned int) val);
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "device_revision.sdr_support", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "device_revision.sdr_support", &val);
   if (val)
-    fprintf (stdout, "                   [SDR Support]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [SDR Support]\n");
   
   {
     uint64_t maj, min;
-    _FIID_OBJ_GET (cmd_rs, 
-                   "firmware_revision1.major_revision", 
-                   &maj);
-    _FIID_OBJ_GET (cmd_rs, 
-                   "firmware_revision2.minor_revision", 
-                   &min);
-    fprintf (stdout, "Firmware Revision: %d.%d\n", 
-	     (unsigned int) maj, (unsigned int) min);
+    _FIID_OBJ_GET (cmd_rs, "firmware_revision1.major_revision", &maj);
+    _FIID_OBJ_GET (cmd_rs, "firmware_revision2.minor_revision", &min);
+    pstdout_printf(state_data->pstate, 
+                   "Firmware Revision: %d.%d\n", 
+                   (unsigned int) maj, 
+                   (unsigned int) min);
   }
   
   _FIID_OBJ_GET (cmd_rs, 
                  "firmware_revision1.device_available", 
                  &val);
   if (val == 0)
-    fprintf (stdout, 
-	     "                   [Device Available (normal operation)]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [Device Available (normal operation)]\n");
   else
     {
-      fprintf (stdout, 
-	       "                   [Device Not Available]\n");
-      fprintf (stdout, 
-	       "                   [firmware, SDR update or self init in progress]\n");
+      pstdout_printf(state_data->pstate, 
+                     "                   [Device Not Available]\n");
+      pstdout_printf(state_data->pstate, 
+                     "                   [firmware, SDR update or self init in progress]\n");
     }
   
   {
     uint64_t ms, ls;
-    _FIID_OBJ_GET (cmd_rs, 
-                   "ipmi_version.ms_bits", 
-                   &ms);
-    _FIID_OBJ_GET (cmd_rs, 
-                   "ipmi_version.ls_bits", 
-                   &ls);
-    fprintf (stdout, 
-	     "IPMI Version:      %d.%d\n", (unsigned int) ms, (unsigned int) ls);
+    _FIID_OBJ_GET (cmd_rs, "ipmi_version.ms_bits", &ms);
+    _FIID_OBJ_GET (cmd_rs, "ipmi_version.ls_bits", &ls);
+    pstdout_printf(state_data->pstate, 
+                   "IPMI Version:      %d.%d\n",
+                   (unsigned int) ms, 
+                   (unsigned int) ls);
   }
   
-  fprintf (stdout, "Additional Device Support:\n");
+  pstdout_printf(state_data->pstate, 
+                 "Additional Device Support:\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.sensor_device", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.sensor_device", &val);
   if(val)
-    fprintf (stdout, "                   [Sensor Device]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [Sensor Device]\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.sdr_repository_device", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.sdr_repository_device", &val);
   if(val)
-    fprintf (stdout, "                   [SDR Repository Device]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [SDR Repository Device]\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.sel_device", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.sel_device", &val);
   if(val)
-    fprintf (stdout, "                   [SEL Device]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [SEL Device]\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.fru_inventory_device", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.fru_inventory_device", &val);
   if(val)
-    fprintf (stdout, "                   [FRU Inventory Device]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [FRU Inventory Device]\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.ipmb_event_receiver", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.ipmb_event_receiver", &val);
   if(val)
-    fprintf (stdout, "                   [IPMB Event Receiver]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [IPMB Event Receiver]\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.ipmb_event_generator", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.ipmb_event_generator", &val);
   if(val)
-    fprintf (stdout, "                   [IPMB Event Generator]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [IPMB Event Generator]\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.bridge", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.bridge", &val);
   if(val)
-    fprintf (stdout, "                   [Bridge]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [Bridge]\n");
   
-  _FIID_OBJ_GET (cmd_rs, 
-                 "additional_device_support.chassis_device", 
-                 &val);
+  _FIID_OBJ_GET (cmd_rs, "additional_device_support.chassis_device", &val);
   if(val)
-    fprintf (stdout, "                   [Chassis Device]\n");
+    pstdout_printf(state_data->pstate, 
+                   "                   [Chassis Device]\n");
   
   {
     uint64_t manufacturer_id, product_id;
     
     _FIID_OBJ_GET (cmd_rs, "manufacturer_id.id", &manufacturer_id);
-    fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
+    pstdout_printf(state_data->pstate, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
     
     _FIID_OBJ_GET (cmd_rs, "product_id", &product_id);
-    fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) product_id);
+    pstdout_printf(state_data->pstate, "Product ID:        %Xh\n", (unsigned int) product_id);
     
     _FIID_OBJ_GET (cmd_rs, "auxiliary_firmware_revision_info", &val);
     switch (manufacturer_id)
@@ -215,19 +205,19 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 
 	      if (!(intel_rs = fiid_obj_create(tmpl_cmd_get_device_id_sr870bn4_rs)))
 		{
-		  perror ("fiid_obj_create");
+                  pstdout_perror(state_data->pstate, "fiid_obj_create");
                   return (-1);
 		}
 
 	      if ((len = fiid_obj_get_all(cmd_rs, buf, 1024)) < 0)
 		{
-		  perror("fiid_obj_get_all");
+                  pstdout_perror(state_data->pstate, "fiid_obj_get_all");
                   return (-1);
 		}
 
 	      if (fiid_obj_set_all(intel_rs, buf, len) < 0)
 		{
-		  perror("fiid_obj_set_all");
+                  pstdout_perror(state_data->pstate, "fiid_obj_set_all");
                   return (-1);
 		}
 	      
@@ -243,10 +233,12 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 	      _FIID_OBJ_GET (intel_rs,
                              "auxiliary_firmware_revision_info.pia.minor",
                              &pia_min);
-	      fprintf (stdout, 
-		       "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
-		       (unsigned int) bc_maj, (unsigned int) bc_min, 
-		       (unsigned int) pia_maj, (unsigned int) pia_min);
+              pstdout_printf(state_data->pstate, 
+                             "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
+                             (unsigned int) bc_maj, 
+                             (unsigned int) bc_min, 
+                             (unsigned int) pia_maj, 
+                             (unsigned int) pia_min);
 
 	      fiid_obj_destroy(intel_rs);
 	      break;
@@ -254,7 +246,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 	  }
 	break;
       default:
-	fprintf (stdout, "Aux Firmware Revision Info: %Xh\n", (unsigned int) val);
+        pstdout_printf(state_data->pstate, "Aux Firmware Revision Info: %Xh\n", (unsigned int) val);
       }
   }
 
@@ -275,7 +267,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
 
   if (!(data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
     {
-      perror ("fiid_obj_create");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return (-1);
     }
 
@@ -320,7 +312,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
-  printf ("Channel Information:\n");
+  pstdout_printf (state_data->pstate, "Channel Information:\n");
   for (i = 0; i < NUM_CHANNELS; i++)
     {
       char *medium_type = NULL;
@@ -329,7 +321,9 @@ display_channel_info (bmc_info_state_data_t *state_data)
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
         continue;
       
-      printf ("       Channel No: %d\n", channel_info_list[i].channel_number);
+      pstdout_printf (state_data->pstate, 
+                      "       Channel No: %d\n", 
+                      channel_info_list[i].channel_number);
       
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
         medium_type = "Reserved";
@@ -382,11 +376,14 @@ display_channel_info (bmc_info_state_data_t *state_data)
         protocol_type = "OEM";
 
       if (medium_type)
-        fprintf (stdout, "      Medium Type: %s\n", medium_type);
-      
+        pstdout_printf (state_data->pstate, 
+                        "      Medium Type: %s\n", 
+                        medium_type);
+
       if (protocol_type)
-        fprintf (stdout, "    Protocol Type: %s\n", protocol_type);
-                  
+        pstdout_printf (state_data->pstate, 
+                        "    Protocol Type: %s\n", 
+                        protocol_type);
     }
   
   return 0;
@@ -411,46 +408,51 @@ run_cmd_args (bmc_info_state_data_t *state_data)
 }
 
 static int
-_bmc_info (void *arg)
+_bmc_info(pstdout_state_t pstate,
+          const char *hostname,
+          void *arg)
 {
   bmc_info_state_data_t state_data;
   bmc_info_prog_data_t *prog_data;
   ipmi_device_t dev = NULL;
   int exit_code = -1;
-  
-  prog_data = (bmc_info_prog_data_t *)arg;
 
-  if (prog_data->args->common.host != NULL)
+  prog_data = (bmc_info_prog_data_t *)arg;
+  
+  if (hostname && strcmp(hostname, "localhost") != 0)
     {
-      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-                                       prog_data->args->common.host,
-                                       prog_data->args->common.username,
-                                       prog_data->args->common.password,
-                                       prog_data->args->common.authentication_type,
+      if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN, 
+                                       hostname,
+                                       prog_data->args->common.username, 
+                                       prog_data->args->common.password, 
+                                       prog_data->args->common.authentication_type, 
                                        prog_data->args->common.privilege_level,
                                        prog_data->args->common.session_timeout,
                                        prog_data->args->common.retry_timeout,
                                        prog_data->debug_flags)))
         {
-          perror ("ipmi_open_outofband()");
+          pstdout_perror(pstate, "ipmi_open_outofband");
           exit_code = EXIT_FAILURE;
           goto cleanup;
-        }
+	}
     }
-  else
+  else 
     {
       if (!ipmi_is_root())
         {
-          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+          pstdout_fprintf(pstate, 
+                          stderr, 
+                          "%s: Permission Denied\n", 
+                          prog_data->progname);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
 
       if (prog_data->args->common.driver_type == IPMI_DEVICE_UNKNOWN)
-        {
-          if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI,
-                                        prog_data->args->common.disable_auto_probe,
-                                        prog_data->args->common.driver_address,
+	{
+	  if (!(dev = ipmi_open_inband (IPMI_DEVICE_OPENIPMI, 
+                                        prog_data->args->common.disable_auto_probe, 
+                                        prog_data->args->common.driver_address, 
                                         prog_data->args->common.register_spacing,
                                         prog_data->args->common.driver_device,
                                         prog_data->debug_flags)))
@@ -469,39 +471,40 @@ _bmc_info (void *arg)
                                                 prog_data->args->common.driver_device,
                                                 prog_data->debug_flags)))
                     {
-                      perror ("ipmi_open_inband()");
+                      pstdout_perror(pstate, "ipmi_open_inband");
                       exit_code = EXIT_FAILURE;
                       goto cleanup;
-                    }
-                }
-            }
-        }
-      else
-        {
-          if (!(dev = ipmi_open_inband (prog_data->args->common.driver_type,
-                                        prog_data->args->common.disable_auto_probe,
-                                        prog_data->args->common.driver_address,
+		    }
+		}
+	    }
+	}
+      else 
+	{
+	  if (!(dev = ipmi_open_inband (prog_data->args->common.driver_type, 
+                                        prog_data->args->common.disable_auto_probe, 
+                                        prog_data->args->common.driver_address, 
                                         prog_data->args->common.register_spacing,
                                         prog_data->args->common.driver_device,
                                         prog_data->debug_flags)))
             {
-              perror ("ipmi_open_inband()");
+              pstdout_perror(pstate, "ipmi_open_inband");
               exit_code = EXIT_FAILURE;
               goto cleanup;
-            }
-        }
+	    }
+	}
     }
 
   memset(&state_data, '\0', sizeof(bmc_info_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
 
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
- 
+
   exit_code = 0;
  cleanup:
   if (dev)
@@ -515,6 +518,7 @@ main (int argc, char **argv)
   bmc_info_prog_data_t prog_data;
   struct bmc_info_arguments cmd_args;
   int exit_code;
+  int rv;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
@@ -524,6 +528,15 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   bmc_info_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
+
+  if (pstdout_init() < 0)
+    {
+      fprintf(stderr,
+              "pstdout_init: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
@@ -539,8 +552,75 @@ main (int argc, char **argv)
 #else  /* NDEBUG */
   prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
-  
-  exit_code = _bmc_info(&prog_data);
-  
+
+  if (prog_data.args->common.host)
+    {
+      int count;
+
+      if ((count = pstdout_hostnames_count(prog_data.args->common.host)) < 0)
+        {
+          fprintf(stderr,
+                  "pstdout_hostnames_count: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (count > 1)
+        {
+          unsigned int output_flags;
+
+          if (prog_data.args->hostrange.buffer_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else if (prog_data.args->hostrange.consolidate_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else 
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+
+          if (pstdout_set_output_flags(output_flags) < 0)
+            {
+              fprintf(stderr,
+                      "pstdout_set_output_flags: %s\n",
+                      pstdout_strerror(pstdout_errnum));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+
+          if (prog_data.args->hostrange.fanout)
+            {
+              if (pstdout_set_fanout(prog_data.args->hostrange.fanout) < 0)
+                {
+                  fprintf(stderr,
+                          "pstdout_set_fanout: %s\n",
+                          pstdout_strerror(pstdout_errnum));
+                  exit_code = EXIT_FAILURE;
+                  goto cleanup;
+                }
+            }
+        }
+
+      if (prog_data.args->hostrange.eliminate)
+        {
+          if (eliminate_nodes(&(prog_data.args->common.host)) < 0)
+            {
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }         
+    }
+
+  if ((rv = pstdout_launch(prog_data.args->common.host,
+                           _bmc_info,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr, 
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = rv;
+ cleanup:
   return (exit_code);
 }

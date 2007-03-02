@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw.h,v 1.2 2007-01-23 00:53:16 chu11 Exp $ 
+   $Id: ipmi-raw.h,v 1.3 2007-03-02 00:56:26 chu11 Exp $ 
    
    ipmi-raw.h - ipmi-raw command line argument parser.
    
@@ -27,6 +27,7 @@
 #include <limits.h>	/* ARG_MAX */
 
 #include "argp-common.h"
+#include "pstdout.h"
 
 enum ipmi_raw_argp_option_keys
   {
@@ -36,6 +37,7 @@ enum ipmi_raw_argp_option_keys
 struct ipmi_raw_arguments
 {
   struct common_cmd_args common;
+  struct hostrange_cmd_args hostrange;
   char *cmd_file;
   uint8_t cmd[ARG_MAX];
   int cmd_length;
@@ -52,6 +54,7 @@ typedef struct ipmi_raw_state_data
 {
   ipmi_raw_prog_data_t *prog_data;
   ipmi_device_t dev;
+  pstdout_state_t pstate;
 } ipmi_raw_state_data_t;
 
 #endif

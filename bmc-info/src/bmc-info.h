@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info.h,v 1.3 2007-01-23 16:56:17 chu11 Exp $ 
+   $Id: bmc-info.h,v 1.4 2007-03-02 00:56:26 chu11 Exp $ 
    
    bmc-info.h - displays BMC information.
    
@@ -26,10 +26,12 @@
 #include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
+#include "pstdout.h"
 
 struct bmc_info_arguments
 {
   struct common_cmd_args common;
+  struct hostrange_cmd_args hostrange;
 };
 
 typedef struct bmc_info_prog_data
@@ -43,6 +45,7 @@ typedef struct bmc_info_state_data
 {
   bmc_info_prog_data_t *prog_data;
   ipmi_device_t dev;
+  pstdout_state_t pstate;
 } bmc_info_state_data_t;
 
 #endif

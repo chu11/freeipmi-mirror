@@ -1,0 +1,1 @@
+SUBDIRS = libipmidetect ipmidetect ipmidetectd

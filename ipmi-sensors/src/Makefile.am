@@ -5,6 +5,10 @@ ipmi_sensors_SOURCES=ipmi-sensors.c sensors-very-verbose-display.c \
 ipmi_sensors_LDADD = ../../common/src/libargpcommon.la \
 	../../common/src/libipmicommon.la \
 	../../common/src/libsdr.la \
+	../../common/src/libpstdout.la \
+	../../common/src/libeliminate.la \
+	../../common/src/libllnlcommon.la \
+	../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../common/src/libsensor.la \
 	../../libfreeipmi/src/libfreeipmi.la \
 	../../common/src/libfreeipmiportability.la
@@ -15,7 +19,8 @@ noinst_HEADERS=ipmi-sensors.h ipmi-sensors-utils.h sensors-verbose-display.h \
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"
+	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
+	-D_REENTRANT
  
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
@@ -33,6 +38,18 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libsensor.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libpstdout.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libeliminate.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libllnlcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../ipmidetect/src/libipmidetect/libipmidetect.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

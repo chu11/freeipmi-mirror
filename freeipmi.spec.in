@@ -49,6 +49,14 @@ Requires: freeipmi = %{version}-%{release}
 %description ipmimonitoring
 Provides library for IPMI host monitoring.
 
+%package ipmidetectd
+Summary: Development/System
+Group: Applications/System
+Requires: freeipmi = %{version}-%{release}
+Requires: chkconfig
+%description ipmidetectd
+IPMI node detection daemon.
+
 %if %{?_with_debug:1}%{!?_with_debug:0}
   %define _enable_debug --enable-debug --enable-trace --enable-syslog
 %endif
@@ -68,6 +76,7 @@ DESTDIR="$RPM_BUILD_ROOT" make install
 # fix coherance problems with associated script filenames
 mkdir -p $RPM_BUILD_ROOT/%{_initrddir}/
 mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/freeipmi-bmc-watchdog $RPM_BUILD_ROOT/%{_initrddir}/freeipmi-bmc-watchdog
+mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/freeipmi-ipmidetectd $RPM_BUILD_ROOT/%{_initrddir}/freeipmi-ipmidetectd
 rm -f %{buildroot}%{_infodir}/dir
 # kludge to get around rpmlint complaining about 0 length semephore file
 echo freeipmi > %{buildroot}/var/lib/freeipmi/ipckey
@@ -142,9 +151,14 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
+%doc %{_datadir}/doc/%{name}/COPYING.pstdout
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout
+%doc %{_datadir}/doc/%{name}/COPYING.ipmidetect
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
 %{_libdir}/libipmiconsole*so*
 %{_libdir}/libfreeipmi*so*
+%{_libdir}/libipmidetect*so*
 /var/lib/*
 %{_sbindir}/bmc-autoconfig
 %{_sbindir}/bmc-config
@@ -159,6 +173,7 @@ fi
 %{_sbindir}/rmcpping
 %{_sbindir}/ipmiconsole
 %{_sbindir}/ipmi-chassis
+%{_sbindir}/ipmidetect
 %{_mandir}/man8/bmc-autoconfig.8*
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
@@ -175,6 +190,9 @@ fi
 %{_mandir}/man8/ipmiconsole.8*
 %{_mandir}/man5/ipmiconsole.conf.5*
 %{_mandir}/man8/ipmi-chassis.8*
+%{_mandir}/man3/libipmidetect.3*
+%{_mandir}/man8/ipmidetect.8*
+%{_mandir}/man5/ipmidetect.conf.5*
 
 %files devel
 %defattr(-,root,root)
@@ -186,9 +204,12 @@ fi
 %{_libdir}/libfreeipmi.a
 %{_libdir}/libipmiconsole.la
 %{_libdir}/libfreeipmi.la
+%{_libdir}/libipmidetect.a
+%{_libdir}/libipmidetect.la
 %dir %{_includedir}/freeipmi
 %dir %{_includedir}/freeipmi/udm
 %{_includedir}/ipmiconsole.h
+%{_includedir}/ipmidetect.h
 %{_includedir}/freeipmi/*.h
 %{_includedir}/freeipmi/udm/*.h
 %{_mandir}/man3/*
@@ -214,7 +235,16 @@ fi
 %{_mandir}/man8/ipmimonitoring.8*
 %dir /var/cache/ipmimonitoringsdrcache
 
+%files ipmidetectd
+%defattr(-,root,root)
+%config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
+%{_sbindir}/ipmidetectd
+%{_mandir}/man5/ipmidetectd.conf.5*
+%{_mandir}/man8/ipmidetectd.8*
+
 %changelog
+* Fri Feb 28 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
+- Add ipmidetectd subpackage.
 * Fri Feb 16 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
 - Add ipmimonitoring subpackage.
 * Sun Jul 30 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0-1

@@ -6,6 +6,8 @@ For Users
 o Added ipmi-pef 
 o Added ipmi-chassis
 o Added ipmimonitoring
+o Added ipmidetect
+o Added hostrange support to ipmi-sensors, ipmi-sel, ipmi-raw, and bmc-info
 o -Q option added for ipmi-sensors and ipmi-sel.
 o -P option added to allow for password prompting.
 o Various bug fixes throughout FreeIPMI.
@@ -14,6 +16,7 @@ For Developers
 --------------
 o Added SDR debugging capabilities to ipmi-sdr and ipmi-sensors.
 o Added libipmimonitoring
+o Added libipmidetect
 
 0.3.0
 -----

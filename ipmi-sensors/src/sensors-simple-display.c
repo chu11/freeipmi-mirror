@@ -24,6 +24,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-utils.h"
+#include "pstdout.h"
 
 static int 
 sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
@@ -31,50 +32,63 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
 				    sdr_full_record_t *record, 
 				    sensor_reading_t *sensor_reading)
 {
-  printf ("%d: %s (%s): ", 
-	  record_id, 
-	  record->sensor_name, 
-	  ipmi_get_sensor_group (record->sensor_type));
+  pstdout_printf (state_data->pstate,
+                  "%d: %s (%s): ", 
+                  record_id, 
+                  record->sensor_name, 
+                  ipmi_get_sensor_group (record->sensor_type));
   
   switch (ipmi_sensor_classify (record->event_reading_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
       if (sensor_reading == NULL)
 	{
-	  printf ("NA");
+	  pstdout_printf (state_data->pstate,
+                          "NA");
 	}
       else 
 	{
-	  printf ("%.2f %s ", 
-		  round_double2 (sensor_reading->current_reading), 
-		  ipmi_sensor_units_abbreviated[record->sensor_unit]);
+	  pstdout_printf (state_data->pstate,
+                          "%.2f %s ", 
+                          round_double2 (sensor_reading->current_reading), 
+                          ipmi_sensor_units_abbreviated[record->sensor_unit]);
 	}
       if (record->readable_threshold_lower_critical_threshold)
 	{
-	  printf ("(%.2f/", round_double2 (record->lower_critical_threshold));
+	  pstdout_printf (state_data->pstate,
+                          "(%.2f/", 
+                          round_double2 (record->lower_critical_threshold));
 	}
       else 
 	{
-	  printf ("(NA/");
+	  pstdout_printf (state_data->pstate,
+                          "(NA/");
 	}
       if (record->readable_threshold_upper_critical_threshold)
 	{
-	  printf ("%.2f): ", round_double2 (record->upper_critical_threshold));
+	  pstdout_printf (state_data->pstate,
+                          "%.2f): ", 
+                          round_double2 (record->upper_critical_threshold));
 	}
       else 
 	{
-	  printf ("NA): ");
+	  pstdout_printf (state_data->pstate,
+                          "NA): ");
 	}
     default:
       if (sensor_reading == NULL)
 	{
-	  printf ("[%s]\n", "Unknown");
+	  pstdout_printf (state_data->pstate,
+                          "[%s]\n", 
+                          "Unknown");
 	}
       else 
 	{
 	  if (sensor_reading->event_message_list == NULL)
 	    {
-	      printf ("[%s]\n", "OK");
+	      pstdout_printf (state_data->pstate,
+                              "[%s]\n", 
+                              "OK");
 	    }
 	  else 
 	    {
@@ -84,9 +98,12 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
 		   sensor_reading->event_message_list[i]; 
 		   i++)
 		{
-		  printf ("[%s]", sensor_reading->event_message_list[i]);
+		  pstdout_printf (state_data->pstate,
+                                  "[%s]",
+                                  sensor_reading->event_message_list[i]);
 		}
-	      printf ("\n");
+	      pstdout_printf (state_data->pstate,
+                              "\n");
 	    }
 	}
     }
@@ -100,19 +117,24 @@ sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
 				       sdr_compact_record_t *record, 
 				       sensor_reading_t *sensor_reading)
 {
-  printf ("%d: %s (%s): ", 
-	  record_id, 
-	  record->sensor_name, 
-	  ipmi_get_sensor_group (record->sensor_type));
+  pstdout_printf (state_data->pstate,
+                  "%d: %s (%s): ", 
+                  record_id, 
+                  record->sensor_name, 
+                  ipmi_get_sensor_group (record->sensor_type));
   if (sensor_reading == NULL)
     {
-      printf ("[%s]\n", "Unknown");
+      pstdout_printf (state_data->pstate,
+                      "[%s]\n", 
+                      "Unknown");
     }
   else 
     {
       if (sensor_reading->event_message_list == NULL)
 	{
-	  printf ("[%s]\n", "OK");
+	  pstdout_printf (state_data->pstate,
+                          "[%s]\n", 
+                          "OK");
 	}
       else 
 	{
@@ -122,9 +144,12 @@ sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
 	       sensor_reading->event_message_list[i]; 
 	       i++)
 	    {
-	      printf ("[%s]", sensor_reading->event_message_list[i]);
+	      pstdout_printf (state_data->pstate,
+                              "[%s]", 
+                              sensor_reading->event_message_list[i]);
 	    }
-	  printf ("\n");
+	  pstdout_printf (state_data->pstate,
+                          "\n");
 	}
     }
   

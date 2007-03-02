@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.8 2007-02-02 23:34:37 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.9 2007-03-02 00:56:26 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -60,23 +60,23 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS, 
+    ARGP_COMMON_OPTIONS_HOSTRANGED, 
     {"verbose",     VERBOSE_KEY,      0, 0, 
-     "Increase verbosity in output.  More -v adds more verbosity.", 13}, 
+     "Increase verbosity in output.  More -v adds more verbosity.", 17}, 
     {"sdr-info",    SDR_INFO_KEY,     0, 0, 
-     "Show SDR Information.", 14}, 
+     "Show SDR Information.", 18}, 
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0, 
-     "Flush sensor cache.", 15}, 
+     "Flush sensor cache.", 19}, 
     {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
-     "Do not output cache creation information.", 16},
+     "Do not output cache creation information.", 20},
     {"list-groups", LIST_GROUPS_KEY,  0, 0, 
-     "List sensor groups.", 17}, 
+     "List sensor groups.", 21}, 
     {"group",       GROUP_KEY,        "GROUP", 0, 
-     "Show sensors belongs to this GROUP.", 18}, 
+     "Show sensors belongs to this GROUP.", 22}, 
     {"sensors",     SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
-     "Show listed sensors.", 19}, 
+     "Show listed sensors.", 23}, 
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
-     "Use DIRECTORY for sensor cache.", 20}, 
+     "Use DIRECTORY for sensor cache.", 24}, 
     { 0 }
   };
 
@@ -205,6 +205,7 @@ static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sensors_arguments *cmd_args = state->input;
+  error_t ret;
   
   switch (key)
     {
@@ -269,8 +270,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return common_parse_opt (key, arg, state, 
-			       &(cmd_args->common));
+      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+      return ret;
     }
   
   return 0;
@@ -280,6 +283,7 @@ void
 ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
+  init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->verbose_wanted = 0;
   cmd_args->verbose_count = 0;
   cmd_args->sdr_info_wanted = 0;

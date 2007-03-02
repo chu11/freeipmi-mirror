@@ -1,0 +1,35 @@
+.TP
+\fB\-B\fR, \fB\-\-buffer-output\fR
+Buffer hostranged output.  Each node's standard output will output
+after the node has completed its IPMI operation.  When specifying this
+option, data may appear to output slower to the user since the the
+entire IPMI operation must complete before any data can be output.
+See HOSTRANGED OUTPUT below for additional information.
+.TP
+\fB\-C\fR, \fB\-\-consolidate-output\fR
+Consolidate hostranged output.  The complete standard output from
+every node specified will be consolidated so that nodes with identical
+output are not output twice.  A header will list those nodes with the
+consolidated output.  When this option is specified, no output can be
+seen until the IPMI operations to all nodes has completed.  If the
+user breaks out of the program early, all currently consolidated
+output will be dumped.  See HOSTRANGED OUTPUT below for additional
+information.
+.TP
+\fB\-F\fR, \fB\-\-fanout\fR
+Set multiple host fanout.  A "sliding window" (or fanout) algorithm is
+used for parallel IPMI communication so that slower nodes or timed out
+nodes will not impede parallel communication.  The maximum number of
+threads available at the same time is limited by the fanout.  The
+default is 32.  See HOSTRANGED OUTPUT below for additional
+information.
+.TP
+\fB\-E\fR, \fB\-\-eliminate\fR
+Eliminate hosts determined as undetected by 
+.B ipmidetect.  
+This attempts to remove the common issue of hostranged execution
+timing out due to several nodes being removed from service in a large
+cluster.  The
+.B ipmidetectd 
+daemon must be running on the node executing the command.  See
+HOSTRANGED OUTPUT below for additional information.

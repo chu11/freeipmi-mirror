@@ -51,6 +51,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "sensors-very-verbose-display.h"
 
 #include "freeipmi-portability.h"
+#include "pstdout.h"
+#include "eliminate.h"
 
 int 
 display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
@@ -66,57 +68,72 @@ display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   
   if (get_sdr_repository_info (state_data->dev, &sdr_repo_info) < 0)
     {
-      fprintf (stderr, "%s: unable to get SDR Repository information\n", 
-	       program_invocation_short_name);
+      pstdout_fprintf (state_data->pstate, 
+                       stderr,
+                       "%s: unable to get SDR Repository information\n", 
+                       program_invocation_short_name);
       return (-1);
     }
   
-  printf ("SDR version:                     %d.%d\n", 
-	  sdr_repo_info.sdr_version_major, 
-	  sdr_repo_info.sdr_version_minor);
-  printf ("SDR record count:                %d\n", 
-	  sdr_repo_info.record_count);
-  printf ("Free space remaining:            %d bytes\n", 
-	  sdr_repo_info.free_space);
+  pstdout_printf (state_data->pstate, 
+                  "SDR version:                     %d.%d\n", 
+                  sdr_repo_info.sdr_version_major, 
+                  sdr_repo_info.sdr_version_minor);
+  pstdout_printf (state_data->pstate, 
+                  "SDR record count:                %d\n", 
+                  sdr_repo_info.record_count);
+  pstdout_printf (state_data->pstate, 
+                  "Free space remaining:            %d bytes\n", 
+                  sdr_repo_info.free_space);
   
   t = sdr_repo_info.most_recent_addition_timestamp;
   tmp = localtime (&t);
   strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", tmp);
-  printf ("Most recent addition timestamp:  %s\n", str);
+  pstdout_printf (state_data->pstate, 
+                  "Most recent addition timestamp:  %s\n", 
+                  str);
   
   t = sdr_repo_info.most_recent_erase_timestamp;
   tmp = localtime (&t);
   strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", tmp);
-  printf ("Most recent erase timestamp:     %s\n", str);
+  pstdout_printf (state_data->pstate, 
+                  "Most recent erase timestamp:     %s\n", 
+                  str);
   
-  printf ("Get SDR Repository Allocation Information Command supported:         %s\n", 
-	  (sdr_repo_info.get_sdr_repository_allocation_info_command_supported ? "Yes" : "No"));
-  printf ("Reserve SDR Repository Command supported:                            %s\n", 
-	  (sdr_repo_info.reserve_sdr_repository_command_supported ? "Yes" : "No"));
-  printf ("Partial Add SDR Command supported:                                   %s\n", 
-	  (sdr_repo_info.partial_add_sdr_command_supported ? "Yes" : "No"));
-  printf ("Delete SDR Command supported:                                        %s\n", 
-	  (sdr_repo_info.delete_sdr_command_supported ? "Yes" : "No"));
-  printf ("Modal/non-modal SDR Repository Update operation supported:           ");
+  pstdout_printf (state_data->pstate, 
+                  "Get SDR Repository Allocation Information Command supported:         %s\n", 
+                  (sdr_repo_info.get_sdr_repository_allocation_info_command_supported ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Reserve SDR Repository Command supported:                            %s\n", 
+                  (sdr_repo_info.reserve_sdr_repository_command_supported ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Partial Add SDR Command supported:                                   %s\n", 
+                  (sdr_repo_info.partial_add_sdr_command_supported ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Delete SDR Command supported:                                        %s\n", 
+                  (sdr_repo_info.delete_sdr_command_supported ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Modal/non-modal SDR Repository Update operation supported:           ");
   switch (sdr_repo_info.modal_non_modal_sdr_repository_update_operation_supported)
     {
     case 0:
-      printf ("Unspecified\n");
+      pstdout_printf (state_data->pstate, "Unspecified\n");
       break;
     case 1:
-      printf ("Non-Modal\n");
+      pstdout_printf (state_data->pstate, "Non-Modal\n");
       break;
     case 2:
-      printf ("Modal\n");
+      pstdout_printf (state_data->pstate, "Modal\n");
       break;
     case 3:
-      printf ("Both\n");
+      pstdout_printf (state_data->pstate, "Both\n");
       break;
     default:
-      printf ("Unknown\n");
+      pstdout_printf (state_data->pstate, "Unknown\n");
     }
-  printf ("SDR could not be written due to lack of space in the SDR Repository: %s\n", 
-	  (sdr_repo_info.overflow_flag ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "SDR could not be written due to lack of space in the SDR Repository: %s\n", 
+                  (sdr_repo_info.overflow_flag ? "Yes" : "No"));
   
   return (0);
 }
@@ -133,19 +150,25 @@ display_group_list (ipmi_sensors_state_data_t *state_data)
     {
       if (!(group = strdupa (ipmi_sensor_types[i])))
         {
-          fprintf (stderr, "strdupa: %s\n", strerror(errno));
+          pstdout_fprintf (state_data->pstate, 
+                           stderr, 
+                           "strdupa: %s\n", 
+                           strerror(errno));
           return (-1);
         }
       str_replace_chr (group, ' ', '_');
-      printf ("%s\n", group);
+      pstdout_printf (state_data->pstate, "%s\n", group);
     }
   if (!(group = strdupa (ipmi_oem_sensor_type)))
     {
-      fprintf (stderr, "strdupa: %s\n", strerror(errno));
+      pstdout_fprintf (state_data->pstate, 
+                       stderr, 
+                       "strdupa: %s\n", 
+                       strerror(errno));
       return (-1);
     }
   str_replace_chr (group, ' ', '_');
-  printf ("%s\n", group);
+  pstdout_printf (state_data->pstate, "%s\n", group);
   
   return 0;
 }
@@ -176,10 +199,11 @@ init_sdr_cache (ipmi_sensors_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host, 
+  if ((sdr_cache_filename = get_sdr_cache_filename (state_data->hostname,
 						    args->sdr_cache_dir)) == NULL)
     {
-      perror ("error: get_sdr_cache_filename (): ");
+      pstdout_perror (state_data->pstate,
+                      "error: get_sdr_cache_filename (): ");
       return (-1);
     }
 
@@ -222,7 +246,15 @@ init_sdr_cache (ipmi_sensors_state_data_t *state_data)
                              0);
 #endif /* NDEBUG */
       if (rc < 0)
-        goto cleanup;
+        {
+          /* No error will output otherwise */
+          if (args->quiet_cache_wanted)
+            pstdout_fprintf (state_data->pstate,
+                             stderr, 
+                             "SDR Cache creation failed: %s\n",
+                             strerror(errno));
+          goto cleanup;
+        }
       fclose (fp);
       fp = NULL;
     }
@@ -443,10 +475,10 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
     {
       int retval;
       if (!args->quiet_cache_wanted)
-        printf ("flushing cache... ");
-      retval = flush_sdr_cache_file (args->common.host, args->sdr_cache_dir);
+        pstdout_printf (state_data->pstate, "flushing cache... ");
+      retval = flush_sdr_cache_file (state_data->hostname, args->sdr_cache_dir);
       if (!args->quiet_cache_wanted)
-        printf ("%s\n", (retval ? "FAILED" : "done"));
+        pstdout_printf (state_data->pstate, "%s\n", (retval ? "FAILED" : "done"));
       return retval;
     }
   
@@ -455,8 +487,10 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
   
   if (init_sdr_cache (state_data) < 0)
     {
-      fprintf (stderr, "%s: sdr cache initialization failed\n", 
-	       program_invocation_short_name);
+      pstdout_fprintf (state_data->pstate, 
+                       stderr, 
+                       "%s: sdr cache initialization failed\n", 
+                       program_invocation_short_name);
       goto cleanup;
     }
   
@@ -470,7 +504,9 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
 }
 
 static int
-_ipmi_sensors (void *arg)
+_ipmi_sensors (pstdout_state_t pstate,
+               const char *hostname,
+               void *arg)
 {
   ipmi_sensors_state_data_t state_data;
   ipmi_sensors_prog_data_t *prog_data;
@@ -479,10 +515,10 @@ _ipmi_sensors (void *arg)
 
   prog_data = (ipmi_sensors_prog_data_t *)arg;
   
-  if (prog_data->args->common.host != NULL)
+  if (hostname && strcmp(hostname, "localhost") != 0)
     {
       if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-				       prog_data->args->common.host,
+				       hostname,
                                        prog_data->args->common.username,
                                        prog_data->args->common.password,
                                        prog_data->args->common.authentication_type, 
@@ -491,7 +527,7 @@ _ipmi_sensors (void *arg)
                                        prog_data->args->common.retry_timeout, 
 				       prog_data->debug_flags)))
 	{
-	  perror ("ipmi_open_outofband()");
+	  pstdout_perror (pstate, "ipmi_open_outofband()");
 	  exit_code = EXIT_FAILURE;
           goto cleanup;
 	}
@@ -500,7 +536,10 @@ _ipmi_sensors (void *arg)
     {
       if (!ipmi_is_root())
         {
-          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+          pstdout_fprintf(pstate,
+                          stderr, 
+                          "%s: Permission Denied\n", 
+                          prog_data->progname);
 	  exit_code = EXIT_FAILURE;
           goto cleanup;
         }
@@ -528,7 +567,7 @@ _ipmi_sensors (void *arg)
                                                 prog_data->args->common.driver_device,
                                                 prog_data->debug_flags)))
                     {
-                      perror ("ipmi_open_inband()");
+                      pstdout_perror (pstate, "ipmi_open_inband()");
                       exit_code = EXIT_FAILURE;
                       goto cleanup;
                     }
@@ -544,7 +583,7 @@ _ipmi_sensors (void *arg)
                                         prog_data->args->common.driver_device,
                                         prog_data->debug_flags)))
 	    {
-	      perror ("ipmi_open_inband()");
+	      pstdout_perror (pstate, "ipmi_open_inband()");
               exit_code = EXIT_FAILURE;
               goto cleanup;
 	    }
@@ -554,6 +593,8 @@ _ipmi_sensors (void *arg)
   memset(&state_data, '\0', sizeof(ipmi_sensors_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
+  state_data.hostname = (char *)hostname;
 
   if (run_cmd_args (&state_data) < 0)
     {
@@ -574,6 +615,7 @@ main (int argc, char **argv)
   ipmi_sensors_prog_data_t prog_data;
   struct ipmi_sensors_arguments cmd_args;
   int exit_code;
+  int rv;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
@@ -584,6 +626,15 @@ main (int argc, char **argv)
   ipmi_sensors_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
    
+  if (pstdout_init() < 0)
+    {
+      fprintf(stderr,
+              "pstdout_init: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
   for (i = 1; i < argc; i++)
@@ -599,6 +650,65 @@ main (int argc, char **argv)
   prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
 
+  if (prog_data.args->common.host)
+    {
+      int count;
+
+      if ((count = pstdout_hostnames_count(prog_data.args->common.host)) < 0)
+        {
+          fprintf(stderr,
+                  "pstdout_hostnames_count: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+      
+      if (count > 1)
+        {
+          unsigned int output_flags;
+
+          if (prog_data.args->hostrange.buffer_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else if (prog_data.args->hostrange.consolidate_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+
+          if (pstdout_set_output_flags(output_flags) < 0)
+            {
+              fprintf(stderr,
+                      "pstdout_set_output_flags: %s\n",
+                      pstdout_strerror(pstdout_errnum));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+
+          if (prog_data.args->hostrange.fanout)
+            {
+              if (pstdout_set_fanout(prog_data.args->hostrange.fanout) < 0)
+                {
+                  fprintf(stderr,
+                          "pstdout_set_fanout: %s\n",
+                          pstdout_strerror(pstdout_errnum));
+                  exit_code = EXIT_FAILURE;
+                  goto cleanup;
+                }
+            }
+          
+          /* We don't want caching info to output when are doing ranged output */
+          prog_data.args->quiet_cache_wanted = 1;
+        }
+
+      if (prog_data.args->hostrange.eliminate)
+        {
+          if (eliminate_nodes(&(prog_data.args->common.host)) < 0)
+            {
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+    }
+
   if (setup_sdr_cache_directory () == -1)
     {
       fprintf (stderr, "%s: sdr cache directory setup failed\n", 
@@ -607,7 +717,18 @@ main (int argc, char **argv)
       goto cleanup;
     }
 
-  exit_code = _ipmi_sensors(&prog_data);
+  if ((rv = pstdout_launch(prog_data.args->common.host,
+                           _ipmi_sensors,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = rv;
  cleanup:
   return (exit_code);
 }

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.4.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.81 2007-02-28 04:20:38 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.82 2007-03-02 00:56:26 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -24,6 +24,11 @@ AC_CONFIG_FILES([
 	ipmiconsole/src/libipmiconsole/Makefile ipmiconsole/src/ipmiconsole/Makefile
 	ipmimonitoring/Makefile ipmimonitoring/src/Makefile
 	ipmimonitoring/src/libipmisdrcache/Makefile ipmimonitoring/src/libipmimonitoring/Makefile ipmimonitoring/src/ipmimonitoring/Makefile
+        ipmidetect/Makefile 
+        ipmidetect/src/Makefile
+        ipmidetect/src/ipmidetect/Makefile
+        ipmidetect/src/ipmidetectd/Makefile
+        ipmidetect/src/libipmidetect/Makefile
         ipmi-raw/Makefile ipmi-raw/src/Makefile 
 	ipmi-raw/ipmi-raw.8.pre
         ipmi-sel/Makefile ipmi-sel/src/Makefile 
@@ -42,6 +47,11 @@ AC_CONFIG_FILES([
         ipmiconsole/libipmiconsole.3
 	ipmimonitoring/ipmimonitoring.8
         ipmimonitoring/libipmimonitoring.3
+        ipmidetect/ipmidetect.8
+        ipmidetect/ipmidetect.conf.5
+        ipmidetect/ipmidetectd.8
+        ipmidetect/ipmidetectd.conf.5
+        ipmidetect/libipmidetect.3
         ipmiping/ipmiping.8 rmcpping/rmcpping.8
 	bmc-config/Makefile bmc-config/src/Makefile
 	bmc-config/bmc-config.8.pre bmc-config/bmc-config.conf.5 
@@ -98,6 +108,24 @@ LIBIPMIMONITORING_REVISION=0
 LIBIPMIMONITORING_AGE=0
 LIBIPMIMONITORING_VERSION_INFO=$LIBIPMIMONITORING_CURRENT:$LIBIPMIMONITORING_REVISION:$LIBIPMIMONITORING_AGE
 AC_SUBST([LIBIPMIMONITORING_VERSION_INFO])
+
+# libipmidetect versioning
+#
+# If library source code has changed at all increment rev
+# (current:rev:age) = (current:rev+1:age)
+#
+# If any interfaces have been added,removed, or changed increment current
+#  and set rev = 0;
+#
+# If any interfaces have been added increment age
+#
+# If any interfaces have been removed, set age = 0
+#
+LIBIPMIDETECT_CURRENT=0
+LIBIPMIDETECT_REVISION=0
+LIBIPMIDETECT_AGE=0
+LIBIPMIDETECT_VERSION_INFO=$LIBIPMIDETECT_CURRENT:$LIBIPMIDETECT_REVISION:$LIBIPMIDETECT_AGE
+AC_SUBST([LIBIPMIDETECT_VERSION_INFO])
 
 AC_CANONICAL_HOST
 
@@ -255,6 +283,8 @@ dnl Misc checks and build options
 AC_IPMIPOWER_CONFIG_FILE
 AC_IPMI_MONITORING_SDR_CACHE_DIR
 AC_IPMI_MONITORING_SENSOR_CONFIG_FILE
+AC_IPMIDETECT_CONFIG_FILE
+AC_IPMIDETECTD_CONFIG_FILE
 
 dnl Checks for header files.
 AC_HEADER_STDC

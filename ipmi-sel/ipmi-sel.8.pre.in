@@ -5,7 +5,7 @@ ipmi-sel \- manual page for ipmi-sel.  IPMI System Event Logger version @PACKAGE
 IPMI System Event Logger is used to view and delete SEL entries.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel.man>
 .if @WITH_DEBUG@ \{
@@ -32,11 +32,13 @@ Delete records from START to END in SEL
 Flush SDR cache
 .TP
 \fB\-Q\fR, \fB\-\-\quiet\-cache\fR
-Do not output information about cache creation/deletion.
+Do not output information about cache creation/deletion. Set automatically
+if multiple hosts are input.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
 Use DIRECTORY for sensor cache
-.LP
+#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

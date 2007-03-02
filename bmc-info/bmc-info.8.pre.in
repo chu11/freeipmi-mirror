@@ -5,13 +5,15 @@ bmc-info \- manual page for bmc-info.  BMC Info @PACKAGE_VERSION@
 Displays BMC Information.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel.man>
 .if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/argp-common-debug.man>
 \}
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

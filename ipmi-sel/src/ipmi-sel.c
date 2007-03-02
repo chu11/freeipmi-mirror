@@ -45,6 +45,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-wrapper.h"
+#include "pstdout.h"
+#include "eliminate.h"
 
 #include "freeipmi-portability.h"
 
@@ -74,10 +76,10 @@ init_sdr_cache (ipmi_sel_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if ((sdr_cache_filename = get_sdr_cache_filename (args->common.host,
+  if ((sdr_cache_filename = get_sdr_cache_filename (state_data->hostname,
                                                     args->sdr_cache_dir)) == NULL)
     {
-      perror ("error: get_sdr_cache_filename (): ");
+      pstdout_perror (state_data->pstate, "error: get_sdr_cache_filename (): ");
       return (-1);
     }
 
@@ -120,7 +122,15 @@ init_sdr_cache (ipmi_sel_state_data_t *state_data)
                              0);
 #endif /* NDEBUG */
       if (rc < 0)
-        goto cleanup;
+        {
+          /* No error will output otherwise */
+          if (args->quiet_cache_wanted)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "SDR Cache creation failed: %s\n",
+                             strerror(errno));
+          goto cleanup;
+        }
       fclose (fp);
       fp = NULL;
     }
@@ -162,39 +172,51 @@ display_sel_info (ipmi_sel_state_data_t *state_data)
   
   if (get_sel_info (state_data, &sel_info) != 0)
     {
-      fprintf (stderr, "%s: unable to get SEL information\n", 
-	       program_invocation_short_name);
+      pstdout_fprintf (state_data->pstate,
+                       stderr, 
+                       "%s: unable to get SEL information\n", 
+                       program_invocation_short_name);
       return (-1);
     }
   
-  printf ("SEL version:                                      %d.%d\n", 
-	  sel_info.sel_version_major, 
-	  sel_info.sel_version_minor);
-  printf ("Number of log entries:                            %d\n", 
-	  sel_info.log_entry_count);
-  printf ("Free space remaining:                             %d bytes\n", 
-	  sel_info.free_space);
+  pstdout_printf (state_data->pstate, 
+                  "SEL version:                                      %d.%d\n", 
+                  sel_info.sel_version_major, 
+                  sel_info.sel_version_minor);
+  pstdout_printf (state_data->pstate, 
+                  "Number of log entries:                            %d\n", 
+                  sel_info.log_entry_count);
+  pstdout_printf (state_data->pstate, 
+                  "Free space remaining:                             %d bytes\n", 
+                  sel_info.free_space);
   
   t = sel_info.recent_addition_timestamp;
   tmp = localtime (&t);
   strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", tmp);
-  printf ("Recent addition timestamp:                        %s\n", str);
+  pstdout_printf (state_data->pstate, 
+                  "Recent addition timestamp:                        %s\n", str);
   
   t = sel_info.recent_erase_timestamp;
   tmp = localtime (&t);
   strftime (str, sizeof (str), "%m/%d/%Y - %H:%M:%S", tmp);
-  printf ("Recent erase timestamp:                           %s\n", str);
+  pstdout_printf (state_data->pstate, 
+                  "Recent erase timestamp:                           %s\n", str);
   
-  printf ("Get SEL Allocation Information Command supported: %s\n", 
-	  (sel_info.get_sel_alloc_info_cmd_support ? "Yes" : "No"));
-  printf ("Reserve SEL Command supported:                    %s\n", 
-	  (sel_info.reserve_sel_cmd_support ? "Yes" : "No"));
-  printf ("Partial Add SEL Entry Command supported:          %s\n", 
-	  (sel_info.partial_add_sel_entry_cmd_support ? "Yes" : "No"));
-  printf ("Delete SEL Command supported:                     %s\n", 
-	  (sel_info.delete_sel_cmd_support ? "Yes" : "No"));
-  printf ("Events drop due to lack of space in SEL:          %s\n", 
-	  (sel_info.overflow_flag ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Get SEL Allocation Information Command supported: %s\n", 
+                  (sel_info.get_sel_alloc_info_cmd_support ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Reserve SEL Command supported:                    %s\n", 
+                  (sel_info.reserve_sel_cmd_support ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Partial Add SEL Entry Command supported:          %s\n", 
+                  (sel_info.partial_add_sel_entry_cmd_support ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Delete SEL Command supported:                     %s\n", 
+                  (sel_info.delete_sel_cmd_support ? "Yes" : "No"));
+  pstdout_printf (state_data->pstate, 
+                  "Events drop due to lack of space in SEL:          %s\n", 
+                  (sel_info.overflow_flag ? "Yes" : "No"));
   
   return (0);
 }
@@ -217,23 +239,25 @@ display_sel_records (ipmi_sel_state_data_t *state_data)
                                       record_id, 
                                       &next_record_id)))
         {
-          fprintf (stderr, "%s: unable to get SEL record\n", 
-                   program_invocation_short_name);
+          pstdout_fprintf (state_data->pstate, 
+                           stderr, 
+                           "%s: unable to get SEL record\n", 
+                           program_invocation_short_name);
           return (-1);
         }
       
-      printf ("%d", sel_rec->record_id);
+      pstdout_printf (state_data->pstate, "%d", sel_rec->record_id);
       if (sel_rec->timestamp)
-	printf (":%s", sel_rec->timestamp);
+	pstdout_printf (state_data->pstate, ":%s", sel_rec->timestamp);
       if (sel_rec->sensor_info)
-	printf (":%s", sel_rec->sensor_info);
+	pstdout_printf (state_data->pstate, ":%s", sel_rec->sensor_info);
       if (sel_rec->event_message)
-	printf (":%s", sel_rec->event_message);
+	pstdout_printf (state_data->pstate, ":%s", sel_rec->event_message);
       if (sel_rec->event_data2_message)
-	printf (":%s", sel_rec->event_data2_message);
+	pstdout_printf (state_data->pstate, ":%s", sel_rec->event_data2_message);
       if (sel_rec->event_data3_message)
-	printf (":%s", sel_rec->event_data3_message);
-      printf ("\n");
+	pstdout_printf (state_data->pstate, ":%s", sel_rec->event_data3_message);
+      pstdout_printf (state_data->pstate, "\n");
 
       destroy_sel_record(sel_rec);
     }
@@ -263,34 +287,37 @@ hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
                               record_data_len, 
                               &next_record_id) != 0)
 	{
-	  fprintf (stderr, "%s: unable to get SEL record\n", 
-		   program_invocation_short_name);
+	  pstdout_fprintf (state_data->pstate, 
+                           stderr, 
+                           "%s: unable to get SEL record\n", 
+                           program_invocation_short_name);
 	  return (-1);
 	}
       
-      fprintf (stream, 
-	       "RID:[%02X][%02X] " 
-	       "RT:[%02X] " 
-	       "TS:[%02X][%02X][%02X][%02X] " 
-	       "GID:[%02X][%02X] " 
-	       "ER:[%02X] " 
-	       "ST:[%02X] " 
-	       "SN:[%02X] " 
-	       "EDIR:[%02X] "
-	       "ED1: [%02X] "
-	       "ED2: [%02X] "
-	       "ED3: [%02X]\n",
-	       record_data[0], record_data[1], 
-	       record_data[2], 
-	       record_data[3], record_data[4], record_data[5], record_data[6], 
-	       record_data[7], record_data[8], 
-	       record_data[9], 
-	       record_data[10], 
-	       record_data[11], 
-	       record_data[12], 
-	       record_data[13], 
-	       record_data[14], 
-	       record_data[15]);
+      pstdout_fprintf (state_data->pstate, 
+                       stream, 
+                       "RID:[%02X][%02X] " 
+                       "RT:[%02X] " 
+                       "TS:[%02X][%02X][%02X][%02X] " 
+                       "GID:[%02X][%02X] " 
+                       "ER:[%02X] " 
+                       "ST:[%02X] " 
+                       "SN:[%02X] " 
+                       "EDIR:[%02X] "
+                       "ED1: [%02X] "
+                       "ED2: [%02X] "
+                       "ED3: [%02X]\n",
+                       record_data[0], record_data[1], 
+                       record_data[2], 
+                       record_data[3], record_data[4], record_data[5], record_data[6], 
+                       record_data[7], record_data[8], 
+                       record_data[9], 
+                       record_data[10], 
+                       record_data[11], 
+                       record_data[12], 
+                       record_data[13], 
+                       record_data[14], 
+                       record_data[15]);
     }
   
   return (0);
@@ -313,10 +340,10 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
     {
       int retval;
       if (!args->quiet_cache_wanted)
-        printf ("flushing cache... ");
-      retval = flush_sdr_cache_file (args->common.host, args->sdr_cache_dir);
+        pstdout_printf (state_data->pstate, "flushing cache... ");
+      retval = flush_sdr_cache_file (state_data->hostname, args->sdr_cache_dir);
       if (!args->quiet_cache_wanted)
-        printf ("%s\n", (retval ? "FAILED" : "done"));
+        pstdout_printf (state_data->pstate, "%s\n", (retval ? "FAILED" : "done"));
       return retval;
     }
 
@@ -335,9 +362,11 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 	    }
 	  else 
 	    {
-	      fprintf (stderr, "%s: unable to open hex dump file [%s]\n", 
-		       program_invocation_short_name, 
-		       args->hex_dump_filename);
+	      pstdout_fprintf (state_data->pstate, 
+                               stderr, 
+                               "%s: unable to open hex dump file [%s]\n", 
+                               program_invocation_short_name, 
+                               args->hex_dump_filename);
 	    }
 	}
       else 
@@ -354,8 +383,10 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 	{
 	  if (delete_sel_entry (state_data, args->delete_record_list[i]) < 0)
             {
-              fprintf (stderr, "deletion of record ID %d failed\n", 
-                       args->delete_record_list[i]);
+              pstdout_fprintf (state_data->pstate, 
+                               stderr, 
+                               "deletion of record ID %d failed\n", 
+                               args->delete_record_list[i]);
               return (-1);
             }
 	}
@@ -379,8 +410,10 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   
   /* achu: ipmi-sel does not require the SDR cache, so if this fails, oh well */
   if (init_sdr_cache (state_data) < 0)
-    fprintf (stderr, "%s: sdr cache initialization failed\n",
-             program_invocation_short_name);
+    pstdout_fprintf (state_data->pstate, 
+                     stderr, 
+                     "%s: sdr cache initialization failed\n",
+                     program_invocation_short_name);
 
   if (display_sel_records (state_data) < 0)
     goto cleanup;
@@ -392,7 +425,9 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 }
 
 static int
-_ipmi_sel (void *arg)
+_ipmi_sel (pstdout_state_t pstate,
+           const char *hostname,
+           void *arg)
 {
   ipmi_sel_state_data_t state_data;
   ipmi_sel_prog_data_t *prog_data;
@@ -401,10 +436,10 @@ _ipmi_sel (void *arg)
 
   prog_data = (ipmi_sel_prog_data_t *)arg;
 
-  if (prog_data->args->common.host != NULL)
+  if (hostname && strcmp(hostname, "localhost") != 0)
     {
       if (!(dev = ipmi_open_outofband (IPMI_DEVICE_LAN,
-                                       prog_data->args->common.host,
+                                       hostname,
                                        prog_data->args->common.username,
                                        prog_data->args->common.password,
                                        prog_data->args->common.authentication_type,
@@ -413,7 +448,7 @@ _ipmi_sel (void *arg)
                                        prog_data->args->common.retry_timeout,
                                        prog_data->debug_flags)))
         {
-          perror ("ipmi_open_outofband()");
+          pstdout_perror(pstate, "ipmi_open_outofband");
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
@@ -422,7 +457,10 @@ _ipmi_sel (void *arg)
     {
       if (!ipmi_is_root())
         {
-          fprintf(stderr, "%s: Permission Denied\n", prog_data->progname);
+          pstdout_fprintf(pstate,
+                          stderr,
+                          "%s: Permission Denied\n",
+                          prog_data->progname);
           exit_code = EXIT_FAILURE;
           goto cleanup;
         }
@@ -450,7 +488,7 @@ _ipmi_sel (void *arg)
                                                 prog_data->args->common.driver_device,
                                                 prog_data->debug_flags)))
                     {
-                      perror ("ipmi_open_inband()");
+                      pstdout_perror(pstate, "ipmi_open_inband");
                       exit_code = EXIT_FAILURE;
                       goto cleanup;
                     }
@@ -466,7 +504,7 @@ _ipmi_sel (void *arg)
                                         prog_data->args->common.driver_device,
                                         prog_data->debug_flags)))
             {
-              perror ("ipmi_open_inband()");
+              pstdout_perror (pstate, "ipmi_open_inband()");
               exit_code = EXIT_FAILURE;
               goto cleanup;
             }
@@ -476,6 +514,8 @@ _ipmi_sel (void *arg)
   memset(&state_data, '\0', sizeof(ipmi_sel_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
+  state_data.hostname = (char *)hostname;
 
   if (run_cmd_args (&state_data) < 0)
     {
@@ -496,6 +536,7 @@ main (int argc, char **argv)
   ipmi_sel_prog_data_t prog_data;
   struct ipmi_sel_arguments cmd_args;
   int exit_code;
+  int rv;
 #ifdef NDEBUG
   int i;
 #endif /* NDEBUG */
@@ -505,6 +546,15 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_sel_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
+
+  if (pstdout_init() < 0)
+    {
+      fprintf(stderr,
+              "pstdout_init: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
 
 #ifdef NDEBUG
   /* Clear out argv data for security purposes on ps(1). */
@@ -521,7 +571,66 @@ main (int argc, char **argv)
   prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
 
-  if (setup_sdr_cache_directory () == -1)
+  if (prog_data.args->common.host)
+    {
+      int count;
+
+      if ((count = pstdout_hostnames_count(prog_data.args->common.host)) < 0)
+        {
+          fprintf(stderr,
+                  "pstdout_hostnames_count: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (count > 1)
+        {
+          unsigned int output_flags;
+
+          if (prog_data.args->hostrange.buffer_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else if (prog_data.args->hostrange.consolidate_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+
+          if (pstdout_set_output_flags(output_flags) < 0)
+            {
+              fprintf(stderr,
+                      "pstdout_set_output_flags: %s\n",
+                      pstdout_strerror(pstdout_errnum));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+
+          if (prog_data.args->hostrange.fanout)
+            {
+              if (pstdout_set_fanout(prog_data.args->hostrange.fanout) < 0)
+                {
+                  fprintf(stderr,
+                          "pstdout_set_fanout: %s\n",
+                          pstdout_strerror(pstdout_errnum));
+                  exit_code = EXIT_FAILURE;
+                  goto cleanup;
+                }
+            }
+
+          /* We don't want caching info to output when are doing ranged output */
+          prog_data.args->quiet_cache_wanted = 1;
+        }
+
+      if (prog_data.args->hostrange.eliminate)
+        {
+          if (eliminate_nodes(&(prog_data.args->common.host)) < 0)
+            {
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+    }
+
+  if (setup_sdr_cache_directory () < 0)
     {
       fprintf (stderr, "%s: sdr cache directory setup failed\n",
                program_invocation_short_name);
@@ -529,7 +638,18 @@ main (int argc, char **argv)
       goto cleanup;
     }
 
-  exit_code = _ipmi_sel(&prog_data);
+  if ((rv = pstdout_launch(prog_data.args->common.host,
+                           _ipmi_sel,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  exit_code = rv;
  cleanup:
   return (exit_code);
 }
