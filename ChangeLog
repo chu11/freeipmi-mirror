@@ -1,3 +1,7 @@
+2007-03-03  Albert Chu <chu11@llnl.gov>
+
+	* Makefile.am: Add freeipmi.spec to dist.
+	
 2007-03-01  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_hostrange_support

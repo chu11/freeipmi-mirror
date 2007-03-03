@@ -14,4 +14,4 @@ DISTCLEANFILES = .deps/*.P
 uninstall-extra:
 	$(docdir)
 
-EXTRA_DIST = $(EXTRA) freeipmi.spec.in autogen.sh
+EXTRA_DIST = $(EXTRA) freeipmi.spec freeipmi.spec.in autogen.sh
