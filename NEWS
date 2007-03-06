@@ -10,7 +10,6 @@ o Added ipmidetect
 o Added hostrange support to ipmi-sensors, ipmi-sel, ipmi-raw, and bmc-info
 o -Q option added for ipmi-sensors and ipmi-sel.
 o -P option added to allow for password prompting.
-o -N option added to ipmiconsole.
 o Various bug fixes throughout FreeIPMI.
 
 For Developers
