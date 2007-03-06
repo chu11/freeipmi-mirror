@@ -1,3 +1,10 @@
+2007-03-06  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole.8.in, ipmiconsole/ipmiconsole.conf.5.in,
+	ipmiconsole/src/ipmiconsole/ipmiconsole_config.h,
+	ipmiconsole/src/ipmiconsole/ipmiconsole_config.c,
+	ipmiconsole/src/ipmiconsole/ipmiconsole.c: Add -N option support.
+	
 2007-03-03  Albert Chu <chu11@llnl.gov>
 
 	* Makefile.am: Add freeipmi.spec to dist.
