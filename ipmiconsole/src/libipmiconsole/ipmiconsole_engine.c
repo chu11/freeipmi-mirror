@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.1.2.1 2006-12-13 00:42:06 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.1.2.2 2007-03-07 03:17:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,10 +124,7 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
    * setup if session_submitted is not set.
    */
   if (!(c->session_submitted) && s->user_fd)
-    {
-      if (s->user_fd)
-        close(s->user_fd);
-    }
+    close(s->user_fd);
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
@@ -226,6 +223,8 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+
+  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
 }
 
 int
@@ -399,6 +398,8 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
 
   s = &(c->session);
 
+  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
+  
   /* File Descriptor User Interface */
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) < 0)

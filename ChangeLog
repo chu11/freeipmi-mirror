@@ -4,6 +4,14 @@
 	ipmiconsole/src/ipmiconsole/ipmiconsole_config.h,
 	ipmiconsole/src/ipmiconsole/ipmiconsole_config.c,
 	ipmiconsole/src/ipmiconsole/ipmiconsole.c: Add -N option support.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_ipmiconsole_cleanup_ctx_session): Remove unnecessary
+	conditional.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_ipmiconsole_cleanup_ctx_session, _ipmiconsole_init_ctx_session):
+	Fix mem initialization bug.
 	
 2006-12-18  Albert Chu <chu11@llnl.gov>
 
