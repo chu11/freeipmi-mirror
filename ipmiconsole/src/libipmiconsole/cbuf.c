@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: cbuf.c,v 1.2 2007-03-07 03:51:13 chu11 Exp $
+ *  $Id: cbuf.c,v 1.1 2007-03-07 03:51:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,6 +39,10 @@
 #include <string.h>
 #include <unistd.h>
 #include "cbuf.h"
+
+#if WITH_SECURE_MALLOC
+#include "secure.h"
+#endif /* !WITH_SECURE_MALLOC */
 
 /*****************************************************************************
  *  lsd_fatal_error
@@ -223,7 +227,11 @@ cbuf_create (int minsize, int maxsize)
         errno = EINVAL;
         return (NULL);
     }
+#if WITH_SECURE_MALLOC
+    if (!(cb = secure_malloc (sizeof (struct cbuf)))) {
+#else  /* !WITH_SECURE_MALLOC */
     if (!(cb = malloc (sizeof (struct cbuf)))) {
+#endif /* !WITH_SECURE_MALLOC */
         errno = ENOMEM;
         return (lsd_nomem_error (__FILE__, __LINE__, "cbuf struct"));
     }
@@ -238,7 +246,11 @@ cbuf_create (int minsize, int maxsize)
     cb->alloc += 2 * CBUF_MAGIC_LEN;
 #endif /* !NDEBUG */
 
+#if WITH_SECURE_MALLOC
+    if (!(cb->data = secure_malloc (cb->alloc))) {
+#else /* !WITH_SECURE_MALLOC */
     if (!(cb->data = malloc (cb->alloc))) {
+#endif /* !WITH_SECURE_MALLOC */
         free (cb);
         errno = ENOMEM;
         return (lsd_nomem_error (__FILE__, __LINE__, "cbuf data"));
@@ -293,10 +305,18 @@ cbuf_destroy (cbuf_t cb)
     cb->data -= CBUF_MAGIC_LEN;         /* jump back to what malloc returned */
 #endif /* !NDEBUG */
 
+#if WITH_SECURE_MALLOC
+    secure_free (cb->data, cb->alloc);
+#else  /* !WITH_SECURE_MALLOC */
     free (cb->data);
+#endif /* !WITH_SECURE_MALLOC */
     cbuf_mutex_unlock (cb);
     cbuf_mutex_destroy (cb);
+#if WITH_SECURE_MALLOC
+    secure_free (cb, sizeof (struct cbuf));
+#else  /* !WITH_SECURE_MALLOC */
     free (cb);
+#endif /* !WITH_SECURE_MALLOC */
     return;
 }
 
@@ -1657,6 +1677,9 @@ cbuf_grow (cbuf_t cb, int n)
  *    less-than, equal-to, or greater-than the number of bytes requested).
  */
     unsigned char *data;
+#if WITH_SECURE_MALLOC
+    unsigned char *new_data;
+#endif /* WITH_SECURE_MALLOC */
     int size_old, size_meta;
     int m;
 
@@ -1683,13 +1706,22 @@ cbuf_grow (cbuf_t cb, int n)
     data -= CBUF_MAGIC_LEN;             /* jump back to what malloc returned */
 #endif /* !NDEBUG */
 
+#if WITH_SECURE_MALLOC
+    if (!(new_data = secure_malloc(m))) {
+#else /* !WITH_SECURE_MALLOC */
     if (!(data = realloc (data, m))) {
+#endif /* !WITH_SECURE_MALLOC */
         /*
          *  XXX: Set flag or somesuch to prevent regrowing when out of memory?
          */
         return (0);                     /* unable to grow data buffer */
     }
+#if WITH_SECURE_MALLOC
+    secure_free(data, cb->alloc);
+    cb->data = new_data;
+#else /* !WITH_SECURE_MALLOC */
     cb->data = data;
+#endif /* !WITH_SECURE_MALLOC */
     cb->alloc = m;
     cb->size = m - size_meta;
 

@@ -7,6 +7,7 @@ ipmi_sensors_LDADD = ../../common/src/libargpcommon.la \
 	../../common/src/libsdr.la \
 	../../common/src/libpstdout.la \
 	../../common/src/libeliminate.la \
+	../../common/src/libcbuf.la \
 	../../common/src/libllnlcommon.la \
 	../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../common/src/libsensor.la \
@@ -44,6 +45,9 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libeliminate.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libcbuf.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libllnlcommon.la: force-dependency-check
