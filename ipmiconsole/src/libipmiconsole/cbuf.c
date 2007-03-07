@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: cbuf.c,v 1.2.2.1 2007-03-07 04:11:04 chu11 Exp $
+ *  $Id: cbuf.c,v 1.2.2.2 2007-03-07 05:16:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,9 +40,7 @@
 #include <unistd.h>
 #include "cbuf.h"
 
-#if WITH_SECURE_MALLOC
 #include "secure.h"
-#endif /* !WITH_SECURE_MALLOC */
 
 /*****************************************************************************
  *  lsd_fatal_error
@@ -130,14 +128,14 @@ static int cbuf_get_mem (void *dstbuf, unsigned char **psrcbuf, int len);
 static int cbuf_put_fd (void *srcbuf, int *pdstfd, int len);
 static int cbuf_put_mem (void *srcbuf, unsigned char **pdstbuf, int len);
 
-static int cbuf_copier (cbuf_t src, cbuf_t dst, int len, int *ndropped);
+static int cbuf_copier (cbuf_t src, cbuf_t dst, int len, int *ndropped, int secure_malloc_flag);
 static int cbuf_dropper (cbuf_t cb, int len);
 static int cbuf_reader (cbuf_t src, int len, cbuf_iof putf, void *dst);
 static int cbuf_replayer (cbuf_t src, int len, cbuf_iof putf, void *dst);
 static int cbuf_writer (cbuf_t dst, int len, cbuf_iof getf, void *src,
-       int *ndropped);
+       int *ndropped, int secure_malloc_flag);
 
-static int cbuf_grow (cbuf_t cb, int n);
+static int cbuf_grow (cbuf_t cb, int n, int secure_malloc_flag);
 static int cbuf_shrink (cbuf_t cb);
 
 #ifndef NDEBUG
@@ -219,7 +217,7 @@ static int cbuf_is_valid (cbuf_t cb);
  *****************************************************************************/
 
 cbuf_t
-cbuf_create (int minsize, int maxsize)
+cbuf_create (int minsize, int maxsize, int secure_malloc_flag)
 {
     cbuf_t cb;
 
@@ -227,13 +225,17 @@ cbuf_create (int minsize, int maxsize)
         errno = EINVAL;
         return (NULL);
     }
-#if WITH_SECURE_MALLOC
-    if (!(cb = secure_malloc (sizeof (struct cbuf)))) {
-#else  /* !WITH_SECURE_MALLOC */
-    if (!(cb = malloc (sizeof (struct cbuf)))) {
-#endif /* !WITH_SECURE_MALLOC */
-        errno = ENOMEM;
-        return (lsd_nomem_error (__FILE__, __LINE__, "cbuf struct"));
+    if (secure_malloc_flag) {
+        if (!(cb = secure_malloc (sizeof (struct cbuf)))) {
+            errno = ENOMEM;
+            return (lsd_nomem_error (__FILE__, __LINE__, "cbuf struct"));
+        }
+    }
+    else {
+        if (!(cb = malloc (sizeof (struct cbuf)))) {
+            errno = ENOMEM;
+            return (lsd_nomem_error (__FILE__, __LINE__, "cbuf struct"));
+        }
     }
     /*  Circular buffer is empty when (i_in == i_out),
      *    so reserve 1 byte for this sentinel.
@@ -246,15 +248,19 @@ cbuf_create (int minsize, int maxsize)
     cb->alloc += 2 * CBUF_MAGIC_LEN;
 #endif /* !NDEBUG */
 
-#if WITH_SECURE_MALLOC
-    if (!(cb->data = secure_malloc (cb->alloc))) {
-        secure_free (cb, sizeof (struct cbuf));
-#else /* !WITH_SECURE_MALLOC */
-    if (!(cb->data = malloc (cb->alloc))) {
-        free (cb);
-#endif /* !WITH_SECURE_MALLOC */
-        errno = ENOMEM;
-        return (lsd_nomem_error (__FILE__, __LINE__, "cbuf data"));
+    if (secure_malloc_flag) {
+        if (!(cb->data = secure_malloc (cb->alloc))) {
+            secure_free (cb, sizeof (struct cbuf));
+            errno = ENOMEM;
+            return (lsd_nomem_error (__FILE__, __LINE__, "cbuf data"));
+        }
+    }
+    else {
+        if (!(cb->data = malloc (cb->alloc))) {
+            free (cb);
+            errno = ENOMEM;
+            return (lsd_nomem_error (__FILE__, __LINE__, "cbuf data"));
+        }
     }
     cbuf_mutex_init (cb);
     cb->minsize = minsize;
@@ -290,7 +296,7 @@ cbuf_create (int minsize, int maxsize)
 
 
 void
-cbuf_destroy (cbuf_t cb)
+cbuf_destroy (cbuf_t cb, int secure_malloc_flag)
 {
     assert (cb != NULL);
     cbuf_mutex_lock (cb);
@@ -306,18 +312,16 @@ cbuf_destroy (cbuf_t cb)
     cb->data -= CBUF_MAGIC_LEN;         /* jump back to what malloc returned */
 #endif /* !NDEBUG */
 
-#if WITH_SECURE_MALLOC
-    secure_free (cb->data, cb->alloc);
-#else  /* !WITH_SECURE_MALLOC */
-    free (cb->data);
-#endif /* !WITH_SECURE_MALLOC */
+    if (secure_malloc_flag)
+        secure_free (cb->data, cb->alloc);
+    else
+        free (cb->data);
     cbuf_mutex_unlock (cb);
     cbuf_mutex_destroy (cb);
-#if WITH_SECURE_MALLOC
-    secure_free (cb, sizeof (struct cbuf));
-#else  /* !WITH_SECURE_MALLOC */
-    free (cb);
-#endif /* !WITH_SECURE_MALLOC */
+    if (secure_malloc_flag)
+        secure_free (cb, sizeof (struct cbuf));
+    else
+        free (cb);
     return;
 }
 
@@ -636,7 +640,7 @@ cbuf_rewind (cbuf_t src, int len)
 
 
 int
-cbuf_write (cbuf_t dst, void *srcbuf, int len, int *ndropped)
+cbuf_write (cbuf_t dst, void *srcbuf, int len, int *ndropped, int secure_malloc_flag)
 {
     int n;
 
@@ -654,7 +658,7 @@ cbuf_write (cbuf_t dst, void *srcbuf, int len, int *ndropped)
     }
     cbuf_mutex_lock (dst);
     assert (cbuf_is_valid (dst));
-    n = cbuf_writer (dst, len, (cbuf_iof) cbuf_get_mem, &srcbuf, ndropped);
+    n = cbuf_writer (dst, len, (cbuf_iof) cbuf_get_mem, &srcbuf, ndropped, secure_malloc_flag);
     assert (cbuf_is_valid (dst));
     cbuf_mutex_unlock (dst);
     return (n);
@@ -835,7 +839,7 @@ cbuf_rewind_line (cbuf_t src, int len, int lines)
 
 
 int
-cbuf_write_line (cbuf_t dst, char *srcbuf, int *ndropped)
+cbuf_write_line (cbuf_t dst, char *srcbuf, int *ndropped, int secure_malloc_flag)
 {
     int len;
     int nfree, ncopy, n;
@@ -866,7 +870,7 @@ cbuf_write_line (cbuf_t dst, char *srcbuf, int *ndropped)
      */
     nfree = dst->size - dst->used;
     if ((len > nfree) && (dst->size < dst->maxsize)) {
-        nfree += cbuf_grow (dst, len - nfree);
+        nfree += cbuf_grow (dst, len - nfree, secure_malloc_flag);
     }
     /*  Determine if src will fit (or be made to fit) in dst cbuf.
      */
@@ -894,14 +898,14 @@ cbuf_write_line (cbuf_t dst, char *srcbuf, int *ndropped)
         /*  Copy data from src string to dst cbuf.
          */
         if (ncopy > 0) {
-            n = cbuf_writer (dst, ncopy, (cbuf_iof) cbuf_get_mem, &psrc, &d);
+            n = cbuf_writer (dst, ncopy, (cbuf_iof) cbuf_get_mem, &psrc, &d, secure_malloc_flag);
             assert (n == ncopy);
             ndrop += d;
         }
         /*  Append newline if needed.
          */
         if (srcbuf[len - 1] != '\n') {
-            n = cbuf_writer (dst, 1, (cbuf_iof) cbuf_get_mem, &newline, &d);
+            n = cbuf_writer (dst, 1, (cbuf_iof) cbuf_get_mem, &newline, &d, secure_malloc_flag);
             assert (n == 1);
             ndrop += d;
         }
@@ -994,7 +998,7 @@ cbuf_replay_to_fd (cbuf_t src, int dstfd, int len)
 
 
 int
-cbuf_write_from_fd (cbuf_t dst, int srcfd, int len, int *ndropped)
+cbuf_write_from_fd (cbuf_t dst, int srcfd, int len, int *ndropped, int secure_malloc_flag)
 {
     int n = 0;
 
@@ -1020,7 +1024,7 @@ cbuf_write_from_fd (cbuf_t dst, int srcfd, int len, int *ndropped)
         }
     }
     if (len > 0) {
-        n = cbuf_writer (dst, len, (cbuf_iof) cbuf_get_fd, &srcfd, ndropped);
+        n = cbuf_writer (dst, len, (cbuf_iof) cbuf_get_fd, &srcfd, ndropped, secure_malloc_flag);
     }
     assert (cbuf_is_valid (dst));
     cbuf_mutex_unlock (dst);
@@ -1029,7 +1033,7 @@ cbuf_write_from_fd (cbuf_t dst, int srcfd, int len, int *ndropped)
 
 
 int
-cbuf_copy (cbuf_t src, cbuf_t dst, int len, int *ndropped)
+cbuf_copy (cbuf_t src, cbuf_t dst, int len, int *ndropped, int secure_malloc_flag)
 {
     int n = 0;
 
@@ -1067,7 +1071,7 @@ cbuf_copy (cbuf_t src, cbuf_t dst, int len, int *ndropped)
         len = src->used;
     }
     if (len > 0) {
-        n = cbuf_copier (src, dst, len, ndropped);
+        n = cbuf_copier (src, dst, len, ndropped, secure_malloc_flag);
     }
     assert (cbuf_is_valid (src));
     assert (cbuf_is_valid (dst));
@@ -1078,7 +1082,7 @@ cbuf_copy (cbuf_t src, cbuf_t dst, int len, int *ndropped)
 
 
 int
-cbuf_move (cbuf_t src, cbuf_t dst, int len, int *ndropped)
+cbuf_move (cbuf_t src, cbuf_t dst, int len, int *ndropped, int secure_malloc_flag)
 {
     int n = 0;
 
@@ -1116,7 +1120,7 @@ cbuf_move (cbuf_t src, cbuf_t dst, int len, int *ndropped)
         len = src->used;
     }
     if (len > 0) {
-        n = cbuf_copier (src, dst, len, ndropped);
+        n = cbuf_copier (src, dst, len, ndropped, secure_malloc_flag);
         if (n > 0) {
             cbuf_dropper (src, n);
         }
@@ -1359,7 +1363,7 @@ cbuf_put_mem (void *srcbuf, unsigned char **pdstbuf, int len)
 
 
 static int
-cbuf_copier (cbuf_t src, cbuf_t dst, int len, int *ndropped)
+cbuf_copier (cbuf_t src, cbuf_t dst, int len, int *ndropped, int secure_malloc_flag)
 {
 /*  Copies up to [len] bytes from the [src] cbuf into the [dst] cbuf.
  *  Returns the number of bytes copied, or -1 on error (with errno set).
@@ -1384,7 +1388,7 @@ cbuf_copier (cbuf_t src, cbuf_t dst, int len, int *ndropped)
      */
     nfree = dst->size - dst->used;
     if ((len > nfree) && (dst->size < dst->maxsize)) {
-        nfree += cbuf_grow (dst, len - nfree);
+        nfree += cbuf_grow (dst, len - nfree, secure_malloc_flag);
     }
     /*  Compute number of bytes to effectively copy to dst cbuf.
      */
@@ -1584,7 +1588,7 @@ cbuf_replayer (cbuf_t src, int len, cbuf_iof putf, void *dst)
 
 
 static int
-cbuf_writer (cbuf_t dst, int len, cbuf_iof getf, void *src, int *ndropped)
+cbuf_writer (cbuf_t dst, int len, cbuf_iof getf, void *src, int *ndropped, int secure_malloc_flag)
 {
 /*  Writes up to [len] bytes from the object pointed at by [src] into [dst].
  *    The I/O function [getf] specifies how data is read from [src].
@@ -1606,7 +1610,7 @@ cbuf_writer (cbuf_t dst, int len, cbuf_iof getf, void *src, int *ndropped)
      */
     nfree = dst->size - dst->used;
     if ((len > nfree) && (dst->size < dst->maxsize)) {
-        nfree += cbuf_grow (dst, len - nfree);
+        nfree += cbuf_grow (dst, len - nfree, secure_malloc_flag);
     }
     /*  Compute number of bytes to write to dst cbuf.
      */
@@ -1671,16 +1675,14 @@ cbuf_writer (cbuf_t dst, int len, cbuf_iof getf, void *src, int *ndropped)
 
 
 static int
-cbuf_grow (cbuf_t cb, int n)
+cbuf_grow (cbuf_t cb, int n, int secure_malloc_flag)
 {
 /*  Attempts to grow the circular buffer [cb] by at least [n] bytes.
  *  Returns the number of bytes by which the buffer has grown (which may be
  *    less-than, equal-to, or greater-than the number of bytes requested).
  */
     unsigned char *data;
-#if WITH_SECURE_MALLOC
     unsigned char *new_data;
-#endif /* WITH_SECURE_MALLOC */
     int size_old, size_meta;
     int m;
 
@@ -1707,22 +1709,28 @@ cbuf_grow (cbuf_t cb, int n)
     data -= CBUF_MAGIC_LEN;             /* jump back to what malloc returned */
 #endif /* !NDEBUG */
 
-#if WITH_SECURE_MALLOC
-    if (!(new_data = secure_malloc(m))) {
-#else /* !WITH_SECURE_MALLOC */
-    if (!(data = realloc (data, m))) {
-#endif /* !WITH_SECURE_MALLOC */
-        /*
-         *  XXX: Set flag or somesuch to prevent regrowing when out of memory?
-         */
-        return (0);                     /* unable to grow data buffer */
+    if (secure_malloc_flag) {
+        if (!(new_data = secure_malloc(m))) {
+            /*
+             *  XXX: Set flag or somesuch to prevent regrowing when out of memory?
+             */
+          return (0);                     /* unable to grow data buffer */
+        }
     }
-#if WITH_SECURE_MALLOC
-    secure_free(data, cb->alloc);
-    cb->data = new_data;
-#else /* !WITH_SECURE_MALLOC */
-    cb->data = data;
-#endif /* !WITH_SECURE_MALLOC */
+    else {
+        if (!(data = realloc (data, m))) {
+            /*
+             *  XXX: Set flag or somesuch to prevent regrowing when out of memory?
+             */
+          return (0);                     /* unable to grow data buffer */
+        }
+    }
+    if (secure_malloc_flag) {
+        secure_free(data, cb->alloc);
+        cb->data = new_data;
+    }
+    else
+        cb->data = data;
     cb->alloc = m;
     cb->size = m - size_meta;
 

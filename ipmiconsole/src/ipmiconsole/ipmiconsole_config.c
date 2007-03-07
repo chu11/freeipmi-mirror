@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.1.2.1 2007-03-06 22:49:11 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.1.2.2 2007-03-07 05:16:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,7 +79,8 @@ _usage(void)
 	  "-l --privilege str            Privilege\n"
 	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
           "-C --config                   Select alternate config file\n"
-          "-N --notsteal                 Do not steal in use SOL sessions by default\n"
+          "-N --dont-steal               Do not steal in use SOL sessions by default\n"
+          "-L --dont-lock-memory         Do not lock memory\n"
           "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
           "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n");
 #ifndef NDEBUG
@@ -118,7 +119,8 @@ _cmdline_parse(int argc, char **argv)
       {"privilege",                1, NULL, 'l'},
       {"cipher-suite-id",          1, NULL, 'c'},
       {"config-file",              1, NULL, 'C'}, 
-      {"not-steal",                0, NULL, 'N'},
+      {"dont-steal",               0, NULL, 'N'},
+      {"dont-lock-memory",         0, NULL, 'L'},
       {"intel-2-0-session",        0, NULL, 'I'},
       {"supermicro-2-0-session",   0, NULL, 'S'},
 #ifndef NDEBUG
@@ -135,7 +137,7 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:k:l:c:C:NIS");
+  strcat(options, "HVh:u:p:k:l:c:C:NLIS");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -209,9 +211,13 @@ _cmdline_parse(int argc, char **argv)
 	  if (!(conf->config_file = strdup(optarg)))
 	    err_exit("strdup: %s", strerror(errno));
 	  break;
-        case 'N':       /* --not-steal */
-          conf->not_steal++;
-          conf->not_steal_set++;
+        case 'N':       /* --dont-steal */
+          conf->dont_steal++;
+          conf->dont_steal_set++;
+          break;
+        case 'L':       /* --dont-lock-memory */
+          conf->dont_lock_memory++;
+          conf->dont_lock_memory_set++;
           break;
         case 'I':       /* --intel-2-0-session */
           conf->intel_2_0_session++;
@@ -396,7 +402,8 @@ _config_file_parse(void)
     k_g_flag,
     privilege_flag, 
     cipher_suite_id_flag,
-    not_steal_flag,
+    dont_steal_flag,
+    dont_lock_memory_flag,
     intel_2_0_session_flag,
     supermicro_2_0_session_flag;
   
@@ -469,15 +476,26 @@ _config_file_parse(void)
         0
       },
       {
-        "not-steal", 
+        "dont-steal", 
         CONFFILE_OPTION_BOOL, 
         -1, 
         _cb_bool,
         1, 
         0, 
-        &not_steal_flag, 
-        &(conf->not_steal),
-        conf->not_steal_set
+        &dont_steal_flag, 
+        &(conf->dont_steal),
+        conf->dont_steal_set
+      },
+      {
+        "dont-lock-memory", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        _cb_bool,
+        1, 
+        0, 
+        &dont_lock_memory_flag, 
+        &(conf->dont_lock_memory),
+        conf->dont_lock_memory_set
       },
       {
         "intel_2_0_session", 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.1.2.3 2007-03-06 22:49:11 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.1.2.4 2007-03-07 05:16:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -332,10 +332,11 @@ main(int argc, char **argv)
   protocol_config.acceptable_packet_errors_count = -1; 
   protocol_config.maximum_retransmission_count = -1; 
   protocol_config.debug_flags = debug_flags;
-  if (conf->not_steal)
-    protocol_config.security_flags = IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE;
-  else
-    protocol_config.security_flags = 0;
+  protocol_config.security_flags = 0;
+  if (conf->dont_steal)
+    protocol_config.security_flags |= IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE;
+  if (conf->dont_lock_memory)
+    protocol_config.security_flags |= IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY;
   if (conf->intel_2_0_session)
     protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_INTEL_2_0;
   else if (conf->supermicro_2_0_session)

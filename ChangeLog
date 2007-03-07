@@ -25,6 +25,12 @@
 	* common/src/Makefile.am: Split off cbuf into a separate lib.
 
 	* ipmipower/src/Makefile.am: Use new cbuf common lib.
+
+	* ipmiconsole/src/libipmiconsole/: Support optional secure
+	mallocs.
+	
+	* ipmiconsole/ipmiconsole.8.in, ipmiconsole/ipmiconsole.conf.5.in,
+	ipmiconsole/src/ipmiconsole/: Add -L option support.
 	
 2006-12-18  Albert Chu <chu11@llnl.gov>
 

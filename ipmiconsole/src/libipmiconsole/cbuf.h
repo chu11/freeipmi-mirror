@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: cbuf.h,v 1.1.2.1 2007-03-07 04:11:04 chu11 Exp $
+ *  $Id: cbuf.h,v 1.1.2.2 2007-03-07 05:16:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -82,7 +82,7 @@ typedef enum {                          /* CBUF_OPT_OVERWRITE values:        */
  *  Functions
  *****************************************************************************/
 
-cbuf_t cbuf_create (int minsize, int maxsize);
+cbuf_t cbuf_create (int minsize, int maxsize, int secure_malloc_flag);
 /*
  *  Creates and returns a new circular buffer, or lsd_nomem_error() on failure.
  *  The buffer is initially allocated to hold [minsize] bytes of data,
@@ -92,7 +92,7 @@ cbuf_t cbuf_create (int minsize, int maxsize);
  *  Abandoning a cbuf without calling cbuf_destroy() will cause a memory leak.
  */
 
-void cbuf_destroy (cbuf_t cb);
+void cbuf_destroy (cbuf_t cb, int secure_malloc_flag);
 /*
  *  Destroys the circular buffer [cb].
  */
@@ -188,7 +188,7 @@ int cbuf_rewind (cbuf_t src, int len);
  *  Returns the number of bytes rewound, or -1 on error (with errno set).
  */
 
-int cbuf_write (cbuf_t dst, void *srcbuf, int len, int *ndropped);
+int cbuf_write (cbuf_t dst, void *srcbuf, int len, int *ndropped, int secure_malloc_flag);
 /*
  *  Writes up to [len] bytes of data from [srcbuf] into the [dst] cbuf
  *    according to dst's CBUF_OPT_OVERWRITE behavior.
@@ -251,7 +251,7 @@ int cbuf_rewind_line (cbuf_t src, int len, int lines);
  *    Returns 0 if the number of lines is not available (ie, all or none).
  */
 
-int cbuf_write_line (cbuf_t dst, char *srcbuf, int *ndropped);
+int cbuf_write_line (cbuf_t dst, char *srcbuf, int *ndropped, int secure_malloc_flag);
 /*
  *  Writes the entire NUL-terminated [srcbuf] string into the [dst] cbuf
  *    according to dst's CBUF_OPT_OVERWRITE behavior.  A newline will be
@@ -287,7 +287,7 @@ int cbuf_replay_to_fd (cbuf_t src, int dstfd, int len);
  *  Returns the number of bytes replayed, or -1 on error (with errno set).
  */
 
-int cbuf_write_from_fd (cbuf_t dst, int srcfd, int len, int *ndropped);
+int cbuf_write_from_fd (cbuf_t dst, int srcfd, int len, int *ndropped, int secure_malloc_flag);
 /*
  *  Writes up to [len] bytes of data from the file referenced by the
  *    [srcfd] file descriptor into the [dst] cbuf according to dst's
@@ -297,7 +297,7 @@ int cbuf_write_from_fd (cbuf_t dst, int srcfd, int len, int *ndropped);
  *    Sets [ndropped] (if not NULL) to the number of bytes overwritten.
  */
 
-int cbuf_copy (cbuf_t src, cbuf_t dst, int len, int *ndropped);
+int cbuf_copy (cbuf_t src, cbuf_t dst, int len, int *ndropped, int secure_malloc_flag);
 /*
  *  Copies up to [len] bytes of data from the [src] cbuf into the [dst] cbuf
  *    according to dst's CBUF_OPT_OVERWRITE behavior.  If [len] is -1,
@@ -306,7 +306,7 @@ int cbuf_copy (cbuf_t src, cbuf_t dst, int len, int *ndropped);
  *    Sets [ndropped] (if not NULL) to the number of [dst] bytes overwritten.
  */
 
-int cbuf_move (cbuf_t src, cbuf_t dst, int len, int *ndropped);
+int cbuf_move (cbuf_t src, cbuf_t dst, int len, int *ndropped, int secure_malloc_flag);
 /*
  *  Moves up to [len] bytes of data from the [src] cbuf into the [dst] cbuf
  *    according to dst's CBUF_OPT_OVERWRITE behavior.  If [len] is -1,
