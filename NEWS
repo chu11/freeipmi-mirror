@@ -2,6 +2,7 @@
 -----
 o -N option added to ipmiconsole.
 o Fix seg-fault in ipmiconsole.
+o Fix secure malloc bug.
 
 0.3.1
 -----

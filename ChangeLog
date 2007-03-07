@@ -12,6 +12,19 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
 	(_ipmiconsole_cleanup_ctx_session, _ipmiconsole_init_ctx_session):
 	Fix mem initialization bug.
+
+	* ipmiconsole/src/libipmiconsole/cbuf.h,
+	ipmiconsole/src/libipmiconsole/cbuf.c: New files for ipmiconsole
+	secure mallocs.
+
+	* ipmiconsole/src/libipmiconsole/Makefile.am: Add cbuf.h and
+	cbuf.c for new build.
+
+	* common/src/cbuf.c: Remove secure malloc code.
+
+	* common/src/Makefile.am: Split off cbuf into a separate lib.
+
+	* ipmipower/src/Makefile.am: Use new cbuf common lib.
 	
 2006-12-18  Albert Chu <chu11@llnl.gov>
 
