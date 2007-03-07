@@ -3,6 +3,9 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
 	(_ipmiconsole_init_ctx_session): Return out of memory error on
 	cbuf_create error.
+
+	* ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_config.c
+	(ipmipower_config_cmdline_parse): Change -U option to -Z.
 	
 2007-03-06  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.47 2007-02-28 04:20:38 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.48 2007-03-07 17:35:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -266,13 +266,13 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 
   /* achu: Here's are what options are left and available
      lower case: de
-     upper case: EGJKNOQZ
+     upper case: EGJKNOQU
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:Pk:nfcrsjmHVC:a:l:R:T:gABo:WSUXYDIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:nfcrsjmHVC:a:l:R:T:gABo:WSZXYDIMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:Pk:nfcrsjmHVC:a:l:R:T:gABo:WSUXYt:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:nfcrsjmHVC:a:l:R:T:gABo:WSZXYt:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -303,7 +303,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"outputtype",                   1, NULL, 'o'},
       {"force-permsg-authentication",  0, NULL, 'W'},
       {"accept-session-id-zero",       0, NULL, 'S'},
-      {"check-unexpected-authcode",    0, NULL, 'U'},
+      {"check-unexpected-authcode",    0, NULL, 'Z'},
       {"intel-2-0-session",            0, NULL, 'X'},
       {"supermicro-2-0-session",       0, NULL, 'Y'},
 #ifndef NDEBUG
@@ -445,7 +445,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->accept_session_id_zero = IPMIPOWER_TRUE;
           conf->accept_session_id_zero_set = IPMIPOWER_TRUE;
           break;
-        case 'U':       /* --check-unexpected-authcode */
+        case 'Z':       /* --check-unexpected-authcode */
           conf->check_unexpected_authcode = IPMIPOWER_TRUE;
           conf->check_unexpected_authcode_set = IPMIPOWER_TRUE;
           break;
