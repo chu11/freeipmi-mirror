@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.2 2007-03-07 05:12:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,6 +75,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
   struct timeval *t;
+  int secure_malloc_flag;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -82,6 +83,8 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   assert(IPMICONSOLE_PACKET_TYPE_REQUEST(p));
 
   s = &(c->session);
+
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
@@ -125,7 +128,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
         return -1;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped)) < 0)
+  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -175,14 +178,18 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
   int rv = -1;
+  int secure_malloc_flag;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   assert(!cbuf_is_empty(c->session.console_remote_console_to_bmc));
+
   s = &(c->session);
   
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
    * the BMC accepts packets in a window. But the SOL packet sequence number
@@ -251,7 +258,7 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
         goto cleanup;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped)) < 0)
+  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -299,7 +306,8 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
   struct ipmiconsole_ctx_session *s;
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
-  
+  int secure_malloc_flag;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session_submitted);
@@ -307,6 +315,8 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
   
   s = &(c->session);
   
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
    * the BMC accepts packets in a window. But the SOL packet sequence number
@@ -335,7 +345,7 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
         return -1;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped)) < 0)
+  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -370,7 +380,8 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
   struct ipmiconsole_ctx_session *s;
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
-  
+  int secure_malloc_flag;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session_submitted);
@@ -378,6 +389,8 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
   
   s = &(c->session);
   
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
    * the BMC accepts packets in a window. But the SOL packet sequence number
@@ -417,7 +430,7 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
         return -1;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped)) < 0)
+  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -2156,13 +2169,16 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
   uint8_t nack;
   uint64_t val;
   int n, dropped, rv = -1;
-  
+  int secure_malloc_flag;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
   s = &(c->session);
+
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
 
   /* 
    * The packet is either an ACK to a packet we sent, or
@@ -2352,7 +2368,8 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
           n = cbuf_write(s->console_bmc_to_remote_console,
 			 character_data + character_data_index,
 			 character_data_len_to_write,
-			 &dropped);
+			 &dropped,
+                         secure_malloc_flag);
         
 	  /* Clear out data */
 	  secure_memset(character_data, '\0', IPMICONSOLE_MAX_CHARACTER_DATA+1);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.2 2006-12-15 17:05:07 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.3 2007-03-07 05:12:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,8 +97,16 @@ extern "C" {
  * This security flag changes the default behavior to return an error
  * if SOL is already detected as being in use.
  *   
+ * DONT_LOCK_MEMORY
+ *
+ * By default, libipmiconsole attempts to lock memory to prevent
+ * sensitive information (such as usernames and passwords) to be
+ * swappable.  However, some processes may not have a high enough
+ * lockable memory limit to suit libipmiconsole.  If the user wishes,
+ * they may disable locked memory to work around this.
  */
 #define IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE 0x00000001
+#define IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY   0x00000002
 
 /* 
  * Workaround Flags

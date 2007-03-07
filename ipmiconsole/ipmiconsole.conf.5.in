@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.2 2007-03-06 22:39:28 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.3 2007-03-07 05:12:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -83,8 +83,11 @@ and "admin".
 .I cipher_suite_id str
 Specify the default Cipher Suite ID to use: "auto", "0", "1", "2", "3", "6", "7", "8", "11", 12"
 .TP
-.I not-steal enable|disable
+.I dont-steal enable|disable
 Specify if in use SOL sessions should not be stolen by default.
+.TP
+.I dont-lock-memory enable|disable
+Specify if memory should not be locked by default.
 .TP
 .I intel_2_0_session enable|disable
 Specify if workarounds for an Intel ipmi 2.0 session should be used.

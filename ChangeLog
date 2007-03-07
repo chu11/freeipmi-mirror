@@ -27,6 +27,12 @@
 	* ipmipower/src/Makefile.am, bmc-info/src/Makefile.am,
 	ipmi-sensor/src/Makefile.am, ipmi-sel/src/Makefile.am,
 	ipmi-raw/src/Makefile.am: Use new cbuf common lib.
+
+	* ipmiconsole/src/libipmiconsole/: Support optional secure
+	mallocs.
+	
+	* ipmiconsole/ipmiconsole.8.in, ipmiconsole/ipmiconsole.conf.5.in,
+	ipmiconsole/src/ipmiconsole/: Add -L option support.
 	
 2007-03-03  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.4 2007-03-06 22:39:28 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.5 2007-03-07 05:12:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -123,6 +123,16 @@ earlier SOL sessions may have not been able to be deactivate properly.
 This options changes the default behavior to return an error if SOL is
 already detected as being in use.
 .TP
+.I "-L, --dont-lock-memory"
+By default, 
+.B ipmiconsole 
+attempts to lock memory to prevent
+sensitive information (such as usernames and passwords) to be
+swappable.  However, some processes may not have a high enough
+lockable memory limit to run 
+.B ipmiconsole.
+If the user wishes, this option can be used to work around this.
+.TP
 .I "-I, --intel-2-0-session"
 Modifies the IPMI 2.0 session protocol for non-compliant Intel
 machines.  For more information, see WORKAROUNDS below.
@@ -206,6 +216,12 @@ command or looking in the /proc file system.  The most secure solution
 is to leave the username and password in the 
 .B Ipmiconsole
 configuration file.
+
+By default, 
+.B ipmiconsole
+locks sensitive information (such as usernames and passwords) into memory.
+By default, a user may not have enough lockable memory and should increase
+their process limit. 
 
 .if @MANPAGE_DEBUG@ \{
 

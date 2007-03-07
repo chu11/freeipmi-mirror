@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.3 2007-03-07 03:13:09 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.4 2007-03-07 05:12:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -107,6 +107,7 @@ void
 _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 {
   struct ipmiconsole_ctx_session *s;
+  int secure_malloc_flag;
   int rv;
 
   assert(c);
@@ -114,6 +115,8 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   
   s = &(c->session);
   
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+
   /* Under typical circumstances, we close only the ipmiconsole_fd.
    * So that an error will be detected by the user via a EOF on a
    * read() or EPIPE on a write() when reading/writing on their file
@@ -128,15 +131,15 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
-    cbuf_destroy(s->console_remote_console_to_bmc);
+    cbuf_destroy(s->console_remote_console_to_bmc, secure_malloc_flag);
   if (s->console_bmc_to_remote_console)
-    cbuf_destroy(s->console_bmc_to_remote_console);
+    cbuf_destroy(s->console_bmc_to_remote_console, secure_malloc_flag);
   if (s->ipmi_fd)
     close(s->ipmi_fd);
   if (s->ipmi_from_bmc)
-    cbuf_destroy(s->ipmi_from_bmc);
+    cbuf_destroy(s->ipmi_from_bmc, secure_malloc_flag);
   if (s->ipmi_to_bmc)
-    cbuf_destroy(s->ipmi_to_bmc);
+    cbuf_destroy(s->ipmi_to_bmc, secure_malloc_flag);
   if (s->asynccomm[0])
     close(s->asynccomm[0]);
   if (s->asynccomm[1])
@@ -391,6 +394,7 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   struct ipmiconsole_ctx_session *s;
   struct sockaddr_in srcaddr;
   int sv[2];
+  int secure_malloc_flag;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -411,14 +415,16 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   s->user_fd = sv[0];
   s->ipmiconsole_fd = sv[1];
 
-  if (!(s->console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX)))
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+
+  if (!(s->console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
       goto cleanup;
     }
 
-  if (!(s->console_bmc_to_remote_console = cbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX)))
+  if (!(s->console_bmc_to_remote_console = cbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -451,14 +457,14 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
    */
   s->console_port = RMCP_PRIMARY_RMCP_PORT;
 
-  if (!(s->ipmi_from_bmc = cbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX)))
+  if (!(s->ipmi_from_bmc = cbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
       goto cleanup;
     }
 
-  if (!(s->ipmi_to_bmc = cbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX)))
+  if (!(s->ipmi_to_bmc = cbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -764,12 +770,15 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
   unsigned int fromlen = sizeof(struct sockaddr_in);
   ssize_t len;
   int n, dropped = 0;
+  int secure_malloc_flag;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
   s = &(c->session);
   
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+
   if ((len = ipmi_lan_recvfrom(s->ipmi_fd, 
                                buffer, 
                                IPMICONSOLE_PACKET_BUFLEN, 
@@ -812,7 +821,7 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
       } while(!cbuf_is_empty(s->ipmi_from_bmc));
     }
   
-  if ((n = cbuf_write(s->ipmi_from_bmc, buffer, len, &dropped)) < 0)
+  if ((n = cbuf_write(s->ipmi_from_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -952,6 +961,7 @@ _console_read(ipmiconsole_ctx_t c)
   char buffer[IPMICONSOLE_PACKET_BUFLEN];
   ssize_t len;
   int n, dropped = 0;
+  int secure_malloc_flag;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -959,6 +969,8 @@ _console_read(ipmiconsole_ctx_t c)
 
   s = &(c->session);
   
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+
   if ((len = read(s->ipmiconsole_fd,
                   buffer,
                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
@@ -977,7 +989,7 @@ _console_read(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if ((n = cbuf_write(s->console_remote_console_to_bmc, buffer, len, &dropped)) < 0)
+  if ((n = cbuf_write(s->console_remote_console_to_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL;

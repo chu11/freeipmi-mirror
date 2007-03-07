@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.5 2007-03-07 03:51:13 chu11 Exp $
+## $Id: Makefile.am,v 1.6 2007-03-07 05:12:32 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -35,7 +35,6 @@ libipmiconsole_la_CFLAGS = $(PTHREAD_CFLAGS)
 
 libipmiconsole_la_CPPFLAGS = -I$(srcdir)/../../../common/src \
 			     -I$(srcdir)/../../../libfreeipmi/include \
-			     -DWITH_SECURE_MALLOC=1 \
 			     -DWITH_PTHREADS=1 \
 			     -D_REENTRANT
 
