@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: cbuf.c,v 1.1 2007-03-07 03:51:13 chu11 Exp $
+ *  $Id: cbuf.c,v 1.2 2007-03-07 04:04:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -248,10 +248,11 @@ cbuf_create (int minsize, int maxsize)
 
 #if WITH_SECURE_MALLOC
     if (!(cb->data = secure_malloc (cb->alloc))) {
+        secure_free (cb, sizeof (struct cbuf));
 #else /* !WITH_SECURE_MALLOC */
     if (!(cb->data = malloc (cb->alloc))) {
-#endif /* !WITH_SECURE_MALLOC */
         free (cb);
+#endif /* !WITH_SECURE_MALLOC */
         errno = ENOMEM;
         return (lsd_nomem_error (__FILE__, __LINE__, "cbuf data"));
     }
