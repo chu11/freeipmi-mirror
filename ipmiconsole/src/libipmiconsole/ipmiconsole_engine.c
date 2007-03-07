@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.4 2007-03-07 05:12:32 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.5 2007-03-07 17:32:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -420,14 +420,14 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   if (!(s->console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
   if (!(s->console_bmc_to_remote_console = cbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
@@ -460,14 +460,14 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   if (!(s->ipmi_from_bmc = cbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
   if (!(s->ipmi_to_bmc = cbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 

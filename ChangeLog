@@ -1,3 +1,9 @@
+2007-03-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_ipmiconsole_init_ctx_session): Return out of memory error on
+	cbuf_create error.
+	
 2007-03-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole.8.in, ipmiconsole/ipmiconsole.conf.5.in,
