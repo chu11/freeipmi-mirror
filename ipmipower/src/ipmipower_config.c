@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.50 2007-03-08 03:52:39 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.51 2007-03-08 03:55:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -233,7 +233,7 @@ _usage(void)
           "-p --password pw      Password\n" 
           "-P --password-prompt  Prompt for Password\n"
           "-k --k-g str          K_g Key\n"
-          "-K --k-g-prompt str   Prompt for K_g Key\n"
+          "-K --k-g-prompt       Prompt for K_g Key\n"
           "-n --on               Power On\n"
           "-f --off              Power Off\n"
           "-c --cycle            Power Cycle\n"
