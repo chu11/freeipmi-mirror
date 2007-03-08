@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.5 2007-03-08 03:30:23 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.6 2007-03-08 03:55:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,7 +80,7 @@ _usage(void)
           "-p --password pw              Password\n"
           "-P --password-prompt          Prompt for Password\n"
           "-k --k-g str                  K_g Key\n"
-          "-K --k-g-prompt str           Prompt for K_g Key\n"
+          "-K --k-g-prompt               Prompt for K_g Key\n"
 	  "-l --privilege str            Privilege\n"
 	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
           "-C --config                   Select alternate config file\n"
