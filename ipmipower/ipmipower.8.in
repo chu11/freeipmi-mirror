@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.56 2007-03-07 17:35:34 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.57 2007-03-08 03:30:23 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,6 +100,10 @@ lists.
 .I "-k, --k-g str"
 Sets the K_g BMC Key to use when authenticating with the BMC for
 ipmi 2.0.  If not specified, a null key is assumed.
+.TP
+.I "-K, --k-g-prompt"
+Prompt for K_g to avoid possibility of listing it in process
+lists.
 .TP
 .I "-n, --on"
 Power on the target hosts.
@@ -665,7 +669,7 @@ later revisions of
 
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
-In order to work around this issue, the -P (--force-permsg-authentication)
+In order to work around this issue, the -W (--force-permsg-authentication)
 option must be set.  The option will force Per Message Authentication
 to be used no matter what is advertised by the remote BMC.
 

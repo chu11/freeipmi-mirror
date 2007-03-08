@@ -6,6 +6,11 @@
 
 	* ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_config.c
 	(ipmipower_config_cmdline_parse): Change -U option to -Z.
+
+	* ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_config.c
+	(ipmipower_config_cmdline_parse), ipmiconsole/ipmiconsole.8.in,
+	ipmiconsole/src/ipmiconsole/ipmiconsole_config.c (_cmdline_parse):
+	Add -K option.
 	
 2007-03-06  Albert Chu <chu11@llnl.gov>
 

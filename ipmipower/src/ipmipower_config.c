@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.48 2007-03-07 17:35:35 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.49 2007-03-08 03:30:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -263,16 +263,17 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char c;
   char *ptr;
   char *pw;
+  char *kg;
 
   /* achu: Here's are what options are left and available
      lower case: de
-     upper case: EGJKNOQU
+     upper case: EGJNOQU
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:Pk:nfcrsjmHVC:a:l:R:T:gABo:WSZXYDIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:WSZXYDIMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:Pk:nfcrsjmHVC:a:l:R:T:gABo:WSZXYt:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:WSZXYt:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -283,6 +284,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"password",                     1, NULL, 'p'},
       {"password-prompt",              0, NULL, 'P'},
       {"k-g",                          1, NULL, 'k'},
+      {"k-g-prompt",                   0, NULL, 'K'},
       {"on",                           0, NULL, 'n'},
       {"off",                          0, NULL, 'f'},
       {"cycle",                        0, NULL, 'c'},
@@ -371,6 +373,15 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
+          conf->k_g_set = IPMIPOWER_TRUE;
+	  /* Args will be cleared out in main() */
+          break;
+        case 'K':       /* --k-g-prompt */
+          if (!(kg = getpass("K_g: ")))
+            err_exit("getpass: %s", strerror(errno));
+          if (strlen(kg) > IPMI_MAX_K_G_LENGTH)
+            err_exit("K_g too long");
+          strcpy(conf->k_g, kg);
           conf->k_g_set = IPMIPOWER_TRUE;
 	  /* Args will be cleared out in main() */
           break;

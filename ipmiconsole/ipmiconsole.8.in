@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.5 2007-03-07 05:12:32 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.6 2007-03-08 03:30:23 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -70,6 +70,10 @@ lists.
 .I "-k, --k-g str"
 Specify the BMC key to use for authentication.  If not specified, a
 NULL key is assumed.
+.TP
+.I "-K, --k-g-prompt"
+Prompt for K_g to avoid possibility of listing it in process
+lists.
 .TP
 .I "-l, --privilege str"
 Specify the privilege type to use.  The currently available privilege
