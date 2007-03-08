@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.44.2.1 2006-12-15 23:37:11 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.44.2.2 2007-03-08 03:57:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -231,14 +231,16 @@ _usage(void)
           "-h --hostnames hosts  List of hostnames\n"
           "-u --username name    Username\n"
           "-p --password pw      Password\n" 
+          "-P --password-prompt  Prompt for Password\n"
           "-k --k-g str          K_g Key\n"
+          "-K --k-g-prompt       Prompt for K_g Key\n"
           "-n --on               Power On\n"
           "-f --off              Power Off\n"
           "-c --cycle            Power Cycle\n"
           "-r --reset            Power Reset\n"
           "-s --stat             Power Status Query\n"
           "-j --pulse            Pulse Diagnostic Interrupt\n"
-          "-k --soft             Soft Shutdown OS via ACPI\n"
+          "-m --soft             Soft Shutdown OS via ACPI\n"
           "-H --help             Output help menu\n"
           "-V --version          Output version\n"
           "-C --config           Specify Alternate Config File\n"
@@ -261,16 +263,18 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 {
   char c;
   char *ptr;
+  char *pw;
+  char *kg;
 
   /* achu: Here's are what options are left and available
      lower case: de
-     upper case: EGJKNOQWZ
+     upper case: EGJNOQZ
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:gABo:PSUXYDIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:WSUXYDIMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:gABo:PSUXYt:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:WSUXYt:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -279,7 +283,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"hostnames",                    1, NULL, 'h'},
       {"username",                     1, NULL, 'u'},
       {"password",                     1, NULL, 'p'},
+      {"password-prompt",              0, NULL, 'P'},
       {"k-g",                          1, NULL, 'k'},
+      {"k-g-prompt",                   0, NULL, 'K'},
       {"on",                           0, NULL, 'n'},
       {"off",                          0, NULL, 'f'},
       {"cycle",                        0, NULL, 'c'},
@@ -298,7 +304,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"wait-until-on",                0, NULL, 'A'},
       {"wait-until-off",               0, NULL, 'B'},
       {"outputtype",                   1, NULL, 'o'},
-      {"force-permsg-authentication",  0, NULL, 'P'},
+      {"force-permsg-authentication",  0, NULL, 'W'},
       {"accept-session-id-zero",       0, NULL, 'S'},
       {"check-unexpected-authcode",    0, NULL, 'U'},
       {"intel-2-0-session",            0, NULL, 'X'},
@@ -355,10 +361,28 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->password_set = IPMIPOWER_TRUE;
 	  /* Args will be cleared out in main() */
           break;
+        case 'P':       /* --password-prompt */
+          if (!(pw = getpass("Password: ")))
+            err_exit("getpass: %s", strerror(errno));
+          if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+            err_exit("password too long");
+          strcpy(conf->password, pw);
+          conf->password_set = IPMIPOWER_TRUE;
+          /* Args will be cleared out in main() */
+          break;
         case 'k':       /* --k-g */
           if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
+          conf->k_g_set = IPMIPOWER_TRUE;
+	  /* Args will be cleared out in main() */
+          break;
+        case 'K':       /* --k-g-prompt */
+          if (!(kg = getpass("K_g: ")))
+            err_exit("getpass: %s", strerror(errno));
+          if (strlen(kg) > IPMI_MAX_K_G_LENGTH)
+            err_exit("K_g too long");
+          strcpy(conf->k_g, kg);
           conf->k_g_set = IPMIPOWER_TRUE;
 	  /* Args will be cleared out in main() */
           break;
@@ -425,7 +449,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->outputtype = ipmipower_output_index(optarg);
           conf->outputtype_set = IPMIPOWER_TRUE;
           break;
-        case 'P':       /* --force-permsg-authentication */
+        case 'W':       /* --force-permsg-authentication */
           conf->force_permsg_authentication = IPMIPOWER_TRUE;
           conf->force_permsg_authentication_set = IPMIPOWER_TRUE;
           break;

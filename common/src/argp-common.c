@@ -194,6 +194,18 @@ common_parse_opt (int key,
 	  cmd_args->password = strdup (arg);
 	}
       break;
+    case PASSWORD_PROMPT_KEY:
+      if (cmd_args->password != NULL)
+        free (cmd_args->password);
+      arg = getpass ("Password: ");
+      if (arg && strlen (arg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+        argp_usage (state);
+      if (!(cmd_args->password = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
+      break;
     case RETRY_TIMEOUT_KEY:
       {
 	int value = 0;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.1.2.2 2007-03-07 05:16:02 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.1.2.3 2007-03-08 03:57:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,6 +36,9 @@
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif /* HAVE_GETOPT_H */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -75,7 +78,9 @@ _usage(void)
 	  "-h --hostname str             Hostname\n"
           "-u --username name            Username\n"
           "-p --password pw              Password\n"
+          "-P --password-prompt          Prompt for Password\n"
           "-k --k-g str                  K_g Key\n"
+          "-K --k-g-prompt               Prompt for K_g Key\n"
 	  "-l --privilege str            Privilege\n"
 	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
           "-C --config                   Select alternate config file\n"
@@ -104,6 +109,8 @@ static void
 _cmdline_parse(int argc, char **argv)
 { 
   char options[100];
+  char *pw;
+  char *kg;
   char *ptr;
   int c;
 
@@ -115,7 +122,9 @@ _cmdline_parse(int argc, char **argv)
       {"hostname",                 1, NULL, 'h'},
       {"username",                 1, NULL, 'u'},
       {"password",                 1, NULL, 'p'},
+      {"password-prompt",          1, NULL, 'P'},
       {"k-g",                      1, NULL, 'k'},
+      {"k-g-prompt",               1, NULL, 'K'},
       {"privilege",                1, NULL, 'l'},
       {"cipher-suite-id",          1, NULL, 'c'},
       {"config-file",              1, NULL, 'C'}, 
@@ -137,7 +146,7 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:k:l:c:C:NLIS");
+  strcat(options, "HVh:u:p:Pk:Kl:c:C:NLIS");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -179,10 +188,28 @@ _cmdline_parse(int argc, char **argv)
           conf->password_set++;
 	  /* Args will be cleared in ipmiconsole_config_setup */
           break;
+        case 'P':       /* --password-prompt */
+          if (!(pw = getpass("Password: ")))
+            err_exit("getpass: %s", strerror(errno));
+          if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+            err_exit("password too long");
+          strcpy(conf->password, pw);
+          conf->password_set++;
+          /* Args will be cleared out in main() */
+          break;
         case 'k':       /* --k-g */
           if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
+          conf->k_g_set++;
+	  /* Args will be cleared in ipmiconsole_config_setup */
+          break;
+        case 'K':       /* --k-g-prompt */
+          if (!(kg = getpass("K_g: ")))
+            err_exit("getpass: %s", strerror(errno));
+          if (strlen(kg) > IPMI_MAX_K_G_LENGTH)
+            err_exit("K_g too long");
+          strcpy(conf->k_g, kg);
           conf->k_g_set++;
 	  /* Args will be cleared in ipmiconsole_config_setup */
           break;

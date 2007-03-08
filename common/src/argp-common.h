@@ -39,6 +39,7 @@ enum argp_common_option_keys
     HOSTNAME_KEY = 'h', 
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
+    PASSWORD_PROMPT_KEY = 'P',
     AUTHENTICATION_TYPE_KEY = 'a', 
     PRIVILEGE_LEVEL_KEY = 'l',
     DEBUG_KEY = 135
@@ -62,12 +63,14 @@ enum argp_common_option_keys
      "Connect to IPMIHOST.", 5},					   \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			   \
      "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 6},  \
-    {"password",       PASSWORD_KEY, "PASSWORD", 1, 			   \
+    {"password",       PASSWORD_KEY, "PASSWORD", 0, 			   \
      "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 7},  \
+    {"password-prompt", PASSWORD_PROMPT_KEY, 0, 0,                                \
+     "Prompt for PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 8},  \
     {"retry-timeout", RETRY_TIMEOUT_KEY, "RETRY_TIMEOUT", 0,               \
-     "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 8},  \
+     "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 9},  \
     {"session-timeout", SESSION_TIMEOUT_KEY, "SESSION_TIMEOUT", 0,         \
-     "Use SESSION_TIMEOUT milliseconds before ending a session.", 9}
+     "Use SESSION_TIMEOUT milliseconds before ending a session.", 10}
 
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
     {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 		   \

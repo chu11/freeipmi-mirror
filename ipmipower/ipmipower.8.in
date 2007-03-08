@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.53 2006-11-02 19:36:45 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.53.2.1 2007-03-08 03:57:41 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,9 +93,17 @@ status of the machine through --stat.  If not specified, a null
 Sets the password to use when authenticating with the BMC.  If not
 specified, a null password is assumed.
 .TP
+.I "-P, --password-prompt"
+Prompt for password to avoid possibility of listing it in process
+lists.
+.TP
 .I "-k, --k-g str"
 Sets the K_g BMC Key to use when authenticating with the BMC for
 ipmi 2.0.  If not specified, a null key is assumed.
+.TP
+.I "-K, --k-g-prompt"
+Prompt for K_g to avoid possibility of listing it in process
+lists.
 .TP
 .I "-n, --on"
 Power on the target hosts.
@@ -236,7 +244,7 @@ the number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
 their power control operation.
 .TP
-.I "-P, --force-permsg-authentication"
+.I "-W, --force-permsg-authentication"
 Forces 
 .B ipmipower
 to use IPMI per message authentication regardless of what is
@@ -660,7 +668,7 @@ later revisions of
 
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
-In order to work around this issue, the -P (--force-permsg-authentication)
+In order to work around this issue, the -W (--force-permsg-authentication)
 option must be set.  The option will force Per Message Authentication
 to be used no matter what is advertised by the remote BMC.
 

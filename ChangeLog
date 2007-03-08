@@ -1,3 +1,14 @@
+2007-03-07  Albert Chu <chu11@llnl.gov>
+
+        * ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_config.c
+        (ipmipower_config_cmdline_parse), ipmiconsole/ipmiconsole.8.in,
+        ipmiconsole/src/ipmiconsole/ipmiconsole_config.c (_cmdline_parse):
+        Add -P and -K option.
+
+        * common/src/argp-common.h, common/src/argp-common.c,
+        common/doc/argp-common-outofband.man: Support -P option.  Remove
+        optional argument of -p due to parsing issues.
+	
 2007-03-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole.8.in, ipmiconsole/ipmiconsole.conf.5.in,
