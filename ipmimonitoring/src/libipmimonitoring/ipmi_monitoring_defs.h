@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.2 2007-02-16 20:23:31 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.3 2007-03-09 02:28:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,7 +93,7 @@
    | IPMI_MONITORING_FLAGS_DEBUG_STDERR \
    | IPMI_MONITORING_FLAGS_DEBUG_SYSLOG \
    | IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS \
-   | IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
+   | IPMI_MONITORING_FLAGS_LOCK_MEMORY)
 
 #define IPMI_MONITORING_WORKAROUND_FLAGS_MASK \
   (IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO)

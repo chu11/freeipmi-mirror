@@ -1,3 +1,10 @@
+2007-03-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmi_monitoring.h,
+	ipmimonitoring/src/ipmi_monitoring.c,
+	ipmimonitoring/src/ipmi_monitoring_defs.h: Do not lock memory by
+	default.
+	
 2007-03-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c

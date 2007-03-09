@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.5 2007-02-17 03:14:03 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.6 2007-03-09 02:28:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,10 +117,10 @@ _destroy_ctx(ipmi_monitoring_ctx_t c)
   c->current_sensor_reading = NULL; 
 
   c->magic = ~IPMI_MONITORING_MAGIC;
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
-    free(c);
-  else
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmi_monitoring_ctx));
+  else
+    free(c);
 }
 
 ipmi_monitoring_ctx_t 
@@ -128,26 +128,26 @@ ipmi_monitoring_ctx_create(void)
 {
   struct ipmi_monitoring_ctx *c = NULL;
 
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
-    {
-      if (!(c = (ipmi_monitoring_ctx_t)malloc(sizeof(struct ipmi_monitoring_ctx))))
-        return NULL;
-      secure_memset(c, '\0', sizeof(struct ipmi_monitoring_ctx));
-    }
-  else
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
     {
       if (!(c = (ipmi_monitoring_ctx_t)secure_malloc(sizeof(struct ipmi_monitoring_ctx))))
         return NULL;
       /* secure_memset called in secure_malloc()*/
     }
+  else
+    {
+      if (!(c = (ipmi_monitoring_ctx_t)malloc(sizeof(struct ipmi_monitoring_ctx))))
+        return NULL;
+      secure_memset(c, '\0', sizeof(struct ipmi_monitoring_ctx));
+    }
   c->magic = IPMI_MONITORING_MAGIC;
 
   if (!(c->sensor_readings = list_create((ListDelF)free)))
     {
-      if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY)
-        free(c);
-      else
+      if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_LOCK_MEMORY)
         secure_free(c, sizeof(struct ipmi_monitoring_ctx));
+      else
+        free(c);
       return NULL;
     }
 

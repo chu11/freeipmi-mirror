@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.2 2007-02-16 20:23:31 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.3 2007-03-09 02:28:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -163,7 +163,7 @@ enum ipmi_monitoring_flags
     IPMI_MONITORING_FLAGS_DEBUG_STDERR       = 0x02,
     IPMI_MONITORING_FLAGS_DEBUG_SYSLOG       = 0x04,
     IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS = 0x08,
-    IPMI_MONITORING_FLAGS_DO_NOT_LOCK_MEMORY = 0x10,
+    IPMI_MONITORING_FLAGS_LOCK_MEMORY        = 0x10,
   };
 
 enum ipmi_monitoring_workaround_flags
