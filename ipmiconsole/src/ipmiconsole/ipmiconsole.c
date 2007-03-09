@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.5 2007-03-07 05:12:32 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.6 2007-03-09 02:44:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -336,8 +336,8 @@ main(int argc, char **argv)
   protocol_config.security_flags = 0;
   if (conf->dont_steal)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE;
-  if (conf->dont_lock_memory)
-    protocol_config.security_flags |= IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY;
+  if (conf->lock_memory)
+    protocol_config.security_flags |= IPMICONSOLE_SECURITY_LOCK_MEMORY;
   if (conf->intel_2_0_session)
     protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_INTEL_2_0;
   else if (conf->supermicro_2_0_session)

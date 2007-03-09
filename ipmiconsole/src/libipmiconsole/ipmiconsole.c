@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.2 2007-03-07 05:12:32 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.3 2007-03-09 02:44:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -210,9 +210,9 @@ ipmiconsole_ctx_create(char *hostname,
       return NULL;
     }
 
-  if (protocol_config->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY)
+  if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
     {
-      if (!(c = (ipmiconsole_ctx_t)malloc(sizeof(struct ipmiconsole_ctx))))
+      if (!(c = (ipmiconsole_ctx_t)secure_malloc(sizeof(struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
           goto cleanup;
@@ -220,7 +220,7 @@ ipmiconsole_ctx_create(char *hostname,
     }
   else
     {
-      if (!(c = (ipmiconsole_ctx_t)secure_malloc(sizeof(struct ipmiconsole_ctx))))
+      if (!(c = (ipmiconsole_ctx_t)malloc(sizeof(struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
           goto cleanup;
@@ -342,10 +342,10 @@ ipmiconsole_ctx_create(char *hostname,
 
  cleanup:
   ipmiconsole_ctx_debug_cleanup(c);
-  if (protocol_config->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY)
-    free(c);
-  else
+  if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
+  else
+    free(c);
   return NULL;
 }
 
@@ -450,9 +450,9 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
 
   c->errnum = IPMICONSOLE_ERR_CONTEXT_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
-  if (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY)
-    free(c);
-  else
+  if (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
+  else
+    free(c);
   return 0;
 }

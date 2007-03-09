@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.2 2007-03-07 05:12:32 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.3 2007-03-09 02:44:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -201,7 +201,7 @@ typedef enum
 
 #define IPMICONSOLE_SECURITY_MASK \
         (IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE \
-         | IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY)
+         | IPMICONSOLE_SECURITY_LOCK_MEMORY)
 
 #define IPMICONSOLE_WORKAROUND_MASK \
         (IPMICONSOLE_WORKAROUND_INTEL_2_0 \

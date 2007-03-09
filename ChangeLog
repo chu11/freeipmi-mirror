@@ -4,6 +4,9 @@
 	ipmimonitoring/src/ipmi_monitoring.c,
 	ipmimonitoring/src/ipmi_monitoring_defs.h: Do not lock memory by
 	default.
+
+	* ipmiconsole/: Do not lock memory by default.  Adjust -L option
+	appropriately.
 	
 2007-03-07  Albert Chu <chu11@llnl.gov>
 
