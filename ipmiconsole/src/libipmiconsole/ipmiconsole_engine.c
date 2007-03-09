@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.1.2.3 2007-03-07 05:16:02 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.1.2.4 2007-03-09 02:46:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -115,7 +115,7 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* Under typical circumstances, we close only the ipmiconsole_fd.
    * So that an error will be detected by the user via a EOF on a
@@ -415,7 +415,7 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   s->user_fd = sv[0];
   s->ipmiconsole_fd = sv[1];
 
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if (!(s->console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
@@ -777,7 +777,7 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
 
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if ((len = ipmi_lan_recvfrom(s->ipmi_fd, 
                                buffer, 
@@ -969,7 +969,7 @@ _console_read(ipmiconsole_ctx_t c)
 
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if ((len = read(s->ipmiconsole_fd,
                   buffer,

@@ -1,3 +1,8 @@
+2007-03-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/: Do not lock memory by default.  Adjust -L option
+	appropriately.
+	
 2007-03-07  Albert Chu <chu11@llnl.gov>
 
         * ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_config.c

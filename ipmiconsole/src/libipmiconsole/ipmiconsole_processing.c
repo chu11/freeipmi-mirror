@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.1.2.1 2007-03-07 05:16:02 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.1.2.2 2007-03-09 02:46:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -84,7 +84,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   s = &(c->session);
 
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
@@ -188,7 +188,7 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
 
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -315,7 +315,7 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
   
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -389,7 +389,7 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
   
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -2178,7 +2178,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 
   s = &(c->session);
 
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_DONT_LOCK_MEMORY) ? 0 : 1;
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * The packet is either an ACK to a packet we sent, or

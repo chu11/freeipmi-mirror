@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.1.2.3 2007-03-08 03:57:41 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.1.2.4 2007-03-09 02:46:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -85,7 +85,7 @@ _usage(void)
 	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
           "-C --config                   Select alternate config file\n"
           "-N --dont-steal               Do not steal in use SOL sessions by default\n"
-          "-L --dont-lock-memory         Do not lock memory\n"
+          "-L --lock-memory              Lock memory\n"
           "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
           "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n");
 #ifndef NDEBUG
@@ -129,7 +129,7 @@ _cmdline_parse(int argc, char **argv)
       {"cipher-suite-id",          1, NULL, 'c'},
       {"config-file",              1, NULL, 'C'}, 
       {"dont-steal",               0, NULL, 'N'},
-      {"dont-lock-memory",         0, NULL, 'L'},
+      {"lock-memory",              0, NULL, 'L'},
       {"intel-2-0-session",        0, NULL, 'I'},
       {"supermicro-2-0-session",   0, NULL, 'S'},
 #ifndef NDEBUG
@@ -242,9 +242,9 @@ _cmdline_parse(int argc, char **argv)
           conf->dont_steal++;
           conf->dont_steal_set++;
           break;
-        case 'L':       /* --dont-lock-memory */
-          conf->dont_lock_memory++;
-          conf->dont_lock_memory_set++;
+        case 'L':       /* --lock-memory */
+          conf->lock_memory++;
+          conf->lock_memory_set++;
           break;
         case 'I':       /* --intel-2-0-session */
           conf->intel_2_0_session++;
@@ -430,7 +430,7 @@ _config_file_parse(void)
     privilege_flag, 
     cipher_suite_id_flag,
     dont_steal_flag,
-    dont_lock_memory_flag,
+    lock_memory_flag,
     intel_2_0_session_flag,
     supermicro_2_0_session_flag;
   
@@ -514,15 +514,15 @@ _config_file_parse(void)
         conf->dont_steal_set
       },
       {
-        "dont-lock-memory", 
+        "lock-memory", 
         CONFFILE_OPTION_BOOL, 
         -1, 
         _cb_bool,
         1, 
         0, 
-        &dont_lock_memory_flag, 
-        &(conf->dont_lock_memory),
-        conf->dont_lock_memory_set
+        &lock_memory_flag, 
+        &(conf->lock_memory),
+        conf->lock_memory_set
       },
       {
         "intel_2_0_session", 

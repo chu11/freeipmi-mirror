@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.1.2.2 2007-03-07 05:16:02 chu11 Exp $
+ *  $Id: ipmiconsole_config.h,v 1.1.2.3 2007-03-09 02:46:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,7 +57,7 @@ struct ipmiconsole_config
   int privilege;
   int cipher_suite_id;
   int dont_steal;
-  int dont_lock_memory;
+  int lock_memory;
   int intel_2_0_session;
   int supermicro_2_0_session;
 
@@ -68,7 +68,7 @@ struct ipmiconsole_config
   int privilege_set;
   int cipher_suite_id_set;
   int dont_steal_set;
-  int dont_lock_memory_set;
+  int lock_memory_set;
   int intel_2_0_session_set;
   int supermicro_2_0_session_set;
 };
