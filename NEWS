@@ -17,6 +17,15 @@ o Added SDR debugging capabilities to ipmi-sdr and ipmi-sensors.
 o Added libipmimonitoring
 o Added libipmidetect
 
+0.3.1
+-----
+
+o FreeBSD Support
+o libfreeipmi: Header file include/C++ fixes.
+o ipmi-sensors, ipmi-sel: Fix SDR cache creation bug for /tmp.
+o ipmi-sensors: Fix SDR parsing corner case bugs.
+o ipmipower, ipmiconsole: Fix mem-leak possibility.
+
 0.3.0
 -----
 
