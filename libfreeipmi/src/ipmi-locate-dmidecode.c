@@ -53,9 +53,9 @@
 
 #define DEFAULT_MEM_DEV "/dev/mem"
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
+typedef uint8_t  fipmiu8;
+typedef uint16_t fipmiu16;
+typedef uint32_t fipmiu32;
 
 /*
  * These macros help us solve problems on systems that don't support
@@ -73,21 +73,21 @@ typedef uint32_t u32;
 #ifdef BIGENDIAN
 typedef struct 
 {
-  u32 h;
-  u32 l;
-} u64;
+  fipmiu32 h;
+  fipmiu32 l;
+} fipmiu64;
 #else
 typedef struct
 {
-  u32 l;
-  u32 h;
-} u64;
+  fipmiu32 l;
+  fipmiu32 h;
+} fipmiu64;
 #endif
 
 #ifdef ALIGNMENT_WORKAROUND
-static u64 U64 (u32 low, u32 high)
+static fipmiu64 U64 (fipmiu32 low, fipmiu32 high)
 {
-  u64 self;
+  fipmiu64 self;
   
   self.l=low;
   self.h=high;
@@ -98,30 +98,30 @@ static u64 U64 (u32 low, u32 high)
 
 #ifdef ALIGNMENT_WORKAROUND
 #	ifdef BIGENDIAN
-#	define WORD(x) (u16)((x)[1]+((x)[0]<<8))
-#	define DWORD(x) (u32)((x)[3]+((x)[2]<<8)+((x)[1]<<16)+((x)[0]<<24))
+#	define WORD(x) (fipmiu16)((x)[1]+((x)[0]<<8))
+#	define DWORD(x) (fipmiu32)((x)[3]+((x)[2]<<8)+((x)[1]<<16)+((x)[0]<<24))
 #	define QWORD(x) (U64(DWORD(x+4), DWORD(x)))
 #	else /* BIGENDIAN */
-#	define WORD(x) (u16)((x)[0]+((x)[1]<<8))
-#	define DWORD(x) (u32)((x)[0]+((x)[1]<<8)+((x)[2]<<16)+((x)[3]<<24))
+#	define WORD(x) (fipmiu16)((x)[0]+((x)[1]<<8))
+#	define DWORD(x) (fipmiu32)((x)[0]+((x)[1]<<8)+((x)[2]<<16)+((x)[3]<<24))
 #	define QWORD(x) (U64(DWORD(x), DWORD(x+4)))
 #	endif /* BIGENDIAN */
 #else /* ALIGNMENT_WORKAROUND */
-#define WORD(x) (u16)(*(const u16 *)(x))
-#define DWORD(x) (u32)(*(const u32 *)(x))
-#define QWORD(x) (*(const u64 *)(x))
+#define WORD(x) (fipmiu16)(*(const fipmiu16 *)(x))
+#define DWORD(x) (fipmiu32)(*(const fipmiu32 *)(x))
+#define QWORD(x) (*(const fipmiu64 *)(x))
 #endif /* ALIGNMENT_WORKAROUND */
 
 struct dmi_header
 {
-  u8 type;
-  u8 length;
-  u16 handle;
+  fipmiu8 type;
+  fipmiu8 length;
+  fipmiu16 handle;
 };
 
 #ifndef HAVE_MMAP
 static int 
-myread (int fd, u8 *buf, size_t count, const char *prefix)
+myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
 {
   ssize_t r = 1;
   size_t r2 = 0;
@@ -154,9 +154,9 @@ myread (int fd, u8 *buf, size_t count, const char *prefix)
 #endif
 
 static int 
-checksum (const u8 *buf, size_t len)
+checksum (const fipmiu8 *buf, size_t len)
 {
-  u8 sum = 0;
+  fipmiu8 sum = 0;
   size_t a;
   
   for (a = 0; a < len; a++)
@@ -210,7 +210,7 @@ mem_chunk (size_t base, size_t len, const char *devmem)
       return NULL;
     }
   
-  memcpy (p, (u8 *) mmp + mmoffset, len);
+  memcpy (p, (fipmiu8 *) mmp + mmoffset, len);
   
   if (munmap (mmp, mmoffset + len) == -1)
     {
@@ -240,10 +240,10 @@ mem_chunk (size_t base, size_t len, const char *devmem)
 }
 
 static int 
-dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
-  u8 *buf;
-  u8 *data;
+  fipmiu8 *buf;
+  fipmiu8 *data;
   int i = 0;
   
   if ((buf = mem_chunk (base, len, devmem)) == NULL)
@@ -255,7 +255,7 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
   while ((i < num) && 
 	 ((data + sizeof (struct dmi_header)) <= (buf + len)))
     {
-      u8 *next;
+      fipmiu8 *next;
       struct dmi_header *h = (struct dmi_header *) data;
       
       /* look for the next handle */
@@ -282,10 +282,10 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 	    }
 	  else 
 	    {
-	      u8 *ptr = NULL;
-	      u8 lsb;
+	      fipmiu8 *ptr = NULL;
+	      fipmiu8 lsb;
 	      uint64_t base_addr;
-	      u64 address;
+	      fipmiu64 address;
 	      
 	      ptr = data + 0x08;
 	      if (h->length < 0x12)
@@ -363,7 +363,7 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 }
 
 static int 
-smbios_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+smbios_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
   if (checksum (buf, buf[0x05]) && 
       (memcmp (buf + 0x10, "_DMI_", 5) == 0) && 
@@ -379,7 +379,7 @@ smbios_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type
 
 #ifndef USE_EFI
 static int 
-legacy_decode (u8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
+legacy_decode (fipmiu8 *buf, const char *devmem, ipmi_interface_type_t interface_type, struct ipmi_locate_info *locate_info)
 {
   if (checksum (buf, 0x0F))
     {
@@ -403,7 +403,7 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_loc
   const char *filename;
   char linebuf[64];
 #endif /* USE_EFI */
-  u8 *buf;
+  fipmiu8 *buf;
   int rv = -1;
   
   ERR_EINVAL (IPMI_INTERFACE_TYPE_VALID(type) && info);

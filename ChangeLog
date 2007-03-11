@@ -1,3 +1,9 @@
+2007-03-11  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-locate-dmidecode.c: Replace u8, u16, u32,
+	u64 typedefs with others, to protect against the possibility we
+	collide with libc typedefs of the same name.
+	
 2007-03-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmi_monitoring.h,
