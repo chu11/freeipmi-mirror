@@ -731,7 +731,7 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
                 uint16_t record_id, 
                 uint16_t *next_record_id)
 {
-  sel_record_t *sel_rec;
+  sel_record_t *sel_rec=NULL;
   fiid_obj_t obj_cmd_rs;
   uint64_t val;
   int32_t len;

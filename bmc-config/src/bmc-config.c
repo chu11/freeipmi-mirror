@@ -94,7 +94,7 @@ _bmc_config (void *arg)
   ipmi_device_t dev = NULL;
   struct section *sections = NULL;
   int exit_code = -1;
-  bmc_err_t ret;
+  bmc_err_t ret = 0;
 
   prog_data = (bmc_config_prog_data_t *)arg;
 

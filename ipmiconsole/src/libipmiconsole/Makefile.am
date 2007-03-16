@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.6 2007-03-07 05:12:32 chu11 Exp $
+## $Id: Makefile.am,v 1.7 2007-03-16 12:05:50 ab Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -49,7 +49,7 @@ libipmiconsole_la_LIBADD = ../../../common/src/libllnlcommon.la \
 install-data-hook: $(INSTALL_LOGDIR)
 
 install-logdir:
-	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/var/log/ipmiconsole
+	$(INSTALL) -m 755 -d $(DESTDIR)var/log/ipmiconsole
 
 EXTRA_DIST = ipmiconsole.map
 

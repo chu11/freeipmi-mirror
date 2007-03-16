@@ -22,6 +22,7 @@
 #include "config.h"
 #endif
 
+#include <stdlib.h>
 #include <argp.h>
 
 #include "argp-common.h"

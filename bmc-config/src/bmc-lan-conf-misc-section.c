@@ -229,7 +229,7 @@ gratuitous_arp_interval_diff (bmc_config_state_data_t *state_data,
   bmc_err_t rc;
   bmc_diff_t ret;
   
-  if ((ret = get_bmc_lan_conf_gratuitous_arp_interval (state_data,
+  if ((rc = get_bmc_lan_conf_gratuitous_arp_interval (state_data,
                                                        &interval)) != BMC_ERR_SUCCESS)
     {
       if (rc == BMC_ERR_NON_FATAL_ERROR)

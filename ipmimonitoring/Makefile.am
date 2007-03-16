@@ -7,9 +7,10 @@ EXTRA_DIST = ipmi_monitoring_sensors.conf
 CLEANFILES = *~
 DISTCLEANFILES = .deps/*.P
 
-install-data-local:
-	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(sysconfdir)
-	$(top_srcdir)/install-sh -m 755 $(srcdir)/ipmi_monitoring_sensors.conf $(DESTDIR)$(sysconfdir)/
+Monitoringconfdir     = $(sysconfdir)
+Monitoringconf_DATA   = ipmi_monitoring_sensors.conf
 
-uninstall-local:
-	$(RM) -f $(DESTDIR)$(sysconfdir)//ipmi_monitoring_sensors.conf
+install-data-local:
+	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)
+	$(INSTALL) -m 755 $(srcdir)/ipmi_monitoring_sensors.conf $(DESTDIR)$(sysconfdir)/
+

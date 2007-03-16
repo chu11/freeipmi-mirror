@@ -1,3 +1,25 @@
+2007-03-16  Anand Babu  <ab@zresearch.com>
+
+	* bmc-config/src/bmc-lan-conf-misc-section.c: Fixed incorrect
+	return status check.
+
+	* bmc-watchdog/Makefile.am: replaced 
+	"$(top_srcdir)/install-sh" with "$(INSTALL)" and "$(DESTDIR)/"
+	with "$(DESTDIR)".
+
+	* ipmiconsole/src/libipmiconsole/Makefile.am: like wise.
+
+	* freeipmi/ipmidetect/Makefile.am: like wise.
+
+	* ipmimonitoring/src/libipmimonitoring/Makefile.am: like wise.
+
+	* ipmimonitoring/Makefile.am: replaced install-data-local target
+	with automake style macros.
+
+	* Other changes are just compiler warning fixes like unused
+	variable or referenced without initialization warning.
+	
+
 2007-03-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c

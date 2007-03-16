@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.3 2007-02-16 20:23:31 chu11 Exp $
+## $Id: Makefile.am,v 1.4 2007-03-16 12:05:50 ab Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -61,7 +61,7 @@ force-dependency-check:
 IPMISDRCACHEdir = $(IPMI_MONITORING_SDR_CACHE_DIR)
 
 install-data-local:
-	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(IPMISDRCACHEdir)
+	$(INSTALL) -m 755 -d $(DESTDIR)$(IPMISDRCACHEdir)
 
 EXTRA_DIST = ipmimonitoring.map
 
