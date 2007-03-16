@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.3 2007-03-09 02:44:46 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.4 2007-03-16 00:40:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2912,7 +2912,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
        *
        * There are several possible races here.
        *
-       * 1) It possible we get a SOL packet before we can a activate
+       * 1) It's possible we get a SOL packet before we can a activate
        * payload response.  For example, the packets are received out
        * of order, or perhaps the activate payload response is lost on
        * the network.
@@ -3010,6 +3010,47 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         }
 
       s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
+
+      /* It's possible the user entered some data before the SOL
+       * session was established.  We send that data now.  Otherwise
+       * we'd have to wait until the next poll() has passed to
+       * ipmiconsole_process_ctxs() is called.
+       * 
+       * TODO: This is identical to code above.  Clean this up later.
+       */
+
+      /* _send_sol_packet_with_character_data() will not send more
+       * than s->console_remote_console_to_bmc_bytes_before_break
+       */
+      if (!cbuf_is_empty(s->console_remote_console_to_bmc)
+          && (!s->break_requested
+              || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
+        {
+          if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
+            {
+		  /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              goto calculate_timeout;
+            }
+          goto calculate_timeout;
+        }
+      
+      if (s->break_requested)
+        {
+          if (_send_sol_packet_generate_break(c, 0) < 0)
+            {
+              /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              goto calculate_timeout;
+            }
+          goto calculate_timeout;
+        }
     }
   else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
     {

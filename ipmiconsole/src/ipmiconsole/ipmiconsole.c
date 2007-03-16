@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.6 2007-03-09 02:44:46 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.7 2007-03-16 00:40:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,7 +90,7 @@ _set_mode_raw(void)
   tty.c_cc[VMIN] = 1;
   tty.c_cc[VTIME] = 0;
 
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &tty) < 0)
+  if (tcsetattr(STDIN_FILENO, TCSADRAIN, &tty) < 0)
     {
       perror("tcsetattr");
       return -1;
@@ -285,7 +285,6 @@ main(int argc, char **argv)
   struct ipmiconsole_protocol_config protocol_config;
   int debug_flags = 0;
   int fd = -1;
-  struct timeval last, now, result;
 
   err_init(argv[0]);
   err_set_flags(ERROR_STDOUT);
@@ -376,8 +375,6 @@ main(int argc, char **argv)
      goto cleanup;
 #endif /* !NDEBUG */
 
-   gettimeofday(&last, NULL);
-
   while (1)
     {
       char buf[IPMICONSOLE_BUFLEN];
@@ -409,10 +406,6 @@ main(int argc, char **argv)
 	  if (!n)
 	    goto cleanup;
 
-	  gettimeofday(&now, NULL);
-	  timersub(&now, &last, &result); 
-	  /* printf("\r\ntime: %lu %lu\r\n", result.tv_sec, result.tv_usec); */
-	  memcpy(&last, &now, sizeof(struct timeval));
 	  if (_stdin(c, fd, buf, n) < 0)
 	    goto cleanup;
 	}
