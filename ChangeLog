@@ -1,3 +1,15 @@
+2007-03-15  Albert Chu <chu11@llnl.gov>
+	
+       * ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+       (_process_ctx): Fix output corner case.  Fix comment typo.
+	
+       * ipmiconsole/src/ipmiconsole/ipmiconsole.c (_set_mode_raw): Use
+       TCSADRAIN instead of TCSAFLUSH to not automatically flush stdin if
+       data exists on it.
+	
+       * ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Remove unused
+       code.
+	
 2007-03-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/: Do not lock memory by default.  Adjust -L option
