@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.6 2007-03-20 21:26:37 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.7 2007-03-20 22:43:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,6 +46,9 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <limits.h>
 #include <assert.h>
 #include <errno.h>
@@ -3008,6 +3011,25 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
             }
 	  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           goto calculate_timeout;
+        }
+      
+      /* Wake up code waiting for SOL to be established */
+      if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED)
+        {
+          uint8_t val;
+          
+          val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_ESTABLISHED;
+          if (write(c->enginecomm[1], &val, 1) < 0)
+            {
+              IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
+              c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+              /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              goto calculate_timeout;
+            }
         }
 
       s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.7 2007-03-20 21:21:28 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.8 2007-03-20 22:43:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -233,6 +233,18 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
   memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
+  
+  if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED)
+    {
+      uint8_t val;
+
+      val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR;
+      if (write(c->enginecomm[1], &val, 1) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
+          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        }
+    }
 }
 
 int

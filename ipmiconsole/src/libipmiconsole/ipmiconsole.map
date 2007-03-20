@@ -2,6 +2,7 @@
   global:
     ipmiconsole_engine_init;
     ipmiconsole_engine_submit;
+    ipmiconsole_engine_submit_block;
     ipmiconsole_engine_teardown;
     ipmiconsole_ctx_create;
     ipmiconsole_ctx_errnum;

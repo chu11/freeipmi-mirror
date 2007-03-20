@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.5 2007-03-20 21:26:37 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.6 2007-03-20 22:43:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,6 +46,8 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#include <sys/types.h>
+#include <sys/select.h>
 #ifdef WITH_PTHREADS
 #include <pthread.h>
 #endif /* WITH_PTHREADS */
@@ -74,26 +76,27 @@ static char *ipmiconsole_errmsgs[] =
     "ctx already submitted",	/* 5 */
     "ctx not submitted",	/* 6 */
     "ctx is still submitted",	/* 7 */
-    "invalid parmaeters",	/* 8 */
-    "ipmi 2.0 unavailable",	/* 9 */
-    "cipher suite unavailable",	/* 10 */
-    "hostname invalid",		/* 11 */
-    "username invalid",		/* 12 */
-    "password invalid",		/* 13 */
-    "k_g invalid",		/* 14 */
-    "privilege invalid",	/* 15 */
-    "cipher suite invalid",	/* 16 */
-    "SOL unavailable",		/* 17 */
-    "SOL in use",		/* 18 */
-    "SOL not responding",	/* 19 */
-    "SOL session stolen",       /* 20 */
-    "BMC Busy",			/* 21 */
-    "BMC Error",		/* 22 */
-    "session timeout",		/* 23 */
-    "out of memory",		/* 24 */
-    "internal system error",	/* 25 */
-    "internal error",		/* 26 */
-    "errnum out of range",	/* 27 */
+    "ctx is waiting for SOL",   /* 8 */
+    "invalid parmaeters",	/* 9 */
+    "ipmi 2.0 unavailable",	/* 10 */
+    "cipher suite unavailable",	/* 11 */
+    "hostname invalid",		/* 12 */
+    "username invalid",		/* 13 */
+    "password invalid",		/* 14 */
+    "k_g invalid",		/* 15 */
+    "privilege invalid",	/* 16 */
+    "cipher suite invalid",	/* 17 */
+    "SOL unavailable",		/* 18 */
+    "SOL in use",		/* 19 */
+    "SOL not responding",	/* 20 */
+    "SOL session stolen",       /* 21 */
+    "BMC Busy",			/* 22 */
+    "BMC Error",		/* 23 */
+    "session timeout",		/* 24 */
+    "out of memory",		/* 25 */
+    "internal system error",	/* 26 */
+    "internal error",		/* 27 */
+    "errnum out of range",	/* 28 */
     NULL
   };
 
@@ -143,6 +146,51 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
   return -1;
 }
 
+static int
+_ipmiconsole_clean_enginecomm(ipmiconsole_ctx_t c)
+{
+  struct timeval tv;
+  fd_set rds;
+  int n;
+  
+  while (1)
+    {
+      FD_ZERO(&rds);
+      FD_SET(c->enginecomm[0], &rds);
+
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+
+      if ((n = select(c->enginecomm[0] + 1, &rds, NULL, NULL, &tv)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("select: %s", strerror(errno)));
+          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+          goto cleanup;
+        }
+
+      if (!n)
+        return 0;
+
+      if (FD_ISSET(c->enginecomm[0], &rds))
+        {
+          uint8_t buf[IPMICONSOLE_PACKET_BUFLEN];
+          ssize_t len;
+
+          if ((len = read(c->enginecomm[0], (void *)buf, IPMICONSOLE_PACKET_BUFLEN)) < 0)
+            {
+              IPMICONSOLE_CTX_DEBUG(c, ("read: %s", strerror(errno)));
+              c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+              goto cleanup;
+            }
+        }
+    }
+
+  return 0;
+
+ cleanup:
+  return -1;
+}
+
 int 
 ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 {
@@ -177,11 +225,140 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
       return -1;
     }
 
+  /* No special behavior under this case */
+  c->enginecomm_flags = 0;
+
+  if (_ipmiconsole_clean_enginecomm(c) < 0)
+    goto cleanup;
+
   if (_ipmiconsole_init_ctx_session(c) < 0)
     goto cleanup;
 
   /* session_submitted flag set in here */
   if (ipmiconsole_engine_submit_ctx(c) < 0)
+    goto cleanup;
+
+  return 0;
+
+ cleanup:
+  _ipmiconsole_cleanup_ctx_session(c);
+  return -1;
+}
+
+static int
+_ipmiconsole_block(ipmiconsole_ctx_t c)
+{
+  fd_set rds;
+  int n;
+  
+  FD_ZERO(&rds);
+  FD_SET(c->enginecomm[0], &rds);
+
+  if ((n = select(c->enginecomm[0] + 1, &rds, NULL, NULL, NULL)) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("select: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  if (!n)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("select returned 0"));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      goto cleanup;
+    }
+
+  if (FD_ISSET(c->enginecomm[0], &rds))
+    {
+      uint8_t val;
+      ssize_t len;
+
+      if ((len = read(c->enginecomm[0], (void *)&val, 1)) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("read: %s", strerror(errno)));
+          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+          goto cleanup;
+        }
+      
+      if (!len)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("enginecomm closed"));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL;
+          goto cleanup;
+        }
+
+      if (val == IPMICONSOLE_ENGINECOMM_SOL_SESSION_ESTABLISHED)
+        c->sol_session_established++;
+      else 
+        {
+          if (val != IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR)
+            {
+              IPMICONSOLE_CTX_DEBUG(c, ("enginecomm returned invalid data: %d", val));
+              c->errnum = IPMICONSOLE_ERR_INTERNAL;
+            }
+          goto cleanup;
+        }
+    }
+
+  return 0;
+
+ cleanup:
+  return -1;
+}
+
+int 
+ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
+{
+  int rv;
+
+  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+    return -1;
+
+  if (!ipmiconsole_engine_is_setup())
+    {
+      c->errnum = IPMICONSOLE_ERR_NOT_SETUP;
+      return -1;
+    }
+
+  if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
+  if (c->session_submitted)
+    {
+      c->errnum = IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED;
+      return -1;
+    }
+
+  if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
+  /* Tell the engine to return info when the SOL session is established */
+  c->enginecomm_flags = IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED;
+  c->sol_session_established = 0;
+
+  /* To determine if an IPMI error occurred */
+  c->errnum = IPMICONSOLE_ERR_SUCCESS;
+
+  if (_ipmiconsole_clean_enginecomm(c) < 0)
+    goto cleanup;
+
+  if (_ipmiconsole_init_ctx_session(c) < 0)
+    goto cleanup;
+
+  /* session_submitted flag set in here */
+  if (ipmiconsole_engine_submit_ctx(c) < 0)
+    goto cleanup;
+
+  /* sol_session_established flag maybe set in here */
+  if (_ipmiconsole_block(c) < 0)
     goto cleanup;
 
   return 0;
@@ -348,6 +525,13 @@ ipmiconsole_ctx_create(char *hostname,
 
   c->workaround_flags = protocol_config->workaround_flags;
 
+  if (pipe(c->enginecomm) < 0)
+    /* errno set via pipe() */
+    goto cleanup;
+
+  c->enginecomm_flags = 0;
+  c->sol_session_established = 0;
+
   if ((rv = pthread_mutex_init(&c->session_submitted_mutex, NULL)) != 0)
     {
       errno = rv;
@@ -411,6 +595,13 @@ _is_submitted(ipmiconsole_ctx_t c)
       return -1;
     }
 
+  if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED
+      && !c->sol_session_established)
+    {
+      c->errnum = IPMICONSOLE_ERR_CTX_IS_WAITING;
+      return -1;
+    }
+
   return 0;
 }
 
@@ -460,6 +651,9 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_CTX_IS_SUBMITTED;
       return -1;
     }
+
+  close(c->enginecomm[0]);
+  close(c->enginecomm[1]);
 
   ipmiconsole_ctx_debug_cleanup(c);
 

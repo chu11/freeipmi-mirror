@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.7 2007-03-16 00:40:04 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.8 2007-03-20 22:43:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -352,9 +352,24 @@ main(int argc, char **argv)
       goto cleanup;
     }
 
-  if (ipmiconsole_engine_submit(c) < 0)
+  if (ipmiconsole_engine_submit_block(c) < 0)
     {
-      fprintf(stderr, "ipmiconsole_submit: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+      if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_UNAVAILABLE
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_USERNAME_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PASSWORD_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_K_G_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_UNAVAILABLE
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_INUSE
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_NOT_RESPONDING
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_BUSY
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_ERROR
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SESSION_TIMEOUT)
+        printf("[error received]: %s\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+      else
+        fprintf(stderr, "ipmiconsole_submit: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
       goto cleanup;
     }
 
@@ -374,6 +389,8 @@ main(int argc, char **argv)
    if (_set_mode_raw() < 0)
      goto cleanup;
 #endif /* !NDEBUG */
+
+  printf("[SOL established]\r\n");
 
   while (1)
     {

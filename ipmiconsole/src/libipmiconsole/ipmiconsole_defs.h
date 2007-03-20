@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.4 2007-03-20 21:21:28 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.5 2007-03-20 22:43:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -207,6 +207,11 @@ typedef enum
         (IPMICONSOLE_WORKAROUND_INTEL_2_0 \
 	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0)
 
+#define IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED   0x1
+
+#define IPMICONSOLE_ENGINECOMM_SOL_SESSION_ESTABLISHED 0x1
+#define IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR       0x2
+
 struct ipmiconsole_ctx_session {
 
   /* File Descriptor User Interface */
@@ -374,6 +379,11 @@ struct ipmiconsole_ctx {
   uint32_t debug_flags;
   uint32_t security_flags;
   uint32_t workaround_flags;
+
+  /* Pipe for non-fd communication: from Engine to API */
+  int enginecomm[2];
+  uint32_t enginecomm_flags;
+  int sol_session_established;
 
   /* Debug Data */
   int debug_fd;
