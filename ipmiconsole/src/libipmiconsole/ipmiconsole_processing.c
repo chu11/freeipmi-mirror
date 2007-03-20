@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.5 2007-03-20 21:21:28 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.6 2007-03-20 21:26:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2248,6 +2248,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
   if (sol_deactivating)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("SOL Deactivating"));
+      c->errnum = IPMICONSOLE_ERR_SOL_STOLEN;
       goto cleanup;
     }
 
