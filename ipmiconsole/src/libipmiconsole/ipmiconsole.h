@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.1.2.3 2007-03-09 02:46:02 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.1.2.4 2007-03-20 21:27:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,13 +54,14 @@ extern "C" {
 #define IPMICONSOLE_ERR_SOL_UNAVAILABLE            17
 #define IPMICONSOLE_ERR_SOL_INUSE                  18
 #define IPMICONSOLE_ERR_SOL_NOT_RESPONDING         19
-#define IPMICONSOLE_ERR_BMC_BUSY                   20
-#define IPMICONSOLE_ERR_BMC_ERROR                  21
-#define IPMICONSOLE_ERR_SESSION_TIMEOUT            22
-#define IPMICONSOLE_ERR_OUT_OF_MEMORY              23
-#define IPMICONSOLE_ERR_SYSTEM_ERROR               24
-#define IPMICONSOLE_ERR_INTERNAL                   25
-#define IPMICONSOLE_ERR_ERRNUMRANGE                26
+#define IPMICONSOLE_ERR_SOL_STOLEN                 20
+#define IPMICONSOLE_ERR_BMC_BUSY                   21
+#define IPMICONSOLE_ERR_BMC_ERROR                  22
+#define IPMICONSOLE_ERR_SESSION_TIMEOUT            23
+#define IPMICONSOLE_ERR_OUT_OF_MEMORY              24
+#define IPMICONSOLE_ERR_SYSTEM_ERROR               25
+#define IPMICONSOLE_ERR_INTERNAL                   26
+#define IPMICONSOLE_ERR_ERRNUMRANGE                27
 
 /* 
  * IPMI Privilege Constants

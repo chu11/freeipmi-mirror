@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.1.2.3 2007-03-20 21:22:34 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.1.2.4 2007-03-20 21:27:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -86,13 +86,14 @@ static char *ipmiconsole_errmsgs[] =
     "SOL unavailable",		/* 17 */
     "SOL in use",		/* 18 */
     "SOL not responding",	/* 19 */
-    "BMC Busy",			/* 20 */
-    "BMC Error",		/* 21 */
-    "session timeout",		/* 22 */
-    "out of memory",		/* 23 */
-    "internal system error",	/* 24 */
-    "internal error",		/* 25 */
-    "errnum out of range",	/* 26 */
+    "SOL session stolen",       /* 20 */
+    "BMC Busy",			/* 21 */
+    "BMC Error",		/* 22 */
+    "session timeout",		/* 23 */
+    "out of memory",		/* 24 */
+    "internal system error",	/* 25 */
+    "internal error",		/* 26 */
+    "errnum out of range",	/* 27 */
     NULL
   };
 
