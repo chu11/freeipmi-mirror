@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.6 2007-03-09 02:44:46 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.7 2007-03-20 21:21:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -126,8 +126,10 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
    * something failed during the setup.  We know it failed during
    * setup if session_submitted is not set.
    */
+#if 0
   if (!(c->session_submitted) && s->user_fd)
     close(s->user_fd);
+#endif
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
@@ -221,6 +223,9 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
+  if (!(c->session_submitted) && s->user_fd)
+    close(s->user_fd);
 
   c->session_submitted = 0;
 
@@ -1440,6 +1445,12 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL;
       goto cleanup_ctxs;
     }
+
+  /* achu:
+   *
+   * Ok to set the flag here b/c we are in the 'console_engine_ctxs_mutex'
+   */
+  c->session_submitted++;
 
  cleanup_ctxs:
   if ((rv = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
