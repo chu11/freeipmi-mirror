@@ -1,4 +1,4 @@
- 2007-03-20  Albert Chu <chu11@llnl.gov>
+2007-03-20  Albert Chu <chu11@llnl.gov>
 	
        * ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
        (_ipmiconsole_cleanup_ctx_session, ipmiconsole_engine_submit_ctx),
@@ -10,6 +10,9 @@
        ipmiconsole/src/libipmiconsole/ipmiconsole.h,
        ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
        (_sol_bmc_to_remote_console_packet): Add SOL stolen error code.
+
+       * ipmiconsole/: Support blocking engine submission.  Make it the
+       default behavior for the ipmiconsole tool.
 	
 2007-03-15  Albert Chu <chu11@llnl.gov>
 	

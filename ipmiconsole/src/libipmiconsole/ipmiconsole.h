@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.1.2.4 2007-03-20 21:27:34 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.1.2.5 2007-03-20 22:44:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,26 +42,27 @@ extern "C" {
 #define IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED       5
 #define IPMICONSOLE_ERR_CTX_NOT_SUBMITTED           6
 #define IPMICONSOLE_ERR_CTX_IS_SUBMITTED            7
-#define IPMICONSOLE_ERR_PARAMETERS                  8
-#define IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE        9
-#define IPMICONSOLE_ERR_CIPHER_SUITE_UNAVAILABLE   10
-#define IPMICONSOLE_ERR_HOSTNAME_INVALID           11 
-#define IPMICONSOLE_ERR_USERNAME_INVALID           12
-#define IPMICONSOLE_ERR_PASSWORD_INVALID           13
-#define IPMICONSOLE_ERR_K_G_INVALID                14
-#define IPMICONSOLE_ERR_PRIVILEGE_INVALID          15
-#define IPMICONSOLE_ERR_CIPHER_SUITE_INVALID       16
-#define IPMICONSOLE_ERR_SOL_UNAVAILABLE            17
-#define IPMICONSOLE_ERR_SOL_INUSE                  18
-#define IPMICONSOLE_ERR_SOL_NOT_RESPONDING         19
-#define IPMICONSOLE_ERR_SOL_STOLEN                 20
-#define IPMICONSOLE_ERR_BMC_BUSY                   21
-#define IPMICONSOLE_ERR_BMC_ERROR                  22
-#define IPMICONSOLE_ERR_SESSION_TIMEOUT            23
-#define IPMICONSOLE_ERR_OUT_OF_MEMORY              24
-#define IPMICONSOLE_ERR_SYSTEM_ERROR               25
-#define IPMICONSOLE_ERR_INTERNAL                   26
-#define IPMICONSOLE_ERR_ERRNUMRANGE                27
+#define IPMICONSOLE_ERR_CTX_IS_WAITING              8
+#define IPMICONSOLE_ERR_PARAMETERS                  9
+#define IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE       10
+#define IPMICONSOLE_ERR_CIPHER_SUITE_UNAVAILABLE   11
+#define IPMICONSOLE_ERR_HOSTNAME_INVALID           12 
+#define IPMICONSOLE_ERR_USERNAME_INVALID           13
+#define IPMICONSOLE_ERR_PASSWORD_INVALID           14
+#define IPMICONSOLE_ERR_K_G_INVALID                15
+#define IPMICONSOLE_ERR_PRIVILEGE_INVALID          16
+#define IPMICONSOLE_ERR_CIPHER_SUITE_INVALID       17
+#define IPMICONSOLE_ERR_SOL_UNAVAILABLE            18
+#define IPMICONSOLE_ERR_SOL_INUSE                  19
+#define IPMICONSOLE_ERR_SOL_NOT_RESPONDING         20
+#define IPMICONSOLE_ERR_SOL_STOLEN                 21
+#define IPMICONSOLE_ERR_BMC_BUSY                   22
+#define IPMICONSOLE_ERR_BMC_ERROR                  23
+#define IPMICONSOLE_ERR_SESSION_TIMEOUT            24
+#define IPMICONSOLE_ERR_OUT_OF_MEMORY              25
+#define IPMICONSOLE_ERR_SYSTEM_ERROR               26
+#define IPMICONSOLE_ERR_INTERNAL                   27
+#define IPMICONSOLE_ERR_ERRNUMRANGE                28
 
 /* 
  * IPMI Privilege Constants
@@ -321,6 +322,16 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * Returns 0 on success, -1 on error
  */
 int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
+
+/*
+ * ipmiconsole_engine_submit_block
+ *
+ * Submit a context to the ipmiconsole engine.  Block until
+ * session is established or an error/timeout occurs.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
 
 /* 
  * ipmiconsole_engine_teardown
