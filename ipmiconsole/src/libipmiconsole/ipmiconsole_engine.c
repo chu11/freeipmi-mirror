@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.1.2.6 2007-03-20 22:44:17 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.1.2.7 2007-03-20 22:54:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -234,7 +234,8 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
   
-  if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED)
+  if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED
+      && !c->sol_session_established)
     {
       uint8_t val;
 

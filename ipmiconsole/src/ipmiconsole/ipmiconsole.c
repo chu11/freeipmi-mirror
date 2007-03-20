@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.1.2.7 2007-03-20 22:44:17 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.1.2.8 2007-03-20 22:54:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -230,7 +230,12 @@ _stdin(ipmiconsole_ctx_t c,
 	  if (errno != EPIPE)
 	    perror("write");
 	  else
-	    printf("error received: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+            {
+              if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_STOLEN)
+                printf("\r\n[%s]\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+              else
+                printf("\r\n[error received]: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+            }
 	  return -1;
 	}
 
@@ -445,7 +450,10 @@ main(int argc, char **argv)
           else 
 	    {
 	      /* b/c we're exitting */
-	      printf("\r\n[error received]: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+              if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_STOLEN)
+                printf("\r\n[%s]\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+              else
+                printf("\r\n[error received]: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
 	      goto cleanup;
 	    }
 
