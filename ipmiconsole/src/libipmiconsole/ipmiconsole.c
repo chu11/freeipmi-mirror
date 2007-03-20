@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.1.2.2 2007-03-09 02:46:02 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.1.2.3 2007-03-20 21:22:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -145,6 +145,8 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
 int 
 ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 {
+  int rv;
+
   if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
     return -1;
 
@@ -154,19 +156,33 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
       return -1;
     }
 
+  if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
   if (c->session_submitted)
     {
       c->errnum = IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED;
       return -1;
     }
-  
+
+  if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+
   if (_ipmiconsole_init_ctx_session(c) < 0)
     goto cleanup;
 
+  /* session_submitted flag set in here */
   if (ipmiconsole_engine_submit_ctx(c) < 0)
     goto cleanup;
 
-  c->session_submitted++;
   return 0;
 
  cleanup:

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.1.2.2 2007-03-09 02:46:02 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.1.2.3 2007-03-20 21:22:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -223,7 +223,7 @@ struct ipmiconsole_ctx_session {
   struct timeval last_ipmi_packet_sent;
   struct timeval last_ipmi_packet_received;
 
-  /* Pipe for non-fd communication */
+  /* Pipe for non-fd communication: from API to engine */
   /* Note for future: Protect w/ mutex is you add opportunities to do async comm */
   int asynccomm[2];
 

@@ -6,7 +6,7 @@ o -K option added to ipmipower and ipmiconsole.
 o -P option replaced w/ -W option in ipmipower.
 o -P option added to most tools.
 o Fix seg-fault in ipmiconsole.
-o Fix output corner case in libipmiconsole.
+o Fix output corner case and race in libipmiconsole.
 o Fix secure malloc bug.
 
 0.3.1

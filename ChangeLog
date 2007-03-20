@@ -1,3 +1,11 @@
+ 2007-03-20  Albert Chu <chu11@llnl.gov>
+	
+       * ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+       (_ipmiconsole_cleanup_ctx_session, ipmiconsole_engine_submit_ctx),
+       ipmiconsole/src/libipmiconsole/ipmiconsole.c
+       (ipmiconsole_engine_submit): Fix possible session_submit race.
+       It has never been hit, but is possible.
+	
 2007-03-15  Albert Chu <chu11@llnl.gov>
 	
        * ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c

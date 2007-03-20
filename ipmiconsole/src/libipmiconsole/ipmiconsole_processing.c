@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.1.2.3 2007-03-16 00:42:00 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.1.2.4 2007-03-20 21:22:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3028,7 +3028,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         {
           if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
             {
-		  /* Attempt to close the session cleanly */
+              /* Attempt to close the session cleanly */
               s->close_session_flag++;
               if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
                 goto close_session;
