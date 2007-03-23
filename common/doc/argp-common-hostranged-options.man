@@ -21,7 +21,7 @@ Set multiple host fanout.  A "sliding window" (or fanout) algorithm is
 used for parallel IPMI communication so that slower nodes or timed out
 nodes will not impede parallel communication.  The maximum number of
 threads available at the same time is limited by the fanout.  The
-default is 32.  See HOSTRANGED OUTPUT below for additional
+default is 64.  See HOSTRANGED OUTPUT below for additional
 information.
 .TP
 \fB\-E\fR, \fB\-\-eliminate\fR

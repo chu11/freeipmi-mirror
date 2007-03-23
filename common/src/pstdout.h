@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.h,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+ *  $Id: pstdout.h,v 1.2 2007-03-23 13:18:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,7 +106,7 @@
 /* 
  * Fanout default, min, and max
  */
-#define PSTDOUT_FANOUT_DEFAULT    32
+#define PSTDOUT_FANOUT_DEFAULT    64
 #define PSTDOUT_FANOUT_MIN        1
 #define PSTDOUT_FANOUT_MAX        1024
 
