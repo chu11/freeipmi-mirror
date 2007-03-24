@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.8 2007-03-21 23:55:41 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.9 2007-03-24 16:56:39 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -118,7 +118,7 @@ Output version and exit.
 .I "-C, --config file"
 Specify an alternate configuration file.
 .TP
-.I "-N, --not-steal"
+.I "-N, --dont-steal"
 Under most circumstances, if SOL is detected as being in use,
 .B ipmiconsole
 will attempt to steal the SOL session away from the previous session.
