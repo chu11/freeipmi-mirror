@@ -445,6 +445,10 @@ replicate the configuration.
       Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
       16.
 
+@item -P, ---password-prompt @*
+      Prompt for password to avoid possibility of listing it in
+      process lists.
+
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
       MD2, MD5, and PLAIN.
@@ -922,6 +926,10 @@ completed successfully.
       Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
       16.
 
+@item -P, ---password-prompt @*
+      Prompt for password to avoid possibility of listing it in
+      process lists.
+
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
       MD2, MD5, and PLAIN.
@@ -1033,6 +1041,10 @@ and out-of-band.
       Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
       16.
 
+@item -P, ---password-prompt @*
+      Prompt for password to avoid possibility of listing it in
+      process lists.
+
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
       MD2, MD5, and PLAIN.
@@ -1100,6 +1112,10 @@ nominal, threshold max/min readings and status descriptions.
 @item -p, ---password=@var{PASSWORD} @*
       Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
       16.
+
+@item -P, ---password-prompt @*
+      Prompt for password to avoid possibility of listing it in
+      process lists.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
@@ -1267,6 +1283,10 @@ you view and manage system event log.
 @item -p, ---password=@var{PASSWORD} @*
       Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
       16.
+
+@item -P, ---password-prompt @*
+      Prompt for password to avoid possibility of listing it in
+      process lists.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
       Use @var{AUTHTYPE} instead of MD5.  Allowed values are NONE,
@@ -1761,9 +1781,17 @@ null username (Anonymous Login @samp{User ID 1}) is assumed.
       Sets the @var{password} to use when authenticating with the BMC.
 If not specified, a null password is assumed.
 
+@item -P, ---password-prompt @var{pw} @*
+      Prompt for password to avoid possibility of listing it in
+process lists.
+
 @item -k, ---k-g @var{str} @*
       Sets the @var{K_g} BMC Key when authenticating with the BMC for
 ipmi 2.0.  If not specified, a null key is assumed.
+
+@item -K, ---k-g @var{str} @*
+      Prompt for K_g to avoid possibility of listing it in process
+lists.
 
 @item -n, ---on @*
       Power on the target hosts.
@@ -1880,7 +1908,7 @@ in your cluster is quite large.  However, hostlist output will only
 output after the slowest node has completed its power control
 operation. 
 
-@item -P,  ---force-permsg-authentication @*
+@item -W,  ---force-permsg-authentication @*
       Forces @command{ipmipower} to use IPMI per message authentication
 regardless of what is advertised by the remote machine.  This option
 has been specifically implemented to get around a compliance issue.
@@ -1890,7 +1918,7 @@ has been specifically implemented to get around a compliance issue.
 of zero.  This option has been specifically implemented to get around
 a compliance issue.
 
-@item -U,  ---check-unexpected-authcode @*
+@item -Z,  ---check-unexpected-authcode @*
       Forces @command{ipmipower} to check packet authcodes even if no
 authcode should be received.  This option has been specifically
 implemented to get around a compliance issue.
@@ -1917,12 +1945,6 @@ uses the @var{time-out} value to determine when to give up on a power
 command.  If not specified, a default @var{time-out} of 20000
 milliseconds (20 seconds) is used.
 
-@item -q, ---retry-wait-timeout @var{ms} @*
-      Sets the @var{retry-wait-timeout} in milliseconds.  The
-@var{retry-wait-timeout} is similar to the @var{retry-timeout} above,
-but is used specifically for power completion verification in the
-@option{--wait-until-on} and @option{--wait-until-off} options.
-
 @item -y, ---retry-timeout @var{ms} @*
       Sets the @var{retry-timeout} in milliseconds.  The
 @acronym{IPMI} protocol sends a series of packets back and forth to a
@@ -1940,6 +1962,12 @@ above.  The @option{--timeout} option refers to the entire amount of
 time the @acronym{IPMI} protocol has to complete a power control operation.  The
 @option{--retry} option refers to the amount of time any individual
 packet within the @acronym{IPMI} protocol has to complete.
+
+@item -q, ---retry-wait-timeout @var{ms} @*
+      Sets the @var{retry-wait-timeout} in milliseconds.  The
+@var{retry-wait-timeout} is similar to the @var{retry-timeout} above,
+but is used specifically for power completion verification in the
+@option{--wait-until-on} and @option{--wait-until-off} options.
 
 @item -b, ---retry-backoff-count @var{num} @*
       After every @var{retry-backoff-count} retransmissions,
@@ -2517,9 +2545,17 @@ privilege to establish an SOL session.
       Specify the password to use to establish communication.  If not
 specified, a NULL password is assumed.
 
+@item -P, ---password-prompt @var{pw} @*
+      Prompt for password to avoid possibility of listing it in
+process lists.
+
 @item -k, ---k-g @var{str} @*
       Specify the BMC key to use for authentication.  If not
 specified, a NULL key is assumed.
+
+@item -K, ---k-g-prompt @var{str} @*
+      Prompt for K_g to avoid possibility of listing it in process
+lists.
 
 @item -l, ---privilege @var{str} @*
       Specify the privilege type to use.  The privilege must be
@@ -2559,6 +2595,18 @@ to use for payload encryption.
 
 @item -C, ---config @var{file} @*
       Specify an alternate configuration file.
+
+@item -N, ---dont-steal @*
+      Under most circumstances, if SOL is detected as being in use,
+ipmiconsole will attempt to steal the SOL session away from the
+previous session.  This default behavior exists for several reasons,
+most notably that earlier SOL sessions may have not been able to be
+deactivate properly.  This options changes the default behavior to
+return an error if SOL is already detected as being in use.
+
+@item -L, ---lock-memory @*
+      Inform ipmiconsole to lock memory to prevent sensitive
+information (such as usernames and passwords) to be swappable.
 
 @item -I,  ---intel-2-0-session @*
       Modifies the IPMI 2.0 session protocol for non-compliant Intel
@@ -2638,9 +2686,17 @@ currently supports the following Cipher Suite IDs:
         @samp{12}
 @end example
 
+@item dont-steal enable|disable @*
+Specify if in use SOL sessions should not be stolen by default.
+
+@item lock-memory enable|disable @*
+Specify if memory should be locked by default.
+
 @item intel_2_0_session enable|disable @*
+Specify if workarounds for an Intel ipmi 2.0 session should be used.
 
 @item supermicro_2_0_session enable|disable @*
+Specify if workarounds for a Supermicro ipmi 2.0 session should be used.
 
 @end itemize
 

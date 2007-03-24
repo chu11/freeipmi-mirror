@@ -1,6 +1,6 @@
 2007-03-24  Albert Chu <chu11@llnl.gov>
 
-	* doc/freeipmi-faq.texi: Updated.
+	* doc/freeipmi.texi, doc/freeipmi-faq.texi: Updated.
 
 	* ipmiconsole/ipmiconsole.8.in: Fix option name typo.
 	
