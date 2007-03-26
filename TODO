@@ -32,6 +32,10 @@ ipmipower:
 ----------
   * re-work vendor one-off support to string input
 
+ipmiconsole:
+------------
+  * multihost/ranged logging, but not interactice
+
 Vendor Workarounds
 ------------------
   * compile options to make workarounds automatic for ipmipower/ipmiconsole
