@@ -178,15 +178,14 @@ In our eyes, there are several reasons why GNU FreeIPMI is particularly special.
 
 Since much of the early development of FreeIPMI was for LLNL's
 clusters, a number of HPC aspects have been added to the tools and/or
-are supported by other HPC software..
+are supported by other HPC software.
 
 Ipmipower is capable of scaling to very large numbers of nodes.  It is
-supported by Powerman
-(http://sourceforge.net/projects/powerman) for scalable power
-management.  At LLNL, in conjunction with Powerman, ipmipower is used
-for power control on clusters ranging from sizes of 8 to 1152.  It is
-capable of power controlling several of the largest clusters in under
-a second.
+supported by Powerman (http://sourceforge.net/projects/powerman) for
+scalable power management.  At LLNL, in conjunction with Powerman,
+ipmipower is used for power control on clusters ranging from sizes of
+4 to 1152.  It is capable of power controlling all of the nodes in the
+largest clusters in under a second.
 
 Libipmiconsole is capable of setting up and maintaining SOL
 connections to a large number of nodes simultaneously.  Ipmiconsole is
