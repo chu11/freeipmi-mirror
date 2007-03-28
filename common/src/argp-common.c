@@ -211,6 +211,12 @@ common_parse_opt (int key,
               exit(1);
             }
 	}
+      if (arg)
+        {
+          int n;
+          n = strlen(arg);
+          __secure_memset(arg, '\0', n);
+        }
       break;
     case PASSWORD_KEY:
       if (arg && strlen (arg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
