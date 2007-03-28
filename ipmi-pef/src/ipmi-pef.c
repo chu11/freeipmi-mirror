@@ -695,12 +695,6 @@ main (int argc, char **argv)
   ipmi_pef_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-#ifdef NDEBUG
-  /* Clear out argv data for security purposes on ps(1). */
-  for (i = 1; i < argc; i++)
-    memset(argv[i], '\0', strlen(argv[i]));
-#endif /* NDEBUG */
-  
 #ifndef NDEBUG
   if (prog_data.args->common.debug)
     prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;

@@ -32,6 +32,7 @@
 #ifdef HAVE_ERROR_H
 #include <error.h>
 #endif
+#include <assert.h>
 #include <argp.h>
 
 #include "freeipmi/ipmi-authentication-type-spec.h"
@@ -40,6 +41,22 @@
 #include "argp-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+
+/* From David Wheeler's Secure Programming Guide */
+static void *
+__secure_memset(void *s, int c, size_t n)
+{
+  volatile char *p;
+
+  assert(s);
+  assert(n);
+
+  p = s;
+  while (n--)
+    *p++=c;
+
+  return s;
+}
 
 error_t 
 common_parse_opt (int key, 
@@ -208,6 +225,12 @@ common_parse_opt (int key,
               exit(1);
             }
 	}
+      if (arg)
+        {
+          int n;
+          n = strlen(arg);
+          __secure_memset(arg, '\0', n);
+        }
       break;
     case PASSWORD_PROMPT_KEY:
       if (cmd_args->password != NULL)
