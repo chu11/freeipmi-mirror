@@ -7,6 +7,9 @@
 	* bmc-info/, bmc-config/, ipmi-chassis/, ipmi-pef/, ipmi-raw/,
 	ipmi-sel/, ipmi-sensors/: Don't clear out all argv data.  Only
 	password.
+
+	* ipmipower/, ipmiconsole/: Don't clear out all argv data, only
+	important stuff.
 	
 2007-03-25  Albert Chu <chu11@llnl.gov>
 
