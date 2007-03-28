@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.44.2.2 2007-03-08 03:57:41 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.44.2.3 2007-03-28 23:24:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -51,6 +51,8 @@
 #include "ipmipower_privilege.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
+
+#include "secure.h"
       
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
@@ -352,14 +354,24 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
             err_exit("Command Line Error: username too long");
           strcpy(conf->username, optarg);
           conf->username_set = IPMIPOWER_TRUE;
-	  /* Args will be cleared out in main() */
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'p':       /* --password */
           if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(conf->password, optarg);
           conf->password_set = IPMIPOWER_TRUE;
-	  /* Args will be cleared out in main() */
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'P':       /* --password-prompt */
           if (!(pw = getpass("Password: ")))
@@ -368,14 +380,18 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
             err_exit("password too long");
           strcpy(conf->password, pw);
           conf->password_set = IPMIPOWER_TRUE;
-          /* Args will be cleared out in main() */
           break;
         case 'k':       /* --k-g */
           if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
           conf->k_g_set = IPMIPOWER_TRUE;
-	  /* Args will be cleared out in main() */
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'K':       /* --k-g-prompt */
           if (!(kg = getpass("K_g: ")))
@@ -384,7 +400,6 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
             err_exit("K_g too long");
           strcpy(conf->k_g, kg);
           conf->k_g_set = IPMIPOWER_TRUE;
-	  /* Args will be cleared out in main() */
           break;
         case 'n':       /* --on */ 
           conf->powercmd = POWER_CMD_POWER_ON;

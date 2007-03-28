@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.1.2.4 2007-03-09 02:46:02 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.1.2.5 2007-03-28 23:24:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,6 +47,7 @@
 #include "ipmiconsole_config.h"
 #include "conffile.h"
 #include "error.h"
+#include "secure.h"
 
 extern struct ipmiconsole_config *conf;
 
@@ -179,14 +180,24 @@ _cmdline_parse(int argc, char **argv)
             err_exit("Command Line Error: username too long");
           strcpy(conf->username, optarg);
           conf->username_set++;
-	  /* Args will be cleared in ipmiconsole_config_setup */
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'p':       /* --password */
           if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(conf->password, optarg);
           conf->password_set++;
-	  /* Args will be cleared in ipmiconsole_config_setup */
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'P':       /* --password-prompt */
           if (!(pw = getpass("Password: ")))
@@ -195,14 +206,18 @@ _cmdline_parse(int argc, char **argv)
             err_exit("password too long");
           strcpy(conf->password, pw);
           conf->password_set++;
-          /* Args will be cleared out in main() */
           break;
         case 'k':       /* --k-g */
           if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
           conf->k_g_set++;
-	  /* Args will be cleared in ipmiconsole_config_setup */
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'K':       /* --k-g-prompt */
           if (!(kg = getpass("K_g: ")))
@@ -211,7 +226,6 @@ _cmdline_parse(int argc, char **argv)
             err_exit("K_g too long");
           strcpy(conf->k_g, kg);
           conf->k_g_set++;
-	  /* Args will be cleared in ipmiconsole_config_setup */
           break;
 	case 'l':	/* --privilege */
 	  if (!strcasecmp(optarg, "user"))

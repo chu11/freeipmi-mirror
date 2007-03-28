@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.21.2.1 2006-12-15 23:37:11 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.21.2.2 2007-03-28 23:24:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -427,20 +427,6 @@ main(int argc, char *argv[])
   /* Must be called before conffile_parse b/c --config option on command line*/
   ipmipower_config_cmdline_parse(argc, argv);
     
-#ifdef NDEBUG
-  /* Clear out argv data for security purposes on ps(1).  This hack
-   * does not work on all operating systems.  See KNOWN ISSUES in
-   * manpage.  Start at index 1, since we don't need to clear out the
-   * "ipmipower" command.
-   *
-   * Reminder: This loop must be called after
-   * ipmipower_config_setup(), otherwise getopt() will not be able to
-   * parse the command line arguments.
-   */
-  for (i = 1; i < argc; i++)
-    memset(argv[i], '\0', strlen(argv[i]));
-#endif /* NDEBUG */
-
   ipmipower_config_conffile_parse(conf->configfile);
   ipmipower_config_check_values();
 
