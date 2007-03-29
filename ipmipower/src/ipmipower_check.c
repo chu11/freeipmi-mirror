@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.58 2006-08-30 18:38:35 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.59 2007-03-29 16:36:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -163,7 +163,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
        * here is our second session-authcode check attempt under these
        * circumstances.
        */
-      if (conf->check_unexpected_authcode == IPMIPOWER_TRUE
+      if ((conf->workaround_flags & WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE)
 	  && !rv
 	  && check_authcode_retry_flag)
 	{
@@ -491,7 +491,8 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
    * session id is correct if it is equal to zero.
    */
 
-  if (conf->accept_session_id_zero == IPMIPOWER_TRUE && !session_id)
+  if ((conf->workaround_flags & WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO)
+      && !session_id)
     return (1);
 
   return ((session_id == expected_session_id) ? 1 : 0);
@@ -742,7 +743,7 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
    * The Intel's don't work with IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL.
    * So check that we get back what we sent.
    */
-  if (conf->intel_2_0_session)
+  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
     rv = (val == ip->requested_maximum_privilege) ? 1 : 0;
   else
     {
@@ -802,7 +803,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * Table 13-11 in the IPMI 2.0 spec.
    */
 
-  if (conf->intel_2_0_session)
+  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
@@ -819,7 +820,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       username_len = (username) ? strlen((char *)username) : 0;
     }
   
-  if (conf->supermicro_2_0_session)
+  if (conf->workaround_flags & WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMI_PACKET_BUFLEN];
       int32_t keybuf_len;
@@ -873,7 +874,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if (conf->intel_2_0_session 
+  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION 
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -946,7 +947,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
    * one.  Would have taken me awhile to figure this one out :-)
    */
 
-  if (conf->intel_2_0_session)
+  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
     {
       if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;

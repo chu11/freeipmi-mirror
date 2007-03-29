@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.99 2006-12-06 19:26:12 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.100 2007-03-29 16:36:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -283,7 +283,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
        * of an actual privilege.
        */
-      if (conf->intel_2_0_session)
+      if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
 	ip->requested_maximum_privilege = ip->privilege;
       else
 	ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
@@ -1115,7 +1115,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
    * The remote BMC ignores if permsg authentiction is enabled
    * or disabled.  So we need to force it no matter what.
    */
-  if (!conf->force_permsg_authentication)
+  if (!(conf->workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION))
     {
       if (!authentication_status_per_message_authentication)
 	ip->permsgauth_enabled = IPMIPOWER_TRUE;
@@ -1310,7 +1310,7 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
                "authentication_type",
                &authentication_type);
   
-  if (conf->force_permsg_authentication)
+  if (conf->workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION)
     return 0;
 
   if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
@@ -1798,7 +1798,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
    */
-  if (conf->intel_2_0_session)
+  if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
@@ -1832,7 +1832,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if (conf->intel_2_0_session 
+  if ((conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;

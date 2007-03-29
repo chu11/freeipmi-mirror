@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.61 2006-12-15 17:26:44 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.62 2007-03-29 16:36:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -579,7 +579,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * allowed.  "No Null characters (00h) are allowed in the name".
        * Table 13-11 in the IPMI 2.0 spec.
        */
-      if (pkt == RAKP_MESSAGE_1_REQ && conf->intel_2_0_session)
+      if (pkt == RAKP_MESSAGE_1_REQ 
+          && (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION))
         {
           memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
           if (username)
@@ -886,7 +887,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * same workaround.
        */
 
-      if (conf->intel_2_0_session)
+      if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = ip->name_only_lookup;
@@ -903,7 +904,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        * password to 16 bytes when generating keys, hashes, etc.  So we
        * have to do the same when generating keys, hashes, etc.
        */
-      if (conf->intel_2_0_session 
+      if ((conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION) 
           && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
           && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
         password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;

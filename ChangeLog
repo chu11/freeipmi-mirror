@@ -1,3 +1,10 @@
+2007-03-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_workarounds.h,
+	ipmipower/src/ipmipower_workarounds.c: New files.
+
+	* ipmipower/: Re-architected workaround options.
+	
 2007-03-28  Albert Chu <chu11@llnl.gov>
 
 	* common/src/argp-common.c (__secure_memset): New function.

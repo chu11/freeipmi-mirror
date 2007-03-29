@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.52 2007-03-28 22:10:32 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.53 2007-03-29 16:36:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,6 +50,7 @@
 #include "ipmipower_output.h"
 #include "ipmipower_privilege.h"
 #include "ipmipower_util.h"
+#include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
 
 #include "secure.h"
@@ -101,11 +102,7 @@ ipmipower_config_setup(void)
   conf->wait_until_on = IPMIPOWER_FALSE;
   conf->wait_until_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
-  conf->force_permsg_authentication = IPMIPOWER_FALSE;
-  conf->accept_session_id_zero = IPMIPOWER_FALSE;
-  conf->check_unexpected_authcode = IPMIPOWER_FALSE;
-  conf->intel_2_0_session = IPMIPOWER_FALSE;
-  conf->supermicro_2_0_session = IPMIPOWER_FALSE;
+  conf->workaround_flags = 0;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
   conf->ipmidump = IPMIPOWER_FALSE;
@@ -137,11 +134,7 @@ ipmipower_config_setup(void)
   conf->wait_until_on_set = IPMIPOWER_FALSE;
   conf->wait_until_off_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
-  conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
-  conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
-  conf->check_unexpected_authcode_set = IPMIPOWER_FALSE;
-  conf->intel_2_0_session_set = IPMIPOWER_FALSE;
-  conf->supermicro_2_0_session_set = IPMIPOWER_FALSE;
+  conf->workaround_flags_set = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_wait_timeout_len_set = IPMIPOWER_FALSE;
@@ -267,16 +260,17 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
   char *pw;
   char *kg;
+  uint32_t flags;
 
   /* achu: Here's are what options are left and available
      lower case: de
-     upper case: EGJNOQU
+     upper case: EGJNOQSUXYX
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:WSZXYDIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:W:DIMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:WSZXYt:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:W:t:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -306,11 +300,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"wait-until-on",                0, NULL, 'A'},
       {"wait-until-off",               0, NULL, 'B'},
       {"outputtype",                   1, NULL, 'o'},
-      {"force-permsg-authentication",  0, NULL, 'W'},
-      {"accept-session-id-zero",       0, NULL, 'S'},
-      {"check-unexpected-authcode",    0, NULL, 'Z'},
-      {"intel-2-0-session",            0, NULL, 'X'},
-      {"supermicro-2-0-session",       0, NULL, 'Y'},
+      {"workaround-flags",             1, NULL, 'W'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
       {"ipmidump",                     0, NULL, 'I'},
@@ -464,25 +454,11 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->outputtype = ipmipower_output_index(optarg);
           conf->outputtype_set = IPMIPOWER_TRUE;
           break;
-        case 'W':       /* --force-permsg-authentication */
-          conf->force_permsg_authentication = IPMIPOWER_TRUE;
-          conf->force_permsg_authentication_set = IPMIPOWER_TRUE;
-          break;
-        case 'S':       /* --accept-session-id-zero */
-          conf->accept_session_id_zero = IPMIPOWER_TRUE;
-          conf->accept_session_id_zero_set = IPMIPOWER_TRUE;
-          break;
-        case 'Z':       /* --check-unexpected-authcode */
-          conf->check_unexpected_authcode = IPMIPOWER_TRUE;
-          conf->check_unexpected_authcode_set = IPMIPOWER_TRUE;
-          break;
-        case 'X':      /* --intel-2-0-session */
-          conf->intel_2_0_session = IPMIPOWER_TRUE;
-          conf->intel_2_0_session_set = IPMIPOWER_TRUE;
-          break;
-        case 'Y':      /* --supermicro-2-0-session */
-          conf->supermicro_2_0_session = IPMIPOWER_TRUE;
-          conf->supermicro_2_0_session_set = IPMIPOWER_TRUE;
+        case 'W':       /* --workaround-flags */
+          if (ipmipower_workarounds_parse(optarg, &flags) < 0)
+            err_exit("Command Line Error: invalid workaround specified");
+          conf->workaround_flags = flags;
+          conf->workaround_flags_set = IPMIPOWER_TRUE;
           break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
@@ -744,14 +720,31 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
   return 0;
 }
 
+static int 
+_cb_workaround_flags(conffile_t cf, struct conffile_data *data,
+                     char *optionname, int option_type, void *option_ptr,
+                     int option_data, void *app_ptr, int app_data) 
+{
+  uint32_t flags;
+
+  if (conf->workaround_flags_set == IPMIPOWER_TRUE)
+    return 0;
+
+  if (ipmipower_workarounds_parse(data->string, &flags) < 0)
+    err_exit("Config File Error: invalid workaround specified");
+  conf->workaround_flags = flags;
+  return 0;
+}
+
+
+
 void 
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
-    wait_until_on_flag, wait_until_off_flag, outputtype_flag, force_permsg_authentication_flag, 
-    accept_session_id_zero_flag, check_unexpected_authcode_flag, intel_2_0_session_flag, 
-    supermicro_2_0_session_flag, timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
+    wait_until_on_flag, wait_until_off_flag, outputtype_flag, workaround_flags_flag, 
+    timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
     retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, 
     ping_percent_flag, ping_consec_count_flag;
 
@@ -781,21 +774,8 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &wait_until_off_flag, &(conf->wait_until_off), conf->wait_until_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
        1, 0, &outputtype_flag, NULL, 0},
-      {"force_permsg_authentication", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &force_permsg_authentication_flag, &(conf->force_permsg_authentication), 
-       conf->force_permsg_authentication_set},
-      {"accept_session_id_zero", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &accept_session_id_zero_flag, &(conf->accept_session_id_zero), 
-       conf->accept_session_id_zero_set},
-      {"check_unexpected_authcode", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &check_unexpected_authcode_flag, &(conf->check_unexpected_authcode), 
-       conf->check_unexpected_authcode_set},
-      {"intel_2_0_session", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &intel_2_0_session_flag, &(conf->intel_2_0_session), 
-       conf->intel_2_0_session_set},
-      {"supermicro_2_0_session", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &supermicro_2_0_session_flag, &(conf->supermicro_2_0_session), 
-       conf->supermicro_2_0_session_set},
+      {"workaround_flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
+       1, 0, &workaround_flags_flag, NULL, 0},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), conf->timeout_len_set},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 

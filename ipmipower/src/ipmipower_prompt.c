@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.39 2006-12-15 17:26:44 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.40 2007-03-29 16:36:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,6 +54,7 @@
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege.h"
+#include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
 
 extern cbuf_t ttyout;
@@ -96,11 +97,7 @@ _cmd_advanced(void)
               "wait-until-on [on|off]                - toggle wait-until-on functionality\n"
               "wait-until-off [on|off]               - toggle wait-until-off functionality\n"
               "outputtype str                        - set a new output type\n"
-              "force-permsg-authentication [on|off]  - toggle force-permsg-auth functionality\n"
-              "accept-session-id-zero [on|off]       - toggle accept-session-id-zero functionality\n"
-              "check-unexpected-authcode [on|off]    - toggle check-unexpected-authcode functionality\n"
-              "intel-2-0-session [on|off]            - toggle intel-2-0-session functionality\n"
-              "supermicro-2-0-session [on|off]       - toggle supermicro-2-0-session functionality\n");
+              "workaround_flags str                  - set new workaround flags\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
               "debug [on|off]                        - toggle debug to stderr\n"
@@ -477,6 +474,28 @@ _cmd_outputtype(char **argv)
                 ipmipower_output_list());
 }
 
+static void
+_cmd_workaround_flags(char **argv)
+{
+  assert(argv != NULL);
+
+  if (argv[1] != NULL) 
+    {
+      uint32_t flags;
+
+      if (ipmipower_workarounds_parse(argv[1], &flags) < 0)
+        cbuf_printf(ttyout, "%s invalid workaround specified\n", argv[1]);
+      else 
+        {
+          conf->workaround_flags = flags;
+          cbuf_printf(ttyout, "workaround flags is now %s\n", argv[1]);
+        }
+    }
+  else
+    cbuf_printf(ttyout, "workaround_flags must be specified: %s\n",
+                ipmipower_workarounds_list());
+}
+
 #ifndef NDEBUG
 static void
 _cmd_log(char **argv)
@@ -671,16 +690,8 @@ _cmd_config(void)
               (conf->wait_until_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:                   %s\n",
               ipmipower_output_string(conf->outputtype));
-  cbuf_printf(ttyout, "Force-Permsg_authentication:  %s\n",
-              (conf->force_permsg_authentication) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Accept-Session-ID-Zero:       %s\n",
-              (conf->accept_session_id_zero) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Check-Unexpected-Authcode:    %s\n",
-              (conf->check_unexpected_authcode) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Intel-2-0-Session:            %s\n",
-	      (conf->intel_2_0_session) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Supermicro-2-0-Session:       %s\n",
-	      (conf->supermicro_2_0_session) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "WorkaroundFlags:              %s\n",
+              ipmipower_workarounds_string(conf->workaround_flags));
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
               (conf->debug) ? "on" : "off");
@@ -856,16 +867,8 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_flag(argv, &conf->wait_until_off, "wait-until-off");
               else if (strcmp(argv[0], "outputtype") == 0)
                 _cmd_outputtype(argv);
-              else if (strcmp(argv[0], "force-permsg-authentication") == 0)
-                _cmd_set_flag(argv, &conf->force_permsg_authentication, "force-permsg-authentication");
-              else if (strcmp(argv[0], "accept-session-id-zero") == 0)
-                _cmd_set_flag(argv, &conf->accept_session_id_zero, "accept-session-id-zero");
-              else if (strcmp(argv[0], "check-unexpected-authcode") == 0)
-                _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
-              else if (strcmp(argv[0], "intel-2-0-session") == 0)
-                _cmd_set_flag(argv, &conf->intel_2_0_session, "intel-2-0-session");
-              else if (strcmp(argv[0], "supermicro-2-0-session") == 0)
-                _cmd_set_flag(argv, &conf->supermicro_2_0_session, "supermicro-2-0-session");
+              else if (strcmp(argv[0], "workaround-flags") == 0)
+                _cmd_workaround_flags(argv);
 #ifndef NDEBUG
               else if (strcmp(argv[0], "debug") == 0) 
                 {

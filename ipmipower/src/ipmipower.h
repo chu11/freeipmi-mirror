@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.66 2007-02-28 04:20:38 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.67 2007-03-29 16:36:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -408,6 +408,16 @@ typedef enum
 
 #define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMCERROR+1)
 
+/* Workaround Flags */
+typedef enum 
+  {
+    WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION = 0x01,
+    WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO      = 0x02,
+    WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE   = 0x04,
+    WORKAROUND_FLAG_INTEL_2_0_SESSION           = 0x08,
+    WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION      = 0x10,
+  } workaround_flag_t;
+
 /* ipmipower_powercmd
  * - Stores all information needed to execute a power command
  */
@@ -560,12 +570,7 @@ struct ipmipower_config
   ipmipower_bool_t         wait_until_off;
   ipmipower_bool_t         power_command_completed; /* for use with wait_until_X */
   output_type_t            outputtype;
-  ipmipower_bool_t         force_permsg_authentication;
-  ipmipower_bool_t         accept_session_id_zero;
-  ipmipower_bool_t         check_unexpected_authcode;
-  ipmipower_bool_t         cipher_suite_records_all_oem;
-  ipmipower_bool_t         intel_2_0_session;
-  ipmipower_bool_t         supermicro_2_0_session;
+  uint32_t                 workaround_flags;
 #ifndef NDEBUG
   ipmipower_bool_t         debug;
   ipmipower_bool_t         ipmidump;
@@ -596,12 +601,7 @@ struct ipmipower_config
   ipmipower_bool_t         on_if_off_set;
   ipmipower_bool_t         wait_until_on_set;
   ipmipower_bool_t         wait_until_off_set;
-  ipmipower_bool_t         force_permsg_authentication_set;
-  ipmipower_bool_t         accept_session_id_zero_set;
-  ipmipower_bool_t         check_unexpected_authcode_set;
-  ipmipower_bool_t         cipher_suite_records_all_oem_set;
-  ipmipower_bool_t         intel_2_0_session_set;
-  ipmipower_bool_t         supermicro_2_0_session_set;
+  ipmipower_bool_t         workaround_flags_set;
   ipmipower_bool_t         outputtype_set;
   ipmipower_bool_t         timeout_len_set;
   ipmipower_bool_t         retry_timeout_len_set;
