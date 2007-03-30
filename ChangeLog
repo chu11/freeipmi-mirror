@@ -4,6 +4,9 @@
 	ipmipower/src/ipmipower_workarounds.c: New files.
 
 	* ipmipower/: Re-architected workaround options.
+
+	* configure.ac: Increment ipmiconsole revision to sync w/ 0.3.2
+	release.
 	
 2007-03-28  Albert Chu <chu11@llnl.gov>
 
