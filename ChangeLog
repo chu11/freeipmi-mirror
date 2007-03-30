@@ -1,6 +1,8 @@
 2007-03-29  Albert Chu <chu11@llnl.gov>
 
        * configure.ac: Update for release.
+
+	* tagged Release-0_3_2.
 	
 2007-03-28  Albert Chu <chu11@llnl.gov>
 
