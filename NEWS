@@ -20,6 +20,17 @@ o Added SDR debugging capabilities to ipmi-sdr and ipmi-sensors.
 o Added libipmimonitoring
 o Added libipmidetect
 
+0.3.2
+-----
+o -N option added to ipmiconsole.
+o -L option added to ipmiconsole.
+o -K option added to ipmipower and ipmiconsole.
+o -P option replaced w/ -W option in ipmipower.
+o -P option added to most tools.
+o Fix seg-fault in ipmiconsole.
+o Fix various bugs in in libipmiconsole and ipmiconsole.
+o Fix secure malloc bug.
+
 0.3.1
 -----
 
