@@ -8,6 +8,7 @@ o Added ipmi-chassis
 o Added ipmimonitoring
 o Added ipmidetect
 o Added hostrange support to ipmi-sensors, ipmi-sel, ipmi-raw, and bmc-info
+o Added -T option to ipmiconsole.
 o Re-architected workarounds options for Ipmipower due to increasing number
   of vendor specific workarounds implemented. -W, -S, -Z, -X, -Y options removed.
   New -W option implemented.
@@ -19,6 +20,7 @@ For Developers
 o Added SDR debugging capabilities to ipmi-sdr and ipmi-sensors.
 o Added libipmimonitoring
 o Added libipmidetect
+o Various minor updates to libipmiconsole, libfreeipmi.
 
 0.3.2
 -----
