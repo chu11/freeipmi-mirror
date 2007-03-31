@@ -112,29 +112,24 @@ release.
 @node How did it start?, Who maintains FreeIPMI?, What is GNU FreeIPMI?, Top
 @section How did it start?
 
-In 2002 Anand Babu at California Digital Corp. (CDC) began working on
-a set of IPMI tools for the GNU system. In September 2003, Albert Chu
-at Lawrence Livermore National Laboratory (LLNL) began work on
-ipmipower.
-
 In October 2003, California Digital Corp. was contracted by LLNL for
-the assembly of Thunder, a 1024 node Itanium2 cluster, and the
-development of several IPMI tools for Thunder.  This project led to
-the co-development of FreeIPMI between California Digital and LLNL.
+the assembly of Thunder, a 1024 node Itanium2 cluster.  This project
+led to the co-development of FreeIPMI between California Digital and
+LLNL by merging the IPMI software developed by both organizations.
 
-Anand Babu, Balamurugan and Ian Zimmerman at CDC worked on the in-band
-driver, libfreeipmi, ipmi-sensors, bmc-config, ipmi-sel, and bmc-info.
-Jim Garlick and Albert Chu at LLNL worked on ipmipower, bmc-watchdog,
-ipmiping, rmcpping, portions of the libfreeipmi library, and ipmipower
-support in Powerman.  In October 2004, FreeIPMI 0.1.0 was officially
-released.  Around same time, FreeIPMI project was accepted by the Free
-Software Foundation as a GNU project.
+Anand Babu, Balamurugan and Ian Zimmerman at CDC contributed the
+in-band driver, libfreeipmi, ipmi-sensors, bmc-config, ipmi-sel, and
+bmc-info.  Jim Garlick and Albert Chu at LLNL contributed ipmipower,
+bmc-watchdog, ipmiping, rmcpping, libfreeipmi, and ipmipower support
+in Powerman.  In October 2004, FreeIPMI 0.1.0 was officially released.
+Around same time, FreeIPMI project was accepted by the Free Software
+Foundation as a GNU project.
 
 @node Who maintains FreeIPMI?, Who should refer to this FAQ?, How did it start?, Top
 @section Who maintains FreeIPMI?
 
-Maintenance and development of GNU FreeIPMI is shared between Z
-RESEARCH Inc. and Lawrence Livermore National Laboratory (LLNL).
+Maintenance and development of GNU FreeIPMI is shared between Lawrence
+Livermore National Laboratory (LLNL) and Z RESEARCH Inc.
 
 (Z RESEARCH Inc. was founded by former members for California Digital Corp.)
 
@@ -149,7 +144,7 @@ POSIX compliant operating systems, this guide is right for you.
 There are multiple implementations, APIs, interfaces, end user
 requirements, etc. that one can choose when developing IPMI drivers,
 libraries, and tools.  GNU FreeIPMI has taken some different
-approaches towards development thatn other open-source projects.
+approaches towards development than other open-source projects.
 
 Some examples of the differences in approaches:
 
@@ -159,12 +154,15 @@ GNU FreeIPMI implements their in-band IPMI driver in userspace using
 iopl() calls (and /dev/io interface under FreeBSD) while OpenIPMI
 implements a kernel module for its in-band IPMI driver.
 
+(Note: As of FreeIPMI 0.3.0, the OpenIPMI linux kernel driver is also
+supported in FreeIPMI as an alternate in-band IPMI driver.)
+
 2) Libraries
 
 OpenIPMI (to our knowledge) concentrates on higher level APIs to use
 the IPMI driver.  GNU FreeIPMI primarily concentrates on APIs for IPMI
-packet construction.  Some higher level management are provided although
-they are not considered the primary focus of libfreeipmi.
+packet construction.  Some higher level management APIs are provided
+although they are not considered the primary focus of libfreeipmi.
 
 The GNU FreeIPMI developers have contributed patches to the other projects
 on multiple occassions.
@@ -176,13 +174,13 @@ In our eyes, there are several reasons why GNU FreeIPMI is particularly special.
 
 1) Support for HPC
 
-Since much of the early development of FreeIPMI was for LLNL's
-clusters, a number of HPC aspects have been added to the tools and/or
-are supported by other HPC software.
+FreeIPMI is used for LLNL Linux clusters, thus a number of HPC aspects
+have been added to the tools and/or are supported by other HPC
+software.
 
-Ipmipower is capable of scaling to very large numbers of nodes.  It is
-supported by Powerman (http://sourceforge.net/projects/powerman) for
-scalable power management.  At LLNL, in conjunction with Powerman,
+Ipmipower is capable of scaling to large nodes for cluster support.
+It is supported by Powerman (http://sourceforge.net/projects/powerman)
+for scalable power management.  At LLNL, in conjunction with Powerman,
 ipmipower is used for power control on clusters ranging from sizes of
 4 to 1152.  It is capable of power controlling all of the nodes in the
 largest clusters in under a second.
@@ -195,7 +193,7 @@ scalable console management.
 Hostranged input and consolidated output is supported in ipmi-sensors,
 ipmi-sel, ipmi-raw, and bmc-info for scalable execution of these tools
 across a cluster in parallel.  Ipmidetect can be used to enhance the
-scalability by eliminating those nodes in the cluster that have been
+efficiency by eliminating those nodes in the cluster that have been
 temporarily removed for servicing.
 
 Ipmimonitoring is used for host monitoring IPMI based sensors on a
