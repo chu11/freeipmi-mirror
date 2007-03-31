@@ -28,10 +28,6 @@ libfreeipmi:
   * how to support xRC4 (can we? should we?)
   * get event messages function that is passed fiids
 
-Vendor Workarounds
-------------------
-  * compile options to make workarounds automatic for ipmipower/ipmiconsole
-
 Autoconf/Portability
 --------------------
   * socklet_t, doesn't exist on all OSes.
