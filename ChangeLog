@@ -1,6 +1,6 @@
 2007-03-30  Albert Chu <chu11@llnl.gov>
 
-	* ipmiconsole/: Add --deactivate option.
+	* ipmiconsole/: Add --deactivate option and SOL deactivate only support.
 
 	* NEWS: Update w/ more 0.4.0 stuff.
 	
