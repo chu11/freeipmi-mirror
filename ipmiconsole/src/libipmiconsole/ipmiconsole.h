@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.7 2007-03-22 20:15:49 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.8 2007-03-31 04:03:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -103,9 +103,15 @@ extern "C" {
  *
  * Inform libipmiconsole to lock memory to prevent sensitive
  * information (such as usernames and passwords) to be swappable.
+ *
+ * DEACTIVATE_ONLY
+ *
+ * Only attempt to deactivate the SOL session.  If an SOL session is
+ * not active, do nothing.
  */
 #define IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE 0x00000001
 #define IPMICONSOLE_SECURITY_LOCK_MEMORY        0x00000002
+#define IPMICONSOLE_SECURITY_DEACTIVATE_ONLY    0x00000004
 
 /* 
  * Workaround Flags

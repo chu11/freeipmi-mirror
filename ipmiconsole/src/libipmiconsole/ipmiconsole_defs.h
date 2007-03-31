@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.5 2007-03-20 22:43:27 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.6 2007-03-31 04:03:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -201,7 +201,8 @@ typedef enum
 
 #define IPMICONSOLE_SECURITY_MASK \
         (IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE \
-         | IPMICONSOLE_SECURITY_LOCK_MEMORY)
+         | IPMICONSOLE_SECURITY_LOCK_MEMORY \
+         | IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
 
 #define IPMICONSOLE_WORKAROUND_MASK \
         (IPMICONSOLE_WORKAROUND_INTEL_2_0 \
@@ -211,6 +212,7 @@ typedef enum
 
 #define IPMICONSOLE_ENGINECOMM_SOL_SESSION_ESTABLISHED 0x1
 #define IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR       0x2
+#define IPMICONSOLE_ENGINECOMM_SOL_SESSION_DEACTIVATED 0x3
 
 struct ipmiconsole_ctx_session {
 
@@ -297,6 +299,7 @@ struct ipmiconsole_ctx_session {
   int try_new_port_flag;
   int deactivate_payload_instances_and_try_again_flag;
   int close_timeout_flag;
+  int deactivate_only_succeeded_flag;
 
   /*
    * Protocol Maintenance Variables

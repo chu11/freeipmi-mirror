@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.8 2007-03-28 22:10:32 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.9 2007-03-31 04:03:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -86,6 +86,7 @@ _usage(void)
 	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
           "-C --config                   Select alternate config file\n"
           "-N --dont-steal               Do not steal in use SOL sessions by default\n"
+          "-T --deactivate               Deactivate a SOL session only\n"
           "-L --lock-memory              Lock memory\n"
           "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
           "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n");
@@ -130,6 +131,7 @@ _cmdline_parse(int argc, char **argv)
       {"cipher-suite-id",          1, NULL, 'c'},
       {"config-file",              1, NULL, 'C'}, 
       {"dont-steal",               0, NULL, 'N'},
+      {"deactivate",               0, NULL, 'T'},
       {"lock-memory",              0, NULL, 'L'},
       {"intel-2-0-session",        0, NULL, 'I'},
       {"supermicro-2-0-session",   0, NULL, 'S'},
@@ -147,7 +149,7 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pk:Kl:c:C:NLIS");
+  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLIS");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -255,6 +257,10 @@ _cmdline_parse(int argc, char **argv)
         case 'N':       /* --dont-steal */
           conf->dont_steal++;
           conf->dont_steal_set++;
+          break;
+        case 'T':       /* --deactivate */
+          conf->deactivate++;
+          conf->deactivate_set++;
           break;
         case 'L':       /* --lock-memory */
           conf->lock_memory++;
@@ -448,6 +454,12 @@ _config_file_parse(void)
     intel_2_0_session_flag,
     supermicro_2_0_session_flag;
   
+  /* Notes:
+   *
+   * -T/--deactivate option is not useful for config fils.  It is
+   * excluded here.
+   */
+
   struct conffile_option options[] =
     {
       {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.9 2007-03-20 22:54:24 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.10 2007-03-31 04:03:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -232,20 +232,25 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
-  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
-  
   if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED
       && !c->sol_session_established)
     {
       uint8_t val;
 
-      val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR;
+      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+          && s->deactivate_only_succeeded_flag)
+        val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_DEACTIVATED;
+      else
+        val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR;
+
       if (write(c->enginecomm[1], &val, 1) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
           c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
         }
     }
+
+  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
 }
 
 int
@@ -305,6 +310,7 @@ _ipmiconsole_init_ctx_session_data(ipmiconsole_ctx_t c)
   s->try_new_port_flag = 0;
   s->deactivate_payload_instances_and_try_again_flag = 0;
   s->close_timeout_flag = 0;
+  s->deactivate_only_succeeded_flag = 0;
 
   s->retransmission_count = 0;
   s->errors_count = 0;

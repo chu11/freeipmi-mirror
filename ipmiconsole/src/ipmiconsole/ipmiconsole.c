@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.10 2007-03-28 22:10:32 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.11 2007-03-31 04:03:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -339,6 +339,8 @@ main(int argc, char **argv)
   protocol_config.security_flags = 0;
   if (conf->dont_steal)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE;
+  if (conf->deactivate)
+    protocol_config.security_flags |= IPMICONSOLE_SECURITY_DEACTIVATE_ONLY;
   if (conf->lock_memory)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_LOCK_MEMORY;
   if (conf->intel_2_0_session)
@@ -376,6 +378,9 @@ main(int argc, char **argv)
         fprintf(stderr, "ipmiconsole_submit: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
       goto cleanup;
     }
+
+  if (conf->deactivate)
+    goto cleanup;
 
   if ((fd = ipmiconsole_ctx_fd(c)) < 0)
     {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.7 2007-03-20 22:43:27 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.8 2007-03-31 04:03:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2882,6 +2882,32 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           goto calculate_timeout;
         }
 
+      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
+        {
+          if (ret)
+            {
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                {
+                  s->close_session_flag++;
+                  if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+                    goto close_session;
+                  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+                  goto calculate_timeout;
+                }
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              goto calculate_timeout;
+            }
+          else
+            {
+              s->close_session_flag++;
+              s->deactivate_only_succeeded_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+              goto calculate_timeout;
+            }
+        }
+
       if (ret)
         {
           s->deactivate_payload_instances_and_try_again_flag++;
@@ -3121,6 +3147,9 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
     {
       assert(s->close_session_flag
 	     || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS);
+
+      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
+        s->deactivate_only_succeeded_flag++;
 
       if (s->close_session_flag)
         {

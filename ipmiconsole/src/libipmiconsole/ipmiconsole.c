@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.6 2007-03-20 22:43:27 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.7 2007-03-31 04:03:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -291,7 +291,12 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
         c->sol_session_established++;
       else 
         {
-          if (val != IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR)
+          if (val == IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR)
+            goto cleanup;
+          else if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+                   && val == IPMICONSOLE_ENGINECOMM_SOL_SESSION_DEACTIVATED)
+            goto success;
+          else
             {
               IPMICONSOLE_CTX_DEBUG(c, ("enginecomm returned invalid data: %d", val));
               c->errnum = IPMICONSOLE_ERR_INTERNAL;
@@ -300,6 +305,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
         }
     }
 
+ success:
   return 0;
 
  cleanup:

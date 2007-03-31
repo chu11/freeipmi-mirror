@@ -1,3 +1,9 @@
+2007-03-30  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/: Add --deactivate option.
+
+	* NEWS: Update w/ more 0.4.0 stuff.
+	
 2007-03-29  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_workarounds.h,
