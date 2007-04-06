@@ -13,6 +13,7 @@ o Re-architected workarounds options for Ipmipower due to increasing number
   of vendor specific workarounds implemented. -W, -S, -Z, -X, -Y options removed.
   New -W option implemented.
 o -Q option added for ipmi-sensors and ipmi-sel.
+o Add community string and alert config to bmc-config.
 o Various bug fixes throughout FreeIPMI.
 
 For Developers
