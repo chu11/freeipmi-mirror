@@ -106,3 +106,57 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
     fiid_obj_destroy(obj_cmd_rs);
   return rv;
 }
+
+bmc_err_t 
+get_number_of_lan_destinations (bmc_config_state_data_t *state_data, int8_t *number_of_lan_destinations)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t rc;
+  uint64_t val;
+  int8_t num;
+
+  if (state_data->number_of_lan_destinations_initialized)
+    {
+      *number_of_lan_destinations = state_data->number_of_lan_destinations;
+      return BMC_ERR_SUCCESS;
+    }
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
+    goto cleanup;
+
+  if ((rc = get_lan_channel_number (state_data, &num)) != BMC_ERR_SUCCESS)
+    {
+      rv = rc;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev,
+                                                                        num,
+                                                                        IPMI_GET_LAN_PARAMETER,
+                                                                        SET_SELECTOR,
+                                                                        BLOCK_SELECTOR,
+                                                                        obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get(obj_cmd_rs,
+		   "number_of_lan_destinations",
+		   &val) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  state_data->number_of_lan_destinations_initialized = true;
+  state_data->number_of_lan_destinations = val;
+
+  *number_of_lan_destinations = state_data->number_of_lan_destinations;
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return rv;
+}

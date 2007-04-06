@@ -63,4 +63,12 @@ int sol_bit_rate_number (const char *string);
 
 char *sol_bit_rate_string (uint8_t value);
 
+int alert_destination_type_number (const char *source);
+
+char *alert_destination_type_string (uint8_t source);
+
+int alert_gateway_number (const char *source);
+
+char *alert_gateway_string (uint8_t source);
+
 #endif

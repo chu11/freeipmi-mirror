@@ -79,4 +79,12 @@ bmc_validate_t sol_bit_rate_number_validate (bmc_config_state_data_t *state_data
                                              const struct section *sect, 
                                              const char *value);
 
+bmc_validate_t alert_destination_type_number_validate (bmc_config_state_data_t *state_data, 
+                                                       const struct section *sect, 
+                                                       const char *value);
+
+bmc_validate_t alert_gateway_number_validate (bmc_config_state_data_t *state_data, 
+                                              const struct section *sect, 
+                                              const char *value);
+
 #endif

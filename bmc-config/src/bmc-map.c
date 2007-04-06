@@ -335,3 +335,53 @@ sol_bit_rate_string (uint8_t value)
     }
   return "";
 }
+
+int
+alert_destination_type_number (const char *source)
+{
+  if (same (source, "pet_trap"))
+    return IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION;
+  if (same (source, "oem1"))
+    return IPMI_DESTINATION_TYPE_OEM1;
+  if (same (source, "oem2"))
+    return IPMI_DESTINATION_TYPE_OEM2;
+  return -1;
+}
+
+char *
+alert_destination_type_string (uint8_t source)
+{
+  switch (source)
+    {
+    case IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION:
+      return "PET_Trap";
+    case IPMI_DESTINATION_TYPE_OEM1:
+      return "OEM1";
+    case IPMI_DESTINATION_TYPE_OEM2:
+      return "OEM2";
+    }
+  return "";
+}
+
+int
+alert_gateway_number (const char *source)
+{
+  if (same (source, "default"))
+    return IPMI_GATEWAY_SELECTOR_DEFAULT;
+  if (same (source, "backup"))
+    return IPMI_GATEWAY_SELECTOR_BACKUP;
+  return -1;
+}
+
+char *
+alert_gateway_string (uint8_t source)
+{
+  switch (source)
+    {
+    case IPMI_GATEWAY_SELECTOR_DEFAULT:
+      return "Default";
+    case IPMI_GATEWAY_SELECTOR_BACKUP:
+      return "Backup";
+    }
+  return "";
+}

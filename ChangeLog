@@ -1,3 +1,8 @@
+2007-04-06  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Add alert config to bmc-config and fix various
+	corner cases.
+	
 2007-04-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-lan-cmds.h,

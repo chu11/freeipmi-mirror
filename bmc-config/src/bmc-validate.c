@@ -166,3 +166,22 @@ sol_bit_rate_number_validate (bmc_config_state_data_t *state_data,
   return BMC_VALIDATE_INVALID_VALUE;
 }
 
+bmc_validate_t 
+alert_destination_type_number_validate (bmc_config_state_data_t *state_data,
+                                        const struct section *sect,
+                                        const char *value)
+{
+  if (alert_destination_type_number (value) != -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
+}
+
+bmc_validate_t 
+alert_gateway_number_validate (bmc_config_state_data_t *state_data,
+                               const struct section *sect,
+                               const char *value)
+{
+  if (alert_gateway_number (value) != -1)
+    return BMC_VALIDATE_VALID_VALUE;
+  return BMC_VALIDATE_INVALID_VALUE;
+}

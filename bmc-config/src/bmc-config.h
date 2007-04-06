@@ -112,6 +112,8 @@ typedef struct bmc_config_state_data
   int8_t serial_channel_number;
   int sol_channel_number_initialized;
   int8_t sol_channel_number;
+  int number_of_lan_destinations_initialized;
+  int8_t number_of_lan_destinations;
 } bmc_config_state_data_t;
 
 #endif /* _BMC_CONFIG_H_ */

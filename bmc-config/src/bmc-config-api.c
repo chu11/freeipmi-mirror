@@ -776,6 +776,96 @@ set_bmc_community_string (bmc_config_state_data_t *state_data,
 }
 
 bmc_err_t 
+set_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data, 
+                                  uint8_t destination_selector,
+                                  uint8_t alert_destination_type,
+                                  uint8_t alert_acknowledge,
+                                  uint8_t alert_acknowledge_timeout,
+                                  uint8_t alert_retries)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+  
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_type (state_data->dev, 
+                                                                  channel_number, 
+                                                                  destination_selector,
+                                                                  alert_destination_type,
+                                                                  alert_acknowledge,
+                                                                  alert_acknowledge_timeout,
+                                                                  alert_retries,
+                                                                  obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t 
+set_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data, 
+                                       uint8_t destination_selector,
+                                       uint8_t alert_gateway,
+                                       char *alert_ip_address,
+                                       char *alert_mac_address)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint32_t alert_ip_address_val = 0;
+  uint64_t alert_mac_address_val = 0;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+  
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_ipv4_address_string2int(alert_ip_address, &alert_ip_address_val) < 0)
+    goto cleanup;
+  
+  if (ipmi_mac_address_string2int(alert_mac_address, &alert_mac_address_val) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->dev, 
+                                                                       channel_number, 
+                                                                       destination_selector,
+                                                                       alert_gateway,
+                                                                       alert_ip_address_val,
+                                                                       alert_mac_address_val,
+                                                                       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t 
 set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
 			  uint32_t vlan_id,
 			  uint8_t vlan_id_enable)
@@ -2406,7 +2496,8 @@ get_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data,
 
 bmc_err_t 
 get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
-			     char *ip_address)
+			     char *ip_address,
+                             unsigned int ip_address_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
@@ -2434,17 +2525,25 @@ get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 "ip_address", 
-			 ip_address_bytes,
-			 4) < 0)
+  if (ip_address && ip_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+                             "ip_address", 
+                             ip_address_bytes,
+                             4) < 0)
+        goto cleanup;
+
+      memset(ip_address, '\0', ip_address_len);
+      snprintf (ip_address, 
+                ip_address_len - 1,
+                "%u.%u.%u.%u", 
+                ip_address_bytes[0], 
+                ip_address_bytes[1], 
+                ip_address_bytes[2], 
+                ip_address_bytes[3]);
+    }
+  else
     goto cleanup;
-  sprintf (ip_address, 
-	   "%u.%u.%u.%u", 
-	   ip_address_bytes[0], 
-	   ip_address_bytes[1], 
-	   ip_address_bytes[2], 
-	   ip_address_bytes[3]);
   
   rv = BMC_ERR_SUCCESS;
  cleanup:
@@ -2455,7 +2554,8 @@ get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data,
 
 bmc_err_t 
 get_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data, 
-			      char *mac_address)
+			      char *mac_address,
+                              unsigned int mac_address_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
@@ -2483,21 +2583,28 @@ get_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 "mac_address", 
-			 mac_address_bytes,
-			 6) < 0)
+  if (mac_address && mac_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+                             "mac_address", 
+                             mac_address_bytes,
+                             6) < 0)
+        goto cleanup;
+
+      memset(mac_address, '\0', mac_address_len);
+      snprintf (mac_address, 
+                mac_address_len - 1,
+                "%02X:%02X:%02X:%02X:%02X:%02X", 
+                mac_address_bytes[0], 
+                mac_address_bytes[1], 
+                mac_address_bytes[2], 
+                mac_address_bytes[3], 
+                mac_address_bytes[4], 
+                mac_address_bytes[5]);
+    }
+  else
     goto cleanup;
 
-  sprintf (mac_address, 
-	   "%02X:%02X:%02X:%02X:%02X:%02X", 
-	   mac_address_bytes[0], 
-	   mac_address_bytes[1], 
-	   mac_address_bytes[2], 
-	   mac_address_bytes[3], 
-	   mac_address_bytes[4], 
-	   mac_address_bytes[5]);
-  
   rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
@@ -2507,7 +2614,8 @@ get_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data,
 
 bmc_err_t 
 get_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data, 
-			      char *subnet_mask)
+			      char *subnet_mask,
+                              unsigned int subnet_mask_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t subnet_mask_bytes[4];
@@ -2535,18 +2643,25 @@ get_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 "subnet_mask", 
-			 subnet_mask_bytes,
-			 4) < 0)
-    goto cleanup;
+  if (subnet_mask && subnet_mask_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+                             "subnet_mask", 
+                             subnet_mask_bytes,
+                             4) < 0)
+        goto cleanup;
 
-  sprintf (subnet_mask, 
-	   "%u.%u.%u.%u", 
-	   subnet_mask_bytes[0], 
-	   subnet_mask_bytes[1], 
-	   subnet_mask_bytes[2], 
-	   subnet_mask_bytes[3]);
+      memset(subnet_mask, '\0', subnet_mask_len);
+      snprintf (subnet_mask, 
+                subnet_mask_len - 1,
+                "%u.%u.%u.%u", 
+                subnet_mask_bytes[0], 
+                subnet_mask_bytes[1], 
+                subnet_mask_bytes[2], 
+                subnet_mask_bytes[3]);
+    }
+  else
+    goto cleanup;
   
   rv = BMC_ERR_SUCCESS;
  cleanup:
@@ -2557,7 +2672,8 @@ get_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data,
 
 bmc_err_t 
 get_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data, 
-					  char *default_gateway_address)
+					  char *default_gateway_address,
+                                          unsigned int default_gateway_address_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
@@ -2585,18 +2701,25 @@ get_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 "ip_address", 
-			 ip_address_bytes,
-			 4) < 0)
-    goto cleanup;
+  if (default_gateway_address && default_gateway_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+                             "ip_address", 
+                             ip_address_bytes,
+                             4) < 0)
+        goto cleanup;
 
-  sprintf (default_gateway_address, 
-	   "%u.%u.%u.%u", 
-	   ip_address_bytes[0], 
-	   ip_address_bytes[1], 
-	   ip_address_bytes[2], 
-	   ip_address_bytes[3]);
+      memset(default_gateway_address, '\0', default_gateway_address_len);
+      snprintf (default_gateway_address, 
+                default_gateway_address_len - 1,
+                "%u.%u.%u.%u", 
+                ip_address_bytes[0], 
+                ip_address_bytes[1], 
+                ip_address_bytes[2], 
+                ip_address_bytes[3]);
+    }
+  else
+    goto cleanup;
   
   rv = BMC_ERR_SUCCESS;
  cleanup:
@@ -2607,7 +2730,8 @@ get_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data,
 
 bmc_err_t 
 get_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_data, 
-					      char *default_gateway_mac_address)
+					      char *default_gateway_mac_address,
+                                              unsigned int default_gateway_mac_address_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
@@ -2635,19 +2759,27 @@ get_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_dat
       goto cleanup;
     }
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 "mac_address", 
-			 mac_address_bytes,
-			 6) < 0)
+  if (default_gateway_mac_address && default_gateway_mac_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+                             "mac_address", 
+                             mac_address_bytes,
+                             6) < 0)
+        goto cleanup;
+
+      memset(default_gateway_mac_address, '\0', default_gateway_mac_address_len);
+      snprintf (default_gateway_mac_address, 
+                default_gateway_mac_address_len - 1,
+                "%02X:%02X:%02X:%02X:%02X:%02X", 
+                mac_address_bytes[0], 
+                mac_address_bytes[1], 
+                mac_address_bytes[2], 
+                mac_address_bytes[3], 
+                mac_address_bytes[4], 
+                mac_address_bytes[5]);
+    }
+  else
     goto cleanup;
-  sprintf (default_gateway_mac_address, 
-	   "%02X:%02X:%02X:%02X:%02X:%02X", 
-	   mac_address_bytes[0], 
-	   mac_address_bytes[1], 
-	   mac_address_bytes[2], 
-	   mac_address_bytes[3], 
-	   mac_address_bytes[4], 
-	   mac_address_bytes[5]);
   
   rv = BMC_ERR_SUCCESS;
  cleanup:
@@ -2658,7 +2790,8 @@ get_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_dat
 
 bmc_err_t 
 get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data, 
-					 char *backup_gateway_address)
+					 char *backup_gateway_address,
+                                         unsigned int backup_gateway_address_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
@@ -2686,18 +2819,25 @@ get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 "ip_address", 
-			 ip_address_bytes,
-			 4) < 0)
-    goto cleanup;
+  if (backup_gateway_address && backup_gateway_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+                             "ip_address", 
+                             ip_address_bytes,
+                             4) < 0)
+        goto cleanup;
 
-  sprintf (backup_gateway_address, 
-	   "%u.%u.%u.%u", 
-	   ip_address_bytes[0], 
-	   ip_address_bytes[1], 
-	   ip_address_bytes[2], 
-	   ip_address_bytes[3]);
+      memset(backup_gateway_address, '\0', backup_gateway_address_len);
+      snprintf (backup_gateway_address, 
+                backup_gateway_address_len - 1,
+                "%u.%u.%u.%u", 
+                ip_address_bytes[0], 
+                ip_address_bytes[1], 
+                ip_address_bytes[2], 
+                ip_address_bytes[3]);
+    }
+  else
+    goto cleanup;
   
   rv = BMC_ERR_SUCCESS;
  cleanup:
@@ -2708,7 +2848,8 @@ get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data,
 
 bmc_err_t 
 get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
-					     char *backup_gateway_mac_address)
+					     char *backup_gateway_mac_address,
+                                             unsigned int backup_gateway_mac_address_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
@@ -2736,20 +2877,27 @@ get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data
       goto cleanup;
     }
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 "mac_address", 
-			 mac_address_bytes,
-			 6) < 0)
-    goto cleanup;
+  if (backup_gateway_mac_address && backup_gateway_mac_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs, 
+                             "mac_address", 
+                             mac_address_bytes,
+                             6) < 0)
+        goto cleanup;
 
-  sprintf (backup_gateway_mac_address, 
-	   "%02X:%02X:%02X:%02X:%02X:%02X", 
-	   mac_address_bytes[0], 
-	   mac_address_bytes[1], 
-	   mac_address_bytes[2], 
-	   mac_address_bytes[3], 
-	   mac_address_bytes[4], 
-	   mac_address_bytes[5]);
+      memset(backup_gateway_mac_address, '\0', backup_gateway_mac_address_len);
+      snprintf (backup_gateway_mac_address, 
+                backup_gateway_mac_address_len - 1,
+                "%02X:%02X:%02X:%02X:%02X:%02X", 
+                mac_address_bytes[0], 
+                mac_address_bytes[1], 
+                mac_address_bytes[2], 
+                mac_address_bytes[3], 
+                mac_address_bytes[4], 
+                mac_address_bytes[5]);
+    }
+  else
+    goto cleanup;
   
   rv = BMC_ERR_SUCCESS;
  cleanup:
@@ -2793,6 +2941,149 @@ get_bmc_community_string (bmc_config_state_data_t *state_data,
                          community_string,
                          community_string_len) < 0)
     goto cleanup;
+  
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t 
+get_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data, 
+                                  uint8_t destination_selector,
+                                  uint8_t *alert_destination_type,
+                                  uint8_t *alert_acknowledge,
+                                  uint8_t *alert_acknowledge_timeout,
+                                  uint8_t *alert_retries)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_type_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->dev, 
+                                                                  channel_number, 
+                                                                  IPMI_GET_LAN_PARAMETER, 
+                                                                  destination_selector, 
+                                                                  BLOCK_SELECTOR, 
+                                                                  obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get (obj_cmd_rs, "destination_type", &val) < 0)
+    goto cleanup;
+  *alert_destination_type = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge", &val) < 0)
+    goto cleanup;
+  *alert_acknowledge = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge_timeout", &val) < 0)
+    goto cleanup;
+  *alert_acknowledge_timeout = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "retries", &val) < 0)
+    goto cleanup;
+  *alert_retries = val;
+  
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t 
+get_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data, 
+                                       uint8_t destination_selector,
+                                       uint8_t *alert_gateway,
+                                       char *alert_ip_address,
+                                       unsigned int alert_ip_address_len,
+                                       char *alert_mac_address,
+                                       unsigned int alert_mac_address_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  uint8_t alert_ip_address_bytes[4];
+  uint8_t alert_mac_address_bytes[6];
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (state_data->dev, 
+                                                                       channel_number, 
+                                                                       IPMI_GET_LAN_PARAMETER, 
+                                                                       destination_selector, 
+                                                                       BLOCK_SELECTOR, 
+                                                                       obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get (obj_cmd_rs, "gateway_selector", &val) < 0)
+    goto cleanup;
+  *alert_gateway = val;
+  
+  if (alert_ip_address && alert_ip_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs,
+                             "alerting_ip_address",
+                             alert_ip_address_bytes,
+                             4) < 0)
+        goto cleanup;
+
+      memset(alert_ip_address, '\0', alert_ip_address_len);
+      snprintf (alert_ip_address, 
+                alert_ip_address_len - 1,
+                "%u.%u.%u.%u", 
+                alert_ip_address_bytes[0], 
+                alert_ip_address_bytes[1], 
+                alert_ip_address_bytes[2], 
+                alert_ip_address_bytes[3]);
+    }
+
+  if (alert_mac_address && alert_mac_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs,
+                             "alerting_mac_address",
+                             alert_mac_address_bytes,
+                             6) < 0)
+        goto cleanup;
+
+      memset(alert_mac_address, '\0', alert_mac_address_len);
+      snprintf (alert_mac_address, 
+                alert_mac_address_len - 1,
+                "%02X:%02X:%02X:%02X:%02X:%02X", 
+                alert_mac_address_bytes[0], 
+                alert_mac_address_bytes[1], 
+                alert_mac_address_bytes[2], 
+                alert_mac_address_bytes[3], 
+                alert_mac_address_bytes[4], 
+                alert_mac_address_bytes[5]);
+    }
   
   rv = BMC_ERR_SUCCESS;
  cleanup:

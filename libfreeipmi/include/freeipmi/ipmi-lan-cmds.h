@@ -64,12 +64,14 @@ extern "C" {
 
 #define IPMI_MAX_COMMUNITY_STRING_LENGTH              18
 
-#define IPMI_DESTINATION_SELECTOR_MIN                 1
+#define IPMI_DESTINATION_SELECTOR_MIN                 0
 #define IPMI_DESTINATION_SELECTOR_MAX                 15
 
+/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_DESTINATION_SELECTOR_VALID(__val) \
-        (((__val) >= IPMI_DESTINATION_SELECTOR_MIN \
-          || (__val) <= IPMI_DESTINATION_SELECTOR_MAX) ? 1 : 0)
+        (((__val + 1) >= (IPMI_DESTINATION_SELECTOR_MIN + 1) \
+          || (__val - 1) <= (IPMI_DESTINATION_SELECTOR_MAX - 1))) ? 1 : 0
+
 
 #define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION      0x0
 #define IPMI_DESTINATION_TYPE_OEM1                      0x6
