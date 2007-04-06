@@ -30,7 +30,7 @@ libfreeipmi:
 
 bmc-config:
 -----------
-Add snmp community string
+  * add spinners or verbose completion option or something
 
 Autoconf/Portability
 --------------------
