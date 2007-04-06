@@ -62,6 +62,43 @@ extern "C" {
         (((__val) == IPMI_BMC_GENERATED_ARP_RESPONSES_ENABLE \
          || (__val) == IPMI_BMC_GENERATED_ARP_RESPONSES_DISABLE) ? 1 : 0)
 
+#define IPMI_MAX_COMMUNITY_STRING_LENGTH              18
+
+#define IPMI_DESTINATION_SELECTOR_MIN                 1
+#define IPMI_DESTINATION_SELECTOR_MAX                 15
+
+#define IPMI_DESTINATION_SELECTOR_VALID(__val) \
+        (((__val) >= IPMI_DESTINATION_SELECTOR_MIN \
+          || (__val) <= IPMI_DESTINATION_SELECTOR_MAX) ? 1 : 0)
+
+#define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION      0x0
+#define IPMI_DESTINATION_TYPE_OEM1                      0x6
+#define IPMI_DESTINATION_TYPE_OEM2                      0x7
+
+#define IPMI_DESTINATION_TYPE_VALID(__val) \
+        (((__val) == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION \
+          || (__val) == IPMI_DESTINATION_TYPE_OEM1 \
+          || (__val) == IPMI_DESTINATION_TYPE_OEM2) ? 1 : 0)
+
+#define IPMI_ALERT_UNACKNOWLEDGED                       0
+#define IPMI_ALERT_ACKNOWLEDGED                         1
+
+#define IPMI_ALERT_VALID(__val) \
+        (((__val) ==  IPMI_ALERT_UNACKNOWLEDGED \
+          || (__val) == IPMI_ALERT_ACKNOWLEDGED) ? 1 : 0)
+
+#define IPMI_ADDRESS_FORMAT_IPV4                        0
+
+#define IPMI_GATEWAY_SELECTOR_DEFAULT                   0
+#define IPMI_GATEWAY_SELECTOR_BACKUP                    1 
+
+#define IPMI_GATEWAY_SELECTOR_VALID(__val) \
+        (((__val) ==  IPMI_GATEWAY_SELECTOR_DEFAULT \
+          || (__val) == IPMI_GATEWAY_SELECTOR_BACKUP) ? 1 : 0)
+
+/* 3 bit number */
+#define IPMI_ALERT_RETRIES_MAX                          7
+
 #define IPMI_VLAN_ID_ENABLE                             0x1
 #define IPMI_VLAN_ID_DISABLE                            0x0
 
@@ -104,6 +141,9 @@ extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_default_gateway
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_default_gateway_mac_address_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_backup_gateway_address_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_backup_gateway_mac_address_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_community_string_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_destination_type_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq;
@@ -122,6 +162,10 @@ extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_default_gateway
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_community_string_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_destination_type_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs;
@@ -205,6 +249,26 @@ int8_t fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t
 int8_t fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t channel_number,
                                                                              uint64_t mac_address,
                                                                              fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_number,
+                                                                   char *community_string,
+                                                                   unsigned int community_string_len,
+                                                                   fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_number,
+                                                                   uint8_t destination_selector,
+                                                                   uint8_t destination_type,
+                                                                   uint8_t alert_acknowledge,
+                                                                   uint8_t alert_acknowledge_timeout,
+                                                                   uint8_t retries,
+                                                                   fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_lan_configuration_parameters_destination_addresses (uint8_t channel_number,
+                                                                        uint8_t destination_selector,
+                                                                        uint8_t gateway_selector,
+                                                                        uint32_t alerting_ip_address,
+                                                                        uint64_t alerting_mac_address,
+                                                                        fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
                                                           uint16_t vlan_id,

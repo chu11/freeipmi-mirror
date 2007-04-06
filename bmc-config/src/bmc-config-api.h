@@ -96,6 +96,8 @@ bmc_err_t set_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *stat
                                                    char *backup_gateway_address);
 bmc_err_t set_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
                                                        char *backup_gateway_mac_address);
+bmc_err_t set_bmc_community_string (bmc_config_state_data_t *state_data, 
+                                    uint8_t *community_string);
 bmc_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
                                     uint32_t vlan_id,
                                     uint8_t vlan_id_enable);
@@ -334,6 +336,9 @@ bmc_err_t get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_dat
                                                             uint8_t *bit_rate);
 bmc_err_t get_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
                                         uint8_t *power_restore_policy);
+bmc_err_t get_bmc_community_string (bmc_config_state_data_t *state_data, 
+                                    uint8_t *community_string,
+                                    uint32_t community_string_len);
 bmc_err_t get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
                                     uint32_t *vlan_id,
                                     uint8_t *vlan_id_enable);

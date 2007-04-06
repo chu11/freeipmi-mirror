@@ -1,3 +1,42 @@
+2007-04-05  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c,
+	(fill_cmd_set_lan_configuration_parameters_community_string,
+	fill_cmd_set_lan_configuration_parameters_destination_type,
+	fill_cmd_set_lan_configuration_parameters_destination_addresses):
+	New functions.
+	
+	* libfreeipmi/include/freeipmi/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c, : Add templates for
+	tmpl_cmd_set_lan_configuration_parameters_community_string_rq,
+	tmpl_cmd_set_lan_configuration_parameters_destination_type_rq,
+	tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq,
+	tmpl_cmd_get_lan_configuration_parameters_community_string_rs,
+	tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs,
+	tmpl_cmd_get_lan_configuration_parameters_destination_type_rs,
+	tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-lan-cmds-udm.h
+	(ipmi_cmd_set_lan_configuration_parameters_community_string,
+	ipmi_cmd_set_lan_configuration_parameters_destination_type,
+	ipmi_cmd_set_lan_configuration_parameters_destination_addresses,
+	ipmi_cmd_get_lan_configuration_parameters_community_string,
+	ipmi_cmd_get_lan_configuration_parameters_number_of_destinations,
+	ipmi_cmd_get_lan_configuration_parameters_destination_type,
+	ipmi_cmd_get_lan_configuration_parameters_destination_addresses):
+	New functions.
+
+	* libfreeipmi/include/freeipmi/ipmi-lan-cmds.h: Add new defines
+	for new lan cmds support.
+
+	* libfreeipmi/include/freeipmi/ipmi-lan-param-spec.h: Fix typo.
+
+	* bmc-config/src/bmc-config-api.h,
+	bmc-config/src/bmc-config-api.c,
+	bmc-config/src/bmc-lan-conf-section.c: Add community string config
+	support.
+	
 2007-03-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/: Add --deactivate option and SOL deactivate only support.

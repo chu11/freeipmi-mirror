@@ -109,6 +109,29 @@ int8_t ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_d
 									  uint8_t gratuitous_arp_interval, 
 									  fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_set_lan_configuration_parameters_community_string (ipmi_device_t dev,
+                                                                   uint8_t channel_number,
+                                                                   char *community_string,
+                                                                   unsigned int community_string_len,
+                                                                   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_lan_configuration_parameters_destination_type (ipmi_device_t dev,
+                                                                   uint8_t channel_number,
+                                                                   uint8_t destination_selector,
+                                                                   uint8_t destination_type,
+                                                                   uint8_t alert_acknowledge,
+                                                                   uint8_t alert_acknowledge_timeout,
+                                                                   uint8_t retries,
+                                                                   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_lan_configuration_parameters_destination_addresses (ipmi_device_t dev,
+                                                                        uint8_t channel_number,
+                                                                        uint8_t destination_selector,
+                                                                        uint8_t gateway_selector,
+                                                                        uint32_t alerting_ip_address,
+                                                                        uint64_t alerting_mac_address,
+                                                                        fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_device_t dev, 
 							  uint8_t channel_number, 
 							  uint16_t vlan_id,
@@ -217,6 +240,35 @@ int8_t ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipm
 									     uint8_t set_selector,
 									     uint8_t block_selector,
 									     fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_device_t dev,
+                                                                   uint8_t channel_number,
+                                                                   uint8_t get_parameter,
+                                                                   uint8_t set_selector,
+                                                                   uint8_t block_selector,
+                                                                   fiid_obj_t obj_cmd_rs);
+
+
+int8_t ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_device_t dev,
+                                                                         uint8_t channel_number,
+                                                                         uint8_t get_parameter,
+                                                                         uint8_t set_selector,
+                                                                         uint8_t block_selector,
+                                                                         fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_device_t dev,
+                                                                   uint8_t channel_number,
+                                                                   uint8_t get_parameter,
+                                                                   uint8_t set_selector,
+                                                                   uint8_t block_selector,
+                                                                   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_device_t dev,
+                                                                        uint8_t channel_number,
+                                                                        uint8_t get_parameter,
+                                                                        uint8_t set_selector,
+                                                                        uint8_t block_selector,
+                                                                        fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_device_t dev, 
 							  uint8_t channel_number, 

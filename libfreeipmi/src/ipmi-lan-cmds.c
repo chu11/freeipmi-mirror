@@ -206,6 +206,51 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_backup_gateway_mac_add
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_community_string_rq =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {144, "community_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_destination_type_rq =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3,  "destination_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "alert_acknowledge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "alert_acknowledge_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1,  "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3,  "retries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "address_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "gateway_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7,  "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "alerting_ip_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {48, "alerting_mac_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -425,6 +470,62 @@ fiid_template_t tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_add
     {4,  "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {48, "mac_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_community_string_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {144, "community_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "number_of_lan_destinations", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_destination_type_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3,  "destination_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "alert_acknowledge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "alert_acknowledge_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3,  "retries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "address_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "gateway_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "alerting_ip_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {48, "alerting_mac_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -896,6 +997,105 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t ch
                                 channel_number,
                                 mac_address,
                                 obj_cmd_rq));
+}
+
+int8_t
+fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_number,
+                                                            char *community_string,
+                                                            unsigned int community_string_len,
+                                                            fiid_obj_t obj_cmd_rq)
+{
+  uint8_t buf[IPMI_MAX_COMMUNITY_STRING_LENGTH];
+  
+  /* achu: community_string can be the max length.  Null termination in IPMI
+   * packet not required.
+   */
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+              && !(community_string
+                   && community_string_len > IPMI_MAX_COMMUNITY_STRING_LENGTH)
+	      && fiid_obj_valid(obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_community_string_rq);
+  
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_COMMUNITY_STRING);
+  
+  /* achu: community_string should be zero extended */
+  memset(buf, '\0', IPMI_MAX_COMMUNITY_STRING_LENGTH);
+  if (community_string)
+    strncpy((char *)buf, community_string, IPMI_MAX_COMMUNITY_STRING_LENGTH);
+  
+  FIID_OBJ_SET_DATA (obj_cmd_rq, "community_string", buf, IPMI_MAX_COMMUNITY_STRING_LENGTH);
+
+  return 0;
+}
+
+int8_t
+fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_number,
+                                                            uint8_t destination_selector,
+                                                            uint8_t destination_type,
+                                                            uint8_t alert_acknowledge,
+                                                            uint8_t alert_acknowledge_timeout,
+                                                            uint8_t retries,
+                                                            fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+              && IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
+              && IPMI_DESTINATION_TYPE_VALID(destination_type)
+              && IPMI_ALERT_VALID(alert_acknowledge)
+              && (retries <= IPMI_ALERT_RETRIES_MAX)
+	      && fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_type_rq);
+
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_DESTINATION_TYPE);
+  FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "destination_type", destination_type);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge", alert_acknowledge);
+  FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge_timeout", alert_acknowledge_timeout);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "retries", retries);
+
+  return 0;
+}
+
+int8_t
+fill_cmd_set_lan_configuration_parameters_destination_addresses (uint8_t channel_number,
+                                                                 uint8_t destination_selector,
+                                                                 uint8_t gateway_selector,
+                                                                 uint32_t alerting_ip_address,
+                                                                 uint64_t alerting_mac_address,
+                                                                 fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+              && IPMI_DESTINATION_SELECTOR_VALID(destination_selector)
+              && IPMI_GATEWAY_SELECTOR_VALID(gateway_selector)
+	      && fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_destination_addresses_rq);
+ 
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_DESTINATION_ADDRESSES);
+  FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "address_format", IPMI_ADDRESS_FORMAT_IPV4);
+  FIID_OBJ_SET (obj_cmd_rq, "gateway_selector", gateway_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "alerting_ip_address", alerting_ip_address);
+  FIID_OBJ_SET (obj_cmd_rq, "alerting_mac_address", alerting_mac_address);
+
+  return 0;
 }
 
 int8_t 

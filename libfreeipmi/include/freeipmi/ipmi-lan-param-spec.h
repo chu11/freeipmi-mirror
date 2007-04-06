@@ -40,7 +40,7 @@ extern "C" {
 #define IPMI_LAN_PARAM_BACKUP_GATEWAY_ADDRESS                           14
 #define IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDRESS                       15
 #define IPMI_LAN_PARAM_COMMUNITY_STRING                                 16
-#define IPMI_LAN_PARAM_NO_OF_DESTINATIONS                               17
+#define IPMI_LAN_PARAM_NUMBER_OF_DESTINATIONS                           17
 #define IPMI_LAN_PARAM_DESTINATION_TYPE                                 18
 #define IPMI_LAN_PARAM_DESTINATION_ADDRESSES                            19
 #define IPMI_LAN_PARAM_VLAN_ID                                          20

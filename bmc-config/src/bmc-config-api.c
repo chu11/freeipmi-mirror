@@ -741,6 +741,41 @@ set_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data
 }
 
 bmc_err_t 
+set_bmc_community_string (bmc_config_state_data_t *state_data, 
+                          uint8_t *community_string)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev, 
+                                                                  channel_number,
+                                                                  community_string, 
+                                                                  (community_string) ? strlen((char *)community_string) : 0,
+                                                                  obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t 
 set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
 			  uint32_t vlan_id,
 			  uint8_t vlan_id_enable)
@@ -2715,6 +2750,49 @@ get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data
 	   mac_address_bytes[3], 
 	   mac_address_bytes[4], 
 	   mac_address_bytes[5]);
+  
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t 
+get_bmc_community_string (bmc_config_state_data_t *state_data, 
+                          uint8_t *community_string,
+                          uint32_t community_string_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  bmc_err_t ret;
+  int8_t channel_number;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev, 
+                                                                  channel_number, 
+                                                                  IPMI_GET_LAN_PARAMETER, 
+                                                                  SET_SELECTOR, 
+                                                                  BLOCK_SELECTOR, 
+                                                                  obj_cmd_rs) < 0) 
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get_data (obj_cmd_rs, 
+                         "community_string", 
+                         community_string,
+                         community_string_len) < 0)
+    goto cleanup;
   
   rv = BMC_ERR_SUCCESS;
  cleanup:

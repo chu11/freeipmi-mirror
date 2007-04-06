@@ -507,6 +507,84 @@ backup_gateway_mac_address_diff (bmc_config_state_data_t *state_data,
 }
 
 static bmc_err_t
+community_string_checkout (bmc_config_state_data_t *state_data,
+                           const struct section *sect,
+                           struct keyvalue *kv)
+{
+  uint8_t community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
+  bmc_err_t ret;
+
+  if ((ret = get_bmc_community_string (state_data,
+                                       community_string,
+                                       IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != BMC_ERR_SUCCESS) 
+    return ret;
+		    
+  if (kv->value)
+    free (kv->value);
+
+  if (!(kv->value = strdup ((char *)community_string)))
+    {
+      perror("strdup");
+      return BMC_ERR_FATAL_ERROR;
+    }
+
+  return BMC_ERR_SUCCESS;
+}
+
+static bmc_err_t
+community_string_commit (bmc_config_state_data_t *state_data,
+                         const struct section *sect,
+                         const struct keyvalue *kv)
+{
+  if (!kv->value)
+    return BMC_ERR_FATAL_ERROR;
+
+  return set_bmc_community_string (state_data,
+                                   (uint8_t *)kv->value);
+}
+
+static bmc_diff_t
+community_string_diff (bmc_config_state_data_t *state_data,
+                       const struct section *sect,
+                       const struct keyvalue *kv)
+{
+  uint8_t community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
+  bmc_err_t rc;
+  bmc_diff_t ret;
+
+  if ((rc = get_bmc_community_string (state_data,
+                                      community_string,
+                                      IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != BMC_ERR_SUCCESS)
+    {
+      if (rc == BMC_ERR_NON_FATAL_ERROR)
+        return BMC_DIFF_NON_FATAL_ERROR;
+      return BMC_DIFF_FATAL_ERROR;
+    }
+
+  if (!kv->value || !same (kv->value, (char *)community_string))
+    ret = BMC_DIFF_DIFFERENT;
+  else
+    ret = BMC_DIFF_SAME;
+
+  if (ret == BMC_DIFF_DIFFERENT)
+    report_diff (sect->section_name,
+		 kv->key,
+		 kv->value,
+		 (char *)community_string);
+  return ret;
+}
+
+static bmc_validate_t
+community_string_validate (bmc_config_state_data_t *state_data,
+                           const struct section *sect,
+                           const char *value)
+{
+  if (!value || strlen (value) > IPMI_MAX_COMMUNITY_STRING_LENGTH)
+    return BMC_VALIDATE_INVALID_VALUE;
+  return BMC_VALIDATE_VALID_VALUE;
+}
+
+static bmc_err_t
 vlan_id_checkout (bmc_config_state_data_t *state_data,
 		  const struct section *sect,
 		  struct keyvalue *kv)
@@ -863,6 +941,17 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
 				backup_gateway_mac_address_commit,
 				backup_gateway_mac_address_diff,
 				mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_section_add_keyvalue (state_data,
+                                lan_conf_section,
+				"Community_String",
+				"Give valid string",
+				0,
+				community_string_checkout,
+				community_string_commit,
+				community_string_diff,
+				community_string_validate) < 0) 
     goto cleanup;
 
   if (bmc_section_add_keyvalue (state_data,
