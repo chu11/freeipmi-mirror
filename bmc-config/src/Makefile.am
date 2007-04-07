@@ -16,6 +16,7 @@ bmc_config_SOURCES = \
 	bmc-lan-channel-section.c \
 	bmc-serial-channel-section.c \
 	bmc-lan-conf-section.c \
+	bmc-lan-conf-alert-section.c \
 	bmc-lan-conf-auth-section.c \
 	bmc-lan-conf-security-keys-section.c \
 	bmc-lan-conf-misc-section.c \
@@ -47,6 +48,7 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-lan-conf-auth-section.h \
 		 bmc-lan-conf-misc-section.h \
 		 bmc-lan-conf-section.h \
+		 bmc-lan-conf-alert-section.h \
 		 bmc-lan-conf-security-keys-section.h \
 		 bmc-rmcpplus-conf-privilege-section.h \
 		 bmc-serial-channel-section.h \

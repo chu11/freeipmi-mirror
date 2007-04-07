@@ -1,3 +1,11 @@
+2007-04-07  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-lan-conf-alert-section.h,
+	bmc-config/src/bmc-lan-conf-alert-section.c: New files.  
+
+	* bmc-config/src/bmc-lan-conf-section.c: Split off alert config
+	into a different section.
+	
 2007-04-06  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Add alert config to bmc-config and fix various
