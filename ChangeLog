@@ -5,6 +5,8 @@
 
 	* bmc-config/src/bmc-lan-conf-section.c: Split off alert config
 	into a different section.
+
+	* bmc-config/src/Makefile.am: Adjust appropriately.
 	
 2007-04-06  Albert Chu <chu11@llnl.gov>
 
