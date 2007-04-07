@@ -14,6 +14,7 @@ o Re-architected workarounds options for Ipmipower due to increasing number
   New -W option implemented.
 o -Q option added for ipmi-sensors and ipmi-sel.
 o Add community string and alert config to bmc-config.
+o Add verbose checkout/commit progress information for large checkout(s)/commit(s).
 o Various bug fixes throughout FreeIPMI.
 
 For Developers

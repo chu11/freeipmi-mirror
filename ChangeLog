@@ -7,6 +7,10 @@
 	into a different section.
 
 	* bmc-config/src/Makefile.am: Adjust appropriately.
+
+	* bmc-config/src/bmc-checkout.c (bmc_checkout_file),
+	bmc-config/src/bmc-commit.c (bmc_commit_file): Add verbose
+	progress information.
 	
 2007-04-06  Albert Chu <chu11@llnl.gov>
 

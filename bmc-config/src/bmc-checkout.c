@@ -309,6 +309,10 @@ bmc_checkout_file (bmc_config_state_data_t *state_data)
       if (this_ret == BMC_ERR_NON_FATAL_ERROR)
         ret = BMC_ERR_NON_FATAL_ERROR;
 
+      if (args->verbose)
+        fprintf (stderr, "Completed checkout of Section: %s\n",
+                 sect->section_name);
+
       sect = sect->next;
     }
 

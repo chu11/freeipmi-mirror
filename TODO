@@ -28,10 +28,6 @@ libfreeipmi:
   * how to support xRC4 (can we? should we?)
   * get event messages function that is passed fiids
 
-bmc-config:
------------
-  * add spinners or verbose completion option or something
-
 Autoconf/Portability
 --------------------
   * socklet_t, doesn't exist on all OSes.
