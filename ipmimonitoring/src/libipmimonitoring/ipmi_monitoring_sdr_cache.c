@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.2 2007-04-16 22:28:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -656,11 +656,13 @@ ipmi_monitoring_sdr_cache_unload(ipmi_monitoring_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->sc);
 
-  ipmi_sdr_cache_close(c->sc);
-  ipmi_sdr_cache_ctx_destroy(c->sc);
-  c->sc = NULL;
+  if (c->sc)
+    {
+      ipmi_sdr_cache_close(c->sc);
+      ipmi_sdr_cache_ctx_destroy(c->sc);
+      c->sc = NULL;
+    }
   return 0;
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.6 2007-03-09 02:28:27 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.7 2007-04-16 22:28:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -330,11 +330,13 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
       c->current_sensor_reading = list_next(c->sensor_readings_itr);
     }
 
+  ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return rv;
 
  cleanup:
+  ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_iterator_destroy(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
   return -1;
@@ -423,11 +425,13 @@ ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
       c->current_sensor_reading = list_next(c->sensor_readings_itr);
     }
 
+  ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return rv;
 
  cleanup:
+  ipmi_monitoring_sdr_cache_unload(c);
   ipmi_monitoring_iterator_destroy(c);
   ipmi_monitoring_ipmi_communication_cleanup(c);
   return -1;
