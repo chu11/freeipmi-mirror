@@ -33,3 +33,10 @@ Autoconf/Portability
   * socklet_t, doesn't exist on all OSes.
   * stdarg.h, other OSes use varargs.h
          
+Others
+======
+
+bmc-config:
+-----------
+Missing Serial Config
+Chassis Config?
