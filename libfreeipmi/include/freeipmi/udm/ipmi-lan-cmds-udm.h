@@ -164,6 +164,13 @@ int8_t ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite
 												  fiid_obj_t obj_cmd_rs);
 
 
+int8_t ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_device_t dev, 
+                                                                              uint8_t channel_number, 
+                                                                              uint8_t get_parameter, 
+                                                                              uint8_t set_selector, 
+                                                                              uint8_t block_selector, 
+                                                                              fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_device_t dev, 
 									      uint8_t channel_number, 
 									      uint8_t get_parameter, 

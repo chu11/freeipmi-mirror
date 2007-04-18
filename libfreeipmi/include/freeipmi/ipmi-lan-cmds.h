@@ -28,6 +28,9 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
+#define IPMI_AUTHENTICATION_TYPE_SUPPORTED             0x1
+#define IPMI_AUTHENTICATION_TYPE_UNSUPPORTED           0x0
+
 #define IPMI_AUTHENTICATION_TYPE_ENABLE                0x1
 #define IPMI_AUTHENTICATION_TYPE_DISABLE               0x0
 
@@ -153,6 +156,7 @@ extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messag
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rs;
 
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ip_address_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs;

@@ -25,6 +25,8 @@
 extern "C" {
 #endif
 
+#define IPMI_LAN_PARAM_SET_IN_PROGRESS                                  0
+#define IPMI_LAN_PARAM_AUTHENTICATION_TYPE_SUPPORT                      1
 #define IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES                      2 
 #define IPMI_LAN_PARAM_IP_ADDRESS                                       3 
 #define IPMI_LAN_PARAM_IP_ADDRESS_SOURCE                                4 
@@ -51,7 +53,7 @@ extern "C" {
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_LAN_PARAM_VALID(__lan_param) \
-        (((__lan_param+1) >= IPMI_LAN_PARAM_IP_ADDRESS \
+        (((__lan_param+1) >= IPMI_LAN_PARAM_AUTHENTICATION_TYPE_SUPPORT \
           && (__lan_param-1) <= IPMI_LAN_PARAM_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) ? 1 : 0)
 
 #ifdef __cplusplus
