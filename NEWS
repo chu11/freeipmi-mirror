@@ -1,6 +1,8 @@
 0.3.3
 -----
 o Allow OEM network functions.
+o Support ipmipower per-msg-auth workaround.
+o Support per-msg-auth in LAN udm and majority of FreeIPMI tools.
 
 0.3.2
 -----
