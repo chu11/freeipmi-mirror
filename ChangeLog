@@ -2,6 +2,19 @@
 
 	* libfreeipmi/include/freeipmi/ipmi-netfn-spec.h: Allow OEM
 	network functions.
+
+	* ipmipower/src/ipmipower_powercmd.c
+	(_check_activate_session_authentication_type): Workaround
+	permsgauth issue.
+
+	* ipmipower/ipmipower.8.in: Update workaround issue.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_cmd_send, ipmi_lan_cmd),
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_lan_open_session), libfreeipmi/src/udm/ipmi-udm-device.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband,
+	_ipmi_outofband_close): Support permsgauth in udm.
 	
 2007-04-17  Albert Chu <chu11@llnl.gov>
 

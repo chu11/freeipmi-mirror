@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.58 2007-03-29 16:36:03 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.59 2007-04-20 05:12:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -629,9 +629,9 @@ firmware.
 
 Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The
 activate session response and close session response packets have
-invalid sequence numbers.  Specific workaround no longer required in
-this version of
-.B ipmipower.
+invalid sequence numbers.  Automatically handled by 
+.B ipmipower,
+specific workaround does not need to be specified.  
 
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
@@ -651,6 +651,12 @@ Supermicro H8QME with SIMSO daughter card: There are several
 Supermicro IPMI 2.0 bugs on early firmware revisions which can be
 worked around using the "supermicro20" workaround.  These compliance
 bugs are confirmed to be fixed on newer firmware.
+
+Supermicro H8QME with SIMSO daughter card: The remote BMC will
+advertise that Per Message Authentication is disabled, but actually
+require it for the protocol. Automatically handled by
+.B ipmipower,
+specific workaround does not need to be specified.  
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

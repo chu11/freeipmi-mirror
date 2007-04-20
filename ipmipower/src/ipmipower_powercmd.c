@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.100 2007-03-29 16:36:03 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.101 2007-04-20 05:12:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1313,27 +1313,34 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
   if (conf->workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION)
     return 0;
 
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Supermicro H8QME with SIMSO daughter card.
+   *
+   * (Note: This could work for "IBM eServer 325" per msg auth
+   * problem.  But I don't have hardware to test it :-()
+   *
+   * The remote BMC ignores if permsg authentiction is disabled.
+   * Handle it appropriately by just not doing permsg authentication.
+   */
   if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
     {
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           dbg("_process_ipmi_packets(%s:%d): not none authentcation",
               ip->ic->hostname, ip->protocol_state);
-          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
-          
-          ip->retry_count = 0;  /* important to reset */
-          Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          return -1;
+          ip->permsgauth_enabled = IPMIPOWER_TRUE;
         }
     }
-  else
+
+  if (ip->permsgauth_enabled == IPMIPOWER_TRUE)
     {
       if (authentication_type != ip->authentication_type)
         {
           dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
               ip->ic->hostname, ip->protocol_state);
           ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
-
+          
           ip->retry_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
           return -1;
