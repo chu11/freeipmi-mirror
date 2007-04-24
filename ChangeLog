@@ -1,3 +1,18 @@
+2007-04-24  Albert Chu <chu11@llnl.gov>
+
+	* common/src/pstdout.c (_pstdout_print, _pstdout_print_wrapper,
+	_pstdout_output_finish): Add race protections w/
+	no_more_external_output flag.
+
+	* common/src/pstdout.c (_pstdout_print_wrapper, pstdout_printf,
+	pstdout_fprintf, pstdout_perror, _pstdout_output_finish): Adjust
+	calls appropriately.
+
+	* common/src/pstdout.c (_pstdout_state_init): Init mutex.
+	
+	* common/src/pstdout.c (_pstdout_sigint_finish_output): Output
+	information on which threads were canceled early.
+	
 2007-04-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-netfn-spec.h: Allow OEM

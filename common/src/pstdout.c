@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+ *  $Id: pstdout.c,v 1.2 2007-04-24 18:14:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -89,6 +89,7 @@ struct pstdout_state {
   char *buffer_stderr;
   unsigned int buffer_stdout_len;
   unsigned int buffer_stderr_len;
+  int no_more_external_output;
   pthread_mutex_t mutex;
 };
 
@@ -470,7 +471,11 @@ pstdout_hostnames_count(const char *hostnames)
 }
 
 static int
-_pstdout_print(pstdout_state_t pstate, FILE *stream, const char *format, va_list ap)
+_pstdout_print(pstdout_state_t pstate, 
+               int internal_to_pstdout,
+               FILE *stream,
+               const char *format, 
+               va_list ap)
 {
   char *buf = NULL;
   char *linebuf = NULL;
@@ -540,6 +545,12 @@ _pstdout_print(pstdout_state_t pstate, FILE *stream, const char *format, va_list
       goto cleanup;
     }
   pstate_mutex_locked++;
+
+  /* Protect from racing output when we are in a Ctrl+C flushing
+   * buffered output situation
+   */
+  if (!internal_to_pstdout && pstate->no_more_external_output)
+    goto cleanup;
 
   if (cbuf_write(whichcbuf, buf, wlen, NULL) < 0)
     {
@@ -666,7 +677,10 @@ _pstdout_print(pstdout_state_t pstate, FILE *stream, const char *format, va_list
 }
 
 static void
-_pstdout_print_wrapper(pstdout_state_t pstate, FILE *stream, const char *format, ...)
+_pstdout_print_wrapper(pstdout_state_t pstate, 
+                       int internal_to_pstdout,
+                       FILE *stream, 
+                       const char *format, ...)
 {
   va_list ap;
   
@@ -677,7 +691,7 @@ _pstdout_print_wrapper(pstdout_state_t pstate, FILE *stream, const char *format,
   assert(format);
 
   va_start(ap, format);
-  _pstdout_print(pstate, stderr, format, ap);
+  _pstdout_print(pstate, internal_to_pstdout, stderr, format, ap);
   va_end(ap);
 }
 
@@ -706,7 +720,7 @@ pstdout_printf(pstdout_state_t pstate, const char *format, ...)
     }
 
   va_start(ap, format);
-  rv = _pstdout_print(pstate, stdout, format, ap);
+  rv = _pstdout_print(pstate, 0, stdout, format, ap);
   va_end(ap);
   return rv;
 }
@@ -742,7 +756,7 @@ pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...)
     }
   
   va_start(ap, format);
-  rv = _pstdout_print(pstate, stream, format, ap);
+  rv = _pstdout_print(pstate, 0, stream, format, ap);
   va_end(ap);
   return rv;
 }
@@ -768,12 +782,14 @@ pstdout_perror(pstdout_state_t pstate, const char *s)
       return;
     }
 
-  _pstdout_print_wrapper(pstate, stderr, "%s: %s\n", s, strerror(errno));
+  _pstdout_print_wrapper(pstate, 0, stderr, "%s: %s\n", s, strerror(errno));
 }
 
 static int
 _pstdout_state_init(pstdout_state_t pstate, char *hostname)
 {
+  int rc;
+
   assert(pstate);
 
   memset(pstate, '\0', sizeof(struct pstdout_state));
@@ -798,6 +814,15 @@ _pstdout_state_init(pstdout_state_t pstate, char *hostname)
   pstate->buffer_stdout_len = 0;
   pstate->buffer_stderr = NULL;
   pstate->buffer_stderr_len = 0;
+  pstate->no_more_external_output = 0;
+
+  if ((rc = pthread_mutex_init(&(pstate->mutex), NULL)))
+    {
+      if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+        fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
+      pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+      return -1;
+    }
   return 0;
 }
 
@@ -904,7 +929,7 @@ static int
 _pstdout_output_finish(pstdout_state_t pstate)
 {
   int pstate_mutex_locked = 0;
-  int rc;
+  int rc, rv = -1;
 
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
@@ -924,10 +949,10 @@ _pstdout_output_finish(pstdout_state_t pstate)
    * finish off the line and get it flushed out.
    */
   if (!cbuf_is_empty(pstate->stdout))
-    _pstdout_print_wrapper(pstate, stdout, "\n");
+    _pstdout_print_wrapper(pstate, 1, stdout, "\n");
   
   if (!cbuf_is_empty(pstate->stderr))
-    _pstdout_print_wrapper(pstate, stderr, "\n");
+    _pstdout_print_wrapper(pstate, 1, stderr, "\n");
   
   if (_pstdout_output_buffer_data(pstate,
                                   stdout,
@@ -949,7 +974,9 @@ _pstdout_output_finish(pstdout_state_t pstate)
 				  &pstdout_consolidated_stderr_mutex) < 0)
     goto cleanup;
 
-  return 0;
+  /* Only output from internal to pstdout is allowed */
+  pstate->no_more_external_output = 1;
+  rv = 0;
 
  cleanup:
   if (pstate_mutex_locked)
@@ -961,7 +988,7 @@ _pstdout_output_finish(pstdout_state_t pstate)
 	  /* Don't change error code, just move on */
 	}
     }
-  return -1;
+  return rv;
 }
 
 static void
@@ -1136,9 +1163,50 @@ _pstdout_sigint_finish_output(void *x, void *arg)
   assert(x);
 
   pstate = (struct pstdout_state *)x;
-
+       
   if (_pstdout_output_finish(pstate) < 0)
     return -1;
+
+  /* The no_more_external_output flag set in _pstdout_output_finish()
+   * protects from extraneous extra output from other threads after
+   * this output.
+   */
+  
+  if (pstate->hostname
+      && (pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME)
+      && !(pstdout_output_flags & PSTDOUT_OUTPUT_BUFFER_STDOUT)
+      && !(pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE))
+    {
+      fprintf(stdout, "%s: exiting session\n", pstate->hostname);
+      fflush(stdout);
+    }
+
+  /* Note: there isn't a race with any remaining threads and the below
+   * output, b/c the _pstdout_output_finish() outputs buffered data or
+   * puts the remaining data into the consolidated output list.  Any extra
+   * output from the user cannot be outputted.
+   */
+
+  if (pstate->hostname
+      && (pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME)
+      && (pstdout_output_flags & PSTDOUT_OUTPUT_BUFFER_STDOUT))
+    {
+      if ((pstate->buffer_stdout && pstate->buffer_stdout_len)
+          || (pstate->buffer_stderr && pstate->buffer_stderr_len))
+        fprintf(stdout, "%s: exiting session: current output flushed\n", pstate->hostname);
+      else
+        fprintf(stdout, "%s: exiting session\n", pstate->hostname);
+      fflush(stdout);
+    }
+
+  if (pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE)
+    {
+      if ((pstate->buffer_stdout && pstate->buffer_stdout_len)
+          || (pstate->buffer_stderr && pstate->buffer_stderr_len))
+        fprintf(stdout, "%s: exiting session: current output consolidated\n", pstate->hostname);
+      else
+        fprintf(stdout, "%s: exiting session\n", pstate->hostname);
+    }
 
   return 0;
 }
