@@ -3,6 +3,7 @@
 o Allow OEM network functions.
 o Support ipmipower per-msg-auth workaround.
 o Support per-msg-auth in LAN udm and majority of FreeIPMI tools.
+o Fix OpenIPMI driver build bug.
 
 0.3.2
 -----
