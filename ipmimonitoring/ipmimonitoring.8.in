@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.2 2007-04-26 21:28:23 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.3 2007-04-26 21:32:50 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,8 +34,8 @@ ipmimonitoring \- IPMI monitoring tool
 is an IPMI sensor monitoring tool that utilizes the libipmimonitoring
 library to interpret sensor readings rather than just report them.
 The library and tool are primarily used for host monitoring
-activities.  For most users who wish to get sensor readings, it is
-recommended that they use
+activities.  For more general sensor readings, it is
+recommended that users use
 .B ipmi-sensors(8).
 
 .SH "OPTIONS"

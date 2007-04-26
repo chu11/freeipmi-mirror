@@ -3,6 +3,8 @@
         * ipmimonitoring/ipmimonitoring.8.in, ipmidetect/ipmidetectd.8.in,
 	ipmiconsole/ipmiconsole.8.in: Fix manpage output bug.
 
+	* ipmimonitoring/ipmimonitoring.8.in: Reword some text.
+
 2007-04-25  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Add pre-req header checks for linux/ipmi.h.
