@@ -5,6 +5,9 @@
 
 	* ipmimonitoring/ipmimonitoring.8.in: Reword some text.
 
+	* ipmipower/ipmipower8.in, ipmiconsole/ipmiconsole.8.in: Update
+	some text.
+
 2007-04-25  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Add pre-req header checks for linux/ipmi.h.

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.59 2007-04-20 05:12:11 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.60 2007-04-26 21:37:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -740,7 +740,7 @@ left in
 for debugging purposes:
 
 .IP o 2
-Command line arguments are not cleared from memory.
+Sensitive command line arguments are not cleared from memory.
 .IP o
 Core dumps are enabled.
 .IP o

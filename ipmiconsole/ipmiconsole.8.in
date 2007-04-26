@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.11 2007-04-26 21:28:23 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.12 2007-04-26 21:37:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -220,13 +220,8 @@ other users when using the
 command or looking in the /proc file system.  The most secure solution
 is to leave the username and password in the 
 .B Ipmiconsole
-configuration file.
-
-By default, 
-.B ipmiconsole
-locks sensitive information (such as usernames and passwords) into memory.
-By default, a user may not have enough lockable memory and should increase
-their process limit. 
+configuration file.  Passwords and K_g keys can
+also be inputted via a prompt via the -P and -K options.
 
 .if @WITH_DEBUG@ \{
 
@@ -239,7 +234,7 @@ left in
 for debugging purposes:
 
 .IP o 2
-Command line arguments are not cleared from memory.
+Sensitive command line arguments are not cleared from memory.
 .IP o
 Core dumps are enabled.
 
