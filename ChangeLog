@@ -5,8 +5,12 @@
 
 	* ipmimonitoring/ipmimonitoring.8.in: Reword some text.
 
-	* ipmipower/ipmipower8.in, ipmiconsole/ipmiconsole.8.in: Update
-	some text.
+	* ipmipower/ipmipower8.in, ipmiconsole/ipmiconsole.8.in,
+	ipmimonitoring/libipmimonitoring.3.in: Update some text.
+
+	* ac_ipmi_monitoring_sensor_config_file.m4: Fix filename typo.
+
+	* doc/freeipmi-faq.texi: Fix some wording.
 
 2007-04-25  Albert Chu <chu11@llnl.gov>
 

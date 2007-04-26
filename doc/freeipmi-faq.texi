@@ -174,31 +174,87 @@ In our eyes, there are several reasons why GNU FreeIPMI is particularly special.
 
 1) Support for HPC
 
-FreeIPMI is used for LLNL Linux clusters, thus a number of HPC aspects
-have been added to the tools and/or are supported by other HPC
-software.
+A number of HPC aspects have been added to the tools and/or are
+supported by other HPC software.
 
 Ipmipower is capable of scaling to large nodes for cluster support.
-It is supported by Powerman (http://sourceforge.net/projects/powerman)
+It is supported by Powerman (@uref{http://sourceforge.net/projects/powerman})
 for scalable power management.  At LLNL, in conjunction with Powerman,
 ipmipower is used for power control on clusters ranging from sizes of
 4 to 1152.  It is capable of power controlling all of the nodes in the
 largest clusters in under a second.
 
-Libipmiconsole is capable of setting up and maintaining SOL
-connections to a large number of nodes simultaneously.  Ipmiconsole is
-currently supported by Conman (http://home.gna.org/conman/) for
-scalable console management.
+Ipmiconsole is currently supported by Conman
+(@uref{http://home.gna.org/conman/}) for scalable console management.  Native
+support of IPMI via libipmiconsole is slated for future support in
+Conman.
 
-Hostranged input and consolidated output is supported in ipmi-sensors,
-ipmi-sel, ipmi-raw, and bmc-info for scalable execution of these tools
-across a cluster in parallel.  Ipmidetect can be used to enhance the
-efficiency by eliminating those nodes in the cluster that have been
+Scalable parallel execution of ipmi-sensors, ipmi-sel, ipmi-raw, and
+bmc-info across a cluster is supported through hostranged input.
+
+@example
+# > bmc-info -h "pwopr[0-5]" -u XXX -p XXX -C
+----------------
+pwopr[0-1,5]
+----------------
+Device ID:         22
+Device Revision:   1
+Firmware Revision: 1.12
+                   [Device Available (normal operation)]
+IPMI Version:      2.0
+Additional Device Support:
+                   [Sensor Device]
+                   [SDR Repository Device]
+                   [SEL Device]
+                   [FRU Inventory Device]
+                   [Chassis Device]
+Manufacturer ID:   28C5h
+Product ID:        4h
+Aux Firmware Revision Info: 38420000h
+Channel Information:
+       Channel No: 1
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
+       Channel No: 5
+      Medium Type: Asynch. Serial/Modem (RS-232)
+    Protocol Type: IPMB-1.0
+----------------
+pwopr[2-4]
+----------------
+Device ID:         22
+Device Revision:   1
+Firmware Revision: 1.23
+                   [Device Available (normal operation)]
+IPMI Version:      2.0
+Additional Device Support:
+                   [Sensor Device]
+                   [SDR Repository Device]
+                   [SEL Device]
+                   [FRU Inventory Device]
+                   [Chassis Device]
+Manufacturer ID:   28C5h
+Product ID:        4h
+Aux Firmware Revision Info: 38420000h
+Channel Information:
+       Channel No: 1
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
+       Channel No: 5
+      Medium Type: Asynch. Serial/Modem (RS-232)
+    Protocol Type: IPMB-1.0
+@end example
+
+In the above example, its clear to see that pwopr[2-4] has different
+firmware than pwopr[0-1,5].
+
+Ipmidetect can be used to enhance the efficiency of the hostranged
+input by eliminating those nodes in the cluster that have been
 temporarily removed for servicing.
 
 Ipmimonitoring is used for host monitoring IPMI based sensors on a
 cluster.  It is currently supported by Skummee
-(https://sourceforge.net/projects/skummee).
+(@uref{https://sourceforge.net/projects/skummee}) on LLNL clusters up
+to 1152 nodes in size.
 
 The bmc-config configuration file and command-line interface are used
 to easily copy the BMC configuration from one node to every other node

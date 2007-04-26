@@ -1,5 +1,5 @@
 \."############################################################################
-\."  $Id: libipmimonitoring.3.in,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+\."  $Id: libipmimonitoring.3.in,v 1.2 2007-04-26 23:42:26 chu11 Exp $
 \."############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -66,16 +66,16 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .br
 .SH DESCRIPTION
 The ipmimonitoring library allows users to get IPMI sensor readings
-both in-band and out-of-band.  In addition, the sensor readings are
-interpreted into NOMINAL, WARNING, or CRITICAL states, so that
-monitoring software may take appropriate actions dependent on the
-sensor readings.
+both in-band and out-of-band via a high level iterator interface.  In
+addition, the sensor readings are interpreted into NOMINAL, WARNING,
+or CRITICAL states, so that monitoring software may take appropriate
+actions dependent on the sensor readings.
 
 In order to improve efficiency, SDR data will be cached on the host in
 @IPMI_MONITORING_SDR_CACHE_DIR@.
 
 Interpretation rules have not been written for all sensors yet.  If
-sensor interpretation rules are needed, please contact the authors
+sensor interpretation rules are needed, please contact the author
 listed below.
 
 .SH STATE CONFIGURATION 
@@ -84,7 +84,7 @@ file stored at @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  Various
 states returnable by IPMI based sensors can be assigned NOMINAL,
 WARNING, or CRITICAL states to be returned by the libipmimonitoring
 library.  If multiple states are triggered on a sensor reading, the
-more sever state is returned to the user.
+more severe state is returned to the user.
 
 .SH FILES
 @IPMI_MONITORING_SDR_CACHE_DIR@

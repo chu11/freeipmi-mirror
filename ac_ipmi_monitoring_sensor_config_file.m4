@@ -1,10 +1,10 @@
 ##*****************************************************************************
-## $Id: ac_ipmi_monitoring_sensor_config_file.m4,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+## $Id: ac_ipmi_monitoring_sensor_config_file.m4,v 1.2 2007-04-26 23:42:26 chu11 Exp $
 ##*****************************************************************************
 
 AC_DEFUN([AC_IPMI_MONITORING_SENSOR_CONFIG_FILE],
 [
-  IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT=/etc/ipmi_monitoring_sensor.conf
+  IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT=/etc/ipmi_monitoring_sensors.conf
 
   AC_MSG_CHECKING([for ipmi_monitoring_sensor config file default path])
   AC_ARG_WITH([ipmi-monitoring-sensor-config-file],
