@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.5 2007-03-31 04:03:06 chu11 Exp $
+ *  $Id: ipmiconsole_config.h,v 1.6 2007-04-26 03:23:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,17 +62,17 @@ struct ipmiconsole_config
   int intel_2_0_session;
   int supermicro_2_0_session;
 
-  int hostname_set;
-  int username_set;
-  int password_set;
-  int k_g_set;
-  int privilege_set;
-  int cipher_suite_id_set;
-  int dont_steal_set;
-  int deactivate_set;
-  int lock_memory_set;
-  int intel_2_0_session_set;
-  int supermicro_2_0_session_set;
+  int hostname_set_on_cmdline;
+  int username_set_on_cmdline;
+  int password_set_on_cmdline;
+  int k_g_set_on_cmdline;
+  int privilege_set_on_cmdline;
+  int cipher_suite_id_set_on_cmdline;
+  int dont_steal_set_on_cmdline;
+  int deactivate_set_on_cmdline;
+  int lock_memory_set_on_cmdline;
+  int intel_2_0_session_set_on_cmdline;
+  int supermicro_2_0_session_set_on_cmdline;
 };
 
 void ipmiconsole_config_setup(int argc, char **argv);

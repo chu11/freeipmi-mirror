@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.9 2007-03-31 04:03:06 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.10 2007-04-26 03:23:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -175,13 +175,13 @@ _cmdline_parse(int argc, char **argv)
           if (strlen(optarg) > MAXHOSTNAMELEN)
             err_exit("Command Line Error: hostname too long");
           strcpy(conf->hostname, optarg);
-          conf->hostname_set++;
+          conf->hostname_set_on_cmdline++;
           break;
         case 'u':       /* --username */
           if (strlen(optarg) > IPMI_MAX_USER_NAME_LENGTH)
             err_exit("Command Line Error: username too long");
           strcpy(conf->username, optarg);
-          conf->username_set++;
+          conf->username_set_on_cmdline++;
           if (optarg)
             {
               int n;
@@ -193,7 +193,7 @@ _cmdline_parse(int argc, char **argv)
           if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(conf->password, optarg);
-          conf->password_set++;
+          conf->password_set_on_cmdline++;
           if (optarg)
             {
               int n;
@@ -207,13 +207,13 @@ _cmdline_parse(int argc, char **argv)
           if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("password too long");
           strcpy(conf->password, pw);
-          conf->password_set++;
+          conf->password_set_on_cmdline++;
           break;
         case 'k':       /* --k-g */
           if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
-          conf->k_g_set++;
+          conf->k_g_set_on_cmdline++;
           if (optarg)
             {
               int n;
@@ -227,7 +227,7 @@ _cmdline_parse(int argc, char **argv)
           if (strlen(kg) > IPMI_MAX_K_G_LENGTH)
             err_exit("K_g too long");
           strcpy(conf->k_g, kg);
-          conf->k_g_set++;
+          conf->k_g_set_on_cmdline++;
           break;
 	case 'l':	/* --privilege */
 	  if (!strcasecmp(optarg, "user"))
@@ -239,7 +239,7 @@ _cmdline_parse(int argc, char **argv)
 	    conf->privilege = IPMICONSOLE_PRIVILEGE_ADMIN;
 	  else
 	    err_exit("Command Line Error: Invalid privilege level");
-	  conf->privilege_set++;
+	  conf->privilege_set_on_cmdline++;
 	  break;
 	case 'c':	/* --cipher-suite-id */
           conf->cipher_suite_id = strtol(optarg, &ptr, 10);
@@ -248,7 +248,7 @@ _cmdline_parse(int argc, char **argv)
 	  if (conf->cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
 	      || conf->cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
             err_exit("Command Line Error: cipher suite id invalid\n");
-          conf->cipher_suite_id_set++;
+          conf->cipher_suite_id_set_on_cmdline++;
 	  break;
 	case 'C':	/* --config-file */
 	  if (!(conf->config_file = strdup(optarg)))
@@ -256,23 +256,23 @@ _cmdline_parse(int argc, char **argv)
 	  break;
         case 'N':       /* --dont-steal */
           conf->dont_steal++;
-          conf->dont_steal_set++;
+          conf->dont_steal_set_on_cmdline++;
           break;
         case 'T':       /* --deactivate */
           conf->deactivate++;
-          conf->deactivate_set++;
+          conf->deactivate_set_on_cmdline++;
           break;
         case 'L':       /* --lock-memory */
           conf->lock_memory++;
-          conf->lock_memory_set++;
+          conf->lock_memory_set_on_cmdline++;
           break;
         case 'I':       /* --intel-2-0-session */
           conf->intel_2_0_session++;
-          conf->intel_2_0_session_set++;
+          conf->intel_2_0_session_set_on_cmdline++;
           break;
         case 'S':       /* --supermicro-2-0-session */
           conf->supermicro_2_0_session++;
-          conf->supermicro_2_0_session_set++;
+          conf->supermicro_2_0_session_set_on_cmdline++;
           break;
 #ifndef NDEBUG
         case 'D':	/* --debug */
@@ -305,7 +305,7 @@ _cb_hostname(conffile_t cf,
 	     void *app_ptr,
 	     int app_data)
 {
-  if (conf->hostname_set)
+  if (conf->hostname_set_on_cmdline)
     return 0;
 
   if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
@@ -325,7 +325,7 @@ _cb_username(conffile_t cf,
 	     void *app_ptr,
 	     int app_data)
 {
-  if (conf->username_set)
+  if (conf->username_set_on_cmdline)
     return 0;
 
   if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
@@ -345,7 +345,7 @@ _cb_password(conffile_t cf,
 	     void *app_ptr,
 	     int app_data)
 {
-  if (conf->password_set)
+  if (conf->password_set_on_cmdline)
     return 0;
 
   if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -365,7 +365,7 @@ _cb_k_g(conffile_t cf,
 	void *app_ptr,
 	int app_data)
 {
-  if (conf->k_g_set)
+  if (conf->k_g_set_on_cmdline)
     return 0;
 
   if (strlen(data->string) > IPMI_MAX_K_G_LENGTH)
@@ -385,7 +385,7 @@ _cb_privilege(conffile_t cf,
 		    void *app_ptr,
 		    int app_data)
 {
-  if (conf->privilege_set)
+  if (conf->privilege_set_on_cmdline)
     return 0;
 
   if (!strcasecmp(data->string, "user"))
@@ -410,7 +410,7 @@ _cb_cipher_suite_id(conffile_t cf,
 		    void *app_ptr, 
 		    int app_data)
 {
-  if (conf->cipher_suite_id_set)
+  if (conf->cipher_suite_id_set_on_cmdline)
     return 0;
 
   conf->cipher_suite_id = data->intval;
@@ -537,7 +537,7 @@ _config_file_parse(void)
         0, 
         &dont_steal_flag, 
         &(conf->dont_steal),
-        conf->dont_steal_set
+        conf->dont_steal_set_on_cmdline
       },
       {
         "lock-memory", 
@@ -548,7 +548,7 @@ _config_file_parse(void)
         0, 
         &lock_memory_flag, 
         &(conf->lock_memory),
-        conf->lock_memory_set
+        conf->lock_memory_set_on_cmdline
       },
       {
         "intel_2_0_session", 
@@ -559,7 +559,7 @@ _config_file_parse(void)
         0, 
         &intel_2_0_session_flag, 
         &(conf->intel_2_0_session),
-        conf->intel_2_0_session_set
+        conf->intel_2_0_session_set_on_cmdline
       },
       {
         "supermicro_2_0_session", 
@@ -570,7 +570,7 @@ _config_file_parse(void)
         0, 
         &supermicro_2_0_session_flag, 
         &(conf->supermicro_2_0_session),
-        conf->supermicro_2_0_session_set
+        conf->supermicro_2_0_session_set_on_cmdline
       },
     };
   conffile_t cf = NULL;

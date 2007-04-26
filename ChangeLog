@@ -1,6 +1,14 @@
 2007-04-25  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Add pre-req header checks for linux/ipmi.h.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_config.c,
+	ipmipower/src/ipmipower.c: Change '_set' parameters to
+	'_set_on_cmdline'.
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.h,
+	ipmiconsole/src/ipmiconsole/ipmiconsole_config.c: Change '_set'
+	parameters to '_set_on_cmdline'.
 	
 2007-04-24  Albert Chu <chu11@llnl.gov>
 

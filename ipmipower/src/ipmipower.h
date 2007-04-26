@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.67 2007-03-29 16:36:03 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.68 2007-04-26 03:23:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -590,28 +590,28 @@ struct ipmipower_config
   int                      ping_consec_count;
 
   /* Flags indicating if option was set on the command line */
-  ipmipower_bool_t         hosts_set;
-  ipmipower_bool_t         username_set;
-  ipmipower_bool_t         password_set;
-  ipmipower_bool_t         k_g_set;
-  ipmipower_bool_t         authentication_type_set;
-  ipmipower_bool_t         privilege_set;
-  ipmipower_bool_t         ipmi_version_set;
-  ipmipower_bool_t         cipher_suite_id_set;
-  ipmipower_bool_t         on_if_off_set;
-  ipmipower_bool_t         wait_until_on_set;
-  ipmipower_bool_t         wait_until_off_set;
-  ipmipower_bool_t         workaround_flags_set;
-  ipmipower_bool_t         outputtype_set;
-  ipmipower_bool_t         timeout_len_set;
-  ipmipower_bool_t         retry_timeout_len_set;
-  ipmipower_bool_t         retry_wait_timeout_len_set;
-  ipmipower_bool_t         retry_backoff_count_set;
-  ipmipower_bool_t         ping_interval_len_set;
-  ipmipower_bool_t         ping_timeout_len_set; 
-  ipmipower_bool_t         ping_consec_count_set;
-  ipmipower_bool_t         ping_packet_count_set;
-  ipmipower_bool_t         ping_percent_set;
+  ipmipower_bool_t         hosts_set_on_cmdline;
+  ipmipower_bool_t         username_set_on_cmdline;
+  ipmipower_bool_t         password_set_on_cmdline;
+  ipmipower_bool_t         k_g_set_on_cmdline;
+  ipmipower_bool_t         authentication_type_set_on_cmdline;
+  ipmipower_bool_t         privilege_set_on_cmdline;
+  ipmipower_bool_t         ipmi_version_set_on_cmdline;
+  ipmipower_bool_t         cipher_suite_id_set_on_cmdline;
+  ipmipower_bool_t         on_if_off_set_on_cmdline;
+  ipmipower_bool_t         wait_until_on_set_on_cmdline;
+  ipmipower_bool_t         wait_until_off_set_on_cmdline;
+  ipmipower_bool_t         workaround_flags_set_on_cmdline;
+  ipmipower_bool_t         outputtype_set_on_cmdline;
+  ipmipower_bool_t         timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retry_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retry_wait_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retry_backoff_count_set_on_cmdline;
+  ipmipower_bool_t         ping_interval_len_set_on_cmdline;
+  ipmipower_bool_t         ping_timeout_len_set_on_cmdline; 
+  ipmipower_bool_t         ping_consec_count_set_on_cmdline;
+  ipmipower_bool_t         ping_packet_count_set_on_cmdline;
+  ipmipower_bool_t         ping_percent_set_on_cmdline;
 };
 
 typedef struct ipmipower_powercmd *ipmipower_powercmd_t;
