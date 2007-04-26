@@ -12,6 +12,10 @@
 
 	* doc/freeipmi-faq.texi: Fix some wording.
 
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(_cmdline_parse, main): Don't clear all args, just the username
+	and password.
+
 2007-04-25  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Add pre-req header checks for linux/ipmi.h.

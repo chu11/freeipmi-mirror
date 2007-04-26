@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.2 2007-02-16 20:23:31 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.3 2007-04-26 23:50:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -173,12 +173,24 @@ _cmdline_parse(int argc, char **argv)
             err_exit("Command Line Error: username too long");
           strcpy(username, optarg);
           conf.username = username;
+         if (optarg)
+           {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'p':       /* --password */
           if (strlen(optarg) > IPMI_1_5_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(password, optarg);
           conf.password = password;
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
           break;
         case 'P':       /* --password-prompt */
           if (!(pw = getpass("Password: ")))
@@ -289,12 +301,6 @@ main(int argc, char **argv)
   _config_init();
   _secure_initialization();
   _cmdline_parse(argc, argv);
-
-#ifdef NDEBUG
-  /* Clear out argv data for security purposes on ps(1). */
-  for (i = 1; i < argc; i++)
-    memset(argv[i], '\0', strlen(argv[i]));
-#endif /* NDEBUG */
 
   if (ipmi_monitoring_init(flags, &errnum) < 0)
     {
