@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.2 2007-04-26 21:28:23 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -66,7 +66,7 @@ Output help menu and exit.
 .TP
 .I "-V, --version"
 Output version and exit.
-.if @MANPAGE_DEBUG@ \{
+.if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
 Turn on debugging.
@@ -76,7 +76,7 @@ Turn on packet dumps for debugging.
 \}
 .LP
 
-.if @MANPAGE_DEBUG@ \{
+.if @WITH_DEBUG@ \{
 .SH "KNOWN ISSUES"
 This version of ipmimonitoring was compiled with debugging.  When compiled
 with debugging,
