@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.60 2007-04-26 21:37:12 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.61 2007-04-26 21:39:47 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -715,7 +715,8 @@ command or looking in the /proc file system.  The most secure solution
 is to enter the username and password while in interactive mode.  If
 administrators do not wish to type in their username and password at
 the interactive prompt, they can be listed in a configuration file, in
-which the access to this file can be limited.
+which the access to this file can be limited.  Passwords and K_g keys
+can also be inputted via a prompt via the -P and -K options.
 
 IPMI specifications do not require BMCs to perform a power control
 operation before returning a completion code to the caller.
