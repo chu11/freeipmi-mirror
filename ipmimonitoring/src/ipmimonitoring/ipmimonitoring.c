@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.4 2007-04-27 03:08:29 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.5 2007-04-27 03:21:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -72,6 +72,7 @@ static struct ipmi_monitoring_ipmi_config conf;
 static char *username = NULL;
 static char *password = NULL;
 static int flags = 0;
+static int regenerate_sdr_cache;
 static int buffer_hostrange_output;
 static int consolidate_hostrange_output;
 static int fanout;
@@ -88,6 +89,8 @@ _config_init(void)
   conf.retransmission_timeout_len = -1;
   conf.retransmission_backoff_count = -1;
   conf.workaround_flags = 0;
+
+  regenerate_sdr_cache = 0;
   buffer_hostrange_output = 0;
   consolidate_hostrange_output = 0;
   fanout = 0;
@@ -103,7 +106,7 @@ _usage(void)
           "-h --hostname str            Hostname(s)\n"
           "-u --username name           Username\n"
           "-p --password pw             Password\n"
-          "-P                           Prompt for Password\n"
+          "-P --password-prompt         Prompt for Password\n"
           "-l --privilege-level str     Privilege Level (user, operator, admin)\n"
           "-a --authentication-type str Authentication Type (none, straight_password, md2, md5)\n"
           "-B --buffer-output           Buffer hostranged output\n"
@@ -136,21 +139,22 @@ _cmdline_parse(int argc, char **argv)
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
     {
-      {"help",                0, NULL, 'H'},
-      {"version",             0, NULL, 'V'},
-      {"hostname",            1, NULL, 'h'},
-      {"username",            1, NULL, 'u'},
-      {"password",            1, NULL, 'p'},
-      {"password-prompt",     1, NULL, 'P'},
-      {"privilege-level",     1, NULL, 'l'},
-      {"authentication-type", 1, NULL, 'a'},
-      {"buffer-output",       0, NULL, 'B'},
-      {"consolidate-output",  0, NULL, 'C'},
-      {"fanout",              1, NULL, 'F'},
-      {"eliminate",           0, NULL, 'E'},
+      {"help",                 0, NULL, 'H'},
+      {"version",              0, NULL, 'V'},
+      {"hostname",             1, NULL, 'h'},
+      {"username",             1, NULL, 'u'},
+      {"password",             1, NULL, 'p'},
+      {"password-prompt",      1, NULL, 'P'},
+      {"privilege-level",      1, NULL, 'l'},
+      {"authentication-type",  1, NULL, 'a'},
+      {"regenerate-sdr-cache", 0, NULL, 'r'},
+      {"buffer-output",        0, NULL, 'B'},
+      {"consolidate-output",   0, NULL, 'C'},
+      {"fanout",               1, NULL, 'F'},
+      {"eliminate",            0, NULL, 'E'},
 #ifndef NDEBUG
-      {"debug",               0, NULL, 'D'},
-      {"debugdump",           0, NULL, 'E'},
+      {"debug",                0, NULL, 'D'},
+      {"debugdump",            0, NULL, 'E'},
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -159,7 +163,7 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:BCF:E");
+  strcat(options, "HVh:u:p:Pl:a:rBCF:E");
 #ifndef NDEBUG
   strcat(options, "DG");
 #endif /* NDEBUG */
@@ -241,6 +245,9 @@ _cmdline_parse(int argc, char **argv)
             conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
           else
             err_exit("Command Line Error: Invalid authentication type");
+          break;
+        case 'r':
+          regenerate_sdr_cache++;
           break;
         case 'B':
           buffer_hostrange_output++;
@@ -332,6 +339,7 @@ _ipmimonitoring(pstdout_state_t pstate,
   ipmi_monitoring_ctx_t c = NULL;
   int i, num;
   int exit_code;
+  unsigned int sensor_reading_flags;
 
   if (!(c = ipmi_monitoring_ctx_create()))
     {
@@ -340,10 +348,14 @@ _ipmimonitoring(pstdout_state_t pstate,
       goto cleanup;
     }
   
+  sensor_reading_flags = IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS;
+  if (regenerate_sdr_cache)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
+
   if ((num = ipmi_monitoring_sensor_readings_by_record_id(c,
 							  (hostname_set) ? hostname : NULL,
                                                           (hostname_set) ? &conf : NULL,
-							  IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS,
+							  sensor_reading_flags,
 							  NULL,
 							  0)) < 0)
     {

@@ -43,9 +43,8 @@ Chassis Config?
 
 ipmimonitoring:
 ---------------
-redo-cache option
 pick different cache dir
-test pstdout stuff
+pick specific sensors
 
 general:
 --------

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.4 2007-04-27 03:08:29 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.5 2007-04-27 03:21:51 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -61,6 +61,17 @@ privilege of "admin" is assumed.
 Specify the authentication mechanism to use.  The currently available
 authentication mechanisms are "none", "straight_password_key", "md2",
 and "md5".  If not specified, "md5" is assumed.
+.TP
+.I "-r, --regenerate-sdr-cache"
+By default 
+.B ipmimonitoring,
+caches the sensor data repository (SDR) of a node for quicker
+monitoring on subsequent executions of 
+.B ipmimonitoring.
+This option informs
+.B ipmimonitoring 
+to regenerate an SDR cache.  This is often used if the firmware for a
+remote node has been changed.
 .TP
 .I "-B, --buffer-output"
 Buffer hostranged output. Each node's standard output will output

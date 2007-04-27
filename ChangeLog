@@ -16,7 +16,8 @@
 	(_cmdline_parse, main): Don't clear all args, just the username
 	and password.
 
-	* ipmimonitoring/: Add hostrange output to ipmimonitoring.
+	* ipmimonitoring/: Add hostrange support to ipmimonitoring.  Add
+	-r option.
 
 2007-04-25  Albert Chu <chu11@llnl.gov>
 
