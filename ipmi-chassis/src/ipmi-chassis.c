@@ -273,9 +273,6 @@ main (int argc, char **argv)
   ipmi_chassis_prog_data_t prog_data;
   struct ipmi_chassis_arguments cmd_args;
   int exit_code;
-#ifdef NDEBUG
-  int i;
-#endif /* NDEBUG */
   
   ipmi_disable_coredump();
   

@@ -685,9 +685,6 @@ main (int argc, char **argv)
   ipmi_pef_prog_data_t prog_data;
   struct ipmi_pef_arguments cmd_args;
   int exit_code;
-#ifdef NDEBUG
-  int i;
-#endif /* NDEBUG */
   
   ipmi_disable_coredump();
 

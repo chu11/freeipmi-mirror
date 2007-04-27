@@ -537,9 +537,6 @@ main (int argc, char **argv)
   struct ipmi_sel_arguments cmd_args;
   int exit_code;
   int rv;
-#ifdef NDEBUG
-  int i;
-#endif /* NDEBUG */
 
   ipmi_disable_coredump();
 

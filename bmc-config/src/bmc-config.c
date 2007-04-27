@@ -217,9 +217,6 @@ main (int argc, char *argv[])
   bmc_config_prog_data_t prog_data;
   struct bmc_config_arguments cmd_args;
   int exit_code;
-#ifdef NDEBUG
-  int i;
-#endif /* NDEBUG */
 
   ipmi_disable_coredump();
 

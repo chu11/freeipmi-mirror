@@ -19,6 +19,8 @@
 	* ipmimonitoring/: Add hostrange support to ipmimonitoring.  Add
 	-r option.
 
+	* Fix various warnings.
+
 2007-04-25  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Add pre-req header checks for linux/ipmi.h.

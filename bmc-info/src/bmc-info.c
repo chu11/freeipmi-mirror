@@ -519,9 +519,6 @@ main (int argc, char **argv)
   struct bmc_info_arguments cmd_args;
   int exit_code;
   int rv;
-#ifdef NDEBUG
-  int i;
-#endif /* NDEBUG */
   
   ipmi_disable_coredump();
   
