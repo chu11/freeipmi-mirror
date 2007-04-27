@@ -16,6 +16,9 @@
 	* common/doc/argp-common-hostranged-text.man,
 	ipmimonitoring/ipmimonitoring.8.in: Add extra hostrange output
 	info.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd):
+	Check checksums before other stuff.
 	
 2007-04-26  Albert Chu <chu11@llnl.gov>
 
