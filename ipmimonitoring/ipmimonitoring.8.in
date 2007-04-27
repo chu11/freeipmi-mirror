@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.6 2007-04-27 03:22:49 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.7 2007-04-27 04:38:57 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -61,6 +61,9 @@ privilege of "admin" is assumed.
 Specify the authentication mechanism to use.  The currently available
 authentication mechanisms are "none", "straight_password_key", "md2",
 and "md5".  If not specified, "md5" is assumed.
+.TP
+.I "-c, --cache-dir dir"
+Specify an alternate directory to read and write SDR caches.
 .TP
 .I "-r, --regenerate-sdr-cache"
 By default 
