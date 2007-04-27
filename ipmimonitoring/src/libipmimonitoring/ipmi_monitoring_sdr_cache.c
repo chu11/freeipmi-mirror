@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.3 2007-04-27 03:08:29 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.4 2007-04-27 04:34:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -60,26 +60,36 @@
 #define IPMI_MONITORING_BYTES_TO_READ_START      16
 #define IPMI_MONITORING_BYTES_TO_READ_DECREMENT  4
 
+char sdr_cache_dir[MAXPATHLEN+1];
+int sdr_cache_dir_set = 0;
+
 static int
 _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
                                     const char *hostname,
                                     char *buf,
                                     unsigned int buflen)
 {
+  char *dir;
+
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(buf);
   assert(buflen);
 
+  if (sdr_cache_dir_set)
+    dir = sdr_cache_dir;
+  else
+    dir = IPMI_MONITORING_SDR_CACHE_DIRECTORY;
+
   memset(buf, '\0', buflen);
   if (hostname)
     snprintf(buf, buflen - 1, "%s/%s.%s", 
-             IPMI_MONITORING_SDR_CACHE_DIRECTORY,
+             dir,
              IPMI_MONITORING_SDR_CACHE_FILENAME,
              hostname);
   else
     snprintf(buf, buflen - 1, "%s/%s.%s", 
-             IPMI_MONITORING_SDR_CACHE_DIRECTORY,
+             dir,
              IPMI_MONITORING_SDR_CACHE_FILENAME, 
              IPMI_MONITORING_SDR_CACHE_INBAND);
 

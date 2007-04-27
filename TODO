@@ -43,7 +43,6 @@ Chassis Config?
 
 ipmimonitoring:
 ---------------
-pick different cache dir
 pick specific sensors
 
 general:

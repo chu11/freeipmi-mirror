@@ -17,7 +17,7 @@
 	and password.
 
 	* ipmimonitoring/: Add hostrange support to ipmimonitoring.  Add
-	-r option.
+	-r option.  Add -c option and alternate cache dir support.
 
 	* Fix various warnings.
 

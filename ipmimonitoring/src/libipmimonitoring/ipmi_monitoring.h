@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.4 2007-04-27 03:08:29 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.5 2007-04-27 04:34:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -520,6 +520,18 @@ typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
  * Returns 0 on success, -1 on error
  */
 int ipmi_monitoring_init(unsigned int flags, int *errnum);
+
+/* 
+ * ipmi_monitoring_sdr_cache_directory
+ *
+ * Initialize the ipmi monitoring library with a different SDR cache
+ * directory.  Threaded applications are responsible for calling this
+ * function before any thread may call another function in the
+ * library.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum);
 
 /* 
  * ipmi_monitoring_ctx_create

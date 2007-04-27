@@ -1,5 +1,5 @@
 \."############################################################################
-\."  $Id: libipmimonitoring.3.in,v 1.2 2007-04-26 23:42:26 chu11 Exp $
+\."  $Id: libipmimonitoring.3.in,v 1.3 2007-04-27 04:34:18 chu11 Exp $
 \."############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,6 +30,8 @@ libipmimonitoring \- a library for IPMI sensor monitoring
 .B #include <ipmi_monitoring.h>
 .sp
 .BI "int ipmi_monitoring_init(unsigned int debug_flags, int *errnum);"
+.sp
+.BI "int ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum);"
 .sp
 .BI "ipmi_monitoring_ctx_t ipmi_monitoring_ctx_create(void);"
 .sp

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.8 2007-04-27 03:08:29 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.9 2007-04-27 04:34:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,6 +33,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <sys/types.h>
+#include <sys/stat.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* !HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -79,6 +84,9 @@ static char *ipmi_monitoring_errmsgs[] =
 static int _ipmi_monitoring_initialized = 0;
 
 uint32_t _ipmi_monitoring_flags = 0;
+
+extern char sdr_cache_dir[MAXPATHLEN+1];
+extern int sdr_cache_dir_set;
 
 static void
 _init_ctx(ipmi_monitoring_ctx_t c)
@@ -202,6 +210,38 @@ ipmi_monitoring_init(unsigned int flags, int *errnum)
 
   _ipmi_monitoring_flags = flags;
   _ipmi_monitoring_initialized++;
+  if (errnum)
+    *errnum = IPMI_MONITORING_ERR_SUCCESS;
+  return 0;
+}
+
+int 
+ipmi_monitoring_sdr_cache_directory(char *dir, int *errnum)
+{
+  struct stat buf;
+
+  if (!dir || (strlen(dir) > MAXPATHLEN))
+    {
+      if (errnum)
+        *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (stat(dir, &buf) < 0)
+    {
+      if (errnum)
+        {
+          if (errno == EACCES || errno == EPERM)
+            *errnum = IPMI_MONITORING_ERR_PERMISSION;
+          else
+            *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+        }
+      return -1;
+    }
+
+  strncpy(sdr_cache_dir, dir, MAXPATHLEN);
+  sdr_cache_dir_set = 1;
+
   if (errnum)
     *errnum = IPMI_MONITORING_ERR_SUCCESS;
   return 0;

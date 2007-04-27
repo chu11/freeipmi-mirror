@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.5 2007-04-27 03:21:51 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.6 2007-04-27 04:34:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,6 +73,7 @@ static char *username = NULL;
 static char *password = NULL;
 static int flags = 0;
 static int regenerate_sdr_cache;
+static char *cache_dir;
 static int buffer_hostrange_output;
 static int consolidate_hostrange_output;
 static int fanout;
@@ -90,6 +91,7 @@ _config_init(void)
   conf.retransmission_backoff_count = -1;
   conf.workaround_flags = 0;
 
+  cache_dir = NULL;
   regenerate_sdr_cache = 0;
   buffer_hostrange_output = 0;
   consolidate_hostrange_output = 0;
@@ -101,22 +103,24 @@ static void
 _usage(void)
 {
   fprintf(stderr, "Usage: ipmimonitoring [OPTIONS]\n"
-          "-H --help                    Output Help\n"
-          "-V --version                 Output Version\n"
-          "-h --hostname str            Hostname(s)\n"
-          "-u --username name           Username\n"
-          "-p --password pw             Password\n"
-          "-P --password-prompt         Prompt for Password\n"
-          "-l --privilege-level str     Privilege Level (user, operator, admin)\n"
-          "-a --authentication-type str Authentication Type (none, straight_password, md2, md5)\n"
-          "-B --buffer-output           Buffer hostranged output\n"
-          "-C --consolidate-output      Consolidate hostranged output\n"
-          "-F --fanout num              Set multiple host fanout\n"
-          "-E --eliminate               Eliminate undetected nodes.\n");
+          "-H --help                     Output Help\n"
+          "-V --version                  Output Version\n"
+          "-h --hostname str             Hostname(s)\n"
+          "-u --username name            Username\n"
+          "-p --password pw              Password\n"
+          "-P --password-prompt          Prompt for Password\n"
+          "-l --privilege-level str      Privilege Level (user, operator, admin)\n"
+          "-a --authentication-type str  Authentication Type (none, straight_password, md2, md5)\n"
+          "-c --cache-dir str            Specify alternate SDR cache directory\n"
+          "-r --regenerate-sdr-cache str Regenerate SDR cache\n"
+          "-B --buffer-output            Buffer hostranged output\n"
+          "-C --consolidate-output       Consolidate hostranged output\n"
+          "-F --fanout num               Set multiple host fanout\n"
+          "-E --eliminate                Eliminate undetected nodes.\n");
 #ifndef NDEBUG
   fprintf(stderr,
-          "-D --debug                   Turn on debugging\n"
-          "-E --debugdump               Turn on packet dumps\n");
+          "-D --debug                    Turn on debugging\n"
+          "-E --debugdump                Turn on packet dumps\n");
 #endif /* NDEBUG */
   exit(0);
 }
@@ -147,6 +151,7 @@ _cmdline_parse(int argc, char **argv)
       {"password-prompt",      1, NULL, 'P'},
       {"privilege-level",      1, NULL, 'l'},
       {"authentication-type",  1, NULL, 'a'},
+      {"cache-dir",            1, NULL, 'c'},
       {"regenerate-sdr-cache", 0, NULL, 'r'},
       {"buffer-output",        0, NULL, 'B'},
       {"consolidate-output",   0, NULL, 'C'},
@@ -163,7 +168,7 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:rBCF:E");
+  strcat(options, "HVh:u:p:Pl:a:c:rBCF:E");
 #ifndef NDEBUG
   strcat(options, "DG");
 #endif /* NDEBUG */
@@ -245,6 +250,9 @@ _cmdline_parse(int argc, char **argv)
             conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
           else
             err_exit("Command Line Error: Invalid authentication type");
+          break;
+        case 'c':
+          cache_dir = optarg;
           break;
         case 'r':
           regenerate_sdr_cache++;
@@ -506,6 +514,15 @@ main(int argc, char **argv)
     {
       fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
       goto cleanup;
+    }
+
+  if (cache_dir)
+    {
+      if (ipmi_monitoring_sdr_cache_directory(cache_dir, &errnum) < 0)
+        {
+          fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
+          goto cleanup;
+        }
     }
   
   if (hostname)
