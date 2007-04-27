@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.c,v 1.2 2007-02-16 20:23:31 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.c,v 1.3 2007-04-27 16:20:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -187,6 +187,9 @@ ipmi_monitoring_outofband_dump(char *prefix,
         IPMI_MONITORING_DEBUG(("ipmi_obj_dump_perror: %s", strerror(errno)));
     }
 
+  /* On ipmi requests, this probably won't output authentication
+   * codes, b/c that is generated in the assemble-packet phase.
+   */
   if (obj_lan_session_hdr)
     {
       if (ipmi_obj_dump_perror(fd, prefix, lan_session_hdr, NULL, obj_lan_session_hdr) < 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.6 2007-04-27 04:34:18 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.7 2007-04-27 16:20:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -72,8 +72,9 @@ static struct ipmi_monitoring_ipmi_config conf;
 static char *username = NULL;
 static char *password = NULL;
 static int flags = 0;
-static int regenerate_sdr_cache;
 static char *cache_dir;
+static int regenerate_sdr_cache;
+static int quiet_readings;
 static int buffer_hostrange_output;
 static int consolidate_hostrange_output;
 static int fanout;
@@ -93,6 +94,7 @@ _config_init(void)
 
   cache_dir = NULL;
   regenerate_sdr_cache = 0;
+  quiet_readings = 0;
   buffer_hostrange_output = 0;
   consolidate_hostrange_output = 0;
   fanout = 0;
@@ -120,7 +122,7 @@ _usage(void)
 #ifndef NDEBUG
   fprintf(stderr,
           "-D --debug                    Turn on debugging\n"
-          "-E --debugdump                Turn on packet dumps\n");
+          "-G --debugdump                Turn on packet dumps\n");
 #endif /* NDEBUG */
   exit(0);
 }
@@ -153,6 +155,7 @@ _cmdline_parse(int argc, char **argv)
       {"authentication-type",  1, NULL, 'a'},
       {"cache-dir",            1, NULL, 'c'},
       {"regenerate-sdr-cache", 0, NULL, 'r'},
+      {"quiet-readings",       0, NULL, 'q'},
       {"buffer-output",        0, NULL, 'B'},
       {"consolidate-output",   0, NULL, 'C'},
       {"fanout",               1, NULL, 'F'},
@@ -168,7 +171,7 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:c:rBCF:E");
+  strcat(options, "HVh:u:p:Pl:a:c:rqBCF:E");
 #ifndef NDEBUG
   strcat(options, "DG");
 #endif /* NDEBUG */
@@ -256,6 +259,9 @@ _cmdline_parse(int argc, char **argv)
           break;
         case 'r':
           regenerate_sdr_cache++;
+          break;
+        case 'q':
+          quiet_readings++;
           break;
         case 'B':
           buffer_hostrange_output++;
@@ -439,43 +445,46 @@ _ipmimonitoring(pstdout_state_t pstate,
 	sensor_state_str = "";
 
       pstdout_printf(pstate,
-                     "%d: %s: [%s]: ", 
+                     "%d: %s: [%s]", 
                      record_id, 
                      sensor_name, 
                      sensor_state_str);
       
-      if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
-	pstdout_printf(pstate,
-                       "%s ", 
-                       (*((uint8_t *)sensor_reading) ? "true" : "false"));
-      else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
-	pstdout_printf(pstate,
-                       "%d ", 
-                       *((uint32_t *)sensor_reading));
-      else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
-	pstdout_printf(pstate,
-                       "%f ", 
-                       *((double *)sensor_reading));
-      else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
-	pstdout_printf(pstate,
-                       "0x%X ", 
-                       *((uint16_t *)sensor_reading));
-
-      if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
-	sensor_units_str = "C";
-      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
-	sensor_units_str = "F";
-      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
-	sensor_units_str = "V";
-      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
-	sensor_units_str = "A";
-      else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
-	sensor_units_str = "RPM";
-      else
-	sensor_units_str = "";
-      pstdout_printf(pstate,
-                     "%s", 
-                     sensor_units_str);
+      if (!quiet_readings)
+        {
+          if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
+            pstdout_printf(pstate,
+                           ": %s ", 
+                           (*((uint8_t *)sensor_reading) ? "true" : "false"));
+          else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
+            pstdout_printf(pstate,
+                           ": %d ", 
+                           *((uint32_t *)sensor_reading));
+          else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
+            pstdout_printf(pstate,
+                           ": %f ", 
+                           *((double *)sensor_reading));
+          else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
+            pstdout_printf(pstate,
+                           ": 0x%X ", 
+                           *((uint16_t *)sensor_reading));
+          
+          if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
+            sensor_units_str = "C";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
+            sensor_units_str = "F";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
+            sensor_units_str = "V";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
+            sensor_units_str = "A";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
+            sensor_units_str = "RPM";
+          else
+            sensor_units_str = "";
+          pstdout_printf(pstate,
+                         "%s", 
+                         sensor_units_str);
+        }
       pstdout_printf(pstate,
                      "\n");
     }

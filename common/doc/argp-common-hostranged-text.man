@@ -30,3 +30,7 @@ readable in many situations, it may be difficult to read in other
 situations. For example, output from multiple nodes may be mixed
 together.  The \fB\-B\fR and \fB\-C\fR options can be used to change
 this default.  
+.LP
+In-band IPMI Communication will be used when the host "localhost" is
+specified.  This allows the user to add the localhost into the
+hostranged output.

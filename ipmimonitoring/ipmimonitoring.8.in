@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.7 2007-04-27 04:38:57 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.8 2007-04-27 16:20:57 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,9 +33,10 @@ ipmimonitoring \- IPMI monitoring tool
 .B ipmimonitoring
 is an IPMI sensor monitoring tool that utilizes the libipmimonitoring
 library to interpret sensor readings rather than just report them.
-The library and tool are primarily used for host monitoring
-activities.  For more general sensor reading use, it is
-recommended that users use
+The tool will output if sensors are in Nominal, Warning, or Critical
+states.  The library and tool are primarily used for host monitoring
+activities.  For more general sensor reading use, it is recommended
+that users use
 .B ipmi-sensors(8).
 
 .SH "OPTIONS"
@@ -75,6 +76,12 @@ This option informs
 .B ipmimonitoring 
 to regenerate an SDR cache.  This is often used if the firmware for a
 remote node has been changed.
+.TP
+.I "-q, --quiet-readings"
+Do not output sensor reading values, only Nominal, Warning, or
+Critical states.  This option is particularly useful if you want to
+use hostranged output across a cluster and want to consolidate the
+output.
 .TP
 .I "-B, --buffer-output"
 Buffer hostranged output. Each node's standard output will output
@@ -158,6 +165,10 @@ readable in many situations, it may be difficult to read in other
 situations. For example, output from multiple nodes may be mixed
 together. The \fB\-B\fR and \fB\-C\fR options can be used to change
 this default.
+.LP
+In-band IPMI Communication will be used when the host "localhost" is
+specified.  This allows the user to add the localhost into the
+hostranged output.
 
 .if @WITH_DEBUG@ \{
 .SH "KNOWN ISSUES"

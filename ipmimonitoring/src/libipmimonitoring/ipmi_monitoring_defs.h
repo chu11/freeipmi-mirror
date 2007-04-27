@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.3 2007-03-09 02:28:27 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.4 2007-04-27 16:20:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,7 +106,7 @@
 #define IPMI_MONITORING_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER  1
 #define IPMI_MONITORING_SEQUENCE_NUMBER_WINDOW                8
 #define IPMI_MONITORING_PREVIOUSLY_RECEIVED_LIST_INIT         0xFF
-#define IPMI_MONITORING_SESSION_TIMEOUT_LENGTH_DEFAULT        60000
+#define IPMI_MONITORING_SESSION_TIMEOUT_LENGTH_DEFAULT        20000
 #define IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT 500
 #define IPMI_MONITORING_RETRANSMISSION_BACKOFF_COUNT_DEFAULT  2
 
@@ -119,9 +119,6 @@
 
 #define IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT              IPMI_PRIVILEGE_LEVEL_USER
 #define IPMI_MONITORING_AUTHENTICATION_TYPE_DEFAULT          IPMI_AUTHENTICATION_TYPE_MD5
-#define IPMI_MONITORING_SESSION_TIMEOUT_LEN_DEFAULT          60000 
-#define IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LEN_DEFAULT   500
-#define IPMI_MONITORING_RETRANSMISSION_BACKOFF_COUNT_DEFAULT 2
 
 #define IPMI_MONITORING_MAGIC         0xABCD9876
 

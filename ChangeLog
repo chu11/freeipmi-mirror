@@ -7,6 +7,11 @@
 	Output sensor names when they are available.
 
 	* ipmi-sensors/ipmi-sensors.8.pre.in: Update -s option info.
+
+	* ipmimonitoring/src/libipmimonitoring/: Bug fixes and code
+	cleanup.
+
+	* ipmimonitoring/: Support -q option in ipmimonitoring.
 	
 2007-04-26  Albert Chu <chu11@llnl.gov>
 

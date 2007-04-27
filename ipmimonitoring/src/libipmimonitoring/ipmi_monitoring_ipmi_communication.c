@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.2 2007-04-27 03:08:29 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3 2007-04-27 16:20:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -392,7 +392,7 @@ _check_authentication_code(ipmi_monitoring_ctx_t c, fiid_obj_t obj_cmd)
                                                        strlen(c->comm.password) ? c->comm.password : NULL,
                                                        strlen(c->comm.password))) < 0)
     {
-      IPMI_MONITORING_DEBUG(("ipmi_lan_check_checksum: %s", strerror(errno)));
+      IPMI_MONITORING_DEBUG(("ipmi_lan_check_session_authentication_code: %s", strerror(errno)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL;
       return -1;
     }
@@ -628,7 +628,7 @@ _send_get_channel_authentication_capabilities(ipmi_monitoring_ctx_t c)
                                  c->comm.obj_lan_msg_hdr_rq,
                                  c->comm.obj_get_channel_authentication_capabilities_rq,
                                  NULL);
-
+  
   if (ipmi_lan_sendto(c->comm.ipmi_fd, 
                       buf, 
                       buflen,
@@ -1158,10 +1158,10 @@ _activate_session(ipmi_monitoring_ctx_t c)
     {
       uint8_t comp_code;
 
-      if ((ret= _receive_response(c, c->comm.obj_activate_session_rs)) < 0)
+      if ((ret = _receive_response(c, c->comm.obj_activate_session_rs)) < 0)
         goto cleanup;
 
-      if (!rv)
+      if (!ret)
         {
           if (_send_activate_session(c) < 0)
             goto cleanup;
@@ -1177,27 +1177,27 @@ _activate_session(ipmi_monitoring_ctx_t c)
                                      c->comm.obj_activate_session_rs,
                                      c->comm.obj_lan_msg_trlr_rs);
 
-      if ((ret= _check_checksum(c, c->comm.obj_activate_session_rs)) < 0)
+      if ((ret = _check_checksum(c, c->comm.obj_activate_session_rs)) < 0)
         goto cleanup;
 
       if (!rv)
         goto continue_loop;
 
-      if ((ret= _check_authentication_code(c, c->comm.obj_activate_session_rs)) < 0)
+      if ((ret = _check_authentication_code(c, c->comm.obj_activate_session_rs)) < 0)
         goto cleanup;
 
       if (!rv)
         goto continue_loop;
 
-      if ((ret= _check_rq_seq(c)) < 0)
+      if ((ret = _check_rq_seq(c)) < 0)
         goto cleanup;
 
       if (!rv)
         goto continue_loop;
 
-      if ((ret= _check_completion_code(c, 
-                                       c->comm.obj_activate_session_rs,
-                                       &comp_code)) < 0)
+      if ((ret = _check_completion_code(c, 
+                                        c->comm.obj_activate_session_rs,
+                                        &comp_code)) < 0)
         goto cleanup;
       
       if (!rv)
@@ -1788,12 +1788,12 @@ _outofband_init(ipmi_monitoring_ctx_t c,
   if (config && config->session_timeout_len > 0)
     c->comm.session_timeout_len = config->session_timeout_len;
   else
-    c->comm.session_timeout_len = IPMI_MONITORING_SESSION_TIMEOUT_LEN_DEFAULT;
+    c->comm.session_timeout_len = IPMI_MONITORING_SESSION_TIMEOUT_LENGTH_DEFAULT;
 
   if (config && config->retransmission_timeout_len > 0)
     c->comm.retransmission_timeout_len = config->retransmission_timeout_len;
   else
-    c->comm.retransmission_timeout_len = IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LEN_DEFAULT;
+    c->comm.retransmission_timeout_len = IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
 
   if (config && config->retransmission_backoff_count > 0)
     c->comm.retransmission_backoff_count = config->retransmission_backoff_count;
