@@ -424,7 +424,7 @@ static int
 sensors_display_very_verbose_fru_dev_locator_record (ipmi_sensors_state_data_t *state_data,
                                                      int record_id, 
 						     int record_type, 
-						     sdr_logical_fru_device_locator_record_t *record, 
+						     sdr_fru_device_locator_record_t *record, 
 						     sensor_reading_t *sensor_reading)
 {
   pstdout_printf (state_data->pstate, 
@@ -554,7 +554,7 @@ sensors_display_very_verbose (ipmi_sensors_state_data_t *state_data,
       return sensors_display_very_verbose_fru_dev_locator_record (state_data,
                                                                   sdr_record->record_id, 
 								  sdr_record->record_type, 
-								  &(sdr_record->record.sdr_logical_fru_device_locator_record), 
+								  &(sdr_record->record.sdr_fru_device_locator_record), 
 								  sensor_reading);
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       return sensors_display_very_verbose_mgmt_cntrlr_dev_locator_record (state_data,

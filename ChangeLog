@@ -1,3 +1,11 @@
+2007-04-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipm/, common/src, ipmi-sel/, ipmi-sensors: Rename
+	"logical_fru" to "fru" for consistency with the ipmi spec.
+
+	* ipmi-sel/src/ipmi-sel-wrappers.c (_get_sel_system_event_record):
+	Output sensor names when they are available.
+	
 2007-04-26  Albert Chu <chu11@llnl.gov>
 
         * ipmimonitoring/ipmimonitoring.8.in, ipmidetect/ipmidetectd.8.in,

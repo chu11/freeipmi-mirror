@@ -918,17 +918,17 @@ _get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
 }
 
 static void 
-_get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data, 
-                                            uint32_t sdr_record_data_len,
-                                            sdr_logical_fru_device_locator_record_t *sdr_logical_fru_device_locator_record,
-                                            int debug)
+_get_sdr_fru_device_locator_record (uint8_t *sdr_record_data, 
+				    uint32_t sdr_record_data_len,
+				    sdr_fru_device_locator_record_t *sdr_fru_device_locator_record,
+				    int debug)
 {
   uint64_t val;
   fiid_obj_t obj = NULL;
 
-  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_logical_fru_device_locator_record);
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_fru_device_locator_record);
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_logical_fru_device_locator_record);
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_fru_device_locator_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
   
@@ -945,21 +945,21 @@ _get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
 #endif /* NDEBUG */
 
   FIID_OBJ_GET_CLEANUP (obj, "device_type", &val);
-  sdr_logical_fru_device_locator_record->device_type = val;
+  sdr_fru_device_locator_record->device_type = val;
   
   FIID_OBJ_GET_CLEANUP (obj, "device_type_modifier", &val);
-  sdr_logical_fru_device_locator_record->device_type_modifier = val;
+  sdr_fru_device_locator_record->device_type_modifier = val;
   
   FIID_OBJ_GET_CLEANUP (obj, "fru_entity_id", &val);
-  sdr_logical_fru_device_locator_record->fru_entity_id = val;
+  sdr_fru_device_locator_record->fru_entity_id = val;
   
   FIID_OBJ_GET_CLEANUP (obj, "fru_entity_instance", &val);
-  sdr_logical_fru_device_locator_record->fru_entity_instance = val;
+  sdr_fru_device_locator_record->fru_entity_instance = val;
   
-  memset(sdr_logical_fru_device_locator_record->device_name, '\0', 17);
+  memset(sdr_fru_device_locator_record->device_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
 			     "device_string",
-			     (uint8_t *)sdr_logical_fru_device_locator_record->device_name,
+			     (uint8_t *)sdr_fru_device_locator_record->device_name,
 			     17);
  
  cleanup:
@@ -1272,10 +1272,10 @@ _get_sdr_record (ipmi_device_t dev,
                                               debug);
       break;
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
-      _get_sdr_logical_fru_device_locator_record (sensor_record,
-                                                  sensor_record_len,
-                                                  &(sdr_record->record.sdr_logical_fru_device_locator_record),
-                                                  debug);
+      _get_sdr_fru_device_locator_record (sensor_record,
+					  sensor_record_len,
+					  &(sdr_record->record.sdr_fru_device_locator_record),
+					  debug);
       break;
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       _get_sdr_management_controller_device_locator_record (sensor_record,

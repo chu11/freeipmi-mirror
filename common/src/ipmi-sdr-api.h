@@ -130,7 +130,7 @@ struct sdr_generic_device_locator_record
 };
 typedef struct sdr_generic_device_locator_record sdr_generic_device_locator_record_t;
 
-struct sdr_logical_fru_device_locator_record
+struct sdr_fru_device_locator_record
 {
   uint8_t device_type;
   uint8_t device_type_modifier;
@@ -138,7 +138,7 @@ struct sdr_logical_fru_device_locator_record
   uint8_t fru_entity_instance;
   char device_name[IPMI_DEVICE_NAME_MAX];
 };
-typedef struct sdr_logical_fru_device_locator_record sdr_logical_fru_device_locator_record_t;
+typedef struct sdr_fru_device_locator_record sdr_fru_device_locator_record_t;
 
 struct sdr_management_controller_device_locator_record
 {
@@ -167,7 +167,7 @@ struct sdr_record
     sdr_event_only_record_t sdr_event_only_record;
     sdr_entity_association_record_t sdr_entity_association_record;
     sdr_generic_device_locator_record_t sdr_generic_device_locator_record;
-    sdr_logical_fru_device_locator_record_t sdr_logical_fru_device_locator_record;
+    sdr_fru_device_locator_record_t sdr_fru_device_locator_record;
     sdr_management_controller_device_locator_record_t sdr_management_controller_device_locator_record;
     sdr_oem_record_t sdr_oem_record;
   } record;

@@ -431,7 +431,7 @@ fiid_template_t tmpl_sdr_generic_device_locator_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_sdr_logical_fru_device_locator_record = 
+fiid_template_t tmpl_sdr_fru_device_locator_record = 
   {
     // SDR record header
     // --------------------

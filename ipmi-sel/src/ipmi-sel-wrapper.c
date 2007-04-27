@@ -167,9 +167,13 @@ _find_sdr_record(ipmi_sel_state_data_t *state_data,
   for (i = 0; i < state_data->sdr_record_count; i++)
     {
       sdr_record = state_data->sdr_record_list + i;
-      /* achu: It seems only threshold sensors can output Trigger data? */
-      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
-	  && sdr_record->record.sdr_full_record.sensor_number == sensor_number)
+      
+      if ((sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD 
+           && sdr_record->record.sdr_full_record.sensor_number == sensor_number)
+          || (sdr_record->record_type == IPMI_SDR_FORMAT_COMPACT_RECORD
+              && sdr_record->record.sdr_compact_record.sensor_number == sensor_number)
+          || (sdr_record->record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD
+              && sdr_record->record.sdr_event_only_record.sensor_number == sensor_number))
 	return sdr_record;
     }
 
@@ -214,7 +218,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
 
-  sdr_record_t *sdr_record;
+  sdr_record_t *sdr_record = NULL;
 
   assert(state_data);
   assert(record_data);
@@ -276,11 +280,38 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
     
     sel_record->timestamp = strdup (buffer);
   }
-  sel_record->sensor_info = NULL;
-  asprintf (&(sel_record->sensor_info), 
-	    "%s #%d", 
-	    ipmi_get_sensor_group (sensor_type), sensor_number);
 
+  sel_record->sensor_info = NULL;
+
+  sdr_record = _find_sdr_record(state_data, sensor_number);
+
+  if (sdr_record)
+    {
+      if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD) 
+        asprintf (&(sel_record->sensor_info), 
+                  "%s %s", 
+                  ipmi_get_sensor_group (sensor_type), 
+                  sdr_record->record.sdr_full_record.sensor_name);
+      else if (sdr_record->record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
+        asprintf (&(sel_record->sensor_info), 
+                  "%s %s", 
+                  ipmi_get_sensor_group (sensor_type), 
+                  sdr_record->record.sdr_compact_record.sensor_name);
+      else if (sdr_record->record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
+        asprintf (&(sel_record->sensor_info), 
+                  "%s %s", 
+                  ipmi_get_sensor_group (sensor_type), 
+                  sdr_record->record.sdr_event_only_record.sensor_name);
+      else
+        asprintf (&(sel_record->sensor_info), 
+                  "%s #%d", 
+                  ipmi_get_sensor_group (sensor_type), sensor_number);
+    }
+  else
+    asprintf (&(sel_record->sensor_info), 
+              "%s #%d", 
+              ipmi_get_sensor_group (sensor_type), sensor_number);
+  
   {
     char buffer[1024];
     int rv;
@@ -329,7 +360,7 @@ _get_sel_system_event_record (ipmi_sel_state_data_t *state_data,
 	  case IPMI_SEL_TRIGGER_READING:
 	    if (state_data->sdr_record_list 
 		&& state_data->sdr_record_count
-		&& (sdr_record = _find_sdr_record(state_data, sensor_number))
+		&& sdr_record 
 		&& sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD
 		&& sdr_record->record.sdr_full_record.event_reading_type_code == IPMI_SENSOR_CLASS_THRESHOLD)
 	      {

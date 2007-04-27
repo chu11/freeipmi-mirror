@@ -570,8 +570,8 @@ _read_sdr_generic_device_locator_record (char *cache_record,
 }
 
 static int 
-_read_sdr_logical_fru_device_locator_record (char *cache_record, 
-					     sdr_logical_fru_device_locator_record_t *record)
+_read_sdr_fru_device_locator_record (char *cache_record, 
+				     sdr_fru_device_locator_record_t *record)
 {
   int int_value = 0;
   char *string_value = NULL;
@@ -759,8 +759,8 @@ read_sdr_record (char *cache_record, sdr_record_t *record)
       return _read_sdr_generic_device_locator_record (cache_record, 
 						      &(record->record.sdr_generic_device_locator_record));
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
-      return _read_sdr_logical_fru_device_locator_record (cache_record, 
-							  &(record->record.sdr_logical_fru_device_locator_record));
+      return _read_sdr_fru_device_locator_record (cache_record, 
+						  &(record->record.sdr_fru_device_locator_record));
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       return _read_sdr_management_controller_device_locator_record (cache_record, 
 								    &(record->record.sdr_management_controller_device_locator_record));

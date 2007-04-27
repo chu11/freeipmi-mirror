@@ -225,8 +225,8 @@ _write_sdr_generic_device_locator_record (FILE *fp,
 }
 
 static int 
-_write_sdr_logical_fru_device_locator_record (FILE *fp, 
-					      sdr_logical_fru_device_locator_record_t *record)
+_write_sdr_fru_device_locator_record (FILE *fp, 
+				      sdr_fru_device_locator_record_t *record)
 {
   ERR_EINVAL (fp && record);
   
@@ -301,8 +301,8 @@ write_sdr_record (FILE *fp, sdr_record_t *record)
       return _write_sdr_generic_device_locator_record (fp, 
 						       &(record->record.sdr_generic_device_locator_record));
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
-      return _write_sdr_logical_fru_device_locator_record (fp, 
-							   &(record->record.sdr_logical_fru_device_locator_record));
+      return _write_sdr_fru_device_locator_record (fp, 
+						   &(record->record.sdr_fru_device_locator_record));
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       return _write_sdr_management_controller_device_locator_record (fp, 
 								     &(record->record.sdr_management_controller_device_locator_record));
