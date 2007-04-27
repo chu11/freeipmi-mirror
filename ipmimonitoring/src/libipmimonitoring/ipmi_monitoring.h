@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.3 2007-03-09 02:28:27 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.4 2007-04-27 03:08:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -564,7 +564,7 @@ char *ipmi_monitoring_ctx_strerror(int errnum);
  * Returns number of sensors values retrieved on success, -1 on error
  */
 int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
-                                                 char *hostname,
+                                                 const char *hostname,
                                                  struct ipmi_monitoring_ipmi_config *config,
                                                  unsigned int sensor_reading_flags,
                                                  unsigned int *record_ids,
@@ -582,7 +582,7 @@ int ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
  * Returns number of sensors values retrieved on success, -1 on error
  */
 int ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
-                                                    char *hostname,
+                                                    const char *hostname,
                                                     struct ipmi_monitoring_ipmi_config *config,
                                                     unsigned int sensor_reading_flags,
                                                     unsigned int *sensor_groups,

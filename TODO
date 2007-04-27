@@ -40,3 +40,14 @@ bmc-config:
 -----------
 Missing Serial Config
 Chassis Config?
+
+ipmimonitoring:
+---------------
+redo-cache option
+pick different cache dir
+test pstdout stuff
+
+general:
+--------
+fix warnings
+evaluate levi's patch

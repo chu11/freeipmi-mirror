@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.3 2007-04-26 23:50:27 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.4 2007-04-27 03:08:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,7 +57,9 @@
 
 #include <freeipmi/freeipmi.h>
 #include "ipmi_monitoring.h"
+#include "eliminate.h"
 #include "error.h"
+#include "pstdout.h"
 #include "secure.h"
 
 #ifndef MAXHOSTNAMELEN
@@ -70,6 +72,10 @@ static struct ipmi_monitoring_ipmi_config conf;
 static char *username = NULL;
 static char *password = NULL;
 static int flags = 0;
+static int buffer_hostrange_output;
+static int consolidate_hostrange_output;
+static int fanout;
+static int eliminate;
 
 static void
 _config_init(void)
@@ -82,6 +88,10 @@ _config_init(void)
   conf.retransmission_timeout_len = -1;
   conf.retransmission_backoff_count = -1;
   conf.workaround_flags = 0;
+  buffer_hostrange_output = 0;
+  consolidate_hostrange_output = 0;
+  fanout = 0;
+  eliminate = 0;
 }
 
 static void
@@ -90,12 +100,16 @@ _usage(void)
   fprintf(stderr, "Usage: ipmimonitoring [OPTIONS]\n"
           "-H --help                    Output Help\n"
           "-V --version                 Output Version\n"
-          "-h --hostname str            Hostname\n"
+          "-h --hostname str            Hostname(s)\n"
           "-u --username name           Username\n"
           "-p --password pw             Password\n"
           "-P                           Prompt for Password\n"
           "-l --privilege-level str     Privilege Level (user, operator, admin)\n"
-          "-a --authentication-type str Authentication Type (none, straight_password, md2, md5)\n");
+          "-a --authentication-type str Authentication Type (none, straight_password, md2, md5)\n"
+          "-B --buffer-output           Buffer hostranged output\n"
+          "-C --consolidate-output      Consolidate hostranged output\n"
+          "-F --fanout num              Set multiple host fanout\n"
+          "-E --eliminate               Eliminate undetected nodes.\n");
 #ifndef NDEBUG
   fprintf(stderr,
           "-D --debug                   Turn on debugging\n"
@@ -116,6 +130,7 @@ _cmdline_parse(int argc, char **argv)
 {
   char options[100];
   char *pw;
+  char *ptr;
   int c;
 
 #if HAVE_GETOPT_LONG
@@ -129,6 +144,10 @@ _cmdline_parse(int argc, char **argv)
       {"password-prompt",     1, NULL, 'P'},
       {"privilege-level",     1, NULL, 'l'},
       {"authentication-type", 1, NULL, 'a'},
+      {"buffer-output",       0, NULL, 'B'},
+      {"consolidate-output",  0, NULL, 'C'},
+      {"fanout",              1, NULL, 'F'},
+      {"eliminate",           0, NULL, 'E'},
 #ifndef NDEBUG
       {"debug",               0, NULL, 'D'},
       {"debugdump",           0, NULL, 'E'},
@@ -140,9 +159,9 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:");
+  strcat(options, "HVh:u:p:Pl:a:BCF:E");
 #ifndef NDEBUG
-  strcat(options, "DE");
+  strcat(options, "DG");
 #endif /* NDEBUG */
 
   /* turn off output messages */
@@ -223,11 +242,27 @@ _cmdline_parse(int argc, char **argv)
           else
             err_exit("Command Line Error: Invalid authentication type");
           break;
+        case 'B':
+          buffer_hostrange_output++;
+          break;
+        case 'C':
+          consolidate_hostrange_output++;
+          break;
+        case 'F':
+          fanout = strtol(optarg, &ptr, 10);
+          if ((ptr != (optarg + strlen(optarg)))
+              || (fanout < PSTDOUT_FANOUT_MIN)
+              || (fanout > PSTDOUT_FANOUT_MAX))
+            err_exit("Command Line Error: Invalid fanout");
+          break;
+        case 'E':
+          eliminate++;
+          break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
           flags |= IPMI_MONITORING_FLAGS_DEBUG_STDERR;
           break;
-        case 'E':       /* --debugdump */
+        case 'G':       /* --debugdump */
           flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
           break;
 #endif /* NDEBUG */
@@ -289,28 +324,19 @@ _secure_initialization(void)
     }
 }
 
-int
-main(int argc, char **argv)
+static int
+_ipmimonitoring(pstdout_state_t pstate,
+                const char *hostname,
+                void *arg)
 {
   ipmi_monitoring_ctx_t c = NULL;
-  int i, errnum, num, rv = 1;
+  int i, num;
+  int exit_code;
 
-  err_init(argv[0]);
-  err_set_flags(ERROR_STDOUT);
-
-  _config_init();
-  _secure_initialization();
-  _cmdline_parse(argc, argv);
-
-  if (ipmi_monitoring_init(flags, &errnum) < 0)
-    {
-      fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
-      goto cleanup;
-    }
-  
   if (!(c = ipmi_monitoring_ctx_create()))
     {
-      fprintf(stderr, "ipmi_monitoring_ctx_create: %s\n", strerror(errno));
+      pstdout_perror(pstate, "ipmi_monitoring_ctx_create:");
+      exit_code = EXIT_FAILURE;
       goto cleanup;
     }
   
@@ -321,7 +347,11 @@ main(int argc, char **argv)
 							  NULL,
 							  0)) < 0)
     {
-      fprintf(stderr, "ipmi_monitoring_sensor_readings_by_record_id: %s\n", ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "ipmi_monitoring_sensor_readings_by_record_id: %s\n",
+                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+      exit_code = EXIT_FAILURE;
       goto cleanup;
     }
     
@@ -334,27 +364,47 @@ main(int argc, char **argv)
 
       if ((record_id = ipmi_monitoring_iterator_record_id(c)) < 0)
 	{
-	  fprintf(stderr, "ipmi_monitoring_iterator_record_id: %s\n", ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+	  pstdout_fprintf(pstate, 
+                          stderr, 
+                          "ipmi_monitoring_iterator_record_id: %s\n", 
+                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+          exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
       if (!(sensor_name = ipmi_monitoring_iterator_sensor_name(c)))
 	{
-	  fprintf(stderr, "ipmi_monitoring_iterator_sensor_name: %s\n", ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+	  pstdout_fprintf(pstate, 
+                          stderr, 
+                          "ipmi_monitoring_iterator_sensor_name: %s\n", 
+                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+          exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
       if ((sensor_state = ipmi_monitoring_iterator_sensor_state(c)) < 0)
 	{
-	  fprintf(stderr, "ipmi_monitoring_iterator_sensor_state: %s\n", ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+	  pstdout_fprintf(pstate, 
+                          stderr, 
+                          "ipmi_monitoring_iterator_sensor_state: %s\n", 
+                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+          exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
       if ((sensor_units = ipmi_monitoring_iterator_sensor_units(c)) < 0)
 	{
-	  fprintf(stderr, "ipmi_monitoring_iterator_sensor_units: %s\n", ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+	  pstdout_fprintf(pstate, 
+                          stderr, 
+                          "ipmi_monitoring_iterator_sensor_units: %s\n", 
+                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+          exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
       if ((sensor_reading_type = ipmi_monitoring_iterator_sensor_reading_type(c)) < 0)
 	{
-	  fprintf(stderr, "ipmi_monitoring_iterator_sensor_reading_type: %s\n", ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+	  pstdout_fprintf(pstate, 
+                          stderr, 
+                          "ipmi_monitoring_iterator_sensor_reading_type: %s\n", 
+                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+          exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
       sensor_reading = ipmi_monitoring_iterator_sensor_reading(c);
@@ -368,16 +418,28 @@ main(int argc, char **argv)
       else
 	sensor_state_str = "";
 
-      printf("%d: %s: [%s]: ", record_id, sensor_name, sensor_state_str);
+      pstdout_printf(pstate,
+                     "%d: %s: [%s]: ", 
+                     record_id, 
+                     sensor_name, 
+                     sensor_state_str);
       
       if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
-	printf("%s ", (*((uint8_t *)sensor_reading) ? "true" : "false"));
+	pstdout_printf(pstate,
+                       "%s ", 
+                       (*((uint8_t *)sensor_reading) ? "true" : "false"));
       else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
-	printf("%d ", *((uint32_t *)sensor_reading));
+	pstdout_printf(pstate,
+                       "%d ", 
+                       *((uint32_t *)sensor_reading));
       else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
-	printf("%f ", *((double *)sensor_reading));
+	pstdout_printf(pstate,
+                       "%f ", 
+                       *((double *)sensor_reading));
       else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
-	printf("0x%X ", *((uint16_t *)sensor_reading));
+	pstdout_printf(pstate,
+                       "0x%X ", 
+                       *((uint16_t *)sensor_reading));
 
       if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
 	sensor_units_str = "C";
@@ -391,11 +453,117 @@ main(int argc, char **argv)
 	sensor_units_str = "RPM";
       else
 	sensor_units_str = "";
-      printf("%s", sensor_units_str);
-      printf("\n");
+      pstdout_printf(pstate,
+                     "%s", 
+                     sensor_units_str);
+      pstdout_printf(pstate,
+                     "\n");
     }
 
-  rv = 0;
+  exit_code = 0;
+ cleanup:
+  if (c)
+    ipmi_monitoring_ctx_destroy(c);
+  return exit_code;
+}
+
+int
+main(int argc, char **argv)
+{
+  int exit_code;
+  int errnum;
+  int rv;
+
+  err_init(argv[0]);
+  err_set_flags(ERROR_STDOUT);
+
+  _config_init();
+  _secure_initialization();
+  _cmdline_parse(argc, argv);
+
+  if (pstdout_init() < 0)
+    {
+      fprintf(stderr,
+              "pstdout_init: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
+  if (ipmi_monitoring_init(flags, &errnum) < 0)
+    {
+      fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
+      goto cleanup;
+    }
+  
+  if (hostname)
+    {
+      int count;
+
+      if ((count = pstdout_hostnames_count(hostname)) < 0)
+        {
+          fprintf(stderr,
+                  "pstdout_hostnames_count: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      if (count > 1)
+        {
+          unsigned int output_flags;
+
+          if (buffer_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else if (consolidate_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+
+          if (pstdout_set_output_flags(output_flags) < 0)
+            {
+              fprintf(stderr,
+                      "pstdout_set_output_flags: %s\n",
+                      pstdout_strerror(pstdout_errnum));
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+
+          if (fanout)
+            {
+              if (pstdout_set_fanout(fanout) < 0)
+                {
+                  fprintf(stderr,
+                          "pstdout_set_fanout: %s\n",
+                          pstdout_strerror(pstdout_errnum));
+                  exit_code = EXIT_FAILURE;
+                  goto cleanup;
+                }
+            }
+        }
+
+      if (eliminate)
+        {
+          if (eliminate_nodes(&hostname) < 0)
+            {
+              exit_code = EXIT_FAILURE;
+              goto cleanup;
+            }
+        }
+    }
+  
+  if ((rv = pstdout_launch(hostname,
+                           _ipmimonitoring,
+                           NULL)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  exit_code = rv;
  cleanup:
   if (username)
     {
@@ -415,7 +583,6 @@ main(int argc, char **argv)
     }
   if (hostname)
     free(hostname);
-  if (c)
-    ipmi_monitoring_ctx_destroy(c);
-  exit(rv);
+  return (exit_code);
 }
+

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.2 2007-04-27 03:08:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1714,7 +1714,7 @@ _socket_close(void *x)
 
 static int
 _outofband_init(ipmi_monitoring_ctx_t c, 
-                char *hostname,
+                const char *hostname,
                 struct ipmi_monitoring_ipmi_config *config)
 {
 #ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
@@ -1938,7 +1938,7 @@ _outofband_init(ipmi_monitoring_ctx_t c,
 
 int 
 ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
-                                        char *hostname,
+                                        const char *hostname,
                                         struct ipmi_monitoring_ipmi_config *config)
 {
 

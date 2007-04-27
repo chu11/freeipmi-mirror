@@ -189,8 +189,9 @@ Ipmiconsole is currently supported by Conman
 support of IPMI via libipmiconsole is slated for future support in
 Conman.
 
-Scalable parallel execution of ipmi-sensors, ipmi-sel, ipmi-raw, and
-bmc-info across a cluster is supported through hostranged input.
+Scalable parallel execution of ipmi-sensors, ipmi-sel, ipmi-raw,
+bmc-info, and ipmimonitoring across a cluster is supported through
+hostranged input and a library.
 
 @example
 # > bmc-info -h "pwopr[0-5]" -u XXX -p XXX -C

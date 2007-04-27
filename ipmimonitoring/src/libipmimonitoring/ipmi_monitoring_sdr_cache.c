@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.2 2007-04-16 22:28:25 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.3 2007-04-27 03:08:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,7 +62,7 @@
 
 static int
 _ipmi_monitoring_sdr_cache_filename(ipmi_monitoring_ctx_t c,
-                                    char *hostname,
+                                    const char *hostname,
                                     char *buf,
                                     unsigned int buflen)
 {
@@ -453,7 +453,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
      
 static int
 _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
-                                    char *hostname,
+                                    const char *hostname,
                                     char *filename)
 {
   uint8_t version;
@@ -534,7 +534,7 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
 
 static int
 _ipmi_monitoring_sdr_cache_delete(ipmi_monitoring_ctx_t c,
-                                  char *hostname,
+                                  const char *hostname,
                                   char *filename)
 {
   assert(c);
@@ -560,7 +560,7 @@ _ipmi_monitoring_sdr_cache_delete(ipmi_monitoring_ctx_t c,
 
 int
 ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
-                               char *hostname)
+                               const char *hostname)
 {
   char filename[MAXPATHLEN+1];
   
@@ -668,7 +668,7 @@ ipmi_monitoring_sdr_cache_unload(ipmi_monitoring_ctx_t c)
 
 int
 ipmi_monitoring_sdr_cache_flush(ipmi_monitoring_ctx_t c,
-                                char *hostname)
+                                const char *hostname)
 {
   char filename[MAXPATHLEN+1];
   
