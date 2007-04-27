@@ -35,7 +35,7 @@ List sensor groups
 List sensors from group
 .TP
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
-List given sensors
+List given sensors.  Accepts space or comma separated lists.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
 Use DIRECTORY for sensor cache
