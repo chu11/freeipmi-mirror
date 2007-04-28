@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.2 2007-04-27 04:34:18 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.3 2007-04-28 21:28:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -598,7 +598,9 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
     {
       if (errno == ENOENT)
         c->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST;
-      else if (errno == EISDIR
+      else if (errno == EPERM
+               || errno == EACCES
+               || errno == EISDIR
 	       || errno == EROFS)
 	c->errnum = IPMI_SDR_CACHE_ERR_PERMISSION;
       else if (errno == ENAMETOOLONG

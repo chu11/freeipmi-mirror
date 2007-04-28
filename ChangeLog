@@ -18,6 +18,9 @@
 	option. Add -C option for consolidated output like other tools.
 	Add -E option to eliminate undetected nodes. Fix conf file
 	inconsistencies.
+
+	* ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.c
+	(ipmi_sdr_cache_open): Fix errno corner case.
 	
 2007-04-27  Albert Chu <chu11@llnl.gov>
 
