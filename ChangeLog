@@ -1044,10 +1044,8 @@
 	* bmc-config/src/bmc-user-sections.c (enable_user_checkout):
 	Slightly alter logic.
 
-2006-09-05  Albert Chu <chu11@llnl.gov>
+2006-09-05  Ingo van Lil (inguin@gmx.de)
 	
-	Apply BMC config fixes from Ingo van Lil (inguin at gmx dot de)
-
 	* bmc-config/src/bmc-misc-section.c (bmc_misc_section_get): Set
 	flag to BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY.
 
@@ -1064,9 +1062,7 @@
 
 	Various compile warning fixes.
 
-2006-09-04  Albert Chu <chu11@llnl.gov>
-
-	Apply PEF configuration fixes from Ingo van Lil (inguin at gmx dot de)
+2006-09-04  Ingo van Lil (inguin@gmx.de)
 
 	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c: Fix
 	incorrect NetFNs.
