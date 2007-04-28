@@ -132,7 +132,6 @@ fi
 %files
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/AUTHORS
-%doc %{_datadir}/doc/%{name}/BUGS
 %doc %{_datadir}/doc/%{name}/COPYING
 %doc %{_datadir}/doc/%{name}/ChangeLog
 %doc %{_datadir}/doc/%{name}/ChangeLog.0
@@ -141,7 +140,6 @@ fi
 %doc %{_datadir}/doc/%{name}/README
 %doc %{_datadir}/doc/%{name}/THANKS
 %doc %{_datadir}/doc/%{name}/TODO
-%doc %{_datadir}/doc/%{name}/ipmi-over-ts2000.texi
 %doc %{_infodir}/*
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
