@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.63 2007-04-28 19:22:33 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.64 2007-04-28 19:25:52 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -245,7 +245,7 @@ Consolidate
 output.  Consolidated output can be used to shorten output if the
 number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
-their power control operation.
+their power control operation. See HOST RANGES below.
 .TP
 .I "-W, --workaround-flags str"
 Informs
@@ -538,6 +538,11 @@ Some examples of range usage follow:
 As a reminder to the reader, some shells will interpret brackets ([
 and ]) for pattern matching.  Depending on your shell, it may be
 necessary to enclose ranged lists within quotes.
+.LP
+By default, power control results will be output one to each
+line. Although this output is readable in many situations, it may be
+difficult to read in other situations. The \fB\-C\fR option can be
+used to change this default.
 .SH "EXAMPLES"
 .LP
 Determine the power status of foo[0-2] with null username and password
