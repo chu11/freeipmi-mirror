@@ -134,7 +134,7 @@ myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
 	  if (errno != EINTR)
 	    {
 	      close (fd);
-	      perror (prefix);
+	      /* perror (prefix); */
 	      return -1;
 	    }
 	}
@@ -145,7 +145,7 @@ myread (int fd, fipmiu8 *buf, size_t count, const char *prefix)
   if (r2 != count)
     {
       close (fd);
-      fprintf (stderr, "%s: Unexpected end of file\n", prefix);
+      /* fprintf (stderr, "%s: Unexpected end of file\n", prefix); */
       return -1;
     }
   
@@ -180,13 +180,13 @@ mem_chunk (size_t base, size_t len, const char *devmem)
   
   if ((fd = open (devmem, O_RDONLY)) == -1)
     {
-      perror (devmem);
+      /* perror (devmem); */
       return NULL;
     }
   
   if ((p = malloc (len)) == NULL)
     {
-      perror ("malloc");
+      /* perror ("malloc"); */
       return NULL;
     }
   
@@ -204,8 +204,8 @@ mem_chunk (size_t base, size_t len, const char *devmem)
   mmp = mmap (0, mmoffset + len, PROT_READ, MAP_SHARED, fd, base - mmoffset);
   if (mmp == ((void *) -1))
     {
-      fprintf (stderr, "%s: ", devmem);
-      perror ("mmap");
+      /* fprintf (stderr, "%s: ", devmem); */
+      /* perror ("mmap"); */
       free (p);
       return NULL;
     }
@@ -214,14 +214,14 @@ mem_chunk (size_t base, size_t len, const char *devmem)
   
   if (munmap (mmp, mmoffset + len) == -1)
     {
-      fprintf (stderr, "%s: ", devmem);
-      perror ("munmap");
+      /* fprintf (stderr, "%s: ", devmem); */
+      /* perror ("munmap"); */
     }
 #else /* HAVE_MMAP */
   if (lseek (fd, base, SEEK_SET) == -1)
     {
-      fprintf (stderr, "%s: ", devmem);
-      perror ("lseek");
+      /* fprintf (stderr, "%s: ", devmem); */
+      /* perror ("lseek"); */
       free (p);
       return NULL;
     }
@@ -234,7 +234,9 @@ mem_chunk (size_t base, size_t len, const char *devmem)
 #endif /* HAVE_MMAP */
   
   if (close (fd) == -1)
-    perror (devmem);
+    {
+      /* perror (devmem); */
+    }
   
   return p;
 }
@@ -431,7 +433,9 @@ ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type,  struct ipmi_loc
 	}
     }
   if (fclose (efi_systab) != 0)
-    perror (filename);
+    {
+      /* perror (filename); */
+    }
   if (fp == 0)
     {
       return -1;
