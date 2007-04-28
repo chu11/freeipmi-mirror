@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.70 2007-04-28 19:22:33 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.71 2007-04-28 20:06:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -49,6 +49,8 @@
 #include "hostlist.h"
 #include "cbuf.h"
 #include "list.h"
+
+#include "ipmidetect.h"
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
@@ -555,9 +557,7 @@ struct ipmipower_config
    */
   ipmipower_bool_t         k_g_configured;
   power_cmd_t              powercmd;
-#ifndef NDEBUG
   char                     configfile[MAXPATHLEN+1];
-#endif /* NDEBUG */
 
   authentication_type_t    authentication_type;
   privilege_type_t         privilege;
@@ -568,6 +568,7 @@ struct ipmipower_config
   ipmipower_bool_t         wait_until_off;
   ipmipower_bool_t         power_command_completed; /* for use with wait_until_X */
   ipmipower_bool_t         consolidate_output;
+  ipmipower_bool_t         eliminate;
   uint32_t                 workaround_flags;
 #ifndef NDEBUG
   ipmipower_bool_t         debug;
@@ -601,6 +602,7 @@ struct ipmipower_config
   ipmipower_bool_t         wait_until_off_set_on_cmdline;
   ipmipower_bool_t         workaround_flags_set_on_cmdline;
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
+  ipmipower_bool_t         eliminate_set_on_cmdline;
   ipmipower_bool_t         timeout_len_set_on_cmdline;
   ipmipower_bool_t         retry_timeout_len_set_on_cmdline;
   ipmipower_bool_t         retry_wait_timeout_len_set_on_cmdline;

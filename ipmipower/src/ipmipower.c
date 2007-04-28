@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.25 2007-04-26 03:23:59 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.26 2007-04-28 20:06:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -162,8 +162,6 @@ _setup(void)
 #else  /* !NDEBUG */
   err_cbuf(0, 0);
 #endif /* !NDEBUG */
-
-  err_file_descriptor(0, 0); /* now errors are done through the ttyerr */
 }
 
 /* _cleanup
@@ -412,13 +410,57 @@ _poll_loop(int non_interactive)
   Free(pfds);
 }
 
+static void
+_eliminate_nodes(void)
+{
+  if (conf->eliminate == IPMIPOWER_TRUE)
+    {
+      ipmidetect_t id = NULL;
+      hostlist_iterator_t itr = NULL;
+      char *host = NULL;
+
+      if (!(id = ipmidetect_handle_create()))
+        err_exit("ipmidetect_handle_create");
+      
+      if (ipmidetect_load_data(id,
+                               NULL,
+                               0,
+                               0) < 0)
+        {
+          if (ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT
+              || ipmidetect_errnum(id) == IPMIDETECT_ERR_CONNECT_TIMEOUT)
+            err_exit("Error connecting to ipmidetect daemon");
+          err_exit("ipmidetect_load_data: %s\n", ipmidetect_errormsg(id));
+        }
+      
+      if (!(itr = hostlist_iterator_create(conf->hosts)))
+        err_exit("hostlist_iterator_create: %s", strerror(errno));
+      
+      while ((host = hostlist_next(itr)))
+        {
+          int ret;
+          
+          if ((ret = ipmidetect_is_node_detected(id, host)) < 0)
+            {
+              if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
+                err_exit("Node '%s' unrecognized by ipmidetect\n", host);
+              err_exit("ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg(id));
+            }
+          
+          if (!ret)
+            {
+              hostlist_delete(conf->hosts, host);
+              conf->hosts_count--;
+            }
+          
+          free(host);
+        }
+    }
+}
+
 int 
 main(int argc, char *argv[]) 
 {
-#ifdef NDEBUG
-  int i;
-#endif /* NDEBUG */
-
   /* Call before anything else */
   err_init(argv[0]);
   err_file_descriptor(1, STDERR_FILENO); /* initially errors goto stderr */
@@ -452,13 +494,17 @@ main(int argc, char *argv[])
           && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE(conf->powercmd))
         err_exit("power operation requires atleast operator privilege");
 
-      for (i = 0; i <  conf->hosts_count; i++) 
+      _eliminate_nodes();
+
+      for (i = 0; i < conf->hosts_count; i++) 
         {
           ipmipower_connection_clear(&ics[i]);
           ipmipower_powercmd_queue(conf->powercmd, &ics[i]);
         }
     }
   
+  err_file_descriptor(0, 0); /* now errors are done through the ttyerr */
+
   /* immediately send out discovery messages upon startup */
   ipmipower_ping_force_discovery_sweep();
 

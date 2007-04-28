@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.42 2007-04-28 19:22:33 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.43 2007-04-28 20:06:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,6 +64,12 @@ extern cbuf_t ttyin;
 extern cbuf_t ttyerr;
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
+
+/* eliminate
+ *
+ * Note: only for non-interactive mode on the command line.  Won't be 
+ * anywhere in this file.
+ */
 
 static void 
 _cmd_help(void) 

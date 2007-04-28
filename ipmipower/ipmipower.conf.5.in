@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.34 2007-04-28 19:22:33 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.35 2007-04-28 20:06:40 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -119,6 +119,9 @@ Specify if wait-until-off is enabled or disabled by default.
 .TP
 .I consolidate-output enable|disable
 Specify if consolidate-output is enabled or disabled by default.
+.TP
+.I eliminate enable|disable
+Specify if eliminate is enabled or disabled by default.
 .TP
 .I workaround-flags str
 Specify default workaround flags to use: "forcepermsg", "idzero", "unexpectedauth", "intel20", "supermicro20"

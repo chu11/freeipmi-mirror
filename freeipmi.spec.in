@@ -194,10 +194,6 @@ fi
 
 %files devel
 %defattr(-,root,root)
-%doc %{_datadir}/doc/%{name}/examples/Makefile
-%doc %{_datadir}/doc/%{name}/examples/udm-test.c
-%doc %{_datadir}/doc/%{name}/freeipmi-hackers-intro.odp
-%doc %{_datadir}/doc/%{name}/ipmi-network-layout.fig
 %{_libdir}/libipmiconsole.a
 %{_libdir}/libfreeipmi.a
 %{_libdir}/libipmiconsole.la

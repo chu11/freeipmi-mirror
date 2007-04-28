@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.64 2007-04-28 19:25:52 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.65 2007-04-28 20:06:40 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -246,6 +246,16 @@ output.  Consolidated output can be used to shorten output if the
 number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
 their power control operation. See HOST RANGES below.
+.TP
+.I "-E, --eliminate"
+Eliminate hosts determined as undetected by
+.B ipmidetect.
+This attempts to remove the common issue of execution timing out due
+to several nodes being removed from service in a large cluster. The
+.B ipmidetectd
+daemon must be running on the node executing the command.  Only works
+in non-interactive mode.  See HOST RANGES below for additional
+information.
 .TP
 .I "-W, --workaround-flags str"
 Informs

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: eliminate.c,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+ *  $Id: eliminate.c,v 1.2 2007-04-28 20:06:40 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -87,7 +87,7 @@ eliminate_nodes(char **hosts)
         {
           if (ipmidetect_errnum(id) == IPMIDETECT_ERR_NOTFOUND)
             fprintf(stderr,
-                    "Unrecognized node '%s' by ipmidetect\n", host);
+                    "Node '%s' unrecognized by ipmidetect\n", host);
           else
             fprintf(stderr,
                     "ipmidetect_is_node_detected: %s\n", ipmidetect_errormsg(id));

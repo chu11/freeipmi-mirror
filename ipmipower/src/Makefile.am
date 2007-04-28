@@ -24,10 +24,12 @@ ipmipower_LDADD = \
 	../../common/src/libcbuf.la \
 	../../common/src/libllnlcommon.la \
 	../../common/src/libipmicommon.la \
+	../../ipmidetect/src/libipmidetect/libipmidetect.la \
 	../../libfreeipmi/src/libfreeipmi.la
  
 ipmipower_CPPFLAGS = \
 	-I$(srcdir)/../../common/src \
+	-I$(srcdir)/../../ipmidetect/src/libipmidetect \
 	-I$(srcdir)/../../libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1	
@@ -63,6 +65,9 @@ noinst_HEADERS= \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
 force-dependency-check:

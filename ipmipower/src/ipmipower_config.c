@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.56 2007-04-28 19:22:33 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.57 2007-04-28 20:06:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -94,9 +94,7 @@ ipmipower_config_setup(void)
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH);
   conf->k_g_configured = IPMIPOWER_FALSE;
   conf->powercmd = POWER_CMD_NONE;
-#ifndef NDEBUG
   memset(conf->configfile, '\0', MAXPATHLEN+1);
-#endif /* NDEBUG */
 
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
   conf->privilege = PRIVILEGE_TYPE_AUTO;
@@ -106,6 +104,7 @@ ipmipower_config_setup(void)
   conf->wait_until_on = IPMIPOWER_FALSE;
   conf->wait_until_off = IPMIPOWER_FALSE;
   conf->consolidate_output = IPMIPOWER_FALSE;
+  conf->eliminate = IPMIPOWER_FALSE;
   conf->workaround_flags = 0;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
@@ -138,6 +137,7 @@ ipmipower_config_setup(void)
   conf->wait_until_on_set_on_cmdline = IPMIPOWER_FALSE;
   conf->wait_until_off_set_on_cmdline = IPMIPOWER_FALSE;
   conf->consolidate_output_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->eliminate_set_on_cmdline = IPMIPOWER_FALSE;
   conf->workaround_flags_set_on_cmdline = IPMIPOWER_FALSE;
   conf->timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
@@ -269,9 +269,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:Pk:KnfcrsjmHVX:a:l:R:T:gABCW:DIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVX:a:l:R:T:gABCEW:DIMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:T:gABCW:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:T:gABCEW:t:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -303,6 +303,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"wait-until-on",                0, NULL, 'A'},
       {"wait-until-off",               0, NULL, 'B'},
       {"consolidate-output",           0, NULL, 'C'},
+      {"eliminate",                    0, NULL, 'E'},
       {"workaround-flags",             1, NULL, 'W'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
@@ -464,6 +465,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'C':       /* --consolidate-output */
           conf->consolidate_output = IPMIPOWER_TRUE;
           conf->consolidate_output_set_on_cmdline = IPMIPOWER_TRUE;
+          break;
+        case 'E':       /* --eliminate */
+          conf->eliminate = IPMIPOWER_TRUE;
+          conf->eliminate_set_on_cmdline = IPMIPOWER_TRUE;
           break;
         case 'W':       /* --workaround-flags */
           if (ipmipower_workarounds_parse(optarg, &flags) < 0)
@@ -746,6 +751,7 @@ ipmipower_config_conffile_parse(char *configfile)
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
     wait_until_on_flag, wait_until_off_flag, consolidate_output_flag, 
+    eliminate_flag,
     workaround_flags_flag, timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
     retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
     ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
@@ -779,6 +785,8 @@ ipmipower_config_conffile_parse(char *configfile)
        conf->wait_until_off_set_on_cmdline},
       {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &consolidate_output_flag, NULL, 0},
+      {"eliminate", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &eliminate_flag, NULL, 0},
       {"workaround-flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
        1, 0, &workaround_flags_flag, NULL, 0},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
