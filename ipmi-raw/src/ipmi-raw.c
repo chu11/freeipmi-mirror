@@ -98,6 +98,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
 {
   const char delim[] = " \t\f\v\r\n";
   char *str = NULL;
+  char *ptr = NULL;
   char *token = NULL;
   int count = 0;
   int i = 0;
@@ -132,23 +133,42 @@ string2bytes (ipmi_raw_state_data_t *state_data,
       pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
+  ptr = str;
   count = 0;
   while (1)
     {
-      token = strsep (&str, delim);
+      token = strsep (&ptr, delim);
       if (token == NULL)
 	break;
       if (strcmp (token, "") == 0)
 	continue;
       
       l = strlen (token);
+
+      if (l >= 2)
+	{
+          if (strncmp(token, "0x", 2) == 0)
+            {
+              token+=2;
+	      if (*token == '\0')
+		{
+		  pstdout_fprintf (state_data->pstate, 
+				   stderr, 
+				   "invalid input\n");
+		  goto cleanup;
+		}
+	      l = strlen (token);
+            }
+	}
+
       if (l > 2)
 	{
 	  pstdout_fprintf (state_data->pstate, 
-                           stderr, 
-                           "invalid input\n");
-          goto cleanup;
+			   stderr, 
+			   "invalid input\n");
+	  goto cleanup;
 	}
+
       for (i = 0; i < l; i++)
 	{
 	  if (isxdigit (token[i]) == 0)
