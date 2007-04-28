@@ -14,6 +14,7 @@ o -Q option added for ipmi-sensors and ipmi-sel.
 o Add community string and alert config to bmc-config.
 o Add verbose checkout/commit progress information for large checkout(s)/commit(s).
 o Add sensor names to ipmi-sel output when possible.
+o '0x' parsing support in ipmi-raw.
 o Various bug fixes throughout FreeIPMI.
 
 For Developers
