@@ -23,6 +23,7 @@ ipmipower_SOURCES= \
 ipmipower_LDADD = \
 	../../common/src/libcbuf.la \
 	../../common/src/libllnlcommon.la \
+	../../common/src/libipmicommon.la \
 	../../libfreeipmi/src/libfreeipmi.la
  
 ipmipower_CPPFLAGS = \
@@ -56,6 +57,9 @@ noinst_HEADERS= \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libllnlcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libipmicommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check

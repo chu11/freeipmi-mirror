@@ -1,3 +1,10 @@
+2007-04-27  Levi Pearson <lpearson@lnxi.com>
+
+	* common/src/ipmi-common.h, common/src/ipmi-common.c (parse_kg,
+	format_kg): New functions.
+
+	* ipmipower/: Support hex keys for K_g.
+	
 2007-04-26  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole.8.in: Fix manpage output bug.

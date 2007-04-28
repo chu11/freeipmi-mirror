@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.44.2.3 2007-03-28 23:24:42 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.44.2.4 2007-04-28 00:15:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -53,6 +53,7 @@
 #include "ipmipower_wrappers.h"
 
 #include "secure.h"
+#include "ipmi-common.h"
       
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
@@ -89,7 +90,8 @@ ipmipower_config_setup(void)
   conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
-  memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
+  memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH);
+  conf->k_g_configured = IPMIPOWER_FALSE;
   conf->powercmd = POWER_CMD_NONE;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
@@ -267,6 +269,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
   char *pw;
   char *kg;
+  int rv;
 
   /* achu: Here's are what options are left and available
      lower case: de
@@ -382,10 +385,13 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->password_set = IPMIPOWER_TRUE;
           break;
         case 'k':       /* --k-g */
-          if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
-            err_exit("Command Line Error: K_g too long");
-          strcpy(conf->k_g, optarg);
-          conf->k_g_set = IPMIPOWER_TRUE;
+          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, optarg)) < 0)
+            err_exit("Command Line Error: Invalid K_g");
+          if (rv > 0)
+            {
+              conf->k_g_configured = IPMIPOWER_TRUE;
+              conf->k_g_set = IPMIPOWER_TRUE;
+            }
           if (optarg)
             {
               int n;
@@ -396,10 +402,13 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'K':       /* --k-g-prompt */
           if (!(kg = getpass("K_g: ")))
             err_exit("getpass: %s", strerror(errno));
-          if (strlen(kg) > IPMI_MAX_K_G_LENGTH)
-            err_exit("K_g too long");
-          strcpy(conf->k_g, kg);
-          conf->k_g_set = IPMIPOWER_TRUE;
+          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
+            err_exit("K_g invalid");
+          if (rv > 0)
+            {
+              conf->k_g_configured = IPMIPOWER_TRUE;
+              conf->k_g_set = IPMIPOWER_TRUE;
+            }
           break;
         case 'n':       /* --on */ 
           conf->powercmd = POWER_CMD_POWER_ON;
@@ -734,13 +743,15 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
              char *optionname, int option_type, void *option_ptr,
              int option_data, void *app_ptr, int app_data) 
 {
+  int rv;
+
   if (conf->k_g_set == IPMIPOWER_TRUE)
     return 0;
 
-  if (strlen(data->string) > IPMI_MAX_K_G_LENGTH)
-    err_exit("Config File Error: K_g too long");
-
-  strcpy(conf->k_g, data->string);
+  if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, data->string)) < 0)
+    err_exit("Config File Error: K_g invalid");
+  if (rv > 0)
+    conf->k_g_configured = IPMIPOWER_TRUE;
   return 0;
 }
 
@@ -876,7 +887,7 @@ ipmipower_config_check_values(void)
 
   if (conf->ipmi_version != IPMI_VERSION_AUTO
       && conf->ipmi_version != IPMI_VERSION_2_0
-      && strlen(conf->k_g) > 0)
+      && conf->k_g_configured == IPMIPOWER_TRUE)
     err_exit("Error: k_g is only used for IPMI 2.0");
 
   if (conf->ipmi_version == IPMI_VERSION_1_5

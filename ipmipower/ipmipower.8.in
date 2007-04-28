@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.53.2.1 2007-03-08 03:57:41 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.53.2.2 2007-04-28 00:15:43 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -99,11 +99,15 @@ lists.
 .TP
 .I "-k, --k-g str"
 Sets the K_g BMC Key to use when authenticating with the BMC for
-ipmi 2.0.  If not specified, a null key is assumed.
+ipmi 2.0.  If not specified, a null key is assumed.  To input the key
+in hexadecimal form, prefix the string with '0x'.  E.g., the key 'abc'
+can be entered with the either the string 'abc' or the
+string '0x616263'
 .TP
 .I "-K, --k-g-prompt"
 Prompt for K_g to avoid possibility of listing it in process
-lists.
+lists.  To input the key in hexadecimal form, prefix the string
+with '0x'.
 .TP
 .I "-n, --on"
 Power on the target hosts.
@@ -422,7 +426,8 @@ specify a new username, no str for null username
 specify a new password, no str for null password
 .TP
 .I "k_g [str]"
-specify a new K_g BMC Key, no str for null
+specify a new K_g BMC Key, no str for null, prefix with '0x' to enter
+a key in hexadecimal
 .TP
 .I "on [host(s)]"
 turns on all hosts, or only the specified host(s).

@@ -36,8 +36,10 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <error.h>
 #endif
 #include <argp.h>
+#include <assert.h>
 
 #include "ipmi-common.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h"
 
 #define IPMI_DPRINTF_MAX_BUF_LEN 65536
 
@@ -102,4 +104,112 @@ void *guaranteed_memset(void *s, int c, size_t n)
     *p++=c;
 
   return s;
+}
+
+/* a k_g key is interpreted as ascii text unless it is prefixed with
+   "0x", in which case is it interpreted as hexadecimal */
+int
+parse_kg(unsigned char *outbuf, int outsz, char *instr)
+{
+  char *p, *q;
+  int i, j;
+  char buf[3] = {0, 0, 0};
+
+  assert(outbuf != NULL);
+  assert(instr != NULL);
+  assert(outsz == IPMI_MAX_K_G_LENGTH);
+
+  if (strlen(instr) == 0)
+    return 0;
+
+  if (strncmp(instr, "0x", 2) == 0) 
+    {
+      if (strlen(instr) > IPMI_MAX_K_G_LENGTH*2+2)
+        return -1;
+      p = instr + 2;
+      guaranteed_memset(outbuf, 0, IPMI_MAX_K_G_LENGTH);
+      for (i = j = 0; i < strlen(p); i+=2, j++)
+        {
+          if (p[i+1] == '\0')
+            return -1;
+          buf[0] = p[i]; buf[1] = p[i+1]; buf[2] = 0;
+          errno = 0;
+          outbuf[j] = strtoul(buf, &q, 16);
+          if (errno || (q != buf + 2))
+            return -1;
+        }
+    }
+  else
+    {
+      if (strlen(instr) > IPMI_MAX_K_G_LENGTH)
+        return -1;
+      guaranteed_memset(outbuf, 0, IPMI_MAX_K_G_LENGTH);
+      memcpy(outbuf, instr, strlen(instr));
+    }
+
+  return 1;
+}
+
+char *
+format_kg(char *outstr, int outsz, unsigned char *k_g)
+{
+  int i;
+  int printable = 1;
+  int foundnull = 0;
+  char *p;
+
+  assert(outstr != NULL);
+  assert(k_g != NULL);
+
+  /* Are there any characters that would prevent printing this as a
+     string on a single line? */
+  for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
+    {
+      if (k_g[i] == '\0')
+        {
+          ++foundnull;
+          continue;
+        }
+      if (!(isgraph(k_g[i]) || k_g[i] == ' ') || foundnull)
+        {
+          printable = 0;
+          break;
+        }
+    }
+
+  /* print out an entirely null key in hex rather than an empty
+     string */
+  if (foundnull == IPMI_MAX_K_G_LENGTH)
+    printable = 0;
+
+  /* don't print out a key starting with a literal '0x' as a string,
+     since parse_kg will try to interpret such strings as hex */
+  if (k_g[0] == '0' && k_g[1] == 'x')
+    printable = 0;
+
+  if (printable)
+    {
+      if (outsz < IPMI_MAX_K_G_LENGTH+1)
+        return NULL;
+      p = outstr;
+      for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
+        {
+          if (k_g[i] == '\0')
+            break;
+          p[i] = k_g[i];
+        }
+      p[i] = 0;
+    }
+  else
+    {
+      if (outsz < IPMI_MAX_K_G_LENGTH*2+1)
+        return NULL;
+      p = outstr;
+      p[0] = '0'; p[1] = 'x';
+      p+=2;
+      for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++, p+=2)
+        sprintf(p, "%02x", k_g[i]);
+    }
+
+  return outstr;
 }
