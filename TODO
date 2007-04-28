@@ -1,41 +1,26 @@
-AB's TODO list
-==============
 libfreeipmi:
 ------------
-[MEDIUM PRIORITY]
-  * Missing IPMI commands.
-    - lan-cmds 
-    - msg-support-cmds
-    - chassis-cmds
-    - serial-cmds
-    - sol-cmds
-    - pef-cmds
-    - sdr-repo-cmds
-    - sel-cmds
-    - sdr-record-types
-    - sel record-types
-    - sensor-cmds
-  * Modify system boot priority table.
-
-[LOW PRIORITY]
-  * FRU Commands (SDR Repo does a similar job).
-  * Command to Switch MUX between BMC and ttyS1
-
-Al's TODO list
-==============
-libfreeipmi:
-------------
-  * how to support xRC4 (can we? should we?)
-  * get event messages function that is passed fiids
+* Missing IPMI commands.
+  - lan-cmds 
+  - msg-support-cmds
+  - chassis-cmds
+  - serial-cmds
+  - sol-cmds
+  - pef-cmds
+  - sdr-repo-cmds
+  - sel-cmds
+  - sdr-record-types
+  - sel record-types
+  - sensor-cmds
+* Modify system boot priority table.
+* how to support xRC4 (can we? should we?)
+* get event messages function that is passed fiids
 
 Autoconf/Portability
 --------------------
-  * socklet_t, doesn't exist on all OSes.
-  * stdarg.h, other OSes use varargs.h
+* socklet_t, doesn't exist on all OSes.
+* stdarg.h, other OSes use varargs.h
          
-Others
-======
-
 bmc-config:
 -----------
 Missing Serial Config
