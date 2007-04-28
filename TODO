@@ -21,6 +21,10 @@ Autoconf/Portability
 * socklet_t, doesn't exist on all OSes.
 * stdarg.h, other OSes use varargs.h
          
+libfreeipmi
+-----------
+udm - ability to return real errors to the user
+
 bmc-config:
 -----------
 Missing Serial Config
