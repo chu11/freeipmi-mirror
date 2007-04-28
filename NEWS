@@ -3,8 +3,6 @@
 
 For Users
 ---------
-o Added ipmi-pef 
-o Added ipmi-chassis
 o Added ipmimonitoring
 o Added ipmidetect
 o Added hostrange support to ipmi-sensors, ipmi-sel, ipmi-raw, and bmc-info

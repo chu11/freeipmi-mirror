@@ -1,12 +1,14 @@
-Release 0.4.0
--------------
+Release 0.4.0 (?)
+-----------------
 
-ipmi-pef
+ipmi-pef 
 - Assignment: Bala
 - Tasks:
   - Bmc-config like checkout/commit
   - Commit check verification
 
+ipmi-chassis
+- Assignment: 
 
 Release 0.5.0
 -------------
