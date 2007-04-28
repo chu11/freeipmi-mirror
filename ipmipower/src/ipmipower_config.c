@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.57 2007-04-28 20:06:40 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.58 2007-04-28 20:07:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -265,7 +265,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 
   /* achu: Here's are what options are left and available
      lower case: deo
-     upper case: EGJNOQSUXY
+     upper case: GJNOQSUXY
    */
 
 #ifndef NDEBUG
