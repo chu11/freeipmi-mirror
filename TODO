@@ -34,3 +34,6 @@ general:
 --------
 hostrange howto doc stuff
 
+ipmipower:
+----------
+-B, -C, -E option support?
