@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.18 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.19 2007-04-28 19:22:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,13 +77,13 @@ ipmipower_output(msg_type_t num, char *hostname)
   assert(MSG_TYPE_VALID(num));
   assert(hostname != NULL);
 
-  if (conf->outputtype == OUTPUT_TYPE_NEWLINE)
-    cbuf_printf(ttyout, "%s: %s\n", hostname, ipmipower_outputs[num]);
-  else if (conf->outputtype == OUTPUT_TYPE_HOSTRANGE) 
+  if (conf->consolidate_output == IPMIPOWER_TRUE)
     {
       if (hostlist_push_host(output_hostrange[num], hostname) == 0)
         err_exit("hostlist_push_host() error\n");
     }
+  else
+    cbuf_printf(ttyout, "%s: %s\n", hostname, ipmipower_outputs[num]);
 
   return;
 }
@@ -91,7 +91,7 @@ ipmipower_output(msg_type_t num, char *hostname)
 void
 ipmipower_output_finish(void)
 {
-  if (conf->outputtype == OUTPUT_TYPE_HOSTRANGE) 
+  if (conf->consolidate_output == IPMIPOWER_TRUE)
     {
       int i, rv;
       char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
@@ -117,8 +117,11 @@ ipmipower_output_finish(void)
                 
             if (rv > 0) 
               {
-                cbuf_printf(ttyout, "%s: %s\n",
-                            buffer, ipmipower_outputs[i]);
+                cbuf_printf(ttyout, "----------------\n");
+                cbuf_printf(ttyout, "%s\n", buffer);
+                cbuf_printf(ttyout, "----------------\n");
+                cbuf_printf(ttyout, " %s\n",
+                            ipmipower_outputs[i]);
                 hostlist_delete(output_hostrange[i], buffer);
               }
             
@@ -130,46 +133,3 @@ ipmipower_output_finish(void)
   return;
 }
 
-output_type_t 
-ipmipower_output_index(char *str) 
-{
-  assert(str != NULL);
-    
-  if (!strcasecmp(str, "none"))
-    return OUTPUT_TYPE_NONE;
-  else if (!strcasecmp(str, "newline"))
-    return OUTPUT_TYPE_NEWLINE;
-  else if (!strcasecmp(str, "hostrange"))
-    return OUTPUT_TYPE_HOSTRANGE;
-  else 
-    return OUTPUT_TYPE_INVALID;
-}
-
-char *
-ipmipower_output_string(output_type_t ot) 
-{
-  assert(OUTPUT_TYPE_VALID(ot));
-
-  switch(ot) 
-    {
-    case OUTPUT_TYPE_NONE:
-      return "none";
-      break;
-    case OUTPUT_TYPE_NEWLINE:
-      return "newline";
-      break;
-    case OUTPUT_TYPE_HOSTRANGE:
-      return "hostrange";
-      break;
-    default:
-      err_exit("ipmipower_output_string: Invalid Output Type: %d\n", ot);
-    }
-    
-  return NULL;                  /* NOT_REACHED */
-}
-
-char *
-ipmipower_output_list(void) 
-{
-  return "none, newline, hostrange";
-}

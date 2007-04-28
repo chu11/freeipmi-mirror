@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.41 2007-04-28 00:28:17 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.42 2007-04-28 19:22:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,7 +98,7 @@ _cmd_advanced(void)
               "on-if-off [on|off]                    - toggle on-if-off functionality\n"
               "wait-until-on [on|off]                - toggle wait-until-on functionality\n"
               "wait-until-off [on|off]               - toggle wait-until-off functionality\n"
-              "outputtype str                        - set a new output type\n"
+              "consolidate-output [on|off]           - toggle consolidate-output functionality\n"
               "workaround_flags str                  - set new workaround flags\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
@@ -464,27 +464,6 @@ _cmd_cipher_suite_id(char **argv)
                 ipmipower_cipher_suite_id_list());
 }
 
-static void 
-_cmd_outputtype(char **argv) 
-{
-  assert(argv != NULL);
-
-  if (argv[1] != NULL) 
-    {
-      output_type_t ot = ipmipower_output_index(argv[1]);
-      if (ot == OUTPUT_TYPE_INVALID)
-        cbuf_printf(ttyout, "%s invalid outputtype\n", argv[1]);
-      else 
-        {
-          conf->outputtype = ot;
-          cbuf_printf(ttyout, "outputtype is now %s\n", argv[1]);
-        }
-    }
-  else
-    cbuf_printf(ttyout, "outputtype must be specified: %s\n",
-                ipmipower_output_list());
-}
-
 static void
 _cmd_workaround_flags(char **argv)
 {
@@ -702,8 +681,8 @@ _cmd_config(void)
               (conf->wait_until_on) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Wait-Until-Off:               %s\n",
               (conf->wait_until_off) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "OutputType:                   %s\n",
-              ipmipower_output_string(conf->outputtype));
+  cbuf_printf(ttyout, "Consolidate-Output:           %s\n",
+              (conf->consolidate_output) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "WorkaroundFlags:              %s\n",
               ipmipower_workarounds_string(conf->workaround_flags));
 #ifndef NDEBUG
@@ -879,8 +858,8 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_flag(argv, &conf->wait_until_on, "wait-until-on");
               else if (strcmp(argv[0], "wait-until-off") == 0)
                 _cmd_set_flag(argv, &conf->wait_until_off, "wait-until-off");
-              else if (strcmp(argv[0], "outputtype") == 0)
-                _cmd_outputtype(argv);
+              else if (strcmp(argv[0], "consolidate-output") == 0)
+                _cmd_set_flag(argv, &conf->consolidate_output, "consolidate-output");
               else if (strcmp(argv[0], "workaround-flags") == 0)
                 _cmd_workaround_flags(argv);
 #ifndef NDEBUG

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.62 2007-04-28 00:28:17 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.63 2007-04-28 19:22:33 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -135,9 +135,11 @@ Output help menu and exit.
 .TP
 .I "-V, --version"
 Output version and exit.
+.if @WITH_DEBUG@ \{
 .TP
-.I "-C, --config file"
+.I "-X, --config file"
 Specify alternate configuration file.
+}
 .LP
 .SH "ADVANCED OPTIONS"
 The following advanced options are used to change the default behavior
@@ -237,14 +239,11 @@ power off actually taking place.  This option will force
 to regularly query the remote BMC and return only after the machine
 has powered off.
 .TP
-.I "-o, --outputtype str"
-Sets the output type to use with 
-.B ipmipower.  
-The currently available output types are "none", "newline", and
-"hostrange".  If not specified, 
+.I "-C, --consolidate-output"
+Consolidate 
 .B ipmipower 
-uses newline output.  Hostrange output can be used to shorten output if
-the number of nodes being power controlled is quite large.  However,
+output.  Consolidated output can be used to shorten output if the
+number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
 their power control operation.
 .TP
@@ -462,8 +461,8 @@ toggle wait-until-on functionality.
 .I "wait-until-off [on|off]"
 toggle wait-until-off functionality.
 .TP
-.I "outputtype str"
-specify a new output type, none, newline, or hostrange.
+.I "consolidate-output [on|off]"
+toggle consolidate-output functionality
 .TP
 .I "workaround-flags str"
 specify workaround options.

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.33 2007-04-28 00:28:17 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.34 2007-04-28 19:22:33 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -102,7 +102,7 @@ Specify the default privilege type to use.
 currently supports the following privilege types: "auto", "user",
 "operator", and "admin".
 .TP
-.I ipmi_version str
+.I ipmi-version str
 Specify the default IPMI protocol version to use: "auto", "1.5", and "2.0"
 .TP
 .I cipher_suite_id str
@@ -117,57 +117,42 @@ Specify if wait-until-on is enabled or disabled by default.
 .I wait-until-off enable|disable
 Specify if wait-until-off is enabled or disabled by default.
 .TP
-.I outputtype str
-Specify the default outputtype type to use.  
-.B Ipmipower 
-currently supports the following output types: "none", "newline", and
-"hostrange".
+.I consolidate-output enable|disable
+Specify if consolidate-output is enabled or disabled by default.
 .TP
-.I force_permsg_authentication enable|disable
-Specify if the permsg-auth flag is forced by default.
-.TP
-.I accept_session_id_zero enable|disable
-Specify if null session id's should be accepted by default.
-.TP
-.I accept_unexpected_authcode enable|disable
-Specify if unexpected nonnull authcodes should be accepted by default.
-.TP
-.I intel_2_0_session enable|disable
-Specify if workarounds for an Intel ipmi 2.0 session should be used.
-.TP
-.I supermicro_2_0_session enable|disable
-Specify if workarounds for a Supermicro ipmi 2.0 session should be used.
+.I workaround-flags str
+Specify default workaround flags to use: "forcepermsg", "idzero", "unexpectedauth", "intel20", "supermicro20"
 .TP
 .I timeout ms
 Specify the timeout in ms.
 .TP
-.I retry_timeout ms
+.I retry-timeout ms
 Specify the retry timeout in ms.  See
 .B ipmipower (1)
 for an explanation on the difference between this is the timeout option.
 .TP
-.I retry_wait_timeout ms
+.I retry-wait-timeout ms
 Specify the retry wait timeout in ms.  See
 .B ipmipower (1)
 for an explanation on the difference between this is the above timeout
 options.
 .TP
-.I retry_backoff_count num
+.I retry-backoff-count num
 Specify the retry backoff count
 .TP 
-.I ping_interval ms
+.I ping-interval ms
 Specify the ping interval length in ms.
 .TP
-.I ping_timeout ms
+.I ping-timeout ms
 Specify the ping timeout length in ms.
 .TP
-.I ping_packet_count num
+.I ping-packet-count num
 Specify a new ping packet count
 .TP
-.I ping_percent num
+.I ping-percent num
 Specify a new ping percent
 .TP
-.I ping_consec_count num
+.I ping-consec-count num
 Specify a new ping consec count
 .LP
 .br

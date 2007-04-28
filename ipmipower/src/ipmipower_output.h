@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.h,v 1.5 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_output.h,v 1.6 2007-04-28 19:22:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,21 +38,5 @@ void ipmipower_output(msg_type_t num, char *hostname);
  * - Output final results
  */
 void ipmipower_output_finish(void);
-
-/* ipmipower_output_index
- * - Return the index of the specific output type
- */
-output_type_t ipmipower_output_index(char *str); 
-
-/* ipmipower_output_string
- * - Return static string description of outputtype
- */
-char *ipmipower_output_string(output_type_t ot);
-
-/* ipmipower_output_list
- * - Return static string list of all available output types
- */
-char *ipmipower_output_list(void); 
-
 
 #endif /* _IPMIPOWER_OUTPUT_H */

@@ -13,6 +13,10 @@
 
 	* bmc-info/, ipmi-raw/, ipmi-sel/, ipmi-sensors/, ipmimonitoring/:
 	Alter default output of buffered hostrange output.
+
+	* ipmipower/: Remove -o option.  Change -C option to -X
+	option. Add -C option for consolidated output like other tools.
+	Fix conf file inconsistencies.
 	
 2007-04-27  Albert Chu <chu11@llnl.gov>
 

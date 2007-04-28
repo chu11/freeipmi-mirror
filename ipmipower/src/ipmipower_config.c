@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.55 2007-04-28 00:28:17 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.56 2007-04-28 19:22:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -94,7 +94,9 @@ ipmipower_config_setup(void)
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH);
   conf->k_g_configured = IPMIPOWER_FALSE;
   conf->powercmd = POWER_CMD_NONE;
+#ifndef NDEBUG
   memset(conf->configfile, '\0', MAXPATHLEN+1);
+#endif /* NDEBUG */
 
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
   conf->privilege = PRIVILEGE_TYPE_AUTO;
@@ -103,7 +105,7 @@ ipmipower_config_setup(void)
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->wait_until_on = IPMIPOWER_FALSE;
   conf->wait_until_off = IPMIPOWER_FALSE;
-  conf->outputtype = OUTPUT_TYPE_NEWLINE;
+  conf->consolidate_output = IPMIPOWER_FALSE;
   conf->workaround_flags = 0;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
@@ -135,7 +137,7 @@ ipmipower_config_setup(void)
   conf->on_if_off_set_on_cmdline = IPMIPOWER_FALSE;
   conf->wait_until_on_set_on_cmdline = IPMIPOWER_FALSE;
   conf->wait_until_off_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->outputtype_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->consolidate_output_set_on_cmdline = IPMIPOWER_FALSE;
   conf->workaround_flags_set_on_cmdline = IPMIPOWER_FALSE;
   conf->timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
@@ -169,9 +171,6 @@ _config_common_checks(char *str)
 
   if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
     err_exit("%s: invalid cipher suite id", str);
-
-  if (conf->outputtype == OUTPUT_TYPE_INVALID) 
-    err_exit("%s: invalid outputtype", str);
 
   if (conf->timeout_len < IPMIPOWER_TIMEOUT_MIN 
       || conf->timeout_len > IPMIPOWER_TIMEOUT_MAX)
@@ -240,7 +239,6 @@ _usage(void)
           "-m --soft             Soft Shutdown OS via ACPI\n"
           "-H --help             Output help menu\n"
           "-V --version          Output version\n"
-          "-C --config           Specify Alternate Config File\n"
           );
   exit(1);
 }
@@ -266,14 +264,14 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   uint32_t flags;
 
   /* achu: Here's are what options are left and available
-     lower case: de
-     upper case: EGJNOQSUXYX
+     lower case: deo
+     upper case: EGJNOQSUXY
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:W:DIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVX:a:l:R:T:gABCW:DIMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
-  char *options = "h:u:p:Pk:KnfcrsjmHVC:a:l:R:T:gABo:W:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:T:gABCW:t:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
@@ -294,7 +292,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"soft",                         0, NULL, 'm'},
       {"help",                         0, NULL, 'H'},
       {"version",                      0, NULL, 'V'},
-      {"config",                       1, NULL, 'C'}, 
+#ifndef NDEBUG
+      {"config",                       1, NULL, 'X'}, 
+#endif /* NDEBUG */
       {"authentication-type",          1, NULL, 'a'},  
       {"privilege",                    1, NULL, 'l'},
       {"ipmi-version",                 1, NULL, 'R'},
@@ -302,7 +302,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"on-if-off",                    0, NULL, 'g'},
       {"wait-until-on",                0, NULL, 'A'},
       {"wait-until-off",               0, NULL, 'B'},
-      {"outputtype",                   1, NULL, 'o'},
+      {"consolidate-output",           0, NULL, 'C'},
       {"workaround-flags",             1, NULL, 'W'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
@@ -427,11 +427,13 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'V':       /* --version */
           _version();
           break;
-        case 'C':
+#ifndef NDEBUG
+        case 'X':
           if (strlen(optarg) > MAXPATHLEN)
             err_exit("Command Line Error: configuration file pathname too long");
           strcpy(conf->configfile, optarg);
           break;
+#endif /* !NDEBUG */
         case 'a':       /* --authentication-type */
           conf->authentication_type = ipmipower_authentication_type_index(optarg);
           conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
@@ -459,9 +461,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->wait_until_off = !conf->wait_until_off;
           conf->wait_until_off_set_on_cmdline = IPMIPOWER_TRUE;
           break;
-        case 'o':       /* --outputtype */
-          conf->outputtype = ipmipower_output_index(optarg);
-          conf->outputtype_set_on_cmdline = IPMIPOWER_TRUE;
+        case 'C':       /* --consolidate-output */
+          conf->consolidate_output = IPMIPOWER_TRUE;
+          conf->consolidate_output_set_on_cmdline = IPMIPOWER_TRUE;
           break;
         case 'W':       /* --workaround-flags */
           if (ipmipower_workarounds_parse(optarg, &flags) < 0)
@@ -642,19 +644,6 @@ _cb_cipher_suite_id(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
-_cb_outputtype(conffile_t cf, struct conffile_data *data,
-               char *optionname, int option_type, void *option_ptr, 
-               int option_data, void *app_ptr, int app_data) 
-{
-  if (conf->outputtype_set_on_cmdline == IPMIPOWER_TRUE)
-    return 0;
-
-  /* Incorrect outputtype checked in _config_common_checks */
-  conf->outputtype = ipmipower_output_index(data->string);
-  return 0;
-}
-
-static int 
 _cb_bool(conffile_t cf, struct conffile_data *data,
          char *optionname, int option_type, void *option_ptr,
          int option_data, void *app_ptr, int app_data) 
@@ -756,10 +745,10 @@ ipmipower_config_conffile_parse(char *configfile)
 {
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
-    wait_until_on_flag, wait_until_off_flag, outputtype_flag, workaround_flags_flag, 
-    timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
-    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, 
-    ping_percent_flag, ping_consec_count_flag;
+    wait_until_on_flag, wait_until_off_flag, consolidate_output_flag, 
+    workaround_flags_flag, timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
+    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
+    ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
 
   struct conffile_option options[] = 
     {
@@ -775,7 +764,7 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &authentication_type_flag, NULL, 0},
       {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
        1, 0, &privilege_flag, NULL, 0},
-      {"ipmi_version", CONFFILE_OPTION_STRING, -1, _cb_ipmi_version,
+      {"ipmi-version", CONFFILE_OPTION_STRING, -1, _cb_ipmi_version,
        1, 0, &ipmi_version_flag, NULL, 0},
       {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
        1, 0, &cipher_suite_id_flag, NULL, 0},
@@ -788,9 +777,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"wait-until-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &wait_until_off_flag, &(conf->wait_until_off), 
        conf->wait_until_off_set_on_cmdline},
-      {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
-       1, 0, &outputtype_flag, NULL, 0},
-      {"workaround_flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
+      {"consolidate-output", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &consolidate_output_flag, NULL, 0},
+      {"workaround-flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
        1, 0, &workaround_flags_flag, NULL, 0},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), 
@@ -804,19 +793,19 @@ ipmipower_config_conffile_parse(char *configfile)
       {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
        1, 0, &retry_backoff_count_flag, &(conf->retry_backoff_count), 
        conf->retry_backoff_count_set_on_cmdline},
-      {"ping_interval", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &ping_interval_flag, &(conf->ping_interval_len), 
        conf->ping_interval_len_set_on_cmdline},
-      {"ping_timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &ping_timeout_flag, &(conf->ping_timeout_len), 
        conf->ping_timeout_len_set_on_cmdline},
-      {"ping_packet_count", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-packet-count", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &ping_packet_count_flag, &(conf->ping_packet_count), 
        conf->ping_packet_count_set_on_cmdline},
-      {"ping_percent", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-percent", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &ping_percent_flag, &(conf->ping_percent), 
        conf->ping_percent_set_on_cmdline},
-      {"ping_consec_count", CONFFILE_OPTION_INT, -1, _cb_int, 
+      {"ping-consec-count", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &ping_consec_count_flag, &(conf->ping_consec_count), 
        conf->ping_consec_count_set_on_cmdline},
     };
