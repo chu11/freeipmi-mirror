@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.2 2007-04-24 18:14:05 chu11 Exp $
+ *  $Id: pstdout.c,v 1.3 2007-04-28 17:26:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -831,6 +831,7 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
                             FILE *stream,
                             char **whichbuffer,
                             unsigned int *whichbufferlen,
+                            uint32_t whichprependmask, 
                             uint32_t whichbuffermask,
                             uint32_t whichconsolidatemask,
                             List whichconsolidatedlist,
@@ -844,6 +845,8 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
   assert(stream == stdout || stream == stderr);
   assert(whichbuffer);
   assert(whichbufferlen);
+  assert(whichprependmask == PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME 
+         || whichprependmask == PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME);
   assert(whichbuffermask == PSTDOUT_OUTPUT_BUFFER_STDOUT 
          || whichbuffermask == PSTDOUT_OUTPUT_BUFFER_STDERR);
   assert(whichconsolidatemask == PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE
@@ -867,6 +870,12 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
 
       if (pstdout_output_flags & whichbuffermask)
         {
+          if (!(pstdout_output_flags & whichprependmask))
+            {
+              fprintf(stream, "----------------\n");
+              fprintf(stream, "%s\n", pstate->hostname);
+              fprintf(stream, "----------------\n");
+            }
           fprintf(stream, "%s", *whichbuffer);
           fflush(stream);
         }
@@ -958,6 +967,7 @@ _pstdout_output_finish(pstdout_state_t pstate)
                                   stdout,
                                   &(pstate->buffer_stdout),
                                   &(pstate->buffer_stdout_len),
+                                  PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME,
                                   PSTDOUT_OUTPUT_BUFFER_STDOUT,
                                   PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE,
                                   pstdout_consolidated_stdout,
@@ -968,6 +978,7 @@ _pstdout_output_finish(pstdout_state_t pstate)
                                   stderr,
                                   &(pstate->buffer_stderr),
                                   &(pstate->buffer_stderr_len),
+                                  PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME,
                                   PSTDOUT_OUTPUT_BUFFER_STDERR,
                                   PSTDOUT_OUTPUT_STDERR_CONSOLIDATE,
                                   pstdout_consolidated_stderr,

@@ -6,6 +6,13 @@
 
 	* ipmi-raw/: Parse '0x' in hex codes too.  Fix seg-fault corner
 	case.
+
+	* common/src/pstdout.c (_pstdout_output_buffer_data,
+	_pstdout_output_finish): Alter default output of buffered
+	hostrange output.
+
+	* bmc-info/, ipmi-raw/, ipmi-sel/, ipmi-sensors/, ipmimonitoring/:
+	Alter default output of buffered hostrange output.
 	
 2007-04-27  Albert Chu <chu11@llnl.gov>
 
