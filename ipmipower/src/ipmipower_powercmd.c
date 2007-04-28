@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.101 2007-04-20 05:12:11 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.102 2007-04-28 00:28:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1181,8 +1181,8 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
       return -1;
     }
 
-  if ((!strlen(conf->k_g) && authentication_status_k_g)
-      || (strlen(conf->k_g) && !authentication_status_k_g))
+  if ((conf->k_g_configured != IPMIPOWER_TRUE && authentication_status_k_g)
+      || (conf->k_g_configured == IPMIPOWER_TRUE && !authentication_status_k_g))
     {
 #ifndef NDEBUG
       ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
@@ -1844,7 +1844,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
-  if (strlen(conf->k_g))
+  if (conf->k_g_configured == IPMIPOWER_TRUE)
     k_g = (uint8_t *)conf->k_g;
   else
     k_g = NULL;
@@ -1860,7 +1860,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            password,
                                            password_len,
                                            k_g,
-                                           (k_g) ? strlen((char *)k_g) : 0,
+                                           (k_g) ? IPMI_MAX_K_G_LENGTH : 0,
                                            ip->remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,

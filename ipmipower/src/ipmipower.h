@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.68 2007-04-26 03:23:59 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.69 2007-04-28 00:28:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -557,7 +557,13 @@ struct ipmipower_config
   int                      hosts_count;
   char                     username[IPMI_MAX_USER_NAME_LENGTH+1];
   char                     password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
-  char                     k_g[IPMI_MAX_K_G_LENGTH+1];
+  char                     k_g[IPMI_MAX_K_G_LENGTH];
+  /* The k_g_configured flag is needed b/c the k_g field may have null
+   * values as part of it's hex key.  For example, if k_g ==
+   * 0x00010203, then strlen(conf->k_g) == 0.  So we need a flag to
+   * indicate that there is an actual value stored.
+   */
+  ipmipower_bool_t         k_g_configured;
   power_cmd_t              powercmd;
   char                     configfile[MAXPATHLEN+1];
 

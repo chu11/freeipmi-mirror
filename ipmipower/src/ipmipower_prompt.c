@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.40 2007-03-29 16:36:03 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.41 2007-04-28 00:28:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -56,6 +56,8 @@
 #include "ipmipower_privilege.h"
 #include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
+
+#include "ipmi-common.h"
 
 extern cbuf_t ttyout;
 extern cbuf_t ttyin;    
@@ -341,28 +343,37 @@ _cmd_password(char **argv)
 static void 
 _cmd_k_g(char **argv) 
 {
+  int rv = 0;
+  char buf[IPMI_MAX_K_G_LENGTH*2+1];
   assert(argv != NULL);
 
   if (conf->ipmi_version != IPMI_VERSION_AUTO
       && conf->ipmi_version != IPMI_VERSION_2_0)
     cbuf_printf(ttyout, "k_g is only used for IPMI 2.0");
-  else if (argv[1] == NULL 
-           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_K_G_LENGTH)) 
+  else
     {
-      memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
+      memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH);
 
       if (argv[1])
-        strcpy(conf->k_g, argv[1]);
-
+        rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, argv[1]);
+      
+      if (rv < 0)
+        cbuf_printf(ttyout, "k_g invalid\n");
+      else
+        {
+          if (rv == 0)
+            conf->k_g_configured = IPMIPOWER_FALSE;
+          else 
+            conf->k_g_configured = IPMIPOWER_TRUE;
 #ifdef NDEBUG
-      cbuf_printf(ttyout, "k_g changed\n");
+          cbuf_printf(ttyout, "k_g changed\n");
 #else  /* !NDEBUG */
-      cbuf_printf(ttyout, "k_g: %s\n", 
-                  (strlen(conf->k_g)) ? conf->k_g : "NULL");
+          cbuf_printf(ttyout, "k_g: %s\n", 
+                      (conf->k_g_configured == IPMIPOWER_TRUE) ? 
+                      format_kg(buf, IPMI_MAX_K_G_LENGTH*2+1, conf->k_g) : "NULL");
 #endif /* !NDEBUG */
+        }
     }
-  else
-    cbuf_printf(ttyout, "k_g invalid length\n");
 }
 
 static void 
@@ -589,6 +600,8 @@ _cmd_logfile(char **argv)
 static void 
 _cmd_config(void) 
 {
+  char buf[IPMI_MAX_K_G_LENGTH*2+1];
+
   if (conf->hosts != NULL) 
     {
       int rv;
@@ -668,7 +681,8 @@ _cmd_config(void)
   cbuf_printf(ttyout, "Password:                     %s\n", 
               (strlen(conf->password)) ? conf->password : "NULL");
   cbuf_printf(ttyout, "K_g:                          %s\n", 
-              (strlen(conf->k_g)) ? conf->k_g : "NULL");
+              (conf->k_g_configured == IPMIPOWER_TRUE) ? 
+              format_kg(buf, IPMI_MAX_K_G_LENGTH*2+1, conf->k_g) : "NULL");
 #else  /* !NDEBUG */
   cbuf_printf(ttyout, "Password:                     *****\n");
   cbuf_printf(ttyout, "K_g:                          *****\n");
