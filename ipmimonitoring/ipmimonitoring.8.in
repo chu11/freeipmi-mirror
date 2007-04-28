@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.8 2007-04-27 16:20:57 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.9 2007-04-28 03:07:03 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,9 +34,10 @@ ipmimonitoring \- IPMI monitoring tool
 is an IPMI sensor monitoring tool that utilizes the libipmimonitoring
 library to interpret sensor readings rather than just report them.
 The tool will output if sensors are in Nominal, Warning, or Critical
-states.  The library and tool are primarily used for host monitoring
-activities.  For more general sensor reading use, it is recommended
-that users use
+states.  The state interpretations are determined by the configuration
+file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  The library and
+tool are primarily used for host monitoring activities.  For more
+general sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
 
 .SH "OPTIONS"
@@ -62,6 +63,19 @@ privilege of "admin" is assumed.
 Specify the authentication mechanism to use.  The currently available
 authentication mechanisms are "none", "straight_password_key", "md2",
 and "md5".  If not specified, "md5" is assumed.
+.TP
+.I "-s, --sensors list"
+Specify a list of sensors record ids to specifically monitor.  List of
+sensors can be separated by spaces or commas.
+.TP
+.I "-g, --groups list"
+Specify a list of groups to specifically monitor.  List of groups can
+be separated by spaces or commas.  The available groups are:
+temperature, voltage, current, fan, physical_security,
+platform_security_violation_attempt, processor, power_supply,
+power_unit, memory, drive_slot, system_firmware_progress,
+event_logging_disabled, system_event, critical_interrupt,
+module_board, slot_connector, watchdog2.
 .TP
 .I "-c, --cache-dir dir"
 Specify an alternate directory to read and write SDR caches.
@@ -170,8 +184,12 @@ In-band IPMI Communication will be used when the host "localhost" is
 specified.  This allows the user to add the localhost into the
 hostranged output.
 
-.if @WITH_DEBUG@ \{
 .SH "KNOWN ISSUES"
+Interpretation rules have not been written for all sensors
+permutations and types.  If sensor interpretation rules are needed,
+please contact the author listed below.
+
+.if @WITH_DEBUG@ \{
 This version of ipmimonitoring was compiled with debugging.  When compiled
 with debugging,
 .B ipmimonitoring 
@@ -188,6 +206,11 @@ Core dumps are enabled.
 Before placing ipmimonitoring in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
+.SH FILES
+@IPMI_MONITORING_SDR_CACHE_DIR@
+
+@IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
+
 .SH "ORIGIN"
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the

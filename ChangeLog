@@ -2,6 +2,11 @@
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_defs.h: Fix k_g
 	corner case.
+
+	* libfreeipmi/src/ipmi-dmidecode-locate.c: Get rid of leftover
+	debugging.
+
+	* ipmimonitoring/: Support -s and -g in ipmimonitoring.
 	
 2007-04-27  Levi Pearson <lpearson@lnxi.com>
 

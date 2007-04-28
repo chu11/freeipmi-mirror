@@ -41,10 +41,6 @@ bmc-config:
 Missing Serial Config
 Chassis Config?
 
-ipmimonitoring:
----------------
-pick specific sensors/groups of sensors
-
 general:
 --------
 hostrange howto doc stuff
