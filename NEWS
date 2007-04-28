@@ -4,6 +4,7 @@ o Allow OEM network functions.
 o Support ipmipower per-msg-auth workaround.
 o Support per-msg-auth in LAN udm and majority of FreeIPMI tools.
 o Support hex k-g input/output.
+o Fix ipmiconsole k_g key corner case.
 o Fix OpenIPMI driver build bug.
 
 0.3.2
