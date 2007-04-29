@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.67 2007-04-29 16:41:35 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.68 2007-04-29 16:48:23 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -372,10 +372,6 @@ ping-consec-count is 5.  This feature can be disabled by setting
 ping-consec-count to 0.  This feature is not used if ping-interval,
 --ping-packet-count, or --ping-percent are set to 0.
 .LP
-.SH "ERROR HANDLING"
-.B ipmipower
-logs errors to the syslog LOG_DAEMON facility.
-.LP
 .SH "INTERACTIVE COMMANDS"
 .B ipmipower
 provides the following interactive commands at the ipmipower> prompt.
@@ -544,32 +540,6 @@ Determine the power status of foo[0-2] with non-null username and password
 .LP
 Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
-.LP
-Hard reset the nodes configured in a configuration file
-        ipmipower -C /etc/powerctrl.conf --reset
-
-.SH "USE WITH POWERMAN"
-The 
-.B powerman
-device configuration file 
-.I ipmipower.dev
-supplied with
-.B powerman
-1.0.20 and beyond can be used to control one or more instances of
-.B ipmipower
-in coprocess mode.
- 
-Due to deficiences within powerman, the power control operations --on,
---off, --cycle, --reset will be reported as successful, despite any
-errors that may occur.  The user should use the --query option to
-ensure that all remote hosts were successfully powered on or off.
-
-It is recommend that the --on-if-off, --wait-until-on, and
---wait-until-off options be used with
-.B ipmipower
-when it is used in conjunction with powerman.  This will ensure
-.B ipmipower
-behaves similarly to other powerman devices.
 
 .SH "WORKAROUNDS"
 With so many different vendors implementing their
@@ -653,16 +623,15 @@ When powering on a powered off machine, the client must have a means
 by which to resolve the MAC address of the remote machine's ethernet
 card.  This is typically done in one of two ways.
 
-1) The first method requires enabling gratuitous ARPs on the remote
-machine.  The remote machine will send out a gratuitous ARP, which
-logically advertises the ethernet IP and MAC address so that other
-machines on the network can cache the IP to MAC address mapping in
+1) Enable gratuitous ARPs on the remote machine.  The remote machine
+will send out a gratuitous ARP, which advertises the ethernet IP and
+MAC address so that other machines on the network this information
 their local ARP cache.  For large clusters, this method is not
 recommended since gratuitous ARPs can flood the network with
 unnecessary traffic.
 
-2) The second method is to permanently store the remote machine's MAC
-address in the local ARP cache.  This is the more common approach.
+2) Permanently store the remote machine's MAC address in the local ARP
+cache.  This is the more common approach on large clusters.
 
 Other methods are listed in the IPMI specification.
 
@@ -694,12 +663,9 @@ On certain operating systems, if you input your username and password
 on the command line, the username and password may be discovered by
 other users when using the
 .B ps(1) 
-command or looking in the /proc file system.  The most secure solution
-is to enter the username and password while in interactive mode.  If
-administrators do not wish to type in their username and password at
-the interactive prompt, they can be listed in a configuration file, in
-which the access to this file can be limited.  Passwords and K_g keys
-can also be inputted via a prompt via the -P and -K options.
+command or looking in the /proc file system.  More secure solutions
+are to configure this information in the config file, in interactive
+mode, or with the -P and -K options.
 
 IPMI specifications do not require BMCs to perform a power control
 operation before returning a completion code to the caller.
