@@ -1,6 +1,8 @@
 2007-04-29  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Fix text.
+
+	* ipmiconsole/ipmiconsole.8.in: Fix some text.
 	
 2007-04-28  Albert Chu <chu11@llnl.gov>
 
