@@ -32,49 +32,58 @@ sensors_display_simple_full_record (ipmi_sensors_state_data_t *state_data,
 				    sdr_full_record_t *record, 
 				    sensor_reading_t *sensor_reading)
 {
-  pstdout_printf (state_data->pstate,
-                  "%d: %s (%s): ", 
-                  record_id, 
-                  record->sensor_name, 
-                  ipmi_get_sensor_group (record->sensor_type));
+  if (state_data->prog_data->args->quiet_readings_wanted)
+    pstdout_printf (state_data->pstate,
+                    "%d: %s: ", 
+                    record_id, 
+                    record->sensor_name); 
+  else
+    pstdout_printf (state_data->pstate,
+                    "%d: %s (%s): ", 
+                    record_id, 
+                    record->sensor_name, 
+                    ipmi_get_sensor_group (record->sensor_type));
   
   switch (ipmi_sensor_classify (record->event_reading_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
-      if (sensor_reading == NULL)
-	{
-	  pstdout_printf (state_data->pstate,
-                          "NA");
-	}
-      else 
-	{
-	  pstdout_printf (state_data->pstate,
-                          "%.2f %s ", 
-                          round_double2 (sensor_reading->current_reading), 
-                          ipmi_sensor_units_abbreviated[record->sensor_unit]);
-	}
-      if (record->readable_threshold_lower_critical_threshold)
-	{
-	  pstdout_printf (state_data->pstate,
-                          "(%.2f/", 
-                          round_double2 (record->lower_critical_threshold));
-	}
-      else 
-	{
-	  pstdout_printf (state_data->pstate,
-                          "(NA/");
-	}
-      if (record->readable_threshold_upper_critical_threshold)
-	{
-	  pstdout_printf (state_data->pstate,
-                          "%.2f): ", 
-                          round_double2 (record->upper_critical_threshold));
-	}
-      else 
-	{
-	  pstdout_printf (state_data->pstate,
-                          "NA): ");
-	}
+      if (!state_data->prog_data->args->quiet_readings_wanted)
+        {             
+          if (sensor_reading == NULL)
+            {
+              pstdout_printf (state_data->pstate,
+                              "NA");
+            }
+          else 
+            {
+              pstdout_printf (state_data->pstate,
+                              "%.2f %s ", 
+                              round_double2 (sensor_reading->current_reading), 
+                              ipmi_sensor_units_abbreviated[record->sensor_unit]);
+            }
+          if (record->readable_threshold_lower_critical_threshold)
+            {
+              pstdout_printf (state_data->pstate,
+                              "(%.2f/", 
+                              round_double2 (record->lower_critical_threshold));
+            }
+          else 
+            {
+              pstdout_printf (state_data->pstate,
+                              "(NA/");
+            }
+          if (record->readable_threshold_upper_critical_threshold)
+            {
+              pstdout_printf (state_data->pstate,
+                              "%.2f): ", 
+                              round_double2 (record->upper_critical_threshold));
+            }
+          else 
+            {
+              pstdout_printf (state_data->pstate,
+                              "NA): ");
+            }
+        }
     default:
       if (sensor_reading == NULL)
 	{
@@ -117,11 +126,18 @@ sensors_display_simple_compact_record (ipmi_sensors_state_data_t *state_data,
 				       sdr_compact_record_t *record, 
 				       sensor_reading_t *sensor_reading)
 {
-  pstdout_printf (state_data->pstate,
-                  "%d: %s (%s): ", 
-                  record_id, 
-                  record->sensor_name, 
-                  ipmi_get_sensor_group (record->sensor_type));
+  if (state_data->prog_data->args->quiet_readings_wanted)
+    pstdout_printf (state_data->pstate,
+                    "%d: %s: ", 
+                    record_id, 
+                    record->sensor_name); 
+  else
+    pstdout_printf (state_data->pstate,
+                    "%d: %s (%s): ", 
+                    record_id, 
+                    record->sensor_name, 
+                    ipmi_get_sensor_group (record->sensor_type));
+
   if (sensor_reading == NULL)
     {
       pstdout_printf (state_data->pstate,

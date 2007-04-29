@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.10 2007-04-28 17:26:48 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.11 2007-04-29 04:36:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,6 +132,7 @@ _usage(void)
           "-g --groups list              Specify list of groups to monitor\n"
           "-c --cache-dir str            Specify alternate SDR cache directory\n"
           "-r --regenerate-sdr-cache str Regenerate SDR cache\n"
+          "-q --quiet-readings           Output only sensor states, no values\n"
           "-B --buffer-output            Buffer hostranged output\n"
           "-C --consolidate-output       Consolidate hostranged output\n"
           "-F --fanout num               Set multiple host fanout\n"

@@ -19,6 +19,12 @@ Verbose sensor output
 \fB\-vv\fR
 Very verbose sensor output
 .TP
+\fB\-q\fR, \fB\-\-quiet-readings\fR
+Do not output sensor reading values or thresholds on simple output,
+only sensor states.  This option is particularly useful if you want to
+use hostranged output across a cluster and want to consolidate the
+output.
+.TP
 \fB\-i\fR, \fB\-\-sdr\-info\fR
 Show SDR Info
 .TP

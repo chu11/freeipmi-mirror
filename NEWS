@@ -3,15 +3,16 @@
 
 For Users
 ---------
+o Added hostrange support to ipmi-sensors, ipmi-sel, ipmi-raw, and bmc-info
 o Added ipmimonitoring
 o Added ipmidetect
-o Added hostrange support to ipmi-sensors, ipmi-sel, ipmi-raw, and bmc-info
 o Added -T option to ipmiconsole.
 o Re-architected workarounds options for Ipmipower due to increasing number
   of vendor specific workarounds implemented. -W, -S, -Z, -X, -Y options removed.
   New -W option implemented.
 o Adjust ipmipower options to follow hostrange convention of other tools.
 o -Q option added for ipmi-sensors and ipmi-sel.
+o -q option added for ipmi-sensors.
 o Add community string and alert config to bmc-config.
 o Add verbose checkout/commit progress information for large checkout(s)/commit(s).
 o Add sensor names to ipmi-sel output when possible.
