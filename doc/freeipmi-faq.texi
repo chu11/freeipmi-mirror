@@ -2,15 +2,15 @@
 @c This file uses the @command command introduced in Texinfo 4.0.
 @c %**start of header
 @setfilename freeipmi-faq.info
-@settitle The GNU FreeIPMI - Frequently Asked Questions
+@settitle GNU FreeIPMI - Frequently Asked Questions
 @finalout
 @c %**end of header
 
 @include version-faq.texi
 
 @copying
-This manual is for GNU Garpd (version @value{VERSION}, @value{UPDATED}).
-Copyright @copyright{} 2006 Z RESEARCH, Inc.
+This manual is for GNU FreeIPMI (version @value{VERSION}, @value{UPDATED}).
+Copyright @copyright{} 2007 FreeIPMI Core Team
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -29,7 +29,7 @@ Free Software Foundation raise funds for GNU development.''
 
 @dircategory Platform Management
 @direntry
-* GNU FreeIPMI FAQ: (freeipmi-faq).  GNU FreeIPMI - Frequently Asked Questions
+* GNU FreeIPMI FAQ: (freeipmi-faq).  FreeIPMI - Frequently Asked Questions
 @end direntry
 
 @ifinfo
@@ -55,20 +55,19 @@ Copyright @copyright{} 2002-2005 FreeIPMI Core Team
 
 @node Top, What is IPMI, (dir), (dir)
 @ifinfo
-Frequently Asked Questions for @strong{GNU FreeIPMI} platform management system.
+Frequently Asked Questions on @strong{FreeIPMI}
 
 This edition of the documentation was last updated on @today{} for
-release @value{VERSION} of the GNU FreeIPMI.
+release @value{VERSION} of the FreeIPMI.
 @end ifinfo
 
 @menu
 * What is IPMI::                
-* What is GNU FreeIPMI?::       
+* What is FreeIPMI?::       
 * How did it start?::           
 * Who maintains FreeIPMI?::
-* Who should refer to this FAQ?::           
-* GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
-* What is special about GNU FreeIPMI::  
+* FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
+* What is special about FreeIPMI::  
 * SSIF Driver Configuration::   
 * x86-64 Compilation::          
 @end menu
@@ -76,13 +75,13 @@ release @value{VERSION} of the GNU FreeIPMI.
 @c Output the table of contents at the beginning.
 @contents
 
-@node What is IPMI, What is GNU FreeIPMI?, Top, Top
+@node What is IPMI, What is FreeIPMI?, Top, Top
 @section @acronym{IPMI} - Platform Management Standard
 
 The @acronym{IPMI} specifications define standardized, abstracted interfaces to
 the platform management subsystem.  @acronym{IPMI} includes the definition of
-interfaces for extending platform management between board within the
-main chassis, and between multiple chassis.
+interfaces for extending platform management between the board within the
+main chassis and between multiple chassis.
 
 The term platform management is used to refer to the monitoring and
 control functions that are built in to the platform hardware and
@@ -96,26 +95,27 @@ conditions for later examination and alerting where the platform
 issues the alert without aid of run-time software.  Lastly it includes
 inventory information that can help identify a failed hardware unit.
 
-@node What is GNU FreeIPMI?, How did it start?, What is IPMI, Top
-@section What is GNU FreeIPMI?
+@node What is FreeIPMI?, How did it start?, What is IPMI, Top
+@section What is FreeIPMI?
 
-GNU FreeIPMI is a Free Intelligent Platform Management System Software.
+FreeIPMI is a Free Intelligent Platform Management System Software.
 It provides ``Remote-Console'' (out-of-band), ``System Management
-Software'' (in-band) and a development library confirming to
+Software'' (in-band) and a development library conforming to the
 Intelligent Platform Management Interface (@acronym{IPMI} v1.5 and
 v2.0) standards.
 
-GNU FreeIPMI User's Guide concentrates installation, usage,
-troubleshooting and bug reporting.  It corresponds to @value{VERSION}
-release. 
+The FreeIPMI User's Guide concentrates on installation, usage,
+troubleshooting and bug reporting.  It corresponds to the
+@value{VERSION} release.
 
-@node How did it start?, Who maintains FreeIPMI?, What is GNU FreeIPMI?, Top
+@node How did it start?, Who maintains FreeIPMI?, What is FreeIPMI?, Top
 @section How did it start?
 
-In October 2003, California Digital Corp. was contracted by LLNL for
-the assembly of Thunder, a 1024 node Itanium2 cluster.  This project
-led to the co-development of FreeIPMI between California Digital and
-LLNL by merging the IPMI software developed by both organizations.
+In October 2003, California Digital Corp. was contracted by Lawrence
+Livermore National Laboratory (LLNL) for the assembly of Thunder, a
+1024 node Itanium2 cluster.  This project led to the co-development of
+FreeIPMI between California Digital and LLNL by merging the IPMI
+software developed by both organizations.
 
 Anand Babu, Balamurugan and Ian Zimmerman at CDC contributed the
 in-band driver, libfreeipmi, ipmi-sensors, bmc-config, ipmi-sel, and
@@ -125,32 +125,26 @@ in Powerman.  In October 2004, FreeIPMI 0.1.0 was officially released.
 Around same time, FreeIPMI project was accepted by the Free Software
 Foundation as a GNU project.
 
-@node Who maintains FreeIPMI?, Who should refer to this FAQ?, How did it start?, Top
+@node Who maintains FreeIPMI?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
 @section Who maintains FreeIPMI?
 
-Maintenance and development of GNU FreeIPMI is shared between Lawrence
-Livermore National Laboratory (LLNL) and Z RESEARCH Inc.
+Maintenance and development of FreeIPMI is currently shared between
+Lawrence Livermore National Laboratory (LLNL) and Z RESEARCH Inc.
 
 (Z RESEARCH Inc. was founded by former members for California Digital Corp.)
 
-@node Who should refer to this FAQ?, GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Who maintains FreeIPMI?, Top
-@section Who should refer to this FAQ?
-If you want to use the @emph{Intelligent Platform Management Interface}
-functionalities available on modern motherboards running GNU or any
-POSIX compliant operating systems, this guide is right for you.
-
-@node GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about GNU FreeIPMI, Who should refer to this FAQ?, Top
-@section What is the relationship between GNU FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
+@node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, Who maintains FreeIPMI?, Top
+@section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
 There are multiple implementations, APIs, interfaces, end user
 requirements, etc. that one can choose when developing IPMI drivers,
-libraries, and tools.  GNU FreeIPMI has taken some different
+libraries, and tools.  FreeIPMI has taken some different
 approaches towards development than other open-source projects.
 
 Some examples of the differences in approaches:
 
 1) In-Band Driver
 
-GNU FreeIPMI implements their in-band IPMI driver in userspace using
+FreeIPMI implements their in-band IPMI driver in userspace using
 iopl() calls (and /dev/io interface under FreeBSD) while OpenIPMI
 implements a kernel module for its in-band IPMI driver.
 
@@ -159,18 +153,15 @@ supported in FreeIPMI as an alternate in-band IPMI driver.)
 
 2) Libraries
 
-OpenIPMI (to our knowledge) concentrates on higher level APIs to use
-the IPMI driver.  GNU FreeIPMI primarily concentrates on APIs for IPMI
-packet construction.  Some higher level management APIs are provided
-although they are not considered the primary focus of libfreeipmi.
+The OpenIPMI library concentrates on higher level APIs.  The FreeIPMI
+library primarily concentrates on APIs for IPMI packet construction.
+Some higher level management APIs are provided although they are not
+considered the primary focus of libfreeipmi.
 
-The GNU FreeIPMI developers have contributed patches to the other projects
-on multiple occassions.
+@node What is special about FreeIPMI, SSIF Driver Configuration, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
+@section What is special about FreeIPMI compared to other open source IPMI projects?
 
-@node What is special about GNU FreeIPMI, SSIF Driver Configuration, GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
-@section What is special about GNU FreeIPMI compared to other open source IPMI projects?
-
-In our eyes, there are several reasons why GNU FreeIPMI is particularly special.
+In our eyes, there are several reasons why FreeIPMI is particularly special.
 
 1) Support for HPC
 
@@ -191,7 +182,7 @@ Conman.
 
 Scalable parallel execution of ipmi-sensors, ipmi-sel, ipmi-raw,
 bmc-info, and ipmimonitoring across a cluster is supported through
-hostranged input and a library.
+hostranged input and output.
 
 @example
 # > bmc-info -h "pwopr[0-5]" -u XXX -p XXX -C
@@ -278,14 +269,14 @@ By ``splitting'' various IPMI features into multiple tools, each tool
 is capable of providing the user with easier to use options and
 features, which may not be capable in a ``all in one'' tool.
 
-@node SSIF Driver Configuration, x86-64 Compilation, What is special about GNU FreeIPMI, Top
+@node SSIF Driver Configuration, x86-64 Compilation, What is special about FreeIPMI, Top
 @section SSIF Driver Configuration
 
-GNU FreeIPMI's SSIF driver works on top of kernel'2 i2c device
+FreeIPMI's SSIF driver works on top of kernel'2 i2c device
 interface.
 
 Under GNU/Linux load these kernel modules: i2c-dev, i2c-i801, i2c-core
-before using GNU FreeIPMI.
+before using FreeIPMI.
 
 To identify SSIF device address: 
 

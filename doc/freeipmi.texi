@@ -9,8 +9,8 @@
 @include version-doc.texi
 
 @copying
-This manual is for GNU Garpd (version @value{VERSION}, @value{UPDATED}).
-Copyright @copyright{} 2006 Z RESEARCH, Inc.
+This manual is for GNU FreeIPMI (version @value{VERSION}, @value{UPDATED}).
+Copyright @copyright{} 2007 FreeIPMI Core Team
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -33,7 +33,7 @@ Free Software Foundation raise funds for GNU development.''
 @end direntry
 
 @ifinfo
-Copyright @copyright{} 2002-2006 FreeIPMI Core Team.
+Copyright @copyright{} 2002-2007 FreeIPMI Core Team.
 
 @insertcopying
 @end ifinfo
@@ -51,10 +51,10 @@ Copyright @copyright{} 2002-2006 FreeIPMI Core Team.
 
 @node Top, Introduction, (dir), (dir)
 @ifinfo
-User's Guide for @strong{GNU FreeIPMI} platform management system.
+User's Guide for the @strong{FreeIPMI} platform management system.
 
 This edition of the documentation was last updated on @today{} for
-release @value{VERSION} of the GNU FreeIPMI.
+release @value{VERSION} of the FreeIPMI.
 @end ifinfo
 
 @c Output the table of contents at the beginning.
@@ -64,7 +64,7 @@ release @value{VERSION} of the GNU FreeIPMI.
 @c All the menus can be updated with the EMACS command
 @c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
 @menu
-* Introduction::                Introduction to the GNU FreeIPMI system.
+* Introduction::                Introduction to the FreeIPMI system.
 * Installation::                Installing the software.
 * libfreeipmi::                 C library for @acronym{IPMI}
 * ipmi-locate::                 @acronym{IPMI} device probing tool.
@@ -82,25 +82,25 @@ release @value{VERSION} of the GNU FreeIPMI.
 * Trouble-shooting::            Trouble-shooting tips.
 * Contact us::                  Contact Information.
 * Authors::                     FreeIPMI core team members.
-* Copying::                     GNU FreeIPMI is a Free Software.
+* Copying::                     FreeIPMI is a Free Software.
 * Glossary::                    Conventions and terminologies. 
 * Concept Index::               Index of concepts.
 * Program Index::               Index of programs.
 @end menu
 
 @node Introduction, Installation, Top, Top
-@chapter Introduction to the GNU FreeIPMI system
-@cindex Introduction to the GNU FreeIPMI system
+@chapter Introduction to the FreeIPMI system
+@cindex Introduction to the FreeIPMI system
 
-GNU FreeIPMI is a Free Intelligent Platform Management System Software.
+FreeIPMI is a Free Intelligent Platform Management System Software.
 It provides ``Remote-Console'' (out-of-band), ``System Management
 Software'' (in-band) and a development library confirming to
 Intelligent  Platform Management Interface (@acronym{IPMI} v1.5 and v2.0) 
 standards. 
 
-GNU FreeIPMI User's Guide concentrates installation, usage,
-troubleshooting and bug reporting.  It corresponds to @value{VERSION}
-release. 
+The FreeIPMI User's Guide concentrates on installation, usage,
+troubleshooting and bug reporting.  It corresponds to the
+@value{VERSION} release.
 
 @menu
 * Intended Audience::           Who should read this guide?.
@@ -113,9 +113,9 @@ If you want to use the @emph{Intelligent Platform Management Interface}
 functionalities available on modern motherboards running GNU or any
 POSIX compliant operating systems, this guide is right for you.
 
-@c The internals of GNU FreeIPMI system including how to hack,
+@c The internals of FreeIPMI system including how to hack,
 @c extend or porting to new platforms are documented in a separate manual
-@c called @inforef{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@.
+@c called @inforef{Top, FreeIPMI Hackers Guide, freeipmi-hg}@.
 
 @node About IPMI,  , Intended Audience, Introduction
 @section @acronym{IPMI} - Platform Management Standard
@@ -138,10 +138,10 @@ issues the alert without aid of run-time software.  Lastly it includes
 inventory information that can help identify a failed hardware unit.
 
 @node Installation, libfreeipmi, Introduction, Top
-@chapter Installing GNU FreeIPMI
+@chapter Installing FreeIPMI
 You can obtain copies of source, binary, documentation and other
 useful information from the
-@uref{http://www.gnu.org/software/freeipmi, GNU FreeIPMI Home Page}@.
+@uref{http://www.gnu.org/software/freeipmi, FreeIPMI Home Page}@.
 
 @menu
 * Dependencies::                Dependent run-time and libraries.
@@ -151,7 +151,7 @@ useful information from the
 
 @node Dependencies, Build, Installation, Installation
 @section Dependencies
-GNU FreeIPMI is designed to have minimum dependencies on other
+FreeIPMI is designed to have minimum dependencies on other
 libraries and tools.  Only the libfreeipmi library depends on
 libgcrypt for encryption use with IPMI 2.0.
 
@@ -233,7 +233,7 @@ Example:
 
 @node Test Fire,  , Build, Installation
 @section Test Fire
-GNU FreeIPMI works both in-band (with-in the system) and out-of-band
+FreeIPMI works both in-band (with-in the system) and out-of-band
 (over the network).  Easiest way to test if your system has @acronym{IPMI}
 support or if the installation is OK is through @command{bmc-info}
 command.
@@ -286,7 +286,7 @@ please refer to @ref{Trouble-shooting}@.
 @chapter @acronym{IPMI} C library (libfreeipmi)
 @pindex libfreeipmi
 
-The Core of the GNU FreeIPMI system consists of LAN, OpenIPMI, KCS, and SSIF 
+The Core of the FreeIPMI system consists of LAN, OpenIPMI, KCS, and SSIF 
 interface drivers, all packaged in a single portable C
 library.  Management applications can access the BMC at various levels 
 using higher level @acronym{IPMI} command APIs or raw read/write interfaces to
@@ -298,7 +298,7 @@ locate the system interfaces.
 @c If you want to develop your own remote-console or
 @c system-management-software or integrate @acronym{IPMI} functionality into your
 @c software using C language interface, then you should refer to
-@c @ref{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@. 
+@c @ref{Top, FreeIPMI Hackers Guide, freeipmi-hg}@. 
 
 @node ipmi-locate, bmc-config, libfreeipmi, Top
 @chapter @acronym{ipmi-locate} IPMI device probing tool
@@ -3032,7 +3032,7 @@ debian-ia64:~#
 Many of the the device drivers are completely written in user-space.  If you
 already have in-kernel @acronym{IPMI} drivers loaded, they may conflict
 with FreeIPMI's drivers.  You may need unload them
-before you launch any GNU FreeIPMI utility.
+before you launch any FreeIPMI utility.
 
 @node Contact us, Authors, Trouble-shooting, Top
 @chapter Contact us
@@ -3070,16 +3070,16 @@ Contact FreeIPMI Core Team <ab(@@)gnu.org.in>
 @cindex Copying
 
 @menu
-* GNU FreeIPMI license::        
-* GNU FreeIPMI documentation license::  
+* FreeIPMI license::        
+* FreeIPMI documentation license::  
 @end menu
 
-@node GNU FreeIPMI license, GNU FreeIPMI documentation license, Copying, Copying
-@section GNU FreeIPMI license
+@node FreeIPMI license, FreeIPMI documentation license, Copying, Copying
+@section FreeIPMI license
 @include gpl.texi
 
-@node GNU FreeIPMI documentation license,  , GNU FreeIPMI license, Copying
-@section GNU FreeIPMI documentation license
+@node FreeIPMI documentation license,  , FreeIPMI license, Copying
+@section FreeIPMI documentation license
 @include fdl.texi
 
 @node Glossary, Concept Index, Copying, Top

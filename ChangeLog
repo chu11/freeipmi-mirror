@@ -23,6 +23,8 @@
 	(ipmi_sdr_cache_open): Fix errno corner case.
 
 	* ipmi-sensors/: Add -q option.
+
+	* docs/: Various minor cleanup and wording fixes.
 	
 2007-04-27  Albert Chu <chu11@llnl.gov>
 
