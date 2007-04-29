@@ -166,7 +166,8 @@ In our eyes, there are several reasons why FreeIPMI is particularly special.
 1) Support for HPC
 
 A number of HPC aspects have been added to the tools and/or are
-supported by other HPC software.
+supported by other HPC software due to the need for FreeIPMI to work
+on LLNL's Linux clusters.
 
 Ipmipower is capable of scaling to large nodes for cluster support.
 It is supported by Powerman (@uref{http://sourceforge.net/projects/powerman})
