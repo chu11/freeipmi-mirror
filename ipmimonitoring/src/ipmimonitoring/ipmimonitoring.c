@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.11 2007-04-29 04:36:50 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.12 2007-04-29 18:37:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,6 +68,7 @@
 
 #define IPMIMONITORING_MAX_RECORD_IDS 256
 #define IPMIMONITORING_MAX_GROUPS     64
+#define IPMIMONITORING_BUFLEN         1024
 
 static struct ipmi_monitoring_ipmi_config conf;
 
@@ -565,7 +566,7 @@ _ipmimonitoring(pstdout_state_t pstate,
                      sensor_name, 
                      sensor_state_str);
       
-      if (!quiet_readings)
+      if (!quiet_readings && sensor_reading)
         {
           if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
             pstdout_printf(pstate,
@@ -580,9 +581,46 @@ _ipmimonitoring(pstdout_state_t pstate,
                            ": %f ", 
                            *((double *)sensor_reading));
           else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
-            pstdout_printf(pstate,
-                           ": 0x%X ", 
-                           *((uint16_t *)sensor_reading));
+            {
+              int bitmask_type;
+
+              pstdout_printf(pstate,
+                             ": 0x%X", 
+                             *((uint16_t *)sensor_reading));
+
+              if ((bitmask_type = ipmi_monitoring_iterator_sensor_bitmask_type(c)) < 0)
+                {
+                  pstdout_fprintf(pstate, 
+                                  stderr, 
+                                  "ipmi_monitoring_iterator_sensor_bitmask_type: %s\n", 
+                                  ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+                  exit_code = EXIT_FAILURE;
+                  goto cleanup;
+                }
+              
+              if (bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
+                {
+                  char buffer[IPMIMONITORING_BUFLEN+1];
+                  
+                  if (ipmi_monitoring_bitmask_string(c,
+                                                     bitmask_type,
+                                                     *((uint16_t *)sensor_reading),
+                                                     buffer,
+                                                     IPMIMONITORING_BUFLEN) < 0)
+                    {
+                      pstdout_fprintf(pstate, 
+                                      stderr, 
+                                      "ipmi_monitoring_bitmask_string: %s\n", 
+                                      ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+                      exit_code = EXIT_FAILURE;
+                      goto cleanup;
+                    }
+                  
+                pstdout_printf(pstate,
+                                 ": \"%s\" ", 
+                                 buffer);
+                }
+            }
           
           if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
             sensor_units_str = "C";

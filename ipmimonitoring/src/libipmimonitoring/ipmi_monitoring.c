@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.9 2007-04-27 04:34:18 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.10 2007-04-29 18:37:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -718,6 +718,9 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
                                char *buffer,
                                unsigned int buflen)
 {
+  unsigned int offset;
+  int i;
+
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return -1;
 
@@ -729,10 +732,11 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
       return -1;
     }
   
-  if (!bitmask)
-    return -1;
-
   memset(buffer, '\0', buflen);
+
+  /* No value in bitmask - no string */
+  if (!bitmask)
+    return 0;
   
   if (bitmask_type >= IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION
       && bitmask_type <= IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_STATE)
@@ -779,8 +783,17 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           return -1;
         }
 
+      for (i = 0; i < 16; i++)
+        {
+          if ((0x1 << i) & bitmask)
+            {
+              offset = i;
+              break;
+            }
+        }
+
       if (ipmi_get_generic_event_message (event_reading_type_code,
-                                          bitmask,
+                                          offset,
                                           buffer,
                                           buflen) < 0)
         {
@@ -844,8 +857,17 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           return -1;
         }
       
+      for (i = 0; i < 16; i++)
+        {
+          if ((0x1 << i) & bitmask)
+            {
+              offset = i;
+              break;
+            }
+        }
+
       if (ipmi_get_sensor_type_code_message (sensor_type_code,
-                                             bitmask,
+                                             offset,
                                              buffer,
                                              buflen) < 0)
         {
