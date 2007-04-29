@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.66 2007-04-29 16:40:07 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.67 2007-04-29 16:41:35 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -120,7 +120,7 @@ Output version and exit.
 .TP
 .I "-X, --config file"
 Specify alternate configuration file.
-}
+\}
 .LP
 .SH "ADVANCED OPTIONS"
 The following advanced options are used to change the default behavior
