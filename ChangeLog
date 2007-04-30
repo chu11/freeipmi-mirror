@@ -10,6 +10,9 @@
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
 	(_ipmimonitoring): Fix corner case.  Output strings for bitmask
 	readings.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.h: Fix
+	bitmask values.  Don't know what I was doing before.
 	
 2007-04-28  Albert Chu <chu11@llnl.gov>
 

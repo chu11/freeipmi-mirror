@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.10 2007-04-29 18:37:03 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.11 2007-04-30 05:25:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -783,6 +783,11 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           return -1;
         }
 
+      /* IPMI spec has bitmasks as the offset bit number, not the
+       * actual offset.
+       *
+       * i.e. bitmask = 0x0020.  IPMI spec offset = 5.
+       */
       for (i = 0; i < 16; i++)
         {
           if ((0x1 << i) & bitmask)
@@ -791,7 +796,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
               break;
             }
         }
-
+ 
       if (ipmi_get_generic_event_message (event_reading_type_code,
                                           offset,
                                           buffer,
@@ -857,6 +862,11 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           return -1;
         }
       
+      /* IPMI spec has bitmasks as the offset bit number, not the
+       * actual offset.
+       *
+       * i.e. bitmask = 0x0020.  IPMI spec offset = 5.
+       */
       for (i = 0; i < 16; i++)
         {
           if ((0x1 << i) & bitmask)
