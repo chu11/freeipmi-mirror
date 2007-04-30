@@ -8,8 +8,8 @@
 	(ipmi_monitoring_bitmask_string): Fix corner case.
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
-	(_ipmimonitoring): Fix corner case.  Output strings output for
-	bitmask readings.
+	(_ipmimonitoring): Fix corner case.  Output strings for bitmask
+	readings.
 	
 2007-04-28  Albert Chu <chu11@llnl.gov>
 
