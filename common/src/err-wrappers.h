@@ -476,6 +476,94 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define UDM_ERR_DEVICE_ALREADY_OPEN(expr)                               \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_ALREADY_OPEN;                       \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DEVICE_ALREADY_OPEN_CLEANUP(expr)                       \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_ALREADY_OPEN;                       \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DEVICE_NOT_OPEN(expr)                                   \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_NOT_OPEN;                           \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DEVICE_NOT_OPEN_CLEANUP(expr)                           \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_NOT_OPEN;                           \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DEVICE_NOT_SUPPORTED(expr)                              \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DEVICE_NOT_SUPPORTED_CLEANUP(expr)                      \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_INVALID_PARAMETERS(expr)                                \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INVALID_PARAMETERS;                        \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_INVALID_PARAMETERS_CLEANUP(expr)                        \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INVALID_PARAMETERS;                        \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define UDM_ERR_INTERNAL_SYSTEM_ERROR(expr)                             \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -520,22 +608,22 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define UDM_ERR_DEVICE_NOT_SUPPORTED(expr)                              \
+#define UDM_ERR_INTERNAL_ERROR(expr)                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
+      dev->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
 
-#define UDM_ERR_DEVICE_NOT_SUPPORTED_CLEANUP(expr)                      \
+#define UDM_ERR_INTERNAL_ERROR_CLEANUP(expr)                            \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
+      dev->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
       goto cleanup;                                                     \
