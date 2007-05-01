@@ -157,6 +157,17 @@ do {                                                  \
     errno = EINVAL;                                   \
 } while (0)
 
+#define __FIID_OBJ_SET_UDM_ERRNUM(___obj)          \
+do {                                               \
+  int32_t __errnum = fiid_obj_errnum((___obj));    \
+  if (__errnum == FIID_ERR_SUCCESS)                \
+    dev->errnum = IPMI_ERR_SUCCESS;                \
+  else if (__errnum == FIID_ERR_OUTMEM)            \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
+  else                                             \
+    dev->errnum = IPMI_ERR_INVALID_PARAMETERS;     \
+} while (0)
+
 #define FIID_TEMPLATE_LEN(__len, __tmpl)                    \
 do {                                                        \
   if (((__len) = fiid_template_len ((__tmpl))) < 0)         \
@@ -338,6 +349,17 @@ do {                                            \
       __FIID_TRACE;                             \
       goto cleanup;                             \
     }                                           \
+} while (0)
+
+#define UDM_FIID_OBJ_CREATE_CLEANUP(__obj, __tmpl)  \
+do {                                                \
+  if (!((__obj) = fiid_obj_create(__tmpl)))         \
+    {                                               \
+      __FIID_SYSLOG;                                \
+      __FIID_TRACE;                                 \
+      dev->errnum = IPMI_ERR_OUT_OF_MEMORY;         \
+      goto cleanup;                                 \
+    }                                               \
 } while (0)
 
 #define FIID_OBJ_DESTROY(__obj)                \
@@ -869,7 +891,25 @@ do {                                                   \
 	errno = EINVAL;                                \
         __FIID_OBJ_SYSLOG((__obj));                    \
         __FIID_OBJ_TRACE((__obj));                     \
-	__FIID_OBJ_SET_ERRNO((__obj));                 \
+	return (-1);                                   \
+      }                                                \
+} while (0)
+
+#define UDM_FIID_OBJ_PACKET_VALID(__obj)               \
+do {                                                   \
+    int __ret;                                         \
+    if ((__ret = fiid_obj_packet_valid((__obj))) < 0)  \
+      {                                                \
+        __FIID_OBJ_SYSLOG((__obj));                    \
+        __FIID_OBJ_TRACE((__obj));                     \
+	__FIID_OBJ_SET_UDM_ERRNUM((__obj));            \
+        return (-1);                                   \
+      }                                                \
+    if (!__ret)                                        \
+      {                                                \
+        __FIID_OBJ_SYSLOG((__obj));                    \
+        __FIID_OBJ_TRACE((__obj));                     \
+        dev->errnum = IPMI_ERR_INVALID_PARAMETERS;     \
 	return (-1);                                   \
       }                                                \
 } while (0)

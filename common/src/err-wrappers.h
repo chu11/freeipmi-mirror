@@ -315,6 +315,233 @@ do {                                                                            
     __IPMI_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                      \
 } while (0)
 
+/* EINVAL -> INTERNAL_LIBRARY_ERROR b/c bad inputs should be directly returned
+ * to the user as IPMI_ERR_INVALID_PARAMETERS
+ */
+#define __ERRNO_TO_UDM_ERRNUM(___obj)              \
+do {                                               \
+  if (errno == 0)                                  \
+    dev->errnum = IPMI_ERR_SUCCESS;                \
+  else if (errno == ENOMEM)                        \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
+  else if (errno == ENODEV)                        \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;   \
+  else if (errno == EINVAL)                        \
+    dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR; \
+  else                                             \
+    dev->errnum = IPMI_ERR_INTERNAL;               \
+} while (0)
+
+#define UDM_ERR_ERRNO_TO_UDM_ERRNUM(expr)                               \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __ERRNO_TO_UDM_ERRNUM;                                            \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_ERRNO_TO_UDM_ERRNUM_CLEANUP(expr)                       \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __ERRNO_TO_UDM_ERRNUM;                                            \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+/* INVALID_PARAMETER -> INTERNAL_LIBRARY_ERROR b/c bad inputs should
+ * be directly returned to the user as IPMI_ERR_INVALID_PARAMETERS
+ */
+#define __KCS_ERRNUM_TO_UDM_ERRNUM(___obj)                       \
+do {                                                             \
+  int32_t __ernum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx); \
+  if (__errnum == IPMI_KCS_CTX_ERR_SUCCESS)                      \
+    dev->errnum = IPMI_ERR_SUCCESS;                              \
+  else if (__errnum == IPMI_KCS_CTX_ERR_OUTMEM)                  \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                        \
+  else if (__errnum == IPMI_KCS_CTX_ERR_PERMISSION)              \
+    dev->errnum = IPMI_ERR_PERMISSION;                           \
+  else if (__errnum == IPMI_KCS_CTX_ERR_PARAMETERS)              \
+    dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;               \
+  else                                                           \
+    dev->errnum = IPMI_ERR_INTERNAL;                             \
+} while (0)
+
+#define UDM_ERR_KCS_ERRNUM_TO_UDM_ERRNUM(expr)                          \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_KCS_ERRNUM_TO_UDM_ERRNUM_CLEANUP(expr)                  \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+/* INVALID_PARAMETER -> INTERNAL_LIBRARY_ERROR b/c bad inputs should
+ * be directly returned to the user as IPMI_ERR_INVALID_PARAMETERS
+ */
+#define __SSIF_ERRNUM_TO_UDM_ERRNUM(___obj)                        \
+do {                                                               \
+  int32_t __ernum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx); \
+  if (__errnum == IPMI_SSIF_CTX_ERR_SUCCESS)                       \
+    dev->errnum = IPMI_ERR_SUCCESS;                                \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_OUTMEM)                   \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                          \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_PERMISSION)               \
+    dev->errnum = IPMI_ERR_PERMISSION;                             \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_PARAMETERS)               \
+    dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                 \
+  else                                                             \
+    dev->errnum = IPMI_ERR_INTERNAL;                               \
+} while (0)
+
+#define UDM_ERR_SSIF_ERRNUM_TO_UDM_ERRNUM(expr)                         \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_SSIF_ERRNUM_TO_UDM_ERRNUM_CLEANUP(expr)                 \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+/* INVALID_PARAMETER -> INTERNAL_LIBRARY_ERROR b/c bad inputs should
+ * be directly returned to the user as IPMI_ERR_INVALID_PARAMETERS
+ */
+#define __OPENIPMI_ERRNUM_TO_UDM_ERRNUM(___obj)                            \
+do {                                                                       \
+  int32_t __ernum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx); \
+  if (__errnum == IPMI_OPENIPMI_CTX_ERR_SUCCESS)                           \
+    dev->errnum = IPMI_ERR_SUCCESS;                                        \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_OUTMEM)                       \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;                                  \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PERMISSION)                   \
+    dev->errnum = IPMI_ERR_PERMISSION;                                     \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOTFOUND)              \
+    dev->errnum = IPMI_ERR_INTERNAL_DEVICE_NOT_SUPPORTED;                  \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)                   \
+    dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                         \
+  else                                                                     \
+    dev->errnum = IPMI_ERR_INTERNAL;                                       \
+} while (0)
+
+#define UDM_ERR_OPENIPMI_ERRNUM_TO_UDM_ERRNUM(expr)                     \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_OPENIPMI_ERRNUM_TO_UDM_ERRNUM_CLEANUP(expr)             \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_INTERNAL_SYSTEM_ERROR(expr)                             \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INTERNAL_SYSTEM_ERROR;                     \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_INTERNAL_SYSTEM_ERROR_CLEANUP(expr)                     \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INTERNAL_SYSTEM_ERROR;                     \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_INTERNAL_LIBRARY_ERROR(expr)                            \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                    \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_INTERNAL_LIBRARY_ERROR_CLEANUP(expr)                    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                    \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DEVICE_NOT_SUPPORTED(expr)                              \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DEVICE_NOT_SUPPORTED_CLEANUP(expr)                      \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #ifdef __cplusplus
 }
 #endif
