@@ -1,3 +1,7 @@
+2007-04-30  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Don't bother to obscure ipmipower error messages.
+
 2007-04-29  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Fix text.

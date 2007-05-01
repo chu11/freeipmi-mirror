@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.68 2007-04-29 16:48:23 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.69 2007-05-01 02:06:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -694,14 +694,8 @@ Sensitive command line arguments are not cleared from memory.
 .IP o
 Core dumps are enabled.
 .IP o
-Error messages are not ambiguously returned to the user.  For example,
-in a debug compiled binary, username and password errors are returned
-with specific username or password error messages.  In a non-debug
-compiled binary, a generic "Permission Denied" message is output under
-both circumstances.
-.IP o
-In interactive mode, "config" and "password" commands will output
-the current password to stdout.
+In interactive mode, commands may output sensitive information
+to stdout.
 .IP o
 Configuration info such as username and password can be output to the
 log file.

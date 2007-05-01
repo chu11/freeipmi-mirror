@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.102 2007-04-28 00:28:17 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.103 2007-05-01 02:06:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -638,11 +638,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    {
 	      if (!ipmipower_check_rakp_2_key_exchange_authentication_code(ip, pkt))
 		{
-#ifndef NDEBUG
-		  ipmipower_output(MSG_TYPE_PASSWORD, ip->ic->hostname);
-#else  /* !NDEBUG */
-		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+		  ipmipower_output(MSG_TYPE_PASSWORD, ip->ic->hostname); /* XXX - permission denied? */
 		  goto cleanup;
 		}
 	    }
@@ -650,11 +646,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    {
 	      if (!ipmipower_check_rakp_4_integrity_check_value(ip, pkt))
 		{
-#ifndef NDEBUG
-		  ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
-#else  /* !NDEBUG */
-		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+		  ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname); /* XXX - permission denied? */
 		  goto cleanup;
 		}
 	    }
@@ -1004,11 +996,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
       || (strlen(conf->username)
 	  && !authentication_status_non_null_username))
     {
-#ifndef NDEBUG
-      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
-#else  /* !NDEBUG */
-      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
       return -1;
     }
 
@@ -1039,11 +1027,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
-#ifndef NDEBUG	      
-	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname);
-#else  /* !NDEBUG */
-	      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname); /* XXX - permission denied? */
 	      return -1;
 	    }
 	  else
@@ -1051,11 +1035,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	}
       else
 	{
-#ifndef NDEBUG	      
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);
-#else  /* !NDEBUG */
-	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	/* XXX - permission denied? */
 	  return -1;
 	}
     }
@@ -1078,11 +1058,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
-#ifndef NDEBUG
-	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);
-#else  /* !NDEBUG */
-              ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);	/* XXX - permission denied? */
 	      return -1;
 	    }
 	  else
@@ -1173,22 +1149,14 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
       || (strlen(conf->username)
 	  && !authentication_status_non_null_username))
     {
-#ifndef NDEBUG
-      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
-#else  /* !NDEBUG */
-      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
       return -1;
     }
 
   if ((conf->k_g_configured != IPMIPOWER_TRUE && authentication_status_k_g)
       || (conf->k_g_configured == IPMIPOWER_TRUE && !authentication_status_k_g))
     {
-#ifndef NDEBUG
-      ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
-#else  /* !NDEBUG */
-      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+      ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);	/* XXX - permission denied? */
       return -1;
     }
 
@@ -1546,11 +1514,7 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
           dbg("_determine_cipher_suite_id_to_use(%s:%d): "
               " cipher suite not found: %x",
               ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
-#ifndef NDEBUG
-          ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); 
-#else  /* !NDEBUG */
-          ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+          ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); /* XXX - permission denied? */
           return -1;
         }
     }
@@ -1581,11 +1545,7 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
           dbg("_determine_cipher_suite_id_to_use(%s:%d): "
               " can't find usable cipher suite",
               ip->ic->hostname, ip->protocol_state);
-#ifndef NDEBUG
-          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname);
-#else  /* !NDEBUG */
-          ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
           return -1;
         }
       
@@ -1687,11 +1647,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	  && conf->privilege != PRIVILEGE_TYPE_AUTO 
 	  && !priv_check)
 	{
-#ifndef NDEBUG
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname); 
-#else  /* !NDEBUG */
-	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	/* XXX - permission denied? */
 	  return -1;
 	}
       
@@ -1699,11 +1655,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	  && conf->privilege == PRIVILEGE_TYPE_AUTO 
 	  && !priv_check)
 	{
-#ifndef NDEBUG
-	  ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); 
-#else  /* !NDEBUG */
-	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+	  ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); /* XXX - permission denied? */
 	  return -1;
 	}
     }
@@ -1718,11 +1670,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
           /* Lets try the next Cipher Suite ID if there is one */
           if (ip->cipher_suite_id_ranking_index == (cipher_suite_id_ranking_count - 1))
             {
-#ifndef NDEBUG
-              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-#else  /* !NDEBUG */
-              ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
               return -1;
             }
           else
@@ -1747,11 +1695,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
               
               if (!cipher_suite_found)
                 {
-#ifndef NDEBUG
-                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-#else  /* !NDEBUG */
-                  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif /* !NDEBUG */
+                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
                   return -1;
                 }
               
