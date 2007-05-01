@@ -55,8 +55,52 @@ do {                                                                    \
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
   errno = save_errno;                                                   \
 } while (0)
+
+#define __KCS_SYSLOG                                                    \
+do {                                                                    \
+  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
+            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
+            __LINE__, __PRETTY_FUNCTION__,                              \
+	    ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx));               \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+} while (0)
+
+#define __SSIF_SYSLOG                                                   \
+do {                                                                    \
+  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
+            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
+            __LINE__, __PRETTY_FUNCTION__,                              \
+	    ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx));             \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+} while (0)
+
+#define __OPENIPMI_SYSLOG                                               \
+do {                                                                    \
+  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
+            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
+            __LINE__, __PRETTY_FUNCTION__,                              \
+	    ipmi_openipmi_ctx_errnum(dev->io.inband.kcs_ctx));          \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+} while (0)
+
+#define __UDM_SYSLOG                                                    \
+do {                                                                    \
+  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
+            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
+            __LINE__, __PRETTY_FUNCTION__,                              \
+	    dev->errnum);                                               \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+} while (0)
 #else
 #define __IPMI_SYSLOG
+#define __KCS_SYSLOG
+#define __SSIF_SYSLOG
+#define __OPENIPMI_SYSLOG
+#define __UDM_SYSLOG
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
@@ -69,6 +113,42 @@ do {                                                                    \
            __LINE__, __PRETTY_FUNCTION__, save_errno);                  \
   fflush (stderr);                                                      \
   errno = save_errno;                                                   \
+} while (0)
+
+#define __KCS_TRACE                                                     \
+do {                                                                    \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
+           __LINE__, __PRETTY_FUNCTION__,                               \
+	   ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx));                \
+  fflush (stderr);                                                      \
+} while (0)
+
+#define __SSIF_TRACE                                                    \
+do {                                                                    \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
+           __LINE__, __PRETTY_FUNCTION__,                               \
+	   ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx));              \
+  fflush (stderr);                                                      \
+} while (0)
+
+#define __OPENIPMI_TRACE                                                \
+do {                                                                    \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
+           __LINE__, __PRETTY_FUNCTION__,                               \
+	   ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx));      \
+  fflush (stderr);                                                      \
+} while (0)
+
+#define __UDM_TRACE                                                     \
+do {                                                                    \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
+           __LINE__, __PRETTY_FUNCTION__,                               \
+	   dev->errnum);                                                \
+  fflush (stderr);                                                      \
 } while (0)
 
 #define __IPMI_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                      \
@@ -89,6 +169,10 @@ do {                                                                    \
 } while (0) 
 #else
 #define __IPMI_TRACE
+#define __KCS_TRACE
+#define __SSIF_TRACE
+#define __OPENIPMI_TRACE
+#define __UDM_TRACE
 #define __IPMI_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                      \
 do {                                                                    \
   extern int errno;                                                     \
@@ -376,8 +460,8 @@ do {                                                              \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __KCS_SYSLOG;                                                     \
+      __KCS_TRACE;                                                      \
       __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
       return (-1);                                                      \
     }                                                                   \
@@ -387,8 +471,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __KCS_SYSLOG;                                                     \
+      __KCS_TRACE;                                                      \
       __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
       goto cleanup;                                                     \
     }                                                                   \
@@ -416,8 +500,8 @@ do {                                                                \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __SSIF_SYSLOG;                                                    \
+      __SSIF_TRACE;                                                     \
       __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
       return (-1);                                                      \
     }                                                                   \
@@ -427,8 +511,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __SSIF_SYSLOG;                                                    \
+      __SSIF_TRACE;                                                     \
       __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
       goto cleanup;                                                     \
     }                                                                   \
@@ -458,8 +542,8 @@ do {                                                                        \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __OPENIPMI_SYSLOG;                                                \
+      __OPENIPMI_TRACE;                                                 \
       __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
       return (-1);                                                      \
     }                                                                   \
@@ -469,8 +553,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __OPENIPMI_SYSLOG;                                                \
+      __OPENIPMI_TRACE;                                                 \
       __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
       goto cleanup;                                                     \
     }                                                                   \

@@ -51,3 +51,5 @@ ssif_cmd
 openipmi_cmd
 
 cleanup err wrappers. any way?
+
+cleanup err wrappers names
