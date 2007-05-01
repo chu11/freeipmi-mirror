@@ -37,3 +37,17 @@ hostrange howto doc stuff
 ipmipower:
 ----------
 -B, -C, -E option support?
+
+
+
+ENONENT/etc. fof ssif/kcs api
+rename variables for better consistency?
+audit errno/kcs/ssif/openipmi errors -> udm errnos
+
+lan_open_session
+lan_cmd
+kcs_cmd
+ssif_cmd
+openipmi_cmd
+
+cleanup err wrappers. any way?
