@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.12 2007-04-29 18:37:03 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.13 2007-05-02 14:00:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -497,10 +497,19 @@ _ipmimonitoring(pstdout_state_t pstate,
         }
     }
     
+
+  pstdout_printf(pstate, 
+                 "Record_ID | Sensor Name | Sensor Group | Monitoring Status");
+  if (!quiet_readings)
+    pstdout_printf(pstate, 
+                   "| Sensor Units | Sensor Reading");
+  pstdout_printf(pstate, 
+                 "\n");
+
   for (i = 0; i < num; i++, ipmi_monitoring_iterator_next(c))
     {
-      int record_id, sensor_state, sensor_units, sensor_reading_type;
-      char *sensor_state_str, *sensor_units_str;
+      int record_id, sensor_group, sensor_state, sensor_units, sensor_reading_type;
+      char *sensor_group_str, *sensor_state_str, *sensor_units_str;
       char *sensor_name;
       void *sensor_reading;
 
@@ -513,6 +522,15 @@ _ipmimonitoring(pstdout_state_t pstate,
           exit_code = EXIT_FAILURE;
 	  goto cleanup;
 	}
+      if ((sensor_group = ipmi_monitoring_iterator_sensor_group(c)) < 0)
+        {
+	  pstdout_fprintf(pstate, 
+                          stderr, 
+                          "ipmi_monitoring_iterator_sensor_group: %s\n", 
+                          ipmi_monitoring_ctx_strerror(ipmi_monitoring_ctx_errnum(c)));
+          exit_code = EXIT_FAILURE;
+	  goto cleanup;
+        }
       if (!(sensor_name = ipmi_monitoring_iterator_sensor_name(c)))
 	{
 	  pstdout_fprintf(pstate, 
@@ -551,6 +569,45 @@ _ipmimonitoring(pstdout_state_t pstate,
 	}
       sensor_reading = ipmi_monitoring_iterator_sensor_reading(c);
 
+      if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE)
+        sensor_group_str = "Temperature";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_VOLTAGE)
+        sensor_group_str = "Voltage";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CURRENT)
+        sensor_group_str = "Current";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_FAN)
+        sensor_group_str = "Fan";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY)
+        sensor_group_str = "Physical Security";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
+        sensor_group_str = "Security Violation Attempt";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_PROCESSOR)
+        sensor_group_str = "Group Processor";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY)
+        sensor_group_str = "Power Supply";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT)
+        sensor_group_str = "Power Unit";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MEMORY)
+        sensor_group_str = "Memory";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT)
+        sensor_group_str = "Drive Slot";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS)
+        sensor_group_str = "System Firmware Progress";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED)
+        sensor_group_str = "Event Logging Disabled";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT)
+        sensor_group_str = "System Event";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT)
+        sensor_group_str = "Critical Interrupt";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD)
+        sensor_group_str = "Module Board";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR)
+        sensor_group_str = "Slot Connector";
+      else if (sensor_group == IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2)
+        sensor_group_str = "Watchdog2";
+      else 
+        sensor_group_str = "N/A";
+
       if (sensor_state == IPMI_MONITORING_SENSOR_STATE_NOMINAL)
 	sensor_state_str = "Nominal";
       else if (sensor_state == IPMI_MONITORING_SENSOR_STATE_WARNING)
@@ -561,32 +618,46 @@ _ipmimonitoring(pstdout_state_t pstate,
 	sensor_state_str = "";
 
       pstdout_printf(pstate,
-                     "%d: %s: [%s]", 
+                     "%d | %s | %s | [%s]", 
                      record_id, 
                      sensor_name, 
+                     sensor_group_str,
                      sensor_state_str);
       
       if (!quiet_readings && sensor_reading)
         {
+          if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
+            sensor_units_str = "C";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
+            sensor_units_str = "F";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
+            sensor_units_str = "V";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
+            sensor_units_str = "A";
+          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
+            sensor_units_str = "RPM";
+          else
+            sensor_units_str = "N/A";
+
+          pstdout_printf(pstate,
+                         " | %s", 
+                         sensor_units_str);
+
           if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER8_BOOL)
             pstdout_printf(pstate,
-                           ": %s ", 
+                           " | %s ", 
                            (*((uint8_t *)sensor_reading) ? "true" : "false"));
           else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER32)
             pstdout_printf(pstate,
-                           ": %d ", 
+                           " | %d ", 
                            *((uint32_t *)sensor_reading));
           else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_DOUBLE)
             pstdout_printf(pstate,
-                           ": %f ", 
+                           " | %f ", 
                            *((double *)sensor_reading));
           else if (sensor_reading_type == IPMI_MONITORING_SENSOR_READING_TYPE_UNSIGNED_INTEGER16_BITMASK)
             {
               int bitmask_type;
-
-              pstdout_printf(pstate,
-                             ": 0x%X", 
-                             *((uint16_t *)sensor_reading));
 
               if ((bitmask_type = ipmi_monitoring_iterator_sensor_bitmask_type(c)) < 0)
                 {
@@ -617,26 +688,14 @@ _ipmimonitoring(pstdout_state_t pstate,
                     }
                   
                 pstdout_printf(pstate,
-                                 ": \"%s\" ", 
+                                 " | '%s' ", 
                                  buffer);
                 }
-            }
-          
-          if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_CELSIUS)
-            sensor_units_str = "C";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_FAHRENHEIT)
-            sensor_units_str = "F";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_VOLTS)
-            sensor_units_str = "V";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_AMPS)
-            sensor_units_str = "A";
-          else if (sensor_units == IPMI_MONITORING_SENSOR_UNITS_RPM)
-            sensor_units_str = "RPM";
-          else
-            sensor_units_str = "";
-          pstdout_printf(pstate,
-                         "%s", 
-                         sensor_units_str);
+              else
+                pstdout_printf(pstate,
+                               " | 0x%X", 
+                               *((uint16_t *)sensor_reading));
+            }         
         }
       pstdout_printf(pstate,
                      "\n");
