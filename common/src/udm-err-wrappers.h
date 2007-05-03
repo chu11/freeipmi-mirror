@@ -160,6 +160,8 @@ do {                                                              \
     dev->errnum = IPMI_ERR_PERMISSION;                            \
   else if (__errnum == IPMI_KCS_CTX_ERR_PARAMETERS)               \
     dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                \
+  else if (__errnum == IPMI_KCS_CTX_ERR_UNAVAILABLE)              \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                      \
   else                                                            \
     dev->errnum = IPMI_ERR_INTERNAL_ERROR;                        \
 } while (0)
@@ -197,6 +199,8 @@ do {                                                                \
     dev->errnum = IPMI_ERR_PERMISSION;                              \
   else if (__errnum == IPMI_SSIF_CTX_ERR_PARAMETERS)                \
     dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                  \
+  else if (__errnum == IPMI_SSIF_CTX_ERR_DEVICE_NOTFOUND)           \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                        \
   else                                                              \
     dev->errnum = IPMI_ERR_INTERNAL_ERROR;                          \
 } while (0)
@@ -233,7 +237,7 @@ do {                                                                        \
   else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PERMISSION)                    \
     dev->errnum = IPMI_ERR_PERMISSION;                                      \
   else if (__errnum == IPMI_OPENIPMI_CTX_ERR_DEVICE_NOTFOUND)               \
-    dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                            \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
   else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)                    \
     dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                          \
   else                                                                      \
@@ -419,6 +423,29 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INVALID_PARAMETERS;                        \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+
+#define UDM_ERR_DRIVER_PATH_REQUIRED(expr)                              \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DRIVER_PATH_REQUIRED;                      \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_DRIVER_PATH_REQUIRED_CLEANUP(expr)                      \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_DRIVER_PATH_REQUIRED;                      \
       __UDM_SYSLOG;                                                     \
       __UDM_TRACE;                                                      \
       goto cleanup;                                                     \

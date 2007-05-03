@@ -329,6 +329,7 @@ static char * ipmi_ssif_ctx_errmsg[] =
     "buffer too small to hold result",
     "BMC busy",
     "out of memory",
+    "device not found",
     "internal error",
     "error number out of range",
     NULL,
@@ -529,7 +530,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
       else if (errno == ENOENT 
 	       || errno == ENOTDIR 
 	       || errno == ENAMETOOLONG)
-	ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
+	ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOTFOUND;
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
       return (-1);

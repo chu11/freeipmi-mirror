@@ -1,3 +1,14 @@
+2007-05-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c,
+	libfreeipmi/include/freeipmi/ipmi-kcs-api.h,
+	libfreeipmi/include/freeipmi/ipmi-ssif-api.h: Include/fix error
+	return conditions.  Add new error codes.
+	
+2007-05-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring.c: Change default output.
+
 2007-04-30  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Don't bother to obscure ipmipower error messages.

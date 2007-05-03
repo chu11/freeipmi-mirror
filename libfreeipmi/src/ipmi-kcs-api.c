@@ -141,6 +141,7 @@ static char * ipmi_kcs_ctx_errmsg[] =
     "buffer too small to hold result",
     "BMC busy",
     "out of memory",
+    "device unavailable",
     "internal error",
     "error number out of range",
     NULL,
@@ -365,6 +366,8 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
     {
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
+      else if (errno == ENOENT)
+        ctx->errnum = IPMI_KCS_CTX_ERR_UNAVAILABLE;
       else
         ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
       return (-1);
