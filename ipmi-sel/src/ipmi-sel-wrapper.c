@@ -109,8 +109,14 @@ get_sel_info (ipmi_sel_state_data_t *state_data,
 
   _FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
-  if (ipmi_cmd_get_sel_info (state_data->dev, obj_cmd_rs) != 0)
-    goto cleanup;
+  if (ipmi_cmd_get_sel_info (state_data->dev, obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sel_info: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   _FIID_OBJ_GET (obj_cmd_rs, "sel_version_major", &val);
   sel_info->sel_version_major = val;
@@ -783,8 +789,14 @@ get_sel_record (ipmi_sel_state_data_t *state_data,
 			      record_id, 
 			      0,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
-			      obj_cmd_rs) != 0)
-    goto cleanup;
+			      obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sel_entry: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   _FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
   *next_record_id = val;
@@ -855,8 +867,14 @@ get_sel_record_raw (ipmi_sel_state_data_t *state_data,
 			      record_id, 
 			      0,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
-			      obj_cmd_rs) != 0)
-    goto cleanup;
+			      obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sel_entry: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   _FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val);
   *next_record_id = val;
@@ -901,8 +919,14 @@ delete_sel_entry (ipmi_sel_state_data_t *state_data,
   if (ipmi_cmd_delete_sel_entry (state_data->dev, 
 				 reservation_id, 
 				 record_id, 
-				 obj_cmd_rs) != 0)
-    goto cleanup;
+				 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_delete_sel_entry: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   fiid_obj_destroy(obj_cmd_rs);
   return 0;
@@ -939,8 +963,14 @@ clear_sel_entries (ipmi_sel_state_data_t *state_data)
   if (ipmi_cmd_clear_sel (state_data->dev, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
-			  obj_cmd_rs) != 0)
-    goto cleanup;
+			  obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_clear_sel: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   return 0;
  cleanup:
@@ -976,8 +1006,14 @@ get_sel_clear_status (ipmi_sel_state_data_t *state_data,
   if (ipmi_cmd_clear_sel (state_data->dev, 
 			  reservation_id, 
 			  IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
-			  obj_cmd_rs) != 0)
-    goto cleanup;
+			  obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_clear_sel: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      goto cleanup;
+    }
   
   if (fiid_obj_get (obj_cmd_rs, "erasure_progress", &val) < 0)
     goto cleanup;

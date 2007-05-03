@@ -83,11 +83,22 @@ do {                                                                    \
 	    dev->errnum);                                               \
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
 } while (0)
+
+#define __ERR_UDM_SYSLOG                                                \
+do {                                                                    \
+  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
+            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
+            __LINE__, __PRETTY_FUNCTION__,                              \
+	    ipmi_device_errnum(dev));                                   \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+} while (0)
 #else
 #define __KCS_SYSLOG
 #define __SSIF_SYSLOG
 #define __OPENIPMI_SYSLOG
 #define __UDM_SYSLOG
+#define __ERR_UDM_SYSLOG
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
@@ -127,6 +138,15 @@ do {                                                                    \
   fflush (stderr);                                                      \
 } while (0)
 
+#define __ERR_UDM_TRACE                                                 \
+do {                                                                    \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
+           __LINE__, __PRETTY_FUNCTION__,                               \
+	   ipmi_device_errnum(dev));                                    \
+  fflush (stderr);                                                      \
+} while (0)
+
 #define __UDM_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                       \
 do {                                                                    \
   char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
@@ -146,6 +166,7 @@ do {                                                                    \
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
 #define __UDM_TRACE
+#define __ERR_UDM_TRACE
 #define __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs)
 #endif /* IPMI_TRACE */
 
@@ -535,6 +556,27 @@ do {                                                                            
       __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                                             \
     }                                                                                                      \
 } while (0)
+
+#define ERR_UDM(expr)                                                   \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __ERR_UDM_SYSLOG;                                                 \
+      __ERR_UDM_TRACE;                                                  \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define ERR_UDM_CLEANUP(expr)                                           \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __ERR_UDM_SYSLOG;                                                 \
+      __ERR_UDM_TRACE;                                                  \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #ifdef __cplusplus
 }
 #endif

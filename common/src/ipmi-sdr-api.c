@@ -69,6 +69,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 #include "ipmi-common.h"
+#include "udm-err-wrappers.h"
 
 #include "common-utils.h"
 
@@ -270,8 +271,7 @@ get_sdr_repository_info (ipmi_device_t dev, sdr_repository_info_t *sdr_info)
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sdr_repository_info_rs);
   
-  if (ipmi_cmd_get_sdr_repository_info (dev, obj_cmd_rs) != 0)
-    goto cleanup;
+  ERR_UDM_CLEANUP (!(ipmi_cmd_get_sdr_repository_info (dev, obj_cmd_rs) < 0));
   
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sdr_version_major", &val);
   sdr_info->sdr_version_major = val;
@@ -326,9 +326,7 @@ get_sdr_cache_filename (char *host, char *user_cache_dir)
  
   memset(hostbuf, '\0', MAXHOSTNAMELEN);
   if (gethostname(hostbuf, MAXHOSTNAMELEN) < 0)
-    {
-      snprintf(hostbuf, MAXHOSTNAMELEN, "localhost");
-    }
+    snprintf(hostbuf, MAXHOSTNAMELEN, "localhost");
   hostbuf[MAXHOSTNAMELEN - 1] = '\0';
 
   /* shorten hostname if necessary */
@@ -403,9 +401,7 @@ setup_sdr_cache_directory ()
 	return (-1);
     }
   else 
-    {
-      return (-1);
-    }
+    return (-1);
   
   return 0;
 }
@@ -1092,12 +1088,12 @@ _get_sdr_sensor_record (ipmi_device_t dev,
   ERR_CLEANUP ((record_header_buf = alloca (record_header_len)));
   memset (record_header_buf, 0, record_header_len);
 
-  ERR_CLEANUP (!(ipmi_cmd_get_sdr (dev, 
-				   0,
-				   record_id, 
-				   0, 
-				   record_header_len, 
-				   obj_cmd_rs)));
+  ERR_UDM_CLEANUP (!(ipmi_cmd_get_sdr (dev, 
+                                       0,
+                                       record_id, 
+                                       0, 
+                                       record_header_len, 
+                                       obj_cmd_rs)));
   
   FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs,
 			     "record_data",
@@ -1117,7 +1113,7 @@ _get_sdr_sensor_record (ipmi_device_t dev,
     {
       FIID_OBJ_CREATE_CLEANUP(local_obj_cmd_rs, tmpl_cmd_reserve_sdr_repository_rs);
       
-      ERR_CLEANUP (!(ipmi_cmd_reserve_sdr_repository (dev, local_obj_cmd_rs) < 0));
+      ERR_UDM_CLEANUP (!(ipmi_cmd_reserve_sdr_repository (dev, local_obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_CLEANUP (local_obj_cmd_rs, "reservation_id", &val);
       reservation_id = (uint16_t) val;
@@ -1134,12 +1130,12 @@ _get_sdr_sensor_record (ipmi_device_t dev,
       
       FIID_OBJ_CLEAR_CLEANUP (obj_cmd_rs);
       
-      ERR_CLEANUP (!(ipmi_cmd_get_sdr (dev, 
-				       reservation_id, 
-				       record_id, 
-				       offset_into_record, 
-				       bytes_to_read, 
-				       obj_cmd_rs) < 0));
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sdr (dev, 
+                                           reservation_id, 
+                                           record_id, 
+                                           offset_into_record, 
+                                           bytes_to_read, 
+                                           obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs, "record_data", chunk_data, 16);
 
@@ -1217,7 +1213,7 @@ _get_sdr_record (ipmi_device_t dev,
 
       if (ipmi_cmd_get_sensor_thresholds (dev, 
 					  sdr_record->record.sdr_full_record.sensor_number, 
-					  obj_cmd_rs) != 0)
+					  obj_cmd_rs) < 0)
         /* This is ok - no biggie if we can't get thresholds*/
         break;
       

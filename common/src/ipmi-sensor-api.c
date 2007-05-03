@@ -48,6 +48,7 @@
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
+#include "udm-err-wrappers.h"
 
 enum system_software_type
   {
@@ -370,10 +371,9 @@ get_sensor_reading (ipmi_device_t dev,
       FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
-      if (ipmi_cmd_get_sensor_reading_threshold (dev, 
-						 sensor_number, 
-						 obj_cmd_rs) != 0)
-        goto cleanup;
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_threshold (dev, 
+                                                                sensor_number, 
+                                                                obj_cmd_rs) < 0));
 
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,
@@ -397,9 +397,7 @@ get_sensor_reading (ipmi_device_t dev,
 						   &(sensor_reading->current_reading)) < 0));
 	}
       else 
-	{
-	  sensor_reading->current_reading = val;
-	}
+        sensor_reading->current_reading = val;
       
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
 			    "reading_state", 
@@ -427,10 +425,9 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      if (ipmi_cmd_get_sensor_reading_discrete (dev, 
-						sensor_number, 
-						obj_cmd_rs) != 0)
-        goto cleanup;
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (dev, 
+                                                               sensor_number, 
+                                                               obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,
@@ -469,10 +466,9 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      if (ipmi_cmd_get_sensor_reading_discrete (dev, 
-						sensor_number, 
-						obj_cmd_rs) != 0)
-        goto cleanup;
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (dev, 
+                                                               sensor_number, 
+                                                               obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,
@@ -511,10 +507,9 @@ get_sensor_reading (ipmi_device_t dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      if (ipmi_cmd_get_sensor_reading_discrete (dev, 
-						sensor_number, 
-						obj_cmd_rs) != 0)
-        goto cleanup;
+      ERR_UDM_CLEANUP (!(ipmi_cmd_get_sensor_reading_discrete (dev, 
+                                                               sensor_number, 
+                                                               obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
 				   obj_cmd_rs,
