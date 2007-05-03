@@ -30,22 +30,17 @@ bmc-config:
 Missing Serial Config
 Chassis Config?
 
-general:
---------
-hostrange howto doc stuff
-
-ipmipower:
-----------
--B, -C, -E option support?
-
 docs
 ----
 
 coding guide
+hostrange guide
 
 management:
 -----------
 
-docs/ - delete all
+docs/ - delete all?
+
 move ftp server
+
 move webpage?
