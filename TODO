@@ -45,6 +45,3 @@ move ftp server
 
 move webpage?
 
-bugs:
-
-better error codes for not opening correct stuff in kcs/ssif
