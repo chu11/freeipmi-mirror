@@ -40,19 +40,23 @@ enum ipmi_errnum
     IPMI_ERR_NULL_DEVICE = 1,
     IPMI_ERR_DEVICE_MAGIC = 2,
     IPMI_ERR_PERMISSION = 3,
-    IPMI_ERR_OUTOFBAND_USERNAME = 4,
-    IPMI_ERR_OUTOFBAND_PASSWORD = 5,
-    IPMI_ERR_DEVICE_ALREADY_OPEN = 50,
-    IPMI_ERR_DEVICE_NOT_OPEN = 51,
-    IPMI_ERR_DEVICE_NOT_SUPPORTED = 52,
-    IPMI_ERR_OVERFLOW = 92,
-    IPMI_ERR_OUT_OF_MEMORY = 93,
-    IPMI_ERR_INVALID_PARAMETERS = 94,
-    IPMI_ERR_INTERNAL_IPMI_ERROR = 95,
-    IPMI_ERR_INTERNAL_SYSTEM_ERROR = 96,
-    IPMI_ERR_INTERNAL_LIBRARY_ERROR = 97,
-    IPMI_ERR_INTERNAL_ERROR = 98,
-    IPMI_ERR_OUTOFRANGE = 99,
+    IPMI_ERR_USERNAME = 4,
+    IPMI_ERR_PASSWORD = 5,
+    IPMI_ERR_PRIVILEGE = 6,
+    IPMI_ERR_AUTHENTICATION_TYPE = 7,
+    IPMI_ERR_SESSION_TIMEOUT = 8,
+    IPMI_ERR_DEVICE_ALREADY_OPEN = 9,
+    IPMI_ERR_DEVICE_NOT_OPEN = 10,
+    IPMI_ERR_DEVICE_NOT_SUPPORTED = 11,
+    IPMI_ERR_BAD_COMPLETION_CODE = 12,
+    IPMI_ERR_BMC_BUSY = 13,
+    IPMI_ERR_OUT_OF_MEMORY = 14,
+    IPMI_ERR_INVALID_PARAMETERS = 15,
+    IPMI_ERR_INTERNAL_IPMI_ERROR = 16,
+    IPMI_ERR_INTERNAL_SYSTEM_ERROR = 17,
+    IPMI_ERR_INTERNAL_LIBRARY_ERROR = 18,
+    IPMI_ERR_INTERNAL_ERROR = 19,
+    IPMI_ERR_OUTOFRANGE = 20,
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 
@@ -75,6 +79,10 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 typedef struct ipmi_device *ipmi_device_t;
  
 ipmi_device_t ipmi_device_create(void);
+
+char *ipmi_device_strerror(int errnum);
+
+int ipmi_device_errnum(ipmi_device_t dev);
 
 int ipmi_open_inband (ipmi_device_t,
 		      ipmi_driver_type_t driver_type, 
