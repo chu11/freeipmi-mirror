@@ -43,8 +43,6 @@ extern "C" {
 
 #include "err-wrappers.h"
 
-#define ERR_WRAPPER_STR_MAX_LEN 4096
-
 #if defined (IPMI_SYSLOG)
 #define __KCS_SYSLOG                                                    \
 do {                                                                    \
@@ -131,18 +129,16 @@ do {                                                                    \
 
 #define __UDM_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                       \
 do {                                                                    \
-  extern int errno;                                                     \
-  int save_errno = errno;                                               \
-  memset((___dev)->errmsg, '\0', IPMI_ERR_STR_MAX_LEN);                 \
+  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
+  memset(errstr, '\0', IPMI_ERR_STR_MAX_LEN);                           \
   if (!ipmi_strerror_cmd_r ((___rs),                                    \
 		      	    (___dev)->net_fn,                           \
-			    (___dev)->errmsg,                           \
+			    errstr,                                     \
 			    IPMI_ERR_STR_MAX_LEN))                      \
     fprintf (stderr,                                                    \
 	     "%s: %d: %s: errmsg = %s\n", __FILE__,                     \
-	     __LINE__, __PRETTY_FUNCTION__, (___dev)->errmsg);          \
+	     __LINE__, __PRETTY_FUNCTION__, errstr);                    \
   fflush(stderr);                                                       \
-  errno = save_errno;                                                   \
   goto cleanup;                                                         \
 } while (0) 
 #else
@@ -150,7 +146,7 @@ do {                                                                    \
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
 #define __UDM_TRACE
-#define __UDM_TRACE_ERRMSG_CLEANUP
+#define __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs)
 #endif /* IPMI_TRACE */
 
 #define __KCS_ERRNUM_TO_UDM_ERRNUM                                \
@@ -508,11 +504,10 @@ do {                                                                            
   UDM_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
   if (!__rv)                                                                                               \
     {                                                                                                      \
-      __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                                             \
       (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE;                                                      \
+      __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                                             \
     }                                                                                                      \
 } while (0)
-
 #ifdef __cplusplus
 }
 #endif

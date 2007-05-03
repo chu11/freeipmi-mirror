@@ -69,7 +69,6 @@ do {                                                                    \
   fflush (stderr);                                                      \
   errno = save_errno;                                                   \
 } while (0)
-} while (0) 
 #else
 #define __IPMI_TRACE
 #endif /* IPMI_TRACE */
@@ -222,6 +221,28 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENODEV;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define ERR_EMSGSIZE(expr)                                              \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EMSGSIZE;                                                 \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define ERR_EMSGSIZE_CLEANUP(expr)                                      \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EMSGSIZE;                                                 \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
       goto cleanup;                                                     \
