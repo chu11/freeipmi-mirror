@@ -386,58 +386,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_IPMI_CMD_CLEANUP(__dev, __lun, __netfn, __rq, __rs)                    \
-do {                                                                               \
-  int8_t __rv;                                                                     \
-  ERR_CLEANUP (!(ipmi_cmd ((__dev),                                                \
-                           (__lun),                                                \
-                           (__netfn),                                              \
-                           (__rq),                                                 \
-                           (__rs)) < 0));                                          \
-  ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));       \
-  if (!__rv)                                                                       \
-    __IPMI_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                      \
-} while (0)
-
-/* EINVAL -> INTERNAL_LIBRARY_ERROR b/c bad inputs should be directly returned
- * to the user as IPMI_ERR_INVALID_PARAMETERS
- */
-#define __ERRNO_TO_UDM_ERRNUM                      \
-do {                                               \
-  if (errno == 0)                                  \
-    dev->errnum = IPMI_ERR_SUCCESS;                \
-  else if (errno == ENOMEM)                        \
-    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
-  else if (errno == ENODEV)                        \
-    dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;   \
-  else if (errno == EINVAL)                        \
-    dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR; \
-  else                                             \
-    dev->errnum = IPMI_ERR_INTERNAL_ERROR;         \
-} while (0)
-
-#define UDM_ERR_ERRNO_TO_UDM_ERRNUM(expr)                               \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      __ERRNO_TO_UDM_ERRNUM;                                            \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define UDM_ERR_ERRNO_TO_UDM_ERRNUM_CLEANUP(expr)                       \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      __ERRNO_TO_UDM_ERRNUM;                                            \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
 /* INVALID_PARAMETER -> INTERNAL_LIBRARY_ERROR b/c bad inputs should
  * be directly returned to the user as IPMI_ERR_INVALID_PARAMETERS
  */
@@ -560,13 +508,91 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+/* EINVAL -> INTERNAL_LIBRARY_ERROR b/c bad inputs should be directly returned
+ * to the user as IPMI_ERR_INVALID_PARAMETERS
+ */
+#define __ERRNO_TO_UDM_ERRNUM                      \
+do {                                               \
+  if (errno == 0)                                  \
+    dev->errnum = IPMI_ERR_SUCCESS;                \
+  else if (errno == ENOMEM)                        \
+    dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
+  else if (errno == ENODEV)                        \
+    dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;   \
+  else if (errno == EINVAL)                        \
+    dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR; \
+  else                                             \
+    dev->errnum = IPMI_ERR_INTERNAL_ERROR;         \
+} while (0)
+
+#define UDM_ERR_DEV_CHECK(expr)                                         \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EINVAL;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_SET_ERRNUM(__errnum)                                    \
+do {                                                                    \
+  dev->errnum = (__errnum);                                             \
+  __UDM_SYSLOG;                                                         \
+  __UDM_TRACE;                                                          \
+} while (0)   
+
+#define UDM_ERR_SET_ERRNUM_CLEANUP(__errnum)                            \
+do {                                                                    \
+  dev->errnum = (__errnum);                                             \
+  __UDM_SYSLOG;                                                         \
+  __UDM_TRACE;                                                          \
+  goto cleanup;                                                         \
+} while (0)   
+
+#define UDM_ERR_LOG(expr)                                               \
+do {                                                                    \
+  __UDM_SYSLOG;                                                         \
+  __UDM_TRACE;                                                          \
+} while (0)   
+
+#define UDM_ERR_LOG_CLEANUP(expr)                                       \
+do {                                                                    \
+  __UDM_SYSLOG;                                                         \
+  __UDM_TRACE;                                                          \
+  goto cleanup;                                                         \
+} while (0)   
+
+#define UDM_ERR_ERRNO_TO_UDM_ERRNUM(expr)                               \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __ERRNO_TO_UDM_ERRNUM;                                            \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_ERRNO_TO_UDM_ERRNUM_CLEANUP(expr)                       \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      __ERRNO_TO_UDM_ERRNUM;                                            \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define UDM_ERR_DEVICE_ALREADY_OPEN(expr)                               \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_DEVICE_ALREADY_OPEN;                       \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -576,8 +602,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_DEVICE_ALREADY_OPEN;                       \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -587,8 +613,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_DEVICE_NOT_OPEN;                           \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -598,8 +624,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_DEVICE_NOT_OPEN;                           \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -609,8 +635,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -620,8 +646,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_DEVICE_NOT_SUPPORTED;                      \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -631,8 +657,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INVALID_PARAMETERS;                        \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -642,8 +668,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INVALID_PARAMETERS;                        \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -653,8 +679,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INTERNAL_SYSTEM_ERROR;                     \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -664,8 +690,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INTERNAL_SYSTEM_ERROR;                     \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -675,8 +701,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                    \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -686,8 +712,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR;                    \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -697,8 +723,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -708,10 +734,28 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       dev->errnum = IPMI_ERR_INTERNAL_ERROR;                            \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
+} while (0)
+
+/* Note: dev->errnum set in call to ipmi_cmd() - don't call wrapper */
+#define UDM_ERR_IPMI_CMD_CLEANUP(__dev, __lun, __netfn, __rq, __rs)                                        \
+do {                                                                                                       \
+  int8_t __rv;                                                                                             \
+  if (ipmi_cmd ((__dev),                                                                                   \
+                (__lun),                                                                                   \
+                (__netfn),                                                                                 \
+                (__rq),                                                                                    \
+                (__rs)) < 0)                                                                               \
+    goto cleanup;                                                                                          \
+  UDM_ERR_ERRNO_TO_UDM_ERRNUM_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));       \
+  if (!__rv)                                                                                               \
+    {                                                                                                      \
+      __IPMI_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                                            \
+      (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE;                                                      \
+    }                                                                                                      \
 } while (0)
 
 #ifdef __cplusplus
