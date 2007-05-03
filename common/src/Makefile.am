@@ -3,6 +3,8 @@ noinst_HEADERS = \
 	bit-ops.h \
 	err-wrappers.h \
 	fiid-wrappers.h \
+	udm-fiid-wrappers.h \
+	udm-err-wrappers.h \
 	freeipmi-portability.h \
 	ipmi-common.h \
 	ipmi-ping.h \
