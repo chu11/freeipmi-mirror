@@ -71,9 +71,9 @@ int ipmi_dprintf(int fd, char *fmt, ...);
 void *guaranteed_memset(void *s, int c, size_t n);
 
 /* Turn an input string into a 20-byte binary k_g key */
-int parse_kg(unsigned char *outbuf, int outsz, char *instr);
+int parse_kg(unsigned char *outbuf, int outsz, const char *instr);
 
 /* Turn a 20-byte binary k_g key into an output string */
-char *format_kg(char *outstr, int outsz, unsigned char *k_g);
+char *format_kg(char *outstr, int outsz, const unsigned char *k_g);
 
 #endif
