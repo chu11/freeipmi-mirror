@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.1.2.5 2007-03-28 23:24:42 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.1.2.6 2007-05-04 14:24:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,6 +48,7 @@
 #include "conffile.h"
 #include "error.h"
 #include "secure.h"
+#include "ipmi-common.h"
 
 extern struct ipmiconsole_config *conf;
 
@@ -68,6 +69,9 @@ _config_default(void)
 
   conf->privilege = -1;
   conf->cipher_suite_id = -1;
+
+  memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH);
+  conf->k_g_configured = 0;
 }
 
 static void
@@ -114,6 +118,7 @@ _cmdline_parse(int argc, char **argv)
   char *kg;
   char *ptr;
   int c;
+  int rv;
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
@@ -208,10 +213,13 @@ _cmdline_parse(int argc, char **argv)
           conf->password_set++;
           break;
         case 'k':       /* --k-g */
-          if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
-            err_exit("Command Line Error: K_g too long");
-          strcpy(conf->k_g, optarg);
-          conf->k_g_set++;
+          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, optarg)) < 0)
+            err_exit("Command Line Error: Invalid K_g");
+          if (rv > 0)
+            {
+              conf->k_g_configured++;
+              conf->k_g_set++;
+            }
           if (optarg)
             {
               int n;
@@ -222,10 +230,13 @@ _cmdline_parse(int argc, char **argv)
         case 'K':       /* --k-g-prompt */
           if (!(kg = getpass("K_g: ")))
             err_exit("getpass: %s", strerror(errno));
-          if (strlen(kg) > IPMI_MAX_K_G_LENGTH)
-            err_exit("K_g too long");
-          strcpy(conf->k_g, kg);
-          conf->k_g_set++;
+          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
+            err_exit("K_g invalid");
+          if (rv > 0)
+            {
+              conf->k_g_configured++;
+              conf->k_g_set++;
+            }
           break;
 	case 'l':	/* --privilege */
 	  if (!strcasecmp(optarg, "user"))
@@ -359,13 +370,16 @@ _cb_k_g(conffile_t cf,
 	void *app_ptr,
 	int app_data)
 {
+  int rv;
+
   if (conf->k_g_set)
     return 0;
 
-  if (strlen(data->string) > IPMI_MAX_K_G_LENGTH)
-    err_exit("Config File Error: K_g too long");
+  if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, data->string)) < 0)
+    err_exit("Config File Error: K_g invalid");
+  if (rv > 0)
+    conf->k_g_configured = 1;
 
-  strcpy(conf->k_g, data->string);
   return 0;
 }
 
