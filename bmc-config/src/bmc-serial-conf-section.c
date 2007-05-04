@@ -391,7 +391,7 @@ connect_mode_checkout (const struct arguments *args,
   if (kv->value)
     free (kv->value);
 
-  kv->value = connect_mode_string (value);
+  kv->value = strdup (connect_mode_string (value));
 
   return 0;
 }
