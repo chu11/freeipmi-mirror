@@ -10,6 +10,12 @@
 	* ipmiconsole/src/ipmiconsole_config.c (_cmdline_parse): Fix -K
 	corner case.
 
+	* ipmipower/src/ipmipower_config.c
+	(ipmipower_config_cmdline_parse): Fix -K corner case.
+
+	* libfreeipmi/src/ipmi-utils.c (ipmi_check_cmd,
+	ipmi_check_completion_code): check obj-cmd w/ fiid_obj_valid().
+
 2007-05-04  Levi Pearson <lpearson@lnxi.com>
 
 	* ipmiconsole/: Support hex keys in ipmiconsole and

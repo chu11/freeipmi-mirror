@@ -83,7 +83,7 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
   uint64_t cmd_recv;
   int32_t len;
 
-  ERR_EINVAL (obj_cmd);
+  ERR_EINVAL (fiid_obj_valid(obj_cmd));
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd");
 
@@ -102,7 +102,7 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
   uint64_t completion_code_recv;
   int32_t len;
 
-  ERR_EINVAL (obj_cmd);
+  ERR_EINVAL (fiid_obj_valid(obj_cmd));
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code");
 

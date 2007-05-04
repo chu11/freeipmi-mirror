@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.58 2007-04-28 20:07:10 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.59 2007-05-04 16:06:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -393,7 +393,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'K':       /* --k-g-prompt */
           if (!(kg = getpass("K_g: ")))
             err_exit("getpass: %s", strerror(errno));
-          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, optarg)) < 0)
+          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
             err_exit("Command Line Error: Invalid K_g");
           if (rv > 0)
             {
