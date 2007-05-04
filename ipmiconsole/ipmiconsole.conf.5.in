@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.4 2007-03-09 02:44:46 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.5 2007-05-04 14:01:50 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -72,7 +72,7 @@ Specify the default username to use.
 Specify the default password to use.
 .TP
 .I k_g str
-Specify the BMC key (K_g) to use.
+Specify the BMC key (K_g) to use.  Prefix with '0x' to enter the key in hex.
 .TP
 .I privilege str
 Specify the default privilege type to use.  

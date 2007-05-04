@@ -1,3 +1,17 @@
+2007-05-04  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_ctx_create): Change API to support k_g len.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(_check_for_authentication_support): Fix state machine corner case.
+
+2007-05-04  Levi Pearson <lpearson@lnxi.com>
+
+	* ipmiconsole/: Support hex keys in ipmiconsole and
+	libipmiconsole.
+
 2007-05-03  Levi Pearson <lpearson@lnxi.com>
 
 	* bmc-config/src/bmc-serial-conf-section.c

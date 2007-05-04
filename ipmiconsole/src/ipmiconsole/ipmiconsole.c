@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.11 2007-03-31 04:03:06 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.12 2007-05-04 14:01:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -324,7 +324,9 @@ main(int argc, char **argv)
 
   ipmi_config.username = strlen(conf->username) ? conf->username : NULL;
   ipmi_config.password = strlen(conf->password) ? conf->password : NULL;
-  ipmi_config.k_g = strlen(conf->k_g) ? conf->k_g : NULL;
+  ipmi_config.k_g = conf->k_g_configured ? conf->k_g : NULL;
+  if (ipmi_config.k_g)
+    ipmi_config.k_g_len = IPMI_MAX_K_G_LENGTH;
   ipmi_config.privilege_level = conf->privilege;
   ipmi_config.cipher_suite_id = conf->cipher_suite_id;
 

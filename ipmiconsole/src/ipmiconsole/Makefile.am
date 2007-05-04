@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.3 2007-02-16 18:00:01 chu11 Exp $
+## $Id: Makefile.am,v 1.4 2007-05-04 14:01:50 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -19,9 +19,13 @@ ipmiconsole_CPPFLAGS = -I$(srcdir)/../libipmiconsole \
 		       -I$(srcdir)/../../../common/src
 
 ipmiconsole_LDADD = ../../../common/src/libllnlcommon.la \
+                    ../../../common/src/libipmicommon.la \
 		    ../libipmiconsole/libipmiconsole.la
 
 ../../../common/src/libllnlcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../../common/src/libipmicommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../libipmiconsole/libipmiconsole.la: force-dependency-check
