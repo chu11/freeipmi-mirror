@@ -138,7 +138,7 @@ ipmi_disable_coredump(void)
 /* a k_g key is interpreted as ascii text unless it is prefixed with
    "0x", in which case is it interpreted as hexadecimal */
 int
-parse_kg(unsigned char *outbuf, int outsz, char *instr)
+parse_kg(unsigned char *outbuf, int outsz, const char *instr)
 {
   char *p, *q;
   int i, j;
@@ -180,7 +180,7 @@ parse_kg(unsigned char *outbuf, int outsz, char *instr)
 }
 
 char *
-format_kg(char *outstr, int outsz, unsigned char *k_g)
+format_kg(char *outstr, int outsz, const unsigned char *k_g)
 {
   int i;
   int printable = 1;

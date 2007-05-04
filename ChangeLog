@@ -2,6 +2,13 @@
 
 	* bmc-config/src/bmc-serial-conf-section.c
 	(connect_mode_checkout): Fix strdup bug.
+
+	* bmc-config/src/bmc-lan-conf-security-keys-section.c
+	(k_g_checkout, k_g_commit, k_g_diff, k_g_validate): Support hex
+	code input/output for K-g.
+
+	* common/src/ipmi-common.c, common/src/ipmi-common.h (parse_kg,
+	format_kg): Add const to appropriate parameters.
 	
 2007-05-03  Albert Chu <chu11@llnl.gov>
 

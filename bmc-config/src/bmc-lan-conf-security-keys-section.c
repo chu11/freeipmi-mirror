@@ -5,6 +5,7 @@
 #include "bmc-map.h"
 #include "bmc-sections.h"
 #include "bmc-validate.h"
+#include "ipmi-common.h"
 
 static bmc_err_t
 k_r_checkout (bmc_config_state_data_t *state_data,
@@ -89,10 +90,10 @@ k_g_checkout (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      struct keyvalue *kv)
 {
-  uint8_t k_g[IPMI_MAX_K_G_LENGTH + 1];
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   bmc_err_t ret;
 
-  memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
+  memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
   
   if ((ret = get_k_g (state_data, 
                       k_g, 
@@ -102,10 +103,16 @@ k_g_checkout (bmc_config_state_data_t *state_data,
   if (kv->value)
     free (kv->value);
 
-  k_g[IPMI_MAX_K_G_LENGTH] = '\0';
-  if (!(kv->value = strdup ((char *)k_g)))
+  if (!(kv->value = (char *)malloc(IPMI_MAX_K_G_LENGTH*2+3)))
     {
-      perror("strdup");
+      perror("malloc");
+      return BMC_ERR_FATAL_ERROR;
+    }
+
+  if (!format_kg(kv->value, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
+    {
+      free (kv->value);
+      kv->value = NULL;
       return BMC_ERR_FATAL_ERROR;
     }
 
@@ -117,9 +124,14 @@ k_g_commit (bmc_config_state_data_t *state_data,
 	    const struct section *sect,
 	    const struct keyvalue *kv)
 {
-  return set_k_g (state_data,
-		  (uint8_t *)kv->value, 
-		  kv->value ? strlen (kv->value): 0);
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH];
+
+  memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
+
+  if (parse_kg(k_g, IPMI_MAX_K_G_LENGTH, kv->value) < 0)
+    return BMC_ERR_FATAL_ERROR;
+
+  return set_k_g (state_data, k_g, IPMI_MAX_K_G_LENGTH);
 }
 
 static bmc_diff_t
@@ -127,22 +139,32 @@ k_g_diff (bmc_config_state_data_t *state_data,
 	  const struct section *sect,
 	  const struct keyvalue *kv)
 {
-  uint8_t k_g[IPMI_MAX_K_G_LENGTH + 1];
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH];
+  uint8_t kv_k_g[IPMI_MAX_K_G_LENGTH];
+  char k_g_str[IPMI_MAX_K_G_LENGTH*2+3];
   bmc_err_t ret;
 
-  memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
+  memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
   if ((ret = get_k_g (state_data, 
                       k_g, 
                       IPMI_MAX_K_G_LENGTH)) != BMC_ERR_SUCCESS)
     return ret;
 
-  if (strcmp (kv->value ? kv->value : "", (char *)k_g)) 
+  if (!format_kg(k_g_str, IPMI_MAX_K_G_LENGTH*2+3, k_g))
+    return BMC_ERR_FATAL_ERROR;
+
+  if (parse_kg(kv_k_g, IPMI_MAX_K_G_LENGTH, kv->value) < 0)
+    return BMC_ERR_FATAL_ERROR;
+  
+  /* a printable k_g key can have two representations, so compare the
+     binary keys */
+  if (memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH)) 
     {
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
-                   (char *)k_g);
+                   k_g_str);
     }
   else
     ret = BMC_DIFF_SAME;
@@ -155,9 +177,11 @@ k_g_validate (bmc_config_state_data_t *state_data,
 	      const struct section *sect,
 	      const char *value)
 {
-  if (strlen (value) <= IPMI_MAX_K_G_LENGTH)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH];
+
+  if (parse_kg(k_g, IPMI_MAX_K_G_LENGTH, value) < 0)
+    return BMC_VALIDATE_INVALID_VALUE;
+  return BMC_VALIDATE_VALID_VALUE;
 }
 
 struct section *
@@ -182,7 +206,7 @@ bmc_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
   if (bmc_section_add_keyvalue (state_data,
                                 lan_conf_security_keys_section,
 				"K_G",
-				"Give string or blank to clear. Max 20 chars",
+				"Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
 				0,
 				k_g_checkout,
 				k_g_commit,
