@@ -7,6 +7,9 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
 	(_check_for_authentication_support): Fix state machine corner case.
 
+	* ipmiconsole/src/ipmiconsole_config.c (_cmdline_parse): Fix -K
+	corner case.
+
 2007-05-04  Levi Pearson <lpearson@lnxi.com>
 
 	* ipmiconsole/: Support hex keys in ipmiconsole and

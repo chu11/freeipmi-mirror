@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.11 2007-05-04 14:01:50 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.12 2007-05-04 14:11:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -230,6 +230,8 @@ _cmdline_parse(int argc, char **argv)
             }
           break;
         case 'K':       /* --k-g-prompt */
+          if (!(kg = getpass("K_g: ")))
+            err_exit("getpass: %s", strerror(errno));
 	  if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
 	    err_exit("K_g invalid");
 	  if (rv > 0)
