@@ -27,6 +27,17 @@ o Added libipmidetect
 o Additional LAN configuration support in libfreeipmi.
 o Various minor updates to libipmiconsole, libfreeipmi.
 
+0.3.3
+-----
+o Support per-msg-auth in LAN udm and majority of FreeIPMI tools.
+o Support hex k-g input/output.
+o Fix ipmipower per-msg-auth.
+o Fix ipmiconsole k_g key corner case.
+o Fix libipmiconsole state machine corner case.
+o Fix OpenIPMI driver build bug.
+o Fix strdup corner case in bmc-config.
+o Allow OEM network functions.
+
 0.3.2
 -----
 o -N option added to ipmiconsole.
