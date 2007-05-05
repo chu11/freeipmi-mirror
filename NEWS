@@ -16,6 +16,7 @@ o -q option added for ipmi-sensors.
 o Add community string and alert config to bmc-config.
 o Add verbose checkout/commit progress information for large checkout(s)/commit(s).
 o Add sensor names to ipmi-sel output when possible.
+o Output more descriptive error messages in most FreeIPMI tools.
 o '0x' parsing support in ipmi-raw.
 o Various bug fixes throughout FreeIPMI.
 
@@ -25,7 +26,7 @@ o Added SDR debugging capabilities to ipmi-sdr and ipmi-sensors.
 o Added libipmimonitoring
 o Added libipmidetect
 o Additional LAN configuration support in libfreeipmi.
-o Various minor updates to libipmiconsole, libfreeipmi.
+o Various updates to libipmiconsole, libfreeipmi.
 
 0.3.3
 -----
