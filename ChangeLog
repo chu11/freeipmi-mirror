@@ -1,3 +1,7 @@
+2007-05-05  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt: Update text.
+	
 2007-05-04  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
