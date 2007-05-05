@@ -5,6 +5,8 @@
 
 	* ipmipower/: Support an additional "password verification
 	timeout" error code.
+
+	* doc/freeipmi-faq.texi: Update text.
 	
 2007-05-04  Albert Chu <chu11@llnl.gov>
 

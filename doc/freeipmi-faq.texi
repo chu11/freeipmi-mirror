@@ -251,7 +251,8 @@ to 1152 nodes in size.
 
 The bmc-config configuration file and command-line interface are used
 to easily copy the BMC configuration from one node to every other node
-in a cluster quickly.
+in a cluster quickly.  It has been used to modify the BMC configuration
+across large LLNL clusters in a few minutes.
 
 2) Easy setup
 
