@@ -2,6 +2,9 @@
 
 	* doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
 	text.
+
+	* ipmipower/: Support an additional "password verification
+	timeout" error code.
 	
 2007-05-04  Albert Chu <chu11@llnl.gov>
 
