@@ -5,8 +5,8 @@ by
 Albert Chu
 chu11@llnl.gov
 
-Introduction with Pdsh
-----------------------
+1) Introduction with Pdsh
+-------------------------
 
 Much of the hostrange input/output in FreeIPMI is based on the tool
 pdsh (http://pdsh.sourceforge.net).  Pdsh is a parallel shell utility
@@ -181,8 +181,8 @@ The time differences may not seem like much difference here in these
 examples.  But think of when this is done across an extremeley large
 cluster.
 
-Hostrange input/output in FreeIPMI
-----------------------------------
+2) Hostrange input/output in FreeIPMI
+-------------------------------------
 
 Much of the hostrange input/output can be handled by running FreeIPMI
 tools with pdsh.  However, pdsh requires that a shell be executed on
@@ -325,8 +325,8 @@ sys     0m0.003s
 Notice the large affect this has on the time for the command to
 complete.
 
-Suggested use of hostrange input/output in FreeIPMI
----------------------------------------------------
+3) Suggested use of hostrange input/output in FreeIPMI
+------------------------------------------------------
 
 Unlike pdsh, where you can run an arbitrary shell command, each
 FreeIPMI tool has a relatively fixed type of output or sets of outputs
@@ -415,8 +415,8 @@ Since each line of output is guaranteed to be only 1 line long, the
 default output (output prefixed with "hostname: ") is probably
 sufficient.
 
-Exceptions to the hostrange support in FreeIPMI
------------------------------------------------
+4) Exceptions to the hostrange support in FreeIPMI
+--------------------------------------------------
 
 The hostrange input/output is not been supported in bmc-config.  There
 are two major reasons for this:

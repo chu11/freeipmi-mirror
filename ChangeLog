@@ -1,6 +1,7 @@
 2007-05-05  Albert Chu <chu11@llnl.gov>
 
-	* doc/freeipmi-coding.txt: Update text.
+	* doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
+	text.
 	
 2007-05-04  Albert Chu <chu11@llnl.gov>
 
