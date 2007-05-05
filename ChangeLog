@@ -7,6 +7,8 @@
 	timeout" error code.
 
 	* doc/freeipmi-faq.texi: Update text.
+
+	* /: Various minor doc updates.
 	
 2007-05-04  Albert Chu <chu11@llnl.gov>
 
