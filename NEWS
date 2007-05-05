@@ -1,8 +1,8 @@
 0.3.3
 -----
-o Support ipmipower per-msg-auth workaround.
 o Support per-msg-auth in LAN udm and majority of FreeIPMI tools.
 o Support hex k-g input/output.
+o Fix ipmipower per-msg-auth.
 o Fix ipmiconsole k_g key corner case.
 o Fix libipmiconsole state machine corner case.
 o Fix OpenIPMI driver build bug.
