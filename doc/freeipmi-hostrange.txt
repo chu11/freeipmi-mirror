@@ -191,17 +191,18 @@ cluster and removes the advantages that IPMI over LAN does not
 interrupt a CPU.
 
 Starting with FreeIPMI 0.4.0 hostrange support has been added into
-ipmi-raw, ipmi-sensors, ipmi-sel, bmc-info, and ipmimonitoring.  More
-than one node at a time can be specified on the command line using the
-hostrange format similar in pdsh.  Using a threaded model similar to
-pdsh, each of the tools will create a sliding-window of threads, each
-executing out-of-band IPMI in parallel.  The number of threads in the
-window can be increased or decreased using the -F option.
+ipmi-raw, ipmi-sensors, ipmi-sel, bmc-info, and ipmimonitoring (it has
+existed in ipmipower since 0.1.0).  More than one node at a time can
+be specified on the command line using the hostrange format similar in
+pdsh.  Using a threaded model similar to pdsh, each of the tools will
+create a sliding-window of threads, each executing out-of-band IPMI in
+parallel.  The number of threads in the window can be increased or
+decreased using the fanout -F option.
 
 The tools now have similar functionality to pdsh, but all of the IPMI
 communication is done out-of-band.  Ipmipower, which supported
-hostranges since 0.1.0, has had it's options and output modified to
-emulate the same functionality of the other tools.
+hostranges since 0.1.0, has had some of its options and output
+modified to to be consistent with the other tools.
 
 (Note: On our test cluster, 'pwopr' hostnames have been used instead
 of 'wopr' for configuring the IPMI IP addresses.  We have also XXXed
@@ -349,7 +350,7 @@ massive amount of it.  Therefore buffered or consolidated output will
 not be very useful.  The hostrange input is most useful for gathering
 the SEL output of the entire cluster quickly and out-of-band.  You can
 then grep for some type of error condition you are specifically
-looking for or pipe it into a log watch utility.
+looking for or pipe it into a log monitoring utility.
 
 The hostrange functionality is also very useful to quickly clear the
 SEL logs across the entire cluster.
