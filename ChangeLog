@@ -9,6 +9,11 @@
 	* doc/freeipmi-faq.texi: Update text.
 
 	* /: Various minor doc updates.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(_ipmimonitoring): Tweak output format.
+
+	* ipmimonitoring/: Minor manpage text fixes.
 	
 2007-05-04  Albert Chu <chu11@llnl.gov>
 

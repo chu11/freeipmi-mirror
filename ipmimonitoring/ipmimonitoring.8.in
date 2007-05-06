@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.9 2007-04-28 03:07:03 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.10 2007-05-06 00:28:55 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,6 +39,14 @@ file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  The library and
 tool are primarily used for host monitoring activities.  For more
 general sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
+
+.B Ipmimonitoring
+will cache the sensor data repository of the machine for later retrieval.
+So the first time you run 
+.B ipmimonitoring
+may take longer to complete that later executions.  By default, the SDR data
+is cached in
+@IPMI_MONITORING_SDR_CACHE_DIR@.
 
 .SH "OPTIONS"
 .TP

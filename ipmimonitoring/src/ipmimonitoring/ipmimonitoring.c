@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.13 2007-05-02 14:00:45 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.14 2007-05-06 00:28:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -618,7 +618,7 @@ _ipmimonitoring(pstdout_state_t pstate,
 	sensor_state_str = "";
 
       pstdout_printf(pstate,
-                     "%d | %s | %s | [%s]", 
+                     "%d | %s | %s | %s", 
                      record_id, 
                      sensor_name, 
                      sensor_group_str,
