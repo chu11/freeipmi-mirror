@@ -1,3 +1,8 @@
+2007-05-07  Tom Zimmerman <tzimmerman@lnxi.com>
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c (get_pef_info): Fix field name
+	typo.
+	
 2007-05-05  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
