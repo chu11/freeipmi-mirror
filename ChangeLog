@@ -1,3 +1,8 @@
+2007-05-07  Ragha Vendra <raghavendra@zresearch.com>
+
+	* ipmiconsole/src/ipmiconsole/Makefile.am: Fix include path
+	compile issue.
+	
 2007-05-07  Tom Zimmerman <tzimmerman@lnxi.com>
 
 	* ipmi-pef/src/ipmi-pef-wrapper.c (get_pef_info): Fix field name

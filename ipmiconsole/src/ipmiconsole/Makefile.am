@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.4 2007-05-04 14:01:50 chu11 Exp $
+## $Id: Makefile.am,v 1.5 2007-05-07 22:55:02 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -16,7 +16,8 @@ ipmiconsole_SOURCES = \
 	error.c
 
 ipmiconsole_CPPFLAGS = -I$(srcdir)/../libipmiconsole \
-		       -I$(srcdir)/../../../common/src
+		       -I$(srcdir)/../../../common/src \
+		       -I$(srcdir)/../../../libfreeipmi/include	
 
 ipmiconsole_LDADD = ../../../common/src/libllnlcommon.la \
                     ../../../common/src/libipmicommon.la \
