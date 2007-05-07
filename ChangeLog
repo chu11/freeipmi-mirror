@@ -1,3 +1,10 @@
+2007-05-07  Albert Chu <chu11@llnl.gov>
+
+	Fix bugs found by Levi Pearson <lpearson@lnxi.com>
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_k_g),
+	common/src/ipmi-common.c (format_kg): Fix k_g buf length bugs.
+	
 2007-05-07  Ragha Vendra <raghavendra@zresearch.com>
 
 	* ipmiconsole/src/ipmiconsole/Makefile.am: Fix include path

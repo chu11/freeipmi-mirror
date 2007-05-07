@@ -188,7 +188,7 @@ format_kg(char *outstr, int outsz, const unsigned char *k_g)
   char *p;
 
   assert(outstr != NULL);
-  assert(outsz > IPMI_MAX_K_G_LENGTH*2);
+  assert(outsz > IPMI_MAX_K_G_LENGTH*2+2);
   assert(k_g != NULL);
 
   /* Are there any characters that would prevent printing this as a
@@ -232,7 +232,7 @@ format_kg(char *outstr, int outsz, const unsigned char *k_g)
     }
   else
     {
-      if (outsz < IPMI_MAX_K_G_LENGTH*2+1)
+      if (outsz < IPMI_MAX_K_G_LENGTH*2+3)
         return NULL;
       p = outstr;
       p[0] = '0'; p[1] = 'x';
