@@ -789,10 +789,9 @@
 
 	* bmc-info/src/bmc-info.c (main): Fix corner case.
 	
-2007-01-20  Albert Chu <chu11@llnl.gov>
+2007-01-20  Dmitry Frolov <frolov@riss-telecom.ru>.
 
-	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo found by Dmitry
-	Frolov <frolov at riss-telecom dot ru>.
+	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo.
 	
 2007-01-12  Albert Chu <chu11@llnl.gov>
 
