@@ -53,4 +53,6 @@ code cleanup
  - common func for udm setup in tools
  - common func for pstdout setup in tools
  - common func for sdr init junk in tools
+common stuff for SDR options in manpages?
+common stuff for admin priv stuff in tools/manpages?
 
