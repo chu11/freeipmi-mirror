@@ -10,12 +10,12 @@ ipmi-pef
 ipmi-chassis
 - Assignment: Ragha
 
+ipmi-fru
+- Assignment: Al
+
 Release 0.5.0
 -------------
 ipmi-sdr
-- Assignment: Bala
-
-ipmi-fru
 - Assignment: Bala
 
 ipmi-device
