@@ -49,4 +49,8 @@ general
 -------
 timeout options for most FreeIPMI tools?
 ipmi 2.0 for all tools?
+code cleanup
+ - common func for udm setup in tools
+ - common func for pstdout setup in tools
+ - common func for sdr init junk in tools
 
