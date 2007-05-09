@@ -117,7 +117,7 @@
 	* freeipmi.spec.in, configure.ac: Adjust appropriately.
 
 	* ipmi-raw/: Parse '0x' in hex codes too.  Fix seg-fault corner
-	case.
+	case. (bug #19645)
 
 	* common/src/pstdout.c (_pstdout_output_buffer_data,
 	_pstdout_output_finish): Alter default output of buffered
