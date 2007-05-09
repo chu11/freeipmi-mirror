@@ -1,3 +1,8 @@
+2007-05-08  Albert Chu <chu11@llnl.gov>
+
+	* Fix typos in header file comments in
+	libfreeipmi/include/freeipmi/udm/.
+	
 2007-05-07  Albert Chu <chu11@llnl.gov>
 
 	Fix bugs found by Levi Pearson <lpearson@lnxi.com>

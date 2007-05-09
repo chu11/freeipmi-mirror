@@ -34,4 +34,4 @@ int8_t ipmi_cmd_get_device_id (ipmi_device_t dev, fiid_obj_t obj_cmd_rs);
 }
 #endif
 
-#endif /* ipmi-device-global-cmds.h */
+#endif /* _IPMI_DEVICE_GLOBAL_CMDS_UDM_H */

@@ -60,6 +60,6 @@ int8_t ipmi_cmd_get_user_payload_access (ipmi_device_t dev,
 }
 #endif
 
-#endif /* ipmi-rmcpplus-support-and-payload-cmds.h */
+#endif /* _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_UDM_H */
 
 
