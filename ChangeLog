@@ -2,6 +2,9 @@
 
 	* Fix typos in header file comments in
 	libfreeipmi/include/freeipmi/udm/.
+
+	* ipmi-sel/src/ipmi-sel-argp.c (ipmi_sel_argp_parse): Fix
+	forgotten initialization.
 	
 2007-05-07  Albert Chu <chu11@llnl.gov>
 
