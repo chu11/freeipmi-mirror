@@ -21,15 +21,3 @@ Report bugs to <@PACKAGE_BUGREPORT@>.
 Copyright \(co 2003,04,05 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
-.SH "SEE ALSO"
-The full documentation for
-.B ipmi-pef
-is maintained as a Texinfo manual.  If the
-.B info
-and
-.B ipmi-pef
-programs are properly installed at your site, the command
-.IP
-.B info ipmi-pef
-.PP
-should give you access to the complete manual.

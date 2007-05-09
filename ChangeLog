@@ -2,6 +2,8 @@
 
 	* ipmi-sel/ipmi-sel.8.pre.in, ipmi-sensors/ipmi-sensors.8.pre.in:
 	Fix some SDR text.
+
+	* Various manpage updates.
 	
 2007-05-08  Albert Chu <chu11@llnl.gov>
 
