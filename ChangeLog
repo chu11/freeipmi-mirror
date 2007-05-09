@@ -1,3 +1,8 @@
+2007-05-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/ipmi-sel.8.pre.in, ipmi-sensors/ipmi-sensors.8.pre.in:
+	Fix some SDR text.
+	
 2007-05-08  Albert Chu <chu11@llnl.gov>
 
 	* Fix typos in header file comments in

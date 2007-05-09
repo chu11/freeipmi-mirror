@@ -26,10 +26,10 @@ use hostranged output across a cluster and want to consolidate the
 output.
 .TP
 \fB\-i\fR, \fB\-\-sdr\-info\fR
-Show SDR Info
+Show sensor data repository (SDR) Info
 .TP
 \fB\-f\fR, \fB\-\-flush\-cache\fR
-Flush sensor cache
+Flush sensor data repository (SDR) cache.
 .TP
 \fB\-Q\fR, \fB\-\-\quiet\-cache\fR
 Do not output information about cache creation/deletion.
@@ -44,7 +44,7 @@ List sensors from group
 List given sensors.  Accepts space or comma separated lists.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Use DIRECTORY for sensor cache
+Use DIRECTORY for sensor data repository (SDR) cache.
 #include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
 .SH "EXAMPLES"
