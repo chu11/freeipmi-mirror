@@ -76,3 +76,4 @@ better error codes for not opening correct stuff in kcs/ssif
 to refactor
 ipmi-pef
 ipmi-chassis
+ipmi-fru
