@@ -59,3 +59,5 @@ common stuff for admin priv stuff in tools/manpages?
 param->parameter everywyhere - it's too confusing - do after ipmi-chassis committed
 
 fix fru template defs, they're messed up
+
+merge in freeipmi-udm
