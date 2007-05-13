@@ -132,6 +132,8 @@ typedef struct sdr_generic_device_locator_record sdr_generic_device_locator_reco
 
 struct sdr_fru_device_locator_record
 {
+  uint8_t logical_fru_device_device_slave_address;
+  uint8_t logical_physical_fru_device;
   uint8_t device_type;
   uint8_t device_type_modifier;
   uint8_t fru_entity_id;

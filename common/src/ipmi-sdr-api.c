@@ -944,6 +944,12 @@ _get_sdr_fru_device_locator_record (uint8_t *sdr_record_data,
     }
 #endif /* NDEBUG */
 
+  FIID_OBJ_GET_CLEANUP (obj, "logical_fru_device_device_slave_address", &val);
+  sdr_fru_device_locator_record->logical_fru_device_device_slave_address = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, "logical_physical_fru_device", &val);
+  sdr_fru_device_locator_record->logical_physical_fru_device = val;
+
   FIID_OBJ_GET_CLEANUP (obj, "device_type", &val);
   sdr_fru_device_locator_record->device_type = val;
   

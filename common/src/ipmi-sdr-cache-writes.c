@@ -230,6 +230,8 @@ _write_sdr_fru_device_locator_record (FILE *fp,
 {
   ERR_EINVAL (fp && record);
   
+  fprintf (fp, "logical_fru_device_device_slave_address=%d\n", record->logical_fru_device_device_slave_address);
+  fprintf (fp, "logical_physical_fru_device=%d\n", record->logical_physical_fru_device);
   fprintf (fp, "device_type=%d\n", record->device_type);
   fprintf (fp, "device_type_modifier=%d\n", record->device_type_modifier);
   fprintf (fp, "fru_entity_id=%d\n", record->fru_entity_id);

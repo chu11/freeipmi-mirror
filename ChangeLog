@@ -1,3 +1,14 @@
+2007-05-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sdr-record-types.c: Modify field for
+	tmpl_sdr_fru_device_locator_record to a more appropriate name.
+
+	* common/src/ipmi-sdr-cache-writes.c
+	(_write_sdr_fru_device_locator_record),
+	common/src/ipmi-sdr-cache-reads.c
+	(_read_sdr_fru_device_locator_record), common/src/ipmi-sdr-api.h:
+	Support logical devices and fru ids in sdr cache.
+	
 2007-05-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/ipmi-sel.8.pre.in, ipmi-sensors/ipmi-sensors.8.pre.in:

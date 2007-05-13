@@ -579,6 +579,16 @@ _read_sdr_fru_device_locator_record (char *cache_record,
   ERR_EINVAL (cache_record && record);
   
   GET_INT_VALUE_BY_KEY (cache_record, 
+                        "logical_fru_device_device_slave_address",
+                        &int_value);
+  record->logical_fru_device_device_slave_address = int_value;
+  
+  GET_INT_VALUE_BY_KEY (cache_record,
+                        "logical_physical_fru_device",
+                        &int_value);
+  record->logical_physical_fru_device = int_value;
+  
+  GET_INT_VALUE_BY_KEY (cache_record,
 			"device_type", 
 			&int_value);
   record->device_type = int_value;
