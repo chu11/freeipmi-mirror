@@ -77,3 +77,6 @@ to refactor
 ipmi-pef
 ipmi-chassis
 ipmi-fru
+
+ipmi-sel/ipmi-sensors
+sdr-cache changes
