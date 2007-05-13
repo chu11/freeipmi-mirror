@@ -52,11 +52,14 @@ ipmi 2.0 for all tools?
 
 code cleanup
 ------------
+param->parameter everywyhere 
+- after ipmi-chassis committed
+audit/fix sdr template names and sdr-api names.
+merge in freeipmi-udm
+- after ipmi-chassis, ipmi-fru, and ipmi-pef committed
+common stuff for admin priv stuff in tools/manpages
+- after ipmi-pef, ipmi-chassis committed
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for SDR options in manpages
-common stuff for admin priv stuff in tools/manpages
-param->parameter everywyhere - it's too confusing - do after ipmi-chassis committed
-audit/fix sdr template names and sdr-api names.
-merge in freeipmi-udm
