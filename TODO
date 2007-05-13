@@ -49,15 +49,14 @@ general
 -------
 timeout options for most FreeIPMI tools?
 ipmi 2.0 for all tools?
+
 code cleanup
- - common func for udm setup in tools
- - common func for pstdout setup in tools
- - common func for sdr init junk in tools
-common stuff for SDR options in manpages?
-common stuff for admin priv stuff in tools/manpages?
-
+------------
+common funcs for udm setup in tools
+common funcs for pstdout setup in tools
+common funcs for sdr init junk in tools
+common stuff for SDR options in manpages
+common stuff for admin priv stuff in tools/manpages
 param->parameter everywyhere - it's too confusing - do after ipmi-chassis committed
-
-fix fru template defs, they're messed up
-
+audit/fix sdr template names and sdr-api names.
 merge in freeipmi-udm
