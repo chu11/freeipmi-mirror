@@ -49,6 +49,7 @@ merge in freeipmi-udm
 - after ipmi-chassis, ipmi-fru, and ipmi-pef committed
 common stuff for admin priv stuff in tools/manpages
 - after ipmi-pef, ipmi-chassis committed
+- needed for bmc-config, ipmi-pef, ipmi-chassis
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
