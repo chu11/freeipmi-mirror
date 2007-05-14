@@ -90,7 +90,10 @@ display_sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 
   if (ipmi_cmd_get_sdr_repository_info (state_data->dev, obj_cmd_rs) != 0)
     {
-      pstdout_perror (state_data->pstate, "ipmi_cmd_get_sdr_repository_info");
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_sdr_repository_info: %s\n",
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       goto cleanup;
     }
  

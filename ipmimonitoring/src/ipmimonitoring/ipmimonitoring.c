@@ -1,9 +1,5 @@
 /*****************************************************************************\
-<<<<<<< ipmimonitoring.c
- *  $Id: ipmimonitoring.c,v 1.12.2.2 2007-05-14 02:41:14 chu11 Exp $
-=======
- *  $Id: ipmimonitoring.c,v 1.12.2.2 2007-05-14 02:41:14 chu11 Exp $
->>>>>>> 1.14
+ *  $Id: ipmimonitoring.c,v 1.12.2.3 2007-05-14 03:00:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

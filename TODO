@@ -26,39 +26,6 @@ bmc-config:
 Missing Serial Config
 Chassis Config?
 
-<<<<<<< TODO
-general:
---------
-hostrange howto doc stuff
-
-ipmipower:
-----------
--B, -C, -E option support?
-
-
-
-ENONENT/etc. fof ssif/kcs api
-rename variables for better consistency?
-audit errno/kcs/ssif/openipmi errors -> udm errnos
-
-lan_open_session
-lan_cmd
-kcs_cmd
-ssif_cmd
-openipmi_cmd
-
-cleanup err wrappers. any way?
-
-cleanup err wrappers names
-
-docs
-----
-
-coding guide
-hostrange guide
-
-=======
->>>>>>> 1.245
 management:
 -----------
 
@@ -68,19 +35,6 @@ move ftp server
 
 move webpage?
 
-<<<<<<< TODO
-bugs:
-
-better error codes for not opening correct stuff in kcs/ssif
-
-to refactor
-ipmi-pef
-ipmi-chassis
-ipmi-fru
-
-ipmi-sel/ipmi-sensors
-sdr-cache changes
-=======
 general
 -------
 timeout options for most FreeIPMI tools?
@@ -96,9 +50,17 @@ merge in freeipmi-udm
 common stuff for admin priv stuff in tools/manpages
 - after ipmi-pef, ipmi-chassis committed
 - needed for bmc-config, ipmi-pef, ipmi-chassis
-sdr error outputs useless
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for SDR options in manpages
->>>>>>> 1.245
+
+rename variables for better consistency?
+audit errno/kcs/ssif/openipmi errors -> udm errnos
+
+bugs:
+
+to refactor
+ipmi-pef
+ipmi-chassis
+ipmi-fru
