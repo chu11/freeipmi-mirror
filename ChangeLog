@@ -1,3 +1,8 @@
+2007-05-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring.c (main): Fix error message
+	typo.
+	
 2007-05-13  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-api.h, common/src/ipmi-sdr-api.c: Renamed to

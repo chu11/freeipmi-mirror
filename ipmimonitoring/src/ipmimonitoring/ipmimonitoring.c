@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.14 2007-05-06 00:28:55 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.15 2007-05-14 17:22:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -741,7 +741,8 @@ main(int argc, char **argv)
     {
       if (ipmi_monitoring_sdr_cache_directory(cache_dir, &errnum) < 0)
         {
-          fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
+          fprintf(stderr, "ipmi_monitoring_sdr_cache_directory: %s\n", 
+                  ipmi_monitoring_ctx_strerror(errnum));
           goto cleanup;
         }
     }
