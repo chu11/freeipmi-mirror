@@ -2041,7 +2041,7 @@ sdr_cache_load (sdr_cache_ctx_t ctx,
     goto cleanup;
 
   if (!(sdr_addition_timestamp == cache_addition_timestamp
-        && sdr_erase_timestamp == cache_addition_timestamp))
+        && sdr_erase_timestamp == cache_erase_timestamp))
     {
       ctx->errnum = SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE;
       goto cleanup;
