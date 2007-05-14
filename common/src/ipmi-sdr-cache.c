@@ -1810,7 +1810,6 @@ sdr_cache_flush (sdr_cache_ctx_t ctx,
 
   if (unlink(cachefilenamebuf) < 0)
     {
-      printf("errno = %d\n", errno);
       if (errno == ENOENT)
         {
           /* actually this ok */
