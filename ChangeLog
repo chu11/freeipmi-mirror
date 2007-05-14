@@ -1,5 +1,14 @@
 2007-05-13  Albert Chu <chu11@llnl.gov>
 
+	* common/src/ipmi-sdr-api.h, common/src/ipmi-sdr-api.c: Renamed to
+	ipmi-sdr-cache.h and ipmi-sdr-cache.c.  Rearchitect sdr API to
+	return better error codes, be thread safe, and avoid potential
+	mem-leaks.  Fix various minor bugs found along the way.
+
+	* ipmi-sel/, ipmi-senors/: Update appropriately.
+	
+2007-05-13  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-sdr-record-types.c: Modify field for
 	tmpl_sdr_fru_device_locator_record to a more appropriate name.
 
