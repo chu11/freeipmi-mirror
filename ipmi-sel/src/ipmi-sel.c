@@ -41,7 +41,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "argp-common.h"
 #include "ipmi-common.h"
-#include "ipmi-sdr-api.h"
+#include "ipmi-sdr-cache.h"
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-wrapper.h"
@@ -55,7 +55,6 @@ cleanup_sdr_cache (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
 
-  memset(&(state_data->sdr_info), '\0', sizeof(sdr_repository_info_t));
   if (state_data->sdr_record_list)
     {
       free(state_data->sdr_record_list);
@@ -68,91 +67,85 @@ int
 init_sdr_cache (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args = NULL;
-  char *sdr_cache_filename = NULL;
-  FILE *fp = NULL;
   int rv = -1;
-
+  
   assert(state_data);
-
+  
   args = state_data->prog_data->args;
-
-  if ((sdr_cache_filename = get_sdr_cache_filename (state_data->hostname,
-                                                    args->sdr_cache_dir)) == NULL)
+  
+  if (sdr_cache_load(state_data->sdr_cache_ctx,
+                     state_data->dev,
+                     state_data->hostname,
+                     args->sdr_cache_dir,
+                     &(state_data->sdr_record_list),
+                     &(state_data->sdr_record_count)) < 0)
     {
-      pstdout_perror (state_data->pstate, "error: get_sdr_cache_filename (): ");
-      return (-1);
-    }
-
-  if ((fp = fopen (sdr_cache_filename, "r")))
-    {
-      sdr_repository_info_t l_sdr_info;
-
-      if (load_sdr_cache (fp,
-                          &(state_data->sdr_info),
-                          &(state_data->sdr_record_list),
-                          &(state_data->sdr_record_count)) < 0)
-        goto cleanup;
-
-      memset (&l_sdr_info, 0, sizeof (sdr_repository_info_t));
-      if (get_sdr_repository_info (state_data->dev, &l_sdr_info) == -1)
-        goto cleanup;
-
-      if (l_sdr_info.most_recent_addition_timestamp == state_data->sdr_info.most_recent_addition_timestamp && l_sdr_info.most_recent_erase_timestamp == state_data->sdr_info.most_recent_erase_timestamp)
+      if (sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) != SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST)
         {
-          rv = 0;
-          goto cleanup;
-        }
-
-      fclose(fp);
-      fp = NULL;
-    }
-
-  if ((fp = fopen (sdr_cache_filename, "w")))
-    {
-      int rc;
-#ifndef NDEBUG
-      rc = create_sdr_cache (state_data->dev,
-                             fp,
-                             (args->quiet_cache_wanted) ? 0 : 1,
-                             state_data->prog_data->debug_flags);
-#else  /* NDEBUG */
-      rc = create_sdr_cache (state_data->dev,
-                             fp,
-                             (args->quiet_cache_wanted) ? 0 : 1,
-                             0);
-#endif /* NDEBUG */
-      if (rc < 0)
-        {
-          /* No error will output otherwise */
-          if (args->quiet_cache_wanted)
+          if (sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) == SDR_CACHE_CTX_ERR_CACHE_INVALID
+              || sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) ==  SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
             pstdout_fprintf (state_data->pstate,
                              stderr,
-                             "SDR Cache creation failed: %s\n",
-                             strerror(errno));
+                             "SDR Cache load failed: %s; SDR cache may need to be flushed and reloaded\n",
+                             sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
+          else
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "SDR Cache load failed: %s\n",
+                               sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
           goto cleanup;
         }
-      fclose (fp);
-      fp = NULL;
     }
-
-  if ((fp = fopen (sdr_cache_filename, "r")))
+  
+  if (sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) == SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST)
     {
-      if (load_sdr_cache (fp,
-                          &(state_data->sdr_info),
-                          &(state_data->sdr_record_list),
-                          &(state_data->sdr_record_count)) < 0)
-        goto cleanup;
-
-      fclose (fp);
-      fp = NULL;
+#ifndef NDEBUG
+      if (sdr_cache_create (state_data->sdr_cache_ctx,
+                            state_data->dev,
+                            state_data->hostname,
+                            args->sdr_cache_dir,
+                            (args->quiet_cache_wanted) ? 0 : 1,
+                            state_data->prog_data->debug_flags) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "SDR Cache creation failed: %s\n",
+                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
+          goto cleanup;
+        }
+#else  /* NDEBUG */
+      if (sdr_cache_create (state_data->sdr_cache_ctx,
+                            state_data->dev,
+                            state_data->hostname,
+                            args->sdr_cache_dir,
+                            (args->quiet_cache_wanted) ? 0 : 1,
+                            0) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "SDR Cache creation failed: %s\n",
+                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
+          goto cleanup;
+        }
+#endif /* NDEBUG */
+      
+      if (sdr_cache_load(state_data->sdr_cache_ctx,
+                         state_data->dev,
+                         state_data->hostname,
+                         args->sdr_cache_dir,
+                         &(state_data->sdr_record_list),
+                         &(state_data->sdr_record_count)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "SDR Cache load failed: %s\n",
+                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
+          goto cleanup;
+        }
     }
-
+  
   rv = 0;
  cleanup:
-  if (fp)
-    fclose (fp);
-  if (sdr_cache_filename)
-    free(sdr_cache_filename);
   if (rv < 0)
     cleanup_sdr_cache(state_data);
   return (rv);
@@ -338,13 +331,21 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
   
   if (args->flush_cache_wanted)
     {
-      int retval;
       if (!args->quiet_cache_wanted)
         pstdout_printf (state_data->pstate, "flushing cache... ");
-      retval = flush_sdr_cache_file (state_data->hostname, args->sdr_cache_dir);
+      if (sdr_cache_flush (state_data->sdr_cache_ctx,
+                           state_data->hostname, 
+                           args->sdr_cache_dir) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr, 
+                           "SDR Cache Flush failed: %s\n",
+                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
+          goto cleanup;
+        }
       if (!args->quiet_cache_wanted)
-        pstdout_printf (state_data->pstate, "%s\n", (retval ? "FAILED" : "done"));
-      return retval;
+        pstdout_printf (state_data->pstate, "done\n");
+      return 0;
     }
 
   if (args->hex_dump_wanted)
@@ -408,12 +409,8 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
       return 0;
     }
   
-  /* achu: ipmi-sel does not require the SDR cache, so if this fails, oh well */
   if (init_sdr_cache (state_data) < 0)
-    pstdout_fprintf (state_data->pstate, 
-                     stderr, 
-                     "%s: sdr cache initialization failed\n",
-                     program_invocation_short_name);
+    goto cleanup;
 
   if (display_sel_records (state_data) < 0)
     goto cleanup;
@@ -532,6 +529,13 @@ _ipmi_sel (pstdout_state_t pstate,
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
 
+  if (!(state_data.sdr_cache_ctx = sdr_cache_ctx_create()))
+    {
+      pstdout_perror (pstate, "sdr_cache_ctx_create()");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
   if (run_cmd_args (&state_data) < 0)
     {
       exit_code = EXIT_FAILURE;
@@ -540,6 +544,8 @@ _ipmi_sel (pstdout_state_t pstate,
 
   exit_code = 0;
  cleanup:
+  if (state_data.sdr_cache_ctx)
+    sdr_cache_ctx_destroy(state_data.sdr_cache_ctx);
   if (dev)
     {
       ipmi_close_device (dev);
@@ -637,14 +643,6 @@ main (int argc, char **argv)
               goto cleanup;
             }
         }
-    }
-
-  if (setup_sdr_cache_directory () < 0)
-    {
-      fprintf (stderr, "%s: sdr cache directory setup failed\n",
-               program_invocation_short_name);
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
     }
 
   if ((rv = pstdout_launch(prog_data.args->common.host,

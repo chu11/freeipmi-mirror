@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.43 2007-04-28 20:06:41 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.43.2.1 2007-05-14 02:41:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -350,7 +350,7 @@ static void
 _cmd_k_g(char **argv) 
 {
   int rv = 0;
-  char buf[IPMI_MAX_K_G_LENGTH*2+1];
+  char buf[IPMI_MAX_K_G_LENGTH*2+3];
   assert(argv != NULL);
 
   if (conf->ipmi_version != IPMI_VERSION_AUTO
@@ -376,7 +376,7 @@ _cmd_k_g(char **argv)
 #else  /* !NDEBUG */
           cbuf_printf(ttyout, "k_g: %s\n", 
                       (conf->k_g_configured == IPMIPOWER_TRUE) ? 
-                      format_kg(buf, IPMI_MAX_K_G_LENGTH*2+1, conf->k_g) : "NULL");
+                      format_kg(buf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
 #endif /* !NDEBUG */
         }
     }

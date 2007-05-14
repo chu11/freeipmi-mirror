@@ -1,3 +1,111 @@
+2007-05-13  Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sdr-api.h, common/src/ipmi-sdr-api.c: Renamed to
+	ipmi-sdr-cache.h and ipmi-sdr-cache.c.  Rearchitect sdr API to
+	return better error codes, be thread safe, and avoid potential
+	mem-leaks.  Fix various minor bugs found along the way.
+
+	* ipmi-sel/, ipmi-senors/: Update appropriately.
+	
+2007-05-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sdr-record-types.c: Modify field for
+	tmpl_sdr_fru_device_locator_record to a more appropriate name.
+
+	* common/src/ipmi-sdr-cache-writes.c
+	(_write_sdr_fru_device_locator_record),
+	common/src/ipmi-sdr-cache-reads.c
+	(_read_sdr_fru_device_locator_record), common/src/ipmi-sdr-api.h:
+	Support logical devices and fru ids in sdr cache.
+	
+2007-05-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/ipmi-sel.8.pre.in, ipmi-sensors/ipmi-sensors.8.pre.in:
+	Fix some SDR text.
+
+	* Various manpage updates.
+	
+2007-05-08  Albert Chu <chu11@llnl.gov>
+
+	* Fix typos in header file comments in
+	libfreeipmi/include/freeipmi/udm/.
+
+	* ipmi-sel/src/ipmi-sel-argp.c (ipmi_sel_argp_parse): Fix
+	forgotten initialization.
+	
+2007-05-07  Albert Chu <chu11@llnl.gov>
+
+	Fix bugs found by Levi Pearson <lpearson@lnxi.com>
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_k_g),
+	common/src/ipmi-common.c (format_kg): Fix k_g buf length bugs.
+	
+2007-05-07  Ragha Vendra <raghavendra@zresearch.com>
+
+	* ipmiconsole/src/ipmiconsole/Makefile.am: Fix include path
+	compile issue.
+	
+2007-05-07  Tom Zimmerman <tzimmerman@lnxi.com>
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c (get_pef_info): Fix field name
+	typo.
+	
+2007-05-05  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: Update
+	text.
+
+	* ipmipower/: Support an additional "password verification
+	timeout" error code.
+
+	* doc/freeipmi-faq.texi: Update text.
+
+	* /: Various minor doc updates.
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c
+	(_ipmimonitoring): Tweak output format.
+
+	* ipmimonitoring/: Minor manpage text fixes.
+	
+2007-05-04  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_ctx_create): Change API to support k_g len.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(_check_for_authentication_support): Fix state machine corner case.
+
+	* ipmiconsole/src/ipmiconsole_config.c (_cmdline_parse): Fix -K
+	corner case.
+
+	* ipmipower/src/ipmipower_config.c
+	(ipmipower_config_cmdline_parse): Fix -K corner case.
+
+	* libfreeipmi/src/ipmi-utils.c (ipmi_check_cmd,
+	ipmi_check_completion_code): check obj-cmd w/ fiid_obj_valid().
+
+	* doc/freeipmi-coding.txt, doc/freeipmi-hostrange.txt: new docs.
+
+	* doc/Makefile.am, freeipmi.spec.in: Update for new docs.
+
+2007-05-04  Levi Pearson <lpearson@lnxi.com>
+
+	* ipmiconsole/: Support hex keys in ipmiconsole and
+	libipmiconsole.
+
+2007-05-03  Levi Pearson <lpearson@lnxi.com>
+
+	* bmc-config/src/bmc-serial-conf-section.c
+	(connect_mode_checkout): Fix strdup bug.
+
+	* bmc-config/src/bmc-lan-conf-security-keys-section.c
+	(k_g_checkout, k_g_commit, k_g_diff, k_g_validate): Support hex
+	code input/output for K-g.
+
+	* common/src/ipmi-common.c, common/src/ipmi-common.h (parse_kg,
+	format_kg): Add const to appropriate parameters.
+	
 2007-05-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c,
@@ -36,7 +144,7 @@
 	* freeipmi.spec.in, configure.ac: Adjust appropriately.
 
 	* ipmi-raw/: Parse '0x' in hex codes too.  Fix seg-fault corner
-	case.
+	case. (bug #19645)
 
 	* common/src/pstdout.c (_pstdout_output_buffer_data,
 	_pstdout_output_finish): Alter default output of buffered
@@ -723,10 +831,9 @@
 
 	* bmc-info/src/bmc-info.c (main): Fix corner case.
 	
-2007-01-20  Albert Chu <chu11@llnl.gov>
+2007-01-20  Dmitry Frolov <frolov@riss-telecom.ru>.
 
-	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo found by Dmitry
-	Frolov <frolov at riss-telecom dot ru>.
+	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo.
 	
 2007-01-12  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.13 2007-03-02 00:56:26 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.13.2.1 2007-05-14 02:41:12 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -357,12 +357,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case SDR_CACHE_DIR_KEY:
       cmd_args->sdr_cache_dir_wanted = 1;
       cmd_args->sdr_cache_dir = strdup (arg);
-      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
-	{
-	  fprintf (stderr, "insufficient permission on sensor cache directory [%s]\n", 
-		   cmd_args->sdr_cache_dir);
-	  argp_usage (state);
-	}
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -395,6 +389,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->delete_range2 = 0;
   cmd_args->hex_dump_wanted = 0;
   cmd_args->hex_dump_filename = NULL;
+  cmd_args->flush_cache_wanted = 0;
   cmd_args->quiet_cache_wanted = 0;
   cmd_args->sdr_cache_dir_wanted = 0;
   cmd_args->sdr_cache_dir = NULL;

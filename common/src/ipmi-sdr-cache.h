@@ -1,5 +1,5 @@
 /*
-ipmi-sdr-api.h: SDR cache creation and management apis.
+ipmi-sdr-cache.h: SDR cache creation and management apis.
 Copyright (C) 2006 FreeIPMI Core Team
 
 This program is free software; you can redistribute it and/or modify
@@ -17,11 +17,29 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#ifndef _IPMI_SDR_API_H
-#define _IPMI_SDR_API_H
+#ifndef _IPMI_SDR_CACHE_H
+#define _IPMI_SDR_CACHE_H
 
 #include <stdio.h>
 #include <stdint.h>
+
+#define SDR_CACHE_CTX_ERR_SUCCESS                        0
+#define SDR_CACHE_CTX_ERR_NULL                           1
+#define SDR_CACHE_CTX_ERR_INVALID                        2
+#define SDR_CACHE_CTX_ERR_PARAMETERS                     3
+#define SDR_CACHE_CTX_ERR_SDR_CACHE_DIRECTORY            4
+#define SDR_CACHE_CTX_ERR_SDR_CACHE_DIRECTORY_PERMISSION 5
+#define SDR_CACHE_CTX_ERR_SDR_CACHE_DIRECTORY_CREATION   6
+#define SDR_CACHE_CTX_ERR_HOSTNAME_INVALID               7
+#define SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST           8
+#define SDR_CACHE_CTX_ERR_CACHE_EXISTS                   9
+#define SDR_CACHE_CTX_ERR_CACHE_INVALID                 10
+#define SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE             11
+#define SDR_CACHE_CTX_ERR_CACHE_PERMISSION              12
+#define SDR_CACHE_CTX_ERR_OUTMEM                        13
+#define SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION            14
+#define SDR_CACHE_CTX_ERR_INTERNAL                      15
+#define SDR_CACHE_CTX_ERR_ERRNUMRANGE                   16
 
 #define IPMI_SENSOR_NAME_MAX  17
 #define IPMI_DEVICE_NAME_MAX  IPMI_SENSOR_NAME_MAX
@@ -132,6 +150,8 @@ typedef struct sdr_generic_device_locator_record sdr_generic_device_locator_reco
 
 struct sdr_fru_device_locator_record
 {
+  uint8_t logical_fru_device_device_slave_address;
+  uint8_t logical_physical_fru_device;
   uint8_t device_type;
   uint8_t device_type_modifier;
   uint8_t fru_entity_id;
@@ -174,18 +194,32 @@ struct sdr_record
 };
 typedef struct sdr_record sdr_record_t;
 
-int get_sdr_repository_info (ipmi_device_t dev, sdr_repository_info_t *sdr_info);
+typedef struct sdr_cache_ctx *sdr_cache_ctx_t;
 
-char *get_sdr_cache_filename (char *host, char *user_cache_dir);
+sdr_cache_ctx_t sdr_cache_ctx_create(void);
 
-int setup_sdr_cache_directory ();
+void sdr_cache_ctx_destroy(sdr_cache_ctx_t ctx);
 
-int flush_sdr_cache_file (char *host, char *user_cache_dir);
+char *sdr_cache_ctx_strerror(int32_t errnum);
 
-int create_sdr_cache (ipmi_device_t dev, FILE *fp, int verbose, int debug);
+int sdr_cache_ctx_errnum(sdr_cache_ctx_t ctx);
 
-int load_sdr_cache (FILE *fp, sdr_repository_info_t *sdr_info, 
-		    sdr_record_t **sdr_record_list, int *count);
+int sdr_cache_create (sdr_cache_ctx_t ctx,
+                      ipmi_device_t dev, 
+                      char *host,
+                      char *user_cache_dir,
+                      int verbose, 
+                      int debug);
 
+int sdr_cache_flush (sdr_cache_ctx_t ctx,
+                     char *host, 
+                     char *user_cache_dir);
+
+int sdr_cache_load (sdr_cache_ctx_t ctx,
+                    ipmi_device_t dev, 
+                    char *host,
+                    char *user_cache_dir,
+		    sdr_record_t **sdr_record_list, 
+                    unsigned int *sdr_record_count);
 
 #endif

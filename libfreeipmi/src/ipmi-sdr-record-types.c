@@ -446,7 +446,7 @@ fiid_template_t tmpl_sdr_fru_device_locator_record =
     {1, "direct_access_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {7, "direct_access_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // FRU Device ID/Device Slave Address
-    {8, "logical_fru_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "logical_fru_device_device_slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // Logical-Physical / Access LUN / Bus ID
     {3, "private_bus_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "lun_for_master_write_read_fru_command", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 

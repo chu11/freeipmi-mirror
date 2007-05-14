@@ -29,14 +29,14 @@ Delete REC-LIST in SEL
 Delete records from START to END in SEL
 .TP
 \fB\-f\fR, \fB\-\-flush\-cache\fR
-Flush SDR cache
+Flush sensor data repository (SDR) cache.
 .TP
 \fB\-Q\fR, \fB\-\-\quiet\-cache\fR
 Do not output information about cache creation/deletion. Set automatically
 if multiple hosts are input.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Use DIRECTORY for sensor cache
+Use DIRECTORY for sensor data repository (SDR) cache.
 #include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
 .SH "EXAMPLES"
@@ -74,15 +74,3 @@ Report bugs to <@PACKAGE_BUGREPORT@>.
 Copyright \(co 2003,04,05 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
-.SH "SEE ALSO"
-The full documentation for
-.B ipmi-sel
-is maintained as a Texinfo manual.  If the
-.B info
-and
-.B ipmi-sel
-programs are properly installed at your site, the command
-.IP
-.B info ipmi-sel
-.PP
-should give you access to the complete manual.

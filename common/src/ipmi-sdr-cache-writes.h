@@ -22,9 +22,15 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include <stdio.h>
 
-#include "ipmi-sdr-api.h"
+#include "ipmi-sdr-cache.h"
 
-int write_sdr_repository_info (FILE *fp, sdr_repository_info_t *sdr_info);
-int write_sdr_record (FILE *fp, sdr_record_t *record);
+int sdr_cache_write_repository_info (sdr_cache_ctx_t ctx,
+                                     ipmi_device_t dev,
+                                     FILE *fp,
+                                     unsigned int *sdr_record_count);
+
+int sdr_cache_write_record (sdr_cache_ctx_t ctx,
+                            FILE *fp,
+                            sdr_record_t *record);
 
 #endif

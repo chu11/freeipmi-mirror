@@ -1,5 +1,5 @@
 \."############################################################################
-\."  $Id: libipmimonitoring.3.in,v 1.4 2007-04-28 03:07:03 chu11 Exp $
+\."  $Id: libipmimonitoring.3.in,v 1.4.2.1 2007-05-14 02:41:14 chu11 Exp $
 \."############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,8 +73,8 @@ addition, the sensor readings are interpreted into NOMINAL, WARNING,
 or CRITICAL states, so that monitoring software may take appropriate
 actions dependent on the sensor readings.
 
-In order to improve efficiency, SDR data will be cached on the host in
-@IPMI_MONITORING_SDR_CACHE_DIR@.
+In order to improve efficiency, SDR data will be cached on the host.
+By default it is cached in @IPMI_MONITORING_SDR_CACHE_DIR@.
 
 Interpretation rules have not been written for all sensors
 permutations and types.  If sensor interpretation rules are needed,

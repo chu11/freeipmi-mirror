@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.10 2007-04-29 04:36:50 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.10.2.1 2007-05-14 02:41:12 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -261,12 +261,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case SDR_CACHE_DIR_KEY:
       cmd_args->sdr_cache_dir_wanted = 1;
       cmd_args->sdr_cache_dir = strdup (arg);
-      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
-	{
-	  fprintf (stderr, "insufficient permission on sensor cache directory [%s]\n", 
-		   cmd_args->sdr_cache_dir);
-	  argp_usage (state);
-	}
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */

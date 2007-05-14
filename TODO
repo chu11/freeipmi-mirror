@@ -21,15 +21,12 @@ Autoconf/Portability
 * socklet_t, doesn't exist on all OSes.
 * stdarg.h, other OSes use varargs.h
          
-libfreeipmi
------------
-udm - ability to return real errors to the user
-
 bmc-config:
 -----------
 Missing Serial Config
 Chassis Config?
 
+<<<<<<< TODO
 general:
 --------
 hostrange howto doc stuff
@@ -60,6 +57,8 @@ docs
 coding guide
 hostrange guide
 
+=======
+>>>>>>> 1.245
 management:
 -----------
 
@@ -69,6 +68,7 @@ move ftp server
 
 move webpage?
 
+<<<<<<< TODO
 bugs:
 
 better error codes for not opening correct stuff in kcs/ssif
@@ -80,3 +80,25 @@ ipmi-fru
 
 ipmi-sel/ipmi-sensors
 sdr-cache changes
+=======
+general
+-------
+timeout options for most FreeIPMI tools?
+ipmi 2.0 for all tools?
+sdr caching requires versioning
+
+code cleanup
+------------
+param->parameter everywyhere 
+- after ipmi-chassis committed
+merge in freeipmi-udm
+- after ipmi-chassis, ipmi-fru, and ipmi-pef committed
+common stuff for admin priv stuff in tools/manpages
+- after ipmi-pef, ipmi-chassis committed
+- needed for bmc-config, ipmi-pef, ipmi-chassis
+sdr error outputs useless
+common funcs for udm setup in tools
+common funcs for pstdout setup in tools
+common funcs for sdr init junk in tools
+common stuff for SDR options in manpages
+>>>>>>> 1.245

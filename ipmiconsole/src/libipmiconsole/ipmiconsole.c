@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.7 2007-03-31 04:03:06 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.7.2.1 2007-05-14 02:41:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -395,7 +395,7 @@ ipmiconsole_ctx_create(char *hostname,
       || !protocol_config
       || (ipmi_config->username && strlen(ipmi_config->username) > IPMI_MAX_USER_NAME_LENGTH)
       || (ipmi_config->password && strlen(ipmi_config->password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-      || (ipmi_config->k_g && strlen(ipmi_config->k_g) > IPMI_MAX_K_G_LENGTH)
+      || (ipmi_config->k_g && ipmi_config->k_g_len > IPMI_MAX_K_G_LENGTH)
       || (ipmi_config->privilege_level >= 0
 	  && (ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_USER
 	      && ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_OPERATOR
@@ -441,8 +441,12 @@ ipmiconsole_ctx_create(char *hostname,
   if (ipmi_config->password)
     strcpy((char *)c->password, ipmi_config->password);
 
-  if (ipmi_config->k_g)
-    strcpy((char *)c->k_g, ipmi_config->k_g);
+  /* k_g may contain nulls */
+  if (ipmi_config->k_g && ipmi_config->k_g_len) 
+    {
+      memcpy(c->k_g, ipmi_config->k_g, ipmi_config->k_g_len);
+      c->k_g_configured = 1;
+    }
 
   if (ipmi_config->privilege_level >= 0)
     {

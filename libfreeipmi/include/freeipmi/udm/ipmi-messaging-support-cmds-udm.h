@@ -121,6 +121,6 @@ int8_t ipmi_lan_open_session (ipmi_device_t dev);
 }
 #endif
 
-#endif /* ipmi-messaging-support-cmds.h */
+#endif /* _IPMI_MESSAGING_SUPPORT_CMDS_UDM_H */
 
 

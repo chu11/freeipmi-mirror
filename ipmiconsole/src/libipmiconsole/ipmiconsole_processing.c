@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.8 2007-03-31 04:03:06 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.8.2.1 2007-05-14 02:41:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1764,8 +1764,8 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if ((!strlen((char *)c->k_g) && authentication_status_k_g)
-      || (strlen((char *)c->k_g) && !authentication_status_k_g))
+  if ((!c->k_g_configured && authentication_status_k_g)
+      || (c->k_g_configured && !authentication_status_k_g))
     {
       c->errnum = IPMICONSOLE_ERR_K_G_INVALID;
       return -1;
@@ -1843,7 +1843,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
   
-  if (strlen((char *)c->k_g))
+  if (c->k_g_configured)
     k_g = (uint8_t *)c->k_g;
   else
     k_g = NULL;
@@ -1868,7 +1868,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
                                            password,
                                            password_len,
                                            k_g,
-                                           (k_g) ? strlen((char *)k_g) : 0,
+                                           (k_g) ? IPMI_MAX_K_G_LENGTH : 0,
                                            s->remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
@@ -2805,10 +2805,9 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 
       if (s->close_session_flag)
         {
-          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
-            goto close_session;
-	  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
-          goto calculate_timeout;
+          /* The session could be up, depending on timeouts, etc. but
+             since we aren't sure, we don't attempt to close it */
+          goto close_session;
         }
 
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ) < 0)

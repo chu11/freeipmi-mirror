@@ -598,7 +598,7 @@ get_pef_info (ipmi_device_t dev, pef_info_t *pef_info)
   pef_info->diagnostic_interrupt_action_support = val;
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "oem_event_record_filtering_supported", &val);
   pef_info->oem_event_record_filtering_support = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_eft_entries", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_event_filter_table_entries", &val);
   pef_info->eft_entries_count = val;
   
   if (pef_info->alert_action_support)

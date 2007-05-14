@@ -52,6 +52,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <arpa/inet.h>
 #include <pwd.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
@@ -63,43 +64,76 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "freeipmi-portability.h"
 #include "ipmi-common.h"
 
-#include "ipmi-sdr-api.h"
+#include "ipmi-sdr-cache.h"
+#include "ipmi-sdr-cache-defs.h"
 
 int 
-write_sdr_repository_info (FILE *fp, 
-			   sdr_repository_info_t *sdr_info)
+sdr_cache_write_repository_info (sdr_cache_ctx_t ctx,
+                                 ipmi_device_t dev,
+                                 FILE *fp,
+                                 unsigned int *sdr_record_count)
 {
-  ERR_EINVAL (fp && sdr_info);
-  
-  fprintf (fp, "sdr_version_major=%d\n", sdr_info->sdr_version_major);
-  fprintf (fp, "sdr_version_minor=%d\n", sdr_info->sdr_version_minor);
-  fprintf (fp, "record_count=%d\n", sdr_info->record_count);
-  fprintf (fp, "free_space=%d\n", sdr_info->free_space);
-  fprintf (fp, "most_recent_addition_timestamp=%d\n", 
-	   sdr_info->most_recent_addition_timestamp);
-  fprintf (fp, "most_recent_erase_timestamp=%d\n", 
-	   sdr_info->most_recent_erase_timestamp);
-  fprintf (fp, "get_sdr_repository_allocation_info_command_supported=%d\n", 
-	   sdr_info->get_sdr_repository_allocation_info_command_supported);
-  fprintf (fp, "reserve_sdr_repository_command_supported=%d\n", 
-	   sdr_info->reserve_sdr_repository_command_supported);
-  fprintf (fp, "partial_add_sdr_command_supported=%d\n", 
-	   sdr_info->partial_add_sdr_command_supported);
-  fprintf (fp, "delete_sdr_command_supported=%d\n", 
-	   sdr_info->delete_sdr_command_supported);
-  fprintf (fp, "modal_non_modal_sdr_repository_update_operation_supported=%d\n", 
-	   sdr_info->modal_non_modal_sdr_repository_update_operation_supported);
-  fprintf (fp, "overflow_flag=%d\n", sdr_info->overflow_flag);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(dev);
+  assert(fp);
+  assert(sdr_record_count);
+
+  _SDR_FIID_OBJ_CREATE(obj_cmd_rs, tmpl_cmd_get_sdr_repository_info_rs);
+
+  if (ipmi_cmd_get_sdr_repository_info (dev, obj_cmd_rs) != 0)
+    {
+      ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
+      goto cleanup;
+    }
+
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "sdr_version_major", &val);
+  fprintf (fp, "sdr_version_major=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "sdr_version_minor", &val);
+  fprintf (fp, "sdr_version_minor=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "record_count", &val);
+  *sdr_record_count = val;
+  fprintf (fp, "record_count=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "free_space", &val);
+  fprintf (fp, "free_space=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val);
+  fprintf (fp, "most_recent_addition_timestamp=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val);
+  fprintf (fp, "most_recent_erase_timestamp=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "get_sdr_repository_allocation_info_command_supported", &val);
+  fprintf (fp, "get_sdr_repository_allocation_info_command_supported=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "reserve_sdr_repository_command_supported", &val);
+  fprintf (fp, "reserve_sdr_repository_command_supported=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "partial_add_sdr_command_supported", &val);
+  fprintf (fp, "partial_add_sdr_command_supported=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "delete_sdr_command_supported", &val);
+  fprintf (fp, "delete_sdr_command_supported=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "modal_non_modal_sdr_repository_update_operation_supported", &val);
+  fprintf (fp, "modal_non_modal_sdr_repository_update_operation_supported=%u\n", (unsigned int)val);
+  _SDR_FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val);
+  fprintf (fp, "overflow_flag=%u\n", (unsigned int)val);
   fprintf (fp, "\n");
   
-  return 0;
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return rv;
 }
 
 static int 
-_write_sdr_full_record (FILE *fp, 
+_write_sdr_full_record (sdr_cache_ctx_t ctx,
+                        FILE *fp, 
 			sdr_full_record_t *record)
 {
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "b=%d\n", record->b);
   fprintf (fp, "m=%d\n", record->m);
@@ -152,10 +186,14 @@ _write_sdr_full_record (FILE *fp,
 }
 
 static int 
-_write_sdr_compact_record (FILE *fp, 
+_write_sdr_compact_record (sdr_cache_ctx_t ctx,
+                           FILE *fp, 
 			   sdr_compact_record_t *record)
 {
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "sensor_owner_id=%d\n", record->sensor_owner_id);
   fprintf (fp, "sensor_number=%d\n", record->sensor_number);
@@ -173,10 +211,14 @@ _write_sdr_compact_record (FILE *fp,
 }
 
 static int 
-_write_sdr_event_only_record (FILE *fp, 
+_write_sdr_event_only_record (sdr_cache_ctx_t ctx,
+                              FILE *fp, 
 			      sdr_event_only_record_t *record)
 {
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "sensor_owner_id=%d\n", record->sensor_owner_id);
   fprintf (fp, "sensor_number=%d\n", record->sensor_number);
@@ -189,10 +231,14 @@ _write_sdr_event_only_record (FILE *fp,
 }
 
 static int 
-_write_sdr_entity_association_record (FILE *fp, 
+_write_sdr_entity_association_record (sdr_cache_ctx_t ctx,
+                                      FILE *fp, 
 				      sdr_entity_association_record_t *record)
 {
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "container_entity_id=%d\n", record->container_entity_id);
   fprintf (fp, "container_entity_instance=%d\n", record->container_entity_instance);
@@ -202,10 +248,14 @@ _write_sdr_entity_association_record (FILE *fp,
 }
 
 static int 
-_write_sdr_generic_device_locator_record (FILE *fp, 
+_write_sdr_generic_device_locator_record (sdr_cache_ctx_t ctx,
+                                          FILE *fp, 
 					  sdr_generic_device_locator_record_t *record)
 {
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "direct_access_address=%d\n", record->direct_access_address);
   fprintf (fp, "channel_number=%d\n", record->channel_number);
@@ -225,11 +275,17 @@ _write_sdr_generic_device_locator_record (FILE *fp,
 }
 
 static int 
-_write_sdr_fru_device_locator_record (FILE *fp, 
+_write_sdr_fru_device_locator_record (sdr_cache_ctx_t ctx,
+                                      FILE *fp, 
 				      sdr_fru_device_locator_record_t *record)
 {
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
+  fprintf (fp, "logical_fru_device_device_slave_address=%d\n", record->logical_fru_device_device_slave_address);
+  fprintf (fp, "logical_physical_fru_device=%d\n", record->logical_physical_fru_device);
   fprintf (fp, "device_type=%d\n", record->device_type);
   fprintf (fp, "device_type_modifier=%d\n", record->device_type_modifier);
   fprintf (fp, "fru_entity_id=%d\n", record->fru_entity_id);
@@ -241,10 +297,14 @@ _write_sdr_fru_device_locator_record (FILE *fp,
 }
 
 static int 
-_write_sdr_management_controller_device_locator_record (FILE *fp, 
+_write_sdr_management_controller_device_locator_record (sdr_cache_ctx_t ctx,
+                                                        FILE *fp, 
 							sdr_management_controller_device_locator_record_t *record)
 {
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "entity_id=%d\n", record->entity_id);
   fprintf (fp, "entity_instance=%d\n", record->entity_instance);
@@ -255,12 +315,16 @@ _write_sdr_management_controller_device_locator_record (FILE *fp,
 }
 
 static int 
-_write_sdr_oem_record (FILE *fp, 
+_write_sdr_oem_record (sdr_cache_ctx_t ctx,
+                       FILE *fp, 
 		       sdr_oem_record_t *record)
 {
   int i;
   
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "manufacturer_id=%d\n", record->manufacturer_id);
   fprintf (fp, "oem_data=");
@@ -275,10 +339,14 @@ _write_sdr_oem_record (FILE *fp,
 }
 
 int 
-write_sdr_record (FILE *fp, sdr_record_t *record)
+sdr_cache_write_record (sdr_cache_ctx_t ctx,
+                        FILE *fp, 
+                        sdr_record_t *record)
 {
-  
-  ERR_EINVAL (fp && record);
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(fp);
+  assert(record);
   
   fprintf (fp, "record_id=%d\n", record->record_id);
   fprintf (fp, "record_type=%d\n", record->record_type);
@@ -286,31 +354,39 @@ write_sdr_record (FILE *fp, sdr_record_t *record)
   switch (record->record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
-      return _write_sdr_full_record (fp, 
+      return _write_sdr_full_record (ctx,
+                                     fp, 
 				     &(record->record.sdr_full_record));
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
-      return _write_sdr_compact_record (fp, 
+      return _write_sdr_compact_record (ctx,
+                                        fp, 
 					&(record->record.sdr_compact_record));
     case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
-      return _write_sdr_event_only_record (fp, 
+      return _write_sdr_event_only_record (ctx,
+                                           fp, 
 					   &(record->record.sdr_event_only_record));
     case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
-      return _write_sdr_entity_association_record (fp, 
+      return _write_sdr_entity_association_record (ctx,
+                                                   fp, 
 						   &(record->record.sdr_entity_association_record));
     case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
-      return _write_sdr_generic_device_locator_record (fp, 
+      return _write_sdr_generic_device_locator_record (ctx,
+                                                       fp, 
 						       &(record->record.sdr_generic_device_locator_record));
     case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
-      return _write_sdr_fru_device_locator_record (fp, 
+      return _write_sdr_fru_device_locator_record (ctx,
+                                                   fp, 
 						   &(record->record.sdr_fru_device_locator_record));
     case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
-      return _write_sdr_management_controller_device_locator_record (fp, 
+      return _write_sdr_management_controller_device_locator_record (ctx,
+                                                                     fp, 
 								     &(record->record.sdr_management_controller_device_locator_record));
     case IPMI_SDR_FORMAT_OEM_RECORD:
-      return _write_sdr_oem_record (fp, 
+      return _write_sdr_oem_record (ctx,
+                                    fp, 
 				    &(record->record.sdr_oem_record));
     }
-  
+ 
   return (-1);
 }
 

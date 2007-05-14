@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel.h,v 1.3 2007-03-02 00:56:26 chu11 Exp $ 
+   $Id: ipmi-sel.h,v 1.3.2.1 2007-05-14 02:41:12 chu11 Exp $ 
    
    ipmi-sel.h - System Event Logger utility.
    
@@ -26,7 +26,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
-#include "ipmi-sdr-api.h"
+#include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
 enum ipmi_sel_argp_option_keys
@@ -74,9 +74,9 @@ typedef struct ipmi_sel_state_data
   ipmi_device_t dev;
   pstdout_state_t pstate;
   char *hostname;
-  sdr_repository_info_t sdr_info;
+  sdr_cache_ctx_t sdr_cache_ctx;
   sdr_record_t *sdr_record_list;
-  int sdr_record_count;
+  unsigned int sdr_record_count;
 } ipmi_sel_state_data_t;
 
 #endif

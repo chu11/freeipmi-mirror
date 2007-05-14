@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.71 2007-04-28 20:06:40 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.71.2.1 2007-05-14 02:41:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -368,30 +368,31 @@ typedef enum
 /* Msg Types */
 typedef enum 
   { 
-    MSG_TYPE_SUCCESS                 =  0,
-    MSG_TYPE_ON                      =  1,
-    MSG_TYPE_OFF                     =  2,
-    MSG_TYPE_OK                      =  3,
-    MSG_TYPE_PERMISSION              =  4,
-    MSG_TYPE_USERNAME                =  5,
-    MSG_TYPE_PASSWORD                =  6,
-    MSG_TYPE_PASSWORD_LENGTH         =  7,
-    MSG_TYPE_K_G                     =  8,
-    MSG_TYPE_PRIVILEGE               =  9,
-    MSG_TYPE_OPERATION               = 10,
-    MSG_TYPE_AUTHENTICATION_TYPE     = 11,
-    MSG_TYPE_1_5_AUTO                = 12,
-    MSG_TYPE_GIVEN_PRIVILEGE         = 13,
-    MSG_TYPE_CIPHER_SUITE            = 14,
-    MSG_TYPE_2_0_AUTO                = 15,
-    MSG_TYPE_TIMEDOUT                = 16,
-    MSG_TYPE_NOTDISCOVERED           = 17,
-    MSG_TYPE_BADCONNECTION           = 18,
-    MSG_TYPE_UNKNOWNNODE             = 19,
-    MSG_TYPE_RESOURCES               = 20,
-    MSG_TYPE_VERSION_NOT_SUPPORTED   = 21,
-    MSG_TYPE_BMCBUSY                 = 22,
-    MSG_TYPE_BMCERROR                = 23,
+    MSG_TYPE_SUCCESS                       =  0,
+    MSG_TYPE_ON                            =  1,
+    MSG_TYPE_OFF                           =  2,
+    MSG_TYPE_OK                            =  3,
+    MSG_TYPE_PERMISSION                    =  4,
+    MSG_TYPE_USERNAME                      =  5,
+    MSG_TYPE_PASSWORD                      =  6,
+    MSG_TYPE_PASSWORD_LENGTH               =  7,
+    MSG_TYPE_K_G                           =  8,
+    MSG_TYPE_PRIVILEGE                     =  9,
+    MSG_TYPE_OPERATION                     = 10,
+    MSG_TYPE_AUTHENTICATION_TYPE           = 11,
+    MSG_TYPE_1_5_AUTO                      = 12,
+    MSG_TYPE_GIVEN_PRIVILEGE               = 13,
+    MSG_TYPE_CIPHER_SUITE                  = 14,
+    MSG_TYPE_2_0_AUTO                      = 15,
+    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT = 16,
+    MSG_TYPE_TIMEDOUT                      = 17,
+    MSG_TYPE_NOTDISCOVERED                 = 18,
+    MSG_TYPE_BADCONNECTION                 = 19,
+    MSG_TYPE_UNKNOWNNODE                   = 20,
+    MSG_TYPE_RESOURCES                     = 21,
+    MSG_TYPE_VERSION_NOT_SUPPORTED         = 22,
+    MSG_TYPE_BMCBUSY                       = 23,
+    MSG_TYPE_BMCERROR                      = 24,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \

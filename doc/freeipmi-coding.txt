@@ -1,0 +1,410 @@
+FreeIPMI Codying
+
+by 
+
+Albert Chu
+chu11@llnl.gov
+
+These are some short instructions on coding style, API style, and
+explanations for some design decisions done in FreeIPMI.
+
+1) Code Style
+-------------
+
+Please use the the coding style of the other code in FreeIPMI.  Here's
+a short example that covers the generics of our code style.
+
+int
+main(int argc, char **argv)
+{
+  int a = 0;
+  int b = 1;
+
+  if (a == 1)
+    printf("yoda\n");
+
+  if (a == 5
+      || b == 1)
+    {
+      printf("foobar\n");
+      printf("xyzzy\n");
+    }
+}
+
+2) Parameter Checking
+---------------------
+
+Please carefully check the input parameters on the inputs your
+program and/or functions take.  Minor parsing issues can lead to
+catastrophic mistakes in IPMI.
+
+For example, suppose you have a --power-control option that takes a
+number to represent a type of operation (on, off, etc.).  Suppose a
+user inputs "--power-control=foobar". The "foobar" will be read as a
+'0' by strtoul().  If not properly checked, the '0' can be passed to
+the IPMI Chassis Control command, which uses the '0' to power off a
+node.
+
+In programs, when appropriate, output error messages to the user
+indicating that how and why the parameters input were incorrect.
+
+3) Code Consistency
+-------------------
+
+Please keep your code as consistent as possible to other code in
+FreeIPMI.  That includes code indenting/stype, API style, and naming
+convention (which is discussed in more detail below).
+
+Although there may be situations that a particular API style or naming
+convention will make things easier for you and your code (such as
+shortening the name of a function, decreasing the number of parameters
+you need to pass to a function, etc), we ask that your code be
+consistent so that it does not confuse other developers.
+
+If there is a distinct technical reason that you must use a different
+API style, please bring it up with the FreeIPMI authors.
+
+For example, pretty much all of the "fill" functions in libfreeipmi
+take the exact parameters they need to fill a fiid object, which is
+also passed into the function as a parameter.  All parameters are
+passed by value, not by a pointer or other method (i.e. object,
+struct, enum, etc.).
+
+The fill_cmd_chassis_identify() is a rare exception, but the technical
+reason is justified by the authors.  Both fields in the IPMI chassis
+identify packet are passed by pointer instead of passed by value.  The
+reason is that both fields are optional and need not be filled.  In
+other words, the packet can truncated in the eys of the IPMI spec.
+The pointer gives the caller the ability to set values (by passing a
+valid pointer) or not (by passing NULL).
+
+4) Libfreeipmi naming conventions
+---------------------------------
+
+The naming style in libfreeipmi was developed primarily for the
+purpose of readability when code is being compared to the IPMI
+specification.
+
+Due to the size of the IPMI spec, there will be a lot of code.  In
+earlier versions of FreeIPMI, there was confusion on where code was
+located, what parameters were called, how parameters should be input,
+etc. due to different people using different abbreviations styles,
+putting functions out of order with the spec, etc.  The code has been
+auditted and cleaned up since then.
+
+So when adding new functions/templates/parameters/files/etc. to
+libfreeipmi, please name them consistently to the rest of the
+libfreeipmi library and the IPMI specification.
+
+This includes:
+- naming functions/templates/parameters/files based on the spec
+- in most cases, not abbreviating any words (or using consistent
+  abbreviations in the rest of the library, check first!)
+- matching parameter lists to the templates and in the same order
+- ordering functions/templates/parameters/files/etc. consistently with the spec.
+
+For example: 
+
+ipmi-messaging-support-cmds.c
+
+is the file for messaging support commands, chapter 22 of the IPMI 2.0 spec.
+
+tmpl_cmd_get_channel_authentication_capabilities_rq
+tmpl_cmd_get_channel_authentication_capabilities_rs
+
+are the templates for the get channel authentication capapilities
+command.  They are listed first in the file b/c they are the first
+commands in the IPMI Messaging Support Commands chapter implemented in
+that file.
+
+fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.straight_password_key", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.oem_prop", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,  "authentication_type.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.anonymous_login", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.non_null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.user_level_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.per_message_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3,  "authentication_status.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {24, "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "oem_auxiliary_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}
+  };
+
+The fields listed in the templates above directly match table 22-15.
+
+int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
+                                                         uint8_t maximum_privilege_level,
+                                                         fiid_obj_t obj_cmd_rq);
+
+And the function above matches the naming and takes exactly the
+parameters needed by the get authentication capabilities request.
+
+The coding conditions specified above may lead to function names or
+function parameters names that will lead to the functions exceeding
+the 80 column mark or having very long parameter lists.  We accept
+this annoyance (or poor coding style, we admit it), as we consider
+matching the specification as the primary objective of libfreeipmi.
+
+For example: 
+
+int8_t
+fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number,
+                                                                       uint8_t callback_level_none,
+                                                                       uint8_t callback_level_md2,
+                                                                       uint8_t callback_level_md5,
+                                                                       uint8_t callback_level_straight_password,
+                                                                       uint8_t callback_level_oem_proprietary,
+                                                                       uint8_t user_level_none,
+                                                                       uint8_t user_level_md2,
+                                                                       uint8_t user_level_md5,
+                                                                       uint8_t user_level_straight_password,
+                                                                       uint8_t user_level_oem_proprietary,
+                                                                       uint8_t operator_level_none,
+                                                                       uint8_t operator_level_md2,
+                                                                       uint8_t operator_level_md5,
+                                                                       uint8_t operator_level_straight_password,
+                                                                       uint8_t operator_level_oem_proprietary,
+                                                                       uint8_t admin_level_none,
+                                                                       uint8_t admin_level_md2,
+                                                                       uint8_t admin_level_md5,
+                                                                       uint8_t admin_level_straight_password,
+                                                                       uint8_t admin_level_oem_proprietary,
+                                                                       uint8_t oem_level_none,
+                                                                       uint8_t oem_level_md2,
+                                                                       uint8_t oem_level_md5,
+                                                                       uint8_t oem_level_straight_password,
+                                                                       uint8_t oem_level_oem_proprietary,
+                                                                       fiid_obj_t obj_cmd_rq);
+
+The function name and parameters look pretty long and terrible.  But
+the names and fields exactly match the get authentication type enables
+fields listed in Table 23-4.  There should be very little difficulty
+understanding what this funciton does, how it should be called, and
+what the parameters are if you are reading along with the spec.
+
+Because we want the code to match the IPMI spec as closely as
+possible, we currently accept the code inefficiencies (due to large
+stacks of parameters) that come with having long parameters lists.
+
+5) Error tracing/syslogging macros
+----------------------------------
+
+Throughout libfreeipmi, you will see various macros such as:
+
+ERR
+
+FIID_OBJ_CREATE_CLEANUP
+
+These are macros that will expand to something along the lines of the
+following:
+
+#define ERR(expr)                                                       \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+The primary purpose of these macros is to log a trace of errors to
+stderr/syslog when appropriate debugging is enabled.  It has allowed
+the FreeIPMI developers to debug issues very quickly and figure out
+vendor IPMI compliance very quickly.
+
+The macros are located in header files in common/src.
+
+6) Fiid vs. other Marshalling/Unmarshalling Styles
+--------------------------------------------------
+
+There are several classic methods for marshalling/unmarshalling data when
+using structs to represent a packet.
+
+Marshall/Unmarshall "manually":
+
+struct packet
+{
+  int field_1; /* 1 bit */
+  int field_2; /* 3 bits */
+  int field_3; /* 4 bits */
+  int field_4; /* 16 bits */
+};
+
+char my_packet_buffer[1024];
+
+struct packet pkt;
+
+pkt.field_1 = my_packet_buffer[0] & 0x01;
+pkt.field_2 = my_packet_buffer[0] & 0x0E >> 1;
+pkt.field_3 = my_packet_buffer[0] & 0xF0 >> 4;
+#if LITTLE_ENDIAN_HOST
+pkt.field_4 = my_packet_buffer[2] | my_packet_buffer[1] << 8;;
+#else
+pkt.field_4 = my_packet_buffer[1] | my_packet_buffer[2] << 8;;
+#endif
+
+Pros:
+
+A) No need to deal with struct packing issues in the compiler.
+B) The struct definition describes packets exactly.
+C) Relatively efficient.
+
+Cons:
+
+A) Have to deal with endian problems.
+B) Lots of code.  Structs and functions for each packet type.
+C) Relatively difficult to deal with optional fields. (Need flags in
+struct to indicate if a field was set/unset.)
+D) Relatively difficult to deal with variable length fields. (Need len
+parameters in struct. to specify length.)
+E) Difficult to do large packet dumps (you only get hex).
+
+Cast a buffer to a packed struct:
+
+For Example:
+
+struct packet
+{
+  int field_1 : 1;
+  int field_2 : 3;
+  int field_3 : 4;
+  int field_4 : 16; 
+};
+
+char my_packet_buffer[1024];
+
+struct packet *pkt = (struct packet *)my_packet_buffer_ptr;
+
+#if LITTLE_ENDIAN_HOST
+pkt->field_4 = ntohs(pkt->field_4);
+#endif
+
+Pros:
+
+A) less code.  No need to create functions for marshalling/unmarshalling.
+B) The struct definition describes packets exactly.
+C) Very efficient (little actual marshalling/unmarshalling needs to be done.)
+
+Cons:
+
+A) Have to deal with endian problems.
+B) Have to deal with portability of struct packing techniques (differences in compilers).
+C) No mechanism to deal with optional fields (how do you know if something is set?)
+D) No mechanism to deal with variable length fields (how do you know how long the field is?)
+E) Difficult to do large packet dumps (you only get hex).
+
+Fiid:
+
+The "FreeIPMI Interface Definition" or 'fiid' API in libfreeipmi using
+a string_name/bit_count template and an API to get and set values in a
+packet to handle marshalling/unmarshalling.  The following is an
+example of this template:
+
+fiid_template_t tmpl_cmd_set_channel_security_keys_rs =
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,   "lock_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {160, "key_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
+  };
+
+The pros and cons of the fiid method are:
+
+Pros:
+
+A) No need to deal with endian problems (handled internally in API).
+B) No need to deal with struct packing issues (bit shifts handled internally in API).
+C) Easier to deal with optional fields (just don't set a field).
+D) Easier to deal with variable length fields (set whatever length you want).
+E) Templates describe the packets exactly.
+F) Easy to do large packet dumps (fields and values easily output and identified).
+
+Cons:
+
+A) Need to learn an API.
+B) Pretty inefficient (lots of string comparisons).
+C) Lots of code.  Templates and functions for each packet type.
+
+The authors acknowledge that the fiid interface is far less efficient
+than the traditional methods and may annoy some.  However, some of
+the below are the big reasons why this was developed and chosen over
+traditional methods.
+
+A) The IPMI specification is very large and has no standards body for
+compliance.  Lack of IPMI compliance from vendors is a well known
+problem in the open-source community.  The templates have saved
+developers countless hours of tcpdump/hex/debugging time due to the
+easy method by which packets can be dumped with their fields and
+values identified.  It is very easy to find vendor IPMI compliance
+problems quickly.
+
+Here's an example of a dump:
+
+pwopr2: : RMCP Header:
+pwopr2: : ------------
+pwopr2: [               6h] = version[ 8b]
+pwopr2: [               0h] = reserved[ 8b]
+pwopr2: [              FFh] = sequence_number[ 8b]
+pwopr2: [               7h] = message_class.class[ 5b]
+pwopr2: [               0h] = message_class.reserved[ 2b]
+pwopr2: [               0h] = message_class.ack[ 1b]
+pwopr2: : IPMI Session Header:
+pwopr2: : --------------------
+pwopr2: [               0h] = authentication_type[ 8b]
+pwopr2: [               0h] = session_sequence_number[32b]
+pwopr2: [               0h] = session_id[32b]
+pwopr2: [               9h] = ipmi_msg_len[ 8b]
+pwopr2: : IPMI Message Header:
+pwopr2: : --------------------
+pwopr2: [              20h] = rs_addr[ 8b]
+pwopr2: [               0h] = rs_lun[ 2b]
+pwopr2: [               6h] = net_fn[ 6b]
+pwopr2: [              C8h] = checksum1[ 8b]
+pwopr2: [              81h] = rq_addr[ 8b]
+pwopr2: [               0h] = rq_lun[ 2b]
+pwopr2: [              26h] = rq_seq[ 6b]
+pwopr2: : IPMI Command Data:
+pwopr2: : ------------------
+pwopr2: [              38h] = cmd[ 8b]
+pwopr2: [               Eh] = channel_number[ 4b]
+pwopr2: [               0h] = reserved1[ 3b]
+pwopr2: [               1h] = get_ipmi_v2.0_extended_data[ 1b]
+pwopr2: [               2h] = maximum_privilege_level[ 4b]
+pwopr2: [               0h] = reserved2[ 4b]
+pwopr2: : IPMI Trailer:
+pwopr2: : --------------
+pwopr2: [              1Fh] = checksum2[ 8b]
+
+B) There are a large number of optional fields and variable length
+fields in the IPMI specification.  The traditional struct based
+marshalling/unmarshalling would have some issues in dealing with
+these.
+
+For example, in IPMI 2.0, the authentication code can be 0 bytes, 16
+bytes, or 20 bytes depending on the authentication mechanism chosen.
+The fiid API allows the programmers to get/set the optional and/or
+variable length values more easily.
+

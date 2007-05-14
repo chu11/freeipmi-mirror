@@ -138,7 +138,7 @@ ipmi_disable_coredump(void)
 /* a k_g key is interpreted as ascii text unless it is prefixed with
    "0x", in which case is it interpreted as hexadecimal */
 int
-parse_kg(unsigned char *outbuf, int outsz, char *instr)
+parse_kg(unsigned char *outbuf, int outsz, const char *instr)
 {
   char *p, *q;
   int i, j;
@@ -180,7 +180,7 @@ parse_kg(unsigned char *outbuf, int outsz, char *instr)
 }
 
 char *
-format_kg(char *outstr, int outsz, unsigned char *k_g)
+format_kg(char *outstr, int outsz, const unsigned char *k_g)
 {
   int i;
   int printable = 1;
@@ -188,7 +188,7 @@ format_kg(char *outstr, int outsz, unsigned char *k_g)
   char *p;
 
   assert(outstr != NULL);
-  assert(outsz > IPMI_MAX_K_G_LENGTH*2);
+  assert(outsz > IPMI_MAX_K_G_LENGTH*2+2);
   assert(k_g != NULL);
 
   /* Are there any characters that would prevent printing this as a
@@ -232,7 +232,7 @@ format_kg(char *outstr, int outsz, unsigned char *k_g)
     }
   else
     {
-      if (outsz < IPMI_MAX_K_G_LENGTH*2+1)
+      if (outsz < IPMI_MAX_K_G_LENGTH*2+3)
         return NULL;
       p = outstr;
       p[0] = '0'; p[1] = 'x';

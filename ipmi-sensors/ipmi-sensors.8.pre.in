@@ -26,10 +26,10 @@ use hostranged output across a cluster and want to consolidate the
 output.
 .TP
 \fB\-i\fR, \fB\-\-sdr\-info\fR
-Show SDR Info
+Show sensor data repository (SDR) Info
 .TP
 \fB\-f\fR, \fB\-\-flush\-cache\fR
-Flush sensor cache
+Flush sensor data repository (SDR) cache.
 .TP
 \fB\-Q\fR, \fB\-\-\quiet\-cache\fR
 Do not output information about cache creation/deletion.
@@ -44,7 +44,7 @@ List sensors from group
 List given sensors.  Accepts space or comma separated lists.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Use DIRECTORY for sensor cache
+Use DIRECTORY for sensor data repository (SDR) cache.
 #include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
 .SH "EXAMPLES"
@@ -74,18 +74,6 @@ On the IBM e325, the BMC firmware is very buggy and prohibits most
 in-band communication in FreeIPMI.  We recommend using the IBM
 provided 'lancfg' tool to initially configure the BMC, then use
 out-of-band access for further communication.
-.SH "SEE ALSO"
-The full documentation for
-.B sensors
-is maintained as a Texinfo manual.  If the
-.B info
-and
-.B sensors
-programs are properly installed at your site, the command
-.IP
-.B info ipmi-sensors
-.PP
-should give you access to the complete manual.
 .SH "AUTHORS"
 Albert Chu <chu11@llnl.gov>, Anand Babu <ab@gnu.org.in>, Balamurugan <bala.a@californiadigital.com>, Ian Zimmerman <itz@californiadigital.com>, Jim Garlick <garlick@llnl.gov>
 

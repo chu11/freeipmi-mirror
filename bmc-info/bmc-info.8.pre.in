@@ -30,15 +30,3 @@ out-of-band access for further communication.
 can be run in-band with some workarounds.
 
 > bmc-info --no-probing -D KCS --driver-address=3234
-.SH "SEE ALSO"
-The full documentation for
-.B bmc-info
-is maintained as a Texinfo manual.  If the
-.B info
-and
-.B bmc-info
-programs are properly installed at your site, the command
-.IP
-.B info bmc-info
-.PP
-should give you access to the complete manual.

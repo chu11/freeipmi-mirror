@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.103 2007-05-01 02:06:11 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.103.2.1 2007-05-14 02:41:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -774,9 +774,16 @@ _has_timed_out(ipmipower_powercmd_t ip)
   /* Must use >=, otherwise we could potentially spin */
   if (timeout_len >= conf->timeout_len) 
     {
-      /* Don't bother outputting timeout if we have finished the power control operation */
+      /* Don't bother outputting timeout if we have finished the power
+         control operation */
       if (ip->protocol_state != PROTOCOL_STATE_CLOSE_SESSION_SENT)
-        ipmipower_output(MSG_TYPE_TIMEDOUT, ip->ic->hostname);
+        {
+          /* Special cases: these are probably due to bad passwords */
+          if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
+            ipmipower_output(MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT, ip->ic->hostname);
+          else
+            ipmipower_output(MSG_TYPE_TIMEDOUT, ip->ic->hostname);
+        }
       return 1;
     }
   

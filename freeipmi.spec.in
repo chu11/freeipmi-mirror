@@ -154,6 +154,8 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ipmidetect
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
+%doc %{_datadir}/doc/%{name}/freeipmi-coding.txt
+%doc %{_datadir}/doc/%{name}/freeipmi-hostrange.txt
 %{_libdir}/libipmiconsole*so*
 %{_libdir}/libfreeipmi*so*
 %{_libdir}/libipmidetect*so*

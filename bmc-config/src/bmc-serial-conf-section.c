@@ -361,7 +361,7 @@ connect_mode_checkout (bmc_config_state_data_t *state_data,
   if (kv->value)
     free (kv->value);
 
-  if (!(kv->value = connect_mode_string (value)))
+  if (!(kv->value = strdup (connect_mode_string (value))))
     {
       perror("strdup");
       return BMC_ERR_FATAL_ERROR;

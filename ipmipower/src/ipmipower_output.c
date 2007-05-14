@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.19 2007-04-28 19:22:33 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.19.2.1 2007-05-14 02:41:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -61,6 +61,7 @@ static char *ipmipower_outputs[] =
     "cannot authenticate at given privilege",
     "invalid cipher suite used",
     "usable cipher suite not found",
+    "password verification timed out",
     "timed out",
     "not discovered",
     "bad connection",

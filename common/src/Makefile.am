@@ -13,7 +13,8 @@ noinst_HEADERS = \
 	common-utils.h \
 	ipmi-sdr-cache-writes.h \
 	ipmi-sdr-cache-reads.h \
-	ipmi-sdr-api.h \
+	ipmi-sdr-cache.h \
+	ipmi-sdr-cache-defs.h \
 	ipmi-sensor-api.h \
 	xmalloc.h \
 	cbuf.h \
@@ -64,8 +65,10 @@ libmd5_la_SOURCES = md5.c
 libmd5_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
 libsdr_la_SOURCES = common-utils.c ipmi-sdr-cache-writes.c ipmi-sdr-cache-reads.c \
-	ipmi-sdr-api.c
-libsdr_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include
+	ipmi-sdr-cache.c
+libsdr_la_CPPFLAGS = -D_GNU_SOURCE \
+		     -D_REENTRANT \
+		     -I$(srcdir)/../../libfreeipmi/include
 libsdr_la_LIBADD = ./libbitops.la
 
 libsensor_la_SOURCES = ipmi-sensor-api.c

@@ -48,15 +48,3 @@ On the IBM e325, the BMC firmware is very buggy and prohibits most
 in-band communication in FreeIPMI.  We recommend using the IBM
 provided 'lancfg' tool to initially configure the BMC, then use
 out-of-band access for further communication.
-.SH "SEE ALSO"
-The full documentation for
-.B FreeIPMI
-is maintained as a Texinfo manual.  If the
-.B info
-and
-.B FreeIPMI
-programs are properly installed at your site, the command
-.IP
-.B info FreeIPMI
-.PP
-should give you access to the complete manual.
