@@ -50,7 +50,6 @@ merge in freeipmi-udm
 common stuff for admin priv stuff in tools/manpages
 - after ipmi-pef, ipmi-chassis committed
 - needed for bmc-config, ipmi-pef, ipmi-chassis
-sdr error outputs useless
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
