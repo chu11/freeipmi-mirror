@@ -44,6 +44,8 @@ ipmi-pef
 * make checkout/commit more like bmc-config
 * state_data must be passed around to all functions
 * by default output everything, support --sections or similar options to output less information.
+* doesn't check for out of mem errors
+
 
 general
 -------
