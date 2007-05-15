@@ -139,14 +139,14 @@ _record_string_to_evt (const char *record_string,
   evt->filter_type = int_value;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  ENBALE_FILTER_KEY_STRING, 
+				  ENABLE_FILTER_KEY_STRING, 
 				  value_string);
   if (string_to_enable_filter (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
 	       "invalid value %s for %s\n", 
 	       value_string, 
-	       ENBALE_FILTER_KEY_STRING);
+	       ENABLE_FILTER_KEY_STRING);
       return -1;
     }
   evt->enable_filter = int_value;
@@ -476,6 +476,123 @@ _record_string_to_evt (const char *record_string,
       return -1;
     }
   evt->event_data3_compare2 = int_value;
+  
+  return 0;
+}
+
+static int 
+_record_string_to_apt (const char *record_string, 
+		       pef_alert_policy_table_t *apt)
+{
+  int int_value = 0;
+  
+  char *value_string = NULL;
+  
+  ERR_EINVAL (record_string && apt);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_ALERT_POLICY_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_policy_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_ALERT_POLICY_NUMBER_KEY_STRING);
+      return -1;
+    }
+  apt->alert_policy_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_POLICY_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_policy_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_POLICY_TYPE_KEY_STRING);
+      return -1;
+    }
+  apt->policy_type = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_POLICY_ENABLED_KEY_STRING, 
+				  value_string);
+  if (string_to_policy_enabled (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_POLICY_ENABLED_KEY_STRING);
+      return -1;
+    }
+  apt->policy_enabled = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_POLICY_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_enable_filter (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_POLICY_NUMBER_KEY_STRING);
+      return -1;
+    }
+  apt->policy_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_DESTINATION_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_DESTINATION_SELECTOR_KEY_STRING);
+      return -1;
+    }
+  apt->destination_selector = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_CHANNEL_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_CHANNEL_NUMBER_KEY_STRING);
+      return -1;
+    }
+  apt->channel_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_ALERT_STRING_SET_SELECTOR_KEY_STRING);
+      return -1;
+    }
+  apt->alert_string_set_selector = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING);
+      return -1;
+    }
+  apt->event_specific_alert_string_lookup = int_value;
   
   return 0;
 }
@@ -910,4 +1027,382 @@ get_alert_policy_table (ipmi_device_t dev,
   FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
   return (rv);
 }
+
+int 
+get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count)
+{
+  pef_alert_policy_table_t *l_apt_list = NULL;
+  int l_count;
+  char *record = NULL;
+  int i;
+  int rv;
+  
+  if (!(fp && apt_list && count))
+    return (-1);
+  
+  if (_get_record_count (fp, &l_count) != 0)
+    return (-1);
+  
+  l_apt_list = (pef_alert_policy_table_t *) calloc (l_count, 
+						    sizeof (pef_alert_policy_table_t));
+  
+  fseek (fp, 0, SEEK_SET);
+  
+  for (i = 0; i < l_count; i++)
+    {
+      _fread_record (fp, &record);
+      rv = _record_string_to_apt (record, &l_apt_list[i]);
+      free (record);
+      if (rv != 0)
+	{
+	  free (l_apt_list);
+	  return (-1);
+	}
+    }
+  
+  *apt_list = l_apt_list;
+  *count = l_count;
+  
+  return 0;
+}
+
+int 
+set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+  
+  ERR_EINVAL (dev && apt);
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (dev, 
+								    apt->alert_policy_number, 
+								    apt->policy_type, 
+								    apt->policy_enabled, 
+								    apt->policy_number, 
+								    apt->destination_selector, 
+								    apt->channel_number, 
+								    apt->alert_string_set_selector, 
+								    apt->event_specific_alert_string_lookup, 
+								    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+/********************************************************************************/
+/* bmc_err_t  */
+/* get_bmc_community_string (bmc_config_state_data_t *state_data,  */
+/*                           uint8_t *community_string, */
+/*                           uint32_t community_string_len) */
+/* { */
+/*   fiid_obj_t obj_cmd_rs = NULL; */
+/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
+/*   bmc_err_t ret; */
+/*   int8_t channel_number; */
+  
+/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) */
+/*     goto cleanup; */
+
+/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+
+/*   if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,  */
+/*                                                                   channel_number,  */
+/*                                                                   IPMI_GET_LAN_PARAMETER,  */
+/*                                                                   SET_SELECTOR,  */
+/*                                                                   BLOCK_SELECTOR,  */
+/*                                                                   obj_cmd_rs) < 0)  */
+/*     { */
+/*       rv = BMC_ERR_NON_FATAL_ERROR; */
+/*       goto cleanup; */
+/*     } */
+  
+/*   if (fiid_obj_get_data (obj_cmd_rs,  */
+/*                          "community_string",  */
+/*                          community_string, */
+/*                          community_string_len) < 0) */
+/*     goto cleanup; */
+  
+/*   rv = BMC_ERR_SUCCESS; */
+/*  cleanup: */
+/*   if (obj_cmd_rs) */
+/*     fiid_obj_destroy(obj_cmd_rs); */
+/*   return (rv); */
+/* } */
+
+/* bmc_err_t  */
+/* get_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data,  */
+/*                                   uint8_t destination_selector, */
+/*                                   uint8_t *alert_destination_type, */
+/*                                   uint8_t *alert_acknowledge, */
+/*                                   uint8_t *alert_acknowledge_timeout, */
+/*                                   uint8_t *alert_retries) */
+/* { */
+/*   fiid_obj_t obj_cmd_rs = NULL; */
+/*   uint64_t val; */
+/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
+/*   bmc_err_t ret; */
+/*   int8_t channel_number; */
+  
+/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_type_rs))) */
+/*     goto cleanup; */
+
+/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+
+/*   if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->dev,  */
+/*                                                                   channel_number,  */
+/*                                                                   IPMI_GET_LAN_PARAMETER,  */
+/*                                                                   destination_selector,  */
+/*                                                                   BLOCK_SELECTOR,  */
+/*                                                                   obj_cmd_rs) < 0) */
+/*     { */
+/*       rv = BMC_ERR_NON_FATAL_ERROR; */
+/*       goto cleanup; */
+/*     } */
+  
+/*   if (fiid_obj_get (obj_cmd_rs, "destination_type", &val) < 0) */
+/*     goto cleanup; */
+/*   *alert_destination_type = val; */
+
+/*   if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge", &val) < 0) */
+/*     goto cleanup; */
+/*   *alert_acknowledge = val; */
+
+/*   if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge_timeout", &val) < 0) */
+/*     goto cleanup; */
+/*   *alert_acknowledge_timeout = val; */
+
+/*   if (fiid_obj_get (obj_cmd_rs, "retries", &val) < 0) */
+/*     goto cleanup; */
+/*   *alert_retries = val; */
+  
+/*   rv = BMC_ERR_SUCCESS; */
+/*  cleanup: */
+/*   if (obj_cmd_rs) */
+/*     fiid_obj_destroy(obj_cmd_rs); */
+/*   return (rv); */
+/* } */
+
+/* bmc_err_t  */
+/* get_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data,  */
+/*                                        uint8_t destination_selector, */
+/*                                        uint8_t *alert_gateway, */
+/*                                        char *alert_ip_address, */
+/*                                        unsigned int alert_ip_address_len, */
+/*                                        char *alert_mac_address, */
+/*                                        unsigned int alert_mac_address_len) */
+/* { */
+/*   fiid_obj_t obj_cmd_rs = NULL; */
+/*   uint64_t val; */
+/*   uint8_t alert_ip_address_bytes[4]; */
+/*   uint8_t alert_mac_address_bytes[6]; */
+/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
+/*   bmc_err_t ret; */
+/*   int8_t channel_number; */
+  
+/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs))) */
+/*     goto cleanup; */
+
+/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+
+/*   if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (state_data->dev,  */
+/*                                                                        channel_number,  */
+/*                                                                        IPMI_GET_LAN_PARAMETER,  */
+/*                                                                        destination_selector,  */
+/*                                                                        BLOCK_SELECTOR,  */
+/*                                                                        obj_cmd_rs) < 0) */
+/*     { */
+/*       rv = BMC_ERR_NON_FATAL_ERROR; */
+/*       goto cleanup; */
+/*     } */
+  
+/*   if (fiid_obj_get (obj_cmd_rs, "gateway_selector", &val) < 0) */
+/*     goto cleanup; */
+/*   *alert_gateway = val; */
+  
+/*   if (alert_ip_address && alert_ip_address_len) */
+/*     { */
+/*       if (fiid_obj_get_data (obj_cmd_rs, */
+/*                              "alerting_ip_address", */
+/*                              alert_ip_address_bytes, */
+/*                              4) < 0) */
+/*         goto cleanup; */
+
+/*       memset(alert_ip_address, '\0', alert_ip_address_len); */
+/*       snprintf (alert_ip_address,  */
+/*                 alert_ip_address_len - 1, */
+/*                 "%u.%u.%u.%u",  */
+/*                 alert_ip_address_bytes[0],  */
+/*                 alert_ip_address_bytes[1],  */
+/*                 alert_ip_address_bytes[2],  */
+/*                 alert_ip_address_bytes[3]); */
+/*     } */
+
+/*   if (alert_mac_address && alert_mac_address_len) */
+/*     { */
+/*       if (fiid_obj_get_data (obj_cmd_rs, */
+/*                              "alerting_mac_address", */
+/*                              alert_mac_address_bytes, */
+/*                              6) < 0) */
+/*         goto cleanup; */
+
+/*       memset(alert_mac_address, '\0', alert_mac_address_len); */
+/*       snprintf (alert_mac_address,  */
+/*                 alert_mac_address_len - 1, */
+/*                 "%02X:%02X:%02X:%02X:%02X:%02X",  */
+/*                 alert_mac_address_bytes[0],  */
+/*                 alert_mac_address_bytes[1],  */
+/*                 alert_mac_address_bytes[2],  */
+/*                 alert_mac_address_bytes[3],  */
+/*                 alert_mac_address_bytes[4],  */
+/*                 alert_mac_address_bytes[5]); */
+/*     } */
+  
+/*   rv = BMC_ERR_SUCCESS; */
+/*  cleanup: */
+/*   if (obj_cmd_rs) */
+/*     fiid_obj_destroy(obj_cmd_rs); */
+/*   return (rv); */
+/* } */
+
+/* bmc_err_t  */
+/* set_bmc_community_string (bmc_config_state_data_t *state_data,  */
+/*                           uint8_t *community_string) */
+/* { */
+/*   fiid_obj_t obj_cmd_rs = NULL; */
+/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
+/*   bmc_err_t ret; */
+/*   int8_t channel_number; */
+  
+/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) */
+/*     goto cleanup; */
+
+/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+
+/*   if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,  */
+/*                                                                   channel_number, */
+/*                                                                   community_string,  */
+/*                                                                   (community_string) ? strlen((char *)community_string) : 0, */
+/*                                                                   obj_cmd_rs) < 0) */
+/*     { */
+/*       rv = BMC_ERR_NON_FATAL_ERROR; */
+/*       goto cleanup; */
+/*     } */
+
+/*   rv = BMC_ERR_SUCCESS; */
+/*  cleanup: */
+/*   if (obj_cmd_rs) */
+/*     fiid_obj_destroy(obj_cmd_rs); */
+/*   return (rv); */
+/* } */
+
+/* bmc_err_t  */
+/* set_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data,  */
+/*                                   uint8_t destination_selector, */
+/*                                   uint8_t alert_destination_type, */
+/*                                   uint8_t alert_acknowledge, */
+/*                                   uint8_t alert_acknowledge_timeout, */
+/*                                   uint8_t alert_retries) */
+/* { */
+/*   fiid_obj_t obj_cmd_rs = NULL; */
+/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
+/*   bmc_err_t ret; */
+/*   int8_t channel_number; */
+
+/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) */
+/*     goto cleanup; */
+  
+/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+
+/*   if (ipmi_cmd_set_lan_configuration_parameters_destination_type (state_data->dev,  */
+/*                                                                   channel_number,  */
+/*                                                                   destination_selector, */
+/*                                                                   alert_destination_type, */
+/*                                                                   alert_acknowledge, */
+/*                                                                   alert_acknowledge_timeout, */
+/*                                                                   alert_retries, */
+/*                                                                   obj_cmd_rs) < 0) */
+/*     { */
+/*       rv = BMC_ERR_NON_FATAL_ERROR; */
+/*       goto cleanup; */
+/*     } */
+
+/*   rv = BMC_ERR_SUCCESS; */
+/*  cleanup: */
+/*   if (obj_cmd_rs) */
+/*     fiid_obj_destroy(obj_cmd_rs); */
+/*   return (rv); */
+/* } */
+
+/* bmc_err_t  */
+/* set_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data,  */
+/*                                        uint8_t destination_selector, */
+/*                                        uint8_t alert_gateway, */
+/*                                        char *alert_ip_address, */
+/*                                        char *alert_mac_address) */
+/* { */
+/*   fiid_obj_t obj_cmd_rs = NULL; */
+/*   uint32_t alert_ip_address_val = 0; */
+/*   uint64_t alert_mac_address_val = 0; */
+/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
+/*   bmc_err_t ret; */
+/*   int8_t channel_number; */
+
+/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) */
+/*     goto cleanup; */
+  
+/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+
+/*   if (ipmi_ipv4_address_string2int(alert_ip_address, &alert_ip_address_val) < 0) */
+/*     goto cleanup; */
+  
+/*   if (ipmi_mac_address_string2int(alert_mac_address, &alert_mac_address_val) < 0) */
+/*     goto cleanup; */
+
+/*   if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->dev,  */
+/*                                                                        channel_number,  */
+/*                                                                        destination_selector, */
+/*                                                                        alert_gateway, */
+/*                                                                        alert_ip_address_val, */
+/*                                                                        alert_mac_address_val, */
+/*                                                                        obj_cmd_rs) < 0) */
+/*     { */
+/*       rv = BMC_ERR_NON_FATAL_ERROR; */
+/*       goto cleanup; */
+/*     } */
+
+/*   rv = BMC_ERR_SUCCESS; */
+/*  cleanup: */
+/*   if (obj_cmd_rs) */
+/*     fiid_obj_destroy(obj_cmd_rs); */
+/*   return (rv); */
+/* } */
 

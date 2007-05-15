@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.3 2007-02-05 21:26:01 balamurugan Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.4 2007-05-15 06:35:31 balamurugan Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -61,6 +61,12 @@ static struct argp_option options[] =
      "Action is to GET the PEF event filter tables", 14},
     {"commit",     COMMIT_KEY,     "FILE", 0,
      "Action is to UPDATE the PEF event filter tables", 15},
+    {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
+     "Do checkout/commit of Alert Policy Table.", 16},
+    {"lan-conf", LAN_CONF_KEY, 0, 0, 
+     "Do checkout/commit of PEF specific LAN configuration.", 17},
+    {"community-string", COMMUNITY_STRING_KEY, "STRING", OPTION_ARG_OPTIONAL, 
+     "Do checkout/commit of Community String", 18},
     { 0 }
   };
 
@@ -85,6 +91,17 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->commit_wanted = 1;
       cmd_args->commit_filename = strdup (arg);
       break;
+    case ALERT_POLICY_TABLE_KEY:
+      cmd_args->alert_policy_table_wanted = 1;
+      break;
+    case LAN_CONF_KEY:
+      cmd_args->lan_conf_wanted = 1;
+      break;
+    case COMMUNITY_STRING_KEY:
+      cmd_args->community_string_wanted = 1;
+      if (arg)
+	cmd_args->community_string = strdup (arg);
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -108,6 +125,10 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
   cmd_args->checkout_filename = NULL;
   cmd_args->commit_wanted = 0;
   cmd_args->commit_filename = NULL;
+  cmd_args->alert_policy_table_wanted = 0;
+  cmd_args->lan_conf_wanted = 0;
+  cmd_args->community_string_wanted = 0;
+  cmd_args->community_string = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }

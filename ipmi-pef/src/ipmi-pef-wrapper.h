@@ -78,5 +78,7 @@ int get_number_of_alert_policy_entries (ipmi_device_t dev, int *num_alert_policy
 int get_alert_policy_table (ipmi_device_t dev, 
 			    int policy_number, 
 			    pef_alert_policy_table_t *apt);
+int get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count);
+int set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt);
 
 #endif

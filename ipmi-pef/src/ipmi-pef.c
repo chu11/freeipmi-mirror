@@ -254,7 +254,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	{
 	  fprintf (fp, 
 		   "%-40s %s\n", 
-		   ENBALE_FILTER_KEY_STRING, 
+		   ENABLE_FILTER_KEY_STRING, 
 		   value_string);
 	  free (value_string);
 	}
@@ -519,6 +519,136 @@ commit_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 }
 
 int 
+checkout_pef_apt (ipmi_pef_state_data_t *state_data, FILE *fp)
+{
+  int rv = 0;
+  int num_alert_policy_entries;
+  int entry;
+  
+  if (get_number_of_alert_policy_entries (state_data->dev, 
+					  &num_alert_policy_entries) != 0)
+    return (-1);
+  
+  for (entry = 1; entry <= num_alert_policy_entries; entry++)
+    {
+      pef_alert_policy_table_t apt;
+      char *value_string = NULL;
+      
+      memset (&apt, 0, sizeof (pef_alert_policy_table_t));
+      
+      if (get_alert_policy_table (state_data->dev, entry, &apt) != 0)
+	{
+	  fprintf (stderr, "unable to get alert policy table #%d\n", entry);
+	  rv = -1;
+	  continue;
+	}
+      
+      if (alert_policy_number_to_string (apt.alert_policy_number, 
+					 &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_ALERT_POLICY_NUMBER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (policy_type_to_string (apt.policy_type, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_POLICY_TYPE_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (policy_enabled_to_string (apt.policy_enabled, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_POLICY_ENABLED_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (policy_number_to_string (apt.policy_number, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_POLICY_NUMBER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (destination_selector_to_string (apt.destination_selector, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_DESTINATION_SELECTOR_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (channel_number_to_string (apt.channel_number, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_CHANNEL_NUMBER_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (alert_string_set_selector_to_string (apt.alert_string_set_selector, 
+					       &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (event_specific_alert_string_lookup_to_string (apt.event_specific_alert_string_lookup, 
+							&value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      fprintf (fp, "\n");
+    }
+  
+  return rv;
+}
+
+int 
+commit_pef_apt (ipmi_pef_state_data_t *state_data, FILE *fp)
+{
+  pef_alert_policy_table_t *apt_list = NULL;
+  int count = 0;
+  int i = 0;
+  int rv = 0;
+  
+  get_apt_list (fp, &apt_list, &count);
+  
+  for (i = 0; i < count; i++)
+    {
+      if (set_alert_policy_table (state_data->dev, &apt_list[i]) != 0)
+	{
+	  fprintf (stderr, "unable to set alert policy table #%d\n", 
+		   apt_list[i].alert_policy_number);
+	  rv = -1;
+	  continue;
+	}
+    }
+  
+  return rv;
+}
+
+int 
 run_cmd_args (ipmi_pef_state_data_t *state_data)
 {
   struct ipmi_pef_arguments *args;
@@ -549,7 +679,28 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	    }
 	}
       
-      rv = checkout_pef_evt (state_data, fp);
+      if (args->alert_policy_table_wanted)
+	{
+	  rv = checkout_pef_apt (state_data, fp);
+	}
+      else
+	{
+	  if (args->lan_conf_wanted)
+	    {
+	      //rv = checkout_pef_lan_conf (state_data, fp);
+	    }
+	  else
+	    {
+	      if (args->community_string_wanted)
+		{
+		  //rv = checkout_pef_community_string (state_data, fp);
+		}
+	      else
+		{
+		  rv = checkout_pef_evt (state_data, fp);
+		}
+	    }
+	}
       
       if (fp != stdout)
 	fclose (fp);
@@ -561,19 +712,38 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
     {
       FILE *fp = NULL;
       
-      fp = fopen (args->commit_filename, "r");
-      if (fp)
-	{
-	  rv = commit_pef_evt (state_data, fp);
-	  fclose (fp);
-	}
-      else 
+      if ((fp = fopen (args->commit_filename, "r")) == NULL)
 	{
 	  fprintf (stderr, "unable to open file [%s] for reading.  aborting...\n", 
 		   args->commit_filename);
 	  rv = -1;
+	  return rv;
 	}
       
+      if (args->alert_policy_table_wanted)
+	{
+	  rv = commit_pef_apt (state_data, fp);
+	}
+      else
+	{
+	  if (args->lan_conf_wanted)
+	    {
+	      //rv = commit_pef_lan_conf (state_data, fp);
+	    }
+	  else
+	    {
+	      if (args->community_string_wanted)
+		{
+		  //rv = commit_pef_community_string (state_data, fp);
+		}
+	      else
+		{
+		  rv = commit_pef_evt (state_data, fp);
+		}
+	    }
+	}
+      
+      fclose (fp);
       return rv;
     }
   

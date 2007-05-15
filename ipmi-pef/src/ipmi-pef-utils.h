@@ -3,7 +3,7 @@
 
 #define FILTER_NUMBER_KEY_STRING    "Filter_Number"
 #define FILTER_TYPE_KEY_STRING      "Filter_Type"
-#define ENBALE_FILTER_KEY_STRING    "Enable_Filter"
+#define ENABLE_FILTER_KEY_STRING    "Enable_Filter"
 #define EVENT_FILTER_ACTION_ALERT_KEY_STRING          "Event_filter_Action_Alert"
 #define EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING      "Event_Filter_Action_Power_Off"
 #define EVENT_FILTER_ACTION_RESET_KEY_STRING          "Event_Filter_Action_Reset"
@@ -30,6 +30,7 @@
 #define EVENT_DATA3_COMPARE1_KEY_STRING       "Event_Data3_Compare1"
 #define EVENT_DATA3_COMPARE2_KEY_STRING       "Event_Data3_Compare2"
 
+#define APT_ALERT_POLICY_NUMBER_KEY_STRING            "Alert_Policy_Number"
 #define APT_POLICY_TYPE_KEY_STRING                    "Policy_Type"
 #define APT_POLICY_ENABLED_KEY_STRING                 "Policy_Enabled"
 #define APT_POLICY_NUMBER_KEY_STRING                  "Policy_Number"
