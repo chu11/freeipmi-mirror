@@ -20,6 +20,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #ifndef _IPMI_PEF_H
 #define _IPMI_PEF_H
 
+#include <freeipmi/freeipmi.h>
+
 #include "ipmi-pef-argp.h"
 
 typedef struct ipmi_pef_prog_data

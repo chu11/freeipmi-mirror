@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.15 2007-04-28 08:08:25 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.16 2007-05-15 21:45:05 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -53,7 +53,14 @@ static char args_doc[] = "[COMMAND-HEX-BYTES]";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS_HOSTRANGED, 
+    ARGP_COMMON_OPTIONS_INBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
+    ARGP_COMMON_OPTIONS_AUTHTYPE,
+    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
+#ifndef NDEBUG
+    ARGP_COMMON_OPTIONS_DEBUG,
+#endif /* NDEBUG */
     {"file", CMD_FILE_KEY, "CMD-FILE", 0, 
      "Read command requests from CMD-FILE.", 17}, 
     { 0 }

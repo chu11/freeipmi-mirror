@@ -7,7 +7,7 @@ PEF configuration utility.
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
-#include <@top_srcdir@/common/doc/argp-common-privlevel.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel-admin.man>
 .if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/argp-common-debug.man>
 \}

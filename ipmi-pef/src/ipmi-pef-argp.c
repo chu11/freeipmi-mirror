@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.6 2007-05-15 18:51:19 balamurugan Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.7 2007-05-15 21:45:05 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -34,6 +34,7 @@
 #include <errno.h>
 
 #include "argp-common.h"
+#include "ipmi-pef.h"
 #include "ipmi-pef-argp.h"
 
 #include "freeipmi-portability.h"
@@ -54,19 +55,25 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS, 
+    ARGP_COMMON_OPTIONS_INBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
+    ARGP_COMMON_OPTIONS_AUTHTYPE,
+    ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
+#ifndef NDEBUG
+    ARGP_COMMON_OPTIONS_DEBUG,
+#endif /* NDEBUG */
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about PEF.", 13},
+     "Show general information about PEF.", 18},
     {"checkout",   CHECKOUT_KEY,   "FILE", OPTION_ARG_OPTIONAL,
-     "Action is to GET the PEF event filter tables", 14},
+     "Action is to GET the PEF event filter tables", 19},
     {"commit",     COMMIT_KEY,     "FILE", 0,
-     "Action is to UPDATE the PEF event filter tables", 15},
+     "Action is to UPDATE the PEF event filter tables", 20},
     {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
-     "Do checkout/commit of Alert Policy Table.", 16},
+     "Do checkout/commit of Alert Policy Table.", 21},
     {"lan-alert-destination", LAN_ALERT_DESTINATION_KEY, 0, 0, 
-     "Do checkout/commit of PEF specific LAN configuration.", 17},
+     "Do checkout/commit of PEF specific LAN configuration.", 22},
     {"community-string", COMMUNITY_STRING_KEY, "STRING", OPTION_ARG_OPTIONAL, 
-     "Do checkout/commit of Community String", 18},
+     "Do checkout/commit of Community String", 23},
     { 0 }
   };
 
@@ -130,6 +137,10 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
   cmd_args->community_string_wanted = 0;
   cmd_args->community_string = NULL;
   
+  /* ADMIN is minimum for ipmi-pef b/c its needed for many of the
+   * ipmi cmds used
+   */
+  cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }
 

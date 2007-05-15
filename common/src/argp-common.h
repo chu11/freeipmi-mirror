@@ -91,9 +91,14 @@ enum argp_common_option_keys
      "Use AUTHTYPE instead of MD5.  "				           \
      "Allowed values are NONE, MD2, MD5, and PLAIN.", 11}	           \
 
-#define ARGP_COMMON_OPTIONS_PRIVLEVEL                                      \
+#define ARGP_COMMON_OPTIONS_PRIVLEVEL_USER                                 \
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
+     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 12}     
+
+#define ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN                                \
+    {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
+     "Use this PRIVILEGE-LEVEL instead of ADMIN.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 12}     
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
@@ -106,42 +111,13 @@ enum argp_common_option_keys
     {"eliminate", ELIMINATE_KEY, 0, 0,                                     \
      "Eliminate undetected nodes.", 16}
 
-#ifdef NDEBUG
-
-#define ARGP_COMMON_OPTIONS                                                \
-       ARGP_COMMON_OPTIONS_INBAND,                                         \
-       ARGP_COMMON_OPTIONS_OUTOFBAND,                                      \
-       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
-       ARGP_COMMON_OPTIONS_PRIVLEVEL 
-
-#define ARGP_COMMON_OPTIONS_HOSTRANGED                                     \
-       ARGP_COMMON_OPTIONS_INBAND,                                         \
-       ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,                           \
-       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
-       ARGP_COMMON_OPTIONS_PRIVLEVEL,                                      \
-       ARGP_COMMON_HOSTRANGED_OPTIONS
-
-#else  /* !NDEBUG */
+#ifndef NDEBUG
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     DEBUG_KEY, 0, 0, 	                                   \
      "Turn on debugging.", 17}                                             
 
-#define ARGP_COMMON_OPTIONS                                                \
-       ARGP_COMMON_OPTIONS_INBAND,                                         \
-       ARGP_COMMON_OPTIONS_OUTOFBAND,                                      \
-       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
-       ARGP_COMMON_OPTIONS_PRIVLEVEL,                                      \
-       ARGP_COMMON_OPTIONS_DEBUG
-
-#define ARGP_COMMON_OPTIONS_HOSTRANGED                                     \
-       ARGP_COMMON_OPTIONS_INBAND,                                         \
-       ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,                           \
-       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
-       ARGP_COMMON_OPTIONS_PRIVLEVEL,                                      \
-       ARGP_COMMON_HOSTRANGED_OPTIONS,                                     \
-       ARGP_COMMON_OPTIONS_DEBUG
-#endif /* !NDEBUG */
+#endif
 
 struct common_cmd_args 
 {

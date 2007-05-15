@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.11 2007-05-14 02:23:47 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.12 2007-05-15 21:45:06 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -60,7 +60,14 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS_HOSTRANGED, 
+    ARGP_COMMON_OPTIONS_INBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
+    ARGP_COMMON_OPTIONS_AUTHTYPE,
+    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
+#ifndef NDEBUG
+    ARGP_COMMON_OPTIONS_DEBUG,
+#endif
     {"verbose",        VERBOSE_KEY,        0, 0, 
      "Increase verbosity in output.  More -v adds more verbosity.", 17}, 
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,

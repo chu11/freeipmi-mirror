@@ -1,3 +1,19 @@
+2007-05-15  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/argp-common-privlevel-admin.man,
+	common/doc/argp-common-privlevel-user.man: New files.
+
+	* common/doc/Makefile.am: Updated appropriately for new files.
+
+	* common/doc/argp-common-privlevel.man: Removed file.
+
+	* common/src/arg-common.h: Modify mechanism by which common args
+	are shared so some tools can have a default privilege of admin.
+
+	* ipmi-sensors/, ipmi-sel/, bmc-info/, bmc-config/, ipmi-raw/,
+	ipmi-pef/: Update to use new common macros and includes.  Default
+	privilege of ipmi-pef and ipmi-chassis is now admin.
+	
 2007-05-16  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-pef/src/ipmi-pef.c (checkout_pef_lad): added comments.

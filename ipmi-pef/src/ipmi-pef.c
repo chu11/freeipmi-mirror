@@ -654,10 +654,10 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
   int rv = 0;
   int num_of_lan_destinations;
   int d;
-  
+
   if (get_number_of_lan_destinations (state_data->dev, &num_of_lan_destinations) != 0)
     return (-1);
-  
+
   for (d = 1; d <= num_of_lan_destinations; d++)
     {
       lan_alert_destination_t lad;
