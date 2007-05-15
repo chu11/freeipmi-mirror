@@ -1,3 +1,22 @@
+2007-05-15  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c
+	(fill_cmd_set_pef_configuration_parameters_alert_strings): uses
+	macro IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE_VALID.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_alert_policy_table):
+	fix to check obj_cmd_rs.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_alert_policy_table):
+	fix to check obj_cmd_rs.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_alert_string_keys,
+	ipmi_cmd_set_pef_configuration_parameters_alert_strings): new
+	functions.
+
 2007-05-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring.c (main): Fix error message

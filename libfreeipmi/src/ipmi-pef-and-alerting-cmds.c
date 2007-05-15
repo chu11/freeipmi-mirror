@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.17 2007-02-23 03:24:20 balamurugan Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.18 2007-05-15 03:07:03 balamurugan Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -798,6 +798,7 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
   ERR_EINVAL (IPMI_STRING_SELECTOR_VALID(string_selector)
               && string_data
               && string_data_len
+	      && IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE_VALID (string_data_len)
               && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_pef_configuration_parameters_alert_strings_rq);
