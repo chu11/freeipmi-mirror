@@ -35,6 +35,12 @@ move ftp server
 
 move webpage?
 
+ipmi-pef
+--------
+* ipmi-pef renamed to pef-config
+* Community String support.
+* LAN channel probing in LAN alert destination functions in ipmi-pef code
+
 general
 -------
 timeout options for most FreeIPMI tools?
@@ -55,4 +61,3 @@ common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for SDR options in manpages
 add header comments to fiid.h
-ipmi-pef -> pef-config
