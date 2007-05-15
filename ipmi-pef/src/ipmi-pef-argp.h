@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.h,v 1.4 2007-05-15 06:35:31 balamurugan Exp $ 
+   $Id: ipmi-pef-argp.h,v 1.5 2007-05-15 18:34:17 balamurugan Exp $ 
    
    ipmi-pef-argp.h - Platform Event Filtering utility.
    
@@ -28,8 +28,8 @@ enum argp_option_keys
     INFO_KEY = 'i', 
     CHECKOUT_KEY = 'o', 
     COMMIT_KEY = 'c', 
-    ALERT_POLICY_TABLE_KEY = 'a', 
-    LAN_CONF_KEY = 'l', 
+    ALERT_POLICY_TABLE_KEY = 't', 
+    LAN_ALERT_DESTINATION_KEY = 'd', 
     COMMUNITY_STRING_KEY = 's'
   };
 
@@ -42,7 +42,7 @@ struct ipmi_pef_arguments
   int commit_wanted;
   char *commit_filename;
   int alert_policy_table_wanted;
-  int lan_conf_wanted;
+  int lan_alert_destination_wanted;
   int community_string_wanted;
   char *community_string;
 };

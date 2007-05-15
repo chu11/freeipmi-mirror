@@ -39,6 +39,15 @@
 #define APT_ALERT_STRING_SET_SELECTOR_KEY_STRING      "Alert_String_Set_Selector"
 #define APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING    "Event_Specific_Alert_String"
 
+#define LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING       "Alert_Destination_Selector"
+#define LAD_ALERT_DESTINATION_TYPE_KEY_STRING       "Alert_Destination_Type"
+#define LAD_ALERT_ACKNOWLEDGE_KEY_STRING            "Alert_Acknowledge"
+#define LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING    "Alert_Acknowledge_Timeout"
+#define LAD_ALERT_RETRIES_KEY_STRING                "Alert_Retries"
+#define LAD_ALERT_GATEWAY_KEY_STRING                "Alert_Gateway"
+#define LAD_ALERT_IP_ADDRESS_KEY_STRING             "Alert_IP_Address"
+#define LAD_ALERT_MAC_ADDRESS_KEY_STRING            "Alert_MAC_Address"
+
 int strchr_replace (char *str, char ch, char nch);
 int filter_number_to_string (int filter_number, char **filter_number_string);
 int string_to_filter_number (const char *filter_number_string, int *filter_number);
@@ -159,5 +168,30 @@ int event_specific_alert_string_lookup_to_string (int event_specific_alert_strin
 						  char **event_specific_alert_string_lookup_string);
 int string_to_event_specific_alert_string_lookup (const char *event_specific_alert_string_lookup_string, 
 						  int *event_specific_alert_string_lookup);
+
+int destination_type_to_string (int alert_destination_type, 
+				char **alert_destination_type_string);
+int string_to_destination_type (const char *alert_destination_type_string, 
+				int *alert_destination_type);
+int alert_acknowledge_to_string (int alert_acknowledge, 
+				 char **alert_acknowledge_string);
+int string_to_alert_acknowledge (const char *alert_acknowledge_string, 
+				 int *alert_acknowledge);
+int alert_acknowledge_timeout_to_string (int alert_acknowledge_timeout, 
+					 char **alert_acknowledge_timeout_string);
+int string_to_alert_acknowledge_timeout (const char *alert_acknowledge_timeout_string, 
+					 int *alert_acknowledge_timeout);
+int alert_retries_to_string (int alert_retries, char **alert_retries_string);
+int string_to_alert_retries (const char *alert_retries_string, int *alert_retries);
+int gateway_selector_to_string (int alert_gateway, char **alert_gateway_string);
+int string_to_gateway_selector (const char *alert_gateway_string, int *alert_gateway);
+int alert_ip_address_to_string (const char *alert_ip_address, 
+				char **alert_ip_address_string);
+int string_to_alert_ip_address (const char *alert_ip_address_string, 
+				char **alert_ip_address);
+int alert_mac_address_to_string (const char *alert_mac_address, 
+				 char **alert_mac_address_string);
+int string_to_alert_mac_address (const char *alert_mac_address_string, 
+				 char **alert_mac_address);
 
 #endif

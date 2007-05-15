@@ -1,8 +1,10 @@
 
 #include <string.h>
+#include <arpa/inet.h>
 
 #include "freeipmi/ipmi-sensor-types-spec.h"
 #include "freeipmi/ipmi-pef-and-alerting-cmds.h"
+#include "freeipmi/ipmi-lan-cmds.h"
 #include "freeipmi-portability.h"
 
 #include "common-utils.h"
@@ -56,6 +58,14 @@
 #define IPMI_ALERT_POLICY_ENABLED_STRING     "Yes"
 #define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING     "No"
 #define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING    "Yes"
+
+#define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING      "PET_Trap"
+#define IPMI_DESTINATION_TYPE_OEM1_STRING                      "OEM1"
+#define IPMI_DESTINATION_TYPE_OEM2_STRING                      "OEM2"
+#define IPMI_ALERT_UNACKNOWLEDGED_STRING    "No"
+#define IPMI_ALERT_ACKNOWLEDGED_STRING      "Yes"
+#define IPMI_GATEWAY_SELECTOR_DEFAULT_STRING    "Default"
+#define IPMI_GATEWAY_SELECTOR_BACKUP_STRING     "Backup"
 
 int 
 strchr_replace (char *str, char ch, char nch)
@@ -1429,3 +1439,243 @@ string_to_event_specific_alert_string_lookup (const char *event_specific_alert_s
   
   return -1;
 }
+
+int 
+destination_type_to_string (int alert_destination_type, 
+			    char **alert_destination_type_string)
+{
+  if (alert_destination_type == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION)
+    {
+      *alert_destination_type_string = 
+	strdup (IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING);
+      return 0;
+    }
+  if (alert_destination_type == IPMI_DESTINATION_TYPE_OEM1)
+    {
+      *alert_destination_type_string = 
+	strdup (IPMI_DESTINATION_TYPE_OEM1_STRING);
+      return 0;
+    }
+  if (alert_destination_type == IPMI_DESTINATION_TYPE_OEM2)
+    {
+      *alert_destination_type_string = 
+	strdup (IPMI_DESTINATION_TYPE_OEM2_STRING);
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_destination_type (const char *alert_destination_type_string, 
+			    int *alert_destination_type)
+{
+  if (strcasecmp (alert_destination_type_string, 
+		  IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING) == 0)
+    {
+      *alert_destination_type = IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION;
+      return 0;
+    }
+  if (strcasecmp (alert_destination_type_string, 
+		  IPMI_DESTINATION_TYPE_OEM1_STRING) == 0)
+    {
+      *alert_destination_type = IPMI_DESTINATION_TYPE_OEM1;
+      return 0;
+    }
+  if (strcasecmp (alert_destination_type_string, 
+		  IPMI_DESTINATION_TYPE_OEM2_STRING) == 0)
+    {
+      *alert_destination_type = IPMI_DESTINATION_TYPE_OEM2;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+alert_acknowledge_to_string (int alert_acknowledge, 
+			     char **alert_acknowledge_string)
+{
+  if (alert_acknowledge == IPMI_ALERT_UNACKNOWLEDGED)
+    {
+      *alert_acknowledge_string = 
+	strdup (IPMI_ALERT_UNACKNOWLEDGED_STRING);
+      return 0;
+    }
+  if (alert_acknowledge == IPMI_ALERT_ACKNOWLEDGED)
+    {
+      *alert_acknowledge_string = 
+	strdup (IPMI_ALERT_ACKNOWLEDGED_STRING);
+      return 0;
+    }
+  return -1;
+}
+
+int 
+string_to_alert_acknowledge (const char *alert_acknowledge_string, 
+			     int *alert_acknowledge)
+{
+  if (strcasecmp (alert_acknowledge_string, 
+		  IPMI_ALERT_UNACKNOWLEDGED_STRING) == 0)
+    {
+      *alert_acknowledge = IPMI_ALERT_UNACKNOWLEDGED;
+      return 0;
+    }
+  if (strcasecmp (alert_acknowledge_string, 
+		  IPMI_ALERT_ACKNOWLEDGED_STRING) == 0)
+    {
+      *alert_acknowledge = IPMI_ALERT_ACKNOWLEDGED;
+      return 0;
+    }
+  return -1;
+}
+
+int 
+alert_acknowledge_timeout_to_string (int alert_acknowledge_timeout, 
+				     char **alert_acknowledge_timeout_string)
+{
+  char *str = NULL;
+  
+  asprintf (&str, "%d", alert_acknowledge_timeout);
+  if (str)
+    {
+      *alert_acknowledge_timeout_string = str;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_alert_acknowledge_timeout (const char *alert_acknowledge_timeout_string, 
+				     int *alert_acknowledge_timeout)
+{
+  int i = 0;
+  
+  if (str2int ((char *) alert_acknowledge_timeout_string, 0, &i) == 0)
+    {
+      *alert_acknowledge_timeout = i;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+alert_retries_to_string (int alert_retries, char **alert_retries_string)
+{
+  char *str = NULL;
+  
+  asprintf (&str, "%d", alert_retries);
+  if (str)
+    {
+      *alert_retries_string = str;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+string_to_alert_retries (const char *alert_retries_string, int *alert_retries)
+{
+  int i = 0;
+  
+  if (str2int ((char *) alert_retries_string, 0, &i) == 0)
+    {
+      *alert_retries = i;
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+gateway_selector_to_string (int alert_gateway, char **alert_gateway_string)
+{
+  if (alert_gateway == IPMI_GATEWAY_SELECTOR_DEFAULT)
+    {
+      *alert_gateway_string = strdup (IPMI_GATEWAY_SELECTOR_DEFAULT_STRING);
+      return 0;
+    }
+  if (alert_gateway == IPMI_GATEWAY_SELECTOR_BACKUP)
+    {
+      *alert_gateway_string = strdup (IPMI_GATEWAY_SELECTOR_BACKUP_STRING);
+      return 0;
+    }
+  return -1;
+}
+
+int 
+string_to_gateway_selector (const char *alert_gateway_string, int *alert_gateway)
+{
+  if (strcasecmp (alert_gateway_string, 
+		  IPMI_GATEWAY_SELECTOR_DEFAULT_STRING) == 0)
+    {
+      *alert_gateway = IPMI_GATEWAY_SELECTOR_DEFAULT;
+      return 0;
+    }
+  if (strcasecmp (alert_gateway_string, 
+		  IPMI_GATEWAY_SELECTOR_BACKUP_STRING) == 0)
+    {
+      *alert_gateway = IPMI_GATEWAY_SELECTOR_BACKUP;
+      return 0;
+    }
+  return -1;
+}
+
+int 
+alert_ip_address_to_string (const char *alert_ip_address, 
+			    char **alert_ip_address_string)
+{
+  *alert_ip_address_string = strdup (alert_ip_address);
+  
+  return 0;
+}
+
+int 
+string_to_alert_ip_address (const char *alert_ip_address_string, 
+			    char **alert_ip_address)
+{
+  struct in_addr addr;
+  
+  if (inet_aton (alert_ip_address_string, &addr) != 0)
+    {
+      *alert_ip_address = strdup (alert_ip_address_string);
+      return 0;
+    }
+  
+  return -1;
+}
+
+int 
+alert_mac_address_to_string (const char *alert_mac_address, 
+			     char **alert_mac_address_string)
+{
+  *alert_mac_address_string = strdup (alert_mac_address);
+  
+  return 0;
+}
+
+int 
+string_to_alert_mac_address (const char *alert_mac_address_string, 
+			     char **alert_mac_address)
+{
+  unsigned int foo;
+  
+  if (sscanf (alert_mac_address_string, 
+              "%02x:%02x:%02x:%02x:%02x:%02x", 
+              &foo, 
+              &foo, 
+              &foo, 
+              &foo, 
+              &foo, 
+              &foo) == 6)
+    {
+      *alert_mac_address = strdup (alert_mac_address_string);
+      return 0;
+    }
+  
+  return -1;
+}
+

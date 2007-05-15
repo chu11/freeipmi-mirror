@@ -32,6 +32,7 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-pef-and-alerting-cmds.h"
 #include "freeipmi/ipmi-pef-param-spec.h"
+#include "freeipmi/udm/ipmi-lan-cmds-udm.h"
 #include "freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h"
 
 #include "err-wrappers.h"
@@ -598,6 +599,128 @@ _record_string_to_apt (const char *record_string,
 }
 
 static int 
+_record_string_to_lad (const char *record_string, 
+		       lan_alert_destination_t *lad)
+{
+  int int_value = 0;
+  
+  char *value_string = NULL;
+  
+  ERR_EINVAL (record_string && lad);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_destination_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING);
+      return -1;
+    }
+  lad->destination_selector = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_destination_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_DESTINATION_TYPE_KEY_STRING);
+      return -1;
+    }
+  lad->destination_type = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_acknowledge (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_ACKNOWLEDGE_KEY_STRING);
+      return -1;
+    }
+  lad->alert_acknowledge = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_acknowledge_timeout (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING);
+      return -1;
+    }
+  lad->alert_acknowledge_timeout = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_RETRIES_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_retries (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_RETRIES_KEY_STRING);
+      return -1;
+    }
+  lad->alert_retries = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_GATEWAY_KEY_STRING, 
+				  value_string);
+  if (string_to_gateway_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_GATEWAY_KEY_STRING);
+      return -1;
+    }
+  lad->gateway_selector = int_value;
+  
+  {
+    char *str = NULL;
+    GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				    LAD_ALERT_IP_ADDRESS_KEY_STRING, 
+				    value_string);
+    if (string_to_alert_ip_address (value_string, &str) != 0)
+      {
+	fprintf (stderr, 
+		 "invalid value %s for %s\n", 
+		 value_string, 
+		 LAD_ALERT_IP_ADDRESS_KEY_STRING);
+	return -1;
+      }
+    strncpy (lad->alert_ip_address, str, 15);
+    free (str);
+    
+    GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				    LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
+				    value_string);
+    if (string_to_alert_mac_address (value_string, &str) != 0)
+    {
+      fprintf (stderr, 
+	       "invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_MAC_ADDRESS_KEY_STRING);
+      return -1;
+    }
+    strncpy (lad->alert_mac_address, str, 17);
+    free (str);
+  }
+  
+  return 0;
+}
+
+static int 
 _fread_record (FILE *fp, char **cache_record)
 {
   char *record;
@@ -1094,7 +1217,6 @@ set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt)
   return (rv);
 }
 
-/********************************************************************************/
 /* bmc_err_t  */
 /* get_bmc_community_string (bmc_config_state_data_t *state_data,  */
 /*                           uint8_t *community_string, */
@@ -1139,149 +1261,6 @@ set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt)
 /* } */
 
 /* bmc_err_t  */
-/* get_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data,  */
-/*                                   uint8_t destination_selector, */
-/*                                   uint8_t *alert_destination_type, */
-/*                                   uint8_t *alert_acknowledge, */
-/*                                   uint8_t *alert_acknowledge_timeout, */
-/*                                   uint8_t *alert_retries) */
-/* { */
-/*   fiid_obj_t obj_cmd_rs = NULL; */
-/*   uint64_t val; */
-/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
-/*   bmc_err_t ret; */
-/*   int8_t channel_number; */
-  
-/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_type_rs))) */
-/*     goto cleanup; */
-
-/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
-
-/*   if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->dev,  */
-/*                                                                   channel_number,  */
-/*                                                                   IPMI_GET_LAN_PARAMETER,  */
-/*                                                                   destination_selector,  */
-/*                                                                   BLOCK_SELECTOR,  */
-/*                                                                   obj_cmd_rs) < 0) */
-/*     { */
-/*       rv = BMC_ERR_NON_FATAL_ERROR; */
-/*       goto cleanup; */
-/*     } */
-  
-/*   if (fiid_obj_get (obj_cmd_rs, "destination_type", &val) < 0) */
-/*     goto cleanup; */
-/*   *alert_destination_type = val; */
-
-/*   if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge", &val) < 0) */
-/*     goto cleanup; */
-/*   *alert_acknowledge = val; */
-
-/*   if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge_timeout", &val) < 0) */
-/*     goto cleanup; */
-/*   *alert_acknowledge_timeout = val; */
-
-/*   if (fiid_obj_get (obj_cmd_rs, "retries", &val) < 0) */
-/*     goto cleanup; */
-/*   *alert_retries = val; */
-  
-/*   rv = BMC_ERR_SUCCESS; */
-/*  cleanup: */
-/*   if (obj_cmd_rs) */
-/*     fiid_obj_destroy(obj_cmd_rs); */
-/*   return (rv); */
-/* } */
-
-/* bmc_err_t  */
-/* get_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data,  */
-/*                                        uint8_t destination_selector, */
-/*                                        uint8_t *alert_gateway, */
-/*                                        char *alert_ip_address, */
-/*                                        unsigned int alert_ip_address_len, */
-/*                                        char *alert_mac_address, */
-/*                                        unsigned int alert_mac_address_len) */
-/* { */
-/*   fiid_obj_t obj_cmd_rs = NULL; */
-/*   uint64_t val; */
-/*   uint8_t alert_ip_address_bytes[4]; */
-/*   uint8_t alert_mac_address_bytes[6]; */
-/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
-/*   bmc_err_t ret; */
-/*   int8_t channel_number; */
-  
-/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs))) */
-/*     goto cleanup; */
-
-/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
-
-/*   if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (state_data->dev,  */
-/*                                                                        channel_number,  */
-/*                                                                        IPMI_GET_LAN_PARAMETER,  */
-/*                                                                        destination_selector,  */
-/*                                                                        BLOCK_SELECTOR,  */
-/*                                                                        obj_cmd_rs) < 0) */
-/*     { */
-/*       rv = BMC_ERR_NON_FATAL_ERROR; */
-/*       goto cleanup; */
-/*     } */
-  
-/*   if (fiid_obj_get (obj_cmd_rs, "gateway_selector", &val) < 0) */
-/*     goto cleanup; */
-/*   *alert_gateway = val; */
-  
-/*   if (alert_ip_address && alert_ip_address_len) */
-/*     { */
-/*       if (fiid_obj_get_data (obj_cmd_rs, */
-/*                              "alerting_ip_address", */
-/*                              alert_ip_address_bytes, */
-/*                              4) < 0) */
-/*         goto cleanup; */
-
-/*       memset(alert_ip_address, '\0', alert_ip_address_len); */
-/*       snprintf (alert_ip_address,  */
-/*                 alert_ip_address_len - 1, */
-/*                 "%u.%u.%u.%u",  */
-/*                 alert_ip_address_bytes[0],  */
-/*                 alert_ip_address_bytes[1],  */
-/*                 alert_ip_address_bytes[2],  */
-/*                 alert_ip_address_bytes[3]); */
-/*     } */
-
-/*   if (alert_mac_address && alert_mac_address_len) */
-/*     { */
-/*       if (fiid_obj_get_data (obj_cmd_rs, */
-/*                              "alerting_mac_address", */
-/*                              alert_mac_address_bytes, */
-/*                              6) < 0) */
-/*         goto cleanup; */
-
-/*       memset(alert_mac_address, '\0', alert_mac_address_len); */
-/*       snprintf (alert_mac_address,  */
-/*                 alert_mac_address_len - 1, */
-/*                 "%02X:%02X:%02X:%02X:%02X:%02X",  */
-/*                 alert_mac_address_bytes[0],  */
-/*                 alert_mac_address_bytes[1],  */
-/*                 alert_mac_address_bytes[2],  */
-/*                 alert_mac_address_bytes[3],  */
-/*                 alert_mac_address_bytes[4],  */
-/*                 alert_mac_address_bytes[5]); */
-/*     } */
-  
-/*   rv = BMC_ERR_SUCCESS; */
-/*  cleanup: */
-/*   if (obj_cmd_rs) */
-/*     fiid_obj_destroy(obj_cmd_rs); */
-/*   return (rv); */
-/* } */
-
-/* bmc_err_t  */
 /* set_bmc_community_string (bmc_config_state_data_t *state_data,  */
 /*                           uint8_t *community_string) */
 /* { */
@@ -1316,93 +1295,223 @@ set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt)
 /*   return (rv); */
 /* } */
 
-/* bmc_err_t  */
-/* set_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data,  */
-/*                                   uint8_t destination_selector, */
-/*                                   uint8_t alert_destination_type, */
-/*                                   uint8_t alert_acknowledge, */
-/*                                   uint8_t alert_acknowledge_timeout, */
-/*                                   uint8_t alert_retries) */
-/* { */
-/*   fiid_obj_t obj_cmd_rs = NULL; */
-/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
-/*   bmc_err_t ret; */
-/*   int8_t channel_number; */
+/********************************************************************************/
 
-/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) */
-/*     goto cleanup; */
+int 
+get_number_of_lan_destinations (ipmi_device_t dev, int *number_of_lan_destinations)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+  uint64_t val;
+  int channel_number = 7;
+  
+  ERR_EINVAL (dev && number_of_lan_destinations);
+  
+/*   if ((ret = get_lan_channel_number (dev, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
+  
+  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (dev, 
+									channel_number, 
+									IPMI_GET_LAN_PARAMETER, 
+									SET_SELECTOR, 
+									BLOCK_SELECTOR, 
+									obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_lan_destinations", &val);
+  *number_of_lan_destinations = val;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return rv;
+}
+
+int 
+get_lan_alert_destination (ipmi_device_t dev, 
+			   int destination_selector, 
+			   lan_alert_destination_t *lad)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  int8_t channel_number = 7;
+  uint8_t alert_ip_address_bytes[4];
+  uint8_t alert_mac_address_bytes[6];
+  
+  ERR_EINVAL (dev && lad);
+  
+/*   if ((ret = get_lan_channel_number (dev, &channel_number)) != BMC_ERR_SUCCESS) */
+/*     { */
+/*       rv = ret; */
+/*       goto cleanup; */
+/*     } */
+  
+  lad->destination_selector = destination_selector;
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
+  
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (dev, 
+                                                                  channel_number, 
+                                                                  IPMI_GET_LAN_PARAMETER, 
+                                                                  destination_selector, 
+                                                                  BLOCK_SELECTOR, 
+                                                                  obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "destination_type", &val);
+  lad->destination_type = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_acknowledge", &val);
+  lad->alert_acknowledge = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_acknowledge_timeout", &val);
+  lad->alert_acknowledge_timeout = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "retries", &val);
+  lad->alert_retries = val;
+  
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
+  
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (dev, 
+                                                                       channel_number, 
+                                                                       IPMI_GET_LAN_PARAMETER, 
+                                                                       destination_selector, 
+                                                                       BLOCK_SELECTOR, 
+                                                                       obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "gateway_selector", &val);
+  lad->gateway_selector = val;
+  
+  FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs, 
+			     "alerting_ip_address", 
+			     alert_ip_address_bytes, 
+			     4);
+  snprintf (lad->alert_ip_address, 
+	    15, 
+	    "%u.%u.%u.%u", 
+	    alert_ip_address_bytes[0], 
+	    alert_ip_address_bytes[1], 
+	    alert_ip_address_bytes[2], 
+	    alert_ip_address_bytes[3]);
+  
+  FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs, 
+                             "alerting_mac_address", 
+                             alert_mac_address_bytes, 
+                             6);
+  snprintf (lad->alert_mac_address, 
+	    17, 
+	    "%02X:%02X:%02X:%02X:%02X:%02X", 
+	    alert_mac_address_bytes[0],
+	    alert_mac_address_bytes[1],
+	    alert_mac_address_bytes[2],
+	    alert_mac_address_bytes[3],
+	    alert_mac_address_bytes[4],
+	    alert_mac_address_bytes[5]);
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+int 
+get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count)
+{
+  lan_alert_destination_t *l_lad_list = NULL;
+  int l_count;
+  char *record = NULL;
+  int i;
+  int rv;
+  
+  if (!(fp && lad_list && count))
+    return (-1);
+  
+  if (_get_record_count (fp, &l_count) != 0)
+    return (-1);
+  
+  l_lad_list = (lan_alert_destination_t *) calloc (l_count, 
+						   sizeof (lan_alert_destination_t));
+  
+  fseek (fp, 0, SEEK_SET);
+  
+  for (i = 0; i < l_count; i++)
+    {
+      _fread_record (fp, &record);
+      rv = _record_string_to_lad (record, &l_lad_list[i]);
+      free (record);
+      if (rv != 0)
+	{
+	  free (l_lad_list);
+	  return (-1);
+	}
+    }
+  
+  *lad_list = l_lad_list;
+  *count = l_count;
+  
+  return 0;
+}
+
+int 
+set_lan_alert_destination (ipmi_device_t dev, lan_alert_destination_t *lad)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+  int8_t channel_number = 7;
+  uint32_t alert_ip_address_bytes = 0;
+  uint64_t alert_mac_address_bytes = 0;
+  
+  ERR_EINVAL (dev && lad);
   
 /*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
 /*     { */
 /*       rv = ret; */
 /*       goto cleanup; */
 /*     } */
-
-/*   if (ipmi_cmd_set_lan_configuration_parameters_destination_type (state_data->dev,  */
-/*                                                                   channel_number,  */
-/*                                                                   destination_selector, */
-/*                                                                   alert_destination_type, */
-/*                                                                   alert_acknowledge, */
-/*                                                                   alert_acknowledge_timeout, */
-/*                                                                   alert_retries, */
-/*                                                                   obj_cmd_rs) < 0) */
-/*     { */
-/*       rv = BMC_ERR_NON_FATAL_ERROR; */
-/*       goto cleanup; */
-/*     } */
-
-/*   rv = BMC_ERR_SUCCESS; */
-/*  cleanup: */
-/*   if (obj_cmd_rs) */
-/*     fiid_obj_destroy(obj_cmd_rs); */
-/*   return (rv); */
-/* } */
-
-/* bmc_err_t  */
-/* set_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data,  */
-/*                                        uint8_t destination_selector, */
-/*                                        uint8_t alert_gateway, */
-/*                                        char *alert_ip_address, */
-/*                                        char *alert_mac_address) */
-/* { */
-/*   fiid_obj_t obj_cmd_rs = NULL; */
-/*   uint32_t alert_ip_address_val = 0; */
-/*   uint64_t alert_mac_address_val = 0; */
-/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
-/*   bmc_err_t ret; */
-/*   int8_t channel_number; */
-
-/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) */
-/*     goto cleanup; */
   
-/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
-
-/*   if (ipmi_ipv4_address_string2int(alert_ip_address, &alert_ip_address_val) < 0) */
-/*     goto cleanup; */
+  if (ipmi_ipv4_address_string2int (lad->alert_ip_address, &alert_ip_address_bytes) < 0)
+    goto cleanup;
   
-/*   if (ipmi_mac_address_string2int(alert_mac_address, &alert_mac_address_val) < 0) */
-/*     goto cleanup; */
-
-/*   if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->dev,  */
-/*                                                                        channel_number,  */
-/*                                                                        destination_selector, */
-/*                                                                        alert_gateway, */
-/*                                                                        alert_ip_address_val, */
-/*                                                                        alert_mac_address_val, */
-/*                                                                        obj_cmd_rs) < 0) */
-/*     { */
-/*       rv = BMC_ERR_NON_FATAL_ERROR; */
-/*       goto cleanup; */
-/*     } */
-
-/*   rv = BMC_ERR_SUCCESS; */
-/*  cleanup: */
-/*   if (obj_cmd_rs) */
-/*     fiid_obj_destroy(obj_cmd_rs); */
-/*   return (rv); */
-/* } */
-
+  if (ipmi_mac_address_string2int (lad->alert_mac_address, &alert_mac_address_bytes) < 0)
+    goto cleanup;
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_type (dev,
+                                                                  channel_number,
+                                                                  lad->destination_selector,
+                                                                  lad->destination_type,
+                                                                  lad->alert_acknowledge,
+                                                                  lad->alert_acknowledge_timeout,
+                                                                  lad->alert_retries,
+                                                                  obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (dev, 
+                                                                       channel_number,
+                                                                       lad->destination_selector,
+                                                                       lad->gateway_selector,
+                                                                       alert_ip_address_bytes,
+                                                                       alert_mac_address_bytes,
+                                                                       obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}

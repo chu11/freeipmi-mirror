@@ -649,6 +649,136 @@ commit_pef_apt (ipmi_pef_state_data_t *state_data, FILE *fp)
 }
 
 int 
+checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
+{
+  int rv = 0;
+  int num_of_lan_destinations;
+  int d;
+  
+  if (get_number_of_lan_destinations (state_data->dev, &num_of_lan_destinations) != 0)
+    return (-1);
+  
+  for (d = 1; d <= num_of_lan_destinations; d++)
+    {
+      lan_alert_destination_t lad;
+      char *value_string = NULL;
+      
+      memset (&lad, 0, sizeof (lan_alert_destination_t));
+      
+      if (get_lan_alert_destination (state_data->dev, d, &lad) != 0)
+	{
+	  fprintf (stderr, "unable to get LAN alert destination #%d\n", d);
+	  rv = -1;
+	  continue;
+	}
+      
+      if (destination_selector_to_string (lad.destination_selector, 
+					  &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (destination_type_to_string (lad.destination_type, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (alert_acknowledge_to_string (lad.alert_acknowledge, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (alert_acknowledge_timeout_to_string (lad.alert_acknowledge_timeout, 
+					       &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (alert_retries_to_string (lad.alert_retries, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_RETRIES_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (gateway_selector_to_string (lad.gateway_selector, &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_GATEWAY_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (alert_ip_address_to_string (lad.alert_ip_address, 
+				      &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_IP_ADDRESS_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      if (alert_mac_address_to_string (lad.alert_mac_address, 
+				       &value_string) == 0)
+	{
+	  fprintf (fp, 
+		   "%-30s %s\n", 
+		   LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
+		   value_string);
+	  free (value_string);
+	}
+      
+      fprintf (fp, "\n");
+    }
+  
+  return rv;
+}
+
+int 
+commit_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
+{
+  lan_alert_destination_t *lad_list = NULL;
+  int count = 0;
+  int i = 0;
+  int rv = 0;
+  
+  get_lad_list (fp, &lad_list, &count);
+  
+  for (i = 0; i < count; i++)
+    {
+      if (set_lan_alert_destination (state_data->dev, &lad_list[i]) != 0)
+	{
+	  fprintf (stderr, "unable to set LAN Alert Destination #%d\n", 
+		   lad_list[i].destination_selector);
+	  rv = -1;
+	  continue;
+	}
+    }
+  
+  return rv;
+}
+
+int 
 run_cmd_args (ipmi_pef_state_data_t *state_data)
 {
   struct ipmi_pef_arguments *args;
@@ -685,9 +815,9 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	}
       else
 	{
-	  if (args->lan_conf_wanted)
+	  if (args->lan_alert_destination_wanted)
 	    {
-	      //rv = checkout_pef_lan_conf (state_data, fp);
+	      rv = checkout_pef_lad (state_data, fp);
 	    }
 	  else
 	    {
@@ -726,9 +856,9 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	}
       else
 	{
-	  if (args->lan_conf_wanted)
+	  if (args->lan_alert_destination_wanted)
 	    {
-	      //rv = commit_pef_lan_conf (state_data, fp);
+	      rv = commit_pef_lad (state_data, fp);
 	    }
 	  else
 	    {

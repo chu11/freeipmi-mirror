@@ -1,3 +1,24 @@
+2007-05-15  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-pef/src/ipmi-pef-utils.c (destination_type_to_string,
+	string_to_destination_type, alert_acknowledge_to_string,
+	string_to_alert_acknowledge, alert_acknowledge_timeout_to_string,
+	string_to_alert_acknowledge_timeout, alert_retries_to_string,
+	string_to_alert_retries, gateway_selector_to_string,
+	string_to_gateway_selector, alert_ip_address_to_string,
+	string_to_alert_ip_address, alert_mac_address_to_string,
+	string_to_alert_mac_address): new functions.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c (_record_string_to_lad,
+	get_number_of_lan_destinations, get_lan_alert_destination,
+	get_lad_list, set_lan_alert_destination): new functions.
+
+	* ipmi-pef/src/ipmi-pef.c (checkout_pef_lad, commit_pef_lad): new
+	functions.
+
+	* ipmi-pef/src/ipmi-pef.c (run_cmd_args): added support to lan
+	alert destination checkout/commit.
+
 2007-05-15  Tom Zimmerman <tzimmerman@lnxi.com>
 
 	* ipmi-pef/src/ipmi-pef-utils.c: Fix #define typo.

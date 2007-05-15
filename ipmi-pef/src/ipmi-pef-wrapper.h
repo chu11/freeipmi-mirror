@@ -69,6 +69,19 @@ struct pef_alert_policy_table
 };
 typedef struct pef_alert_policy_table pef_alert_policy_table_t;
 
+struct lan_alert_destination
+{
+  int destination_selector;
+  int destination_type;
+  int alert_acknowledge;
+  int alert_acknowledge_timeout;
+  int alert_retries;
+  int gateway_selector;
+  char alert_ip_address[16];
+  char alert_mac_address[18];
+};
+typedef struct lan_alert_destination lan_alert_destination_t;
+
 int get_pef_info (ipmi_device_t dev, pef_info_t *pef_info);
 int get_event_filter_table (ipmi_device_t dev, int filter, pef_event_filter_table_t *evt);
 int set_event_filter_table (ipmi_device_t dev, pef_event_filter_table_t *evt);
@@ -80,5 +93,13 @@ int get_alert_policy_table (ipmi_device_t dev,
 			    pef_alert_policy_table_t *apt);
 int get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count);
 int set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt);
+
+int get_number_of_lan_destinations (ipmi_device_t dev, int *number_of_lan_destinations);
+int get_lan_alert_destination (ipmi_device_t dev, 
+			       int destination_selector, 
+			       lan_alert_destination_t *lad);
+int get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count);
+int set_lan_alert_destination (ipmi_device_t dev, lan_alert_destination_t *lad);
+
 
 #endif
