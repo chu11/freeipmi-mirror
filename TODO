@@ -40,7 +40,7 @@ ipmi-pef
 * ipmi-pef renamed to pef-config
 * Community String support.
 * LAN channel probing in LAN alert destination functions in ipmi-pef code
-* manpage
+* manpage and conf.5 manpage
 
 general
 -------
