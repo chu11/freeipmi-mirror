@@ -685,6 +685,8 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
       if (destination_type_to_string (lad.destination_type, &value_string) == 0)
 	{
 	  fprintf (fp, 
+		   "## Possible values: PET_Trap/OEM1/OEM2\n");
+	  fprintf (fp, 
 		   "%-30s %s\n", 
 		   LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
 		   value_string);
@@ -693,6 +695,8 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
       
       if (alert_acknowledge_to_string (lad.alert_acknowledge, &value_string) == 0)
 	{
+	  fprintf (fp, 
+		   "## Possible values: Yes/No\n");
 	  fprintf (fp, 
 		   "%-30s %s\n", 
 		   LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
@@ -704,6 +708,8 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
 					       &value_string) == 0)
 	{
 	  fprintf (fp, 
+		   "## Give valid unsigned number in seconds\n");
+	  fprintf (fp, 
 		   "%-30s %s\n", 
 		   LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
 		   value_string);
@@ -713,6 +719,8 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
       if (alert_retries_to_string (lad.alert_retries, &value_string) == 0)
 	{
 	  fprintf (fp, 
+		   "## Give valid unsigned number\n");
+	  fprintf (fp, 
 		   "%-30s %s\n", 
 		   LAD_ALERT_RETRIES_KEY_STRING, 
 		   value_string);
@@ -721,6 +729,8 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
       
       if (gateway_selector_to_string (lad.gateway_selector, &value_string) == 0)
 	{
+	  fprintf (fp, 
+		   "## Possible values: Default/Backup\n");
 	  fprintf (fp, 
 		   "%-30s %s\n", 
 		   LAD_ALERT_GATEWAY_KEY_STRING, 
@@ -732,6 +742,8 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
 				      &value_string) == 0)
 	{
 	  fprintf (fp, 
+		   "## Give valid IP address\n");
+	  fprintf (fp, 
 		   "%-30s %s\n", 
 		   LAD_ALERT_IP_ADDRESS_KEY_STRING, 
 		   value_string);
@@ -741,6 +753,8 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
       if (alert_mac_address_to_string (lad.alert_mac_address, 
 				       &value_string) == 0)
 	{
+	  fprintf (fp, 
+		   "## Give valid MAC address\n");
 	  fprintf (fp, 
 		   "%-30s %s\n", 
 		   LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
