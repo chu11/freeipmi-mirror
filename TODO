@@ -40,7 +40,10 @@ ipmi-pef
 * ipmi-pef renamed to pef-config
 * Community String support.
 * LAN channel probing in LAN alert destination functions in ipmi-pef code
-* manpage and conf.5 manpage
+* .8 manpage and conf.5 manpage
+* make checkout/commit more like bmc-config
+* state_data must be passed around to all functions
+* by default output everything, support --sections or similar options to output less information.
 
 general
 -------
