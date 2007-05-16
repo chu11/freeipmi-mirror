@@ -1,3 +1,8 @@
+2007-05-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/: Fix string parsing bugs in alert policy table.  Fix
+	event trigger output corner case.
+	
 2007-05-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/: Do initial support of lan channels and community

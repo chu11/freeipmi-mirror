@@ -393,7 +393,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
       if (event_trigger_to_string (evt.event_trigger, &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "## Possible values: Threshold/Generic_Discrete_0xXX/Sensor_Specific_Discrete/OEM_0xXX/Match_Any\n");
+		   "## Possible values: Unspecified/Threshold/Generic_Discrete_0xXX/Sensor_Specific_Discrete/OEM_0xXX/Match_Any\n");
 	  fprintf (fp, 
 		   "%-50s %s\n", 
 		   EVENT_TRIGGER_KEY_STRING, 

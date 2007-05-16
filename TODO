@@ -46,6 +46,8 @@ ipmi-pef
 * diff
 * fix string to int/ int to string mappings
   - event trigger
+* parsing seg faults
+* invalid key found for what record/section 
 
 general
 -------

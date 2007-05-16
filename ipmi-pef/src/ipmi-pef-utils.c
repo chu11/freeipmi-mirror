@@ -39,6 +39,7 @@
 #define EVENT_TRIGGER_MATCH_ANY_STRING    "Match_Any"
 #define EVENT_TRIGGER_MATCH_ANY           0xFF
 
+#define IPMI_SENSOR_CLASS_UNSPECIFIED_STRING                 "Unspecified"
 #define IPMI_SENSOR_CLASS_THRESHOLD_STRING                   "Threshold"
 #define IPMI_SENSOR_CLASS_GENERIC_DISCRETE_STRING            "Generic_Discrete"
 #define IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE_STRING    "Sensor_Specific_Discrete"
@@ -450,7 +451,7 @@ string_to_alert_policy_number (const char *alert_policy_number_string,
 			       int *alert_policy_number)
 {
   int i = 0;
-  
+
   if (str2int ((char *) alert_policy_number_string, 16, &i) == 0)
     {
       *alert_policy_number = i;
@@ -800,6 +801,8 @@ event_trigger_to_string (int event_trigger, char **event_trigger_string)
 		IPMI_SENSOR_CLASS_OEM_STRING, event_trigger);
       return 0;
     case IPMI_SENSOR_CLASS_NOT_AVAILABLE:
+      *event_trigger_string = strdup (IPMI_SENSOR_CLASS_UNSPECIFIED_STRING);
+      return 0;
     default:
       return -1;
     }
@@ -821,6 +824,12 @@ string_to_event_trigger (const char *event_trigger_string, int *event_trigger)
   
   lstr = strdupa (event_trigger_string);
   
+  if (strcasecmp (lstr, IPMI_SENSOR_CLASS_UNSPECIFIED_STRING) == 0)
+    {
+      *event_trigger = 0;
+      return 0;
+    }
+
   if (strcasestr (lstr, IPMI_SENSOR_CLASS_THRESHOLD_STRING) == lstr)
     {
       int et = 0;

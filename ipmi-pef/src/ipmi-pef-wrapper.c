@@ -516,7 +516,7 @@ _record_string_to_apt (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_ALERT_POLICY_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_policy_type (value_string, &int_value) != 0)
+  if (string_to_alert_policy_number (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -555,7 +555,7 @@ _record_string_to_apt (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_POLICY_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_enable_filter (value_string, &int_value) != 0)
+  if (string_to_policy_number (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -568,7 +568,7 @@ _record_string_to_apt (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_DESTINATION_SELECTOR_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
+  if (string_to_destination_selector (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -581,7 +581,7 @@ _record_string_to_apt (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_CHANNEL_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
+  if (string_to_channel_number (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -594,7 +594,7 @@ _record_string_to_apt (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
+  if (string_to_alert_string_set_selector (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -607,7 +607,7 @@ _record_string_to_apt (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
+  if (string_to_event_specific_alert_string_lookup (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
