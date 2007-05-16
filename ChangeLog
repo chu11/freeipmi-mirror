@@ -7,6 +7,11 @@
 	incorrect logic in mapping to strings functions.  General code
 	cleanup.
 
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_config.c
+	(ipmi_monitoring_sensor_config),
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.c
+	(_destroy_ctx): Fix mem-leaks.
+
 	* doc/freeipmi.texi, doc/gpl.texi, doc/version-doc.texi,
 	doc/authors.texi, doc/fdl.texi, THANKS: Removed.
 
