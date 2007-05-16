@@ -237,7 +237,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
       if (filter_number_to_string (evt.filter_number, &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   FILTER_NUMBER_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -247,7 +247,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  fprintf (fp, 
 		   "## Possible values: Manufacturer_Pre_Configured/Software_Configurable\n");
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   FILTER_TYPE_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -255,7 +255,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
       if (enable_filter_to_string (evt.enable_filter, &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   ENABLE_FILTER_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -264,7 +264,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					       &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -273,7 +273,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 						   &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -282,7 +282,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					       &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_FILTER_ACTION_RESET_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -291,7 +291,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 						     &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -300,7 +300,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					     &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_FILTER_ACTION_OEM_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -309,7 +309,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 							      &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -318,7 +318,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 								 &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -326,7 +326,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
       if (alert_policy_number_to_string (evt.alert_policy_number, &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   ALERT_POLICY_NUMBER_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -335,7 +335,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					    &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   GROUP_CONTROL_SELECTOR_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -345,7 +345,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  fprintf (fp, 
 		   "## Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable\n");
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_SEVERITY_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -355,7 +355,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  fprintf (fp, 
 		   "## Possible values: Hex value or Match_Any\n");
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   GENERATOR_ID_BYTE1_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -365,7 +365,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  fprintf (fp, 
 		   "## Possible values: Hex value or Match_Any\n");
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   GENERATOR_ID_BYTE2_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -375,7 +375,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  fprintf (fp, 
 		   "## Possible values: Sensor type or Match_Any\n");
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   SENSOR_TYPE_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -385,7 +385,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  fprintf (fp, 
 		   "## Possible values: Sensor number or Match_Any\n");
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   SENSOR_NUMBER_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -395,7 +395,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  fprintf (fp, 
 		   "## Possible values: Threshold/Generic_Discrete_0xXX/Sensor_Specific_Discrete/OEM_0xXX/Match_Any\n");
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_TRIGGER_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -404,7 +404,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					     &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -413,7 +413,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA1_AND_MASK_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -422,7 +422,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA1_COMPARE1_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -431,7 +431,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA1_COMPARE2_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -440,7 +440,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA2_AND_MASK_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -449,7 +449,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA2_COMPARE1_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -458,7 +458,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA2_COMPARE2_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -467,7 +467,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA3_AND_MASK_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -476,7 +476,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA3_COMPARE1_KEY_STRING, 
 		   value_string);
 	  free (value_string);
@@ -485,7 +485,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 					  &value_string) == 0)
 	{
 	  fprintf (fp, 
-		   "%-40s %s\n", 
+		   "%-50s %s\n", 
 		   EVENT_DATA3_COMPARE2_KEY_STRING, 
 		   value_string);
 	  free (value_string);

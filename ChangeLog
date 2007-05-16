@@ -4,6 +4,7 @@
 	string support.  Fix thread safety problems.  Add -v and -f
 	option.  Re-adjust options to emulate bmc-config options.  Fix
 	mem-leaks. Fix and add numerous error messages.  Fix various bugs.
+	Fix output alignment.
 	
 2007-05-15  Albert Chu <chu11@llnl.gov>
 
