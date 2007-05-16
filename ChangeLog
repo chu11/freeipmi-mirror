@@ -13,6 +13,8 @@
 	* ipmi-sensors/, ipmi-sel/, bmc-info/, bmc-config/, ipmi-raw/,
 	ipmi-pef/: Update to use new common macros and includes.  Default
 	privilege of ipmi-pef and ipmi-chassis is now admin.
+
+	* various minor doc updates.
 	
 2007-05-16  A Balamurugan  <bala@zresearch.com>
 

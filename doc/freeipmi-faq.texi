@@ -128,10 +128,11 @@ Foundation as a GNU project.
 @node Who maintains FreeIPMI?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
 @section Who maintains FreeIPMI?
 
-Maintenance and development of FreeIPMI is currently shared between
-Lawrence Livermore National Laboratory (LLNL) and Z RESEARCH Inc.
+Primary maintenance of FreeIPMI is managed by Albert Chu at Lawrence
+Livermore National Laboratory (LLNL).  Developers from Zresearch
+continue to aid in development of new features for FreeIPMI.  
 
-(Z RESEARCH Inc. was founded by former members for California Digital Corp.)
+(Note: Z RESEARCH Inc. was founded by former members for California Digital Corp.)
 
 @node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, Who maintains FreeIPMI?, Top
 @section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
