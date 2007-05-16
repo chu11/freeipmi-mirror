@@ -59,7 +59,12 @@
           fprintf (stderr, "Key '%s' not found\n", __key);	        \
 	  return (-1);							\
 	}								\
-      __value = strdupa (local_value_string);				\
+      if (!(__value = strdupa (local_value_string)))                    \
+        {                                                               \
+          free (local_value_string);					\
+          perror("strdupa");                                            \
+          return (-1);                                                  \
+        }                                                               \
       free (local_value_string);					\
     }									\
   while (0)
@@ -189,13 +194,21 @@ _get_value_string_by_key (const char *cache_record,
       
       if ((line_pos = strchr (buf, '\n')) == NULL)
 	{
-	  line = strdupa (buf);
+	  if (!(line = strdupa (buf)))
+            {
+              perror("strdupa");
+              return -1;
+            }
 	  buf = NULL;
 	}
       else 
 	{
 	  int len = line_pos - buf;
-	  line = strndupa (buf, len);
+	  if (!(line = strndupa (buf, len)))
+            {
+              perror("strdupa");
+              return -1;
+            }
 	  buf += (len + 1);
 	}
       
@@ -204,7 +217,11 @@ _get_value_string_by_key (const char *cache_record,
       
       if (strcasecmp (token, key) == 0)
 	{
-	  *value = strdup (stripwhite (line));
+	  if (!(*value = strdup (stripwhite (line))))
+            {
+              perror("strdup");
+              return -1;
+            }
 	  return 0;
 	}
     }
@@ -235,7 +252,12 @@ _fread_record (FILE *fp, char **cache_record)
 	{
 	  char *lineptr = line;
 	  char *tmp_lineptr = line;
-	  line = strdupa (stripwhite (tmp_lineptr));
+	  if (!(line = strdupa (stripwhite (tmp_lineptr))))
+            {
+              free (lineptr);
+              perror("strdupa");
+              return -1;
+            }
 	  free (lineptr);
 	}
       if (strlen (line) == 0)
@@ -243,7 +265,11 @@ _fread_record (FILE *fp, char **cache_record)
 	  *cache_record = NULL;
 	  if (record)
 	    {
-	      *cache_record = strdup (record);
+	      if (!(*cache_record = strdup (record)))
+                {
+                  perror("strdup");
+                  return -1;
+                }
 	    }
 	  return 0;
 	}
@@ -260,7 +286,11 @@ _fread_record (FILE *fp, char **cache_record)
 	if (record)
 	  {
 	    len = strlen (record) + strlen (line) + 2;
-	    l_record = alloca (len);
+	    if (!(l_record = alloca (len)))
+              {
+                perror("alloca");
+                return -1;
+              }
 	    strcpy (l_record, record);
 	    strcat (l_record, line);
 	    strcat (l_record, "\n");
@@ -269,7 +299,11 @@ _fread_record (FILE *fp, char **cache_record)
 	else 
 	  {
 	    len = strlen (line) + 2;
-	    l_record = alloca (len);
+	    if (!(l_record = alloca (len)))
+              {
+                perror("alloca");
+                return -1;
+              }
 	    strcpy (l_record, line);
 	    strcat (l_record, "\n");
 	    record = l_record;
@@ -734,8 +768,12 @@ get_lan_alert_destination_list (FILE *fp, lan_alert_destination_t **lad_list, in
   if (_get_record_count (fp, &l_count) != 0)
     return (-1);
   
-  l_lad_list = (lan_alert_destination_t *) calloc (l_count, 
-						   sizeof (lan_alert_destination_t));
+  if (!(l_lad_list = (lan_alert_destination_t *) calloc (l_count, 
+                                                         sizeof (lan_alert_destination_t))))
+    {
+      perror("calloc");
+      return -1;
+    }
   
   fseek (fp, 0, SEEK_SET);
   
@@ -985,8 +1023,12 @@ get_alert_policy_table_list (FILE *fp, pef_alert_policy_table_t **apt_list, int 
   if (_get_record_count (fp, &l_count) != 0)
     return (-1);
   
-  l_apt_list = (pef_alert_policy_table_t *) calloc (l_count, 
-						    sizeof (pef_alert_policy_table_t));
+  if (!(l_apt_list = (pef_alert_policy_table_t *) calloc (l_count, 
+                                                          sizeof (pef_alert_policy_table_t))))
+    {
+      perror("calloc");
+      return -1;
+    }
   
   fseek (fp, 0, SEEK_SET);
   
@@ -1515,8 +1557,12 @@ get_event_filter_table_list (FILE *fp, pef_event_filter_table_t **eft_list, int 
   if (_get_record_count (fp, &l_count) != 0)
     return (-1);
   
-  l_eft_list = (pef_event_filter_table_t *) calloc (l_count, 
-						    sizeof (pef_event_filter_table_t));
+  if (!(l_eft_list = (pef_event_filter_table_t *) calloc (l_count, 
+                                                          sizeof (pef_event_filter_table_t))))
+    {
+      perror("calloc");
+      return -1;
+    }
   
   fseek (fp, 0, SEEK_SET);
   
