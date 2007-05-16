@@ -43,6 +43,7 @@ ipmi-pef
 * state_data must be passed around to all functions
 * by default output everything, support --sections or similar options to output less information.
 * doesn't check for out of mem errors
+  - strdup, calloc, and malloc
 * diff
 * fix string to int/ int to string mappings
   - event trigger

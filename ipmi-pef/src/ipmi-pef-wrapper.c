@@ -78,6 +78,95 @@ get_lan_channel_number (struct ipmi_pef_state_data *state_data)
   return channel_number;
 }
 
+int 
+get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, int *number_of_lan_destinations)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+  uint64_t val;
+  int channel_number;
+  
+  assert(state_data);
+  assert(number_of_lan_destinations);
+  
+  if ((channel_number = get_lan_channel_number (state_data)) < 0)
+    goto cleanup; 
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
+  
+  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev, 
+									channel_number, 
+									IPMI_GET_LAN_PARAMETER, 
+									SET_SELECTOR, 
+									BLOCK_SELECTOR, 
+									obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_lan_destinations", &val);
+  *number_of_lan_destinations = val;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return rv;
+}
+
+int 
+get_number_of_alert_policy_entries (struct ipmi_pef_state_data *state_data, int *num_alert_policy_entries)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(state_data);
+  assert(num_alert_policy_entries);
+
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev, 
+										IPMI_GET_PEF_PARAMETER, 
+										SET_SELECTOR, 
+										BLOCK_SELECTOR, 
+										obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_alert_policy_entries", &val);
+  *num_alert_policy_entries = val;
+  rv = 0;
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+int 
+get_number_of_event_filters (struct ipmi_pef_state_data *state_data, int *num_event_filters)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(state_data);
+  assert(num_event_filters);
+
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev, 
+									 IPMI_GET_PEF_PARAMETER, 
+									 SET_SELECTOR, 
+									 BLOCK_SELECTOR, 
+									 obj_cmd_rs) != 0)
+    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_event_filters", &val);
+  *num_event_filters = val;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
 
 static int 
 _get_value_string_by_key (const char *cache_record, 
@@ -121,626 +210,6 @@ _get_value_string_by_key (const char *cache_record,
     }
   
   return -1;
-}
-
-static int 
-_record_string_to_evt (const char *record_string, 
-		       pef_event_filter_table_t *evt)
-{
-  int int_value = 0;
-  
-  char *value_string = NULL;
-  
-  assert(record_string);
-  assert(evt);
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  FILTER_NUMBER_KEY_STRING, 
-				  value_string);
-  if (string_to_filter_number (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       FILTER_NUMBER_KEY_STRING);
-      return -1;
-    }
-  evt->filter_number = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  FILTER_TYPE_KEY_STRING, 
-				  value_string);
-  if (string_to_filter_type (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       FILTER_TYPE_KEY_STRING);
-      return -1;
-    }
-  evt->filter_type = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  ENABLE_FILTER_KEY_STRING, 
-				  value_string);
-  if (string_to_enable_filter (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       ENABLE_FILTER_KEY_STRING);
-      return -1;
-    }
-  evt->enable_filter = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
-				  value_string);
-  if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_FILTER_ACTION_ALERT_KEY_STRING);
-      return -1;
-    }
-  evt->event_filter_action_alert = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
-				  value_string);
-  if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING);
-      return -1;
-    }
-  evt->event_filter_action_power_off = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_FILTER_ACTION_RESET_KEY_STRING, 
-				  value_string);
-  if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_FILTER_ACTION_RESET_KEY_STRING);
-      return -1;
-    }
-  evt->event_filter_action_reset = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
-				  value_string);
-  if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING);
-      return -1;
-    }
-  evt->event_filter_action_power_cycle = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_FILTER_ACTION_OEM_KEY_STRING, 
-				  value_string);
-  if (string_to_event_filter_action_oem (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_FILTER_ACTION_OEM_KEY_STRING);
-      return -1;
-    }
-  evt->event_filter_action_oem = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
-				  value_string);
-  if (string_to_event_filter_action_diagnostic_interrupt (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING);
-      return -1;
-    }
-  evt->event_filter_action_diagnostic_interrupt = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
-				  value_string);
-  if (string_to_event_filter_action_group_control_operation (value_string, 
-							     &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING);
-      return -1;
-    }
-  evt->event_filter_action_group_control_operation = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  ALERT_POLICY_NUMBER_KEY_STRING, 
-				  value_string);
-  if (string_to_alert_policy_number (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       ALERT_POLICY_NUMBER_KEY_STRING);
-      return -1;
-    }
-  evt->alert_policy_number = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  GROUP_CONTROL_SELECTOR_KEY_STRING, 
-				  value_string);
-  if (string_to_group_control_selector (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       GROUP_CONTROL_SELECTOR_KEY_STRING);
-      return -1;
-    }
-  evt->group_control_selector = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_SEVERITY_KEY_STRING, 
-				  value_string);
-  if (string_to_event_severity (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_SEVERITY_KEY_STRING);
-      return -1;
-    }
-  evt->event_severity = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  GENERATOR_ID_BYTE1_KEY_STRING, 
-				  value_string);
-  if (string_to_generator_id_byte1 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       GENERATOR_ID_BYTE1_KEY_STRING);
-      return -1;
-    }
-  evt->generator_id_byte1 = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  GENERATOR_ID_BYTE2_KEY_STRING, 
-				  value_string);
-  if (string_to_generator_id_byte2 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       GENERATOR_ID_BYTE2_KEY_STRING);
-      return -1;
-    }
-  evt->generator_id_byte2 = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  SENSOR_TYPE_KEY_STRING, 
-				  value_string);
-  if (string_to_sensor_type (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       SENSOR_TYPE_KEY_STRING);
-      return -1;
-    }
-  evt->sensor_type = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  SENSOR_NUMBER_KEY_STRING, 
-				  value_string);
-  if (string_to_sensor_number (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       SENSOR_NUMBER_KEY_STRING);
-      return -1;
-    }
-  evt->sensor_number = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_TRIGGER_KEY_STRING, 
-				  value_string);
-  if (string_to_event_trigger (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_TRIGGER_KEY_STRING);
-      return -1;
-    }
-  evt->event_trigger = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data1_offset_mask (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA1_OFFSET_MASK_KEY_STRING);
-      return -1;
-    }
-  evt->event_data1_offset_mask = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA1_AND_MASK_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data1_AND_mask (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA1_AND_MASK_KEY_STRING);
-      return -1;
-    }
-  evt->event_data1_AND_mask = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA1_COMPARE1_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data1_compare1 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA1_COMPARE1_KEY_STRING);
-      return -1;
-    }
-  evt->event_data1_compare1 = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA1_COMPARE2_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data1_compare2 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA1_COMPARE2_KEY_STRING);
-      return -1;
-    }
-  evt->event_data1_compare2 = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA2_AND_MASK_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data2_AND_mask (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA2_AND_MASK_KEY_STRING);
-      return -1;
-    }
-  evt->event_data2_AND_mask = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA2_COMPARE1_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data2_compare1 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA2_COMPARE1_KEY_STRING);
-      return -1;
-    }
-  evt->event_data2_compare1 = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA2_COMPARE2_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data2_compare2 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA2_COMPARE2_KEY_STRING);
-      return -1;
-    }
-  evt->event_data2_compare2 = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA3_AND_MASK_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data3_AND_mask (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA3_AND_MASK_KEY_STRING);
-      return -1;
-    }
-  evt->event_data3_AND_mask = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA3_COMPARE1_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data3_compare1 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA3_COMPARE1_KEY_STRING);
-      return -1;
-    }
-  evt->event_data3_compare1 = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  EVENT_DATA3_COMPARE2_KEY_STRING, 
-				  value_string);
-  if (string_to_event_data3_compare2 (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       EVENT_DATA3_COMPARE2_KEY_STRING);
-      return -1;
-    }
-  evt->event_data3_compare2 = int_value;
-  
-  return 0;
-}
-
-static int 
-_record_string_to_apt (const char *record_string, 
-		       pef_alert_policy_table_t *apt)
-{
-  int int_value = 0;
-  
-  char *value_string = NULL;
-  
-  assert(record_string);
-  assert(apt);
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_ALERT_POLICY_NUMBER_KEY_STRING, 
-				  value_string);
-  if (string_to_alert_policy_number (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_ALERT_POLICY_NUMBER_KEY_STRING);
-      return -1;
-    }
-  apt->alert_policy_number = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_POLICY_TYPE_KEY_STRING, 
-				  value_string);
-  if (string_to_policy_type (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_POLICY_TYPE_KEY_STRING);
-      return -1;
-    }
-  apt->policy_type = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_POLICY_ENABLED_KEY_STRING, 
-				  value_string);
-  if (string_to_policy_enabled (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_POLICY_ENABLED_KEY_STRING);
-      return -1;
-    }
-  apt->policy_enabled = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_POLICY_NUMBER_KEY_STRING, 
-				  value_string);
-  if (string_to_policy_number (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_POLICY_NUMBER_KEY_STRING);
-      return -1;
-    }
-  apt->policy_number = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_DESTINATION_SELECTOR_KEY_STRING, 
-				  value_string);
-  if (string_to_destination_selector (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_DESTINATION_SELECTOR_KEY_STRING);
-      return -1;
-    }
-  apt->destination_selector = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_CHANNEL_NUMBER_KEY_STRING, 
-				  value_string);
-  if (string_to_channel_number (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_CHANNEL_NUMBER_KEY_STRING);
-      return -1;
-    }
-  apt->channel_number = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
-				  value_string);
-  if (string_to_alert_string_set_selector (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_ALERT_STRING_SET_SELECTOR_KEY_STRING);
-      return -1;
-    }
-  apt->alert_string_set_selector = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
-				  value_string);
-  if (string_to_event_specific_alert_string_lookup (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING);
-      return -1;
-    }
-  apt->event_specific_alert_string_lookup = int_value;
-  
-  return 0;
-}
-
-static int 
-_record_string_to_lad (const char *record_string, 
-		       lan_alert_destination_t *lad)
-{
-  int int_value = 0;
-  
-  char *value_string = NULL;
-  
-  assert(record_string);
-  assert(lad);
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
-				  value_string);
-  if (string_to_destination_selector (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING);
-      return -1;
-    }
-  lad->destination_selector = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
-				  value_string);
-  if (string_to_destination_type (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_DESTINATION_TYPE_KEY_STRING);
-      return -1;
-    }
-  lad->destination_type = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
-				  value_string);
-  if (string_to_alert_acknowledge (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_ACKNOWLEDGE_KEY_STRING);
-      return -1;
-    }
-  lad->alert_acknowledge = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
-				  value_string);
-  if (string_to_alert_acknowledge_timeout (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING);
-      return -1;
-    }
-  lad->alert_acknowledge_timeout = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  LAD_ALERT_RETRIES_KEY_STRING, 
-				  value_string);
-  if (string_to_alert_retries (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_RETRIES_KEY_STRING);
-      return -1;
-    }
-  lad->alert_retries = int_value;
-  
-  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  LAD_ALERT_GATEWAY_KEY_STRING, 
-				  value_string);
-  if (string_to_gateway_selector (value_string, &int_value) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_GATEWAY_KEY_STRING);
-      return -1;
-    }
-  lad->gateway_selector = int_value;
-  
-  {
-    char *str = NULL;
-    GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				    LAD_ALERT_IP_ADDRESS_KEY_STRING, 
-				    value_string);
-    if (string_to_alert_ip_address (value_string, &str) != 0)
-      {
-	fprintf (stderr, 
-		 "Invalid value %s for %s\n", 
-		 value_string, 
-		 LAD_ALERT_IP_ADDRESS_KEY_STRING);
-	return -1;
-      }
-    strncpy (lad->alert_ip_address, str, 15);
-    free (str);
-    
-    GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				    LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
-				    value_string);
-    if (string_to_alert_mac_address (value_string, &str) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_MAC_ADDRESS_KEY_STRING);
-      return -1;
-    }
-    strncpy (lad->alert_mac_address, str, 17);
-    free (str);
-  }
-  
-  return 0;
 }
 
 static int 
@@ -916,347 +385,6 @@ get_pef_info (struct ipmi_pef_state_data *state_data, pef_info_t *pef_info)
   return (rv);
 }
 
-int 
-get_event_filter_table (struct ipmi_pef_state_data *state_data, int filter, pef_event_filter_table_t *evt)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  int rv = -1;
-  
-  assert(state_data);
-  assert(evt);
-  
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs);
-  
-  if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->dev,
-								    IPMI_GET_PEF_PARAMETER,
-								    filter,
-								    BLOCK_SELECTOR,
-								    obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "filter_number", &val);
-  evt->filter_number = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "filter_configuration.type", &val);
-  evt->filter_type = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "filter_configuration.filter", &val);
-  evt->enable_filter = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.alert", &val);
-  evt->event_filter_action_alert = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.power_off", &val);
-  evt->event_filter_action_power_off = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.reset", &val);
-  evt->event_filter_action_reset = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.power_cycle", &val);
-  evt->event_filter_action_power_cycle = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.oem", &val);
-  evt->event_filter_action_oem = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.diagnostic_interrupt", &val);
-  evt->event_filter_action_diagnostic_interrupt = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.group_control_operation", &val);
-  evt->event_filter_action_group_control_operation = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_policy_number.policy_number", &val);
-  evt->alert_policy_number = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_policy_number.group_control_selector", &val);
-  evt->group_control_selector = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_severity", &val);
-  evt->event_severity = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "generator_id_byte1", &val);
-  evt->generator_id_byte1 = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "generator_id_byte2", &val);
-  evt->generator_id_byte2 = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sensor_type", &val);
-  evt->sensor_type = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sensor_number", &val);
-  evt->sensor_number = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_trigger", &val);
-  evt->event_trigger = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_offset_mask", &val);
-  evt->event_data1_offset_mask = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_AND_mask", &val);
-  evt->event_data1_AND_mask = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_compare1", &val);
-  evt->event_data1_compare1 = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_compare2", &val);
-  evt->event_data1_compare2 = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data2_AND_mask", &val);
-  evt->event_data2_AND_mask = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data2_compare1", &val);
-  evt->event_data2_compare1 = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data2_compare2", &val);
-  evt->event_data2_compare2 = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data3_AND_mask", &val);
-  evt->event_data3_AND_mask = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data3_compare1", &val);
-  evt->event_data3_compare1 = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data3_compare2", &val);
-  evt->event_data3_compare2 = val;
-  
-  rv = 0;
-  
- cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
-  return (rv);
-}
-
-int 
-set_event_filter_table (struct ipmi_pef_state_data *state_data, pef_event_filter_table_t *evt)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
-  
-  assert(state_data);
-  assert(evt);
-  
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
-  
-  if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (state_data->dev, 
-								    evt->filter_number, 
-								    evt->filter_type, 
-								    evt->enable_filter, 
-								    evt->event_filter_action_alert, 
-								    evt->event_filter_action_power_off, 
-								    evt->event_filter_action_reset, 
-								    evt->event_filter_action_power_cycle, 
-								    evt->event_filter_action_oem, 
-								    evt->event_filter_action_diagnostic_interrupt, 
-								    evt->event_filter_action_group_control_operation, 
-								    evt->alert_policy_number, 
-								    evt->group_control_selector, 
-								    evt->event_severity, 
-								    evt->generator_id_byte1, 
-								    evt->generator_id_byte2, 
-								    evt->sensor_type, 
-								    evt->sensor_number, 
-								    evt->event_trigger, 
-								    evt->event_data1_offset_mask, 
-								    evt->event_data1_AND_mask, 
-								    evt->event_data1_compare1, 
-								    evt->event_data1_compare2, 
-								    evt->event_data2_AND_mask, 
-								    evt->event_data2_compare1, 
-								    evt->event_data2_compare2, 
-								    evt->event_data3_AND_mask, 
-								    evt->event_data3_compare1, 
-								    evt->event_data3_compare2, 
-								    obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  rv = 0;
-  
- cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
-  return (rv);
-}
-
-int 
-get_number_of_event_filters (struct ipmi_pef_state_data *state_data, int *num_event_filters)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  int rv = -1;
-  
-  assert(state_data);
-  assert(num_event_filters);
-
-  FIID_OBJ_CREATE (obj_cmd_rs, 
-		   tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
-  if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev, 
-									 IPMI_GET_PEF_PARAMETER, 
-									 SET_SELECTOR, 
-									 BLOCK_SELECTOR, 
-									 obj_cmd_rs) != 0)
-    goto cleanup;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_event_filters", &val);
-  *num_event_filters = val;
-  
-  rv = 0;
-  
- cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
-  return (rv);
-}
-
-int 
-get_evt_list (FILE *fp, pef_event_filter_table_t **evt_list, int *count)
-{
-  pef_event_filter_table_t *l_evt_list = NULL;
-  int l_count;
-  char *record = NULL;
-  int i;
-  int rv;
-  
-  assert(fp);
-  assert(evt_list);
-  assert(count);
-
-  if (_get_record_count (fp, &l_count) != 0)
-    return (-1);
-  
-  l_evt_list = (pef_event_filter_table_t *) calloc (l_count, 
-						    sizeof (pef_event_filter_table_t));
-  
-  fseek (fp, 0, SEEK_SET);
-  
-  for (i = 0; i < l_count; i++)
-    {
-      _fread_record (fp, &record);
-      rv = _record_string_to_evt (record, &l_evt_list[i]);
-      free (record);
-      if (rv != 0)
-	{
-	  free (l_evt_list);
-	  return (-1);
-	}
-    }
-  
-  *evt_list = l_evt_list;
-  *count = l_count;
-  
-  return 0;
-}
-
-int 
-get_number_of_alert_policy_entries (struct ipmi_pef_state_data *state_data, int *num_alert_policy_entries)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  int rv = -1;
-  
-  assert(state_data);
-  assert(num_alert_policy_entries);
-
-  FIID_OBJ_CREATE (obj_cmd_rs, 
-		   tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
-  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev, 
-										IPMI_GET_PEF_PARAMETER, 
-										SET_SELECTOR, 
-										BLOCK_SELECTOR, 
-										obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_alert_policy_entries", &val);
-  *num_alert_policy_entries = val;
-  rv = 0;
- cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
-  return (rv);
-}
-
-int 
-get_alert_policy_table (struct ipmi_pef_state_data *state_data, 
-			int policy_number, 
-			pef_alert_policy_table_t *apt)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  int rv = -1;
-  
-  assert(state_data);
-  assert(apt);
-  
-  FIID_OBJ_CREATE (obj_cmd_rs, 
-		   tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs);
-  
-  if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->dev, 
-								    IPMI_GET_PEF_PARAMETER,
-								    policy_number, 
-								    BLOCK_SELECTOR, 
-								    obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_policy_entry_number", &val);
-  apt->alert_policy_number = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.policy_type", &val);
-  apt->policy_type = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.enabled", &val);
-  apt->policy_enabled = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.policy_number", &val);
-  apt->policy_number = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "channel_destination.destination_selector", &val);
-  apt->destination_selector = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "channel_destination.channel_number", &val);
-  apt->channel_number = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
-  apt->alert_string_set_selector = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.event_specific_alert_string_lookup", &val);
-  apt->event_specific_alert_string_lookup = val;
-  
-  rv = 0;
-  
- cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
-  return (rv);
-}
-
-int 
-get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count)
-{
-  pef_alert_policy_table_t *l_apt_list = NULL;
-  int l_count;
-  char *record = NULL;
-  int i;
-  int rv;
-  
-  assert(fp);
-  assert(apt_list);
-  assert(count);
-  
-  if (_get_record_count (fp, &l_count) != 0)
-    return (-1);
-  
-  l_apt_list = (pef_alert_policy_table_t *) calloc (l_count, 
-						    sizeof (pef_alert_policy_table_t));
-  
-  fseek (fp, 0, SEEK_SET);
-  
-  for (i = 0; i < l_count; i++)
-    {
-      _fread_record (fp, &record);
-      rv = _record_string_to_apt (record, &l_apt_list[i]);
-      free (record);
-      if (rv != 0)
-	{
-	  free (l_apt_list);
-	  return (-1);
-	}
-    }
-  
-  *apt_list = l_apt_list;
-  *count = l_count;
-  
-  return 0;
-}
-
-int 
-set_alert_policy_table (struct ipmi_pef_state_data *state_data, pef_alert_policy_table_t *apt)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
-  
-  assert(state_data);
-  assert(apt);
-  
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
-  if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->dev, 
-								    apt->alert_policy_number, 
-								    apt->policy_type, 
-								    apt->policy_enabled, 
-								    apt->policy_number, 
-								    apt->destination_selector, 
-								    apt->channel_number, 
-								    apt->alert_string_set_selector, 
-								    apt->event_specific_alert_string_lookup, 
-								    obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  rv = 0;
-  
- cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
-  return (rv);
-}
-
 int
 get_bmc_community_string (struct ipmi_pef_state_data *state_data,
 			  uint8_t *community_string, 
@@ -1375,43 +503,6 @@ set_bmc_community_string (struct ipmi_pef_state_data *state_data,
   return (rv); 
 } 
 
-/********************************************************************************/
-
-int 
-get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, int *number_of_lan_destinations)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  int rv = -1;
-  uint64_t val;
-  int channel_number;
-  
-  assert(state_data);
-  assert(number_of_lan_destinations);
-  
-  if ((channel_number = get_lan_channel_number (state_data)) < 0)
-    goto cleanup; 
-  
-  FIID_OBJ_CREATE (obj_cmd_rs, 
-		   tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
-  
-  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev, 
-									channel_number, 
-									IPMI_GET_LAN_PARAMETER, 
-									SET_SELECTOR, 
-									BLOCK_SELECTOR, 
-									obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_lan_destinations", &val);
-  *number_of_lan_destinations = val;
-  
-  rv = 0;
-  
- cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
-  return rv;
-}
-
 int 
 get_lan_alert_destination (struct ipmi_pef_state_data *state_data, 
 			   int destination_selector, 
@@ -1504,8 +595,131 @@ get_lan_alert_destination (struct ipmi_pef_state_data *state_data,
   return (rv);
 }
 
+static int 
+_record_string_to_lan_alert_destination (const char *record_string, 
+                                         lan_alert_destination_t *lad)
+{
+  int int_value = 0;
+  
+  char *value_string = NULL;
+  
+  assert(record_string);
+  assert(lad);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_destination_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING);
+      return -1;
+    }
+  lad->destination_selector = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_destination_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_DESTINATION_TYPE_KEY_STRING);
+      return -1;
+    }
+  lad->destination_type = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_acknowledge (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_ACKNOWLEDGE_KEY_STRING);
+      return -1;
+    }
+  lad->alert_acknowledge = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_acknowledge_timeout (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING);
+      return -1;
+    }
+  lad->alert_acknowledge_timeout = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_RETRIES_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_retries (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_RETRIES_KEY_STRING);
+      return -1;
+    }
+  lad->alert_retries = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  LAD_ALERT_GATEWAY_KEY_STRING, 
+				  value_string);
+  if (string_to_gateway_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_GATEWAY_KEY_STRING);
+      return -1;
+    }
+  lad->gateway_selector = int_value;
+  
+  {
+    char *str = NULL;
+    GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				    LAD_ALERT_IP_ADDRESS_KEY_STRING, 
+				    value_string);
+    if (string_to_alert_ip_address (value_string, &str) != 0)
+      {
+	fprintf (stderr, 
+		 "Invalid value %s for %s\n", 
+		 value_string, 
+		 LAD_ALERT_IP_ADDRESS_KEY_STRING);
+	return -1;
+      }
+    strncpy (lad->alert_ip_address, str, 15);
+    free (str);
+    
+    GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				    LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
+				    value_string);
+    if (string_to_alert_mac_address (value_string, &str) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       LAD_ALERT_MAC_ADDRESS_KEY_STRING);
+      return -1;
+    }
+    strncpy (lad->alert_mac_address, str, 17);
+    free (str);
+  }
+  
+  return 0;
+}
+
 int 
-get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count)
+get_lan_alert_destination_list (FILE *fp, lan_alert_destination_t **lad_list, int *count)
 {
   lan_alert_destination_t *l_lad_list = NULL;
   int l_count;
@@ -1528,7 +742,7 @@ get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count)
   for (i = 0; i < l_count; i++)
     {
       _fread_record (fp, &record);
-      rv = _record_string_to_lad (record, &l_lad_list[i]);
+      rv = _record_string_to_lan_alert_destination (record, &l_lad_list[i]);
       free (record);
       if (rv != 0)
 	{
@@ -1590,3 +804,789 @@ set_lan_alert_destination (struct ipmi_pef_state_data *state_data, lan_alert_des
   FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
   return (rv);
 }
+
+int 
+get_alert_policy_table (struct ipmi_pef_state_data *state_data, 
+			int policy_number, 
+			pef_alert_policy_table_t *apt)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(state_data);
+  assert(apt);
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, 
+		   tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs);
+  
+  if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->dev, 
+								    IPMI_GET_PEF_PARAMETER,
+								    policy_number, 
+								    BLOCK_SELECTOR, 
+								    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_policy_entry_number", &val);
+  apt->alert_policy_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.policy_type", &val);
+  apt->policy_type = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.enabled", &val);
+  apt->policy_enabled = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "policy_number.policy_number", &val);
+  apt->policy_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "channel_destination.destination_selector", &val);
+  apt->destination_selector = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "channel_destination.channel_number", &val);
+  apt->channel_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
+  apt->alert_string_set_selector = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.event_specific_alert_string_lookup", &val);
+  apt->event_specific_alert_string_lookup = val;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+static int 
+_record_string_to_alert_policy_table (const char *record_string, 
+                                      pef_alert_policy_table_t *apt)
+{
+  int int_value = 0;
+  
+  char *value_string = NULL;
+  
+  assert(record_string);
+  assert(apt);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_ALERT_POLICY_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_policy_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_ALERT_POLICY_NUMBER_KEY_STRING);
+      return -1;
+    }
+  apt->alert_policy_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_POLICY_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_policy_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_POLICY_TYPE_KEY_STRING);
+      return -1;
+    }
+  apt->policy_type = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_POLICY_ENABLED_KEY_STRING, 
+				  value_string);
+  if (string_to_policy_enabled (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_POLICY_ENABLED_KEY_STRING);
+      return -1;
+    }
+  apt->policy_enabled = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_POLICY_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_policy_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_POLICY_NUMBER_KEY_STRING);
+      return -1;
+    }
+  apt->policy_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_DESTINATION_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_destination_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_DESTINATION_SELECTOR_KEY_STRING);
+      return -1;
+    }
+  apt->destination_selector = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_CHANNEL_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_channel_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_CHANNEL_NUMBER_KEY_STRING);
+      return -1;
+    }
+  apt->channel_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_string_set_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_ALERT_STRING_SET_SELECTOR_KEY_STRING);
+      return -1;
+    }
+  apt->alert_string_set_selector = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
+				  value_string);
+  if (string_to_event_specific_alert_string_lookup (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING);
+      return -1;
+    }
+  apt->event_specific_alert_string_lookup = int_value;
+  
+  return 0;
+}
+
+int 
+get_alert_policy_table_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count)
+{
+  pef_alert_policy_table_t *l_apt_list = NULL;
+  int l_count;
+  char *record = NULL;
+  int i;
+  int rv;
+  
+  assert(fp);
+  assert(apt_list);
+  assert(count);
+  
+  if (_get_record_count (fp, &l_count) != 0)
+    return (-1);
+  
+  l_apt_list = (pef_alert_policy_table_t *) calloc (l_count, 
+						    sizeof (pef_alert_policy_table_t));
+  
+  fseek (fp, 0, SEEK_SET);
+  
+  for (i = 0; i < l_count; i++)
+    {
+      _fread_record (fp, &record);
+      rv = _record_string_to_alert_policy_table (record, &l_apt_list[i]);
+      free (record);
+      if (rv != 0)
+	{
+	  free (l_apt_list);
+	  return (-1);
+	}
+    }
+  
+  *apt_list = l_apt_list;
+  *count = l_count;
+  
+  return 0;
+}
+
+int 
+set_alert_policy_table (struct ipmi_pef_state_data *state_data, pef_alert_policy_table_t *apt)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+  
+  assert(state_data);
+  assert(apt);
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->dev, 
+								    apt->alert_policy_number, 
+								    apt->policy_type, 
+								    apt->policy_enabled, 
+								    apt->policy_number, 
+								    apt->destination_selector, 
+								    apt->channel_number, 
+								    apt->alert_string_set_selector, 
+								    apt->event_specific_alert_string_lookup, 
+								    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+int 
+get_event_filter_table (struct ipmi_pef_state_data *state_data, int filter, pef_event_filter_table_t *eft)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+  
+  assert(state_data);
+  assert(eft);
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs);
+  
+  if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->dev,
+								    IPMI_GET_PEF_PARAMETER,
+								    filter,
+								    BLOCK_SELECTOR,
+								    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "filter_number", &val);
+  eft->filter_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "filter_configuration.type", &val);
+  eft->filter_type = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "filter_configuration.filter", &val);
+  eft->enable_filter = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.alert", &val);
+  eft->event_filter_action_alert = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.power_off", &val);
+  eft->event_filter_action_power_off = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.reset", &val);
+  eft->event_filter_action_reset = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.power_cycle", &val);
+  eft->event_filter_action_power_cycle = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.oem", &val);
+  eft->event_filter_action_oem = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.diagnostic_interrupt", &val);
+  eft->event_filter_action_diagnostic_interrupt = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_filter_action.group_control_operation", &val);
+  eft->event_filter_action_group_control_operation = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_policy_number.policy_number", &val);
+  eft->alert_policy_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_policy_number.group_control_selector", &val);
+  eft->group_control_selector = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_severity", &val);
+  eft->event_severity = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "generator_id_byte1", &val);
+  eft->generator_id_byte1 = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "generator_id_byte2", &val);
+  eft->generator_id_byte2 = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sensor_type", &val);
+  eft->sensor_type = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sensor_number", &val);
+  eft->sensor_number = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_trigger", &val);
+  eft->event_trigger = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_offset_mask", &val);
+  eft->event_data1_offset_mask = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_AND_mask", &val);
+  eft->event_data1_AND_mask = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_compare1", &val);
+  eft->event_data1_compare1 = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data1_compare2", &val);
+  eft->event_data1_compare2 = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data2_AND_mask", &val);
+  eft->event_data2_AND_mask = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data2_compare1", &val);
+  eft->event_data2_compare1 = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data2_compare2", &val);
+  eft->event_data2_compare2 = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data3_AND_mask", &val);
+  eft->event_data3_AND_mask = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data3_compare1", &val);
+  eft->event_data3_compare1 = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "event_data3_compare2", &val);
+  eft->event_data3_compare2 = val;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+static int 
+_record_string_to_event_filter_table (const char *record_string, 
+                                      pef_event_filter_table_t *eft)
+{
+  int int_value = 0;
+  
+  char *value_string = NULL;
+  
+  assert(record_string);
+  assert(eft);
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  FILTER_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_filter_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       FILTER_NUMBER_KEY_STRING);
+      return -1;
+    }
+  eft->filter_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  FILTER_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_filter_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       FILTER_TYPE_KEY_STRING);
+      return -1;
+    }
+  eft->filter_type = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  ENABLE_FILTER_KEY_STRING, 
+				  value_string);
+  if (string_to_enable_filter (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       ENABLE_FILTER_KEY_STRING);
+      return -1;
+    }
+  eft->enable_filter = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_ALERT_KEY_STRING);
+      return -1;
+    }
+  eft->event_filter_action_alert = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING);
+      return -1;
+    }
+  eft->event_filter_action_power_off = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_RESET_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_RESET_KEY_STRING);
+      return -1;
+    }
+  eft->event_filter_action_reset = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING);
+      return -1;
+    }
+  eft->event_filter_action_power_cycle = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_OEM_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_oem (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_OEM_KEY_STRING);
+      return -1;
+    }
+  eft->event_filter_action_oem = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_diagnostic_interrupt (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING);
+      return -1;
+    }
+  eft->event_filter_action_diagnostic_interrupt = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
+				  value_string);
+  if (string_to_event_filter_action_group_control_operation (value_string, 
+							     &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING);
+      return -1;
+    }
+  eft->event_filter_action_group_control_operation = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  ALERT_POLICY_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_alert_policy_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       ALERT_POLICY_NUMBER_KEY_STRING);
+      return -1;
+    }
+  eft->alert_policy_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  GROUP_CONTROL_SELECTOR_KEY_STRING, 
+				  value_string);
+  if (string_to_group_control_selector (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       GROUP_CONTROL_SELECTOR_KEY_STRING);
+      return -1;
+    }
+  eft->group_control_selector = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_SEVERITY_KEY_STRING, 
+				  value_string);
+  if (string_to_event_severity (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_SEVERITY_KEY_STRING);
+      return -1;
+    }
+  eft->event_severity = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  GENERATOR_ID_BYTE1_KEY_STRING, 
+				  value_string);
+  if (string_to_generator_id_byte1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       GENERATOR_ID_BYTE1_KEY_STRING);
+      return -1;
+    }
+  eft->generator_id_byte1 = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  GENERATOR_ID_BYTE2_KEY_STRING, 
+				  value_string);
+  if (string_to_generator_id_byte2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       GENERATOR_ID_BYTE2_KEY_STRING);
+      return -1;
+    }
+  eft->generator_id_byte2 = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  SENSOR_TYPE_KEY_STRING, 
+				  value_string);
+  if (string_to_sensor_type (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       SENSOR_TYPE_KEY_STRING);
+      return -1;
+    }
+  eft->sensor_type = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  SENSOR_NUMBER_KEY_STRING, 
+				  value_string);
+  if (string_to_sensor_number (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       SENSOR_NUMBER_KEY_STRING);
+      return -1;
+    }
+  eft->sensor_number = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_TRIGGER_KEY_STRING, 
+				  value_string);
+  if (string_to_event_trigger (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_TRIGGER_KEY_STRING);
+      return -1;
+    }
+  eft->event_trigger = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_offset_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_OFFSET_MASK_KEY_STRING);
+      return -1;
+    }
+  eft->event_data1_offset_mask = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_AND_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_AND_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_AND_MASK_KEY_STRING);
+      return -1;
+    }
+  eft->event_data1_AND_mask = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_COMPARE1_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_compare1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_COMPARE1_KEY_STRING);
+      return -1;
+    }
+  eft->event_data1_compare1 = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA1_COMPARE2_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data1_compare2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA1_COMPARE2_KEY_STRING);
+      return -1;
+    }
+  eft->event_data1_compare2 = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA2_AND_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data2_AND_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA2_AND_MASK_KEY_STRING);
+      return -1;
+    }
+  eft->event_data2_AND_mask = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA2_COMPARE1_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data2_compare1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA2_COMPARE1_KEY_STRING);
+      return -1;
+    }
+  eft->event_data2_compare1 = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA2_COMPARE2_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data2_compare2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA2_COMPARE2_KEY_STRING);
+      return -1;
+    }
+  eft->event_data2_compare2 = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA3_AND_MASK_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data3_AND_mask (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA3_AND_MASK_KEY_STRING);
+      return -1;
+    }
+  eft->event_data3_AND_mask = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA3_COMPARE1_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data3_compare1 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA3_COMPARE1_KEY_STRING);
+      return -1;
+    }
+  eft->event_data3_compare1 = int_value;
+  
+  GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
+				  EVENT_DATA3_COMPARE2_KEY_STRING, 
+				  value_string);
+  if (string_to_event_data3_compare2 (value_string, &int_value) != 0)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       EVENT_DATA3_COMPARE2_KEY_STRING);
+      return -1;
+    }
+  eft->event_data3_compare2 = int_value;
+  
+  return 0;
+}
+
+int 
+get_event_filter_table_list (FILE *fp, pef_event_filter_table_t **eft_list, int *count)
+{
+  pef_event_filter_table_t *l_eft_list = NULL;
+  int l_count;
+  char *record = NULL;
+  int i;
+  int rv;
+  
+  assert(fp);
+  assert(eft_list);
+  assert(count);
+
+  if (_get_record_count (fp, &l_count) != 0)
+    return (-1);
+  
+  l_eft_list = (pef_event_filter_table_t *) calloc (l_count, 
+						    sizeof (pef_event_filter_table_t));
+  
+  fseek (fp, 0, SEEK_SET);
+  
+  for (i = 0; i < l_count; i++)
+    {
+      _fread_record (fp, &record);
+      rv = _record_string_to_event_filter_table (record, &l_eft_list[i]);
+      free (record);
+      if (rv != 0)
+	{
+	  free (l_eft_list);
+	  return (-1);
+	}
+    }
+  
+  *eft_list = l_eft_list;
+  *count = l_count;
+  
+  return 0;
+}
+
+int 
+set_event_filter_table (struct ipmi_pef_state_data *state_data, pef_event_filter_table_t *eft)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int rv = -1;
+  
+  assert(state_data);
+  assert(eft);
+  
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
+  
+  if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (state_data->dev, 
+								    eft->filter_number, 
+								    eft->filter_type, 
+								    eft->enable_filter, 
+								    eft->event_filter_action_alert, 
+								    eft->event_filter_action_power_off, 
+								    eft->event_filter_action_reset, 
+								    eft->event_filter_action_power_cycle, 
+								    eft->event_filter_action_oem, 
+								    eft->event_filter_action_diagnostic_interrupt, 
+								    eft->event_filter_action_group_control_operation, 
+								    eft->alert_policy_number, 
+								    eft->group_control_selector, 
+								    eft->event_severity, 
+								    eft->generator_id_byte1, 
+								    eft->generator_id_byte2, 
+								    eft->sensor_type, 
+								    eft->sensor_number, 
+								    eft->event_trigger, 
+								    eft->event_data1_offset_mask, 
+								    eft->event_data1_AND_mask, 
+								    eft->event_data1_compare1, 
+								    eft->event_data1_compare2, 
+								    eft->event_data2_AND_mask, 
+								    eft->event_data2_compare1, 
+								    eft->event_data2_compare2, 
+								    eft->event_data3_AND_mask, 
+								    eft->event_data3_compare1, 
+								    eft->event_data3_compare2, 
+								    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+  
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+
+

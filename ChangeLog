@@ -2,7 +2,7 @@
 
 	* ipmi-pef/: Fix string parsing bugs in alert policy table.  Fix
 	event trigger output corner case.  Fix build dependency bug.  Add
-	-e option.  Force user to specify section.
+	-e option.  Force user to specify section.  General code cleanup.
 
 	* doc/freeipmi.texi, doc/gpl.texi, doc/version-doc.texi,
 	doc/authors.texi, doc/fdl.texi, THANKS: Removed.
