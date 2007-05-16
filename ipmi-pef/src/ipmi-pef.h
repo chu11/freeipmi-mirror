@@ -21,8 +21,33 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #define _IPMI_PEF_H
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
 
-#include "ipmi-pef-argp.h"
+#include "argp-common.h"
+
+enum argp_option_keys
+  { 
+    INFO_KEY = 'i', 
+    CHECKOUT_KEY = 'o', 
+    COMMIT_KEY = 'c', 
+    ALERT_POLICY_TABLE_KEY = 't', 
+    LAN_ALERT_DESTINATION_KEY = 'd', 
+    COMMUNITY_STRING_KEY = 's'
+  };
+
+struct ipmi_pef_arguments
+{
+  struct common_cmd_args common;
+  int info_wanted;
+  int checkout_wanted;
+  char *checkout_filename;
+  int commit_wanted;
+  char *commit_filename;
+  int alert_policy_table_wanted;
+  int lan_alert_destination_wanted;
+  int community_string_wanted;
+  char *community_string;
+};
 
 typedef struct ipmi_pef_prog_data
 { 

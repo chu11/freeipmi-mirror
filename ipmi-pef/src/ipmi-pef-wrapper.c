@@ -42,6 +42,7 @@
 
 #include "common-utils.h"
 
+#include "ipmi-pef.h"
 #include "ipmi-pef-utils.h"
 #include "ipmi-pef-wrapper.h"
 
@@ -61,6 +62,27 @@
       free (value_string);						\
     }									\
   while (0)
+
+static int8_t lan_channel_number;
+static int lan_channel_number_initialized = 0;
+
+int
+get_lan_channel_number (ipmi_device_t dev, int8_t *channel_num)
+{
+  if (lan_channel_number_initialized)
+    {
+      *channel_num = lan_channel_number;
+      return 0;
+    }
+
+  if ((lan_channel_number = ipmi_get_channel_number (dev,
+						     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+    return -1;
+
+  lan_channel_number_initialized = 1;
+  *channel_num = lan_channel_number;
+  return 0;
+}
 
 
 static int 
@@ -1217,83 +1239,69 @@ set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt)
   return (rv);
 }
 
-/* bmc_err_t  */
-/* get_bmc_community_string (bmc_config_state_data_t *state_data,  */
-/*                           uint8_t *community_string, */
-/*                           uint32_t community_string_len) */
-/* { */
-/*   fiid_obj_t obj_cmd_rs = NULL; */
-/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
-/*   bmc_err_t ret; */
-/*   int8_t channel_number; */
+int
+get_bmc_community_string (ipmi_device_t dev,
+			  uint8_t *community_string, 
+			  uint32_t community_string_len) 
+{ 
+  fiid_obj_t obj_cmd_rs = NULL; 
+  int8_t channel_number; 
+  int rv = -1;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) 
+    goto cleanup; 
+
+  if (get_lan_channel_number (dev, &channel_number) < 0)
+    goto cleanup; 
+ 
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string (dev,  
+								  channel_number,  
+								  IPMI_GET_LAN_PARAMETER,  
+								  SET_SELECTOR,  
+								  BLOCK_SELECTOR,  
+								  obj_cmd_rs) < 0)  
+    goto cleanup; 
   
-/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) */
-/*     goto cleanup; */
-
-/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
-
-/*   if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,  */
-/*                                                                   channel_number,  */
-/*                                                                   IPMI_GET_LAN_PARAMETER,  */
-/*                                                                   SET_SELECTOR,  */
-/*                                                                   BLOCK_SELECTOR,  */
-/*                                                                   obj_cmd_rs) < 0)  */
-/*     { */
-/*       rv = BMC_ERR_NON_FATAL_ERROR; */
-/*       goto cleanup; */
-/*     } */
+  if (fiid_obj_get_data (obj_cmd_rs,  
+			 "community_string",  
+			 community_string, 
+			 community_string_len) < 0) 
+    goto cleanup; 
   
-/*   if (fiid_obj_get_data (obj_cmd_rs,  */
-/*                          "community_string",  */
-/*                          community_string, */
-/*                          community_string_len) < 0) */
-/*     goto cleanup; */
+  rv = 0;
+ cleanup: 
+  if (obj_cmd_rs) 
+    fiid_obj_destroy(obj_cmd_rs); 
+  return (rv); 
+} 
+
+int
+set_bmc_community_string (ipmi_device_t dev,
+			  uint8_t *community_string) 
+{ 
+  fiid_obj_t obj_cmd_rs = NULL; 
+  int8_t channel_number; 
+  int rv = -1;
   
-/*   rv = BMC_ERR_SUCCESS; */
-/*  cleanup: */
-/*   if (obj_cmd_rs) */
-/*     fiid_obj_destroy(obj_cmd_rs); */
-/*   return (rv); */
-/* } */
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) 
+    goto cleanup; 
 
-/* bmc_err_t  */
-/* set_bmc_community_string (bmc_config_state_data_t *state_data,  */
-/*                           uint8_t *community_string) */
-/* { */
-/*   fiid_obj_t obj_cmd_rs = NULL; */
-/*   bmc_err_t rv = BMC_ERR_FATAL_ERROR; */
-/*   bmc_err_t ret; */
-/*   int8_t channel_number; */
-  
-/*   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) */
-/*     goto cleanup; */
+  if (get_lan_channel_number (dev, &channel_number) < 0)
+    goto cleanup; 
 
-/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string (dev,  
+								  channel_number, 
+								  community_string,  
+								  (community_string) ? strlen((char *)community_string) : 0, 
+								  obj_cmd_rs) < 0) 
+    goto cleanup; 
 
-/*   if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,  */
-/*                                                                   channel_number, */
-/*                                                                   community_string,  */
-/*                                                                   (community_string) ? strlen((char *)community_string) : 0, */
-/*                                                                   obj_cmd_rs) < 0) */
-/*     { */
-/*       rv = BMC_ERR_NON_FATAL_ERROR; */
-/*       goto cleanup; */
-/*     } */
-
-/*   rv = BMC_ERR_SUCCESS; */
-/*  cleanup: */
-/*   if (obj_cmd_rs) */
-/*     fiid_obj_destroy(obj_cmd_rs); */
-/*   return (rv); */
-/* } */
+  rv = 0;
+ cleanup: 
+  if (obj_cmd_rs) 
+    fiid_obj_destroy(obj_cmd_rs); 
+  return (rv); 
+} 
 
 /********************************************************************************/
 
@@ -1303,15 +1311,12 @@ get_number_of_lan_destinations (ipmi_device_t dev, int *number_of_lan_destinatio
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   uint64_t val;
-  int channel_number = 7;
+  int8_t channel_number;
   
   ERR_EINVAL (dev && number_of_lan_destinations);
   
-/*   if ((ret = get_lan_channel_number (dev, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
+  if (get_lan_channel_number (dev, &channel_number) < 0)
+    goto cleanup; 
   
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
@@ -1348,11 +1353,8 @@ get_lan_alert_destination (ipmi_device_t dev,
   
   ERR_EINVAL (dev && lad);
   
-/*   if ((ret = get_lan_channel_number (dev, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
+  if (get_lan_channel_number (dev, &channel_number) < 0)
+    goto cleanup; 
   
   lad->destination_selector = destination_selector;
   
@@ -1477,11 +1479,8 @@ set_lan_alert_destination (ipmi_device_t dev, lan_alert_destination_t *lad)
   
   ERR_EINVAL (dev && lad);
   
-/*   if ((ret = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS) */
-/*     { */
-/*       rv = ret; */
-/*       goto cleanup; */
-/*     } */
+  if (get_lan_channel_number (dev, &channel_number) < 0)
+    goto cleanup; 
   
   if (ipmi_ipv4_address_string2int (lad->alert_ip_address, &alert_ip_address_bytes) < 0)
     goto cleanup;

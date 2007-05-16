@@ -793,6 +793,35 @@ commit_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
 }
 
 int 
+checkout_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
+{
+  uint8_t community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
+
+  if (get_bmc_community_string (state_data->dev,
+				community_string,
+				IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
+    {
+      fprintf (stderr, "unable to get community string\n");
+      return -1;
+    }
+  
+  fprintf (fp, 
+	   "## Give valid string\n");
+  fprintf (fp, 
+	   "%-30s %s\n", 
+	   "Community String", 
+	   community_string);
+
+  return 0;
+}
+
+int 
+commit_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
+{
+  return set_bmc_community_string (state_data->dev, (uint8_t *)state_data->prog_data->args->community_string);
+}
+
+int 
 run_cmd_args (ipmi_pef_state_data_t *state_data)
 {
   struct ipmi_pef_arguments *args;
@@ -837,7 +866,7 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	    {
 	      if (args->community_string_wanted)
 		{
-		  //rv = checkout_pef_community_string (state_data, fp);
+		  rv = checkout_pef_community_string (state_data, fp);
 		}
 	      else
 		{
@@ -878,7 +907,7 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	    {
 	      if (args->community_string_wanted)
 		{
-		  //rv = commit_pef_community_string (state_data, fp);
+		  rv = commit_pef_community_string (state_data, fp);
 		}
 	      else
 		{

@@ -1,5 +1,10 @@
 2007-05-15  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pef/: Do initial support of lan channels, community string
+	support.  Fix various bugs.
+	
+2007-05-15  Albert Chu <chu11@llnl.gov>
+
 	* common/doc/argp-common-privlevel-admin.man,
 	common/doc/argp-common-privlevel-user.man: New files.
 
