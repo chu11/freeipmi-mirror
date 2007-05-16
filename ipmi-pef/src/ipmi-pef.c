@@ -850,20 +850,24 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
   
   if (args->checkout_wanted)
     {
-      FILE *fp = stdout;
-      
-      if (args->checkout_filename)
+      FILE *fp = NULL;
+      int file_opened = 0;
+
+      if (args->filename && strcmp (args->filename, "-"))
 	{
-	  fp = fopen (args->checkout_filename, "w");
+	  fp = fopen (args->filename, "w");
 	  if (fp == NULL)
 	    {
               fprintf (stderr, "Unable to open file [%s] for writing: %s\n", 
-                       args->checkout_filename,
+                       args->filename,
                        strerror(errno));
               rv = -1;
               return rv;
 	    }
+          file_opened++;
 	}
+      else
+        fp = stdout;
       
       if (args->alert_policy_table_wanted)
 	{
@@ -888,7 +892,7 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	    }
 	}
       
-      if (fp != stdout)
+      if (file_opened)
 	fclose (fp);
       
       return rv;
@@ -897,15 +901,22 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
   if (args->commit_wanted)
     {
       FILE *fp = NULL;
-      
-      if ((fp = fopen (args->commit_filename, "r")) == NULL)
-	{
-	  fprintf (stderr, "Unable to open file [%s] for reading: %s\n", 
-		   args->commit_filename,
-                   strerror(errno));
-	  rv = -1;
-	  return rv;
-	}
+      int file_opened = 0;
+
+      if (args->filename && strcmp (args->filename, "-"))
+        {
+          if ((fp = fopen (args->filename, "r")) == NULL)
+            {
+              fprintf (stderr, "Unable to open file [%s] for reading: %s\n", 
+                       args->filename,
+                       strerror(errno));
+              rv = -1;
+              return rv;
+            }
+          file_opened++;
+        }
+      else
+        fp = stdin;
       
       if (args->alert_policy_table_wanted)
 	{
@@ -930,7 +941,8 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	    }
 	}
       
-      fclose (fp);
+      if (file_opened)
+        fclose (fp);
       return rv;
     }
   

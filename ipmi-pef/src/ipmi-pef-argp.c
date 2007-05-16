@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.8 2007-05-16 03:56:28 chu11 Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.9 2007-05-16 04:29:25 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -64,9 +64,9 @@ static struct argp_option options[] =
 #endif /* NDEBUG */
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about PEF.", 18},
-    {"checkout",   CHECKOUT_KEY,   "FILE", OPTION_ARG_OPTIONAL,
+    {"checkout",   CHECKOUT_KEY,   0, 0,
      "Action is to GET the PEF event filter tables", 19},
-    {"commit",     COMMIT_KEY,     "FILE", 0,
+    {"commit",     COMMIT_KEY,     0, 0,
      "Action is to UPDATE the PEF event filter tables", 20},
     {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
      "Do checkout/commit of Alert Policy Table.", 21},
@@ -75,6 +75,9 @@ static struct argp_option options[] =
     {"community-string", COMMUNITY_STRING_KEY, "STRING", OPTION_ARG_OPTIONAL, 
      "Do checkout/commit of Community String", 23},
     {"verbose", VERBOSE_KEY, 0, 0,  "Produce verbose output", 24},
+    /* XXX: and diff */
+    {"filename", FILENAME_KEY, "FILENAME", 0,
+     "use FILENAME in checkout or commit", 25},
     { 0 }
   };
 
@@ -92,12 +95,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case CHECKOUT_KEY:
       cmd_args->checkout_wanted = 1;
-      if (arg)
-	cmd_args->checkout_filename = strdup (arg);
       break;
     case COMMIT_KEY:
       cmd_args->commit_wanted = 1;
-      cmd_args->commit_filename = strdup (arg);
       break;
     case ALERT_POLICY_TABLE_KEY:
       cmd_args->alert_policy_table_wanted = 1;
@@ -112,6 +112,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case VERBOSE_KEY:
       cmd_args->verbose_wanted = 1;
+      break;
+    case FILENAME_KEY:
+      if (cmd_args->filename) /* If specified more than once */
+        free (cmd_args->filename);
+      if (!(cmd_args->filename = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -133,15 +142,14 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
   init_common_cmd_args (&(cmd_args->common));
   cmd_args->info_wanted = 0;
   cmd_args->checkout_wanted = 0;
-  cmd_args->checkout_filename = NULL;
   cmd_args->commit_wanted = 0;
-  cmd_args->commit_filename = NULL;
   cmd_args->alert_policy_table_wanted = 0;
   cmd_args->lan_alert_destination_wanted = 0;
   cmd_args->community_string_wanted = 0;
   cmd_args->community_string = NULL;
   cmd_args->verbose_wanted = 0;
-  
+  cmd_args->filename = NULL;
+
   /* ADMIN is minimum for ipmi-pef b/c its needed for many of the
    * ipmi cmds used
    */

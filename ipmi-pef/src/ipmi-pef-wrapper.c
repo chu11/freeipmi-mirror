@@ -797,7 +797,8 @@ _fread_record (FILE *fp, char **cache_record)
 	  }
       }
     }
-  
+ 
+
   return 0;
 }
 
