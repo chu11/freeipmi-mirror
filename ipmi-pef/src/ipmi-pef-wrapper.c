@@ -55,7 +55,8 @@
       if (_get_value_string_by_key (__cache_record,			\
 				    __key,				\
 				    &local_value_string) == -1)		\
-	{								\
+	{                                                               \
+          fprintf (stderr, "Key '%s' not found\n", __key);	        \
 	  return (-1);							\
 	}								\
       __value = strdupa (value_string);					\
@@ -133,7 +134,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_filter_number (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       FILTER_NUMBER_KEY_STRING);
       return -1;
@@ -146,7 +147,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_filter_type (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       FILTER_TYPE_KEY_STRING);
       return -1;
@@ -159,7 +160,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_enable_filter (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       ENABLE_FILTER_KEY_STRING);
       return -1;
@@ -172,7 +173,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_FILTER_ACTION_ALERT_KEY_STRING);
       return -1;
@@ -185,7 +186,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING);
       return -1;
@@ -198,7 +199,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_FILTER_ACTION_RESET_KEY_STRING);
       return -1;
@@ -211,7 +212,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING);
       return -1;
@@ -224,7 +225,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_filter_action_oem (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_FILTER_ACTION_OEM_KEY_STRING);
       return -1;
@@ -237,7 +238,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_filter_action_diagnostic_interrupt (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING);
       return -1;
@@ -251,7 +252,7 @@ _record_string_to_evt (const char *record_string,
 							     &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING);
       return -1;
@@ -264,7 +265,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_alert_policy_number (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       ALERT_POLICY_NUMBER_KEY_STRING);
       return -1;
@@ -277,7 +278,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_group_control_selector (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       GROUP_CONTROL_SELECTOR_KEY_STRING);
       return -1;
@@ -290,7 +291,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_severity (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_SEVERITY_KEY_STRING);
       return -1;
@@ -303,7 +304,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_generator_id_byte1 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       GENERATOR_ID_BYTE1_KEY_STRING);
       return -1;
@@ -316,7 +317,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_generator_id_byte2 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       GENERATOR_ID_BYTE2_KEY_STRING);
       return -1;
@@ -329,7 +330,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_sensor_type (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       SENSOR_TYPE_KEY_STRING);
       return -1;
@@ -342,7 +343,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_sensor_number (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       SENSOR_NUMBER_KEY_STRING);
       return -1;
@@ -355,7 +356,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_trigger (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_TRIGGER_KEY_STRING);
       return -1;
@@ -368,7 +369,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data1_offset_mask (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA1_OFFSET_MASK_KEY_STRING);
       return -1;
@@ -381,7 +382,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data1_AND_mask (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA1_AND_MASK_KEY_STRING);
       return -1;
@@ -394,7 +395,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data1_compare1 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA1_COMPARE1_KEY_STRING);
       return -1;
@@ -407,7 +408,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data1_compare2 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA1_COMPARE2_KEY_STRING);
       return -1;
@@ -420,7 +421,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data2_AND_mask (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA2_AND_MASK_KEY_STRING);
       return -1;
@@ -433,7 +434,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data2_compare1 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA2_COMPARE1_KEY_STRING);
       return -1;
@@ -446,7 +447,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data2_compare2 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA2_COMPARE2_KEY_STRING);
       return -1;
@@ -459,7 +460,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data3_AND_mask (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA3_AND_MASK_KEY_STRING);
       return -1;
@@ -472,7 +473,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data3_compare1 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA3_COMPARE1_KEY_STRING);
       return -1;
@@ -485,7 +486,7 @@ _record_string_to_evt (const char *record_string,
   if (string_to_event_data3_compare2 (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       EVENT_DATA3_COMPARE2_KEY_STRING);
       return -1;
@@ -512,7 +513,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_policy_type (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_ALERT_POLICY_NUMBER_KEY_STRING);
       return -1;
@@ -525,7 +526,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_policy_type (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_POLICY_TYPE_KEY_STRING);
       return -1;
@@ -538,7 +539,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_policy_enabled (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_POLICY_ENABLED_KEY_STRING);
       return -1;
@@ -551,7 +552,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_enable_filter (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_POLICY_NUMBER_KEY_STRING);
       return -1;
@@ -564,7 +565,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_DESTINATION_SELECTOR_KEY_STRING);
       return -1;
@@ -577,7 +578,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_CHANNEL_NUMBER_KEY_STRING);
       return -1;
@@ -590,7 +591,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_ALERT_STRING_SET_SELECTOR_KEY_STRING);
       return -1;
@@ -603,7 +604,7 @@ _record_string_to_apt (const char *record_string,
   if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING);
       return -1;
@@ -630,7 +631,7 @@ _record_string_to_lad (const char *record_string,
   if (string_to_destination_selector (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING);
       return -1;
@@ -643,7 +644,7 @@ _record_string_to_lad (const char *record_string,
   if (string_to_destination_type (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       LAD_ALERT_DESTINATION_TYPE_KEY_STRING);
       return -1;
@@ -656,7 +657,7 @@ _record_string_to_lad (const char *record_string,
   if (string_to_alert_acknowledge (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       LAD_ALERT_ACKNOWLEDGE_KEY_STRING);
       return -1;
@@ -669,7 +670,7 @@ _record_string_to_lad (const char *record_string,
   if (string_to_alert_acknowledge_timeout (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING);
       return -1;
@@ -682,7 +683,7 @@ _record_string_to_lad (const char *record_string,
   if (string_to_alert_retries (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       LAD_ALERT_RETRIES_KEY_STRING);
       return -1;
@@ -695,7 +696,7 @@ _record_string_to_lad (const char *record_string,
   if (string_to_gateway_selector (value_string, &int_value) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       LAD_ALERT_GATEWAY_KEY_STRING);
       return -1;
@@ -710,7 +711,7 @@ _record_string_to_lad (const char *record_string,
     if (string_to_alert_ip_address (value_string, &str) != 0)
       {
 	fprintf (stderr, 
-		 "invalid value %s for %s\n", 
+		 "Invalid value %s for %s\n", 
 		 value_string, 
 		 LAD_ALERT_IP_ADDRESS_KEY_STRING);
 	return -1;
@@ -724,7 +725,7 @@ _record_string_to_lad (const char *record_string,
     if (string_to_alert_mac_address (value_string, &str) != 0)
     {
       fprintf (stderr, 
-	       "invalid value %s for %s\n", 
+	       "Invalid value %s for %s\n", 
 	       value_string, 
 	       LAD_ALERT_MAC_ADDRESS_KEY_STRING);
       return -1;
