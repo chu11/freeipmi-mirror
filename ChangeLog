@@ -2,6 +2,14 @@
 
 	* ipmi-pef/: Fix string parsing bugs in alert policy table.  Fix
 	event trigger output corner case.
+
+	* doc/freeipmi.texi, doc/gpl.texi, doc/version-doc.texi,
+	doc/authors.texi, doc/fdl.texi, THANKS: Removed.
+
+	* freeipmi.spec.in, doc/Makefile.am, Makefile.am: Updated
+	appropriately.
+	
+	* various minor doc updates
 	
 2007-05-15  Albert Chu <chu11@llnl.gov>
 

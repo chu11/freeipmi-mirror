@@ -1,6 +1,5 @@
 #  build and install the .info pages
-info_TEXINFOS = freeipmi.texi freeipmi-faq.texi
-freeipmi_TEXINFOS = authors.texi gpl.texi fdl.texi
+info_TEXINFOS =  freeipmi-faq.texi
 
 EXTRA_DIST = freeipmi-coding.txt freeipmi-hostrange.txt
 
