@@ -155,7 +155,7 @@ checkout_pef_lan_alert_destination (ipmi_pef_state_data_t *state_data, FILE *fp)
   for (d = 1; d <= num_of_lan_destinations; d++)
     {
       lan_alert_destination_t lad;
-      char *value_string = NULL;
+      char *str = NULL;
       
       memset (&lad, 0, sizeof (lan_alert_destination_t));
       
@@ -167,95 +167,93 @@ checkout_pef_lan_alert_destination (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  continue;
 	}
       
-      if (destination_selector_to_string (lad.destination_selector, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = destination_selector_to_string (lad.destination_selector)))
+        {
+          return -1;
+        }
+
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
+               str);
+      free (str);
       
-      if (destination_type_to_string (lad.destination_type, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: PET_Trap/OEM1/OEM2\n");
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = destination_type_to_string (lad.destination_type)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: PET_Trap/OEM1/OEM2\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
+               str);
+      free (str);
       
-      if (alert_acknowledge_to_string (lad.alert_acknowledge, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Yes/No\n");
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = alert_acknowledge_to_string (lad.alert_acknowledge)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Yes/No\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
+               str);
+      free (str);
       
-      if (alert_acknowledge_timeout_to_string (lad.alert_acknowledge_timeout, 
-					       &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Give valid unsigned number in seconds\n");
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = alert_acknowledge_timeout_to_string (lad.alert_acknowledge_timeout)))
+        return -1;
+
+      fprintf (fp, 
+               "## Give valid unsigned number in seconds\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
+               str);
+      free (str);
       
-      if (alert_retries_to_string (lad.alert_retries, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Give valid unsigned number\n");
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_RETRIES_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = alert_retries_to_string (lad.alert_retries)))
+        return -1;
+
+      fprintf (fp, 
+               "## Give valid unsigned number\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_RETRIES_KEY_STRING, 
+               str);
+      free (str);
       
-      if (gateway_selector_to_string (lad.gateway_selector, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Default/Backup\n");
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_GATEWAY_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = gateway_selector_to_string (lad.gateway_selector)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Default/Backup\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_GATEWAY_KEY_STRING, 
+               str);
+      free (str);
       
-      if (alert_ip_address_to_string (lad.alert_ip_address, 
-				      &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Give valid IP address\n");
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_IP_ADDRESS_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = alert_ip_address_to_string (lad.alert_ip_address)))
+        return -1;
+
+      fprintf (fp, 
+               "## Give valid IP address\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_IP_ADDRESS_KEY_STRING, 
+               str);
+      free (str);
       
-      if (alert_mac_address_to_string (lad.alert_mac_address, 
-				       &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Give valid MAC address\n");
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = alert_mac_address_to_string (lad.alert_mac_address)))
+        return -1;
+      
+      fprintf (fp, 
+               "## Give valid MAC address\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
+               str);
+      free (str);
       
       fprintf (fp, "\n");
     }
@@ -303,7 +301,7 @@ checkout_pef_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
   for (entry = 1; entry <= num_alert_policy_entries; entry++)
     {
       pef_alert_policy_table_t apt;
-      char *value_string = NULL;
+      char *str = NULL;
       
       memset (&apt, 0, sizeof (pef_alert_policy_table_t));
       
@@ -315,80 +313,79 @@ checkout_pef_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  continue;
 	}
       
-      if (alert_policy_number_to_string (apt.alert_policy_number, 
-					 &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_ALERT_POLICY_NUMBER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = alert_policy_number_to_string (apt.alert_policy_number)))
+        return -1;
+
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_ALERT_POLICY_NUMBER_KEY_STRING, 
+               str);
+      free (str);
       
-      if (policy_type_to_string (apt.policy_type, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_POLICY_TYPE_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = policy_type_to_string (apt.policy_type)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destina\n");
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_POLICY_TYPE_KEY_STRING, 
+               str);
+      free (str);
       
-      if (policy_enabled_to_string (apt.policy_enabled, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_POLICY_ENABLED_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = policy_enabled_to_string (apt.policy_enabled)))
+        return -1;
+
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_POLICY_ENABLED_KEY_STRING, 
+               str);
+      free (str);
       
-      if (policy_number_to_string (apt.policy_number, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_POLICY_NUMBER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = policy_number_to_string (apt.policy_number)))
+        return -1;
       
-      if (destination_selector_to_string (apt.destination_selector, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_DESTINATION_SELECTOR_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_POLICY_NUMBER_KEY_STRING, 
+               str);
+      free (str);
       
-      if (channel_number_to_string (apt.channel_number, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_CHANNEL_NUMBER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = destination_selector_to_string (apt.destination_selector)))
+        return -1;
+
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_DESTINATION_SELECTOR_KEY_STRING, 
+               str);
+      free (str);
       
-      if (alert_string_set_selector_to_string (apt.alert_string_set_selector, 
-					       &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = channel_number_to_string (apt.channel_number)))
+        return -1;
+
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_CHANNEL_NUMBER_KEY_STRING, 
+               str);
+      free (str);
       
-      if (event_specific_alert_string_lookup_to_string (apt.event_specific_alert_string_lookup, 
-							&value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-30s %s\n", 
-		   APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = alert_string_set_selector_to_string (apt.alert_string_set_selector)))
+        return -1;
+
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
+               str);
+      free (str);
+      
+      if (!(str = event_specific_alert_string_lookup_to_string (apt.event_specific_alert_string_lookup)))
+        return -1;
+
+      fprintf (fp, 
+               "%-30s %s\n", 
+               APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
+               str);
+      free (str);
       
       fprintf (fp, "\n");
     }
@@ -435,7 +432,7 @@ checkout_pef_event_filter_table (ipmi_pef_state_data_t *state_data, FILE *fp)
   for (filter = 1; filter <= num_event_filters; filter++)
     {
       pef_event_filter_table_t eft;
-      char *value_string = NULL;
+      char *str = NULL;
       
       memset (&eft, 0, sizeof (pef_event_filter_table_t));
       
@@ -447,262 +444,272 @@ checkout_pef_event_filter_table (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  continue;
 	}
       
-      if (filter_number_to_string (eft.filter_number, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   FILTER_NUMBER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (filter_type_to_string (eft.filter_type, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Manufacturer_Pre_Configured/Software_Configurable\n");
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   FILTER_TYPE_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (enable_filter_to_string (eft.enable_filter, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   ENABLE_FILTER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_filter_action_alert_to_string (eft.event_filter_action_alert, 
-					       &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_filter_action_power_off_to_string (eft.event_filter_action_power_off, 
-						   &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_filter_action_reset_to_string (eft.event_filter_action_reset, 
-					       &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_FILTER_ACTION_RESET_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_filter_action_power_cycle_to_string (eft.event_filter_action_power_cycle, 
-						     &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_filter_action_oem_to_string (eft.event_filter_action_oem, 
-					     &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_FILTER_ACTION_OEM_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_filter_action_diagnostic_interrupt_to_string (eft.event_filter_action_diagnostic_interrupt, 
-							      &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_filter_action_group_control_operation_to_string (eft.event_filter_action_group_control_operation, 
-								 &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (alert_policy_number_to_string (eft.alert_policy_number, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   ALERT_POLICY_NUMBER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (group_control_selector_to_string (eft.group_control_selector, 
-					    &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   GROUP_CONTROL_SELECTOR_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_severity_to_string (eft.event_severity, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable\n");
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_SEVERITY_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (generator_id_byte1_to_string (eft.generator_id_byte1, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Hex value or Match_Any\n");
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   GENERATOR_ID_BYTE1_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (generator_id_byte2_to_string (eft.generator_id_byte2, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Hex value or Match_Any\n");
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   GENERATOR_ID_BYTE2_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (sensor_type_to_string (eft.sensor_type, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Sensor type or Match_Any\n");
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   SENSOR_TYPE_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (sensor_number_to_string (eft.sensor_number, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Sensor number or Match_Any\n");
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   SENSOR_NUMBER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_trigger_to_string (eft.event_trigger, &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "## Possible values: Unspecified/Threshold/Generic_Discrete_0xXX/Sensor_Specific_Discrete/OEM_0xXX/Match_Any\n");
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_TRIGGER_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data1_offset_mask_to_string (eft.event_data1_offset_mask, 
-					     &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data1_AND_mask_to_string (eft.event_data1_AND_mask, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA1_AND_MASK_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data1_compare1_to_string (eft.event_data1_compare1, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA1_COMPARE1_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data1_compare2_to_string (eft.event_data1_compare2, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA1_COMPARE2_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data2_AND_mask_to_string (eft.event_data2_AND_mask, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA2_AND_MASK_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data2_compare1_to_string (eft.event_data2_compare1, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA2_COMPARE1_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data2_compare2_to_string (eft.event_data2_compare2, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA2_COMPARE2_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data3_AND_mask_to_string (eft.event_data3_AND_mask, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA3_AND_MASK_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data3_compare1_to_string (eft.event_data3_compare1, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA3_COMPARE1_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
-      if (event_data3_compare2_to_string (eft.event_data3_compare2, 
-					  &value_string) == 0)
-	{
-	  fprintf (fp, 
-		   "%-50s %s\n", 
-		   EVENT_DATA3_COMPARE2_KEY_STRING, 
-		   value_string);
-	  free (value_string);
-	}
+      if (!(str = filter_number_to_string (eft.filter_number)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               FILTER_NUMBER_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = filter_type_to_string (eft.filter_type)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Manufacturer_Pre_Configured/Software_Configurable\n");
+      fprintf (fp, 
+               "%-50s %s\n", 
+               FILTER_TYPE_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = enable_filter_to_string (eft.enable_filter)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               ENABLE_FILTER_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_filter_action_alert_to_string (eft.event_filter_action_alert)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_filter_action_power_off_to_string (eft.event_filter_action_power_off)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_filter_action_reset_to_string (eft.event_filter_action_reset)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_FILTER_ACTION_RESET_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_filter_action_power_cycle_to_string (eft.event_filter_action_power_cycle)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_filter_action_oem_to_string (eft.event_filter_action_oem)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_FILTER_ACTION_OEM_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_filter_action_diagnostic_interrupt_to_string (eft.event_filter_action_diagnostic_interrupt)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_filter_action_group_control_operation_to_string (eft.event_filter_action_group_control_operation)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = alert_policy_number_to_string (eft.alert_policy_number)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               ALERT_POLICY_NUMBER_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = group_control_selector_to_string (eft.group_control_selector)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               GROUP_CONTROL_SELECTOR_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_severity_to_string (eft.event_severity)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable\n");
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_SEVERITY_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = generator_id_byte1_to_string (eft.generator_id_byte1)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Hex value or Match_Any\n");
+      fprintf (fp, 
+               "%-50s %s\n", 
+               GENERATOR_ID_BYTE1_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = generator_id_byte2_to_string (eft.generator_id_byte2)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Hex value or Match_Any\n");
+      fprintf (fp, 
+               "%-50s %s\n", 
+               GENERATOR_ID_BYTE2_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = sensor_type_to_string (eft.sensor_type)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Sensor type or Match_Any\n");
+      fprintf (fp, 
+               "%-50s %s\n", 
+               SENSOR_TYPE_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = sensor_number_to_string (eft.sensor_number)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Sensor number or Match_Any\n");
+      fprintf (fp, 
+               "%-50s %s\n", 
+               SENSOR_NUMBER_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_trigger_to_string (eft.event_trigger)))
+        return -1;
+
+      fprintf (fp, 
+               "## Possible values: Unspecified/Threshold/Generic_Discrete_0xXX/Sensor_Specific_Discrete/OEM_0xXX/Match_Any\n");
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_TRIGGER_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data1_offset_mask_to_string (eft.event_data1_offset_mask)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data1_AND_mask_to_string (eft.event_data1_AND_mask)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA1_AND_MASK_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data1_compare1_to_string (eft.event_data1_compare1)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA1_COMPARE1_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data1_compare2_to_string (eft.event_data1_compare2)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA1_COMPARE2_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data2_AND_mask_to_string (eft.event_data2_AND_mask)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA2_AND_MASK_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data2_compare1_to_string (eft.event_data2_compare1)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA2_COMPARE1_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data2_compare2_to_string (eft.event_data2_compare2)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA2_COMPARE2_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data3_AND_mask_to_string (eft.event_data3_AND_mask)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA3_AND_MASK_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data3_compare1_to_string (eft.event_data3_compare1)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA3_COMPARE1_KEY_STRING, 
+               str);
+      free (str);
+
+      if (!(str = event_data3_compare2_to_string (eft.event_data3_compare2)))
+        return -1;
+
+      fprintf (fp, 
+               "%-50s %s\n", 
+               EVENT_DATA3_COMPARE2_KEY_STRING, 
+               str);
+      free (str);
+
       fprintf (fp, "\n");
     }
   

@@ -44,7 +44,6 @@
 #define IPMI_SENSOR_CLASS_GENERIC_DISCRETE_STRING            "Generic_Discrete"
 #define IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE_STRING    "Sensor_Specific_Discrete"
 #define IPMI_SENSOR_CLASS_OEM_STRING                         "OEM"
-#define IPMI_SENSOR_UNKNOWN_STRING                           "Unknown"
 
 #define YES_VALUE_STRING    "Yes"
 #define YES_VALUE           1
@@ -86,8 +85,8 @@ strchr_replace (char *str, char ch, char nch)
   return 0;
 }
 
-int 
-filter_number_to_string (int filter_number, char **filter_number_string)
+char * 
+filter_number_to_string (int filter_number)
 {
   char *str = NULL;
   
@@ -95,10 +94,9 @@ filter_number_to_string (int filter_number, char **filter_number_string)
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *filter_number_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -115,35 +113,42 @@ string_to_filter_number (const char *filter_number_string, int *filter_number)
   return -1;
 }
 
-int 
-filter_type_to_string (int filter_type, char **filter_type_string)
+char *
+filter_type_to_string (int filter_type)
 {
+  char *str = NULL;
+
   switch (filter_type)
     {
     case IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER:
-      if (!(*filter_type_string = strdup (IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER_STRING)))
+      if (!(str = strdup (IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER:
-      if (!(*filter_type_string = strdup (IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER_STRING))) 
+      if (!(str = strdup (IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER_STRING))) 
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     default:
-      if (!(*filter_type_string = strdup (IPMI_FILTER_CONFIGURATION_RESERVED_STRING)))
+      if (!(str = strdup (IPMI_FILTER_CONFIGURATION_RESERVED_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
-  return -1;
+  if (!(str = strdup("")))
+    {
+      perror("strdup");
+      return NULL;
+    }
+  return str;
 }
 
 int 
@@ -166,27 +171,29 @@ string_to_filter_type (const char *filter_type_string, int *filter_type)
   return -1;
 }
 
-int 
-enable_filter_to_string (int enable_filter, char **enable_filter_string)
+char * 
+enable_filter_to_string (int enable_filter)
 {
+  char *str = NULL;
+
   if (enable_filter)
     {
-      if (!(*enable_filter_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*enable_filter_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -207,28 +214,29 @@ string_to_enable_filter (const char *enable_filter_string, int *enable_filter)
   return -1;
 }
 
-int 
-event_filter_action_alert_to_string (int event_filter_action_alert, 
-				     char **event_filter_action_alert_string)
+char *
+event_filter_action_alert_to_string (int event_filter_action_alert)
 {
+  char *str = NULL;
+
   if (event_filter_action_alert)
     {
-      if (!(*event_filter_action_alert_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*event_filter_action_alert_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -250,28 +258,29 @@ string_to_event_filter_action_alert (const char *event_filter_action_alert_strin
   return -1;
 }
 
-int 
-event_filter_action_power_off_to_string (int event_filter_action_power_off, 
-					 char **event_filter_action_power_off_string)
+char *
+event_filter_action_power_off_to_string (int event_filter_action_power_off)
 {
+  char *str = NULL;
+
   if (event_filter_action_power_off)
     {
-      if (!(*event_filter_action_power_off_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*event_filter_action_power_off_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -293,28 +302,29 @@ string_to_event_filter_action_power_off (const char *event_filter_action_power_o
   return -1;
 }
 
-int 
-event_filter_action_reset_to_string (int event_filter_action_reset, 
-				     char **event_filter_action_reset_string)
+char *
+event_filter_action_reset_to_string (int event_filter_action_reset)
 {
+  char *str = NULL;
+
   if (event_filter_action_reset)
     {
-      if (!(*event_filter_action_reset_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*event_filter_action_reset_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -336,28 +346,29 @@ string_to_event_filter_action_reset (const char *event_filter_action_reset_strin
   return -1;
 }
 
-int 
-event_filter_action_power_cycle_to_string (int event_filter_action_power_cycle, 
-					   char **event_filter_action_power_cycle_string)
+char *
+event_filter_action_power_cycle_to_string (int event_filter_action_power_cycle)
 {
+  char *str = NULL;
+
   if (event_filter_action_power_cycle)
     {
-      if (!(*event_filter_action_power_cycle_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*event_filter_action_power_cycle_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -379,28 +390,29 @@ string_to_event_filter_action_power_cycle (const char *event_filter_action_power
   return -1;
 }
 
-int 
-event_filter_action_oem_to_string (int event_filter_action_oem, 
-				   char **event_filter_action_oem_string)
+char *
+event_filter_action_oem_to_string (int event_filter_action_oem)
 {
+  char *str = NULL;
+
   if (event_filter_action_oem)
     {
-      if (!(*event_filter_action_oem_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*event_filter_action_oem_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -422,28 +434,29 @@ string_to_event_filter_action_oem (const char *event_filter_action_oem_string,
   return -1;
 }
 
-int 
-event_filter_action_diagnostic_interrupt_to_string (int event_filter_action_diagnostic_interrupt, 
-						    char **event_filter_action_diagnostic_interrupt_string)
+char *
+event_filter_action_diagnostic_interrupt_to_string (int event_filter_action_diagnostic_interrupt)
 {
+  char *str = NULL;
+
   if (event_filter_action_diagnostic_interrupt)
     {
-      if (!(*event_filter_action_diagnostic_interrupt_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*event_filter_action_diagnostic_interrupt_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -465,28 +478,29 @@ string_to_event_filter_action_diagnostic_interrupt (const char *event_filter_act
   return -1;
 }
 
-int 
-event_filter_action_group_control_operation_to_string (int event_filter_action_group_control_operation, 
-						       char **event_filter_action_group_control_operation_string)
+char *
+event_filter_action_group_control_operation_to_string (int event_filter_action_group_control_operation)
 {
+  char *str = NULL;
+
   if (event_filter_action_group_control_operation)
     {
-      if (!(*event_filter_action_group_control_operation_string = strdup (YES_VALUE_STRING)))
+      if (!(str = strdup (YES_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   else 
     {
-      if (!(*event_filter_action_group_control_operation_string = strdup (NO_VALUE_STRING)))
+      if (!(str = strdup (NO_VALUE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
     }
   
-  return 0;
+  return str;
 }
 
 int 
@@ -508,9 +522,8 @@ string_to_event_filter_action_group_control_operation (const char *event_filter_
   return -1;
 }
 
-int 
-alert_policy_number_to_string (int alert_policy_number, 
-			       char **alert_policy_number_string)
+char *
+alert_policy_number_to_string (int alert_policy_number)
 {
   char *str = NULL;
   
@@ -518,10 +531,9 @@ alert_policy_number_to_string (int alert_policy_number,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *alert_policy_number_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -539,9 +551,8 @@ string_to_alert_policy_number (const char *alert_policy_number_string,
   return -1;
 }
 
-int 
-group_control_selector_to_string (int group_control_selector, 
-				  char **group_control_selector_string)
+char *
+group_control_selector_to_string (int group_control_selector)
 {
   char *str = NULL;
   
@@ -549,10 +560,9 @@ group_control_selector_to_string (int group_control_selector,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *group_control_selector_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -570,63 +580,70 @@ string_to_group_control_selector (const char *group_control_selector_string,
   return -1;
 }
 
-int 
-event_severity_to_string (int event_severity, char **event_severity_string)
+char *
+event_severity_to_string (int event_severity)
 {
+  char *str = NULL;
+
   switch (event_severity)
     {
     case IPMI_EVENT_SEVERITY_UNSPECIFIED:
-      if (!(*event_severity_string = strdup (IPMI_EVENT_SEVERITY_UNSPECIFIED_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SEVERITY_UNSPECIFIED_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_EVENT_SEVERITY_MONITOR:
-      if (!(*event_severity_string = strdup (IPMI_EVENT_SEVERITY_MONITOR_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SEVERITY_MONITOR_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_EVENT_SEVERITY_INFORMATION:
-      if (!(*event_severity_string = strdup (IPMI_EVENT_SEVERITY_INFORMATION_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SEVERITY_INFORMATION_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_EVENT_SEVERITY_OK:
-      if (!(*event_severity_string = strdup (IPMI_EVENT_SEVERITY_OK_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SEVERITY_OK_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION:
-      if (!(*event_severity_string = strdup (IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_EVENT_SEVERITY_CRITICAL_CONDITION:
-      if (!(*event_severity_string = strdup (IPMI_EVENT_SEVERITY_CRITICAL_CONDITION_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SEVERITY_CRITICAL_CONDITION_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION:
-      if (!(*event_severity_string = strdup (IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
-  return -1;
+  if (!(str = strdup("")))
+    {
+      perror("strdup");
+      return NULL;
+    }
+  return str;
 }
 
 int 
@@ -684,29 +701,28 @@ string_to_event_severity (const char *event_severity_string, int *event_severity
   return -1;
 }
 
-int 
-generator_id_byte1_to_string (int generator_id_byte1, char **generator_id_byte1_string)
+char *
+generator_id_byte1_to_string (int generator_id_byte1)
 {
   char *str = NULL;
   
   if (generator_id_byte1 == GENERATOR_ID_BYTE1_MATCH_ANY)
     {
-      if (!(*generator_id_byte1_string = strdup (GENERATOR_ID_BYTE1_MATCH_ANY_STRING)))
+      if (!(str = strdup (GENERATOR_ID_BYTE1_MATCH_ANY_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
   asprintf (&str, "0x%0X", generator_id_byte1);
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *generator_id_byte1_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -730,29 +746,28 @@ string_to_generator_id_byte1 (const char *generator_id_byte1_string, int *genera
   return -1;
 }
 
-int 
-generator_id_byte2_to_string (int generator_id_byte2, char **generator_id_byte2_string)
+char *
+generator_id_byte2_to_string (int generator_id_byte2)
 {
   char *str = NULL;
   
   if (generator_id_byte2 == GENERATOR_ID_BYTE2_MATCH_ANY)
     {
-      if (!(*generator_id_byte2_string = strdup (GENERATOR_ID_BYTE2_MATCH_ANY_STRING)))
+      if (!(str = strdup (GENERATOR_ID_BYTE2_MATCH_ANY_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
   asprintf (&str, "0x%0X", generator_id_byte2);
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *generator_id_byte2_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -776,35 +791,33 @@ string_to_generator_id_byte2 (const char *generator_id_byte2_string, int *genera
   return -1;
 }
 
-int 
-sensor_type_to_string (int sensor_type, char **sensor_type_string)
+char *
+sensor_type_to_string (int sensor_type)
 {
   const char *sensor_str = NULL;
   char *str = NULL;
   
   if (sensor_type == SENSOR_TYPE_MATCH_ANY)
     {
-      if (!(*sensor_type_string = strdup (SENSOR_TYPE_MATCH_ANY_STRING)))
+      if (!(str = strdup (SENSOR_TYPE_MATCH_ANY_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
   if (!(sensor_str = ipmi_get_sensor_group (sensor_type)))
-    {
-      sensor_str = IPMI_SENSOR_UNKNOWN_STRING;
-    }
+    sensor_str = "";
       
-  if (!(*sensor_type_string = strdup (sensor_str)))
+  if (!(str = strdup (sensor_str)))
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
 
-  strchr_replace (*sensor_type_string, ' ', '_');
-  return 0;
+  strchr_replace (str, ' ', '_');
+  return str;
 }
 
 int 
@@ -857,29 +870,28 @@ string_to_sensor_type (const char *sensor_type_string, int *sensor_type)
   return -1;
 }
 
-int 
-sensor_number_to_string (int sensor_number, char **sensor_number_string)
+char *
+sensor_number_to_string (int sensor_number)
 {
   char *str = NULL;
   
   if (sensor_number == SENSOR_NUMBER_MATCH_ANY)
     {
-      if (!(*sensor_number_string = strdup (SENSOR_NUMBER_MATCH_ANY_STRING)))
+      if (!(str = strdup (SENSOR_NUMBER_MATCH_ANY_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
   asprintf (&str, "0x%0X", sensor_number);
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *sensor_number_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -903,67 +915,68 @@ string_to_sensor_number (const char *sensor_number_string, int *sensor_number)
   return -1;
 }
 
-int 
-event_trigger_to_string (int event_trigger, char **event_trigger_string)
+char *
+event_trigger_to_string (int event_trigger)
 {
-  char *str;
+  char *str = NULL;
 
   if (event_trigger == EVENT_TRIGGER_MATCH_ANY)
     {
-      if (!(*event_trigger_string = strdup (EVENT_TRIGGER_MATCH_ANY_STRING)))
+      if (!(str = strdup (EVENT_TRIGGER_MATCH_ANY_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
   switch (ipmi_sensor_classify (event_trigger))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
-      if (!(*event_trigger_string = strdup (IPMI_SENSOR_CLASS_THRESHOLD_STRING)))
+      if (!(str = strdup (IPMI_SENSOR_CLASS_THRESHOLD_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
       asprintf (&str, "%s_0x%0X", IPMI_SENSOR_CLASS_GENERIC_DISCRETE_STRING, event_trigger);
       if (!str)
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      *event_trigger_string = str;
-      return 0;
+      return str;
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      if (!(*event_trigger_string = strdup (IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE_STRING)))
+      if (!(str = strdup (IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     case IPMI_SENSOR_CLASS_OEM:
       asprintf (&str, "%s_0x%0X", IPMI_SENSOR_CLASS_OEM_STRING, event_trigger);
       if (!str)
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      *event_trigger_string = str;
-      return 0;
+      return str;
     case IPMI_SENSOR_CLASS_NOT_AVAILABLE:
-      if (!(*event_trigger_string = strdup (IPMI_SENSOR_CLASS_UNSPECIFIED_STRING)))
+      if (!(str = strdup (IPMI_SENSOR_CLASS_UNSPECIFIED_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
-    default:
-      return -1;
+      return str;
     }
   
-  return -1;
+  if (!(str = strdup("")))
+    {
+      perror("strdup");
+      return NULL;
+    }
+  return str;
 }
 
 int 
@@ -1033,9 +1046,8 @@ string_to_event_trigger (const char *event_trigger_string, int *event_trigger)
   return -1;
 }
 
-int 
-event_data1_offset_mask_to_string (int event_data1_offset_mask, 
-				   char **event_data1_offset_mask_string)
+char *
+event_data1_offset_mask_to_string (int event_data1_offset_mask)
 {
   char *str = NULL;
   
@@ -1043,10 +1055,9 @@ event_data1_offset_mask_to_string (int event_data1_offset_mask,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data1_offset_mask_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1064,9 +1075,8 @@ string_to_event_data1_offset_mask (const char *event_data1_offset_mask_string,
   return -1;
 }
 
-int 
-event_data1_AND_mask_to_string (int event_data1_AND_mask, 
-				char **event_data1_AND_mask_string)
+char *
+event_data1_AND_mask_to_string (int event_data1_AND_mask)
 {
   char *str = NULL;
   
@@ -1074,10 +1084,9 @@ event_data1_AND_mask_to_string (int event_data1_AND_mask,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data1_AND_mask_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1095,9 +1104,8 @@ string_to_event_data1_AND_mask (const char *event_data1_AND_mask_string,
   return -1;
 }
 
-int 
-event_data1_compare1_to_string (int event_data1_compare1, 
-				char **event_data1_compare1_string)
+char *
+event_data1_compare1_to_string (int event_data1_compare1)
 {
   char *str = NULL;
   
@@ -1105,10 +1113,9 @@ event_data1_compare1_to_string (int event_data1_compare1,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data1_compare1_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1126,9 +1133,8 @@ string_to_event_data1_compare1 (const char *event_data1_compare1_string,
   return -1;
 }
 
-int 
-event_data1_compare2_to_string (int event_data1_compare2, 
-				char **event_data1_compare2_string)
+char *
+event_data1_compare2_to_string (int event_data1_compare2)
 {
   char *str = NULL;
   
@@ -1136,10 +1142,9 @@ event_data1_compare2_to_string (int event_data1_compare2,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data1_compare2_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1157,9 +1162,8 @@ string_to_event_data1_compare2 (const char *event_data1_compare2_string,
   return -1;
 }
 
-int 
-event_data2_AND_mask_to_string (int event_data2_AND_mask, 
-				char **event_data2_AND_mask_string)
+char *
+event_data2_AND_mask_to_string (int event_data2_AND_mask)
 {
   char *str = NULL;
   
@@ -1167,10 +1171,9 @@ event_data2_AND_mask_to_string (int event_data2_AND_mask,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data2_AND_mask_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1188,9 +1191,8 @@ string_to_event_data2_AND_mask (const char *event_data2_AND_mask_string,
   return -1;
 }
 
-int 
-event_data2_compare1_to_string (int event_data2_compare1, 
-				char **event_data2_compare1_string)
+char *
+event_data2_compare1_to_string (int event_data2_compare1)
 {
   char *str = NULL;
   
@@ -1198,10 +1200,9 @@ event_data2_compare1_to_string (int event_data2_compare1,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data2_compare1_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1219,9 +1220,8 @@ string_to_event_data2_compare1 (const char *event_data2_compare1_string,
   return -1;
 }
 
-int 
-event_data2_compare2_to_string (int event_data2_compare2, 
-				char **event_data2_compare2_string)
+char *
+event_data2_compare2_to_string (int event_data2_compare2)
 {
   char *str = NULL;
   
@@ -1229,10 +1229,9 @@ event_data2_compare2_to_string (int event_data2_compare2,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data2_compare2_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1250,9 +1249,8 @@ string_to_event_data2_compare2 (const char *event_data2_compare2_string,
   return -1;
 }
 
-int 
-event_data3_AND_mask_to_string (int event_data3_AND_mask, 
-				char **event_data3_AND_mask_string)
+char *
+event_data3_AND_mask_to_string (int event_data3_AND_mask)
 {
   char *str = NULL;
   
@@ -1260,10 +1258,9 @@ event_data3_AND_mask_to_string (int event_data3_AND_mask,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data3_AND_mask_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1281,9 +1278,8 @@ string_to_event_data3_AND_mask (const char *event_data3_AND_mask_string,
   return -1;
 }
 
-int 
-event_data3_compare1_to_string (int event_data3_compare1, 
-				char **event_data3_compare1_string)
+char *
+event_data3_compare1_to_string (int event_data3_compare1)
 {
   char *str = NULL;
   
@@ -1291,10 +1287,9 @@ event_data3_compare1_to_string (int event_data3_compare1,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data3_compare1_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1312,9 +1307,8 @@ string_to_event_data3_compare1 (const char *event_data3_compare1_string,
   return -1;
 }
 
-int 
-event_data3_compare2_to_string (int event_data3_compare2, 
-				char **event_data3_compare2_string)
+char *
+event_data3_compare2_to_string (int event_data3_compare2)
 {
   char *str = NULL;
   
@@ -1322,10 +1316,9 @@ event_data3_compare2_to_string (int event_data3_compare2,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *event_data3_compare2_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1343,56 +1336,63 @@ string_to_event_data3_compare2 (const char *event_data3_compare2_string,
   return -1;
 }
 
-int 
-policy_type_to_string (int policy_type, char **policy_type_string)
+char *
+policy_type_to_string (int policy_type)
 {
+  char *str = NULL;
+
   if (policy_type == IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION)
     {
-      if (!(*policy_type_string = strdup (IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION_STRING)))
+      if (!(str = strdup (IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
-  if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY)
+  else if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY)
     {
-      if (!(*policy_type_string = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_STRING)))
+      if (!(str = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
-  if (policy_type == IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES)
+  else if (policy_type == IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES)
     {
-      if (!(*policy_type_string = strdup (IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES_STRING)))
+      if (!(str = strdup (IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
-  if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL)
+  else if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL)
     {
-      if (!(*policy_type_string = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL_STRING)))
+      if (!(str = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
-  if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE)
+  else if (policy_type == IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE)
     {
-      if (!(*policy_type_string = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE_STRING)))
+      if (!(str = strdup (IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
   
-  return -1;
+  if (!(str = strdup("")))
+    {
+      perror("strdup");
+      return NULL;
+    }
+  return str;
 }
 
 int 
@@ -1432,29 +1432,29 @@ string_to_policy_type (const char *policy_type_string, int *policy_type)
   return -1;
 }
 
-int 
-policy_enabled_to_string (int policy_enabled, char **policy_enabled_string)
+char *
+policy_enabled_to_string (int policy_enabled)
 {
-  if (policy_enabled == IPMI_ALERT_POLICY_DISABLED)
-    {
-      if (!(*policy_enabled_string = strdup (IPMI_ALERT_POLICY_DISABLED_STRING)))
-        {
-          perror("strdup");
-          return -1;
-        }
-      return 0;
-    }
+  char *str = NULL;
+
   if (policy_enabled == IPMI_ALERT_POLICY_ENABLED)
     {
-      if (!(*policy_enabled_string = strdup (IPMI_ALERT_POLICY_ENABLED_STRING)))
+      if (!(str = strdup (IPMI_ALERT_POLICY_ENABLED_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+    }
+  else
+    {
+      if (!(str = strdup (IPMI_ALERT_POLICY_DISABLED_STRING)))
+        {
+          perror("strdup");
+          return NULL;
+        }
     }
   
-  return -1;
+  return str;
 }
 
 int 
@@ -1465,6 +1465,7 @@ string_to_policy_enabled (const char *policy_enabled_string, int *policy_enabled
       *policy_enabled = IPMI_ALERT_POLICY_DISABLED;
       return 0;
     }
+
   if (strcasecmp (policy_enabled_string, IPMI_ALERT_POLICY_ENABLED_STRING) == 0)
     {
       *policy_enabled = IPMI_ALERT_POLICY_ENABLED;
@@ -1473,8 +1474,8 @@ string_to_policy_enabled (const char *policy_enabled_string, int *policy_enabled
   return -1;
 }
 
-int 
-policy_number_to_string (int policy_number, char **policy_number_string)
+char *
+policy_number_to_string (int policy_number)
 {
   char *str = NULL;
   
@@ -1482,10 +1483,9 @@ policy_number_to_string (int policy_number, char **policy_number_string)
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *policy_number_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1502,9 +1502,8 @@ string_to_policy_number (const char *policy_number_string, int *policy_number)
   return -1;
 }
 
-int 
-destination_selector_to_string (int destination_selector, 
-				char **destination_selector_string)
+char *
+destination_selector_to_string (int destination_selector)
 {
   char *str = NULL;
   
@@ -1512,10 +1511,9 @@ destination_selector_to_string (int destination_selector,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *destination_selector_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1533,8 +1531,8 @@ string_to_destination_selector (const char *destination_selector_string,
   return -1;
 }
 
-int 
-channel_number_to_string (int channel_number, char **channel_number_string)
+char *
+channel_number_to_string (int channel_number)
 {
   char *str = NULL;
   
@@ -1542,10 +1540,9 @@ channel_number_to_string (int channel_number, char **channel_number_string)
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *channel_number_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1562,9 +1559,8 @@ string_to_channel_number (const char *channel_number_string, int *channel_number
   return -1;
 }
 
-int 
-alert_string_set_selector_to_string (int alert_string_set_selector, 
-				     char **alert_string_set_selector_string)
+char *
+alert_string_set_selector_to_string (int alert_string_set_selector)
 {
   char *str = NULL;
   
@@ -1572,10 +1568,9 @@ alert_string_set_selector_to_string (int alert_string_set_selector,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *alert_string_set_selector_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1593,34 +1588,29 @@ string_to_alert_string_set_selector (const char *alert_string_set_selector_strin
   return -1;
 }
 
-int 
-event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lookup, 
-					      char **event_specific_alert_string_lookup_string)
+char *
+event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lookup)
 {
-  if (event_specific_alert_string_lookup == 
-      IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO)
+  char *str = NULL;
+
+  if (event_specific_alert_string_lookup == IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES)
     {
-      if (!(*event_specific_alert_string_lookup_string = 
-            strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
     }
-  if (event_specific_alert_string_lookup == 
-      IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES)
+  else
     {
-      if (!(*event_specific_alert_string_lookup_string = 
-            strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
     }
   
-  return -1;
+  return str;
 }
 
 int 
@@ -1645,42 +1635,45 @@ string_to_event_specific_alert_string_lookup (const char *event_specific_alert_s
   return -1;
 }
 
-int 
-destination_type_to_string (int alert_destination_type, 
-			    char **alert_destination_type_string)
+char *
+destination_type_to_string (int alert_destination_type)
 {
+  char *str = NULL;
+
   if (alert_destination_type == IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION)
     {
-      if (!(*alert_destination_type_string = 
-            strdup (IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING)))
+      if (!(str = strdup (IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
-  if (alert_destination_type == IPMI_DESTINATION_TYPE_OEM1)
+  else if (alert_destination_type == IPMI_DESTINATION_TYPE_OEM1)
     {
-      if (!(*alert_destination_type_string = 
-            strdup (IPMI_DESTINATION_TYPE_OEM1_STRING)))
+      if (!(str = strdup (IPMI_DESTINATION_TYPE_OEM1_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
-  if (alert_destination_type == IPMI_DESTINATION_TYPE_OEM2)
+  else if (alert_destination_type == IPMI_DESTINATION_TYPE_OEM2)
     {
-      if (!(*alert_destination_type_string = 
-            strdup (IPMI_DESTINATION_TYPE_OEM2_STRING)))
+      if (!(str = strdup (IPMI_DESTINATION_TYPE_OEM2_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
+      return str;
     }
-  
-  return -1;
+
+  if (!(str = strdup("")))
+    {
+      perror("strdup");
+      return NULL;
+    }
+  return str;
 }
 
 int 
@@ -1709,31 +1702,29 @@ string_to_destination_type (const char *alert_destination_type_string,
   return -1;
 }
 
-int 
-alert_acknowledge_to_string (int alert_acknowledge, 
-			     char **alert_acknowledge_string)
+char *
+alert_acknowledge_to_string (int alert_acknowledge)
 {
-  if (alert_acknowledge == IPMI_ALERT_UNACKNOWLEDGED)
-    {
-      if (!(*alert_acknowledge_string = 
-            strdup (IPMI_ALERT_UNACKNOWLEDGED_STRING)))
-        {
-          perror("strdup");
-          return -1;
-        }
-      return 0;
-    }
+  char *str = NULL;
+
   if (alert_acknowledge == IPMI_ALERT_ACKNOWLEDGED)
     {
-      if (!(*alert_acknowledge_string = 
-            strdup (IPMI_ALERT_ACKNOWLEDGED_STRING)))
+      if (!(str = strdup (IPMI_ALERT_ACKNOWLEDGED_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
     }
-  return -1;
+  else
+    {
+      if (!(str = strdup (IPMI_ALERT_UNACKNOWLEDGED_STRING)))
+        {
+          perror("strdup");
+          return NULL;
+        }
+    }
+
+  return str;
 }
 
 int 
@@ -1755,9 +1746,8 @@ string_to_alert_acknowledge (const char *alert_acknowledge_string,
   return -1;
 }
 
-int 
-alert_acknowledge_timeout_to_string (int alert_acknowledge_timeout, 
-				     char **alert_acknowledge_timeout_string)
+char *
+alert_acknowledge_timeout_to_string (int alert_acknowledge_timeout)
 {
   char *str = NULL;
   
@@ -1765,10 +1755,9 @@ alert_acknowledge_timeout_to_string (int alert_acknowledge_timeout,
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *alert_acknowledge_timeout_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1786,8 +1775,8 @@ string_to_alert_acknowledge_timeout (const char *alert_acknowledge_timeout_strin
   return -1;
 }
 
-int 
-alert_retries_to_string (int alert_retries, char **alert_retries_string)
+char *
+alert_retries_to_string (int alert_retries)
 {
   char *str = NULL;
   
@@ -1795,10 +1784,9 @@ alert_retries_to_string (int alert_retries, char **alert_retries_string)
   if (!str)
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  *alert_retries_string = str;
-  return 0;
+  return str;
 }
 
 int 
@@ -1815,28 +1803,29 @@ string_to_alert_retries (const char *alert_retries_string, int *alert_retries)
   return -1;
 }
 
-int 
-gateway_selector_to_string (int alert_gateway, char **alert_gateway_string)
+char *
+gateway_selector_to_string (int alert_gateway)
 {
+  char *str = NULL;
+
   if (alert_gateway == IPMI_GATEWAY_SELECTOR_DEFAULT)
     {
-      if (!(*alert_gateway_string = strdup (IPMI_GATEWAY_SELECTOR_DEFAULT_STRING)))
+      if (!(str = strdup (IPMI_GATEWAY_SELECTOR_DEFAULT_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
     }
-  if (alert_gateway == IPMI_GATEWAY_SELECTOR_BACKUP)
+  else
     {
-      if (!(*alert_gateway_string = strdup (IPMI_GATEWAY_SELECTOR_BACKUP_STRING)))
+      if (!(str = strdup (IPMI_GATEWAY_SELECTOR_BACKUP_STRING)))
         {
           perror("strdup");
-          return -1;
+          return NULL;
         }
-      return 0;
     }
-  return -1;
+
+  return str;
 }
 
 int 
@@ -1857,17 +1846,17 @@ string_to_gateway_selector (const char *alert_gateway_string, int *alert_gateway
   return -1;
 }
 
-int 
-alert_ip_address_to_string (const char *alert_ip_address, 
-			    char **alert_ip_address_string)
+char *
+alert_ip_address_to_string (const char *alert_ip_address)
 {
-  if (!(*alert_ip_address_string = strdup (alert_ip_address)))
+  char *str = NULL;
+
+  if (!(str = strdup (alert_ip_address)))
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
-  
-  return 0;
+  return str;
 }
 
 int 
@@ -1889,17 +1878,18 @@ string_to_alert_ip_address (const char *alert_ip_address_string,
   return -1;
 }
 
-int 
-alert_mac_address_to_string (const char *alert_mac_address, 
-			     char **alert_mac_address_string)
+char *
+alert_mac_address_to_string (const char *alert_mac_address)
 {
-  if (!(*alert_mac_address_string = strdup (alert_mac_address)))
+  char *str = NULL;
+
+  if (!(str = strdup (alert_mac_address)))
     {
       perror("strdup");
-      return -1;
+      return NULL;
     }
   
-  return 0;
+  return str;
 }
 
 int 
