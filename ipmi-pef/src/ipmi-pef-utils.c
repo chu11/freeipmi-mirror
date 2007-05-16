@@ -44,6 +44,7 @@
 #define IPMI_SENSOR_CLASS_GENERIC_DISCRETE_STRING            "Generic_Discrete"
 #define IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE_STRING    "Sensor_Specific_Discrete"
 #define IPMI_SENSOR_CLASS_OEM_STRING                         "OEM"
+#define IPMI_SENSOR_UNKNOWN_STRING                           "Unknown"
 
 #define YES_VALUE_STRING    "Yes"
 #define YES_VALUE           1
@@ -791,27 +792,17 @@ sensor_type_to_string (int sensor_type, char **sensor_type_string)
       return 0;
     }
   
-  if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+  if (!(sensor_str = ipmi_get_sensor_group (sensor_type)))
     {
-      asprintf (&str, "%s_0x%0X", sensor_str, sensor_type);
-      if (!str)
-        {
-          perror("strdup");
-          return -1;
-        }
-      strchr_replace (*sensor_type_string, ' ', '_');
-      return 0;
+      sensor_str = IPMI_SENSOR_UNKNOWN_STRING;
     }
-  
-  /* XXX this is wrong - check range */
-  if ((sensor_str = ipmi_get_sensor_group (sensor_type)) == NULL)
-    return -1;
-
+      
   if (!(*sensor_type_string = strdup (sensor_str)))
     {
       perror("strdup");
       return -1;
     }
+
   strchr_replace (*sensor_type_string, ' ', '_');
   return 0;
 }
