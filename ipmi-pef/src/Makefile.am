@@ -27,4 +27,10 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libfreeipmiportability.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
+../../common/src/libsdr.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libsensor.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 force-dependency-check:

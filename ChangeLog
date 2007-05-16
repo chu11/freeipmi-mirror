@@ -1,7 +1,8 @@
 2007-05-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/: Fix string parsing bugs in alert policy table.  Fix
-	event trigger output corner case.
+	event trigger output corner case.  Fix build dependency bug.  Add
+	-e option.  Force user to specify section.
 
 	* doc/freeipmi.texi, doc/gpl.texi, doc/version-doc.texi,
 	doc/authors.texi, doc/fdl.texi, THANKS: Removed.

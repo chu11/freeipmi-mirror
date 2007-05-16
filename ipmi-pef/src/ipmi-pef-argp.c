@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.10 2007-05-16 06:14:13 chu11 Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.11 2007-05-16 17:29:57 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -68,16 +68,19 @@ static struct argp_option options[] =
      "Action is to GET the PEF event filter tables", 19},
     {"commit",     COMMIT_KEY,     0, 0,
      "Action is to UPDATE the PEF event filter tables", 20},
-    {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
-     "Do checkout/commit of Alert Policy Table.", 21},
-    {"lan-alert-destination", LAN_ALERT_DESTINATION_KEY, 0, 0, 
-     "Do checkout/commit of PEF specific LAN configuration.", 22},
-    {"community-string", COMMUNITY_STRING_KEY, 0, 0,
-     "Do checkout/commit of Community String", 23},
-    {"verbose", VERBOSE_KEY, 0, 0,  "Produce verbose output", 24},
     /* XXX: and diff */
+    {"community-string", COMMUNITY_STRING_KEY, 0, 0,
+     "Checkout/commit Community String", 21},
+    {"lan-alert-destinations", LAN_ALERT_DESTINATIONS_KEY, 0, 0, 
+     "Checkout/commit of PEF LAN configuration.", 22},
+    {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
+     "Checkout/commit of Alert Policy Table.", 23},
+    {"event-filter-table", EVENT_FILTER_TABLE_KEY, 0, 0,
+     "Checkout/commit Event Filter Table", 24},
+    {"verbose", VERBOSE_KEY, 0, 0,  
+     "Produce verbose output", 25},
     {"filename", FILENAME_KEY, "FILENAME", 0,
-     "use FILENAME in checkout or commit", 25},
+     "use FILENAME in checkout or commit", 26},
     { 0 }
   };
 
@@ -99,11 +102,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case COMMIT_KEY:
       cmd_args->commit_wanted = 1;
       break;
+    case EVENT_FILTER_TABLE_KEY:
+      cmd_args->event_filter_table_wanted = 1;
+      break;
     case ALERT_POLICY_TABLE_KEY:
       cmd_args->alert_policy_table_wanted = 1;
       break;
-    case LAN_ALERT_DESTINATION_KEY:
-      cmd_args->lan_alert_destination_wanted = 1;
+    case LAN_ALERT_DESTINATIONS_KEY:
+      cmd_args->lan_alert_destinations_wanted = 1;
       break;
     case COMMUNITY_STRING_KEY:
       cmd_args->community_string_wanted = 1;
@@ -141,9 +147,10 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
   cmd_args->info_wanted = 0;
   cmd_args->checkout_wanted = 0;
   cmd_args->commit_wanted = 0;
-  cmd_args->alert_policy_table_wanted = 0;
-  cmd_args->lan_alert_destination_wanted = 0;
   cmd_args->community_string_wanted = 0;
+  cmd_args->lan_alert_destinations_wanted = 0;
+  cmd_args->alert_policy_table_wanted = 0;
+  cmd_args->event_filter_table_wanted = 0;
   cmd_args->verbose_wanted = 0;
   cmd_args->filename = NULL;
 

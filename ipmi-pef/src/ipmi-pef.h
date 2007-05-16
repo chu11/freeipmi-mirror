@@ -30,8 +30,9 @@ enum argp_option_keys
     INFO_KEY = 'i', 
     CHECKOUT_KEY = 'o', 
     COMMIT_KEY = 'c', 
+    EVENT_FILTER_TABLE_KEY = 'e',
     ALERT_POLICY_TABLE_KEY = 't', 
-    LAN_ALERT_DESTINATION_KEY = 'd', 
+    LAN_ALERT_DESTINATIONS_KEY = 'd', 
     COMMUNITY_STRING_KEY = 's',
     VERBOSE_KEY = 'v',
     FILENAME_KEY = 'f'
@@ -43,9 +44,10 @@ struct ipmi_pef_arguments
   int info_wanted;
   int checkout_wanted;
   int commit_wanted;
-  int alert_policy_table_wanted;
-  int lan_alert_destination_wanted;
   int community_string_wanted;
+  int lan_alert_destinations_wanted;
+  int alert_policy_table_wanted;
+  int event_filter_table_wanted;
   char *community_string;
   int verbose_wanted;
   char *filename;

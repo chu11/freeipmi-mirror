@@ -191,12 +191,16 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
   int rv = 0;
   int num_event_filters;
   int filter;
+#if 0
   int i;
   char *group;
+#endif
   
   if (get_number_of_event_filters (state_data, &num_event_filters) != 0)
     return (-1);
   
+#if 0
+  /* XXX: why did Bala output this stuff?? */
   fprintf (fp, "### Sensor types:\n");
   for (i = 0; ipmi_sensor_types[i]; i++)
     {
@@ -218,6 +222,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
   fprintf (fp, "### \n");
   
   checkout_alert_policy_table (state_data, fp);
+#endif
   
   for (filter = 1; filter <= num_event_filters; filter++)
     {
@@ -894,32 +899,45 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
       else
         fp = stdout;
       
-      if (args->alert_policy_table_wanted)
-	{
-	  rv = checkout_pef_apt (state_data, fp);
-	}
-      else
-	{
-	  if (args->lan_alert_destination_wanted)
-	    {
-	      rv = checkout_pef_lad (state_data, fp);
-	    }
-	  else
-	    {
-	      if (args->community_string_wanted)
-		{
-		  rv = checkout_pef_community_string (state_data, fp);
-		}
-	      else
-		{
-		  rv = checkout_pef_evt (state_data, fp);
-		}
-	    }
-	}
+#if 0
+      /* XXX come back to this later when the sectional stuff works */
+      /* By default, output everything if nothing was requested */
+      if (!args->community_string_wanted
+          && !args->lan_alert_destinations_wanted
+          && !args->alert_policy_table_wanted
+          && !args->event_filter_table_wanted)
+        {
+          args->community_string_wanted = 1;
+          args->lan_alert_destinations_wanted = 1;
+          args->alert_policy_table_wanted = 1;
+          args->event_filter_table_wanted = 1;
+        }
+#endif
       
+      if (args->community_string_wanted)
+        {
+          if ((rv = checkout_pef_community_string (state_data, fp)) < 0)
+            goto checkout_cleanup;
+        }
+      if (args->lan_alert_destinations_wanted)
+        {
+          if ((rv = checkout_pef_lad (state_data, fp)) < 0)
+            goto checkout_cleanup;
+        }
+      if (args->alert_policy_table_wanted)
+        {
+          if ((rv = checkout_pef_apt (state_data, fp)) < 0)
+            goto checkout_cleanup;
+        }
+      if (args->event_filter_table_wanted)
+        {
+          if ((rv = checkout_pef_evt (state_data, fp)) < 0)
+            goto checkout_cleanup;
+        }
+      
+    checkout_cleanup:
       if (file_opened)
 	fclose (fp);
-      
       return rv;
     }
   
@@ -942,30 +960,31 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
         }
       else
         fp = stdin;
+
+      /* XXX come back to this later when the sectional stuff works */
       
-      if (args->alert_policy_table_wanted)
+      if (args->community_string_wanted)
+        {
+          if ((rv = commit_pef_community_string (state_data, fp)) < 0)
+            goto commit_cleanup;
+        }
+      else if (args->lan_alert_destinations_wanted)
+        {
+          if ((rv = commit_pef_lad (state_data, fp)) < 0)
+            goto commit_cleanup;
+        }
+      else if (args->alert_policy_table_wanted)
 	{
-	  rv = commit_pef_apt (state_data, fp);
+	  if ((rv = commit_pef_apt (state_data, fp)) < 0)
+            goto commit_cleanup;
 	}
-      else
+      else if (args->event_filter_table_wanted)
 	{
-	  if (args->lan_alert_destination_wanted)
-	    {
-	      rv = commit_pef_lad (state_data, fp);
-	    }
-	  else
-	    {
-	      if (args->community_string_wanted)
-		{
-		  rv = commit_pef_community_string (state_data, fp);
-		}
-	      else
-		{
-		  rv = commit_pef_evt (state_data, fp);
-		}
-	    }
-	}
+          if ((rv = commit_pef_evt (state_data, fp)) < 0)
+            goto commit_cleanup;
+        }
       
+    commit_cleanup:
       if (file_opened)
         fclose (fp);
       return rv;
