@@ -518,6 +518,7 @@ commit_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	}
     }
   
+  free(evt_list);
   return rv;
 }
 
@@ -650,6 +651,7 @@ commit_pef_apt (ipmi_pef_state_data_t *state_data, FILE *fp)
 	}
     }
   
+  free(apt_list);
   return rv;
 }
 
@@ -796,6 +798,7 @@ commit_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
 	}
     }
   
+  free(lad_list);
   return rv;
 }
 

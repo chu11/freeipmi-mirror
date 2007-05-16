@@ -2,7 +2,7 @@
 
 	* ipmi-pef/: Do initial support of lan channels and community
 	string support.  Fix thread safety problems.  Add -v option.  Fix
-	numerous error messages.  Fix various bugs.
+	mem-leaks. Fix numerous error messages.  Fix various bugs.
 	
 2007-05-15  Albert Chu <chu11@llnl.gov>
 
