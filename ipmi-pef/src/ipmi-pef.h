@@ -32,7 +32,8 @@ enum argp_option_keys
     COMMIT_KEY = 'c', 
     ALERT_POLICY_TABLE_KEY = 't', 
     LAN_ALERT_DESTINATION_KEY = 'd', 
-    COMMUNITY_STRING_KEY = 's'
+    COMMUNITY_STRING_KEY = 's',
+    VERBOSE_KEY = 'v'
   };
 
 struct ipmi_pef_arguments
@@ -47,6 +48,7 @@ struct ipmi_pef_arguments
   int lan_alert_destination_wanted;
   int community_string_wanted;
   char *community_string;
+  int verbose_wanted;
 };
 
 typedef struct ipmi_pef_prog_data

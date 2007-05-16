@@ -45,6 +45,7 @@ ipmi-pef
 * doesn't check for out of mem errors
 * diff
 * doesn't output error help
+* verbose
 
 general
 -------

@@ -48,9 +48,9 @@ display_pef_info (ipmi_pef_state_data_t *state_data)
   
   memset (&pef_info, 0, sizeof (pef_info_t));
   
-  if (get_pef_info (state_data->dev, &pef_info) != 0)
+  if (get_pef_info (state_data, &pef_info) != 0)
     {
-      fprintf (stderr, "%s: unable to get PEF information\n", 
+      fprintf (stderr, "%s: Unable to get PEF information\n", 
 	       program_invocation_short_name);
       return (-1);
     }
@@ -94,7 +94,7 @@ checkout_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
   int num_alert_policy_entries;
   int entry;
   
-  if (get_number_of_alert_policy_entries (state_data->dev, 
+  if (get_number_of_alert_policy_entries (state_data, 
 					  &num_alert_policy_entries) != 0)
     return (-1);
   
@@ -105,9 +105,10 @@ checkout_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
       
       memset (&apt, 0, sizeof (pef_alert_policy_table_t));
       
-      if (get_alert_policy_table (state_data->dev, entry, &apt) != 0)
+      if (get_alert_policy_table (state_data, entry, &apt) != 0)
 	{
-	  fprintf (stderr, "unable to get alert policy table #%d\n", entry);
+          if (state_data->prog_data->args->verbose_wanted)
+            fprintf (fp, "## FATAL: Unable to get alert policy table #%d\n", entry);
 	  rv = -1;
 	  continue;
 	}
@@ -193,7 +194,7 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
   int i;
   char *group;
   
-  if (get_number_of_event_filters (state_data->dev, &num_event_filters) != 0)
+  if (get_number_of_event_filters (state_data, &num_event_filters) != 0)
     return (-1);
   
   fprintf (fp, "### Sensor types:\n");
@@ -225,9 +226,10 @@ checkout_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
       
       memset (&evt, 0, sizeof (pef_event_filter_table_t));
       
-      if (get_event_filter_table (state_data->dev, filter, &evt) != 0)
+      if (get_event_filter_table (state_data, filter, &evt) != 0)
 	{
-	  fprintf (stderr, "unable to get event filter table #%d\n", filter);
+          if (state_data->prog_data->args->verbose_wanted)
+            fprintf (fp, "## FATAL: Unable to get event filter table #%d\n", filter);
 	  rv = -1;
 	  continue;
 	}
@@ -506,10 +508,11 @@ commit_pef_evt (ipmi_pef_state_data_t *state_data, FILE *fp)
   
   for (i = 0; i < count; i++)
     {
-      if (set_event_filter_table (state_data->dev, &evt_list[i]) != 0)
+      if (set_event_filter_table (state_data, &evt_list[i]) != 0)
 	{
-	  fprintf (stderr, "unable to set event filter table #%d\n", 
-		   evt_list[i].filter_number);
+          if (state_data->prog_data->args->verbose_wanted)
+            fprintf (fp, "## FATAL: Unable to set event filter table #%d\n", 
+                     evt_list[i].filter_number);
 	  rv = -1;
 	  continue;
 	}
@@ -525,7 +528,7 @@ checkout_pef_apt (ipmi_pef_state_data_t *state_data, FILE *fp)
   int num_alert_policy_entries;
   int entry;
   
-  if (get_number_of_alert_policy_entries (state_data->dev, 
+  if (get_number_of_alert_policy_entries (state_data, 
 					  &num_alert_policy_entries) != 0)
     return (-1);
   
@@ -536,9 +539,10 @@ checkout_pef_apt (ipmi_pef_state_data_t *state_data, FILE *fp)
       
       memset (&apt, 0, sizeof (pef_alert_policy_table_t));
       
-      if (get_alert_policy_table (state_data->dev, entry, &apt) != 0)
+      if (get_alert_policy_table (state_data, entry, &apt) != 0)
 	{
-	  fprintf (stderr, "unable to get alert policy table #%d\n", entry);
+          if (state_data->prog_data->args->verbose_wanted)
+            fprintf (fp, "## FATAL: Unable to get alert policy table #%d\n", entry);
 	  rv = -1;
 	  continue;
 	}
@@ -636,10 +640,11 @@ commit_pef_apt (ipmi_pef_state_data_t *state_data, FILE *fp)
   
   for (i = 0; i < count; i++)
     {
-      if (set_alert_policy_table (state_data->dev, &apt_list[i]) != 0)
+      if (set_alert_policy_table (state_data, &apt_list[i]) != 0)
 	{
-	  fprintf (stderr, "unable to set alert policy table #%d\n", 
-		   apt_list[i].alert_policy_number);
+          if (state_data->prog_data->args->verbose_wanted)
+            fprintf (fp, "## FATAL: Unable to set alert policy table #%d\n", 
+                     apt_list[i].alert_policy_number);
 	  rv = -1;
 	  continue;
 	}
@@ -655,7 +660,7 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
   int num_of_lan_destinations;
   int d;
 
-  if (get_number_of_lan_destinations (state_data->dev, &num_of_lan_destinations) != 0)
+  if (get_number_of_lan_destinations (state_data, &num_of_lan_destinations) != 0)
     return (-1);
 
   for (d = 1; d <= num_of_lan_destinations; d++)
@@ -665,9 +670,10 @@ checkout_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
       
       memset (&lad, 0, sizeof (lan_alert_destination_t));
       
-      if (get_lan_alert_destination (state_data->dev, d, &lad) != 0)
+      if (get_lan_alert_destination (state_data, d, &lad) != 0)
 	{
-	  fprintf (stderr, "unable to get LAN alert destination #%d\n", d);
+          if (state_data->prog_data->args->verbose_wanted)
+            fprintf (fp, "## FATAL: Unable to get LAN alert destination #%d\n", d);
 	  rv = -1;
 	  continue;
 	}
@@ -780,10 +786,11 @@ commit_pef_lad (ipmi_pef_state_data_t *state_data, FILE *fp)
   
   for (i = 0; i < count; i++)
     {
-      if (set_lan_alert_destination (state_data->dev, &lad_list[i]) != 0)
+      if (set_lan_alert_destination (state_data, &lad_list[i]) != 0)
 	{
-	  fprintf (stderr, "unable to set LAN Alert Destination #%d\n", 
-		   lad_list[i].destination_selector);
+          if (state_data->prog_data->args->verbose_wanted)
+            fprintf (fp, "## FATAL: Unable to set LAN Alert Destination #%d\n", 
+                     lad_list[i].destination_selector);
 	  rv = -1;
 	  continue;
 	}
@@ -797,11 +804,12 @@ checkout_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   uint8_t community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
 
-  if (get_bmc_community_string (state_data->dev,
+  if (get_bmc_community_string (state_data,
 				community_string,
 				IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
     {
-      fprintf (stderr, "unable to get community string\n");
+      if (state_data->prog_data->args->verbose_wanted)
+        fprintf (fp, "## FATAL: Unable to get community string\n");
       return -1;
     }
   
@@ -818,7 +826,7 @@ checkout_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
 int 
 commit_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
-  return set_bmc_community_string (state_data->dev, (uint8_t *)state_data->prog_data->args->community_string);
+  return set_bmc_community_string (state_data, (uint8_t *)state_data->prog_data->args->community_string);
 }
 
 int 
@@ -846,9 +854,11 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
 	  fp = fopen (args->checkout_filename, "w");
 	  if (fp == NULL)
 	    {
-	      fprintf (stderr, "unable to open file [%s] for writing.  using stdout\n", 
-		       args->checkout_filename);
-	      fp = stdout;
+              fprintf (stderr, "Unable to open file [%s] for writing: %s\n", 
+                       args->checkout_filename,
+                       strerror(errno));
+              rv = -1;
+              return rv;
 	    }
 	}
       
@@ -887,8 +897,9 @@ run_cmd_args (ipmi_pef_state_data_t *state_data)
       
       if ((fp = fopen (args->commit_filename, "r")) == NULL)
 	{
-	  fprintf (stderr, "unable to open file [%s] for reading.  aborting...\n", 
-		   args->commit_filename);
+	  fprintf (stderr, "Unable to open file [%s] for reading: %s\n", 
+		   args->commit_filename,
+                   strerror(errno));
 	  rv = -1;
 	  return rv;
 	}

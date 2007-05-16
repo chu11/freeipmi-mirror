@@ -22,7 +22,6 @@ struct pef_info
 };
 typedef struct pef_info pef_info_t;
 
-
 struct pef_event_filter_table 
 {
   int filter_number;
@@ -82,41 +81,48 @@ struct lan_alert_destination
 };
 typedef struct lan_alert_destination lan_alert_destination_t;
 
-int get_pef_info (ipmi_device_t dev, pef_info_t *pef_info);
+int get_pef_info (struct ipmi_pef_state_data *state_data, 
+		  pef_info_t *pef_info);
 
-int get_event_filter_table (ipmi_device_t dev, int filter, pef_event_filter_table_t *evt);
+int get_event_filter_table (struct ipmi_pef_state_data *state_data, 
+			    int filter, 
+			    pef_event_filter_table_t *evt);
 
-int set_event_filter_table (ipmi_device_t dev, pef_event_filter_table_t *evt);
+int set_event_filter_table (struct ipmi_pef_state_data *state_data, pef_event_filter_table_t *evt);
 
-int get_number_of_event_filters (ipmi_device_t dev, int *num_event_filters);
+int get_number_of_event_filters (struct ipmi_pef_state_data *state_data, int *num_event_filters);
 
 int get_evt_list (FILE *fp, pef_event_filter_table_t **evt_list, int *count);
 
-int get_number_of_alert_policy_entries (ipmi_device_t dev, int *num_alert_policy_entries);
+int get_number_of_alert_policy_entries (struct ipmi_pef_state_data *state_data, 
+					int *num_alert_policy_entries);
 
-int get_alert_policy_table (ipmi_device_t dev, 
+int get_alert_policy_table (struct ipmi_pef_state_data *state_data, 
 			    int policy_number, 
 			    pef_alert_policy_table_t *apt);
 
 int get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count);
 
-int set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt);
+int set_alert_policy_table (struct ipmi_pef_state_data *state_data, pef_alert_policy_table_t *apt);
 
+int get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, 
+				    int *number_of_lan_destinations);
 
-int get_number_of_lan_destinations (ipmi_device_t dev, int *number_of_lan_destinations);
-
-int get_lan_alert_destination (ipmi_device_t dev, 
+int get_lan_alert_destination (struct ipmi_pef_state_data *state_data, 
 			       int destination_selector, 
 			       lan_alert_destination_t *lad);
 
 int get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count);
 
-int set_lan_alert_destination (ipmi_device_t dev, lan_alert_destination_t *lad);
+int set_lan_alert_destination (struct ipmi_pef_state_data *state_data, 
+			       lan_alert_destination_t *lad);
 
 
-int get_bmc_community_string (ipmi_device_t dev,
+int get_bmc_community_string (struct ipmi_pef_state_data *state_data,
                               uint8_t *community_string, 
                               uint32_t community_string_len);
 
-int set_bmc_community_string (ipmi_device_t dev, uint8_t *community_string) ;
+int set_bmc_community_string (struct ipmi_pef_state_data *state_data, 
+			      uint8_t *community_string) ;
+
 #endif

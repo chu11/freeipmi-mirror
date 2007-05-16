@@ -27,7 +27,7 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
-#include <argp.h>
+#include <assert.h>
 
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-pef-and-alerting-cmds.h"
@@ -63,25 +63,16 @@
     }									\
   while (0)
 
-static int8_t lan_channel_number;
-static int lan_channel_number_initialized = 0;
-
 int
-get_lan_channel_number (ipmi_device_t dev, int8_t *channel_num)
+get_lan_channel_number (struct ipmi_pef_state_data *state_data)
 {
-  if (lan_channel_number_initialized)
-    {
-      *channel_num = lan_channel_number;
-      return 0;
-    }
+  int channel_number;
 
-  if ((lan_channel_number = ipmi_get_channel_number (dev,
-						     IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if ((channel_number = ipmi_get_channel_number (state_data->dev,
+                                                 IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
     return -1;
-
-  lan_channel_number_initialized = 1;
-  *channel_num = lan_channel_number;
-  return 0;
+  
+  return channel_number;
 }
 
 
@@ -133,7 +124,8 @@ _record_string_to_evt (const char *record_string,
   
   char *value_string = NULL;
   
-  ERR_EINVAL (record_string && evt);
+  assert(record_string);
+  assert(evt);
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  FILTER_NUMBER_KEY_STRING, 
@@ -511,7 +503,8 @@ _record_string_to_apt (const char *record_string,
   
   char *value_string = NULL;
   
-  ERR_EINVAL (record_string && apt);
+  assert(record_string);
+  assert(apt);
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_ALERT_POLICY_NUMBER_KEY_STRING, 
@@ -628,7 +621,8 @@ _record_string_to_lad (const char *record_string,
   
   char *value_string = NULL;
   
-  ERR_EINVAL (record_string && lad);
+  assert(record_string);
+  assert(lad);
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
@@ -829,17 +823,18 @@ _get_record_count (FILE *fp, int *count)
 }
 
 int 
-get_pef_info (ipmi_device_t dev, pef_info_t *pef_info)
+get_pef_info (struct ipmi_pef_state_data *state_data, pef_info_t *pef_info)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
   
-  ERR_EINVAL (dev && pef_info);
+  assert(state_data);
+  assert(pef_info);
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_capabilities_rs);
   
-  if (ipmi_cmd_get_pef_capabilities (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_capabilities (state_data->dev, obj_cmd_rs) != 0)
     goto cleanup;
   
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "pef_version_major", &val);
@@ -869,7 +864,7 @@ get_pef_info (ipmi_device_t dev, pef_info_t *pef_info)
       
       FIID_OBJ_CREATE (obj_cmd_rs, 
 		       tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (dev, 
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev, 
 									     IPMI_GET_PEF_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
@@ -881,7 +876,7 @@ get_pef_info (ipmi_device_t dev, pef_info_t *pef_info)
       
       FIID_OBJ_CREATE (obj_cmd_rs, 
 		       tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (dev, 
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev, 
 										    IPMI_GET_PEF_PARAMETER, 
 										    SET_SELECTOR, 
 										    BLOCK_SELECTOR, 
@@ -893,7 +888,7 @@ get_pef_info (ipmi_device_t dev, pef_info_t *pef_info)
       
       FIID_OBJ_CREATE (obj_cmd_rs, 
 		       tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs);
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (dev, 
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->dev, 
 									     IPMI_GET_PEF_PARAMETER, 
 									     SET_SELECTOR, 
 									     BLOCK_SELECTOR, 
@@ -911,17 +906,18 @@ get_pef_info (ipmi_device_t dev, pef_info_t *pef_info)
 }
 
 int 
-get_event_filter_table (ipmi_device_t dev, int filter, pef_event_filter_table_t *evt)
+get_event_filter_table (struct ipmi_pef_state_data *state_data, int filter, pef_event_filter_table_t *evt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
   
-  ERR_EINVAL (dev && evt);
+  assert(state_data);
+  assert(evt);
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs);
   
-  if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (dev,
+  if (ipmi_cmd_get_pef_configuration_parameters_event_filter_table (state_data->dev,
 								    IPMI_GET_PEF_PARAMETER,
 								    filter,
 								    BLOCK_SELECTOR,
@@ -993,16 +989,17 @@ get_event_filter_table (ipmi_device_t dev, int filter, pef_event_filter_table_t 
 }
 
 int 
-set_event_filter_table (ipmi_device_t dev, pef_event_filter_table_t *evt)
+set_event_filter_table (struct ipmi_pef_state_data *state_data, pef_event_filter_table_t *evt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   
-  ERR_EINVAL (dev && evt);
+  assert(state_data);
+  assert(evt);
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
   
-  if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (dev, 
+  if (ipmi_cmd_set_pef_configuration_parameters_event_filter_table (state_data->dev, 
 								    evt->filter_number, 
 								    evt->filter_type, 
 								    evt->enable_filter, 
@@ -1042,7 +1039,7 @@ set_event_filter_table (ipmi_device_t dev, pef_event_filter_table_t *evt)
 }
 
 int 
-get_number_of_event_filters (ipmi_device_t dev, int *num_event_filters)
+get_number_of_event_filters (struct ipmi_pef_state_data *state_data, int *num_event_filters)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1050,7 +1047,7 @@ get_number_of_event_filters (ipmi_device_t dev, int *num_event_filters)
   
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
-  if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev, 
 									 IPMI_GET_PEF_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 
@@ -1105,7 +1102,7 @@ get_evt_list (FILE *fp, pef_event_filter_table_t **evt_list, int *count)
 }
 
 int 
-get_number_of_alert_policy_entries (ipmi_device_t dev, int *num_alert_policy_entries)
+get_number_of_alert_policy_entries (struct ipmi_pef_state_data *state_data, int *num_alert_policy_entries)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1113,7 +1110,7 @@ get_number_of_alert_policy_entries (ipmi_device_t dev, int *num_alert_policy_ent
   
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
-  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev, 
 										IPMI_GET_PEF_PARAMETER, 
 										SET_SELECTOR, 
 										BLOCK_SELECTOR, 
@@ -1129,7 +1126,7 @@ get_number_of_alert_policy_entries (ipmi_device_t dev, int *num_alert_policy_ent
 }
 
 int 
-get_alert_policy_table (ipmi_device_t dev, 
+get_alert_policy_table (struct ipmi_pef_state_data *state_data, 
 			int policy_number, 
 			pef_alert_policy_table_t *apt)
 {
@@ -1137,12 +1134,13 @@ get_alert_policy_table (ipmi_device_t dev,
   uint64_t val;
   int rv = -1;
   
-  ERR_EINVAL (dev && apt);
+  assert(state_data);
+  assert(apt);
   
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs);
   
-  if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (dev, 
+  if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->dev, 
 								    IPMI_GET_PEF_PARAMETER,
 								    policy_number, 
 								    BLOCK_SELECTOR, 
@@ -1212,15 +1210,16 @@ get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count)
 }
 
 int 
-set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt)
+set_alert_policy_table (struct ipmi_pef_state_data *state_data, pef_alert_policy_table_t *apt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   
-  ERR_EINVAL (dev && apt);
+  assert(state_data);
+  assert(apt);
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_pef_configuration_parameters_rs);
-  if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (dev, 
+  if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->dev, 
 								    apt->alert_policy_number, 
 								    apt->policy_type, 
 								    apt->policy_enabled, 
@@ -1240,21 +1239,21 @@ set_alert_policy_table (ipmi_device_t dev, pef_alert_policy_table_t *apt)
 }
 
 int
-get_bmc_community_string (ipmi_device_t dev,
+get_bmc_community_string (struct ipmi_pef_state_data *state_data,
 			  uint8_t *community_string, 
 			  uint32_t community_string_len) 
 { 
   fiid_obj_t obj_cmd_rs = NULL; 
-  int8_t channel_number; 
+  int channel_number; 
   int rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) 
     goto cleanup; 
 
-  if (get_lan_channel_number (dev, &channel_number) < 0)
+  if ((channel_number = get_lan_channel_number (state_data)) < 0)
     goto cleanup; 
  
-  if (ipmi_cmd_get_lan_configuration_parameters_community_string (dev,  
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,  
 								  channel_number,  
 								  IPMI_GET_LAN_PARAMETER,  
 								  SET_SELECTOR,  
@@ -1276,20 +1275,20 @@ get_bmc_community_string (ipmi_device_t dev,
 } 
 
 int
-set_bmc_community_string (ipmi_device_t dev,
+set_bmc_community_string (struct ipmi_pef_state_data *state_data,
 			  uint8_t *community_string) 
 { 
   fiid_obj_t obj_cmd_rs = NULL; 
-  int8_t channel_number; 
+  int channel_number; 
   int rv = -1;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) 
     goto cleanup; 
 
-  if (get_lan_channel_number (dev, &channel_number) < 0)
+  if ((channel_number = get_lan_channel_number (state_data)) < 0)
     goto cleanup; 
 
-  if (ipmi_cmd_set_lan_configuration_parameters_community_string (dev,  
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,  
 								  channel_number, 
 								  community_string,  
 								  (community_string) ? strlen((char *)community_string) : 0, 
@@ -1306,22 +1305,23 @@ set_bmc_community_string (ipmi_device_t dev,
 /********************************************************************************/
 
 int 
-get_number_of_lan_destinations (ipmi_device_t dev, int *number_of_lan_destinations)
+get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, int *number_of_lan_destinations)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   uint64_t val;
-  int8_t channel_number;
+  int channel_number;
   
-  ERR_EINVAL (dev && number_of_lan_destinations);
+  assert(state_data);
+  assert(number_of_lan_destinations);
   
-  if (get_lan_channel_number (dev, &channel_number) < 0)
+  if ((channel_number = get_lan_channel_number (state_data)) < 0)
     goto cleanup; 
   
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs);
   
-  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev, 
 									channel_number, 
 									IPMI_GET_LAN_PARAMETER, 
 									SET_SELECTOR, 
@@ -1340,20 +1340,21 @@ get_number_of_lan_destinations (ipmi_device_t dev, int *number_of_lan_destinatio
 }
 
 int 
-get_lan_alert_destination (ipmi_device_t dev, 
+get_lan_alert_destination (struct ipmi_pef_state_data *state_data, 
 			   int destination_selector, 
 			   lan_alert_destination_t *lad)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
-  int8_t channel_number = 7;
+  int channel_number;
   uint8_t alert_ip_address_bytes[4];
   uint8_t alert_mac_address_bytes[6];
   
-  ERR_EINVAL (dev && lad);
+  assert(state_data);
+  assert(lad);
   
-  if (get_lan_channel_number (dev, &channel_number) < 0)
+  if ((channel_number = get_lan_channel_number (state_data)) < 0)
     goto cleanup; 
   
   lad->destination_selector = destination_selector;
@@ -1361,7 +1362,7 @@ get_lan_alert_destination (ipmi_device_t dev,
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_lan_configuration_parameters_destination_type_rs);
   
-  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->dev, 
                                                                   channel_number, 
                                                                   IPMI_GET_LAN_PARAMETER, 
                                                                   destination_selector, 
@@ -1386,7 +1387,7 @@ get_lan_alert_destination (ipmi_device_t dev,
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs);
   
-  if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (dev, 
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (state_data->dev, 
                                                                        channel_number, 
                                                                        IPMI_GET_LAN_PARAMETER, 
                                                                        destination_selector, 
@@ -1469,17 +1470,18 @@ get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count)
 }
 
 int 
-set_lan_alert_destination (ipmi_device_t dev, lan_alert_destination_t *lad)
+set_lan_alert_destination (struct ipmi_pef_state_data *state_data, lan_alert_destination_t *lad)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
-  int8_t channel_number = 7;
+  int channel_number;
   uint32_t alert_ip_address_bytes = 0;
   uint64_t alert_mac_address_bytes = 0;
   
-  ERR_EINVAL (dev && lad);
+  assert(state_data);
+  assert(lad);
   
-  if (get_lan_channel_number (dev, &channel_number) < 0)
+  if ((channel_number = get_lan_channel_number (state_data)) < 0)
     goto cleanup; 
   
   if (ipmi_ipv4_address_string2int (lad->alert_ip_address, &alert_ip_address_bytes) < 0)
@@ -1489,7 +1491,7 @@ set_lan_alert_destination (ipmi_device_t dev, lan_alert_destination_t *lad)
     goto cleanup;
   
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_set_lan_configuration_parameters_rs);
-  if (ipmi_cmd_set_lan_configuration_parameters_destination_type (dev,
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_type (state_data->dev,
                                                                   channel_number,
                                                                   lad->destination_selector,
                                                                   lad->destination_type,
@@ -1499,7 +1501,7 @@ set_lan_alert_destination (ipmi_device_t dev, lan_alert_destination_t *lad)
                                                                   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (dev, 
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->dev, 
                                                                        channel_number,
                                                                        lad->destination_selector,
                                                                        lad->gateway_selector,

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.7 2007-05-15 21:45:05 chu11 Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.8 2007-05-16 03:56:28 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -74,6 +74,7 @@ static struct argp_option options[] =
      "Do checkout/commit of PEF specific LAN configuration.", 22},
     {"community-string", COMMUNITY_STRING_KEY, "STRING", OPTION_ARG_OPTIONAL, 
      "Do checkout/commit of Community String", 23},
+    {"verbose", VERBOSE_KEY, 0, 0,  "Produce verbose output", 24},
     { 0 }
   };
 
@@ -109,6 +110,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
       if (arg)
 	cmd_args->community_string = strdup (arg);
       break;
+    case VERBOSE_KEY:
+      cmd_args->verbose_wanted = 1;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -136,6 +140,7 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
   cmd_args->lan_alert_destination_wanted = 0;
   cmd_args->community_string_wanted = 0;
   cmd_args->community_string = NULL;
+  cmd_args->verbose_wanted = 0;
   
   /* ADMIN is minimum for ipmi-pef b/c its needed for many of the
    * ipmi cmds used
