@@ -44,8 +44,8 @@ ipmi-pef
 * by default output everything, support --sections or similar options to output less information.
 * doesn't check for out of mem errors
 * diff
-* doesn't output error help
-* verbose
+* fix string to int/ int to string mappings
+  - event trigger
 
 general
 -------

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.9 2007-05-16 04:29:25 chu11 Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.10 2007-05-16 06:14:13 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -72,7 +72,7 @@ static struct argp_option options[] =
      "Do checkout/commit of Alert Policy Table.", 21},
     {"lan-alert-destination", LAN_ALERT_DESTINATION_KEY, 0, 0, 
      "Do checkout/commit of PEF specific LAN configuration.", 22},
-    {"community-string", COMMUNITY_STRING_KEY, "STRING", OPTION_ARG_OPTIONAL, 
+    {"community-string", COMMUNITY_STRING_KEY, 0, 0,
      "Do checkout/commit of Community String", 23},
     {"verbose", VERBOSE_KEY, 0, 0,  "Produce verbose output", 24},
     /* XXX: and diff */
@@ -107,8 +107,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case COMMUNITY_STRING_KEY:
       cmd_args->community_string_wanted = 1;
-      if (arg)
-	cmd_args->community_string = strdup (arg);
       break;
     case VERBOSE_KEY:
       cmd_args->verbose_wanted = 1;
@@ -146,7 +144,6 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
   cmd_args->alert_policy_table_wanted = 0;
   cmd_args->lan_alert_destination_wanted = 0;
   cmd_args->community_string_wanted = 0;
-  cmd_args->community_string = NULL;
   cmd_args->verbose_wanted = 0;
   cmd_args->filename = NULL;
 

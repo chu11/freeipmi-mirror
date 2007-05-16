@@ -820,8 +820,10 @@ checkout_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
 	   "## Give valid string\n");
   fprintf (fp, 
 	   "%-30s %s\n", 
-	   "Community String", 
+	   COMMUNITY_STRING_KEY_STRING,
 	   community_string);
+  fprintf (fp,
+           "\n");
 
   return 0;
 }
@@ -829,7 +831,30 @@ checkout_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
 int 
 commit_pef_community_string (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
-  return set_bmc_community_string (state_data, (uint8_t *)state_data->prog_data->args->community_string);
+  uint8_t community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
+  int rv = -1;
+
+  if (get_community_string (state_data,
+			    fp,
+			    community_string,
+			    IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
+    {
+      if (state_data->prog_data->args->verbose_wanted)
+	fprintf (fp, "## FATAL: Unable to set community string\n");
+      goto cleanup;
+    }
+  
+  if (set_bmc_community_string (state_data, 
+				community_string) < 0)
+    {
+      if (state_data->prog_data->args->verbose_wanted)
+	fprintf (fp, "## FATAL: Unable to set community string\n");
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return rv;
 }
 
 int 

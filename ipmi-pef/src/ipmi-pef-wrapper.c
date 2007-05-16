@@ -59,8 +59,8 @@
           fprintf (stderr, "Key '%s' not found\n", __key);	        \
 	  return (-1);							\
 	}								\
-      __value = strdupa (value_string);					\
-      free (value_string);						\
+      __value = strdupa (local_value_string);				\
+      free (local_value_string);					\
     }									\
   while (0)
 
@@ -68,6 +68,8 @@ int
 get_lan_channel_number (struct ipmi_pef_state_data *state_data)
 {
   int channel_number;
+
+  assert(state_data);
 
   if ((channel_number = ipmi_get_channel_number (state_data->dev,
                                                  IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
@@ -84,6 +86,10 @@ _get_value_string_by_key (const char *cache_record,
 {
   const char *buf = NULL;
   
+  assert(cache_record);
+  assert(key);
+  assert(value);
+
   buf = cache_record;
   
   while (buf)
@@ -742,6 +748,9 @@ _fread_record (FILE *fp, char **cache_record)
 {
   char *record;
   
+  assert(fp);
+  assert(cache_record);
+
   record = NULL;
   
   while (1)
@@ -1047,6 +1056,9 @@ get_number_of_event_filters (struct ipmi_pef_state_data *state_data, int *num_ev
   uint64_t val;
   int rv = -1;
   
+  assert(state_data);
+  assert(num_event_filters);
+
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev, 
@@ -1074,9 +1086,10 @@ get_evt_list (FILE *fp, pef_event_filter_table_t **evt_list, int *count)
   int i;
   int rv;
   
-  if (!(fp && evt_list && count))
-    return (-1);
-  
+  assert(fp);
+  assert(evt_list);
+  assert(count);
+
   if (_get_record_count (fp, &l_count) != 0)
     return (-1);
   
@@ -1110,6 +1123,9 @@ get_number_of_alert_policy_entries (struct ipmi_pef_state_data *state_data, int 
   uint64_t val;
   int rv = -1;
   
+  assert(state_data);
+  assert(num_alert_policy_entries);
+
   FIID_OBJ_CREATE (obj_cmd_rs, 
 		   tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev, 
@@ -1182,8 +1198,9 @@ get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count)
   int i;
   int rv;
   
-  if (!(fp && apt_list && count))
-    return (-1);
+  assert(fp);
+  assert(apt_list);
+  assert(count);
   
   if (_get_record_count (fp, &l_count) != 0)
     return (-1);
@@ -1249,6 +1266,10 @@ get_bmc_community_string (struct ipmi_pef_state_data *state_data,
   int channel_number; 
   int rv = -1;
 
+  assert(state_data);
+  assert(community_string);
+  assert(community_string_len);
+  
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) 
     goto cleanup; 
 
@@ -1276,6 +1297,53 @@ get_bmc_community_string (struct ipmi_pef_state_data *state_data,
   return (rv); 
 } 
 
+int 
+get_community_string (struct ipmi_pef_state_data *state_data,
+                      FILE *fp,
+                      uint8_t *community_string, 
+                      uint32_t community_string_len)
+{
+  char *record = NULL;
+  char *value_string = NULL;
+
+  assert(state_data);
+  assert(fp);
+  assert(community_string);
+  assert(community_string_len);
+
+  fseek (fp, 0, SEEK_SET);
+  
+
+  if (_fread_record (fp, &record) < 0)
+    {
+      /* XXX fix later */
+      return -1;
+    }
+
+  GET_VALUE_STRING_BY_KEY_RETURN (record, 
+                                  COMMUNITY_STRING_KEY_STRING,
+				  value_string);
+  if (strlen(value_string) > IPMI_MAX_COMMUNITY_STRING_LENGTH)
+    {
+      fprintf (stderr, 
+	       "Invalid value %s for %s\n", 
+	       value_string, 
+	       COMMUNITY_STRING_KEY_STRING);
+      return -1;
+    }
+  if (community_string_len < strlen(value_string))
+    {
+      fprintf (stderr, 
+	       "Internal buffer length error: %s for %s\n", 
+	       value_string, 
+	       COMMUNITY_STRING_KEY_STRING);
+      return -1;
+    }
+  memcpy(community_string, value_string, community_string_len);
+  
+  return 0;
+}
+
 int
 set_bmc_community_string (struct ipmi_pef_state_data *state_data,
 			  uint8_t *community_string) 
@@ -1284,6 +1352,9 @@ set_bmc_community_string (struct ipmi_pef_state_data *state_data,
   int channel_number; 
   int rv = -1;
   
+  assert(state_data);
+  assert(community_string);
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) 
     goto cleanup; 
 
@@ -1442,9 +1513,10 @@ get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count)
   int i;
   int rv;
   
-  if (!(fp && lad_list && count))
-    return (-1);
-  
+  assert(fp);
+  assert(lad_list);
+  assert(count);
+
   if (_get_record_count (fp, &l_count) != 0)
     return (-1);
   

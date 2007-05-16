@@ -3,8 +3,9 @@
 	* ipmi-pef/: Do initial support of lan channels and community
 	string support.  Fix thread safety problems.  Add -v and -f
 	option.  Re-adjust options to emulate bmc-config options.  Fix
-	mem-leaks. Fix and add numerous error messages.  Fix various bugs.
-	Fix output alignment.
+	mem-leaks. Fix and add numerous error messages.  Commit community
+	string via file too.  Remove ability to set community string on
+	command line.  Fix various bugs.  Fix output alignment.
 	
 2007-05-15  Albert Chu <chu11@llnl.gov>
 

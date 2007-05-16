@@ -105,6 +105,18 @@ int get_apt_list (FILE *fp, pef_alert_policy_table_t **apt_list, int *count);
 
 int set_alert_policy_table (struct ipmi_pef_state_data *state_data, pef_alert_policy_table_t *apt);
 
+int get_bmc_community_string (struct ipmi_pef_state_data *state_data,
+                              uint8_t *community_string, 
+                              uint32_t community_string_len);
+
+int get_community_string (struct ipmi_pef_state_data *state_data,
+                          FILE *fp,
+                          uint8_t *community_string, 
+                          uint32_t community_string_len);
+
+int set_bmc_community_string (struct ipmi_pef_state_data *state_data, 
+			      uint8_t *community_string) ;
+
 int get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, 
 				    int *number_of_lan_destinations);
 
@@ -116,13 +128,5 @@ int get_lad_list (FILE *fp, lan_alert_destination_t **lad_list, int *count);
 
 int set_lan_alert_destination (struct ipmi_pef_state_data *state_data, 
 			       lan_alert_destination_t *lad);
-
-
-int get_bmc_community_string (struct ipmi_pef_state_data *state_data,
-                              uint8_t *community_string, 
-                              uint32_t community_string_len);
-
-int set_bmc_community_string (struct ipmi_pef_state_data *state_data, 
-			      uint8_t *community_string) ;
 
 #endif

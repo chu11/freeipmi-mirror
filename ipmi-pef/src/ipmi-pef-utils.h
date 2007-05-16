@@ -48,6 +48,8 @@
 #define LAD_ALERT_IP_ADDRESS_KEY_STRING             "Alert_IP_Address"
 #define LAD_ALERT_MAC_ADDRESS_KEY_STRING            "Alert_MAC_Address"
 
+#define COMMUNITY_STRING_KEY_STRING                 "Community_String"
+
 int strchr_replace (char *str, char ch, char nch);
 int filter_number_to_string (int filter_number, char **filter_number_string);
 int string_to_filter_number (const char *filter_number_string, int *filter_number);
