@@ -31,20 +31,65 @@ enum argp_option_keys
     INFO_KEY = 'i', 
     CHECKOUT_KEY = 'o', 
     COMMIT_KEY = 'c', 
-    EVENT_FILTER_TABLE_KEY = 'e',
-    ALERT_POLICY_TABLE_KEY = 't', 
-    LAN_ALERT_DESTINATIONS_KEY = 'd', 
+    DIFF_KEY = 'd',
+    LIST_SECTIONS_KEY = 'L',
     COMMUNITY_STRING_KEY = 's',
+    LAN_ALERT_DESTINATIONS_KEY = 'n', 
+    ALERT_POLICY_TABLE_KEY = 't', 
+    EVENT_FILTER_TABLE_KEY = 'e',
     VERBOSE_KEY = 'v',
     FILENAME_KEY = 'f'
   };
 
+typedef enum
+  {
+    PEF_ACTION_INFO = 1,
+    PEF_ACTION_CHECKOUT,
+    PEF_ACTION_COMMIT,
+    PEF_ACTION_DIFF,
+    PEF_ACTION_LIST_SECTIONS,
+  } pef_action_t;
+
+typedef enum
+  {
+    PEF_ERR_FATAL_ERROR = -2,
+    PEF_ERR_NON_FATAL_ERROR = -1,
+    PEF_ERR_SUCCESS = 0,
+  } pef_err_t;
+
+typedef enum
+  {
+    PEF_DIFF_FATAL_ERROR = -2,
+    PEF_DIFF_NON_FATAL_ERROR = -1,
+    PEF_DIFF_SAME = 0,
+    PEF_DIFF_DIFFERENT = 1,
+  } pef_diff_t;
+
+typedef enum
+  {
+    PEF_VALIDATE_FATAL_ERROR = -2,
+    PEF_VALIDATE_INVALID_VALUE = -1,
+    PEF_VALIDATE_VALID_VALUE = 0,
+  } pef_validate_t;
+
+struct keypair
+{
+  char *keypair;
+  struct keypair *next;
+};
+
+struct sectionstr
+{
+  char *sectionstr;
+  struct sectionstr *next;
+};
+
 struct ipmi_pef_arguments
 {
   struct common_cmd_args common;
-  int info_wanted;
-  int checkout_wanted;
-  int commit_wanted;
+  
+  pef_action_t action;
+
   int community_string_wanted;
   int lan_alert_destinations_wanted;
   int alert_policy_table_wanted;
@@ -65,8 +110,12 @@ typedef struct ipmi_pef_state_data
 { 
   ipmi_pef_prog_data_t *prog_data;
   ipmi_device_t dev;
+#if 0
+    /* XXX come back to this later */
+  struct section *sections;
+#endif
 
-  /* achu: caching to make bmc-config work more quickly */
+  /* achu: caching to make ipmi-pef work more quickly */
   int lan_channel_number_initialized;
   int8_t lan_channel_number;
   int number_of_lan_destinations_initialized;

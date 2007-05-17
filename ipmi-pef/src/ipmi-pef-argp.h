@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.h,v 1.6 2007-05-16 02:45:46 chu11 Exp $ 
+   $Id: ipmi-pef-argp.h,v 1.7 2007-05-17 17:26:52 chu11 Exp $ 
    
    ipmi-pef-argp.h - Platform Event Filtering utility.
    
@@ -26,5 +26,6 @@
 #include "ipmi-pef.h"
 
 void ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args);
+int ipmi_pef_args_validate (struct ipmi_pef_arguments *args);
 
 #endif

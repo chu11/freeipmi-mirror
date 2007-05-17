@@ -35,13 +35,15 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "argp-common.h"
 #include "ipmi-common.h"
 #include "ipmi-pef.h"
-#include "ipmi-pef-utils.h"
 #include "ipmi-pef-argp.h"
+#include "ipmi-pef-common.h"
 #include "ipmi-pef-keys.h"
 #include "ipmi-pef-map.h"
+#include "ipmi-pef-utils.h"
 #include "ipmi-pef-wrapper.h"
 
 #include "freeipmi-portability.h"
+#include "fiid-wrappers.h"
 
 void
 _ipmi_pef_state_data_init(ipmi_pef_state_data_t *state_data)
@@ -56,52 +58,6 @@ _ipmi_pef_state_data_init(ipmi_pef_state_data_t *state_data)
   state_data->number_of_lan_destinations_initialized = 0;
   state_data->number_of_alert_policy_entries_initialized = 0;
   state_data->number_of_event_filters_initialized = 0;
-}
-
-int 
-display_pef_info (ipmi_pef_state_data_t *state_data)
-{
-  pef_info_t pef_info;
-  
-  memset (&pef_info, 0, sizeof (pef_info_t));
-  
-  if (get_pef_info (state_data, &pef_info) != 0)
-    {
-      fprintf (stderr, "%s: Unable to get PEF information\n", 
-	       program_invocation_short_name);
-      return (-1);
-    }
-
-  printf ("PEF version:                            %d.%d\n", 
-	  pef_info.pef_version_major, 
-	  pef_info.pef_version_minor);
-  printf ("Alert action support:                   %s\n", 
-	  (pef_info.alert_action_support ? "Yes" : "No"));
-  printf ("Power down action support:              %s\n", 
-	  (pef_info.power_down_action_support ? "Yes" : "No"));
-  printf ("Power reset action support:             %s\n", 
-	  (pef_info.reset_action_support ? "Yes" : "No"));
-  printf ("Power cycle action support:             %s\n", 
-	  (pef_info.power_cycle_action_support ? "Yes" : "No"));
-  printf ("OEM action support:                     %s\n", 
-	  (pef_info.oem_action_support ? "Yes" : "No"));
-  printf ("Diagnostic interrupt action support:    %s\n", 
-	  (pef_info.diagnostic_interrupt_action_support ? "Yes" : "No"));
-  printf ("OEM event record filtering support:     %s\n", 
-	  (pef_info.oem_event_record_filtering_support ? "Yes" : "No"));
-  printf ("Number of Event Filter Table entries:   %d\n", 
-	  pef_info.number_of_event_filter_table_entries);
-  if (pef_info.alert_action_support)
-    {
-      printf ("Number of Event Filters:                %d\n", 
-	      pef_info.number_of_event_filters);
-      printf ("Number of Alert Policy entries:         %d\n", 
-	      pef_info.number_of_alert_policies);
-      printf ("Number of Alert Strings:                %d\n", 
-	      pef_info.number_of_alert_strings);
-    }
-  
-  return (0);
 }
 
 int 
@@ -759,136 +715,260 @@ commit_pef_event_filter_table (ipmi_pef_state_data_t *state_data, FILE *fp)
   return rv;
 }
 
-int 
-run_cmd_args (ipmi_pef_state_data_t *state_data)
+pef_err_t
+pef_info (ipmi_pef_state_data_t *state_data)
 {
-  struct ipmi_pef_arguments *args;
-  int rv = -1;
+  fiid_obj_t obj_cmd_rs = NULL;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  uint64_t val, val1, val2;
+  int alert_action_support = 0;
+
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_pef_capabilities_rs);
   
-  assert (state_data);
+  if (ipmi_cmd_get_pef_capabilities (state_data->dev, obj_cmd_rs) < 0)
+    {
+      fprintf (stderr, "Failure Retrieving PEF info\n");
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "pef_version_major", &val1);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "pef_version_minor", &val2);
+  printf ("PEF version:                            %d.%d\n", 
+	  (int)val1, 
+	  (int)val2);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "action_support.alert", &val);
+  printf ("Alert action support:                   %s\n", 
+	  (val ? "Yes" : "No"));
+  alert_action_support = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "action_support.power_down", &val);
+  printf ("Power down action support:              %s\n", 
+	  (val ? "Yes" : "No"));
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "action_support.reset", &val);
+  printf ("Power reset action support:             %s\n", 
+	  (val? "Yes" : "No"));
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "action_support.power_cycle", &val);
+  printf ("Power cycle action support:             %s\n", 
+	  (val ? "Yes" : "No"));
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "action_support.oem_action", &val);
+  printf ("OEM action support:                     %s\n", 
+	  (val ? "Yes" : "No"));
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "action_support.diagnostic_interrupt", &val);
+  printf ("Diagnostic interrupt action support:    %s\n", 
+	  (val ? "Yes" : "No"));
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "oem_event_record_filtering_supported", &val);
+  printf ("OEM event record filtering support:     %s\n", 
+	  (val ? "Yes" : "No"));
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_event_filter_table_entries", &val);
+  printf ("Number of Event Filter Table entries:   %d\n", 
+	  (int)val);
+
+  if (alert_action_support)
+    {
+      FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+
+      FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs,
+                               tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
+
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev,
+                                                                             IPMI_GET_PEF_PARAMETER,
+                                                                             SET_SELECTOR,
+                                                                             BLOCK_SELECTOR,
+                                                                             obj_cmd_rs) < 0)
+        {
+          fprintf (stderr, "Failure Retrieving PEF info\n");
+          rv = PEF_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_event_filters", &val);
+
+      printf ("Number of Event Filters:                %d\n", 
+	      (int)val);
+
+      FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+
+      FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs,
+                               tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
+
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev,
+                                                                                    IPMI_GET_PEF_PARAMETER,
+                                                                                    SET_SELECTOR,
+                                                                                    BLOCK_SELECTOR,
+                                                                                    obj_cmd_rs) < 0)
+        {
+          fprintf (stderr, "Failure Retrieving PEF info\n");
+          rv = PEF_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_alert_policy_entries", &val);
+
+      printf ("Number of Alert Policy entries:         %d\n", 
+	      (int)val);
+      
+      FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+
+      FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs,
+                               tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs);
+
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->dev,
+                                                                             IPMI_GET_PEF_PARAMETER,
+                                                                             SET_SELECTOR,
+                                                                             BLOCK_SELECTOR,
+                                                                             obj_cmd_rs) < 0)
+        {
+          fprintf (stderr, "Failure Retrieving PEF info\n");
+          rv = PEF_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_alert_strings", &val);
+      
+      printf ("Number of Alert Strings:                %d\n", 
+	      (int)val);
+    }
+  
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+pef_checkout (ipmi_pef_state_data_t *state_data)
+{
+  FILE *fp = NULL;
+  int file_opened = 0;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  struct ipmi_pef_arguments *args;
 
   args = state_data->prog_data->args;
 
-  if (args->info_wanted)
+  if (args->filename && strcmp (args->filename, "-"))
     {
-      rv = display_pef_info (state_data);
-      return rv;
+      fp = fopen (args->filename, "w");
+      if (fp == NULL)
+        {
+          fprintf (stderr, "Unable to open file [%s] for writing: %s\n", 
+                   args->filename,
+                   strerror(errno));
+          goto cleanup;
+        }
+      file_opened++;
     }
-  
-  if (args->checkout_wanted)
-    {
-      FILE *fp = NULL;
-      int file_opened = 0;
-
-      if (args->filename && strcmp (args->filename, "-"))
-	{
-	  fp = fopen (args->filename, "w");
-	  if (fp == NULL)
-	    {
-              fprintf (stderr, "Unable to open file [%s] for writing: %s\n", 
-                       args->filename,
-                       strerror(errno));
-              rv = -1;
-              return rv;
-	    }
-          file_opened++;
-	}
-      else
-        fp = stdout;
+  else
+    fp = stdout;
       
 #if 0
-      /* XXX come back to this later when the sectional stuff works */
-      /* By default, output everything if nothing was requested */
-      if (!args->community_string_wanted
-          && !args->lan_alert_destinations_wanted
-          && !args->alert_policy_table_wanted
-          && !args->event_filter_table_wanted)
-        {
-          args->community_string_wanted = 1;
-          args->lan_alert_destinations_wanted = 1;
-          args->alert_policy_table_wanted = 1;
-          args->event_filter_table_wanted = 1;
-        }
+  /* XXX come back to this later when the sectional stuff works */
+  /* By default, output everything if nothing was requested */
+  if (!args->community_string_wanted
+      && !args->lan_alert_destinations_wanted
+      && !args->alert_policy_table_wanted
+      && !args->event_filter_table_wanted)
+    {
+      args->community_string_wanted = 1;
+      args->lan_alert_destinations_wanted = 1;
+      args->alert_policy_table_wanted = 1;
+      args->event_filter_table_wanted = 1;
+    }
 #endif
       
-      if (args->community_string_wanted)
-        {
-          if ((rv = checkout_pef_community_string (state_data, fp)) < 0)
-            goto checkout_cleanup;
-        }
-      if (args->lan_alert_destinations_wanted)
-        {
-          if ((rv = checkout_pef_lan_alert_destination (state_data, fp)) < 0)
-            goto checkout_cleanup;
-        }
-      if (args->alert_policy_table_wanted)
-        {
-          if ((rv = checkout_pef_alert_policy_table (state_data, fp)) < 0)
-            goto checkout_cleanup;
-        }
-      if (args->event_filter_table_wanted)
-        {
-          if ((rv = checkout_pef_event_filter_table (state_data, fp)) < 0)
-            goto checkout_cleanup;
-        }
-      
-    checkout_cleanup:
-      if (file_opened)
-	fclose (fp);
-      return rv;
-    }
-  
-  if (args->commit_wanted)
+  if (args->community_string_wanted)
     {
-      FILE *fp = NULL;
-      int file_opened = 0;
-
-      if (args->filename && strcmp (args->filename, "-"))
-        {
-          if ((fp = fopen (args->filename, "r")) == NULL)
-            {
-              fprintf (stderr, "Unable to open file [%s] for reading: %s\n", 
-                       args->filename,
-                       strerror(errno));
-              rv = -1;
-              return rv;
-            }
-          file_opened++;
-        }
-      else
-        fp = stdin;
-
-      /* XXX come back to this later when the sectional stuff works */
-      
-      if (args->community_string_wanted)
-        {
-          if ((rv = commit_pef_community_string (state_data, fp)) < 0)
-            goto commit_cleanup;
-        }
-      else if (args->lan_alert_destinations_wanted)
-        {
-          if ((rv = commit_pef_lan_alert_destination (state_data, fp)) < 0)
-            goto commit_cleanup;
-        }
-      else if (args->alert_policy_table_wanted)
-	{
-	  if ((rv = commit_pef_alert_policy_table (state_data, fp)) < 0)
-            goto commit_cleanup;
-	}
-      else if (args->event_filter_table_wanted)
-	{
-          if ((rv = commit_pef_event_filter_table (state_data, fp)) < 0)
-            goto commit_cleanup;
-        }
-      
-    commit_cleanup:
-      if (file_opened)
-        fclose (fp);
-      return rv;
+      if (checkout_pef_community_string (state_data, fp) < 0)
+        goto cleanup;
     }
-  
+  if (args->lan_alert_destinations_wanted)
+    {
+      if (checkout_pef_lan_alert_destination (state_data, fp) < 0)
+        goto cleanup;
+    }
+  if (args->alert_policy_table_wanted)
+    {
+      if (checkout_pef_alert_policy_table (state_data, fp) < 0)
+        goto cleanup;
+    }
+  if (args->event_filter_table_wanted)
+    {
+      if (checkout_pef_event_filter_table (state_data, fp) < 0)
+        goto cleanup;
+    }
+      
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (file_opened)
+    fclose (fp);
   return rv;
 }
+
+pef_err_t
+pef_commit (ipmi_pef_state_data_t *state_data)
+{
+  FILE *fp = NULL;
+  int file_opened = 0;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  struct ipmi_pef_arguments *args;
+
+  args = state_data->prog_data->args;
+
+  if (args->filename && strcmp (args->filename, "-"))
+    {
+      if ((fp = fopen (args->filename, "r")) == NULL)
+        {
+          fprintf (stderr, "Unable to open file [%s] for reading: %s\n", 
+                   args->filename,
+                   strerror(errno));
+          goto cleanup;
+        }
+      file_opened++;
+    }
+  else
+    fp = stdin;
+  
+  /* XXX come back to this later when the sectional stuff works */
+  
+  if (args->community_string_wanted)
+    {
+      if (commit_pef_community_string (state_data, fp) < 0)
+        goto cleanup;
+    }
+  else if (args->lan_alert_destinations_wanted)
+    {
+      if (commit_pef_lan_alert_destination (state_data, fp) < 0)
+        goto cleanup;
+    }
+  else if (args->alert_policy_table_wanted)
+    {
+      if (commit_pef_alert_policy_table (state_data, fp) < 0)
+        goto cleanup;
+    }
+  else if (args->event_filter_table_wanted)
+    {
+      if (commit_pef_event_filter_table (state_data, fp) < 0)
+        goto cleanup;
+    }
+  
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (file_opened)
+    fclose (fp);
+  return rv;
+}
+
+#if 0
+/* XXX Do later */
+pef_err_t
+pef_diff (ipmi_pef_state_data_t *state_data)
+{
+}
+#endif
+
+#if 0
+/* XXX Do later */
+pef_err_t
+pef_list_sections (ipmi_pef_state_data_t *state_data)
+{
+}
+#endif
 
 static int 
 _ipmi_pef (void *arg)
@@ -897,7 +977,8 @@ _ipmi_pef (void *arg)
   ipmi_pef_prog_data_t *prog_data;
   ipmi_device_t dev = NULL;
   int exit_code = -1;
-  
+  pef_err_t ret = 0;
+
   prog_data = (ipmi_pef_prog_data_t *) arg;
   
   if (prog_data->args->common.host != NULL)
@@ -976,8 +1057,44 @@ _ipmi_pef (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
   
-  if (run_cmd_args (&state_data) < 0)
-    { 
+#if 0
+    /* XXX come back to this later */
+  if (!(sections = bmc_config_sections_create (&state_data)))
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  state_data.sections = sections;
+#endif
+
+  printf("%s:%d\n", __FUNCTION__, __LINE__);
+  printf("%d\n", prog_data->args->action);
+  switch (prog_data->args->action) {
+  case PEF_ACTION_INFO:
+    ret = pef_info (&state_data);
+    break;
+  case PEF_ACTION_CHECKOUT:
+    ret = pef_checkout (&state_data);
+    break;
+  case PEF_ACTION_COMMIT:
+    ret = pef_commit (&state_data);
+    break;
+  case PEF_ACTION_DIFF:
+#if 0
+    /* XXX come back to this later */
+    ret = pef_diff (&state_data);
+#endif
+    break;
+  case PEF_ACTION_LIST_SECTIONS:
+#if 0
+    /* XXX come back to this later */
+    ret = pef_sections_list (&state_data);
+#endif
+    break;
+  }
+
+  if (ret == PEF_ERR_FATAL_ERROR || ret == PEF_ERR_NON_FATAL_ERROR)
+    {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -1000,6 +1117,10 @@ main (int argc, char **argv)
 
   prog_data.progname = argv[0];
   ipmi_pef_argp_parse (argc, argv, &cmd_args);
+
+  if (ipmi_pef_args_validate (&cmd_args) < 0)
+    return (EXIT_FAILURE);
+
   prog_data.args = &cmd_args;
 
 #ifndef NDEBUG

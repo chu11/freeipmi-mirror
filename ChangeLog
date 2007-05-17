@@ -12,10 +12,16 @@
 	* bmc-config/src/bmc-config.c (_bmc_config_state_data_init):
 	Initialize forgotten field.
 
+	* bmc-config/src/bmc-config.c (main): Initialize progname field.
+
 	* ipmi-pef/: Cache lan_channel_number, number_of_lan_destinations,
 	number_of_alert_policy_entries, number_of_event_filters in
 	state_data.  Adjust functions appropriately for this.  Initialize
-	state_data appropriately.  General code cleanup.
+	state_data appropriately.  Fix help message descriptions.  Begin
+	to re-architect args to more resemble bmc-config's.  Add args
+	validation function ipmi_pef_args_validate.  Begin to re-architect
+	main code structure to more like bmc-config's.  Remove
+	get_pef_info() wrapper function.  General code cleanup.
 	
 2007-05-16  Albert Chu <chu11@llnl.gov>
 
