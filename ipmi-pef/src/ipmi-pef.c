@@ -34,11 +34,12 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "argp-common.h"
 #include "ipmi-common.h"
+#include "ipmi-pef.h"
 #include "ipmi-pef-utils.h"
 #include "ipmi-pef-argp.h"
 #include "ipmi-pef-keys.h"
+#include "ipmi-pef-map.h"
 #include "ipmi-pef-wrapper.h"
-#include "ipmi-pef.h"
 
 #include "freeipmi-portability.h"
 
@@ -147,7 +148,7 @@ int
 checkout_pef_lan_alert_destination (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   int rv = 0;
-  int num_of_lan_destinations;
+  int8_t num_of_lan_destinations;
   int d;
 
   if (get_number_of_lan_destinations (state_data, &num_of_lan_destinations) != 0)
@@ -292,7 +293,7 @@ int
 checkout_pef_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   int rv = 0;
-  int num_alert_policy_entries;
+  int8_t num_alert_policy_entries;
   int entry;
   
   if (get_number_of_alert_policy_entries (state_data, 
@@ -424,7 +425,7 @@ int
 checkout_pef_event_filter_table (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   int rv = 0;
-  int num_event_filters;
+  int8_t num_event_filters;
   int filter;
   
   if (get_number_of_event_filters (state_data, &num_event_filters) != 0)

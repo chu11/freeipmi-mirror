@@ -7,75 +7,75 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
-#include "freeipmi/ipmi-sensor-types-spec.h"
-#include "freeipmi/ipmi-pef-and-alerting-cmds.h"
-#include "freeipmi/ipmi-lan-cmds.h"
-#include "freeipmi-portability.h"
+#include <freeipmi/freeipmi.h>
 
 #include "common-utils.h"
 #include "ipmi-sensor-api.h"
 
-#include "ipmi-pef-utils.h"
+#include "ipmi-pef-map.h"
 
-#define IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER_STRING    "Manufacturer_Pre_Configured"
-#define IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER_STRING          "Software_Configurable"
-#define IPMI_FILTER_CONFIGURATION_RESERVED_STRING                              "Reserved"
+#define IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER_STRING        "Manufacturer_Pre_Configured"
+#define IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER_STRING              "Software_Configurable"
+#define IPMI_FILTER_CONFIGURATION_RESERVED_STRING                                  "Reserved"
 
-#define IPMI_EVENT_SEVERITY_UNSPECIFIED_STRING                "Unspecified"
-#define IPMI_EVENT_SEVERITY_MONITOR_STRING                    "Monitor"
-#define IPMI_EVENT_SEVERITY_INFORMATION_STRING                "Information"
-#define IPMI_EVENT_SEVERITY_OK_STRING                         "OK"
-#define IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION_STRING     "Non_Critical"
-#define IPMI_EVENT_SEVERITY_CRITICAL_CONDITION_STRING         "Critical"
-#define IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION_STRING  "Non_Recoverable"
+#define IPMI_EVENT_SEVERITY_UNSPECIFIED_STRING                                     "Unspecified"
+#define IPMI_EVENT_SEVERITY_MONITOR_STRING                                         "Monitor"
+#define IPMI_EVENT_SEVERITY_INFORMATION_STRING                                     "Information"
+#define IPMI_EVENT_SEVERITY_OK_STRING                                              "OK"
+#define IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION_STRING                          "Non_Critical"
+#define IPMI_EVENT_SEVERITY_CRITICAL_CONDITION_STRING                              "Critical"
+#define IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION_STRING                       "Non_Recoverable"
 
-#define GENERATOR_ID_BYTE1_MATCH_ANY_STRING    "Match_Any"
-#define GENERATOR_ID_BYTE1_MATCH_ANY           0xFF
+#define GENERATOR_ID_BYTE1_MATCH_ANY_STRING                                        "Match_Any"
+#define GENERATOR_ID_BYTE1_MATCH_ANY                                               0xFF  
 
-#define GENERATOR_ID_BYTE2_MATCH_ANY_STRING    "Match_Any"
-#define GENERATOR_ID_BYTE2_MATCH_ANY           0xFF
+#define GENERATOR_ID_BYTE2_MATCH_ANY_STRING                                        "Match_Any"
+#define GENERATOR_ID_BYTE2_MATCH_ANY                                               0xFF
 
-#define SENSOR_TYPE_MATCH_ANY_STRING    "Match_Any"
-#define SENSOR_TYPE_MATCH_ANY           0xFF
+#define SENSOR_TYPE_MATCH_ANY_STRING                                               "Match_Any"
+#define SENSOR_TYPE_MATCH_ANY                                                      0xFF
 
-#define SENSOR_NUMBER_MATCH_ANY_STRING    "Match_Any"
-#define SENSOR_NUMBER_MATCH_ANY           0xFF
+#define SENSOR_NUMBER_MATCH_ANY_STRING                                             "Match_Any"
+#define SENSOR_NUMBER_MATCH_ANY                                                    0xFF
 
-#define EVENT_TRIGGER_MATCH_ANY_STRING    "Match_Any"
-#define EVENT_TRIGGER_MATCH_ANY           0xFF
+#define EVENT_TRIGGER_MATCH_ANY_STRING                                             "Match_Any"
+#define EVENT_TRIGGER_MATCH_ANY                                                    0xFF
 
-#define IPMI_SENSOR_CLASS_UNSPECIFIED_STRING                 "Unspecified"
-#define IPMI_SENSOR_CLASS_THRESHOLD_STRING                   "Threshold"
-#define IPMI_SENSOR_CLASS_GENERIC_DISCRETE_STRING            "Generic_Discrete"
-#define IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE_STRING    "Sensor_Specific_Discrete"
-#define IPMI_SENSOR_CLASS_OEM_STRING                         "OEM"
+#define IPMI_SENSOR_CLASS_UNSPECIFIED_STRING                                       "Unspecified"
+#define IPMI_SENSOR_CLASS_THRESHOLD_STRING                                         "Threshold"
+#define IPMI_SENSOR_CLASS_GENERIC_DISCRETE_STRING                                  "Generic_Discrete"
+#define IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE_STRING                          "Sensor_Specific_Discrete"
+#define IPMI_SENSOR_CLASS_OEM_STRING                                               "OEM"
 
-#define YES_VALUE_STRING    "Yes"
-#define YES_VALUE           1
-#define NO_VALUE_STRING     "No"
-#define NO_VALUE            0
+#define YES_VALUE_STRING                                                           "Yes"
+#define YES_VALUE                                                                  1
+#define NO_VALUE_STRING                                                            "No"
+#define NO_VALUE                                                                   0
 
-#define IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION_STRING    "Always_Send_To_This_Destination"
-#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_STRING              "Proceed_To_Next_Entry"
-#define IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES_STRING    "Do_Not_Proceed_Any_More_Entries"
-#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL_STRING    "Proceed_To_Next_Entry_Different_Channel"
-#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE_STRING    "Proceed_To_Next_Entry_Different_Destination_Type"
-#define IPMI_ALERT_POLICY_DISABLED_STRING    "No"
-#define IPMI_ALERT_POLICY_ENABLED_STRING     "Yes"
+#define IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION_STRING                   "Always_Send_To_This_Destination"
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_STRING                             "Proceed_To_Next_Entry"
+#define IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES_STRING                   "Do_Not_Proceed_Any_More_Entries"
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL_STRING           "Proceed_To_Next_Entry_Different_Channel"
+#define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE_STRING  "Proceed_To_Next_Entry_Different_Destination_Type"
+#define IPMI_ALERT_POLICY_DISABLED_STRING                                          "No"
+#define IPMI_ALERT_POLICY_ENABLED_STRING                                           "Yes"
 
-#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING     "No"
-#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING    "Yes"
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING                          "No"
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING                         "Yes"
 
-#define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING      "PET_Trap"
-#define IPMI_DESTINATION_TYPE_OEM1_STRING                      "OEM1"
-#define IPMI_DESTINATION_TYPE_OEM2_STRING                      "OEM2"
+#define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING                          "PET_Trap"
+#define IPMI_DESTINATION_TYPE_OEM1_STRING                                          "OEM1"
+#define IPMI_DESTINATION_TYPE_OEM2_STRING                                          "OEM2"
 
-#define IPMI_ALERT_UNACKNOWLEDGED_STRING    "No"
-#define IPMI_ALERT_ACKNOWLEDGED_STRING      "Yes"
+#define IPMI_ALERT_UNACKNOWLEDGED_STRING                                           "No"
+#define IPMI_ALERT_ACKNOWLEDGED_STRING                                             "Yes"
 
-#define IPMI_GATEWAY_SELECTOR_DEFAULT_STRING    "Default"
-#define IPMI_GATEWAY_SELECTOR_BACKUP_STRING     "Backup"
+#define IPMI_GATEWAY_SELECTOR_DEFAULT_STRING                                       "Default"
+#define IPMI_GATEWAY_SELECTOR_BACKUP_STRING                                        "Backup"
 
 static int 
 _strchr_replace (char *str, char ch, char nch)

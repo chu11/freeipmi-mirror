@@ -17,6 +17,7 @@ ipmi_pef_LDADD = ../../common/src/libargpcommon.la \
 noinst_HEADERS = \
 	ipmi-pef.h \
 	ipmi-pef-argp.h \
+	ipmi-pef-common.h \
 	ipmi-pef-keys.h \
 	ipmi-pef-map.c \
 	ipmi-pef-utils.h \

@@ -1,9 +1,6 @@
 #ifndef _IPMI_PEF_WRAPPER_H
 #define _IPMI_PEF_WRAPPER_H
 
-#define SET_SELECTOR      0x0
-#define BLOCK_SELECTOR    0x0
-
 struct pef_info 
 {
   int pef_version_major;
@@ -80,17 +77,6 @@ struct lan_alert_destination
   char alert_mac_address[18];
 };
 typedef struct lan_alert_destination lan_alert_destination_t;
-
-int get_lan_channel_number (struct ipmi_pef_state_data *state_data, int *channel_number);
-
-int get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, 
-				    int *number_of_lan_destinations);
-
-int get_number_of_alert_policy_entries (struct ipmi_pef_state_data *state_data, 
-					int *num_alert_policy_entries);
-
-int get_number_of_event_filters (struct ipmi_pef_state_data *state_data, 
-                                 int *num_event_filters);
 
 int get_pef_info (struct ipmi_pef_state_data *state_data, 
 		  pef_info_t *pef_info);
