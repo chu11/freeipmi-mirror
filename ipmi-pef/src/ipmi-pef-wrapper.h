@@ -12,10 +12,10 @@ struct pef_info
   int oem_action_support;
   int diagnostic_interrupt_action_support;
   int oem_event_record_filtering_support;
-  int eft_entries_count;
-  int num_event_filters;
-  int num_alert_policies;
-  int num_alert_strings;
+  int number_of_event_filter_table_entries;
+  int number_of_event_filters;
+  int number_of_alert_policies;
+  int number_of_alert_strings;
 };
 typedef struct pef_info pef_info_t;
 

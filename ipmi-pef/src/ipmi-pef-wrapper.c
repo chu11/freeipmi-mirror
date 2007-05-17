@@ -264,7 +264,7 @@ get_pef_info (struct ipmi_pef_state_data *state_data, pef_info_t *pef_info)
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "oem_event_record_filtering_supported", &val);
   pef_info->oem_event_record_filtering_support = val;
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_event_filter_table_entries", &val);
-  pef_info->eft_entries_count = val;
+  pef_info->number_of_event_filter_table_entries = val;
   
   if (pef_info->alert_action_support)
     {
@@ -279,7 +279,7 @@ get_pef_info (struct ipmi_pef_state_data *state_data, pef_info_t *pef_info)
 									     obj_cmd_rs) != 0)
 	goto cleanup;
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_event_filters", &val);
-      pef_info->num_event_filters = val;
+      pef_info->number_of_event_filters = val;
       FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
       
       FIID_OBJ_CREATE (obj_cmd_rs, 
@@ -291,7 +291,7 @@ get_pef_info (struct ipmi_pef_state_data *state_data, pef_info_t *pef_info)
 										    obj_cmd_rs) != 0)
 	goto cleanup;
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_alert_policy_entries", &val);
-      pef_info->num_alert_policies = val;
+      pef_info->number_of_alert_policies = val;
       FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
       
       FIID_OBJ_CREATE (obj_cmd_rs, 
@@ -303,7 +303,7 @@ get_pef_info (struct ipmi_pef_state_data *state_data, pef_info_t *pef_info)
 									     obj_cmd_rs) != 0)
 	goto cleanup;
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "number_of_alert_strings", &val);
-      pef_info->num_alert_strings = val;
+      pef_info->number_of_alert_strings = val;
     }
   
   rv = 0;

@@ -8,6 +8,9 @@
 
 	* ipmi-pef/src/ipmi-pef-utils.c: Add forgotten config header and
 	checks.
+
+	* bmc-config/src/bmc-config.c (_bmc_config_state_data_init):
+	Initialize forgotten field.
 	
 2007-05-16  Albert Chu <chu11@llnl.gov>
 

@@ -65,6 +65,16 @@ typedef struct ipmi_pef_state_data
 { 
   ipmi_pef_prog_data_t *prog_data;
   ipmi_device_t dev;
+
+  /* achu: caching to make bmc-config work more quickly */
+  int lan_channel_number_initialized;
+  int8_t lan_channel_number;
+  int number_of_lan_destinations_initialized;
+  int8_t number_of_lan_destinations;
+  int number_of_alert_policy_entries_initialized;
+  int8_t number_of_alert_policy_entries;
+  int number_of_event_filters_initialized;
+  int8_t number_of_event_filters;
 } ipmi_pef_state_data_t;
 
 #endif

@@ -43,6 +43,21 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "freeipmi-portability.h"
 
+void
+_ipmi_pef_state_data_init(ipmi_pef_state_data_t *state_data)
+{
+  assert (state_data);
+
+  memset(state_data, '\0', sizeof(ipmi_pef_state_data_t));
+  state_data->prog_data = NULL;
+  state_data->dev = NULL;
+
+  state_data->lan_channel_number_initialized = 0;
+  state_data->number_of_lan_destinations_initialized = 0;
+  state_data->number_of_alert_policy_entries_initialized = 0;
+  state_data->number_of_event_filters_initialized = 0;
+}
+
 int 
 display_pef_info (ipmi_pef_state_data_t *state_data)
 {
@@ -75,15 +90,15 @@ display_pef_info (ipmi_pef_state_data_t *state_data)
   printf ("OEM event record filtering support:     %s\n", 
 	  (pef_info.oem_event_record_filtering_support ? "Yes" : "No"));
   printf ("Number of Event Filter Table entries:   %d\n", 
-	  pef_info.eft_entries_count);
+	  pef_info.number_of_event_filter_table_entries);
   if (pef_info.alert_action_support)
     {
       printf ("Number of Event Filters:                %d\n", 
-	      pef_info.num_event_filters);
+	      pef_info.number_of_event_filters);
       printf ("Number of Alert Policy entries:         %d\n", 
-	      pef_info.num_alert_policies);
+	      pef_info.number_of_alert_policies);
       printf ("Number of Alert Strings:                %d\n", 
-	      pef_info.num_alert_strings);
+	      pef_info.number_of_alert_strings);
     }
   
   return (0);
@@ -293,14 +308,14 @@ int
 checkout_pef_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   int rv = 0;
-  int8_t num_alert_policy_entries;
+  int8_t number_of_alert_policy_entries;
   int entry;
   
   if (get_number_of_alert_policy_entries (state_data, 
-					  &num_alert_policy_entries) != 0)
+					  &number_of_alert_policy_entries) != 0)
     return (-1);
   
-  for (entry = 1; entry <= num_alert_policy_entries; entry++)
+  for (entry = 1; entry <= number_of_alert_policy_entries; entry++)
     {
       pef_alert_policy_table_t apt;
       char *str = NULL;
