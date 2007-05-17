@@ -3,6 +3,9 @@ sbin_PROGRAMS = ipmi-pef
 ipmi_pef_SOURCES = \
 	ipmi-pef.c \
 	ipmi-pef-argp.c \
+	ipmi-pef-checkout.c \
+	ipmi-pef-commit.c \
+	ipmi-pef-info.c \
 	ipmi-pef-map.c \
 	ipmi-pef-utils.c \
 	ipmi-pef-wrapper.c
@@ -17,7 +20,10 @@ ipmi_pef_LDADD = ../../common/src/libargpcommon.la \
 noinst_HEADERS = \
 	ipmi-pef.h \
 	ipmi-pef-argp.h \
+	ipmi-pef-checkout.h \
+	ipmi-pef-commit.h \
 	ipmi-pef-common.h \
+	ipmi-pef-info.h \
 	ipmi-pef-keys.h \
 	ipmi-pef-map.c \
 	ipmi-pef-utils.h \

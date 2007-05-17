@@ -22,6 +22,11 @@
 	validation function ipmi_pef_args_validate.  Begin to re-architect
 	main code structure to more like bmc-config's.  Remove
 	get_pef_info() wrapper function.  General code cleanup.
+
+	* ipmi-pef/src/ipmi-pef-info.h, ipmi-pef/src/ipmi-pef-info.c,
+	ipmi-pef/src/ipmi-pef-commit.h, ipmi-pef/src/ipmi-pef-commit.c,
+	ipmi-pef/src/ipmi-pef-checkout.h,
+	ipmi-pef/src/ipmi-pef-checkout.c: New files.
 	
 2007-05-16  Albert Chu <chu11@llnl.gov>
 
