@@ -20,6 +20,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #ifndef _IPMI_PEF_H
 #define _IPMI_PEF_H
 
+#include <stdint.h>
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
 

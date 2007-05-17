@@ -50,6 +50,7 @@ ipmi-pef
 * parsing seg faults
 * invalid key found for what record/section 
 * if keycheckout value bad - doesn't output field for editing
+* collapse common funcs in ipmi-pef-util
 
 general
 -------

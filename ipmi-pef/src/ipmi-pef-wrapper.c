@@ -633,17 +633,16 @@ static int
 _record_string_to_lan_alert_destination (const char *record_string, 
                                          lan_alert_destination_t *lad)
 {
-  int int_value = 0;
-  
   char *value_string = NULL;
-  
+  int n;
+    
   assert(record_string);
   assert(lad);
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING, 
 				  value_string);
-  if (string_to_destination_selector (value_string, &int_value) != 0)
+  if ((n = string_to_destination_selector (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -651,12 +650,12 @@ _record_string_to_lan_alert_destination (const char *record_string,
 	       LAD_ALERT_DESTINATION_SELECTOR_KEY_STRING);
       return -1;
     }
-  lad->destination_selector = int_value;
+  lad->destination_selector = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  LAD_ALERT_DESTINATION_TYPE_KEY_STRING, 
 				  value_string);
-  if (string_to_destination_type (value_string, &int_value) != 0)
+  if ((n = string_to_destination_type (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -664,12 +663,12 @@ _record_string_to_lan_alert_destination (const char *record_string,
 	       LAD_ALERT_DESTINATION_TYPE_KEY_STRING);
       return -1;
     }
-  lad->destination_type = int_value;
+  lad->destination_type = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  LAD_ALERT_ACKNOWLEDGE_KEY_STRING, 
 				  value_string);
-  if (string_to_alert_acknowledge (value_string, &int_value) != 0)
+  if ((n = string_to_alert_acknowledge (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -677,12 +676,12 @@ _record_string_to_lan_alert_destination (const char *record_string,
 	       LAD_ALERT_ACKNOWLEDGE_KEY_STRING);
       return -1;
     }
-  lad->alert_acknowledge = int_value;
+  lad->alert_acknowledge = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING, 
 				  value_string);
-  if (string_to_alert_acknowledge_timeout (value_string, &int_value) != 0)
+  if ((n = string_to_alert_acknowledge_timeout (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -690,12 +689,12 @@ _record_string_to_lan_alert_destination (const char *record_string,
 	       LAD_ALERT_ACKNOWLEDGE_TIMEOUT_KEY_STRING);
       return -1;
     }
-  lad->alert_acknowledge_timeout = int_value;
+  lad->alert_acknowledge_timeout = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  LAD_ALERT_RETRIES_KEY_STRING, 
 				  value_string);
-  if (string_to_alert_retries (value_string, &int_value) != 0)
+  if ((n = string_to_alert_retries (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -703,12 +702,12 @@ _record_string_to_lan_alert_destination (const char *record_string,
 	       LAD_ALERT_RETRIES_KEY_STRING);
       return -1;
     }
-  lad->alert_retries = int_value;
+  lad->alert_retries = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  LAD_ALERT_GATEWAY_KEY_STRING, 
 				  value_string);
-  if (string_to_gateway_selector (value_string, &int_value) != 0)
+  if ((n = string_to_gateway_selector (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -716,14 +715,14 @@ _record_string_to_lan_alert_destination (const char *record_string,
 	       LAD_ALERT_GATEWAY_KEY_STRING);
       return -1;
     }
-  lad->gateway_selector = int_value;
+  lad->gateway_selector = n;
   
   {
     char *str = NULL;
     GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				    LAD_ALERT_IP_ADDRESS_KEY_STRING, 
 				    value_string);
-    if (string_to_alert_ip_address (value_string, &str) != 0)
+    if (string_to_alert_ip_address (value_string, &str) < 0)
       {
 	fprintf (stderr, 
 		 "Invalid value %s for %s\n", 
@@ -737,14 +736,14 @@ _record_string_to_lan_alert_destination (const char *record_string,
     GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				    LAD_ALERT_MAC_ADDRESS_KEY_STRING, 
 				    value_string);
-    if (string_to_alert_mac_address (value_string, &str) != 0)
-    {
-      fprintf (stderr, 
-	       "Invalid value %s for %s\n", 
-	       value_string, 
-	       LAD_ALERT_MAC_ADDRESS_KEY_STRING);
-      return -1;
-    }
+    if (string_to_alert_mac_address (value_string, &str) < 0)
+      {
+        fprintf (stderr, 
+                 "Invalid value %s for %s\n", 
+                 value_string, 
+                 LAD_ALERT_MAC_ADDRESS_KEY_STRING);
+        return -1;
+      }
     strncpy (lad->alert_mac_address, str, 17);
     free (str);
   }
@@ -893,9 +892,8 @@ static int
 _record_string_to_alert_policy_table (const char *record_string, 
                                       pef_alert_policy_table_t *apt)
 {
-  int int_value = 0;
-  
   char *value_string = NULL;
+  int n;
   
   assert(record_string);
   assert(apt);
@@ -903,7 +901,7 @@ _record_string_to_alert_policy_table (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_ALERT_POLICY_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_alert_policy_number (value_string, &int_value) != 0)
+  if ((n = string_to_alert_policy_number (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -911,12 +909,12 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_ALERT_POLICY_NUMBER_KEY_STRING);
       return -1;
     }
-  apt->alert_policy_number = int_value;
+  apt->alert_policy_number = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_POLICY_TYPE_KEY_STRING, 
 				  value_string);
-  if (string_to_policy_type (value_string, &int_value) != 0)
+  if ((n = string_to_policy_type (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -924,12 +922,12 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_POLICY_TYPE_KEY_STRING);
       return -1;
     }
-  apt->policy_type = int_value;
+  apt->policy_type = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_POLICY_ENABLED_KEY_STRING, 
 				  value_string);
-  if (string_to_policy_enabled (value_string, &int_value) != 0)
+  if ((n = string_to_policy_enabled (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -937,12 +935,12 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_POLICY_ENABLED_KEY_STRING);
       return -1;
     }
-  apt->policy_enabled = int_value;
+  apt->policy_enabled = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_POLICY_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_policy_number (value_string, &int_value) != 0)
+  if ((n = string_to_policy_number (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -950,12 +948,12 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_POLICY_NUMBER_KEY_STRING);
       return -1;
     }
-  apt->policy_number = int_value;
+  apt->policy_number = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_DESTINATION_SELECTOR_KEY_STRING, 
 				  value_string);
-  if (string_to_destination_selector (value_string, &int_value) != 0)
+  if ((n = string_to_destination_selector (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -963,12 +961,12 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_DESTINATION_SELECTOR_KEY_STRING);
       return -1;
     }
-  apt->destination_selector = int_value;
+  apt->destination_selector = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_CHANNEL_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_channel_number (value_string, &int_value) != 0)
+  if ((n = string_to_channel_number (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -976,12 +974,12 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_CHANNEL_NUMBER_KEY_STRING);
       return -1;
     }
-  apt->channel_number = int_value;
+  apt->channel_number = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_ALERT_STRING_SET_SELECTOR_KEY_STRING, 
 				  value_string);
-  if (string_to_alert_string_set_selector (value_string, &int_value) != 0)
+  if ((n = string_to_alert_string_set_selector (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -989,12 +987,12 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_ALERT_STRING_SET_SELECTOR_KEY_STRING);
       return -1;
     }
-  apt->alert_string_set_selector = int_value;
+  apt->alert_string_set_selector = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
 				  value_string);
-  if (string_to_event_specific_alert_string_lookup (value_string, &int_value) != 0)
+  if ((n = string_to_event_specific_alert_string_lookup (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1002,7 +1000,7 @@ _record_string_to_alert_policy_table (const char *record_string,
 	       APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING);
       return -1;
     }
-  apt->event_specific_alert_string_lookup = int_value;
+  apt->event_specific_alert_string_lookup = n;
   
   return 0;
 }
@@ -1166,9 +1164,8 @@ static int
 _record_string_to_event_filter_table (const char *record_string, 
                                       pef_event_filter_table_t *eft)
 {
-  int int_value = 0;
-  
   char *value_string = NULL;
+  int n;
   
   assert(record_string);
   assert(eft);
@@ -1176,7 +1173,7 @@ _record_string_to_event_filter_table (const char *record_string,
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  FILTER_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_filter_number (value_string, &int_value) != 0)
+  if ((n = string_to_filter_number (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1184,12 +1181,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       FILTER_NUMBER_KEY_STRING);
       return -1;
     }
-  eft->filter_number = int_value;
+  eft->filter_number = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  FILTER_TYPE_KEY_STRING, 
 				  value_string);
-  if (string_to_filter_type (value_string, &int_value) != 0)
+  if ((n = string_to_filter_type (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1197,12 +1194,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       FILTER_TYPE_KEY_STRING);
       return -1;
     }
-  eft->filter_type = int_value;
+  eft->filter_type = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  ENABLE_FILTER_KEY_STRING, 
 				  value_string);
-  if (string_to_enable_filter (value_string, &int_value) != 0)
+  if ((n = string_to_enable_filter (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1210,12 +1207,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       ENABLE_FILTER_KEY_STRING);
       return -1;
     }
-  eft->enable_filter = int_value;
+  eft->enable_filter = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_FILTER_ACTION_ALERT_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_alert (value_string, &int_value) != 0)
+  if ((n = string_to_event_filter_action_alert (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1223,12 +1220,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_FILTER_ACTION_ALERT_KEY_STRING);
       return -1;
     }
-  eft->event_filter_action_alert = int_value;
+  eft->event_filter_action_alert = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_power_off (value_string, &int_value) != 0)
+  if ((n = string_to_event_filter_action_power_off (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1236,12 +1233,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_FILTER_ACTION_POWER_OFF_KEY_STRING);
       return -1;
     }
-  eft->event_filter_action_power_off = int_value;
+  eft->event_filter_action_power_off = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_FILTER_ACTION_RESET_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_reset (value_string, &int_value) != 0)
+  if ((n = string_to_event_filter_action_reset (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1249,12 +1246,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_FILTER_ACTION_RESET_KEY_STRING);
       return -1;
     }
-  eft->event_filter_action_reset = int_value;
+  eft->event_filter_action_reset = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_power_cycle (value_string, &int_value) != 0)
+  if ((n = string_to_event_filter_action_power_cycle (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1262,12 +1259,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_FILTER_ACTION_POWER_CYCLE_KEY_STRING);
       return -1;
     }
-  eft->event_filter_action_power_cycle = int_value;
+  eft->event_filter_action_power_cycle = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_FILTER_ACTION_OEM_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_oem (value_string, &int_value) != 0)
+  if ((n = string_to_event_filter_action_oem (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1275,12 +1272,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_FILTER_ACTION_OEM_KEY_STRING);
       return -1;
     }
-  eft->event_filter_action_oem = int_value;
+  eft->event_filter_action_oem = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_diagnostic_interrupt (value_string, &int_value) != 0)
+  if ((n = string_to_event_filter_action_diagnostic_interrupt (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1288,13 +1285,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_KEY_STRING);
       return -1;
     }
-  eft->event_filter_action_diagnostic_interrupt = int_value;
+  eft->event_filter_action_diagnostic_interrupt = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING, 
 				  value_string);
-  if (string_to_event_filter_action_group_control_operation (value_string, 
-							     &int_value) != 0)
+  if ((n = string_to_event_filter_action_group_control_operation (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1302,12 +1298,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_KEY_STRING);
       return -1;
     }
-  eft->event_filter_action_group_control_operation = int_value;
+  eft->event_filter_action_group_control_operation = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  ALERT_POLICY_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_alert_policy_number (value_string, &int_value) != 0)
+  if ((n = string_to_alert_policy_number (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1315,12 +1311,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       ALERT_POLICY_NUMBER_KEY_STRING);
       return -1;
     }
-  eft->alert_policy_number = int_value;
+  eft->alert_policy_number = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  GROUP_CONTROL_SELECTOR_KEY_STRING, 
 				  value_string);
-  if (string_to_group_control_selector (value_string, &int_value) != 0)
+  if ((n = string_to_group_control_selector (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1328,12 +1324,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       GROUP_CONTROL_SELECTOR_KEY_STRING);
       return -1;
     }
-  eft->group_control_selector = int_value;
+  eft->group_control_selector = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_SEVERITY_KEY_STRING, 
 				  value_string);
-  if (string_to_event_severity (value_string, &int_value) != 0)
+  if ((n = string_to_event_severity (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1341,12 +1337,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_SEVERITY_KEY_STRING);
       return -1;
     }
-  eft->event_severity = int_value;
+  eft->event_severity = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  GENERATOR_ID_BYTE1_KEY_STRING, 
 				  value_string);
-  if (string_to_generator_id_byte1 (value_string, &int_value) != 0)
+  if ((n = string_to_generator_id_byte1 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1354,12 +1350,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       GENERATOR_ID_BYTE1_KEY_STRING);
       return -1;
     }
-  eft->generator_id_byte1 = int_value;
+  eft->generator_id_byte1 = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  GENERATOR_ID_BYTE2_KEY_STRING, 
 				  value_string);
-  if (string_to_generator_id_byte2 (value_string, &int_value) != 0)
+  if ((n = string_to_generator_id_byte2 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1367,12 +1363,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       GENERATOR_ID_BYTE2_KEY_STRING);
       return -1;
     }
-  eft->generator_id_byte2 = int_value;
+  eft->generator_id_byte2 = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  SENSOR_TYPE_KEY_STRING, 
 				  value_string);
-  if (string_to_sensor_type (value_string, &int_value) != 0)
+  if ((n = string_to_sensor_type (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1380,12 +1376,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       SENSOR_TYPE_KEY_STRING);
       return -1;
     }
-  eft->sensor_type = int_value;
+  eft->sensor_type = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  SENSOR_NUMBER_KEY_STRING, 
 				  value_string);
-  if (string_to_sensor_number (value_string, &int_value) != 0)
+  if ((n = string_to_sensor_number (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1393,12 +1389,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       SENSOR_NUMBER_KEY_STRING);
       return -1;
     }
-  eft->sensor_number = int_value;
+  eft->sensor_number = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_TRIGGER_KEY_STRING, 
 				  value_string);
-  if (string_to_event_trigger (value_string, &int_value) != 0)
+  if ((n = string_to_event_trigger (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1406,12 +1402,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_TRIGGER_KEY_STRING);
       return -1;
     }
-  eft->event_trigger = int_value;
+  eft->event_trigger = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA1_OFFSET_MASK_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data1_offset_mask (value_string, &int_value) != 0)
+  if ((n = string_to_event_data1_offset_mask (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1419,12 +1415,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA1_OFFSET_MASK_KEY_STRING);
       return -1;
     }
-  eft->event_data1_offset_mask = int_value;
+  eft->event_data1_offset_mask = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA1_AND_MASK_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data1_AND_mask (value_string, &int_value) != 0)
+  if ((n = string_to_event_data1_AND_mask (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1432,12 +1428,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA1_AND_MASK_KEY_STRING);
       return -1;
     }
-  eft->event_data1_AND_mask = int_value;
+  eft->event_data1_AND_mask = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA1_COMPARE1_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data1_compare1 (value_string, &int_value) != 0)
+  if ((n = string_to_event_data1_compare1 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1445,12 +1441,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA1_COMPARE1_KEY_STRING);
       return -1;
     }
-  eft->event_data1_compare1 = int_value;
+  eft->event_data1_compare1 = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA1_COMPARE2_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data1_compare2 (value_string, &int_value) != 0)
+  if ((n = string_to_event_data1_compare2 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1458,12 +1454,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA1_COMPARE2_KEY_STRING);
       return -1;
     }
-  eft->event_data1_compare2 = int_value;
+  eft->event_data1_compare2 = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA2_AND_MASK_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data2_AND_mask (value_string, &int_value) != 0)
+  if ((n = string_to_event_data2_AND_mask (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1471,12 +1467,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA2_AND_MASK_KEY_STRING);
       return -1;
     }
-  eft->event_data2_AND_mask = int_value;
+  eft->event_data2_AND_mask = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA2_COMPARE1_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data2_compare1 (value_string, &int_value) != 0)
+  if ((n = string_to_event_data2_compare1 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1484,12 +1480,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA2_COMPARE1_KEY_STRING);
       return -1;
     }
-  eft->event_data2_compare1 = int_value;
+  eft->event_data2_compare1 = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA2_COMPARE2_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data2_compare2 (value_string, &int_value) != 0)
+  if ((n = string_to_event_data2_compare2 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1497,12 +1493,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA2_COMPARE2_KEY_STRING);
       return -1;
     }
-  eft->event_data2_compare2 = int_value;
+  eft->event_data2_compare2 = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA3_AND_MASK_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data3_AND_mask (value_string, &int_value) != 0)
+  if ((n = string_to_event_data3_AND_mask (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1510,12 +1506,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA3_AND_MASK_KEY_STRING);
       return -1;
     }
-  eft->event_data3_AND_mask = int_value;
+  eft->event_data3_AND_mask = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA3_COMPARE1_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data3_compare1 (value_string, &int_value) != 0)
+  if ((n = string_to_event_data3_compare1 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1523,12 +1519,12 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA3_COMPARE1_KEY_STRING);
       return -1;
     }
-  eft->event_data3_compare1 = int_value;
+  eft->event_data3_compare1 = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
 				  EVENT_DATA3_COMPARE2_KEY_STRING, 
 				  value_string);
-  if (string_to_event_data3_compare2 (value_string, &int_value) != 0)
+  if ((n = string_to_event_data3_compare2 (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
@@ -1536,7 +1532,7 @@ _record_string_to_event_filter_table (const char *record_string,
 	       EVENT_DATA3_COMPARE2_KEY_STRING);
       return -1;
     }
-  eft->event_data3_compare2 = int_value;
+  eft->event_data3_compare2 = n;
   
   return 0;
 }

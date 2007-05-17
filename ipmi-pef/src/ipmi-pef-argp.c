@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.11 2007-05-16 17:29:57 chu11 Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.12 2007-05-17 05:06:15 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -70,13 +70,13 @@ static struct argp_option options[] =
      "Action is to UPDATE the PEF event filter tables", 20},
     /* XXX: and diff */
     {"community-string", COMMUNITY_STRING_KEY, 0, 0,
-     "Checkout/commit Community String", 21},
+     "Checkout Community String", 21},
     {"lan-alert-destinations", LAN_ALERT_DESTINATIONS_KEY, 0, 0, 
-     "Checkout/commit of PEF LAN configuration.", 22},
+     "Checkout of LAN Alert Destinations.", 22},
     {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
-     "Checkout/commit of Alert Policy Table.", 23},
+     "Checkout of Alert Policy Table.", 23},
     {"event-filter-table", EVENT_FILTER_TABLE_KEY, 0, 0,
-     "Checkout/commit Event Filter Table", 24},
+     "Checkout Event Filter Table", 24},
     {"verbose", VERBOSE_KEY, 0, 0,  
      "Produce verbose output", 25},
     {"filename", FILENAME_KEY, "FILENAME", 0,

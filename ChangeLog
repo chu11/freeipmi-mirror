@@ -5,7 +5,7 @@
 	-e option.  Force user to specify section.  Check for out of mem
 	errors.  Fix some mapping corner cases.  Fix error handling and
 	incorrect logic in mapping to strings functions.  General code
-	cleanup.
+	cleanup.  Begin re-architect to bmc-config style design.
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_config.c
 	(ipmi_monitoring_sensor_config),
