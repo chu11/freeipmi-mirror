@@ -11,6 +11,11 @@
 
 	* bmc-config/src/bmc-config.c (_bmc_config_state_data_init):
 	Initialize forgotten field.
+
+	* ipmi-pef/: Cache lan_channel_number, number_of_lan_destinations,
+	number_of_alert_policy_entries, number_of_event_filters in
+	state_data.  Adjust functions appropriately for this.  Initialize
+	state_data appropriately.  General code cleanup.
 	
 2007-05-16  Albert Chu <chu11@llnl.gov>
 

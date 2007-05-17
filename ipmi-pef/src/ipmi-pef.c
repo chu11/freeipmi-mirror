@@ -971,8 +971,8 @@ _ipmi_pef (void *arg)
 	    }
 	}
     }
-  
-  memset (&state_data, '\0', sizeof (ipmi_pef_state_data_t));
+
+  _ipmi_pef_state_data_init (&state_data);
   state_data.dev = dev;
   state_data.prog_data = prog_data;
   
