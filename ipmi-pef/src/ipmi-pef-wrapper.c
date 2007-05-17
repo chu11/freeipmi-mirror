@@ -43,6 +43,8 @@
 #include "common-utils.h"
 
 #include "ipmi-pef.h"
+#include "ipmi-pef-keys.h"
+#include "ipmi-pef-map.h"
 #include "ipmi-pef-utils.h"
 #include "ipmi-pef-wrapper.h"
 
@@ -70,17 +72,18 @@
   while (0)
 
 int
-get_lan_channel_number (struct ipmi_pef_state_data *state_data)
+get_lan_channel_number (struct ipmi_pef_state_data *state_data, int *channel_number)
 {
-  int channel_number;
+  int num;
 
   assert(state_data);
 
-  if ((channel_number = ipmi_get_channel_number (state_data->dev,
-                                                 IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
+  if ((num = ipmi_get_channel_number (state_data->dev,
+                                      IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
     return -1;
   
-  return channel_number;
+  *channel_number = num;
+  return 0;
 }
 
 int 
@@ -94,7 +97,7 @@ get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, int *num
   assert(state_data);
   assert(number_of_lan_destinations);
   
-  if ((channel_number = get_lan_channel_number (state_data)) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) < 0)
     goto cleanup; 
   
   FIID_OBJ_CREATE (obj_cmd_rs, 
@@ -435,7 +438,7 @@ get_bmc_community_string (struct ipmi_pef_state_data *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) 
     goto cleanup; 
 
-  if ((channel_number = get_lan_channel_number (state_data)) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) < 0)
     goto cleanup; 
  
   if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,  
@@ -520,7 +523,7 @@ set_bmc_community_string (struct ipmi_pef_state_data *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) 
     goto cleanup; 
 
-  if ((channel_number = get_lan_channel_number (state_data)) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) < 0)
     goto cleanup; 
 
   if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,  
@@ -552,7 +555,7 @@ get_lan_alert_destination (struct ipmi_pef_state_data *state_data,
   assert(state_data);
   assert(lad);
   
-  if ((channel_number = get_lan_channel_number (state_data)) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) < 0)
     goto cleanup; 
   
   lad->destination_selector = destination_selector;
@@ -806,7 +809,7 @@ set_lan_alert_destination (struct ipmi_pef_state_data *state_data, lan_alert_des
   assert(state_data);
   assert(lad);
   
-  if ((channel_number = get_lan_channel_number (state_data)) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) < 0)
     goto cleanup; 
   
   if (ipmi_ipv4_address_string2int (lad->alert_ip_address, &alert_ip_address_bytes) < 0)

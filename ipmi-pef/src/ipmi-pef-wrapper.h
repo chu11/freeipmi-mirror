@@ -81,6 +81,8 @@ struct lan_alert_destination
 };
 typedef struct lan_alert_destination lan_alert_destination_t;
 
+int get_lan_channel_number (struct ipmi_pef_state_data *state_data, int *channel_number);
+
 int get_number_of_lan_destinations (struct ipmi_pef_state_data *state_data, 
 				    int *number_of_lan_destinations);
 

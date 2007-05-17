@@ -52,6 +52,11 @@ ipmi-pef
 * if keycheckout value bad - doesn't output field for editing
 * collapse common funcs in ipmi-pef-util
 * - map files
+* other pef config from bmc-config
+
+bmc-config/ipmi-pef
+-------------------
+caching for faster commit/checkout
 
 general
 -------

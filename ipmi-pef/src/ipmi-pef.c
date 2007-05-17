@@ -36,6 +36,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-common.h"
 #include "ipmi-pef-utils.h"
 #include "ipmi-pef-argp.h"
+#include "ipmi-pef-keys.h"
 #include "ipmi-pef-wrapper.h"
 #include "ipmi-pef.h"
 

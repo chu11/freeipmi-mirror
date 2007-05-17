@@ -1,5 +1,11 @@
-sbin_PROGRAMS=ipmi-pef
-ipmi_pef_SOURCES=ipmi-pef-argp.c ipmi-pef-utils.c ipmi-pef-wrapper.c ipmi-pef.c 
+sbin_PROGRAMS = ipmi-pef
+
+ipmi_pef_SOURCES = \
+	ipmi-pef.c \
+	ipmi-pef-argp.c \
+	ipmi-pef-map.c \
+	ipmi-pef-utils.c \
+	ipmi-pef-wrapper.c
  
 ipmi_pef_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libipmicommon.la \
@@ -8,7 +14,13 @@ ipmi_pef_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libsdr.la \
 		 ../../common/src/libsensor.la 
  
-noinst_HEADERS=ipmi-pef-argp.h ipmi-pef-utils.h ipmi-pef-wrapper.h ipmi-pef.h
+noinst_HEADERS = \
+	ipmi-pef.h \
+	ipmi-pef-argp.h \
+	ipmi-pef-keys.h \
+	ipmi-pef-map.c \
+	ipmi-pef-utils.h \
+	ipmi-pef-wrapper.h
  
 AM_CFLAGS = -Wall
 AM_CPPFLAGS = -I$(srcdir)/../../common/src \
