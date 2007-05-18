@@ -67,7 +67,7 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
 
   for (i = 0; i < num_users; i++)
     {
-      if (!(sect = bmc_user_section_get(state_data, i)))
+      if (!(sect = bmc_user_section_get(state_data, i+1)))
 	goto cleanup;
       if (_add_section (&sections, sect) < 0)
 	goto cleanup;
@@ -440,7 +440,7 @@ bmc_section_diff_value (bmc_config_state_data_t *state_data,
   return kv->diff (state_data, sect, kv);
 }
 
-int 
+bmc_err_t 
 bmc_sections_list (bmc_config_state_data_t *state_data)
 {
   struct section *sect;
@@ -453,5 +453,5 @@ bmc_sections_list (bmc_config_state_data_t *state_data)
       sect = sect->next;
     }
 
-  return 0;
+  return BMC_ERR_SUCCESS;
 }

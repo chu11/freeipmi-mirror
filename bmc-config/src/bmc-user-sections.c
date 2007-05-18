@@ -1647,13 +1647,13 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
   struct section *user_section = NULL;
   char buf[64];
 
-  if (userid < 0)
+  if (userid <= 0)
     {
       fprintf(stderr, "Invalid Userid = %d\n", userid);
       return NULL;
     }
 
-  snprintf(buf, 64, "User%d", userid + 1);
+  snprintf(buf, 64, "User%d", userid);
 
   if (!(user_section = bmc_section_create(state_data, buf)))
     goto cleanup;

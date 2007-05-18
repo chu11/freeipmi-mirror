@@ -1,0 +1,170 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
+#include "ipmi-pef.h"
+#include "ipmi-pef-common.h"
+#include "ipmi-pef-parser.h"
+#include "ipmi-pef-sections.h"
+
+pef_err_t
+ipmi_pef_parser (ipmi_pef_state_data_t *state_data, FILE *fp)
+{ 
+  char buf[4096];
+  int line_num = 0;
+  char *section_name = NULL;
+  char *key_name = NULL;
+  char *value = NULL;
+  char *tok;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+#ifndef NDEBUG 
+  struct ipmi_pef_arguments *args;
+
+  args = state_data->prog_data->args;
+#endif /* NDEBUG */
+
+  while (fgets (buf, 4096, fp)) 
+    {
+      line_num ++;
+      buf[4095] = 0;
+      char *first_word = strtok (buf, " \t\n");
+      
+      if (!first_word) 
+        {
+#ifndef NDEBUG 
+          if (args->common.debug)
+            fprintf (stderr, "%d: empty line\n", line_num);
+#endif /* NDEBUG */
+          continue;
+        }
+    
+      if (first_word[0] == '#') 
+        {
+#ifndef NDEBUG 
+          if (args->common.debug)
+            fprintf (stderr, "Comment on line %d\n", line_num);
+#endif /* NDEBUG */
+          continue;
+        }
+      
+      if (same (first_word, "Section")) 
+        {
+          if (!(tok = strtok (NULL, " \t\n")))
+            {
+              fprintf (stderr, "FATAL: Error parsing line number %d\n",
+                       line_num);
+              goto cleanup;
+            }
+          
+          if (section_name)
+            {
+              free (section_name);
+              section_name = NULL;
+            }
+
+          if (!(section_name = strdup (tok)))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
+
+#ifndef NDEBUG 
+          if (args->common.debug) 
+            fprintf (stderr, "Entering section `%s'\n", section_name);
+#endif /* NDEBUG */
+
+          continue;
+        } 
+      /* same (first_word, "Section") */
+      
+      if (same (first_word, "EndSection")) 
+        {
+          if (!section_name) 
+            {
+              fprintf (stderr, "FATAL: encountered `%s' without a matching Section\n",
+                       first_word);
+              goto cleanup;
+            }
+#ifndef NDEBUG 
+          if (args->common.debug)
+            fprintf (stderr, "Leaving section `%s'\n", section_name);
+#endif /* NDEBUG */
+
+          free (section_name);
+          section_name = NULL;
+          
+          continue;
+        } 
+      /* same (first_word, "EndSection") */
+      
+      if (!section_name) 
+        {
+          fprintf (stderr, "FATAL: Key `%s' not inside any Section\n",
+                 first_word);
+          goto cleanup;
+        }
+      
+      if (key_name)
+        {
+          free (key_name);
+          key_name = NULL;
+        }
+
+      if (!(key_name = strdup (first_word)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+
+      if (value)
+        {
+          free (value);
+          value = NULL;
+        }
+
+      if ((tok = strtok (NULL, " \t\n")))
+        {
+          if (!(value = strdup (tok)))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
+        }
+      else
+        {
+          if (!(value = strdup ("")))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
+        }
+      
+#ifndef NDEBUG 
+      if (args->common.debug) 
+        fprintf (stderr, "Trying to set `%s:%s=%s'\n",
+                 section_name, key_name, value);
+#endif /* NDEBUG */
+      
+      if (ipmi_pef_section_set_value (state_data,
+                                      section_name,
+                                      key_name,
+                                      value) < 0) 
+        goto cleanup;
+    }
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (section_name)
+    free(section_name);
+  if (key_name)
+    free(key_name);
+  if (value)
+    free(value);
+  return rv;
+}

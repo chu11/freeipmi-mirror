@@ -246,7 +246,7 @@ get_bmc_community_string (struct ipmi_pef_state_data *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) 
     goto cleanup; 
 
-  if (get_lan_channel_number (state_data, &channel_number) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) != PEF_ERR_SUCCESS)
     goto cleanup; 
  
   if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,  
@@ -331,7 +331,7 @@ set_bmc_community_string (struct ipmi_pef_state_data *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) 
     goto cleanup; 
 
-  if (get_lan_channel_number (state_data, &channel_number) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) != PEF_ERR_SUCCESS)
     goto cleanup; 
 
   if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,  
@@ -363,7 +363,7 @@ get_lan_alert_destination (struct ipmi_pef_state_data *state_data,
   assert(state_data);
   assert(lad);
   
-  if (get_lan_channel_number (state_data, &channel_number) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) != PEF_ERR_SUCCESS)
     goto cleanup; 
   
   lad->destination_selector = destination_selector;
@@ -617,7 +617,7 @@ set_lan_alert_destination (struct ipmi_pef_state_data *state_data, lan_alert_des
   assert(state_data);
   assert(lad);
   
-  if (get_lan_channel_number (state_data, &channel_number) < 0)
+  if (get_lan_channel_number (state_data, &channel_number) != PEF_ERR_SUCCESS)
     goto cleanup; 
   
   if (ipmi_ipv4_address_string2int (lad->alert_ip_address, &alert_ip_address_bytes) < 0)

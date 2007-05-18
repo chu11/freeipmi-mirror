@@ -154,7 +154,7 @@ pef_commit (ipmi_pef_state_data_t *state_data)
       if (commit_pef_community_string (state_data, fp) < 0)
         goto cleanup;
     }
-  else if (args->lan_alert_destinations_wanted)
+  else if (args->alert_destinations_wanted)
     {
       if (commit_pef_lan_alert_destination (state_data, fp) < 0)
         goto cleanup;

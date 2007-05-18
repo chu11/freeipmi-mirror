@@ -74,4 +74,5 @@ common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for SDR options in manpages
+common stuff for parsing in bmc-config and ipmi-pef
 add header comments to fiid.h

@@ -5,8 +5,15 @@ ipmi_pef_SOURCES = \
 	ipmi-pef-argp.c \
 	ipmi-pef-checkout.c \
 	ipmi-pef-commit.c \
+	ipmi-pef-community-string.c \
+	ipmi-pef-alert-destination.c \
+	ipmi-pef-alert-policy-table.c \
+	ipmi-pef-event-filter-table.c \
+	ipmi-pef-diff.c \
 	ipmi-pef-info.c \
 	ipmi-pef-map.c \
+	ipmi-pef-parser.c \
+	ipmi-pef-sections.c \
 	ipmi-pef-utils.c \
 	ipmi-pef-wrapper.c
  
@@ -23,9 +30,16 @@ noinst_HEADERS = \
 	ipmi-pef-checkout.h \
 	ipmi-pef-commit.h \
 	ipmi-pef-common.h \
+	ipmi-pef-community-string.h \
+	ipmi-pef-alert-destination.h \
+	ipmi-pef-alert-policy-table.h \
+	ipmi-pef-event-filter-table.h \
+	ipmi-pef-diff.h \
 	ipmi-pef-info.h \
 	ipmi-pef-keys.h \
-	ipmi-pef-map.c \
+	ipmi-pef-map.h \
+	ipmi-pef-parser.h \
+	ipmi-pef-sections.h \
 	ipmi-pef-utils.h \
 	ipmi-pef-wrapper.h
  

@@ -27,6 +27,30 @@
 	ipmi-pef/src/ipmi-pef-commit.h, ipmi-pef/src/ipmi-pef-commit.c,
 	ipmi-pef/src/ipmi-pef-checkout.h,
 	ipmi-pef/src/ipmi-pef-checkout.c: New files.
+
+	* bmc-config/src/bmc-sections.c (bmc_config_sections_create),
+	bmc-config/src/bmc-user-sections.c (bmc_user_section_get): Alter
+	indexing method.
+
+	* ipmi-pef/src/ipmi-pef-community-string.c,
+	ipmi-pef/src/ipmi-pef-alert-destination.c,
+	ipmi-pef/src/ipmi-pef-alert-policy-table.c,
+	ipmi-pef/src/ipmi-pef-event-filter-table.c,
+	ipmi-pef/src/ipmi-pef-diff.c, ipmi-pef/src/ipmi-pef-parser.c,
+	ipmi-pef/src/ipmi-pef-sections.c,
+	ipmi-pef/src/ipmi-pef-community-string.h,
+	ipmi-pef/src/ipmi-pef-alert-destination.h,
+	ipmi-pef/src/ipmi-pef-alert-policy-table.h,
+	ipmi-pef/src/ipmi-pef-event-filter-table.h,
+	ipmi-pef/src/ipmi-pef-diff.h, ipmi-pef/src/ipmi-pef-parser.h,
+	ipmi-pef/src/ipmi-pef-sections.h: New files.
+
+	* ipmi-pef/: Change "lan_destinations" and
+	"lan_alert_destinations" to "alert_destinations" globally for
+	consistency.
+
+	* bmc-config/src/bmc-sections.h, bmc-config/src/bmc-sections.c
+	(bmc_sections_list): Correct return type.
 	
 2007-05-16  Albert Chu <chu11@llnl.gov>
 

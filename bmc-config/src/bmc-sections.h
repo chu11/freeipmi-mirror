@@ -113,6 +113,6 @@ int bmc_section_diff_value (bmc_config_state_data_t *state_data,
 			    const char *key_name,
 			    const char *value);
 
-int bmc_sections_list (bmc_config_state_data_t *state_data);
+bmc_err_t bmc_sections_list (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_SECTIONS_H_ */

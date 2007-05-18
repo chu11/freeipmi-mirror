@@ -6,4 +6,6 @@
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0
 
+#define same(a,b) (strcasecmp(a,b) == 0)
+
 #endif

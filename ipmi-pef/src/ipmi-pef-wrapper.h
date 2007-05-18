@@ -70,7 +70,7 @@ int get_community_string (struct ipmi_pef_state_data *state_data,
                           uint32_t community_string_len);
 
 int set_bmc_community_string (struct ipmi_pef_state_data *state_data, 
-			      uint8_t *community_string) ;
+			      uint8_t *community_string);
 
 int get_alert_policy_table (struct ipmi_pef_state_data *state_data, 
 			    int policy_number, 
