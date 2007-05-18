@@ -1,3 +1,16 @@
+2007-05-17  Tom Zimmerman <tzimmerman@lnxi.com>
+
+	* common/src/bit-ops.h: Fix macro bug.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c (get_lan_alert_destination): Fix
+	buffer length bug.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_destination_type,
+	tmpl_cmd_set_lan_configuration_parameters_destination_type_rq,
+	tmpl_cmd_get_lan_configuration_parameters_destination_type_rs):
+	Fix template field ordering bug.
+
 2007-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/src/ipmi-pef-map.h, ipmi-pef/src/ipmi-pef-map.c,
