@@ -1,5 +1,5 @@
 /* 
-   bmc-conf2.h: BMC Config functions
+   bmc-config-wrapper.h: BMC Config functions
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,11 +16,11 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
 */
 
-#ifndef _BMC_CONFIG_API_H
-#define _BMC_CONFIG_API_H
+#ifndef _BMC_CONFIG_WRAPPER_H
+#define _BMC_CONFIG_WRAPPER_H
 
 #include "bmc-config.h"
-#include "bmc-common.h"
+#include "bmc-config-common.h"
 
 bmc_err_t get_bmc_max_users (bmc_config_state_data_t *state_data,
                              uint8_t *max_users);

@@ -1,5 +1,5 @@
 /* 
-   bmc-conf2.c: BMC Config functions
+   bmc-config-wrapper.c: BMC Config functions
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,8 +16,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
 */
 
-#include "bmc-config-api.h"
-#include "bmc-ipmi-wrapper.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-utils.h"
 
 #include "bit-ops.h"
 
