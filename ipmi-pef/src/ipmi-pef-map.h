@@ -1,6 +1,16 @@
 #ifndef _IPMI_PEF_MAP_H
 #define _IPMI_PEF_MAP_H
 
+int alert_destination_type_number (const char *source);
+
+char *alert_destination_type_string (uint8_t source);
+
+int alert_gateway_number (const char *source);
+
+char *alert_gateway_string (uint8_t source);
+
+/* XXX */
+
 char *filter_number_to_string (int filter_number);
 int string_to_filter_number (const char *filter_number_string);
 

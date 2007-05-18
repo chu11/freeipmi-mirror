@@ -16,6 +16,8 @@
 #include "common-utils.h"
 #include "ipmi-sensor-api.h"
 
+#include "ipmi-pef.h"
+#include "ipmi-pef-common.h"
 #include "ipmi-pef-map.h"
 
 #define IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER_STRING        "Manufacturer_Pre_Configured"
@@ -76,6 +78,56 @@
 
 #define IPMI_GATEWAY_SELECTOR_DEFAULT_STRING                                       "Default"
 #define IPMI_GATEWAY_SELECTOR_BACKUP_STRING                                        "Backup"
+
+int
+alert_destination_type_number (const char *source)
+{
+  if (same (source, IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING))
+    return IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION;
+  if (same (source, IPMI_DESTINATION_TYPE_OEM1_STRING))
+    return IPMI_DESTINATION_TYPE_OEM1;
+  if (same (source, IPMI_DESTINATION_TYPE_OEM2_STRING))
+    return IPMI_DESTINATION_TYPE_OEM2;
+  return -1;
+}
+
+char *
+alert_destination_type_string (uint8_t source)
+{
+  switch (source)
+    {
+    case IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION:
+      return IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING;
+    case IPMI_DESTINATION_TYPE_OEM1:
+      return IPMI_DESTINATION_TYPE_OEM1_STRING;
+    case IPMI_DESTINATION_TYPE_OEM2:
+      return IPMI_DESTINATION_TYPE_OEM2_STRING;
+    }
+  return "";
+}
+
+int
+alert_gateway_number (const char *source)
+{
+  if (same (source, IPMI_GATEWAY_SELECTOR_DEFAULT_STRING))
+    return IPMI_GATEWAY_SELECTOR_DEFAULT;
+  if (same (source, IPMI_GATEWAY_SELECTOR_BACKUP_STRING))
+    return IPMI_GATEWAY_SELECTOR_BACKUP;
+  return -1;
+}
+
+char *
+alert_gateway_string (uint8_t source)
+{
+  switch (source)
+    {
+    case IPMI_GATEWAY_SELECTOR_DEFAULT:
+      return IPMI_GATEWAY_SELECTOR_DEFAULT_STRING;
+    case IPMI_GATEWAY_SELECTOR_BACKUP:
+      return IPMI_GATEWAY_SELECTOR_BACKUP_STRING;
+    }
+  return "";
+}
 
 static int 
 _strchr_replace (char *str, char ch, char nch)

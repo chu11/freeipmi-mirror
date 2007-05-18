@@ -46,6 +46,327 @@
 #include "ipmi-pef-utils.h"
 #include "ipmi-pef-wrapper.h"
 
+pef_err_t
+get_bmc_lan_conf_community_string (ipmi_pef_state_data_t *state_data,
+                                   uint8_t *community_string,
+                                   uint32_t community_string_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret;
+  int8_t channel_number;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,
+                                                                  channel_number,
+                                                                  IPMI_GET_LAN_PARAMETER,
+                                                                  SET_SELECTOR,
+                                                                  BLOCK_SELECTOR,
+                                                                  obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get_data (obj_cmd_rs,
+                         "community_string",
+                         community_string,
+                         community_string_len) < 0)
+    goto cleanup;
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+set_bmc_lan_conf_community_string (ipmi_pef_state_data_t *state_data,
+                                   uint8_t *community_string)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret;
+  int8_t channel_number;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,
+                                                                  channel_number,
+                                                                  community_string,
+                                                                  (community_string) ? strlen((char *)community_string) : 0,
+                                                                  obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+get_bmc_lan_conf_destination_type(ipmi_pef_state_data_t *state_data,
+                                  uint8_t destination_selector,
+                                  uint8_t *alert_destination_type,
+                                  uint8_t *alert_acknowledge,
+                                  uint8_t *alert_acknowledge_timeout,
+                                  uint8_t *alert_retries)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret;
+  int8_t channel_number;
+
+  assert(state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_type_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_type (state_data->dev,
+                                                                  channel_number,
+                                                                  IPMI_GET_LAN_PARAMETER,
+                                                                  destination_selector,
+                                                                  BLOCK_SELECTOR,
+                                                                  obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "destination_type", &val) < 0)
+    goto cleanup;
+  *alert_destination_type = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge", &val) < 0)
+    goto cleanup;
+  *alert_acknowledge = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "alert_acknowledge_timeout", &val) < 0)
+    goto cleanup;
+  *alert_acknowledge_timeout = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "retries", &val) < 0)
+    goto cleanup;
+  *alert_retries = val;
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+get_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_data,
+                                       uint8_t destination_selector,
+                                       uint8_t *alert_gateway,
+                                       char *alert_ip_address,
+                                       unsigned int alert_ip_address_len,
+                                       char *alert_mac_address,
+                                       unsigned int alert_mac_address_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  uint8_t alert_ip_address_bytes[4];
+  uint8_t alert_mac_address_bytes[6];
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret;
+  int8_t channel_number;
+
+  assert(state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_destination_addresses (state_data->dev,
+                                                                       channel_number,
+                                                                       IPMI_GET_LAN_PARAMETER,
+                                                                       destination_selector,
+                                                                       BLOCK_SELECTOR,
+                                                                       obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "gateway_selector", &val) < 0)
+    goto cleanup;
+  *alert_gateway = val;
+
+  if (alert_ip_address && alert_ip_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs,
+                             "alerting_ip_address",
+                             alert_ip_address_bytes,
+                             4) < 0)
+        goto cleanup;
+
+      memset(alert_ip_address, '\0', alert_ip_address_len);
+      snprintf (alert_ip_address,
+                alert_ip_address_len - 1,
+                "%u.%u.%u.%u",
+                alert_ip_address_bytes[0],
+                alert_ip_address_bytes[1],
+                alert_ip_address_bytes[2],
+                alert_ip_address_bytes[3]);
+    }
+
+  if (alert_mac_address && alert_mac_address_len)
+    {
+      if (fiid_obj_get_data (obj_cmd_rs,
+                             "alerting_mac_address",
+                             alert_mac_address_bytes,
+                             6) < 0)
+        goto cleanup;
+
+      memset(alert_mac_address, '\0', alert_mac_address_len);
+      snprintf (alert_mac_address,
+                alert_mac_address_len - 1,
+                "%02X:%02X:%02X:%02X:%02X:%02X",
+                alert_mac_address_bytes[0],
+                alert_mac_address_bytes[1],
+                alert_mac_address_bytes[2],
+                alert_mac_address_bytes[3],
+                alert_mac_address_bytes[4],
+                alert_mac_address_bytes[5]);
+    }
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+set_bmc_lan_conf_destination_type(ipmi_pef_state_data_t *state_data,
+                                  uint8_t destination_selector,
+                                  uint8_t alert_destination_type,
+                                  uint8_t alert_acknowledge,
+                                  uint8_t alert_acknowledge_timeout,
+                                  uint8_t alert_retries)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret;
+  int8_t channel_number;
+
+  assert(state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_type (state_data->dev,
+                                                                  channel_number,
+                                                                  destination_selector,
+                                                                  alert_destination_type,
+                                                                  alert_acknowledge,
+                                                                  alert_acknowledge_timeout,
+                                                                  alert_retries,
+                                                                  obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+set_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_data,
+                                       uint8_t destination_selector,
+                                       uint8_t alert_gateway,
+                                       char *alert_ip_address,
+                                       char *alert_mac_address)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint32_t alert_ip_address_val = 0;
+  uint64_t alert_mac_address_val = 0;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret;
+  int8_t channel_number;
+
+  assert(state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_ipv4_address_string2int(alert_ip_address, &alert_ip_address_val) < 0)
+    goto cleanup;
+
+  if (ipmi_mac_address_string2int(alert_mac_address, &alert_mac_address_val) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->dev,
+                                                                       channel_number,
+                                                                       destination_selector,
+                                                                       alert_gateway,
+                                                                       alert_ip_address_val,
+                                                                       alert_mac_address_val,
+                                                                       obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+
+
 #define GET_VALUE_STRING_BY_KEY_RETURN(__cache_record, __key, __value)  \
   do									\
     {									\
@@ -232,43 +553,43 @@ _get_record_count (FILE *fp, int *count)
 
 int
 get_bmc_community_string (struct ipmi_pef_state_data *state_data,
-			  uint8_t *community_string, 
-			  uint32_t community_string_len) 
-{ 
-  fiid_obj_t obj_cmd_rs = NULL; 
-  int8_t channel_number; 
+                          uint8_t *community_string,
+                          uint32_t community_string_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t channel_number;
   int rv = -1;
 
   assert(state_data);
   assert(community_string);
   assert(community_string_len);
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs))) 
-    goto cleanup; 
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
+    goto cleanup;
 
   if (get_lan_channel_number (state_data, &channel_number) != PEF_ERR_SUCCESS)
-    goto cleanup; 
- 
-  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,  
-								  channel_number,  
-								  IPMI_GET_LAN_PARAMETER,  
-								  SET_SELECTOR,  
-								  BLOCK_SELECTOR,  
-								  obj_cmd_rs) < 0)  
-    goto cleanup; 
-  
-  if (fiid_obj_get_data (obj_cmd_rs,  
-			 "community_string",  
-			 community_string, 
-			 community_string_len) < 0) 
-    goto cleanup; 
-  
+    goto cleanup;
+
+  if (ipmi_cmd_get_lan_configuration_parameters_community_string (state_data->dev,
+                                                                  channel_number,
+                                                                  IPMI_GET_LAN_PARAMETER,
+                                                                  SET_SELECTOR,
+                                                                  BLOCK_SELECTOR,
+                                                                  obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (fiid_obj_get_data (obj_cmd_rs,
+                         "community_string",
+                         community_string,
+                         community_string_len) < 0)
+    goto cleanup;
+
   rv = 0;
- cleanup: 
-  if (obj_cmd_rs) 
-    fiid_obj_destroy(obj_cmd_rs); 
-  return (rv); 
-} 
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
 
 int 
 get_community_string (struct ipmi_pef_state_data *state_data,
@@ -319,34 +640,34 @@ get_community_string (struct ipmi_pef_state_data *state_data,
 
 int
 set_bmc_community_string (struct ipmi_pef_state_data *state_data,
-			  uint8_t *community_string) 
-{ 
-  fiid_obj_t obj_cmd_rs = NULL; 
-  int8_t channel_number; 
+                          uint8_t *community_string)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t channel_number;
   int rv = -1;
-  
+
   assert(state_data);
   assert(community_string);
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs))) 
-    goto cleanup; 
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
 
   if (get_lan_channel_number (state_data, &channel_number) != PEF_ERR_SUCCESS)
-    goto cleanup; 
+    goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,  
-								  channel_number, 
-								  community_string,  
-								  (community_string) ? strlen((char *)community_string) : 0, 
-								  obj_cmd_rs) < 0) 
-    goto cleanup; 
+  if (ipmi_cmd_set_lan_configuration_parameters_community_string (state_data->dev,
+                                                                  channel_number,
+                                                                  community_string,
+                                                                  (community_string) ? strlen((char *)community_string) : 0,
+                                                                  obj_cmd_rs) < 0)
+    goto cleanup;
 
   rv = 0;
- cleanup: 
-  if (obj_cmd_rs) 
-    fiid_obj_destroy(obj_cmd_rs); 
-  return (rv); 
-} 
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
 
 int 
 get_lan_alert_destination (struct ipmi_pef_state_data *state_data, 

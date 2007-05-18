@@ -3,6 +3,9 @@
 	* ipmi-pef/src/ipmi-pef-validate.h,
 	ipmi-pef/src/ipmi-pef-validate.c: New files.
 
+	* ipmi-pef/: Add initial community string and alert destination
+	sectional support.
+
 2007-05-17  Tom Zimmerman <tzimmerman@lnxi.com>
 
 	* common/src/bit-ops.h: Fix macro bug.

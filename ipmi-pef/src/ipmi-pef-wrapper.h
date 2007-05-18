@@ -60,8 +60,43 @@ struct lan_alert_destination
 };
 typedef struct lan_alert_destination lan_alert_destination_t;
 
+pef_err_t get_bmc_lan_conf_community_string (ipmi_pef_state_data_t *state_data,
+                                             uint8_t *community_string,
+                                             uint32_t community_string_len);
+
+pef_err_t set_bmc_lan_conf_community_string (ipmi_pef_state_data_t *state_data,
+                                             uint8_t *community_string);
+
+pef_err_t get_bmc_lan_conf_destination_type(ipmi_pef_state_data_t *state_data,
+                                            uint8_t destination_selector,
+                                            uint8_t *alert_destination_type,
+                                            uint8_t *alert_acknowledge,
+                                            uint8_t *alert_acknowledge_timeout,
+                                            uint8_t *alert_retries);
+
+pef_err_t get_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_data,
+                                                 uint8_t destination_selector,
+                                                 uint8_t *alert_gateway,
+                                                 char *alert_ip_address,
+                                                 unsigned int alert_ip_address_len,
+                                                 char *alert_mac_address,
+                                                 unsigned int alert_mac_address_len);
+
+pef_err_t set_bmc_lan_conf_destination_type(ipmi_pef_state_data_t *state_data,
+                                            uint8_t destination_selector,
+                                            uint8_t alert_destination_type,
+                                            uint8_t alert_acknowledge,
+                                            uint8_t alert_acknowledge_timeout,
+                                            uint8_t alert_retries);
+
+pef_err_t set_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_data,
+                                                 uint8_t destination_selector,
+                                                 uint8_t alert_gateway,
+                                                 char *alert_ip_address,
+                                                 char *alert_mac_address);
+
 int get_bmc_community_string (struct ipmi_pef_state_data *state_data,
-                              uint8_t *community_string, 
+                              uint8_t *community_string,
                               uint32_t community_string_len);
 
 int get_community_string (struct ipmi_pef_state_data *state_data,
@@ -69,8 +104,8 @@ int get_community_string (struct ipmi_pef_state_data *state_data,
                           uint8_t *community_string, 
                           uint32_t community_string_len);
 
-int set_bmc_community_string (struct ipmi_pef_state_data *state_data, 
-			      uint8_t *community_string);
+int set_bmc_community_string (struct ipmi_pef_state_data *state_data,
+                              uint8_t *community_string);
 
 int get_alert_policy_table (struct ipmi_pef_state_data *state_data, 
 			    int policy_number, 
