@@ -254,12 +254,12 @@ checkout_pef_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
                str);
       free (str);
       
-      if (!(str = event_specific_alert_string_lookup_to_string (apt.event_specific_alert_string_lookup)))
+      if (!(str = event_specific_alert_string_to_string (apt.event_specific_alert_string)))
         return -1;
 
       fprintf (fp, 
                "%-30s %s\n", 
-               APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
+               APT_EVENT_SPECIFIC_ALERT_STRING_KEY_STRING, 
                str);
       free (str);
       

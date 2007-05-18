@@ -36,6 +36,25 @@ number_range_one_byte (bmc_config_state_data_t *state_data,
 }
 
 bmc_validate_t
+number_range_two_bytes (bmc_config_state_data_t *state_data,
+                        const struct section *sect,
+                        const char *value)
+{
+  long int conv;
+  char *endptr;
+
+  conv = strtol (value, &endptr, 0);
+
+  if (*endptr)
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  if (conv < 0 || conv > 65535)
+    return BMC_VALIDATE_INVALID_VALUE;
+
+  return BMC_VALIDATE_VALID_VALUE;
+}
+
+bmc_validate_t
 ip_address_validate (bmc_config_state_data_t *state_data,
                      const struct section *sect,
                      const char *value)

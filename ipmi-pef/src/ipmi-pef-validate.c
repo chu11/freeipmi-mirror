@@ -29,6 +29,44 @@ yes_no_validate (ipmi_pef_state_data_t *state_data,
 }
 
 pef_validate_t 
+number_range_four_bits (ipmi_pef_state_data_t *state_data,
+                        const struct section *sect,
+                        const char *value)
+{
+  long int conv;
+  char *endptr;
+
+  conv = strtol (value, &endptr, 0);
+
+  if (*endptr)
+    return PEF_VALIDATE_INVALID_VALUE;
+
+  if (conv < 0 || conv > 15)
+    return PEF_VALIDATE_INVALID_VALUE;
+
+  return PEF_VALIDATE_VALID_VALUE;
+}
+
+pef_validate_t 
+number_range_seven_bits (ipmi_pef_state_data_t *state_data,
+                         const struct section *sect,
+                         const char *value)
+{
+  long int conv;
+  char *endptr;
+
+  conv = strtol (value, &endptr, 0);
+
+  if (*endptr)
+    return PEF_VALIDATE_INVALID_VALUE;
+
+  if (conv < 0 || conv > 127)
+    return PEF_VALIDATE_INVALID_VALUE;
+
+  return PEF_VALIDATE_VALID_VALUE;
+}
+
+pef_validate_t 
 number_range_one_byte (ipmi_pef_state_data_t *state_data,
                        const struct section *sect,
                        const char *value)
@@ -94,6 +132,16 @@ alert_gateway_validate (ipmi_pef_state_data_t *state_data,
                         const char *value)
 {
   if (alert_gateway_number (value) != -1)
+    return PEF_VALIDATE_VALID_VALUE;
+  return PEF_VALIDATE_INVALID_VALUE;
+}
+
+pef_validate_t
+policy_type_validate (ipmi_pef_state_data_t *state_data,
+                      const struct section *sect,
+                      const char *value)
+{
+  if (policy_type_number (value) != -1)
     return PEF_VALIDATE_VALID_VALUE;
   return PEF_VALIDATE_INVALID_VALUE;
 }

@@ -940,25 +940,6 @@ port_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_validate_t
-port_validate (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       const char *value)
-{
-  long int num;
-  char *endptr;
-
-  num = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  if (num < 0 || num > 65535)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
 struct section *
 bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
 {
@@ -1085,7 +1066,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        port_checkout,
                                        port_commit,
                                        port_diff,
-                                       port_validate) < 0)
+                                       number_range_two_bytes) < 0)
     goto cleanup;
 
   return sol_conf_section;

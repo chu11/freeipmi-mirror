@@ -19,7 +19,7 @@
 #define APT_DESTINATION_SELECTOR_KEY_STRING                    "Destination_Selector"
 #define APT_CHANNEL_NUMBER_KEY_STRING                          "Channel_Number"
 #define APT_ALERT_STRING_SET_SELECTOR_KEY_STRING               "Alert_String_Set_Selector"
-#define APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING      "Event_Specific_Alert_String"
+#define APT_EVENT_SPECIFIC_ALERT_STRING_KEY_STRING             "Event_Specific_Alert_String"
 
 #define FILTER_NUMBER_KEY_STRING                               "Filter_Number"
 #define FILTER_TYPE_KEY_STRING                                 "Filter_Type"

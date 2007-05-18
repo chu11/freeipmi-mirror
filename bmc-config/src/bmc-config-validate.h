@@ -31,6 +31,10 @@ bmc_validate_t number_range_one_byte (bmc_config_state_data_t *state_data,
                                       const struct section *sect, 
                                       const char *value);
 
+bmc_validate_t number_range_two_bytes (bmc_config_state_data_t *state_data,
+                                       const struct section *sect,
+                                       const char *value);
+
 bmc_validate_t ip_address_validate (bmc_config_state_data_t *state_data,
                                     const struct section *sect,
                                     const char *value);

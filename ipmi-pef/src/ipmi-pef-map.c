@@ -66,8 +66,8 @@
 #define IPMI_ALERT_POLICY_DISABLED_STRING                                          "No"
 #define IPMI_ALERT_POLICY_ENABLED_STRING                                           "Yes"
 
-#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING                          "No"
-#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING                         "Yes"
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_NO_STRING                                 "No"
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_YES_STRING                                "Yes"
 
 #define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING                          "PET_Trap"
 #define IPMI_DESTINATION_TYPE_OEM1_STRING                                          "OEM1"
@@ -82,11 +82,11 @@
 int
 alert_destination_type_number (const char *source)
 {
-  if (same (source, IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING))
+  if (same (source, "pet_trap"))
     return IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION;
-  if (same (source, IPMI_DESTINATION_TYPE_OEM1_STRING))
+  if (same (source, "oem1"))
     return IPMI_DESTINATION_TYPE_OEM1;
-  if (same (source, IPMI_DESTINATION_TYPE_OEM2_STRING))
+  if (same (source, "oem2"))
     return IPMI_DESTINATION_TYPE_OEM2;
   return -1;
 }
@@ -97,11 +97,11 @@ alert_destination_type_string (uint8_t source)
   switch (source)
     {
     case IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION:
-      return IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION_STRING;
+      return "PET_Trap";
     case IPMI_DESTINATION_TYPE_OEM1:
-      return IPMI_DESTINATION_TYPE_OEM1_STRING;
+      return "OEM1";
     case IPMI_DESTINATION_TYPE_OEM2:
-      return IPMI_DESTINATION_TYPE_OEM2_STRING;
+      return "OEM2";
     }
   return "";
 }
@@ -109,9 +109,9 @@ alert_destination_type_string (uint8_t source)
 int
 alert_gateway_number (const char *source)
 {
-  if (same (source, IPMI_GATEWAY_SELECTOR_DEFAULT_STRING))
+  if (same (source, "default"))
     return IPMI_GATEWAY_SELECTOR_DEFAULT;
-  if (same (source, IPMI_GATEWAY_SELECTOR_BACKUP_STRING))
+  if (same (source, "backup"))
     return IPMI_GATEWAY_SELECTOR_BACKUP;
   return -1;
 }
@@ -122,12 +122,55 @@ alert_gateway_string (uint8_t source)
   switch (source)
     {
     case IPMI_GATEWAY_SELECTOR_DEFAULT:
-      return IPMI_GATEWAY_SELECTOR_DEFAULT_STRING;
+      return "Default";
     case IPMI_GATEWAY_SELECTOR_BACKUP:
-      return IPMI_GATEWAY_SELECTOR_BACKUP_STRING;
+      return "Backup";
     }
   return "";
 }
+
+int
+policy_type_number (const char *source)
+{
+  if (same (source, "always_send_to_this_destination"))
+    return IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION;
+  if (same (source, "proceed_to_next_entry"))
+    return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY;
+  if (same (source, "do_not_proceed_any_more_entries"))
+    return IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES;
+  if (same (source, "proceed_to_next_entry_different_channel"))
+    return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL;
+  if (same (source, "proceed_to_next_entry_different_destination_type"))
+    return IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE;
+  return -1;
+}
+
+char *
+policy_type_string (uint8_t source)
+{
+  switch (source)
+    {
+    case IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION:
+      return "Always_Send_To_This_Destination";
+      break;
+    case IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY:
+      return "Proceed_To_Next_Entry";
+      break;
+    case IPMI_ALERT_POLICY_DO_NOT_PROCEED_ANY_MORE_ENTRIES:
+      return "Do_Not_Proceed_Any_More_Entries";
+      break;
+    case IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_CHANNEL:
+      return "Proceed_To_Next_Entry_Different_Channel";
+      break;
+    case IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY_DIFFERENT_DESTINATION_TYPE:
+      return "Proceed_To_Next_Entry_Different_Destination_Type";
+      break;
+    }
+
+  return "";
+}
+
+
 
 static int 
 _strchr_replace (char *str, char ch, char nch)
@@ -1446,13 +1489,13 @@ string_to_alert_string_set_selector (const char *alert_string_set_selector_strin
 }
 
 char *
-event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lookup)
+event_specific_alert_string_to_string (int event_specific_alert_string)
 {
   char *str = NULL;
 
-  if (event_specific_alert_string_lookup == IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES)
+  if (event_specific_alert_string == IPMI_EVENT_SPECIFIC_ALERT_STRING_YES)
     {
-      if (!(str = strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_YES_STRING)))
         {
           perror("strdup");
           return NULL;
@@ -1460,7 +1503,7 @@ event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lo
     }
   else
     {
-      if (!(str = strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING)))
+      if (!(str = strdup (IPMI_EVENT_SPECIFIC_ALERT_STRING_NO_STRING)))
         {
           perror("strdup");
           return NULL;
@@ -1471,13 +1514,13 @@ event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lo
 }
 
 int 
-string_to_event_specific_alert_string_lookup (const char *event_specific_alert_string_lookup_string)
+string_to_event_specific_alert_string (const char *event_specific_alert_string_string)
 {
-  if (!strcasecmp (event_specific_alert_string_lookup_string, IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO_STRING))
-    return IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO;
+  if (!strcasecmp (event_specific_alert_string_string, IPMI_EVENT_SPECIFIC_ALERT_STRING_NO_STRING))
+    return IPMI_EVENT_SPECIFIC_ALERT_STRING_NO;
 
-  if (!strcasecmp (event_specific_alert_string_lookup_string, IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES_STRING))
-    return IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES;
+  if (!strcasecmp (event_specific_alert_string_string, IPMI_EVENT_SPECIFIC_ALERT_STRING_YES_STRING))
+    return IPMI_EVENT_SPECIFIC_ALERT_STRING_YES;
   
   return -1;
 }

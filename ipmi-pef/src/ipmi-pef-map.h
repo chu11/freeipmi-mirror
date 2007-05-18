@@ -9,6 +9,10 @@ int alert_gateway_number (const char *source);
 
 char *alert_gateway_string (uint8_t source);
 
+int policy_type_number (const char *source);
+
+char *policy_type_string (uint8_t source);
+
 /* XXX */
 
 char *filter_number_to_string (int filter_number);
@@ -116,8 +120,8 @@ int string_to_channel_number (const char *channel_number_string);
 char *alert_string_set_selector_to_string (int alert_string_set_selector);
 int string_to_alert_string_set_selector (const char *alert_string_set_selector_string);
 
-char *event_specific_alert_string_lookup_to_string (int event_specific_alert_string_lookup);
-int string_to_event_specific_alert_string_lookup (const char *event_specific_alert_string_lookup_string);
+char *event_specific_alert_string_to_string (int event_specific_alert_string);
+int string_to_event_specific_alert_string (const char *event_specific_alert_string_string);
 
 char *destination_type_to_string (int alert_destination_type);
 int string_to_destination_type (const char *alert_destination_type_string);

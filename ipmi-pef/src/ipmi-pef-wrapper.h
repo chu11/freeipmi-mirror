@@ -43,7 +43,7 @@ struct pef_alert_policy_table
   int destination_selector;
   int channel_number;
   int alert_string_set_selector;
-  int event_specific_alert_string_lookup;
+  int event_specific_alert_string;
 };
 typedef struct pef_alert_policy_table pef_alert_policy_table_t;
 
@@ -97,23 +97,23 @@ pef_err_t set_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_da
 
 pef_err_t get_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data, 
                                                uint8_t alert_policy_entry_number,
-                                               uint8_t *policy_number_type,
-                                               uint8_t *policy_number_enabled,
+                                               uint8_t *policy_type,
+                                               uint8_t *policy_enabled,
                                                uint8_t *policy_number,
                                                uint8_t *destination_selector,
                                                uint8_t *channel_number,
                                                uint8_t *alert_string_set_selector,
-                                               uint8_t *event_specific_alert_string_lookup);
+                                               uint8_t *event_specific_alert_string);
 
 pef_err_t set_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data, 
                                                uint8_t alert_policy_entry_number,
-                                               uint8_t policy_number_type,
-                                               uint8_t policy_number_enabled,
+                                               uint8_t policy_type,
+                                               uint8_t policy_enabled,
                                                uint8_t policy_number,
                                                uint8_t destination_selector,
                                                uint8_t channel_number,
                                                uint8_t alert_string_set_selector,
-                                               uint8_t event_specific_alert_string_lookup);
+                                               uint8_t event_specific_alert_string);
 
 pef_err_t get_bmc_pef_conf_event_filter_table (struct ipmi_pef_state_data *state_data, 
                                                uint8_t filter_number,

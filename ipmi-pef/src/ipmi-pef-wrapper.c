@@ -372,13 +372,13 @@ set_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_data,
 pef_err_t
 get_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data, 
                                      uint8_t alert_policy_entry_number,
-                                     uint8_t *policy_number_type,
-                                     uint8_t *policy_number_enabled,
+                                     uint8_t *policy_type,
+                                     uint8_t *policy_enabled,
                                      uint8_t *policy_number,
                                      uint8_t *destination_selector,
                                      uint8_t *channel_number,
                                      uint8_t *alert_string_set_selector,
-                                     uint8_t *event_specific_alert_string_lookup)
+                                     uint8_t *event_specific_alert_string)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -406,10 +406,10 @@ get_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data,
 #endif
   if (fiid_obj_get (obj_cmd_rs, "policy_number.policy_type", &val) < 0)
     goto cleanup;
-  *policy_number_type = val;
+  *policy_type = val;
   if (fiid_obj_get (obj_cmd_rs, "policy_number.enabled", &val) < 0)
     goto cleanup;
-  *policy_number_enabled = val;
+  *policy_enabled = val;
   if (fiid_obj_get (obj_cmd_rs, "policy_number.policy_number", &val) < 0)
     goto cleanup;
   *policy_number = val;
@@ -422,9 +422,9 @@ get_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data,
   if (fiid_obj_get (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val) < 0)
     goto cleanup;
   *alert_string_set_selector = val;
-  if (fiid_obj_get (obj_cmd_rs, "alert_string_key.event_specific_alert_string_lookup", &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val) < 0)
     goto cleanup;
-  *event_specific_alert_string_lookup = val;
+  *event_specific_alert_string = val;
   
   rv = PEF_ERR_SUCCESS;
  cleanup:
@@ -436,13 +436,13 @@ get_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data,
 pef_err_t
 set_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data, 
                                      uint8_t alert_policy_entry_number,
-                                     uint8_t policy_number_type,
-                                     uint8_t policy_number_enabled,
+                                     uint8_t policy_type,
+                                     uint8_t policy_enabled,
                                      uint8_t policy_number,
                                      uint8_t destination_selector,
                                      uint8_t channel_number,
                                      uint8_t alert_string_set_selector,
-                                     uint8_t event_specific_alert_string_lookup)
+                                     uint8_t event_specific_alert_string)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
@@ -455,13 +455,13 @@ set_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data,
 
   if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->dev, 
 								    alert_policy_entry_number, 
-								    policy_number_type, 
-								    policy_number_enabled, 
+								    policy_type, 
+								    policy_enabled, 
 								    policy_number, 
 								    destination_selector, 
 								    channel_number, 
 								    alert_string_set_selector, 
-								    event_specific_alert_string_lookup, 
+								    event_specific_alert_string, 
 								    obj_cmd_rs) < 0)
     {
       rv = PEF_ERR_NON_FATAL_ERROR;
@@ -1344,8 +1344,8 @@ get_alert_policy_table (struct ipmi_pef_state_data *state_data,
   apt->channel_number = val;
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val);
   apt->alert_string_set_selector = val;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.event_specific_alert_string_lookup", &val);
-  apt->event_specific_alert_string_lookup = val;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val);
+  apt->event_specific_alert_string = val;
   
   rv = 0;
   
@@ -1456,17 +1456,17 @@ _record_string_to_alert_policy_table (const char *record_string,
   apt->alert_string_set_selector = n;
   
   GET_VALUE_STRING_BY_KEY_RETURN (record_string, 
-				  APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING, 
+				  APT_EVENT_SPECIFIC_ALERT_STRING_KEY_STRING, 
 				  value_string);
-  if ((n = string_to_event_specific_alert_string_lookup (value_string)) < 0)
+  if ((n = string_to_event_specific_alert_string (value_string)) < 0)
     {
       fprintf (stderr, 
 	       "Invalid value %s for %s\n", 
 	       value_string, 
-	       APT_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_KEY_STRING);
+	       APT_EVENT_SPECIFIC_ALERT_STRING_KEY_STRING);
       return -1;
     }
-  apt->event_specific_alert_string_lookup = n;
+  apt->event_specific_alert_string = n;
   
   return 0;
 }
@@ -1532,7 +1532,7 @@ set_alert_policy_table (struct ipmi_pef_state_data *state_data, pef_alert_policy
 								    apt->destination_selector, 
 								    apt->channel_number, 
 								    apt->alert_string_set_selector, 
-								    apt->event_specific_alert_string_lookup, 
+								    apt->event_specific_alert_string, 
 								    obj_cmd_rs) != 0)
     goto cleanup;
   

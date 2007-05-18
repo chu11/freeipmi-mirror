@@ -62,6 +62,7 @@ ipmi-pef
 bmc-config/ipmi-pef
 -------------------
 caching for faster commit/checkout
+mem-leaks from strdups, is this ever freed?
 
 general
 -------

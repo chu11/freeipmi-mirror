@@ -408,3 +408,20 @@ bytes, or 20 bytes depending on the authentication mechanism chosen.
 The fiid API allows the programmers to get/set the optional and/or
 variable length values more easily.
 
+It should be noted that in IPMI, many of this optional and/or variable
+length fields are in the middle of the packet, rather than the end.  Therefore,
+the traditional struct method of dealing with a variable length method:
+
+struct packet
+{
+  int field_1; /* 1 bit */
+  int field_2; /* 3 bits */
+  int field_3; /* 4 bits */
+  int field_4; /* 16 bits */
+  char *field_variable_length[1];
+};
+
+cannot be used.
+
+
+
