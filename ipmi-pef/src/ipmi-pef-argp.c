@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.14 2007-05-18 02:48:19 chu11 Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.15 2007-05-18 16:27:32 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -82,7 +82,7 @@ static struct argp_option options[] =
      "List available sections for checkout", 22},
     {"community-string", COMMUNITY_STRING_KEY, 0, 0,
      "Checkout Community String", 23},
-    {"alert-destinations", ALERT_DESTINATIONS_KEY, 0, 0, 
+    {"lan-alert-destinations", LAN_ALERT_DESTINATIONS_KEY, 0, 0, 
      "Checkout of LAN Alert Destinations.", 24},
     {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
      "Checkout of Alert Policy Table.", 25},
@@ -122,8 +122,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case COMMUNITY_STRING_KEY:
       cmd_args->community_string_wanted = 1;
       break;
-    case ALERT_DESTINATIONS_KEY:
-      cmd_args->alert_destinations_wanted = 1;
+    case LAN_ALERT_DESTINATIONS_KEY:
+      cmd_args->lan_alert_destinations_wanted = 1;
       break;
     case ALERT_POLICY_TABLE_KEY:
       cmd_args->alert_policy_table_wanted = 1;
@@ -163,7 +163,7 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
   init_common_cmd_args (&(cmd_args->common));
   cmd_args->action = 0;
   cmd_args->community_string_wanted = 0;
-  cmd_args->alert_destinations_wanted = 0;
+  cmd_args->lan_alert_destinations_wanted = 0;
   cmd_args->alert_policy_table_wanted = 0;
   cmd_args->event_filter_table_wanted = 0;
   cmd_args->verbose_wanted = 0;

@@ -46,7 +46,7 @@ get_lan_channel_number (struct ipmi_pef_state_data *state_data, int8_t *channel_
 }
 
 pef_err_t
-get_number_of_alert_destinations (struct ipmi_pef_state_data *state_data, int8_t *number_of_alert_destinations)
+get_number_of_lan_alert_destinations (struct ipmi_pef_state_data *state_data, int8_t *number_of_lan_alert_destinations)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
@@ -55,11 +55,11 @@ get_number_of_alert_destinations (struct ipmi_pef_state_data *state_data, int8_t
   int8_t channel_number;
   
   assert(state_data);
-  assert(number_of_alert_destinations);
+  assert(number_of_lan_alert_destinations);
   
-  if (state_data->number_of_alert_destinations_initialized)
+  if (state_data->number_of_lan_alert_destinations_initialized)
     {
-      *number_of_alert_destinations = state_data->number_of_alert_destinations;
+      *number_of_lan_alert_destinations = state_data->number_of_lan_alert_destinations;
       return PEF_ERR_SUCCESS;
     }
 
@@ -91,10 +91,10 @@ get_number_of_alert_destinations (struct ipmi_pef_state_data *state_data, int8_t
       goto cleanup;
     }
   
-  state_data->number_of_alert_destinations_initialized = 1;
-  state_data->number_of_alert_destinations = val;
+  state_data->number_of_lan_alert_destinations_initialized = 1;
+  state_data->number_of_lan_alert_destinations = val;
 
-  *number_of_alert_destinations = state_data->number_of_alert_destinations;
+  *number_of_lan_alert_destinations = state_data->number_of_lan_alert_destinations;
   rv = PEF_ERR_SUCCESS;
  cleanup:
   FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);

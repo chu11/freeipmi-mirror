@@ -16,7 +16,7 @@
 #include "ipmi-pef-utils.h"
 
 #include "ipmi-pef-community-string.h"
-#include "ipmi-pef-alert-destination.h"
+#include "ipmi-pef-lan-alert-destination.h"
 #include "ipmi-pef-alert-policy-table.h"
 #include "ipmi-pef-event-filter-table.h"
 
@@ -44,13 +44,13 @@ ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
-  int8_t number_of_alert_destinations,
+  int8_t number_of_lan_alert_destinations,
     number_of_alert_policy_entries,
     number_of_event_filters;
   int i;
 
-  if (get_number_of_alert_destinations(state_data, 
-                                       &number_of_alert_destinations) != PEF_ERR_SUCCESS)
+  if (get_number_of_lan_alert_destinations(state_data, 
+                                           &number_of_lan_alert_destinations) != PEF_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->verbose_wanted)
         fprintf (stderr, "## FATAL: Unable to get Number of Alert Destinations\n");
@@ -78,9 +78,9 @@ ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data)
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  for (i = 0; i < number_of_alert_destinations; i++)
+  for (i = 0; i < number_of_lan_alert_destinations; i++)
     {
-      if (!(sect = ipmi_pef_alert_destination_section_get(state_data, i+1)))
+      if (!(sect = ipmi_pef_lan_alert_destination_section_get(state_data, i+1)))
 	goto cleanup;
       if (_add_section (&sections, sect) < 0)
 	goto cleanup;

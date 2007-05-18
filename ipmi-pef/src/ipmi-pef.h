@@ -34,7 +34,7 @@ enum argp_option_keys
     DIFF_KEY = 'd',
     LIST_SECTIONS_KEY = 'L',
     COMMUNITY_STRING_KEY = 's',
-    ALERT_DESTINATIONS_KEY = 'n', 
+    LAN_ALERT_DESTINATIONS_KEY = 'n', 
     ALERT_POLICY_TABLE_KEY = 't', 
     EVENT_FILTER_TABLE_KEY = 'e',
     VERBOSE_KEY = 'v',
@@ -91,7 +91,7 @@ struct ipmi_pef_arguments
   pef_action_t action;
 
   int community_string_wanted;
-  int alert_destinations_wanted;
+  int lan_alert_destinations_wanted;
   int alert_policy_table_wanted;
   int event_filter_table_wanted;
   char *community_string;
@@ -115,8 +115,8 @@ typedef struct ipmi_pef_state_data
   /* achu: caching to make ipmi-pef work more quickly */
   int lan_channel_number_initialized;
   int8_t lan_channel_number;
-  int number_of_alert_destinations_initialized;
-  int8_t number_of_alert_destinations;
+  int number_of_lan_alert_destinations_initialized;
+  int8_t number_of_lan_alert_destinations;
   int number_of_alert_policy_entries_initialized;
   int8_t number_of_alert_policy_entries;
   int number_of_event_filters_initialized;

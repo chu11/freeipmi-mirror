@@ -54,7 +54,7 @@ _ipmi_pef_state_data_init(ipmi_pef_state_data_t *state_data)
   state_data->dev = NULL;
 
   state_data->lan_channel_number_initialized = 0;
-  state_data->number_of_alert_destinations_initialized = 0;
+  state_data->number_of_lan_alert_destinations_initialized = 0;
   state_data->number_of_alert_policy_entries_initialized = 0;
   state_data->number_of_event_filters_initialized = 0;
 }

@@ -36,7 +36,7 @@ typedef struct pef_event_filter_table pef_event_filter_table_t;
 
 struct pef_alert_policy_table
 {
-  int alert_policy_number;
+  int alert_policy_entry_number;
   int policy_type;
   int policy_enabled;
   int policy_number;
@@ -74,6 +74,13 @@ pef_err_t get_bmc_lan_conf_destination_type(ipmi_pef_state_data_t *state_data,
                                             uint8_t *alert_acknowledge_timeout,
                                             uint8_t *alert_retries);
 
+pef_err_t set_bmc_lan_conf_destination_type(ipmi_pef_state_data_t *state_data,
+                                            uint8_t destination_selector,
+                                            uint8_t alert_destination_type,
+                                            uint8_t alert_acknowledge,
+                                            uint8_t alert_acknowledge_timeout,
+                                            uint8_t alert_retries);
+
 pef_err_t get_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_data,
                                                  uint8_t destination_selector,
                                                  uint8_t *alert_gateway,
@@ -82,18 +89,91 @@ pef_err_t get_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_da
                                                  char *alert_mac_address,
                                                  unsigned int alert_mac_address_len);
 
-pef_err_t set_bmc_lan_conf_destination_type(ipmi_pef_state_data_t *state_data,
-                                            uint8_t destination_selector,
-                                            uint8_t alert_destination_type,
-                                            uint8_t alert_acknowledge,
-                                            uint8_t alert_acknowledge_timeout,
-                                            uint8_t alert_retries);
-
 pef_err_t set_bmc_lan_conf_destination_addresses(ipmi_pef_state_data_t *state_data,
                                                  uint8_t destination_selector,
                                                  uint8_t alert_gateway,
                                                  char *alert_ip_address,
                                                  char *alert_mac_address);
+
+pef_err_t get_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data, 
+                                               uint8_t alert_policy_entry_number,
+                                               uint8_t *policy_number_type,
+                                               uint8_t *policy_number_enabled,
+                                               uint8_t *policy_number,
+                                               uint8_t *destination_selector,
+                                               uint8_t *channel_number,
+                                               uint8_t *alert_string_set_selector,
+                                               uint8_t *event_specific_alert_string_lookup);
+
+pef_err_t set_bmc_pef_conf_alert_policy_table (struct ipmi_pef_state_data *state_data, 
+                                               uint8_t alert_policy_entry_number,
+                                               uint8_t policy_number_type,
+                                               uint8_t policy_number_enabled,
+                                               uint8_t policy_number,
+                                               uint8_t destination_selector,
+                                               uint8_t channel_number,
+                                               uint8_t alert_string_set_selector,
+                                               uint8_t event_specific_alert_string_lookup);
+
+pef_err_t get_bmc_pef_conf_event_filter_table (struct ipmi_pef_state_data *state_data, 
+                                               uint8_t filter_number,
+                                               uint8_t *filter_type,
+                                               uint8_t *enable_filter,
+                                               uint8_t *event_filter_action_alert,
+                                               uint8_t *event_filter_action_power_off,
+                                               uint8_t *event_filter_action_reset,
+                                               uint8_t *event_filter_action_power_cycle,
+                                               uint8_t *event_filter_action_oem,
+                                               uint8_t *event_filter_action_diagnostic_interrupt,
+                                               uint8_t *event_filter_action_group_control_operation,
+                                               uint8_t *alert_policy_number,
+                                               uint8_t *group_control_selector,
+                                               uint8_t *event_severity,
+                                               uint8_t *generator_id_byte1,
+                                               uint8_t *generator_id_byte2,
+                                               uint8_t *sensor_type,
+                                               uint8_t *sensor_number,
+                                               uint8_t *event_trigger,
+                                               uint8_t *event_data1_offset_mask,
+                                               uint8_t *event_data1_AND_mask,
+                                               uint8_t *event_data1_compare1,
+                                               uint8_t *event_data1_compare2,
+                                               uint8_t *event_data2_AND_mask,
+                                               uint8_t *event_data2_compare1,
+                                               uint8_t *event_data2_compare2,
+                                               uint8_t *event_data3_AND_mask,
+                                               uint8_t *event_data3_compare1,
+                                               uint8_t *event_data3_compare2);
+
+pef_err_t set_bmc_pef_conf_event_filter_table (struct ipmi_pef_state_data *state_data, 
+                                               uint8_t filter_number,
+                                               uint8_t filter_type,
+                                               uint8_t enable_filter,
+                                               uint8_t event_filter_action_alert,
+                                               uint8_t event_filter_action_power_off,
+                                               uint8_t event_filter_action_reset,
+                                               uint8_t event_filter_action_power_cycle,
+                                               uint8_t event_filter_action_oem,
+                                               uint8_t event_filter_action_diagnostic_interrupt,
+                                               uint8_t event_filter_action_group_control_operation,
+                                               uint8_t alert_policy_number,
+                                               uint8_t group_control_selector,
+                                               uint8_t event_severity,
+                                               uint8_t generator_id_byte1,
+                                               uint8_t generator_id_byte2,
+                                               uint8_t sensor_type,
+                                               uint8_t sensor_number,
+                                               uint8_t event_trigger,
+                                               uint8_t event_data1_offset_mask,
+                                               uint8_t event_data1_AND_mask,
+                                               uint8_t event_data1_compare1,
+                                               uint8_t event_data1_compare2,
+                                               uint8_t event_data2_AND_mask,
+                                               uint8_t event_data2_compare1,
+                                               uint8_t event_data2_compare2,
+                                               uint8_t event_data3_AND_mask,
+                                               uint8_t event_data3_compare1,
+                                               uint8_t event_data3_compare2);
 
 int get_bmc_community_string (struct ipmi_pef_state_data *state_data,
                               uint8_t *community_string,

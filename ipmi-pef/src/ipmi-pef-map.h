@@ -95,6 +95,9 @@ int string_to_event_data3_compare1 (const char *event_data3_compare1_string);
 char *event_data3_compare2_to_string (int event_data3_compare2);
 int string_to_event_data3_compare2 (const char *event_data3_compare2_string);
 
+char *alert_policy_entry_number_to_string (int alert_policy_entry_number);
+int string_to_alert_policy_entry_number (const char *alert_policy_entry_number_string);
+
 char *policy_type_to_string (int policy_type);
 int string_to_policy_type (const char *policy_type_string);
 

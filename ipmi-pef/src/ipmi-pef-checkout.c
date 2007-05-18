@@ -49,13 +49,13 @@ int
 checkout_pef_lan_alert_destination (ipmi_pef_state_data_t *state_data, FILE *fp)
 {
   int rv = 0;
-  int8_t num_of_alert_destinations;
+  int8_t num_of_lan_alert_destinations;
   int d;
 
-  if (get_number_of_alert_destinations (state_data, &num_of_alert_destinations) != PEF_ERR_SUCCESS)
+  if (get_number_of_lan_alert_destinations (state_data, &num_of_lan_alert_destinations) != PEF_ERR_SUCCESS)
     return (-1);
 
-  for (d = 1; d <= num_of_alert_destinations; d++)
+  for (d = 1; d <= num_of_lan_alert_destinations; d++)
     {
       lan_alert_destination_t lad;
       char *str = NULL;
@@ -189,12 +189,12 @@ checkout_pef_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
 	  continue;
 	}
       
-      if (!(str = alert_policy_number_to_string (apt.alert_policy_number)))
+      if (!(str = alert_policy_entry_number_to_string (apt.alert_policy_entry_number)))
         return -1;
 
       fprintf (fp, 
                "%-30s %s\n", 
-               APT_ALERT_POLICY_NUMBER_KEY_STRING, 
+               APT_ALERT_POLICY_ENTRY_NUMBER_KEY_STRING, 
                str);
       free (str);
       
@@ -611,7 +611,7 @@ pef_checkout (ipmi_pef_state_data_t *state_data)
       if (checkout_pef_community_string (state_data, fp) < 0)
         goto cleanup;
     }
-  if (args->alert_destinations_wanted)
+  if (args->lan_alert_destinations_wanted)
     {
       if (checkout_pef_lan_alert_destination (state_data, fp) < 0)
         goto cleanup;

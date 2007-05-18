@@ -87,7 +87,7 @@ commit_pef_alert_policy_table (ipmi_pef_state_data_t *state_data, FILE *fp)
 	{
           if (state_data->prog_data->args->verbose_wanted)
             fprintf (fp, "## FATAL: Unable to set alert policy table #%d\n", 
-                     apt_list[i].alert_policy_number);
+                     apt_list[i].alert_policy_entry_number);
 	  rv = -1;
 	  continue;
 	}
@@ -154,7 +154,7 @@ pef_commit (ipmi_pef_state_data_t *state_data)
       if (commit_pef_community_string (state_data, fp) < 0)
         goto cleanup;
     }
-  else if (args->alert_destinations_wanted)
+  else if (args->lan_alert_destinations_wanted)
     {
       if (commit_pef_lan_alert_destination (state_data, fp) < 0)
         goto cleanup;

@@ -1208,6 +1208,31 @@ string_to_event_data3_compare2 (const char *event_data3_compare2_string)
 }
 
 char *
+alert_policy_entry_number_to_string (int alert_policy_entry_number)
+{
+  char *str = NULL;
+  
+  asprintf (&str, "%d", alert_policy_entry_number);
+  if (!str)
+    {
+      perror("strdup");
+      return NULL;
+    }
+  return str;
+}
+
+int 
+string_to_alert_policy_entry_number (const char *alert_policy_entry_number_string)
+{
+  int n = 0;
+
+  if (!str2int ((char *) alert_policy_entry_number_string, 16, &n))
+    return n;
+  
+  return -1;
+}
+
+char *
 policy_type_to_string (int policy_type)
 {
   char *str = NULL;

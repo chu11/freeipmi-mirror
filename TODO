@@ -53,6 +53,11 @@ ipmi-pef
 * collapse common funcs in ipmi-pef-util
 * - map files
 * other pef config from bmc-config
+* fix key string names (or remove when change is done)
+* how to deal with channel number for alert policy table
+* listing usable sensor names in eft
+* making config options more reasonable/easy to understand
+* alert strings
 
 bmc-config/ipmi-pef
 -------------------

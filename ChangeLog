@@ -1,3 +1,28 @@
+2007-05-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/: Fix incorrect naming of "policy number" for "entry
+	number" globally.
+
+	* ipmi-pef/src/ipmi-pef-alert-destination.c,
+	ipmi-pef/src/ipmi-pef-alert-destination.h: Renamed to 
+	ipmi-pef/src/ipmi-pef-lan-alert-destination.c and
+	ipmi-pef/src/ipmi-pef-lan-alert-destination.h.
+	
+	* ipmi-pef/: Change "alert_destinations" and
+	"lan_alert_destination" in appropriate locations to clarification.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.h, ipmi-pef/src/ipmi-pef-wrapper.c
+	(get_bmc_lan_conf_community_string,
+	set_bmc_lan_conf_community_string,
+	get_bmc_lan_conf_destination_type,
+	set_bmc_lan_conf_destination_type,
+	get_bmc_lan_conf_destination_addresses,
+	set_bmc_lan_conf_destination_addresses,
+	get_bmc_pef_conf_alert_policy_table,
+	set_bmc_pef_conf_alert_policy_table,
+	get_bmc_pef_conf_event_filter_table,
+	set_bmc_pef_conf_event_filter_table): New functions.
+
 2007-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/src/ipmi-pef-validate.h,

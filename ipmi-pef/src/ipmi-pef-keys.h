@@ -12,7 +12,7 @@
 #define LAD_ALERT_IP_ADDRESS_KEY_STRING                        "Alert_IP_Address"
 #define LAD_ALERT_MAC_ADDRESS_KEY_STRING                       "Alert_MAC_Address"
 
-#define APT_ALERT_POLICY_NUMBER_KEY_STRING                     "Alert_Policy_Number"
+#define APT_ALERT_POLICY_ENTRY_NUMBER_KEY_STRING               "Alert_Policy_Entry_Number"
 #define APT_POLICY_TYPE_KEY_STRING                             "Policy_Type"
 #define APT_POLICY_ENABLED_KEY_STRING                          "Policy_Enabled"
 #define APT_POLICY_NUMBER_KEY_STRING                           "Policy_Number"

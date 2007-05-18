@@ -6,7 +6,7 @@ ipmi_pef_SOURCES = \
 	ipmi-pef-checkout.c \
 	ipmi-pef-commit.c \
 	ipmi-pef-community-string.c \
-	ipmi-pef-alert-destination.c \
+	ipmi-pef-lan-alert-destination.c \
 	ipmi-pef-alert-policy-table.c \
 	ipmi-pef-event-filter-table.c \
 	ipmi-pef-diff.c \
@@ -32,7 +32,7 @@ noinst_HEADERS = \
 	ipmi-pef-commit.h \
 	ipmi-pef-common.h \
 	ipmi-pef-community-string.h \
-	ipmi-pef-alert-destination.h \
+	ipmi-pef-lan-alert-destination.h \
 	ipmi-pef-alert-policy-table.h \
 	ipmi-pef-event-filter-table.h \
 	ipmi-pef-diff.h \

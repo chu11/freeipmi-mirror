@@ -108,15 +108,15 @@ alert_destination_type_checkout (ipmi_pef_state_data_t *state_data,
   uint8_t destination_type;
   pef_err_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   if ((ret = destination_type_get (state_data,
@@ -145,16 +145,16 @@ alert_destination_type_commit (ipmi_pef_state_data_t *state_data,
                                const struct keyvalue *kv)
 {
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   pef_err_t ret;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   return destination_type_set (state_data,
@@ -175,15 +175,15 @@ alert_destination_type_diff (ipmi_pef_state_data_t *state_data,
   pef_err_t rc;
   pef_diff_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((rc = get_number_of_alert_destinations (state_data, 
-                                            &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((rc = get_number_of_lan_alert_destinations (state_data, 
+                                                  &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return rc;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   if ((rc = destination_type_get (state_data,
@@ -220,15 +220,15 @@ alert_acknowledge_checkout (ipmi_pef_state_data_t *state_data,
   uint8_t alert_acknowledge;
   pef_err_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   if ((ret = destination_type_get (state_data,
@@ -268,16 +268,16 @@ alert_acknowledge_commit (ipmi_pef_state_data_t *state_data,
                           const struct keyvalue *kv)
 {
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   pef_err_t ret;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   return destination_type_set (state_data,
@@ -298,15 +298,15 @@ alert_acknowledge_diff (ipmi_pef_state_data_t *state_data,
   pef_err_t rc;
   pef_diff_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
   
-  if ((rc = get_number_of_alert_destinations (state_data, 
-                                            &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((rc = get_number_of_lan_alert_destinations (state_data, 
+                                                  &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return rc;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((rc = destination_type_get (state_data,
@@ -344,15 +344,15 @@ alert_acknowledge_timeout_checkout (ipmi_pef_state_data_t *state_data,
   uint8_t alert_acknowledge_timeout;
   pef_err_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((ret = destination_type_get (state_data,
@@ -377,21 +377,21 @@ alert_acknowledge_timeout_checkout (ipmi_pef_state_data_t *state_data,
 
 static pef_err_t
 alert_acknowledge_timeout_commit (ipmi_pef_state_data_t *state_data,
-                          const struct section *sect,
-                          const struct keyvalue *kv)
+                                  const struct section *sect,
+                                  const struct keyvalue *kv)
 {
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   pef_err_t ret;
   uint8_t alert_acknowledge_timeout;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   alert_acknowledge_timeout = atoi (kv->value);
@@ -414,15 +414,15 @@ alert_acknowledge_timeout_diff (ipmi_pef_state_data_t *state_data,
   pef_err_t rc;
   pef_diff_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
   
-  if ((rc = get_number_of_alert_destinations (state_data, 
-                                            &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((rc = get_number_of_lan_alert_destinations (state_data, 
+                                                  &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return rc;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((rc = destination_type_get (state_data,
@@ -462,15 +462,15 @@ alert_retries_checkout (ipmi_pef_state_data_t *state_data,
   uint8_t alert_retries;
   pef_err_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((ret = destination_type_get (state_data,
@@ -499,17 +499,17 @@ alert_retries_commit (ipmi_pef_state_data_t *state_data,
                       const struct keyvalue *kv)
 {
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   pef_err_t ret;
   uint8_t alert_retries;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   alert_retries = atoi (kv->value);
@@ -532,15 +532,15 @@ alert_retries_diff (ipmi_pef_state_data_t *state_data,
   pef_err_t rc;
   pef_diff_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
   
-  if ((rc = get_number_of_alert_destinations (state_data, 
-                                            &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((rc = get_number_of_lan_alert_destinations (state_data, 
+                                                  &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return rc;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((rc = destination_type_get (state_data,
@@ -694,15 +694,15 @@ alert_gateway_checkout (ipmi_pef_state_data_t *state_data,
   uint8_t gateway;
   pef_err_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((ret = destination_addresses_get (state_data,
@@ -732,16 +732,16 @@ alert_gateway_commit (ipmi_pef_state_data_t *state_data,
                       const struct keyvalue *kv)
 {
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   pef_err_t ret;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   return destination_addresses_set (state_data,
@@ -761,15 +761,15 @@ alert_gateway_diff (ipmi_pef_state_data_t *state_data,
   pef_err_t rc;
   pef_diff_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((rc = get_number_of_alert_destinations (state_data, 
-                                            &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((rc = get_number_of_lan_alert_destinations (state_data, 
+                                                  &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return rc;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   if ((rc = destination_addresses_get (state_data,
@@ -807,15 +807,15 @@ alert_ip_address_checkout (ipmi_pef_state_data_t *state_data,
   pef_err_t ret;
   char alert_ip[IPMI_PEF_MAXIPADDRLEN + 1];
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
   
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((ret = destination_addresses_get (state_data,
@@ -845,16 +845,16 @@ alert_ip_address_commit (ipmi_pef_state_data_t *state_data,
                          const struct keyvalue *kv)
 {
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   pef_err_t ret;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   return destination_addresses_set (state_data,
@@ -873,15 +873,15 @@ alert_ip_address_diff (ipmi_pef_state_data_t *state_data,
   pef_err_t rc;
   pef_diff_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((rc = get_number_of_alert_destinations (state_data, 
-                                            &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((rc = get_number_of_lan_alert_destinations (state_data, 
+                                                  &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return rc;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   if ((rc = destination_addresses_get (state_data,
@@ -912,21 +912,21 @@ alert_ip_address_diff (ipmi_pef_state_data_t *state_data,
 
 static pef_err_t
 alert_mac_address_checkout (ipmi_pef_state_data_t *state_data,
-                           const struct section *sect,
-                           struct keyvalue *kv)
+                            const struct section *sect,
+                            struct keyvalue *kv)
 {
   pef_err_t ret;
   char alert_mac[IPMI_PEF_MAXMACADDRLEN + 1];
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
   
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
   
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
   
   if ((ret = destination_addresses_get (state_data,
@@ -952,20 +952,20 @@ alert_mac_address_checkout (ipmi_pef_state_data_t *state_data,
 
 static pef_err_t
 alert_mac_address_commit (ipmi_pef_state_data_t *state_data,
-                         const struct section *sect,
-                         const struct keyvalue *kv)
+                          const struct section *sect,
+                          const struct keyvalue *kv)
 {
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
   pef_err_t ret;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((ret = get_number_of_alert_destinations (state_data, 
-                                             &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((ret = get_number_of_lan_alert_destinations (state_data, 
+                                                   &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return ret;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   return destination_addresses_set (state_data,
@@ -977,22 +977,22 @@ alert_mac_address_commit (ipmi_pef_state_data_t *state_data,
 
 static pef_diff_t
 alert_mac_address_diff (ipmi_pef_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                        const struct section *sect,
+                        const struct keyvalue *kv)
 {
   char alert_mac[IPMI_PEF_MAXMACADDRLEN + 1];
   pef_err_t rc;
   pef_diff_t ret;
   uint8_t destination_selector;
-  uint8_t number_of_alert_destinations;
+  uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (sect->section_name + strlen ("Alert_Destination_"));
+  destination_selector = atoi (sect->section_name + strlen ("Lan_Alert_Destination_"));
 
-  if ((rc = get_number_of_alert_destinations (state_data, 
-                                            &number_of_alert_destinations)) != PEF_ERR_SUCCESS)
+  if ((rc = get_number_of_lan_alert_destinations (state_data, 
+                                                  &number_of_lan_alert_destinations)) != PEF_ERR_SUCCESS)
     return rc;
 
-  if (destination_selector > number_of_alert_destinations)
+  if (destination_selector > number_of_lan_alert_destinations)
     return PEF_ERR_NON_FATAL_ERROR;
 
   if ((rc = destination_addresses_get (state_data,
@@ -1022,7 +1022,7 @@ alert_mac_address_diff (ipmi_pef_state_data_t *state_data,
 }
 
 struct section *
-ipmi_pef_alert_destination_section_get (ipmi_pef_state_data_t *state_data, int num)
+ipmi_pef_lan_alert_destination_section_get (ipmi_pef_state_data_t *state_data, int num)
 {
   struct section *sect = NULL;
   char buf[64];
@@ -1033,7 +1033,7 @@ ipmi_pef_alert_destination_section_get (ipmi_pef_state_data_t *state_data, int n
       return NULL;
     }
 
-  snprintf(buf, 64, "Alert_Destination_%d", num);
+  snprintf(buf, 64, "Lan_Alert_Destination_%d", num);
 
   if (!(sect = ipmi_pef_section_create (state_data, buf)))
     goto cleanup;
