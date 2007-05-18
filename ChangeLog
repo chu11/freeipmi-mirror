@@ -1,3 +1,8 @@
+2007-05-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/src/ipmi-pef-validate.h,
+	ipmi-pef/src/ipmi-pef-validate.c: New files.
+
 2007-05-17  Tom Zimmerman <tzimmerman@lnxi.com>
 
 	* common/src/bit-ops.h: Fix macro bug.

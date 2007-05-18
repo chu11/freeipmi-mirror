@@ -15,6 +15,7 @@ ipmi_pef_SOURCES = \
 	ipmi-pef-parser.c \
 	ipmi-pef-sections.c \
 	ipmi-pef-utils.c \
+	ipmi-pef-validate.c \
 	ipmi-pef-wrapper.c
  
 ipmi_pef_LDADD = ../../common/src/libargpcommon.la \
@@ -41,6 +42,7 @@ noinst_HEADERS = \
 	ipmi-pef-parser.h \
 	ipmi-pef-sections.h \
 	ipmi-pef-utils.h \
+	ipmi-pef-validate.h \
 	ipmi-pef-wrapper.h
  
 AM_CFLAGS = -Wall
