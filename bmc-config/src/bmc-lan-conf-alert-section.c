@@ -1,11 +1,11 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-ipmi-wrapper.h"
-#include "bmc-map.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-utils.h"
+#include "bmc-config-map.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 #define BMC_MAXIPADDRLEN 16
 #define BMC_MAXMACADDRLEN 24
@@ -1094,1180 +1094,1180 @@ bmc_lan_conf_alert_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *lan_conf_alert_section = NULL;
 
-  if (!(lan_conf_alert_section = bmc_section_create (state_data, "Lan_Conf_Alert")))
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Community_String",
-				"Give valid string",
-				0,
-				community_string_checkout,
-				community_string_commit,
-				community_string_diff,
-				community_string_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_1",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_1",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_1",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_1",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_1",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_1",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_1",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_2",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
+  if (!(lan_conf_alert_section = bmc_config_section_create (state_data, "Lan_Conf_Alert")))
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Community_String",
+                                       "Give valid string",
+                                       0,
+                                       community_string_checkout,
+                                       community_string_commit,
+                                       community_string_diff,
+                                       community_string_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_1",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_1",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_1",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_1",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_1",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_1",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_1",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_2",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_2",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_2",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_2",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_2",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_2",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_2",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_3",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_3",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_3",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_3",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_3",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_3",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_3",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_4",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_4",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_4",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_4",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_4",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_4",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_4",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_5",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_5",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_5",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_5",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_5",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_5",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_5",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_6",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_6",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_6",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_6",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_6",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_6",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_6",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_7",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_7",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_7",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_7",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_7",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_7",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_7",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_8",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_8",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_8",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_8",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_8",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_8",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_8",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_9",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_9",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_9",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_9",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_9",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_9",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_9",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_10",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_10",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_10",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_10",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_10",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_10",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_10",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_11",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_11",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_11",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_11",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_11",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_11",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_11",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,  
-				"Alert_Destination_Type_12",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_12",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_12",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_12",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_12",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_12",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_12",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_13",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_13",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_13",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_13",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_13",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_13",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_13",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_14",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_14",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_14",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_14",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_14",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_14",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_14",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Destination_Type_15",
-				"Possible values: PET_Trap/OEM1/OEM2",
-				0,
-				alert_destination_type_checkout,
-				alert_destination_type_commit,
-				alert_destination_type_diff,
-				alert_destination_type_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_15",
-				"Possible values: Yes/No",
-				0,
-				alert_acknowledge_checkout,
-				alert_acknowledge_commit,
-				alert_acknowledge_diff,
-				yes_no_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Acknowledge_Timeout_15",
-				"Give valid unsigned number in seconds",
-				0,
-				alert_acknowledge_timeout_checkout,
-				alert_acknowledge_timeout_commit,
-				alert_acknowledge_timeout_diff,
-				number_range_one_byte) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Retries_15",
-				"Give valid unsigned number",
-				0,
-				alert_retries_checkout,
-				alert_retries_commit,
-				alert_retries_diff,
-				alert_retries_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_Gateway_15",
-				"Possible values: Default/Backup",
-				0,
-				alert_gateway_checkout,
-				alert_gateway_commit,
-				alert_gateway_diff,
-				alert_gateway_number_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_IP_Address_15",
-				"Give valid IP address",
-				0,
-				alert_ip_address_checkout,
-				alert_ip_address_commit,
-				alert_ip_address_diff,
-				ip_address_validate) < 0) 
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_alert_section,
-				"Alert_MAC_Address_15",
-				"Give valid MAC address",
-				0,
-				alert_mac_address_checkout,
-				alert_mac_address_commit,
-				alert_mac_address_diff,
-				mac_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_2",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_2",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_2",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_2",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_2",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_2",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_3",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_3",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_3",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_3",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_3",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_3",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_3",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_4",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_4",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_4",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_4",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_4",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_4",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_4",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_5",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_5",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_5",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_5",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_5",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_5",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_5",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_6",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_6",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_6",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_6",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_6",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_6",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_6",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_7",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_7",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_7",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_7",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_7",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_7",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_7",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_8",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_8",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_8",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_8",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_8",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_8",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_8",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_9",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_9",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_9",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_9",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_9",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_9",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_9",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_10",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_10",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_10",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_10",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_10",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_10",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_10",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_11",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_11",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_11",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_11",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_11",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_11",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_11",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,  
+                                       "Alert_Destination_Type_12",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_12",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_12",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_12",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_12",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_12",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_12",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_13",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_13",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_13",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_13",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_13",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_13",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_13",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_14",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_14",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_14",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_14",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_14",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_14",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_14",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Destination_Type_15",
+                                       "Possible values: PET_Trap/OEM1/OEM2",
+                                       0,
+                                       alert_destination_type_checkout,
+                                       alert_destination_type_commit,
+                                       alert_destination_type_diff,
+                                       alert_destination_type_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_15",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       alert_acknowledge_checkout,
+                                       alert_acknowledge_commit,
+                                       alert_acknowledge_diff,
+                                       yes_no_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Acknowledge_Timeout_15",
+                                       "Give valid unsigned number in seconds",
+                                       0,
+                                       alert_acknowledge_timeout_checkout,
+                                       alert_acknowledge_timeout_commit,
+                                       alert_acknowledge_timeout_diff,
+                                       number_range_one_byte) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Retries_15",
+                                       "Give valid unsigned number",
+                                       0,
+                                       alert_retries_checkout,
+                                       alert_retries_commit,
+                                       alert_retries_diff,
+                                       alert_retries_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_Gateway_15",
+                                       "Possible values: Default/Backup",
+                                       0,
+                                       alert_gateway_checkout,
+                                       alert_gateway_commit,
+                                       alert_gateway_diff,
+                                       alert_gateway_number_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_IP_Address_15",
+                                       "Give valid IP address",
+                                       0,
+                                       alert_ip_address_checkout,
+                                       alert_ip_address_commit,
+                                       alert_ip_address_diff,
+                                       ip_address_validate) < 0) 
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_alert_section,
+                                       "Alert_MAC_Address_15",
+                                       "Give valid MAC address",
+                                       0,
+                                       alert_mac_address_checkout,
+                                       alert_mac_address_commit,
+                                       alert_mac_address_diff,
+                                       mac_address_validate) < 0) 
     goto cleanup;
 
   return lan_conf_alert_section;
 
  cleanup:
   if (lan_conf_alert_section)
-    bmc_section_destroy(state_data, lan_conf_alert_section);
+    bmc_config_section_destroy(state_data, lan_conf_alert_section);
   return NULL;
 }
 

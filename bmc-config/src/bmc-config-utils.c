@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-#include "bmc-ipmi-wrapper.h"
+#include "bmc-config-utils.h"
 
 bmc_err_t 
 get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)

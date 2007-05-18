@@ -1,5 +1,5 @@
 /* 
-   bmd-diff.h: diff functions
+   ipmi_wrapper.h: higher level wrapper to libfreeipmi functions
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,17 +16,15 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 
-#ifndef _BMC_DIFF_H
-#define _BMC_DIFF_H
+#ifndef _BMC_IPMI_WRAPPER_H
+#define _BMC_IPMI_WRAPPER_H
 
 #include "bmc-config.h"
-#include "bmc-sections.h"
+#include "bmc-config-common.h"
 
-bmc_err_t bmc_diff (bmc_config_state_data_t *state_data);
-
-void report_diff (const char *section,
-                  const char *key,
-                  const char *input_value,
-                  const char *actual_value);
+bmc_err_t get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num);
+bmc_err_t get_serial_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num);
+bmc_err_t get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num);
+bmc_err_t get_number_of_lan_destinations (bmc_config_state_data_t *state_data, int8_t *number_of_lan_destinations);
 
 #endif

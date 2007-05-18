@@ -60,10 +60,10 @@
 
 #include "bmc-config.h"
 #include "bmc-config-argp.h"
-#include "bmc-commit.h"
-#include "bmc-checkout.h"
-#include "bmc-diff.h"
-#include "bmc-sections.h"
+#include "bmc-config-commit.h"
+#include "bmc-config-checkout.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-sections.h"
 
 #include "ipmi-common.h"
 
@@ -175,7 +175,7 @@ _bmc_config (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
-  if (!(sections = bmc_config_sections_create (&state_data)))
+  if (!(sections = bmc_config_sections_list_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -193,7 +193,7 @@ _bmc_config (void *arg)
     ret = bmc_diff (&state_data);
     break;
   case BMC_ACTION_LIST_SECTIONS:
-    ret = bmc_sections_list (&state_data);
+    ret = bmc_config_sections_list (&state_data);
     break;
   }
   
@@ -208,7 +208,7 @@ _bmc_config (void *arg)
   if (dev)
     ipmi_close_device (dev);
   if (sections)
-    bmc_config_sections_destroy(&state_data, sections);
+    bmc_config_sections_list_destroy(&state_data, sections);
   return exit_code;
 }
 

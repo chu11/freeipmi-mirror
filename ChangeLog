@@ -6,6 +6,9 @@
 	* ipmi-pef/: Add initial community string and alert destination
 	sectional support.
 
+	* ipmi-pef/, bmc-config/: Various filename and function name
+	changes for code and filename consistency between the two tools.
+
 2007-05-17  Tom Zimmerman <tzimmerman@lnxi.com>
 
 	* common/src/bit-ops.h: Fix macro bug.

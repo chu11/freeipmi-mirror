@@ -1,11 +1,11 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-sections.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-sections.h"
 
 bmc_err_t
-bmc_parser (bmc_config_state_data_t *state_data, FILE *fp)
+bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
 { 
   char buf[4096];
   int line_num = 0;
@@ -142,10 +142,10 @@ bmc_parser (bmc_config_state_data_t *state_data, FILE *fp)
                  section_name, key_name, value);
 #endif /* NDEBUG */
       
-      if (bmc_section_set_value (state_data,
-                                 section_name,
-                                 key_name,
-                                 value) < 0) 
+      if (bmc_config_section_set_value (state_data,
+                                        section_name,
+                                        key_name,
+                                        value) < 0) 
         goto cleanup;
     }
 

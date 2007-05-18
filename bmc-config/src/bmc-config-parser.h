@@ -1,6 +1,6 @@
 /* 
 
-   bmc-parser.h - function prototypes
+   bmc-config-parser.h - function prototypes
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_PARSER_H_
-#define _BMC_PARSER_H_
+#ifndef _BMC_CONFIG_PARSER_H_
+#define _BMC_CONFIG_PARSER_H_
 
 #include "bmc-config.h"
-#include "bmc-sections.h"
+#include "bmc-config-sections.h"
 
-bmc_err_t bmc_parser (bmc_config_state_data_t *state_data, FILE *fp);
+bmc_err_t bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp);
 
-#endif /* _BMC_PARSER_H_ */
+#endif /* _BMC_CONFIG_PARSER_H_ */

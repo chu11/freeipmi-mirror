@@ -4,14 +4,14 @@ sbin_PROGRAMS = bmc-config
 bmc_config_SOURCES = \
 	bmc-config.c \
 	bmc-config-argp.c \
-	bmc-map.c \
-	bmc-sections.c \
-	bmc-parser.c \
-	bmc-config-api.c \
-	bmc-ipmi-wrapper.c \
-	bmc-checkout.c \
-	bmc-commit.c \
-	bmc-diff.c \
+	bmc-config-map.c \
+	bmc-config-sections.c \
+	bmc-config-parser.c \
+	bmc-config-wrapper.c \
+	bmc-config-utils.c \
+	bmc-config-checkout.c \
+	bmc-config-commit.c \
+	bmc-config-diff.c \
 	bmc-user-sections.c \
 	bmc-lan-channel-section.c \
 	bmc-serial-channel-section.c \
@@ -25,7 +25,7 @@ bmc_config_SOURCES = \
 	bmc-pef-conf-section.c \
 	bmc-sol-conf-section.c \
 	bmc-misc-section.c \
-	bmc-validate.c
+	bmc-config-validate.c
 
 bmc_config_LDADD = ../../common/src/libargpcommon.la \
                  ../../common/src/libipmicommon.la \
@@ -37,12 +37,12 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 
 noinst_HEADERS = bmc-config.h \
 		 bmc-config-argp.h \
-		 bmc-checkout.h \
-		 bmc-commit.h \
-		 bmc-common.h \
-		 bmc-config-api.h \
-		 bmc-diff.h \
-		 bmc-ipmi-wrapper.h \
+		 bmc-config-checkout.h \
+		 bmc-config-commit.h \
+		 bmc-config-common.h \
+		 bmc-config-wrapper.h \
+		 bmc-config-diff.h \
+		 bmc-config-utils.h \
 		 bmc-user-sections.h \
 		 bmc-lan-channel-section.h \
 		 bmc-lan-conf-auth-section.h \
@@ -56,10 +56,10 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-pef-conf-section.h \
 		 bmc-sol-conf-section.h \
 		 bmc-misc-section.h \
-		 bmc-map.h \
-		 bmc-parser.h \
-		 bmc-sections.h \
-		 bmc-validate.h
+		 bmc-config-map.h \
+		 bmc-config-parser.h \
+		 bmc-config-sections.h \
+		 bmc-config-validate.h
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

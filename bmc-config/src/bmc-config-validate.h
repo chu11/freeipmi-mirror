@@ -1,5 +1,5 @@
 /* 
-   bmc-validate.h: map functions
+   bmc-config-validate.h: map functions
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,12 +16,12 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 
-#ifndef _BMC_VALIDATE_H
-#define _BMC_VALIDATE_H
+#ifndef _BMC_CONFIG_VALIDATE_H
+#define _BMC_CONFIG_VALIDATE_H
 
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-sections.h"
+#include "bmc-config-common.h"
+#include "bmc-config-sections.h"
 
 bmc_validate_t yes_no_validate (bmc_config_state_data_t *state_data, 
                                 const struct section *sect, 

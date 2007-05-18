@@ -1,7 +1,5 @@
 /* 
-   $Id: bmc-common.h,v 1.4 2006-09-13 21:23:56 chu11 Exp $ 
-
-   common.h - Common header definitions.
+   $Id: bmc-config-common.h,v 1.1 2007-05-18 06:20:32 chu11 Exp $ 
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -20,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#ifndef _BMC_COMMON_H
-#define _BMC_COMMON_H
+#ifndef _BMC_CONFIG_COMMON_H
+#define _BMC_CONFIG_COMMON_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -70,5 +68,7 @@
 
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0
+
+#define same(a,b) (strcasecmp(a,b) == 0)
 
 #endif

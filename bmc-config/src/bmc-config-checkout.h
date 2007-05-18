@@ -1,6 +1,6 @@
 /* 
 
-   bmc-commit.h - function prototypes
+   bmc-config-checkout.h - function prototypes
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_COMMIT_H_
-#define _BMC_COMMIT_H_
+#ifndef _BMC_CONFIG_CHECKOUT_H_
+#define _BMC_CONFIG_CHECKOUT_H_
 
 #include "bmc-config.h"
-#include "bmc-sections.h"
+#include "bmc-config-sections.h"
 
-bmc_err_t bmc_commit (bmc_config_state_data_t *state_data);
+bmc_err_t bmc_checkout (bmc_config_state_data_t *state_data);
 
-#endif /* _BMC_COMMIT_H_ */
+#endif /* _BMC_CONFIG_CHECKOUT_H_ */

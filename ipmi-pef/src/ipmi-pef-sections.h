@@ -48,10 +48,10 @@ struct keyvalue {
   Keyvalue_Validate validate;
 };
 
-struct section * ipmi_pef_sections_create (ipmi_pef_state_data_t *state_data);
+struct section * ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data);
 
-void ipmi_pef_sections_destroy (ipmi_pef_state_data_t *state_data,
-                                struct section *sections);
+void ipmi_pef_sections_list_destroy (ipmi_pef_state_data_t *state_data,
+                                     struct section *sections);
 
 struct section * ipmi_pef_section_create (ipmi_pef_state_data_t *state_data, 
                                           char *section_name);

@@ -40,7 +40,7 @@ _add_section(struct section **sections, struct section *sect)
 }
 
 struct section *
-ipmi_pef_sections_create (ipmi_pef_state_data_t *state_data)
+ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
@@ -105,13 +105,13 @@ ipmi_pef_sections_create (ipmi_pef_state_data_t *state_data)
   return sections;
 
  cleanup:
-  ipmi_pef_sections_destroy(state_data, sections);
+  ipmi_pef_sections_list_destroy(state_data, sections);
   return NULL;
 }
 
 void 
-ipmi_pef_sections_destroy(ipmi_pef_state_data_t *state_data,
-                          struct section *sections)
+ipmi_pef_sections_list_destroy(ipmi_pef_state_data_t *state_data,
+                               struct section *sections)
 {
   if (sections)
     {

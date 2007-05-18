@@ -147,7 +147,7 @@ _ipmi_pef (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
-  if (!(sections = ipmi_pef_sections_create (&state_data)))
+  if (!(sections = ipmi_pef_sections_list_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -184,7 +184,7 @@ _ipmi_pef (void *arg)
   if (dev)
     ipmi_close_device (dev);
   if (sections)
-     ipmi_pef_sections_destroy(&state_data, sections);
+    ipmi_pef_sections_list_destroy(&state_data, sections);
   return exit_code;
 }
 

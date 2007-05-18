@@ -24,7 +24,7 @@
 #define _BMC_PEF_CONF_SECTION_H_
 
 #include "bmc-config.h"
-#include "bmc-sections.h"
+#include "bmc-config-sections.h"
 
 struct section * bmc_pef_conf_section_get (bmc_config_state_data_t *state_data);
 

@@ -1,9 +1,9 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 static bmc_err_t
 pef_control_checkout (bmc_config_state_data_t *state_data,
@@ -1230,146 +1230,146 @@ bmc_pef_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *pef_section;
 
-  if (!(pef_section = bmc_section_create (state_data, "PEF_Conf")))
+  if (!(pef_section = bmc_config_section_create (state_data, "PEF_Conf")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_PEF",
-				"Possible values: Yes/No",
-				0,
-				enable_pef_checkout,
-				enable_pef_commit,
-				enable_pef_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_PEF",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_pef_checkout,
+                                       enable_pef_commit,
+                                       enable_pef_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_PEF_Event_Messages",
-				"Possible values: Yes/No",
-				0,
-				enable_pef_event_messages_checkout,
-				enable_pef_event_messages_commit,
-				enable_pef_event_messages_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_PEF_Event_Messages",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_pef_event_messages_checkout,
+                                       enable_pef_event_messages_commit,
+                                       enable_pef_event_messages_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_PEF_Startup_Delay",
-				"Possible values: Yes/No",
-				0,
-				enable_pef_startup_delay_checkout,
-				enable_pef_startup_delay_commit,
-				enable_pef_startup_delay_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_PEF_Startup_Delay",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_pef_startup_delay_checkout,
+                                       enable_pef_startup_delay_commit,
+                                       enable_pef_startup_delay_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_PEF_Alert_Startup_Delay",
-				"Possible values: Yes/No",
-				0,
-				enable_pef_alert_startup_delay_checkout,
-				enable_pef_alert_startup_delay_commit,
-				enable_pef_alert_startup_delay_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_PEF_Alert_Startup_Delay",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_pef_alert_startup_delay_checkout,
+                                       enable_pef_alert_startup_delay_commit,
+                                       enable_pef_alert_startup_delay_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
   
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_Alert_Action",
-				"Possible values: Yes/No",
-				0,
-				enable_alert_action_checkout,
-				enable_alert_action_commit,
-				enable_alert_action_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_Alert_Action",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_alert_action_checkout,
+                                       enable_alert_action_commit,
+                                       enable_alert_action_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_Power_Down_Action",
-				"Possible values: Yes/No",
-				0,
-				enable_power_down_action_checkout,
-				enable_power_down_action_commit,
-				enable_power_down_action_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_Power_Down_Action",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_power_down_action_checkout,
+                                       enable_power_down_action_commit,
+                                       enable_power_down_action_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_Reset_Action",
-				"Possible values: Yes/No",
-				0,
-				enable_reset_action_checkout,
-				enable_reset_action_commit,
-				enable_reset_action_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_Reset_Action",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_reset_action_checkout,
+                                       enable_reset_action_commit,
+                                       enable_reset_action_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_Power_Cycle_Action",
-				"Possible values: Yes/No",
-				0,
-				enable_power_cycle_action_checkout,
-				enable_power_cycle_action_commit,
-				enable_power_cycle_action_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_Power_Cycle_Action",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_power_cycle_action_checkout,
+                                       enable_power_cycle_action_commit,
+                                       enable_power_cycle_action_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_OEM_Action",
-				"Possible values: Yes/No",
-				0,
-				enable_oem_action_checkout,
-				enable_oem_action_commit,
-				enable_oem_action_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_OEM_Action",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_oem_action_checkout,
+                                       enable_oem_action_commit,
+                                       enable_oem_action_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"Enable_Diagnostic_Interrupt",
-				"Possible values: Yes/No",
-				0,
-				enable_diagnostic_interrupt_checkout,
-				enable_diagnostic_interrupt_commit,
-				enable_diagnostic_interrupt_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "Enable_Diagnostic_Interrupt",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_diagnostic_interrupt_checkout,
+                                       enable_diagnostic_interrupt_commit,
+                                       enable_diagnostic_interrupt_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"PEF_Startup_Delay",
-				"Give value in seconds",
-				0,
-				pef_startup_delay_checkout,
-				pef_startup_delay_commit,
-				pef_startup_delay_diff,
-				number_range_one_byte) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "PEF_Startup_Delay",
+                                       "Give value in seconds",
+                                       0,
+                                       pef_startup_delay_checkout,
+                                       pef_startup_delay_commit,
+                                       pef_startup_delay_diff,
+                                       number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                pef_section,
-				"PEF_Alert_Startup_Delay",
-				"Give value in seconds",
-				0,
-				pef_alert_startup_delay_checkout,
-				pef_alert_startup_delay_commit,
-				pef_alert_startup_delay_diff,
-				number_range_one_byte) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       pef_section,
+                                       "PEF_Alert_Startup_Delay",
+                                       "Give value in seconds",
+                                       0,
+                                       pef_alert_startup_delay_checkout,
+                                       pef_alert_startup_delay_commit,
+                                       pef_alert_startup_delay_diff,
+                                       number_range_one_byte) < 0)
     goto cleanup;
 
   return pef_section;
 
  cleanup:
   if (pef_section)
-    bmc_section_destroy(state_data, pef_section);
+    bmc_config_section_destroy(state_data, pef_section);
   return NULL;
 }
 

@@ -1,9 +1,9 @@
-#include "bmc-commit.h"
+#include "bmc-config-commit.h"
 
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-parser.h"
-#include "bmc-sections.h"
+#include "bmc-config-common.h"
+#include "bmc-config-parser.h"
+#include "bmc-config-sections.h"
 
 static bmc_err_t
 bmc_commit_keypair (bmc_config_state_data_t *state_data,
@@ -36,10 +36,10 @@ bmc_commit_keypair (bmc_config_state_data_t *state_data,
   key_name = strtok (key_name, " \t");
   value = strtok (value, " \t");
 
-  rv = bmc_section_commit_value (state_data, 
-                                 section_name,
-                                 key_name, 
-                                 value);
+  rv = bmc_config_section_commit_value (state_data, 
+                                        section_name,
+                                        key_name, 
+                                        value);
  cleanup:
   if (keypair)
     free(keypair);
@@ -206,7 +206,7 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass - read in input from file */
-  if ((this_ret = bmc_parser (state_data, fp)) == BMC_ERR_FATAL_ERROR)
+  if ((this_ret = bmc_config_parser (state_data, fp)) == BMC_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == BMC_ERR_NON_FATAL_ERROR)

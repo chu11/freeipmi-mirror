@@ -1,27 +1,27 @@
 /* 
 
-   bmc-sections - sections of bmc parameters
+bmc-config-sections - sections of bmc parameters
 
-   Copyright (C) 2006 FreeIPMI Core Team
+Copyright (C) 2006 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-sections.h"
+#include "bmc-config-common.h"
+#include "bmc-config-sections.h"
 #include "bmc-user-sections.h"
 #include "bmc-lan-channel-section.h"
 #include "bmc-lan-conf-section.h"
@@ -56,7 +56,7 @@ _add_section(struct section **sections, struct section *sect)
 }
 
 struct section *
-bmc_config_sections_create (bmc_config_state_data_t *state_data)
+bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
@@ -136,28 +136,28 @@ bmc_config_sections_create (bmc_config_state_data_t *state_data)
   return sections;
 
  cleanup:
-  bmc_config_sections_destroy(state_data, sections);
+  bmc_config_sections_list_destroy(state_data, sections);
   return NULL;
 }
 
 void 
-bmc_config_sections_destroy(bmc_config_state_data_t *state_data,
-                            struct section *sections)
+bmc_config_sections_list_destroy(bmc_config_state_data_t *state_data,
+                                 struct section *sections)
 {
   if (sections)
     {
       while (sections)
 	{
 	  struct section *sections_next = sections->next;
-	  bmc_section_destroy(state_data, sections);
+	  bmc_config_section_destroy(state_data, sections);
 	  sections = sections_next;
 	}
     }
 }
 
 struct section * 
-bmc_section_create (bmc_config_state_data_t *state_data,
-                    char *section_name)
+bmc_config_section_create (bmc_config_state_data_t *state_data,
+                           char *section_name)
 {
   struct section *section = NULL;
 
@@ -179,13 +179,13 @@ bmc_section_create (bmc_config_state_data_t *state_data,
   return section;
  cleanup:
   if (section)
-    bmc_section_destroy (state_data, section);
+    bmc_config_section_destroy (state_data, section);
   return NULL;
 }
 
 void 
-bmc_section_destroy (bmc_config_state_data_t *state_data,
-                     struct section *section)
+bmc_config_section_destroy (bmc_config_state_data_t *state_data,
+                            struct section *section)
 {
   if (section)
     {
@@ -208,15 +208,15 @@ bmc_section_destroy (bmc_config_state_data_t *state_data,
 }
 
 int 
-bmc_section_add_keyvalue (bmc_config_state_data_t *state_data,
-                          struct section *section,
-			  const char *key,
-			  const char *desc,
-			  unsigned int flags,
-			  Keyvalue_Checkout checkout,
-			  Keyvalue_Commit commit,
-			  Keyvalue_Diff diff,
-			  Keyvalue_Validate validate)
+bmc_config_section_add_keyvalue (bmc_config_state_data_t *state_data,
+                                 struct section *section,
+                                 const char *key,
+                                 const char *desc,
+                                 unsigned int flags,
+                                 Keyvalue_Checkout checkout,
+                                 Keyvalue_Commit commit,
+                                 Keyvalue_Diff diff,
+                                 Keyvalue_Validate validate)
 {
   struct keyvalue *kv;
 
@@ -262,8 +262,8 @@ bmc_section_add_keyvalue (bmc_config_state_data_t *state_data,
 }
 
 static struct section *
-bmc_section_find_section (bmc_config_state_data_t *state_data,
-                          const char *section_name)
+bmc_config_section_find_section (bmc_config_state_data_t *state_data,
+                                 const char *section_name)
 {
   const struct section *sect;
 
@@ -280,16 +280,16 @@ bmc_section_find_section (bmc_config_state_data_t *state_data,
 }
 
 struct keyvalue *
-bmc_section_find_keyvalue (bmc_config_state_data_t *state_data,
-                           const char *section_name,
-			   const char *key_name)
+bmc_config_section_find_keyvalue (bmc_config_state_data_t *state_data,
+                                  const char *section_name,
+                                  const char *key_name)
 {
 
   const struct section *sect;
   struct keyvalue *kv = NULL;
 
-  if (!(sect = bmc_section_find_section (state_data,
-                                         section_name)))
+  if (!(sect = bmc_config_section_find_section (state_data,
+                                                section_name)))
     {
       fprintf (stderr, "Unknown section `%s'\n", section_name);
       return NULL;
@@ -315,18 +315,18 @@ bmc_section_find_keyvalue (bmc_config_state_data_t *state_data,
 }
 
 int
-bmc_section_set_value (bmc_config_state_data_t *state_data,
-                       const char *section_name,
-		       const char *key_name,
-		       const char *value)
+bmc_config_section_set_value (bmc_config_state_data_t *state_data,
+                              const char *section_name,
+                              const char *key_name,
+                              const char *value)
 {
   struct section *sect;
   struct keyvalue *kv;
 
-  if (!(sect = bmc_section_find_section (state_data, section_name)))
+  if (!(sect = bmc_config_section_find_section (state_data, section_name)))
     return -1;
 
-  if (!(kv = bmc_section_find_keyvalue (state_data, section_name, key_name)))
+  if (!(kv = bmc_config_section_find_keyvalue (state_data, section_name, key_name)))
     return -1;
 
   if (kv->validate)
@@ -357,18 +357,18 @@ bmc_section_set_value (bmc_config_state_data_t *state_data,
 }
 
 bmc_err_t
-bmc_section_commit_value (bmc_config_state_data_t *state_data,
-                          const char *section_name,
-			  const char *key_name,
-			  const char *value)
+bmc_config_section_commit_value (bmc_config_state_data_t *state_data,
+                                 const char *section_name,
+                                 const char *key_name,
+                                 const char *value)
 {
   struct section *sect;
   struct keyvalue *kv;
 
-  if (!(sect = bmc_section_find_section (state_data, section_name)))
+  if (!(sect = bmc_config_section_find_section (state_data, section_name)))
     return BMC_ERR_FATAL_ERROR;
 
-  if (!(kv = bmc_section_find_keyvalue (state_data, section_name, key_name)))
+  if (!(kv = bmc_config_section_find_keyvalue (state_data, section_name, key_name)))
     return BMC_ERR_FATAL_ERROR;
 
   if (kv->validate)
@@ -399,18 +399,18 @@ bmc_section_commit_value (bmc_config_state_data_t *state_data,
 }
 
 int
-bmc_section_diff_value (bmc_config_state_data_t *state_data,
-                        const char *section_name,
-			const char *key_name,
-			const char *value)
+bmc_config_section_diff_value (bmc_config_state_data_t *state_data,
+                               const char *section_name,
+                               const char *key_name,
+                               const char *value)
 {
   struct section *sect;
   struct keyvalue *kv;
 
-  if (!(sect = bmc_section_find_section (state_data, section_name)))
+  if (!(sect = bmc_config_section_find_section (state_data, section_name)))
     return BMC_ERR_FATAL_ERROR;
 
-  if (!(kv = bmc_section_find_keyvalue (state_data, section_name, key_name)))
+  if (!(kv = bmc_config_section_find_keyvalue (state_data, section_name, key_name)))
     return BMC_ERR_FATAL_ERROR;
 
   if (kv->validate)
@@ -441,7 +441,7 @@ bmc_section_diff_value (bmc_config_state_data_t *state_data,
 }
 
 bmc_err_t 
-bmc_sections_list (bmc_config_state_data_t *state_data)
+bmc_config_sections_list (bmc_config_state_data_t *state_data)
 {
   struct section *sect;
 

@@ -1,8 +1,8 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-diff.h"
-#include "bmc-parser.h"
-#include "bmc-sections.h"
+#include "bmc-config-common.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-parser.h"
+#include "bmc-config-sections.h"
 
 static bmc_diff_t
 bmc_diff_keypair (bmc_config_state_data_t *state_data,
@@ -35,10 +35,10 @@ bmc_diff_keypair (bmc_config_state_data_t *state_data,
   key_name = strtok (key_name, " \t");
   value = strtok (value, " \t");
 
-  rv = bmc_section_diff_value (state_data,
-                               section_name, 
-                               key_name,
-                               value);
+  rv = bmc_config_section_diff_value (state_data,
+                                      section_name, 
+                                      key_name,
+                                      value);
  cleanup:
   if (keypair)
     free (keypair);
@@ -100,7 +100,7 @@ bmc_diff_file (bmc_config_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass */
-  if ((this_ret = bmc_parser (state_data, fp)) == BMC_DIFF_FATAL_ERROR)
+  if ((this_ret = bmc_config_parser (state_data, fp)) == BMC_DIFF_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == BMC_DIFF_NON_FATAL_ERROR)

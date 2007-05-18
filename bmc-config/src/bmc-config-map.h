@@ -1,5 +1,5 @@
 /* 
-   bmc_map.h: map functions
+   bmc-config-map.h: map functions
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -16,12 +16,12 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
 
-#ifndef _BMC_MAP_H
-#define _BMC_MAP_H
+#ifndef _BMC_CONFIG_MAP_H
+#define _BMC_CONFIG_MAP_H
 
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-sections.h"
+#include "bmc-config-common.h"
+#include "bmc-config-sections.h"
 
 int channel_access_mode (const char *string);
 
