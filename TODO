@@ -58,12 +58,15 @@ code cleanup
 ------------
 param->parameter everywyhere 
 - after ipmi-chassis committed
-merge in freeipmi-udm
-- after ipmi-chassis, ipmi-fru, and pef-config committed
-- for 0.4.0 or 0.5.0?
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for SDR options in manpages
 common stuff for parsing in bmc-config and pef-config
+
+re-architecture
+---------------
+merge in freeipmi-udm
+- after ipmi-chassis, ipmi-fru, and pef-config committed
+- for 0.4.0 or 0.5.0?
 add header comments to fiid.h
