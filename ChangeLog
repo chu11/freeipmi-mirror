@@ -53,6 +53,11 @@
 	ipmi-pef/src/ipmi-pef-wrapper.c: Transfer pef wrapper functions
 	from bmc-config.
 
+	* bmc-config/src/bmc-config-argp.c (_create_sectionstr): Fix
+	variable name.
+
+	* tagged pre_ipmi_pef_major_rearch
+
 2007-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/src/ipmi-pef-validate.h,
