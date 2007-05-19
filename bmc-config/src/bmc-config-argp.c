@@ -134,21 +134,21 @@ _create_keypair(char *arg)
 static struct sectionstr *
 _create_sectionstr(char *arg)
 {
-  struct sectionstr *kp;
+  struct sectionstr *s;
   
-  if (!(kp = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
+  if (!(s = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
     {
       perror("malloc");
       exit(1);
     }
-  if (!(kp->sectionstr = strdup(arg)))
+  if (!(s->sectionstr = strdup(arg)))
     {
       perror("strdup");
       exit(1);
     }
-  kp->next = NULL;
+  s->next = NULL;
 
-  return kp;
+  return s;
 }
 
 /* Parse a single option. */
