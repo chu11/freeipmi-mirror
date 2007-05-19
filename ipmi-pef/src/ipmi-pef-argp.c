@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-pef-argp.c,v 1.15 2007-05-18 16:27:32 chu11 Exp $ 
+   $Id: ipmi-pef-argp.c,v 1.16 2007-05-19 04:08:22 chu11 Exp $ 
    
    ipmi-pef-argp.c - Platform Event Filtering utility.
    
@@ -80,27 +80,42 @@ static struct argp_option options[] =
      "Action is to SHOW THE DIFFERENCES with BMC", 21},
     {"listsections", LIST_SECTIONS_KEY, 0, 0,
      "List available sections for checkout", 22},
-    {"community-string", COMMUNITY_STRING_KEY, 0, 0,
-     "Checkout Community String", 23},
-    {"lan-alert-destinations", LAN_ALERT_DESTINATIONS_KEY, 0, 0, 
-     "Checkout of LAN Alert Destinations.", 24},
-    {"alert-policy-table", ALERT_POLICY_TABLE_KEY, 0, 0, 
-     "Checkout of Alert Policy Table.", 25},
-    {"event-filter-table", EVENT_FILTER_TABLE_KEY, 0, 0,
-     "Checkout Event Filter Table", 26},
     {"verbose", VERBOSE_KEY, 0, 0,  
      "Produce verbose output", 27},
     {"filename", FILENAME_KEY, "FILENAME", 0,
      "use FILENAME in checkout or commit", 28},
+    {"section", SECTIONS_KEY, "SECTION", 0,
+     "use SECTION in checkout", 29},
     { 0 }
   };
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
+static struct sectionstr *
+_create_sectionstr(char *arg)
+{
+  struct sectionstr *s;
+
+  if (!(s = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
+    {
+      perror("malloc");
+      exit(1);
+    }
+  if (!(s->sectionstr = strdup(arg)))
+    {
+      perror("strdup");
+      exit(1);
+    }
+  s->next = NULL;
+
+  return s;
+}
+
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_pef_arguments *cmd_args = state->input;
+  struct sectionstr *sstr;
   
   switch (key)
     {
@@ -119,20 +134,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case LIST_SECTIONS_KEY:
       cmd_args->action = PEF_ACTION_LIST_SECTIONS;
       break;
-    case COMMUNITY_STRING_KEY:
-      cmd_args->community_string_wanted = 1;
-      break;
-    case LAN_ALERT_DESTINATIONS_KEY:
-      cmd_args->lan_alert_destinations_wanted = 1;
-      break;
-    case ALERT_POLICY_TABLE_KEY:
-      cmd_args->alert_policy_table_wanted = 1;
-      break;
-    case EVENT_FILTER_TABLE_KEY:
-      cmd_args->event_filter_table_wanted = 1;
-      break;
     case VERBOSE_KEY:
-      cmd_args->verbose_wanted = 1;
+      cmd_args->verbose = 1;
       break;
     case FILENAME_KEY:
       if (cmd_args->filename) /* If specified more than once */
@@ -142,6 +145,21 @@ parse_opt (int key, char *arg, struct argp_state *state)
           perror("strdup");
           exit(1);
         }
+      break;
+    case SECTIONS_KEY:
+      sstr = _create_sectionstr(arg);
+      if (cmd_args->sectionstrs)
+        {
+          struct sectionstr *p = NULL;
+
+          p = cmd_args->sectionstrs;
+          while (p->next)
+            p = p->next;
+
+          p->next = sstr;
+        }
+      else
+        cmd_args->sectionstrs = sstr;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -162,12 +180,9 @@ ipmi_pef_argp_parse (int argc, char **argv, struct ipmi_pef_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
   cmd_args->action = 0;
-  cmd_args->community_string_wanted = 0;
-  cmd_args->lan_alert_destinations_wanted = 0;
-  cmd_args->alert_policy_table_wanted = 0;
-  cmd_args->event_filter_table_wanted = 0;
-  cmd_args->verbose_wanted = 0;
+  cmd_args->verbose = 0;
   cmd_args->filename = NULL;
+  cmd_args->sectionstrs = NULL;
 
   /* ADMIN is minimum for ipmi-pef b/c its needed for many of the
    * ipmi cmds used

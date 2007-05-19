@@ -25,14 +25,12 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #include "bmc-user-sections.h"
 #include "bmc-lan-channel-section.h"
 #include "bmc-lan-conf-section.h"
-#include "bmc-lan-conf-alert-section.h"
 #include "bmc-lan-conf-auth-section.h"
 #include "bmc-lan-conf-security-keys-section.h"
 #include "bmc-lan-conf-misc-section.h"
 #include "bmc-rmcpplus-conf-privilege-section.h"
 #include "bmc-serial-channel-section.h"
 #include "bmc-serial-conf-section.h"
-#include "bmc-pef-conf-section.h"
 #include "bmc-sol-conf-section.h"
 #include "bmc-misc-section.h"
 
@@ -83,11 +81,6 @@ bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_lan_conf_alert_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
   if (!(sect = bmc_lan_conf_auth_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
@@ -114,11 +107,6 @@ bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (!(sect = bmc_serial_conf_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
-  if (!(sect = bmc_pef_conf_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;

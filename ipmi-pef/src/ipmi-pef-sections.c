@@ -15,6 +15,7 @@
 #include "ipmi-pef-sections.h"
 #include "ipmi-pef-utils.h"
 
+#include "ipmi-pef-pef-conf-section.h"
 #include "ipmi-pef-community-string.h"
 #include "ipmi-pef-lan-alert-destination.h"
 #include "ipmi-pef-alert-policy-table.h"
@@ -52,7 +53,7 @@ ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data)
   if (get_number_of_lan_alert_destinations(state_data, 
                                            &number_of_lan_alert_destinations) != PEF_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->verbose_wanted)
+      if (state_data->prog_data->args->verbose)
         fprintf (stderr, "## FATAL: Unable to get Number of Alert Destinations\n");
       return NULL;
     }
@@ -60,7 +61,7 @@ ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data)
   if (get_number_of_alert_policy_entries(state_data,
                                          &number_of_event_filters) != PEF_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->verbose_wanted)
+      if (state_data->prog_data->args->verbose)
         fprintf (stderr, "## FATAL: Unable to get Number of Alert Policy Entries\n");
       return NULL;
     }
@@ -68,7 +69,7 @@ ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data)
   if (get_number_of_event_filters(state_data, 
                                   &number_of_event_filters) != PEF_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->verbose_wanted)
+      if (state_data->prog_data->args->verbose)
         fprintf (stderr, "## FATAL: Unable to get Number of Event Filters\n");
       return NULL;
     }

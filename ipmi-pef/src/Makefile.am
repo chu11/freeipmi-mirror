@@ -39,7 +39,6 @@ noinst_HEADERS = \
 	ipmi-pef-event-filter-table.h \
 	ipmi-pef-diff.h \
 	ipmi-pef-info.h \
-	ipmi-pef-keys.h \
 	ipmi-pef-map.h \
 	ipmi-pef-parser.h \
 	ipmi-pef-sections.h \

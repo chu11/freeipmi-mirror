@@ -96,19 +96,6 @@ bmc_err_t set_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *stat
                                                    char *backup_gateway_address);
 bmc_err_t set_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
                                                        char *backup_gateway_mac_address);
-bmc_err_t set_bmc_community_string (bmc_config_state_data_t *state_data, 
-                                    uint8_t *community_string);
-bmc_err_t set_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data, 
-                                            uint8_t destination_selector,
-                                            uint8_t alert_destination_type,
-                                            uint8_t alert_acknowledge,
-                                            uint8_t alert_acknowledge_timeout,
-                                            uint8_t alert_retries);
-bmc_err_t set_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data, 
-                                                 uint8_t destination_selector,
-                                                 uint8_t alert_gateway,
-                                                 char *alert_ip_address,
-                                                 char *alert_mac_address);
 bmc_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
                                     uint32_t vlan_id,
                                     uint8_t vlan_id_enable);
@@ -172,22 +159,6 @@ bmc_err_t set_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_dat
                                                             uint8_t dtr_hangup, 
                                                             uint8_t flow_control, 
                                                             uint8_t bit_rate);
-bmc_err_t set_pef_control (bmc_config_state_data_t *state_data, 
-                           uint8_t pef, 
-                           uint8_t pef_event_messages, 
-                           uint8_t pef_startup_delay, 
-                           uint8_t pef_alert_startup_delay);
-bmc_err_t set_pef_action_global_control (bmc_config_state_data_t *state_data, 
-                                         uint8_t alert_action, 
-                                         uint8_t power_down_action, 
-                                         uint8_t reset_action, 
-                                         uint8_t power_cycle_action, 
-                                         uint8_t oem_action, 
-                                         uint8_t diagnostic_interrupt);
-bmc_err_t set_pef_startup_delay (bmc_config_state_data_t *state_data, 
-                                 uint8_t pef_startup_delay);
-bmc_err_t set_pef_alert_startup_delay (bmc_config_state_data_t *state_data, 
-                                       uint8_t pef_alert_startup_delay);
 bmc_err_t set_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
                                         uint8_t power_restore_policy);
 
@@ -354,43 +325,11 @@ bmc_err_t get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_dat
                                                             uint8_t *bit_rate);
 bmc_err_t get_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
                                         uint8_t *power_restore_policy);
-bmc_err_t get_bmc_community_string (bmc_config_state_data_t *state_data, 
-                                    uint8_t *community_string,
-                                    uint32_t community_string_len);
-bmc_err_t get_bmc_lan_conf_destination_type(bmc_config_state_data_t *state_data, 
-                                            uint8_t destination_selector,
-                                            uint8_t *alert_destination_type,
-                                            uint8_t *alert_acknowledge,
-                                            uint8_t *alert_acknowledge_timeout,
-                                            uint8_t *alert_retries);
-bmc_err_t get_bmc_lan_conf_destination_addresses(bmc_config_state_data_t *state_data, 
-                                                 uint8_t destination_selector,
-                                                 uint8_t *alert_gateway,
-                                                 char *alert_ip_address,
-                                                 unsigned int alert_ip_address_len,
-                                                 char *alert_mac_address,
-                                                 unsigned int alert_mac_address_len);
 bmc_err_t get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
                                     uint32_t *vlan_id,
                                     uint8_t *vlan_id_enable);
 bmc_err_t get_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
                                           uint8_t *vlan_priority);
-bmc_err_t get_pef_control (bmc_config_state_data_t *state_data, 
-                           uint8_t *pef, 
-                           uint8_t *pef_event_messages, 
-                           uint8_t *pef_startup_delay, 
-                           uint8_t *pef_alert_startup_delay);
-bmc_err_t get_pef_action_global_control (bmc_config_state_data_t *state_data, 
-                                         uint8_t *alert_action, 
-                                         uint8_t *power_down_action, 
-                                         uint8_t *reset_action, 
-                                         uint8_t *power_cycle_action, 
-                                         uint8_t *oem_action, 
-                                         uint8_t *diagnostic_interrupt);
-bmc_err_t get_pef_startup_delay (bmc_config_state_data_t *state_data, 
-                                 uint8_t *pef_startup_delay);
-bmc_err_t get_pef_alert_startup_delay (bmc_config_state_data_t *state_data, 
-                                       uint8_t *pef_alert_startup_delay);
 bmc_err_t get_sol_sol_enable (bmc_config_state_data_t *state_data,
                               uint8_t *sol_enable);
 bmc_err_t get_sol_sol_authentication (bmc_config_state_data_t *state_data,

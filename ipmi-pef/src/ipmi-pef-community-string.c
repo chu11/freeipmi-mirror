@@ -61,9 +61,9 @@ community_string_diff (ipmi_pef_state_data_t *state_data,
   pef_err_t rc;
   pef_diff_t ret;
 
-  if ((rc = get_bmc_community_string (state_data,
-                                      community_string,
-                                      IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != PEF_ERR_SUCCESS)
+  if ((rc = get_bmc_lan_conf_community_string (state_data,
+					       community_string,
+					       IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != PEF_ERR_SUCCESS)
     {
       if (rc == PEF_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;

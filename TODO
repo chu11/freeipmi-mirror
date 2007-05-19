@@ -39,28 +39,11 @@ ipmi-pef
 --------
 * ipmi-pef renamed to pef-config
 * .8 manpage and conf.5 manpage
-* make checkout/commit more like bmc-config
-* state_data must be passed around to all functions
-* by default output everything, support --sections or similar options to output less information.
-* doesn't check for out of mem errors
-  - strdup, calloc, and malloc
-* diff
-* fix string to int/ int to string mappings
-  - event trigger
-* parsing seg faults
-* invalid key found for what record/section 
-* if keycheckout value bad - doesn't output field for editing
-* collapse common funcs in ipmi-pef-util
-* - map files
-* other pef config from bmc-config
-* fix key string names (or remove when change is done)
 * how to deal with channel number for alert policy table
-* listing usable sensor names in eft
 * making config options more reasonable/easy to understand
 * alert strings
 * how to specify event reading type codes
   - better input for most of event filter section
-* delete pef stuff from bmc-config
 * pef alert strings
 
 bmc-config/ipmi-pef
@@ -68,7 +51,7 @@ bmc-config/ipmi-pef
 better parsing/caching for faster commit/checkout
 mem-leaks from strdups, is this ever freed?
 get functions - too much duplication, can be condensed - need to re-architect in some way
-
+keypair/section on command line free mem
 
 general
 -------

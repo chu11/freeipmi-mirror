@@ -33,12 +33,9 @@ enum argp_option_keys
     COMMIT_KEY = 'c', 
     DIFF_KEY = 'd',
     LIST_SECTIONS_KEY = 'L',
-    COMMUNITY_STRING_KEY = 's',
-    LAN_ALERT_DESTINATIONS_KEY = 'n', 
-    ALERT_POLICY_TABLE_KEY = 't', 
-    EVENT_FILTER_TABLE_KEY = 'e',
     VERBOSE_KEY = 'v',
-    FILENAME_KEY = 'f'
+    FILENAME_KEY = 'f',
+    SECTIONS_KEY = 'S',
   };
 
 typedef enum
@@ -90,13 +87,9 @@ struct ipmi_pef_arguments
   
   pef_action_t action;
 
-  int community_string_wanted;
-  int lan_alert_destinations_wanted;
-  int alert_policy_table_wanted;
-  int event_filter_table_wanted;
-  char *community_string;
-  int verbose_wanted;
+  int verbose;
   char *filename;
+  struct sectionstr *sectionstrs;
 };
 
 typedef struct ipmi_pef_prog_data

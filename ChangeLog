@@ -58,6 +58,12 @@
 
 	* tagged pre_ipmi_pef_major_rearch
 
+	* bmc-config/: Remove pef related sections.
+
+	* ipmi-pef/: Complete bmc-config style input/output.
+
+	* tagged post_ipmi_pef_major_rearch
+
 2007-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/src/ipmi-pef-validate.h,

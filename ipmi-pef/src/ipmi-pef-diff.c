@@ -14,50 +14,6 @@
 #include "ipmi-pef-parser.h"
 #include "ipmi-pef-sections.h"
 
-#if 0
-/* XXX come back to this later */
-
-static pef_diff_t
-pef_diff_keypair (ipmi_pef_state_data_t *state_data,
-                  struct keypair *kp)
-{
-  char *keypair = NULL;
-  char *section_name;
-  char *key_name;
-  char *value;
-  pef_diff_t rv = PEF_DIFF_FATAL_ERROR;
-  
-  if (!(keypair = strdup (kp->keypair)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  section_name = strtok (keypair, ":");
-  key_name = strtok (NULL, "=");
-  value = strtok (NULL, "");
-
-  if (!(section_name && key_name && value)) 
-    {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = PEF_DIFF_NON_FATAL_ERROR; 
-      goto cleanup;
-    }
-     
-  section_name = strtok (section_name, " \t");
-  key_name = strtok (key_name, " \t");
-  value = strtok (value, " \t");
-
-  rv = ipmi_pef_section_diff_value (state_data,
-                                    section_name, 
-                                    key_name,
-                                    value);
- cleanup:
-  if (keypair)
-    free (keypair);
-  return rv;
-}
-
 static pef_diff_t
 pef_diff_file (ipmi_pef_state_data_t *state_data)
 {
@@ -83,7 +39,7 @@ pef_diff_file (ipmi_pef_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass */
-  if ((this_ret = bmc_parser (state_data, fp)) == PEF_DIFF_FATAL_ERROR)
+  if ((this_ret = ipmi_pef_parser (state_data, fp)) == PEF_DIFF_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == PEF_DIFF_NON_FATAL_ERROR)
@@ -118,7 +74,6 @@ pef_diff_file (ipmi_pef_state_data_t *state_data)
     fclose(fp);
   return rv;
 }
-#endif
 
 pef_err_t
 pef_diff (ipmi_pef_state_data_t *state_data)
@@ -128,10 +83,7 @@ pef_diff (ipmi_pef_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-#if 0
-  /* XXX */
   ret = pef_diff_file (state_data);
-#endif
 
   if (ret == PEF_DIFF_SAME)
     return PEF_ERR_SUCCESS;
