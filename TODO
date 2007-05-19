@@ -28,11 +28,7 @@ Chassis Config?
 
 management:
 -----------
-
-docs/ - delete all?
-
-move ftp server
-
+move ftp server?
 move webpage?
 
 ipmi-pef
@@ -40,7 +36,6 @@ ipmi-pef
 * ipmi-pef renamed to pef-config
 * .8 manpage and conf.5 manpage
 * how to deal with channel number for alert policy table
-* making config options more reasonable/easy to understand
 * alert strings
 * how to specify event reading type codes
   - better input for most of event filter section
@@ -51,13 +46,13 @@ bmc-config/ipmi-pef
 better parsing/caching for faster commit/checkout
 mem-leaks from strdups, is this ever freed?
 get functions - too much duplication, can be condensed - need to re-architect in some way
-keypair/section on command line free mem
 
 general
 -------
 timeout options for most FreeIPMI tools?
 ipmi 2.0 for all tools?
 sdr caching requires versioning
+tool for getting channel information - in ipmi-device tool for 0.5.0?
 
 code cleanup
 ------------
@@ -65,6 +60,7 @@ param->parameter everywyhere
 - after ipmi-chassis committed
 merge in freeipmi-udm
 - after ipmi-chassis, ipmi-fru, and ipmi-pef committed
+- for 0.4.0 or 0.5.0?
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools

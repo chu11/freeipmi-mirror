@@ -4,6 +4,8 @@
 	design considerations.
 
 	* ipmi-pef/src/ipmi-pef-event-filter-table.c: Major code cleanup.
+
+	* ipmi-pef/ipmi-pef.8.pre.in: Updated appropriately.
 	
 2007-05-18  Albert Chu <chu11@llnl.gov>
 
