@@ -2,6 +2,8 @@
 
 	* doc/freeipmi-coding.txt: Talk about bmc-config and ipmi-pef
 	design considerations.
+
+	* ipmi-pef/src/ipmi-pef-event-filter-table.c: Major code cleanup.
 	
 2007-05-18  Albert Chu <chu11@llnl.gov>
 
