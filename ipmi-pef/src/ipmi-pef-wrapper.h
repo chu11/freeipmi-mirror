@@ -60,6 +60,46 @@ struct lan_alert_destination
 };
 typedef struct lan_alert_destination lan_alert_destination_t;
 
+pef_err_t get_pef_control (ipmi_pef_state_data_t *state_data,
+                           uint8_t *pef,
+                           uint8_t *pef_event_messages,
+                           uint8_t *pef_startup_delay,
+                           uint8_t *pef_alert_startup_delay);
+
+pef_err_t set_pef_control (ipmi_pef_state_data_t *state_data,
+                           uint8_t pef,
+                           uint8_t pef_event_messages,
+                           uint8_t pef_startup_delay,
+                           uint8_t pef_alert_startup_delay);
+
+pef_err_t get_pef_action_global_control (ipmi_pef_state_data_t *state_data,
+                                         uint8_t *alert_action,
+                                         uint8_t *power_down_action,
+                                         uint8_t *reset_action,
+                                         uint8_t *power_cycle_action,
+                                         uint8_t *oem_action,
+                                         uint8_t *diagnostic_interrupt);
+
+pef_err_t set_pef_action_global_control (ipmi_pef_state_data_t *state_data,
+                                         uint8_t alert_action,
+                                         uint8_t power_down_action,
+                                         uint8_t reset_action,
+                                         uint8_t power_cycle_action,
+                                         uint8_t oem_action,
+                                         uint8_t diagnostic_interrupt);
+
+pef_err_t get_pef_startup_delay (ipmi_pef_state_data_t *state_data,
+                                 uint8_t *pef_startup_delay);
+
+pef_err_t set_pef_startup_delay (ipmi_pef_state_data_t *state_data,
+                                 uint8_t pef_startup_delay);
+
+pef_err_t set_pef_alert_startup_delay (ipmi_pef_state_data_t *state_data,
+                                       uint8_t pef_alert_startup_delay);
+
+pef_err_t get_pef_alert_startup_delay (ipmi_pef_state_data_t *state_data,
+                                       uint8_t *pef_alert_startup_delay);
+
 pef_err_t get_bmc_lan_conf_community_string (ipmi_pef_state_data_t *state_data,
                                              uint8_t *community_string,
                                              uint32_t community_string_len);

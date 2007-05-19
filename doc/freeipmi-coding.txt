@@ -409,9 +409,9 @@ The fiid API allows the programmers to get/set the optional and/or
 variable length values more easily.
 
 It should be noted that in IPMI, many of the optional and/or variable
-length fields are in the middle of the packet, rather than the end.
-Therefore, the traditional struct method of dealing with a variable
-length method:
+length fields may be in the "middle" of group of data, rather than the
+end/trailer.  Therefore, the traditional struct method of dealing with
+a variable length method:
 
 struct packet
 {
@@ -424,5 +424,8 @@ struct packet
 
 cannot be used.
 
+C) Although a relatively equal amount of marshalling functions have to
+be done to marshall data before its sent, fewer unmarshalling
+functions need to be created.
 
 

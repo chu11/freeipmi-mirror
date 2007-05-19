@@ -73,6 +73,11 @@ ipmi_pef_sections_list_create (ipmi_pef_state_data_t *state_data)
       return NULL;
     }
 
+  if (!(sect = ipmi_pef_pef_conf_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
+
   if (!(sect = ipmi_pef_community_string_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)

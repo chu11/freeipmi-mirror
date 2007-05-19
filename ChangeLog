@@ -45,6 +45,14 @@
 	* bmc-config/src/bmc-sol-conf-section.c (port_validate): Use
 	number_range_two_bytes function.
 
+	* ipmi-pef/src/ipmi-pef-pef-conf-section.h,
+	ipmi-pef/src/ipmi-pef-pef-conf-section.c: Transfer pef conf
+	section from bmc-config.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.h,
+	ipmi-pef/src/ipmi-pef-wrapper.c: Transfer pef wrapper functions
+	from bmc-config.
+
 2007-05-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/src/ipmi-pef-validate.h,
