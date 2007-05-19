@@ -33,6 +33,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #include "bmc-serial-conf-section.h"
 #include "bmc-sol-conf-section.h"
 #include "bmc-misc-section.h"
+#include "bmc-config-utils.h"
 
 static int
 _add_section(struct section **sections, struct section *sect)
@@ -58,12 +59,16 @@ bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
-  int num_users, i;
+  int8_t number_of_users, i;
 
-  if ((num_users = bmc_get_num_users (state_data)) < 0)
-    return NULL;
+  if (get_number_of_users (state_data, &number_of_users) != BMC_ERR_SUCCESS)
+    {
+      if (state_data->prog_data->args->verbose)
+        fprintf (stderr, "## FATAL: Unable to get Number of Users\n");
+      return NULL;
+    }
 
-  for (i = 0; i < num_users; i++)
+  for (i = 0; i < number_of_users; i++)
     {
       if (!(sect = bmc_user_section_get(state_data, i+1)))
 	goto cleanup;
@@ -145,7 +150,10 @@ bmc_config_sections_list_destroy(bmc_config_state_data_t *state_data,
 
 struct section * 
 bmc_config_section_create (bmc_config_state_data_t *state_data,
-                           char *section_name)
+                           char *section_name,
+                           Section_Load_Config section_load_config,
+                           Section_Write_Config section_write_config,
+                           Section_Cleanup section_cleanup)
 {
   struct section *section = NULL;
 
@@ -163,6 +171,11 @@ bmc_config_section_create (bmc_config_state_data_t *state_data,
       perror("strdup");
       goto cleanup;
     }
+
+  section->section_load_config = section_load_config;
+  section->section_write_config = section_write_config;
+  section->section_cleanup = section_cleanup;
+  section->sectionptr = NULL;
 
   return section;
  cleanup:

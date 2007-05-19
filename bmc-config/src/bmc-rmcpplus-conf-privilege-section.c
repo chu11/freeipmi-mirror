@@ -446,7 +446,11 @@ bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *rmcpplus_conf_privilege_section = NULL;
 
-  if (!(rmcpplus_conf_privilege_section = bmc_config_section_create (state_data, "Rmcpplus_Conf_Privilege")))
+  if (!(rmcpplus_conf_privilege_section = bmc_config_section_create (state_data, 
+                                                                     "Rmcpplus_Conf_Privilege",
+                                                                     NULL,
+                                                                     NULL,
+                                                                     NULL)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

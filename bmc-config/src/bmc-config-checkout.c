@@ -67,6 +67,15 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
+  if (sect->section_load_config)
+    {
+      if ((ret = (*sect->section_load_config)(state_data, sect)) != BMC_ERR_SUCCESS)
+        {
+          rv = ret;
+          goto cleanup;
+        }
+    }
+
   if ((ret = kv->checkout (state_data, sect, kv)) == BMC_ERR_FATAL_ERROR)
     goto cleanup;
 
@@ -77,6 +86,8 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
 
   rv = ret;
  cleanup:
+  if (sect->section_cleanup)
+    (*sect->section_cleanup)(state_data, sect);
   if (keypair)
     free(keypair);
   return rv;
@@ -121,16 +132,24 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
   struct keyvalue *kv;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
+  bmc_err_t this_ret;
 
   fprintf (fp, "Section %s\n", sect->section_name);
 
   args = state_data->prog_data->args;
   kv = sect->keyvalues;
+
+  if (sect->section_load_config)
+    {
+      if ((this_ret = (*sect->section_load_config)(state_data, sect)) != BMC_ERR_SUCCESS)
+        {
+          rv = this_ret;
+          goto cleanup;
+        }
+    }
   
   while (kv) 
-    {
-      bmc_err_t this_ret;
-      
+    {     
       /* achu: Certain keys should be "hidden" and not be checked out.
        * They only linger for backwards compatability to FreeIPMI's
        * 0.2.0 bmc-config, which have several options with typoed
@@ -197,10 +216,14 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
       kv = kv->next;
     }
 
+  if (sect->section_cleanup)
+    (*sect->section_cleanup)(state_data, sect);
   fprintf (fp, "EndSection\n");
   return ret;
 
  cleanup:
+  if (sect->section_cleanup)
+    (*sect->section_cleanup)(state_data, sect);
   return rv;
 }
 

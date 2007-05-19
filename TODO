@@ -58,6 +58,7 @@ general
 timeout options for most FreeIPMI tools?
 ipmi 2.0 for all tools?
 sdr caching requires versioning
+all the extra free kv->value's, are they necessary??
 
 code cleanup
 ------------

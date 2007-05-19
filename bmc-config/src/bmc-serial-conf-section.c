@@ -850,7 +850,11 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *bmc_serial_conf_section = NULL;
 
-  if (!(bmc_serial_conf_section = bmc_config_section_create(state_data, "Serial_Conf")))
+  if (!(bmc_serial_conf_section = bmc_config_section_create(state_data, 
+                                                            "Serial_Conf",
+                                                            NULL,
+                                                            NULL,
+                                                            NULL)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

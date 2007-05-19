@@ -190,7 +190,11 @@ bmc_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *lan_conf_security_keys_section = NULL;
 
-  if (!(lan_conf_security_keys_section = bmc_config_section_create (state_data, "Lan_Conf_Security_Keys")))
+  if (!(lan_conf_security_keys_section = bmc_config_section_create (state_data, 
+                                                                    "Lan_Conf_Security_Keys",
+                                                                    NULL,
+                                                                    NULL,
+                                                                    NULL)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

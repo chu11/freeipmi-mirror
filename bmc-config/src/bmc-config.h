@@ -106,6 +106,8 @@ typedef struct bmc_config_state_data
   int cipher_suite_priv_set;
 
   /* achu: caching to make bmc-config work more quickly */
+  int number_of_users_initialized;
+  int8_t number_of_users;
   int lan_channel_number_initialized;
   int8_t lan_channel_number;
   int serial_channel_number_initialized;

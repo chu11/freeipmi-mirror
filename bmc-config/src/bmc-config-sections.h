@@ -30,10 +30,26 @@
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x2
 #define BMC_DO_NOT_CHECKOUT                             0x4
 
+/* section_load_config function call */
+typedef bmc_err_t (*Section_Load_Config) (bmc_config_state_data_t *state_data,
+                                          struct section *sect);
+
+/* section_write_config function call */
+typedef bmc_err_t (*Section_Write_Config) (bmc_config_state_data_t *state_data,
+                                           struct section *sect);
+
+/* section_cleanup function call */
+typedef void (*Section_Cleanup) (bmc_config_state_data_t *state_data,
+                                 struct section *sect);
+
 struct section {
   struct section *next;
   char *section_name;
   struct keyvalue *keyvalues;
+  Section_Load_Config section_load_config;
+  Section_Write_Config section_write_config;
+  Section_Cleanup section_cleanup;
+  void *sectionptr;
 };
 
 /* checkout procedure fills the value into kv->value as printable string */
@@ -76,7 +92,10 @@ void bmc_config_sections_list_destroy (bmc_config_state_data_t *state_data,
                                        struct section *sections);
 
 struct section * bmc_config_section_create (bmc_config_state_data_t *state_data, 
-                                            char *section_name);
+                                            char *section_name,
+                                            Section_Load_Config section_load_config,
+                                            Section_Write_Config section_write_config,
+                                            Section_Cleanup section_cleanup);
 
 void bmc_config_section_destroy (bmc_config_state_data_t *state_data, 
                                  struct section *section);

@@ -1,3 +1,8 @@
+2007-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/: Re-arch to checkout/commit by section instead of
+	each line.
+	
 2007-05-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/: Fix incorrect naming of "policy number" for "entry

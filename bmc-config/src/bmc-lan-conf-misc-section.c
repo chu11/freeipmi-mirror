@@ -257,7 +257,11 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *lan_conf_misc_section = NULL;
 
-  if (!(lan_conf_misc_section = bmc_config_section_create (state_data, "Lan_Conf_Misc")))
+  if (!(lan_conf_misc_section = bmc_config_section_create (state_data, 
+                                                           "Lan_Conf_Misc",
+                                                           NULL,
+                                                           NULL,
+                                                           NULL)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

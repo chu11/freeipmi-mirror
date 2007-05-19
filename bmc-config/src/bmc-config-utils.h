@@ -25,6 +25,7 @@
 bmc_err_t get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num);
 bmc_err_t get_serial_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num);
 bmc_err_t get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num);
+bmc_err_t get_number_of_users (bmc_config_state_data_t *state_data, int8_t *number_of_users);
 bmc_err_t get_number_of_lan_destinations (bmc_config_state_data_t *state_data, int8_t *number_of_lan_destinations);
 
 #endif
