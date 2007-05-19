@@ -61,6 +61,7 @@ ipmi-pef
 * how to specify event reading type codes
   - better input for most of event filter section
 * delete pef stuff from bmc-config
+* pef alert strings
 
 bmc-config/ipmi-pef
 -------------------
