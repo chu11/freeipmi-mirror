@@ -170,7 +170,81 @@ policy_type_string (uint8_t source)
   return "";
 }
 
+int 
+filter_type_number (const char *source)
+{
+  if (same (source, "manufacturer_pre_configured"))
+    return IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER;
+  if (same (source, "software_configurable"))
+    return IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER;
+  if (same (source, "reserved1"))
+    return 0x1;
+  if (same (source, "reserved3"))
+    return 0x3;
 
+  return -1;
+}
+
+char *
+filter_type_string (uint8_t source)
+{
+  switch (source)
+    {
+    case IPMI_FILTER_CONFIGURATION_MANUFACTURER_PRE_CONFIGURED_FILTER:
+      return "Manufacturer_Pre_Configured";
+    case IPMI_FILTER_CONFIGURATION_SOFTWARE_CONFIGURABLE_FILTER:
+      return "Software_Configurable";
+    case 0x1:
+      return "Reserved1";
+    case 0x3:
+      return "Reserved3";
+    }
+  return "";
+}
+
+int 
+event_severity_number (const char *source)
+{
+  if (same (source, "unspecified"))
+    return IPMI_EVENT_SEVERITY_UNSPECIFIED;
+  if (same (source, "monitor"))
+    return IPMI_EVENT_SEVERITY_MONITOR;
+  if (same (source, "information"))
+    return IPMI_EVENT_SEVERITY_INFORMATION;
+  if (same (source, "ok"))
+    return IPMI_EVENT_SEVERITY_OK;
+  if (same (source, "non_critical"))
+    return IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION;
+  if (same (source, "critical"))
+    return IPMI_EVENT_SEVERITY_CRITICAL_CONDITION;
+  if (same (source, "non_recoverable"))
+    return IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION;
+  
+  return -1;
+}
+
+char *
+event_severity_string (uint8_t source)
+{
+  switch (source)
+    {
+    case IPMI_EVENT_SEVERITY_UNSPECIFIED:
+      return "Unspecified";
+    case IPMI_EVENT_SEVERITY_MONITOR:
+      return "Monitor";
+    case IPMI_EVENT_SEVERITY_INFORMATION:
+      return "Information";
+    case IPMI_EVENT_SEVERITY_OK:
+      return "OK";
+    case IPMI_EVENT_SEVERITY_NON_CRITICAL_CONDITION:
+      return "Non_Critical";
+    case IPMI_EVENT_SEVERITY_CRITICAL_CONDITION:
+      return "Critical";
+    case IPMI_EVENT_SEVERITY_NON_RECOVERABLE_CONDITION:
+      return "Non_Recoverable";
+    }
+  return "";
+}
 
 static int 
 _strchr_replace (char *str, char ch, char nch)

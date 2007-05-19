@@ -503,11 +503,12 @@ policy_number_diff (ipmi_pef_state_data_t *state_data,
     ret = PEF_DIFF_SAME;
   else
     {
+      char num[32];
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
-                   get_val ? "Yes" : "No");
+                   num);
     }
   return ret;
 }
@@ -628,11 +629,12 @@ destination_selector_diff (ipmi_pef_state_data_t *state_data,
     ret = PEF_DIFF_SAME;
   else
     {
+      char num[32];
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
-                   get_val ? "Yes" : "No");
+                   num);
     }
   return ret;
 }
@@ -753,11 +755,12 @@ channel_number_diff (ipmi_pef_state_data_t *state_data,
     ret = PEF_DIFF_SAME;
   else
     {
+      char num[32];
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
-                   get_val ? "Yes" : "No");
+                   num);
     }
   return ret;
 }
@@ -878,11 +881,12 @@ alert_string_set_selector_diff (ipmi_pef_state_data_t *state_data,
     ret = PEF_DIFF_SAME;
   else
     {
+      char num[32];
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
-                   get_val ? "Yes" : "No");
+                   num);
     }
   return ret;
 }

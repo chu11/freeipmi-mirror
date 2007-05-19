@@ -13,6 +13,14 @@ int policy_type_number (const char *source);
 
 char *policy_type_string (uint8_t source);
 
+int filter_type_number (const char *source);
+
+char *filter_type_string (uint8_t source);
+
+int event_severity_number (const char *source);
+
+char *event_severity_string (uint8_t source);
+
 /* XXX */
 
 char *filter_number_to_string (int filter_number);

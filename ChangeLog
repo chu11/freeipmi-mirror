@@ -27,13 +27,17 @@
 	"event_specific_alert_string" based on spec wording.
 
 	* ipmi-pef/: Continued work to rearchitect into bmc-config like
-	architecture.  Add alert policy checkout sections.  Reword
-	"event_specific_alert_string_lookup" to
-	"event_specific_alert_string" everywhere.
+	architecture.  Add alert policy checkout sections.  Add event
+	filter table sections. Reword "event_specific_alert_string_lookup"
+	to "event_specific_alert_string" everywhere.
 
 	* ipmi-pef/src/ipmi-pef-validate.h,
 	ipmi-pef/src/ipmi-pef-validate.c (number_range_four_bits,
-	number_range_seven_bits): New functions.
+	number_range_seven_bits, number_range_three_bits,
+	number_range_two_bytes, filter_type_validate,
+	event_severity_validate, policy_type_validate,
+	alert_gateway_validate, alert_destination_type_validate): New
+	functions.
 
 	* bmc-config/src/bmc-config-validate.h,
 	bmc-config/src/bmc-config-validate.c (number_range_two_bytes): New function.

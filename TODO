@@ -58,11 +58,15 @@ ipmi-pef
 * listing usable sensor names in eft
 * making config options more reasonable/easy to understand
 * alert strings
+* how to specify event reading type codes
+  - better input for most of event filter section
 
 bmc-config/ipmi-pef
 -------------------
-caching for faster commit/checkout
+better parsing/caching for faster commit/checkout
 mem-leaks from strdups, is this ever freed?
+get functions - too much duplication, can be condensed - need to re-architect in some way
+
 
 general
 -------

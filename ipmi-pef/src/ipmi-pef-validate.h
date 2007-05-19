@@ -9,6 +9,10 @@ pef_validate_t yes_no_validate (ipmi_pef_state_data_t *state_data,
                                 const struct section *sect, 
                                 const char *value);
 
+pef_validate_t number_range_three_bits (ipmi_pef_state_data_t *state_data, 
+                                        const struct section *sect, 
+                                        const char *value);
+
 pef_validate_t number_range_four_bits (ipmi_pef_state_data_t *state_data, 
                                       const struct section *sect, 
                                       const char *value);
@@ -20,6 +24,10 @@ pef_validate_t number_range_seven_bits (ipmi_pef_state_data_t *state_data,
 pef_validate_t number_range_one_byte (ipmi_pef_state_data_t *state_data, 
                                       const struct section *sect, 
                                       const char *value);
+
+pef_validate_t number_range_two_bytes (ipmi_pef_state_data_t *state_data,
+                                       const struct section *sect,
+                                       const char *value);
 
 pef_validate_t ip_address_validate (ipmi_pef_state_data_t *state_data,
                                     const struct section *sect,
@@ -40,5 +48,13 @@ pef_validate_t alert_gateway_validate (ipmi_pef_state_data_t *state_data,
 pef_validate_t policy_type_validate (ipmi_pef_state_data_t *state_data,
                                      const struct section *sect,
                                      const char *value);
+
+pef_validate_t filter_type_validate (ipmi_pef_state_data_t *state_data,
+                                     const struct section *sect,
+                                     const char *value);
+
+pef_validate_t event_severity_validate (ipmi_pef_state_data_t *state_data,
+                                        const struct section *sect,
+                                        const char *value);
 
 #endif

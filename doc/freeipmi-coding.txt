@@ -74,7 +74,7 @@ The fill_cmd_chassis_identify() is a rare exception, but the technical
 reason is justified by the authors.  Both fields in the IPMI chassis
 identify packet are passed by pointer instead of passed by value.  The
 reason is that both fields are optional and need not be filled.  In
-other words, the packet can truncated in the eys of the IPMI spec.
+other words, the packet can truncated in the eyes of the IPMI spec.
 The pointer gives the caller the ability to set values (by passing a
 valid pointer) or not (by passing NULL).
 
@@ -408,9 +408,10 @@ bytes, or 20 bytes depending on the authentication mechanism chosen.
 The fiid API allows the programmers to get/set the optional and/or
 variable length values more easily.
 
-It should be noted that in IPMI, many of this optional and/or variable
-length fields are in the middle of the packet, rather than the end.  Therefore,
-the traditional struct method of dealing with a variable length method:
+It should be noted that in IPMI, many of the optional and/or variable
+length fields are in the middle of the packet, rather than the end.
+Therefore, the traditional struct method of dealing with a variable
+length method:
 
 struct packet
 {
