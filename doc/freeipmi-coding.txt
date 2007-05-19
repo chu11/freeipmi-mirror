@@ -273,7 +273,8 @@ C) Relatively efficient.
 Cons:
 
 A) Have to deal with endian problems.
-B) Lots of code.  Structs and functions for each packet type.
+B) Lots of code.  Structs and marshalling/unmarshalling functions for
+each packet type.
 C) Relatively difficult to deal with optional fields. (Need flags in
 struct to indicate if a field was set/unset.)
 D) Relatively difficult to deal with variable length fields. (Need len
@@ -341,25 +342,29 @@ C) Easier to deal with optional fields (just don't set a field).
 D) Easier to deal with variable length fields (set whatever length you want).
 E) Templates describe the packets exactly.
 F) Easy to do large packet dumps (fields and values easily output and identified).
+G) Significantly reduce the amount of marshalling/unmarshalling functions needed.
 
 Cons:
 
-A) Need to learn an API.
+A) Need to learn/use an API.
 B) Pretty inefficient (lots of string comparisons).
-C) Lots of code.  Templates and functions for each packet type.
+C) Lots of code templates.
 
 The authors acknowledge that the fiid interface is far less efficient
 than the traditional methods and may annoy some.  However, some of
 the below are the big reasons why this was developed and chosen over
 traditional methods.
 
-A) The IPMI specification is very large and has no standards body for
-compliance.  Lack of IPMI compliance from vendors is a well known
-problem in the open-source community.  The templates have saved
-developers countless hours of tcpdump/hex/debugging time due to the
-easy method by which packets can be dumped with their fields and
-values identified.  It is very easy to find vendor IPMI compliance
-problems quickly.
+A) The IPMI specification is very large, so reducing code size weighed
+in as an important factor for the authors.  This allowed there to be
+fewer marshalling/unmarshalling functions and debug fuctions.
+
+B) Although IPMI has a specification, the lack of IPMI compliance from
+vendors is a well known problem in the open-source community.  The
+templates have saved developers countless hours of tcpdump debugging
+time due to the easy method by which packets can be dumped with their
+fields and values identified.  It is very easy to find vendor IPMI
+compliance problems quickly.
 
 Here's an example of a dump:
 
@@ -398,20 +403,13 @@ pwopr2: : IPMI Trailer:
 pwopr2: : --------------
 pwopr2: [              1Fh] = checksum2[ 8b]
 
-B) There are a large number of optional fields and variable length
-fields in the IPMI specification.  The traditional struct based
-marshalling/unmarshalling would have some issues in dealing with
-these.
-
-For example, in IPMI 2.0, the authentication code can be 0 bytes, 16
-bytes, or 20 bytes depending on the authentication mechanism chosen.
-The fiid API allows the programmers to get/set the optional and/or
-variable length values more easily.
+C) There are a relatively large number of optional fields and variable
+length fields in the IPMI specification.  The traditional struct based
+marshalling/unmarshalling has problems with handling these.
 
 It should be noted that in IPMI, many of the optional and/or variable
-length fields may be in the "middle" of group of data, rather than the
-end/trailer.  Therefore, the traditional struct method of dealing with
-a variable length method:
+length fields may not be in the "trailer" of a packet.  Therefore, a 
+traditional struct method of dealing with a variable length method:
 
 struct packet
 {
@@ -423,9 +421,5 @@ struct packet
 };
 
 cannot be used.
-
-C) Although a relatively equal amount of marshalling functions have to
-be done to marshall data before its sent, fewer unmarshalling
-functions need to be created.
 
 
