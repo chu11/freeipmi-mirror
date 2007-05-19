@@ -1,12 +1,12 @@
-FreeIPMI Codying
+FreeIPMI Coding
 
 by 
 
 Albert Chu
 chu11@llnl.gov
 
-These are some short instructions on coding style, API style, and
-explanations for some design decisions done in FreeIPMI.
+These are some short descriptions on coding style, API style, and some
+design decisions done in FreeIPMI's libraries and tools.
 
 1) Code Style
 -------------
@@ -89,8 +89,9 @@ Due to the size of the IPMI spec, there will be a lot of code.  In
 earlier versions of FreeIPMI, there was confusion on where code was
 located, what parameters were called, how parameters should be input,
 etc. due to different people using different abbreviations styles,
-putting functions out of order with the spec, etc.  The code has been
-auditted and cleaned up since then.
+putting functions out of order with the spec, in different files,
+using/not-using different bitmasks, etc.  The code has been auditted
+and cleaned up since then.
 
 So when adding new functions/templates/parameters/files/etc. to
 libfreeipmi, please name them consistently to the rest of the
@@ -157,7 +158,8 @@ int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          fiid_obj_t obj_cmd_rq);
 
 And the function above matches the naming and takes exactly the
-parameters needed by the get authentication capabilities request.
+parameters needed by the get authentication capabilities request
+template.
 
 The coding conditions specified above may lead to function names or
 function parameters names that will lead to the functions exceeding
@@ -204,7 +206,8 @@ what the parameters are if you are reading along with the spec.
 
 Because we want the code to match the IPMI spec as closely as
 possible, we currently accept the code inefficiencies (due to large
-stacks of parameters) that come with having long parameters lists.
+stacks of parameters) that come with having long parameters lists and
+the atrocities of having gigantic 25+ paramter function calls in code.
 
 5) Error tracing/syslogging macros
 ----------------------------------
@@ -238,10 +241,15 @@ The macros are located in header files in common/src.
 6) Fiid vs. other Marshalling/Unmarshalling Styles
 --------------------------------------------------
 
+To most that look at the FreeIPMI code, they may be surprised by the
+method by which we marshall/unmarshall IPMI packets and generally
+build packets.
+
 There are several classic methods for marshalling/unmarshalling data when
 using structs to represent a packet.
 
-Marshall/Unmarshall "manually":
+Method A: Marshall/Unmarshall "manually":
+-----------------------------------------
 
 struct packet
 {
@@ -281,7 +289,8 @@ D) Relatively difficult to deal with variable length fields. (Need len
 parameters in struct. to specify length.)
 E) Difficult to do large packet dumps (you only get hex).
 
-Cast a buffer to a packed struct:
+Method B: Cast a buffer to a packed struct:
+-------------------------------------------
 
 For Example:
 
@@ -315,7 +324,8 @@ C) No mechanism to deal with optional fields (how do you know if something is se
 D) No mechanism to deal with variable length fields (how do you know how long the field is?)
 E) Difficult to do large packet dumps (you only get hex).
 
-Fiid:
+Our Method C: Fiid:
+-------------------
 
 The "FreeIPMI Interface Definition" or 'fiid' API in libfreeipmi using
 a string_name/bit_count template and an API to get and set values in a
@@ -332,23 +342,34 @@ fiid_template_t tmpl_cmd_set_channel_security_keys_rs =
     {0, "", 0}
   };
 
+The following a few of the API functions used for FIID to give you an
+idea for the API style.
+
+fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
+int32_t fiid_obj_errnum(fiid_obj_t obj);
+int8_t fiid_obj_clear (fiid_obj_t obj);
+int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
+int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
+int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+
 The pros and cons of the fiid method are:
 
 Pros:
 
 A) No need to deal with endian problems (handled internally in API).
-B) No need to deal with struct packing issues (bit shifts handled internally in API).
+B) No need to deal with struct packing issues (bit shifts are handled internally in API).
 C) Easier to deal with optional fields (just don't set a field).
 D) Easier to deal with variable length fields (set whatever length you want).
 E) Templates describe the packets exactly.
 F) Easy to do large packet dumps (fields and values easily output and identified).
-G) Significantly reduce the amount of marshalling/unmarshalling functions needed.
+G) Significantly reduce the amount of marshalling/unmarshalling code needed.
 
 Cons:
 
-A) Need to learn/use an API.
+A) Need to learn/use a reasonably sized API.
 B) Pretty inefficient (lots of string comparisons).
-C) Lots of code templates.
+C) Lots of duplicate templates (relative inability to "inherit" structs).
 
 The authors acknowledge that the fiid interface is far less efficient
 than the traditional methods and may annoy some.  However, some of
@@ -357,7 +378,7 @@ traditional methods.
 
 A) The IPMI specification is very large, so reducing code size weighed
 in as an important factor for the authors.  This allowed there to be
-fewer marshalling/unmarshalling functions and debug fuctions.
+fewer marshalling/unmarshalling functions and debug output fuctions.
 
 B) Although IPMI has a specification, the lack of IPMI compliance from
 vendors is a well known problem in the open-source community.  The
@@ -421,5 +442,75 @@ struct packet
 };
 
 cannot be used.
+
+7) Bmc-Config/Ipmi-Pef callback design
+--------------------------------------
+
+Bmc-config and Ipmi-pef (henceforce just called Bmc-config) are coded
+with a archicture that reads/writes each configurable field in the BMC
+separately.  This architecture has some pros and cons.
+
+As an example, suppose we have the following BMC configuration file
+we'd like to commit.
+
+FieldA       Value1
+FieldB.1     Value2
+FieldB.2     Value3
+FieldB.3     Value4
+FieldB.4     Value5
+
+Suppose FieldA is read/written using a single IPMI packet and fields
+FieldB.1-FieldB.4 can be read/written using a single IPMI packet.
+
+In the architecture that Bmc-config is currently based on, the above
+would require 5 read requests to read all 5 values.  It would require
+4 read requests (for FieldB.1-FieldB.4) and 5 write requests to write
+the values.
+
+Obviously, this sounds like (and is!) very inefficient.  In addition,
+coding wise, it leads to a very large amount of code duplication.
+There are large amounts of very similar "get the old values, change
+1 specific value, write all the values back" code in Bmc-config.
+
+The authors acknowledge that the code is very inefficient.  However, here
+are some of the major reasons why this was done and is still kept.
+
+A) (This is the primary reason this architecture is still kept.)  Due
+to widely varying hardware and implementations, this handles the write
+configuration case best.  Suppose FieldB.2 is only configurable on
+IPMI 2.0 systems but not IPMI 1.5 systems.  Suppose (perhaps b/c it is
+optional in the IPMI specification) FieldB.3 is supported by some
+vendors but not other vendors.  Suppose FieldB.4 is simply not
+implemented correctly by the vendor (which has been a common problem
+that has to be dealt in the open-source community).
+
+This architecture allows the majority of the configuration to succeed
+on a specific platform, and allows the end user to know exactly what
+may or may not be configurable.  If all 4 fields of FieldB.1-FieldB.4
+were written at the same time, there is currently in the IPMI protocol
+no way to know what field was configured incorrectly and why.
+
+B) There are several (and possibly more future) vendor compliance
+problems that can be (or will need to be) worked around.  By using
+this architecture each specific field can be worked around
+independetly depending on the vendor.
+
+C) Admittedly, much is this is still done this way for legacy reasons.
+'FieldA' type fields were a more common case in the beginning of
+FreeIPMI's implementation, which (to some extent) is why this
+architecture was initially selected.
+
+The major deficiencies that we see are:
+
+D) Slow reads/writes due to an excess of IPMI traffic needed.  The
+read case can be sped up since it is not affected by problem 'A'
+above.  However, at this point in time, the inefficiencies of 'A' will
+likely be kept in favor of its ability to handle the generic write
+case.
+
+
+
+
+   
 
 

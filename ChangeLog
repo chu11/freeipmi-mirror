@@ -1,3 +1,8 @@
+2007-05-19  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt: Talk about bmc-config and ipmi-pef
+	design considerations.
+	
 2007-05-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-pef/: Fix incorrect naming of "policy number" for "entry
