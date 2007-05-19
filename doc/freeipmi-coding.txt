@@ -443,12 +443,13 @@ struct packet
 
 cannot be used.
 
-7) Bmc-Config/Ipmi-Pef callback design
---------------------------------------
+7) Bmc-Config/Pef-Config callback design
+----------------------------------------
 
-Bmc-config and Ipmi-pef (henceforce just called Bmc-config) are coded
-with a archicture that reads/writes each configurable field in the BMC
-separately.  This architecture has some pros and cons.
+Bmc-config and pef-config (henceforce both are refered to just
+Bmc-config) are coded with a archicture that reads/writes each
+configurable field in the BMC separately.  This architecture has some
+pros and cons.
 
 As an example, suppose we have the following BMC configuration file
 we'd like to commit.

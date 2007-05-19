@@ -31,9 +31,9 @@ management:
 move ftp server?
 move webpage?
 
-ipmi-pef
+pef-config
 --------
-* ipmi-pef renamed to pef-config
+* pef-config renamed to pef-config
 * .8 manpage and conf.5 manpage
 * how to deal with channel number for alert policy table
 * alert strings
@@ -41,7 +41,7 @@ ipmi-pef
   - better input for most of event filter section
 * pef alert strings
 
-bmc-config/ipmi-pef
+bmc-config/pef-config
 -------------------
 better parsing/caching for faster commit/checkout
 mem-leaks from strdups, is this ever freed?
@@ -59,11 +59,11 @@ code cleanup
 param->parameter everywyhere 
 - after ipmi-chassis committed
 merge in freeipmi-udm
-- after ipmi-chassis, ipmi-fru, and ipmi-pef committed
+- after ipmi-chassis, ipmi-fru, and pef-config committed
 - for 0.4.0 or 0.5.0?
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for SDR options in manpages
-common stuff for parsing in bmc-config and ipmi-pef
+common stuff for parsing in bmc-config and pef-config
 add header comments to fiid.h
