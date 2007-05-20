@@ -1,3 +1,18 @@
+2007-05-20  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt: Update.
+
+	* pef-config/src/pef-config-alert-policy-table.c
+	(pef_config_alert_policy_table_section_get): Add lan channel
+	number to help for channel number.
+
+	* pef-config/src/pef-config-alert-policy-table.c: Fix diff
+	callback bugs.
+
+	* REDESIGN: Add notes for future.
+
+	* pef-config/: Add Alert String support.
+
 2007-05-19  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Talk about bmc-config and ipmi-pef

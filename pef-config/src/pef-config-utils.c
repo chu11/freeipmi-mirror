@@ -102,6 +102,53 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
 }
 
 pef_err_t
+get_number_of_alert_strings (struct pef_config_state_data *state_data, int8_t *number_of_alert_strings)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  
+  assert(state_data);
+  assert(number_of_alert_strings);
+
+  if (state_data->number_of_alert_strings_initialized)
+    {
+      *number_of_alert_strings = state_data->number_of_alert_strings;
+      return PEF_ERR_SUCCESS;
+    }
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->dev, 
+										IPMI_GET_PEF_PARAMETER, 
+										SET_SELECTOR, 
+										BLOCK_SELECTOR, 
+										obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get(obj_cmd_rs,
+                   "number_of_alert_strings",
+                   &val) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  state_data->number_of_alert_strings_initialized = 1;
+  state_data->number_of_alert_strings = val;
+
+  *number_of_alert_strings = state_data->number_of_alert_strings;
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
 get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, int8_t *number_of_alert_policy_entries)
 {
   fiid_obj_t obj_cmd_rs = NULL;

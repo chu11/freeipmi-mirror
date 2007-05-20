@@ -15,9 +15,10 @@
 #include "pef-config-sections.h"
 #include "pef-config-utils.h"
 
-#include "pef-config-pef-conf-section.h"
 #include "pef-config-community-string.h"
 #include "pef-config-lan-alert-destination.h"
+#include "pef-config-pef-conf-section.h"
+#include "pef-config-alert-string.h"
 #include "pef-config-alert-policy-table.h"
 #include "pef-config-event-filter-table.h"
 
@@ -46,6 +47,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
   struct section *sections = NULL;
   struct section *sect = NULL;
   int8_t number_of_lan_alert_destinations,
+    number_of_alert_strings,
     number_of_alert_policy_entries,
     number_of_event_filters;
   int i;
@@ -65,6 +67,14 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
         fprintf (stderr, "## FATAL: Unable to get Number of Alert Policy Entries\n");
       return NULL;
     }
+
+  if (get_number_of_alert_strings(state_data,
+                                  &number_of_alert_strings) != PEF_ERR_SUCCESS)
+    {
+      if (state_data->prog_data->args->verbose)
+        fprintf (stderr, "## FATAL: Unable to get Number of Alert Strings\n");
+      return NULL;
+    }
   
   if (get_number_of_event_filters(state_data, 
                                   &number_of_event_filters) != PEF_ERR_SUCCESS)
@@ -74,11 +84,6 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
       return NULL;
     }
 
-  if (!(sect = pef_config_pef_conf_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
   if (!(sect = pef_config_community_string_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
@@ -87,6 +92,19 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
   for (i = 0; i < number_of_lan_alert_destinations; i++)
     {
       if (!(sect = pef_config_lan_alert_destination_section_get(state_data, i+1)))
+	goto cleanup;
+      if (_add_section (&sections, sect) < 0)
+	goto cleanup;
+    }
+
+  if (!(sect = pef_config_pef_conf_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
+
+  for (i = 0; i < number_of_alert_strings; i++)
+    {
+      if (!(sect = pef_config_alert_string_section_get(state_data, i+1)))
 	goto cleanup;
       if (_add_section (&sections, sect) < 0)
 	goto cleanup;

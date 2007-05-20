@@ -34,12 +34,12 @@ destination_type_get (pef_config_state_data_t *state_data,
   uint8_t tmp_alert_retries;
   pef_err_t ret;
 
-  if ((ret = get_bmc_lan_conf_destination_type (state_data,
-                                                destination_selector,
-                                                &tmp_alert_destination_type,
-                                                &tmp_alert_acknowledge,
-                                                &tmp_alert_acknowledge_timeout,
-                                                &tmp_alert_retries)) != PEF_ERR_SUCCESS)
+  if ((ret = get_bmc_destination_type (state_data,
+                                       destination_selector,
+                                       &tmp_alert_destination_type,
+                                       &tmp_alert_acknowledge,
+                                       &tmp_alert_acknowledge_timeout,
+                                       &tmp_alert_retries)) != PEF_ERR_SUCCESS)
     return ret;
 
   if (alert_destination_type)
@@ -72,12 +72,12 @@ destination_type_set (pef_config_state_data_t *state_data,
   uint8_t tmp_alert_retries;
   pef_err_t ret;
 
-  if ((ret = get_bmc_lan_conf_destination_type(state_data,
-                                               destination_selector,
-                                               &tmp_alert_destination_type,
-                                               &tmp_alert_acknowledge,
-                                               &tmp_alert_acknowledge_timeout,
-                                               &tmp_alert_retries)) != PEF_ERR_SUCCESS)
+  if ((ret = get_bmc_destination_type(state_data,
+                                      destination_selector,
+                                      &tmp_alert_destination_type,
+                                      &tmp_alert_acknowledge,
+                                      &tmp_alert_acknowledge_timeout,
+                                      &tmp_alert_retries)) != PEF_ERR_SUCCESS)
     return ret;
   
   if (alert_destination_type_is_set)
@@ -89,12 +89,12 @@ destination_type_set (pef_config_state_data_t *state_data,
   if (alert_retries_is_set)
     tmp_alert_retries = alert_retries;
 
-  if ((ret = set_bmc_lan_conf_destination_type(state_data,
-                                               destination_selector,
-                                               tmp_alert_destination_type,
-                                               tmp_alert_acknowledge,
-                                               tmp_alert_acknowledge_timeout,
-                                               tmp_alert_retries)) != PEF_ERR_SUCCESS)
+  if ((ret = set_bmc_destination_type(state_data,
+                                      destination_selector,
+                                      tmp_alert_destination_type,
+                                      tmp_alert_acknowledge,
+                                      tmp_alert_acknowledge_timeout,
+                                      tmp_alert_retries)) != PEF_ERR_SUCCESS)
     return ret;
 
   return PEF_ERR_SUCCESS;
@@ -608,13 +608,13 @@ destination_addresses_get (pef_config_state_data_t *state_data,
   memset(tmp_ip, '\0', PEF_CONFIG_MAXIPADDRLEN + 1);
   memset(tmp_mac, '\0', PEF_CONFIG_MAXMACADDRLEN+1);
 
-  if ((ret = get_bmc_lan_conf_destination_addresses (state_data,
-                                                     destination_selector,
-                                                     &tmp_alert_gateway,
-                                                     tmp_ip,
-                                                     PEF_CONFIG_MAXIPADDRLEN + 1,
-                                                     tmp_mac,
-                                                     PEF_CONFIG_MAXMACADDRLEN+1)) != PEF_ERR_SUCCESS)
+  if ((ret = get_bmc_destination_addresses (state_data,
+                                            destination_selector,
+                                            &tmp_alert_gateway,
+                                            tmp_ip,
+                                            PEF_CONFIG_MAXIPADDRLEN + 1,
+                                            tmp_mac,
+                                            PEF_CONFIG_MAXMACADDRLEN+1)) != PEF_ERR_SUCCESS)
     return ret;
   
   if (alert_gateway)
@@ -660,13 +660,13 @@ destination_addresses_set (pef_config_state_data_t *state_data,
   tmp_ip_ptr = tmp_ip;
   tmp_mac_ptr = tmp_mac;
 
-  if ((ret = get_bmc_lan_conf_destination_addresses (state_data,
-                                                     destination_selector,
-                                                     &tmp_alert_gateway,
-                                                     tmp_ip_ptr,
-                                                     PEF_CONFIG_MAXIPADDRLEN+1,
-                                                     tmp_mac_ptr,
-                                                     PEF_CONFIG_MAXMACADDRLEN+1)) != PEF_ERR_SUCCESS)
+  if ((ret = get_bmc_destination_addresses (state_data,
+                                            destination_selector,
+                                            &tmp_alert_gateway,
+                                            tmp_ip_ptr,
+                                            PEF_CONFIG_MAXIPADDRLEN+1,
+                                            tmp_mac_ptr,
+                                            PEF_CONFIG_MAXMACADDRLEN+1)) != PEF_ERR_SUCCESS)
     return ret;
   
   if (alert_gateway_is_set)
@@ -676,11 +676,11 @@ destination_addresses_set (pef_config_state_data_t *state_data,
   if (alert_mac_address && alert_mac_address_is_set)
     tmp_mac_ptr = alert_mac_address;
 
-  if ((ret = set_bmc_lan_conf_destination_addresses(state_data,
-                                                    destination_selector,
-                                                    tmp_alert_gateway,
-                                                    tmp_ip_ptr,
-                                                    tmp_mac_ptr)) != PEF_ERR_SUCCESS)
+  if ((ret = set_bmc_destination_addresses(state_data,
+                                           destination_selector,
+                                           tmp_alert_gateway,
+                                           tmp_ip_ptr,
+                                           tmp_mac_ptr)) != PEF_ERR_SUCCESS)
     return ret;
 
   return PEF_ERR_SUCCESS;

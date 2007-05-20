@@ -41,40 +41,59 @@ pef_err_t set_pef_alert_startup_delay (pef_config_state_data_t *state_data,
 pef_err_t get_pef_alert_startup_delay (pef_config_state_data_t *state_data,
                                        uint8_t *pef_alert_startup_delay);
 
-pef_err_t get_bmc_lan_conf_community_string (pef_config_state_data_t *state_data,
-                                             uint8_t *community_string,
-                                             uint32_t community_string_len);
+pef_err_t get_pef_alert_string_keys (pef_config_state_data_t *state_data,
+                                     uint8_t string_selector,
+                                     uint8_t *event_filter_number,
+                                     uint8_t *alert_string_set);
+     
+pef_err_t set_pef_alert_string_keys (pef_config_state_data_t *state_data,
+                                     uint8_t string_selector,
+                                     uint8_t event_filter_number,
+                                     uint8_t alert_string_set);
 
-pef_err_t set_bmc_lan_conf_community_string (pef_config_state_data_t *state_data,
-                                             uint8_t *community_string);
+pef_err_t get_pef_alert_string (pef_config_state_data_t *state_data,
+                                uint8_t string_selector,
+                                uint8_t *alert_string,
+                                uint32_t alert_string_len);
 
-pef_err_t get_bmc_lan_conf_destination_type(pef_config_state_data_t *state_data,
-                                            uint8_t destination_selector,
-                                            uint8_t *alert_destination_type,
-                                            uint8_t *alert_acknowledge,
-                                            uint8_t *alert_acknowledge_timeout,
-                                            uint8_t *alert_retries);
+pef_err_t set_pef_alert_string (pef_config_state_data_t *state_data,
+                                uint8_t string_selector,
+                                uint8_t *alert_string);
+     
+pef_err_t get_bmc_community_string (pef_config_state_data_t *state_data,
+                                    uint8_t *community_string,
+                                    uint32_t community_string_len);
 
-pef_err_t set_bmc_lan_conf_destination_type(pef_config_state_data_t *state_data,
-                                            uint8_t destination_selector,
-                                            uint8_t alert_destination_type,
-                                            uint8_t alert_acknowledge,
-                                            uint8_t alert_acknowledge_timeout,
-                                            uint8_t alert_retries);
+pef_err_t set_bmc_community_string (pef_config_state_data_t *state_data,
+                                    uint8_t *community_string);
 
-pef_err_t get_bmc_lan_conf_destination_addresses(pef_config_state_data_t *state_data,
-                                                 uint8_t destination_selector,
-                                                 uint8_t *alert_gateway,
-                                                 char *alert_ip_address,
-                                                 unsigned int alert_ip_address_len,
-                                                 char *alert_mac_address,
-                                                 unsigned int alert_mac_address_len);
+pef_err_t get_bmc_destination_type(pef_config_state_data_t *state_data,
+                                   uint8_t destination_selector,
+                                   uint8_t *alert_destination_type,
+                                   uint8_t *alert_acknowledge,
+                                   uint8_t *alert_acknowledge_timeout,
+                                   uint8_t *alert_retries);
 
-pef_err_t set_bmc_lan_conf_destination_addresses(pef_config_state_data_t *state_data,
-                                                 uint8_t destination_selector,
-                                                 uint8_t alert_gateway,
-                                                 char *alert_ip_address,
-                                                 char *alert_mac_address);
+pef_err_t set_bmc_destination_type(pef_config_state_data_t *state_data,
+                                   uint8_t destination_selector,
+                                   uint8_t alert_destination_type,
+                                   uint8_t alert_acknowledge,
+                                   uint8_t alert_acknowledge_timeout,
+                                   uint8_t alert_retries);
+
+pef_err_t get_bmc_destination_addresses(pef_config_state_data_t *state_data,
+                                        uint8_t destination_selector,
+                                        uint8_t *alert_gateway,
+                                        char *alert_ip_address,
+                                        unsigned int alert_ip_address_len,
+                                        char *alert_mac_address,
+                                        unsigned int alert_mac_address_len);
+
+pef_err_t set_bmc_destination_addresses(pef_config_state_data_t *state_data,
+                                        uint8_t destination_selector,
+                                        uint8_t alert_gateway,
+                                        char *alert_ip_address,
+                                        char *alert_mac_address);
 
 pef_err_t get_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data, 
                                                uint8_t alert_policy_entry_number,

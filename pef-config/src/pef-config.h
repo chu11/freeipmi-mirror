@@ -110,6 +110,8 @@ typedef struct pef_config_state_data
   int8_t lan_channel_number;
   int number_of_lan_alert_destinations_initialized;
   int8_t number_of_lan_alert_destinations;
+  int number_of_alert_strings_initialized;
+  int8_t number_of_alert_strings;
   int number_of_alert_policy_entries_initialized;
   int8_t number_of_alert_policy_entries;
   int number_of_event_filters_initialized;

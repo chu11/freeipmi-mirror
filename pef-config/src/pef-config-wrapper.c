@@ -330,9 +330,202 @@ set_pef_alert_startup_delay (pef_config_state_data_t *state_data,
 }
 
 pef_err_t
-get_bmc_lan_conf_community_string (pef_config_state_data_t *state_data,
-                                   uint8_t *community_string,
-                                   uint32_t community_string_len)
+get_pef_alert_string_keys (pef_config_state_data_t *state_data,
+                           uint8_t string_selector,
+                           uint8_t *event_filter_number,
+                           uint8_t *alert_string_set)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val = 0;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (state_data->dev,
+                                                                   IPMI_GET_PEF_PARAMETER,
+                                                                   string_selector,
+                                                                   BLOCK_SELECTOR,
+                                                                   obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "filter_number", &val) < 0)
+    goto cleanup;
+  *event_filter_number = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "set_number_for_string", &val) < 0)
+    goto cleanup;
+  *alert_string_set = val;
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+set_pef_alert_string_keys (pef_config_state_data_t *state_data,
+                           uint8_t string_selector,
+                           uint8_t event_filter_number,
+                           uint8_t alert_string_set)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (state_data->dev,
+                                                                   string_selector,
+                                                                   event_filter_number,
+                                                                   alert_string_set,
+                                                                   obj_cmd_rs) < 0)
+    {
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+get_pef_alert_string (pef_config_state_data_t *state_data,
+                      uint8_t string_selector,
+                      uint8_t *alert_string,
+                      uint32_t alert_string_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  int blocks;
+  int i;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs)))
+    goto cleanup;
+
+  memset(alert_string, '\0', alert_string_len);
+
+  if (!((alert_string_len - 1) % 16))
+    blocks = (alert_string_len - 1)/16;
+  else
+    blocks = (alert_string_len - 1)/16 + 1;
+
+  for (i = 0; i < blocks; i++)
+    {
+      fiid_obj_clear(obj_cmd_rs);
+      int j;
+
+      if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->dev,
+                                                                  IPMI_GET_PEF_PARAMETER,
+                                                                  string_selector,
+                                                                  i + 1,
+                                                                  obj_cmd_rs) < 0)
+        {
+          rv = PEF_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
+      
+      /* XXX: Be lazy for now, assume no strings will overflow
+       * whatever is passed in, so don't check for overflow errors
+       * from fiid_obj_get_data.
+       */
+      if (fiid_obj_get_data (obj_cmd_rs,
+                             "string_data",
+                             alert_string + (i * 16),
+                             (alert_string_len - 1) - (i * 16)) < 0)
+        goto cleanup;
+
+      /* Check if we've found a nul character */
+      for (j = 0; j < 16; j++)
+        {
+          if (!((alert_string + (i * 16))[j]))
+            goto done;
+        }
+    }
+
+ done:
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+set_pef_alert_string (pef_config_state_data_t *state_data,
+                      uint8_t string_selector,
+                      uint8_t *alert_string)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  uint8_t *alert_string_buf = NULL;
+  int alert_string_len = 0;
+  int alert_string_buf_len = 0;
+  int blocks;
+  int i;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    goto cleanup;
+  
+  if (alert_string)
+    alert_string_len = strlen(alert_string);
+
+  /* We need to write a nul char, so count it as part of the buflen */
+  alert_string_buf_len = alert_string_len + 1;
+  
+  if (!(alert_string_buf = (uint8_t *)malloc(alert_string_buf_len)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+  memset(alert_string_buf, '\0', alert_string_buf_len);
+
+  if (!((alert_string_buf_len) % 16))
+    blocks = (alert_string_buf_len)/16;
+  else
+    blocks = (alert_string_buf_len)/16 + 1;
+
+  for (i = 0; i < blocks; i++)
+    {
+      uint8_t len_to_write;
+
+      if ((alert_string_buf_len - (i * 16)) < 16)
+        len_to_write = alert_string_buf_len - (i * 16);
+      else
+        len_to_write = 16;
+
+      if (ipmi_cmd_set_pef_configuration_parameters_alert_strings (state_data->dev,
+                                                                   string_selector,
+                                                                   i+1,
+                                                                   alert_string_buf + (i * 16),
+                                                                   len_to_write,
+                                                                   obj_cmd_rs) < 0)
+        {
+          rv = PEF_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
+    }
+
+  rv = PEF_ERR_SUCCESS;
+ cleanup:
+  if (alert_string_buf)
+    free(alert_string_buf);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+pef_err_t
+get_bmc_community_string (pef_config_state_data_t *state_data,
+                          uint8_t *community_string,
+                          uint32_t community_string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
@@ -373,8 +566,8 @@ get_bmc_lan_conf_community_string (pef_config_state_data_t *state_data,
 }
 
 pef_err_t
-set_bmc_lan_conf_community_string (pef_config_state_data_t *state_data,
-                                   uint8_t *community_string)
+set_bmc_community_string (pef_config_state_data_t *state_data,
+                          uint8_t *community_string)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
@@ -408,12 +601,12 @@ set_bmc_lan_conf_community_string (pef_config_state_data_t *state_data,
 }
 
 pef_err_t
-get_bmc_lan_conf_destination_type(pef_config_state_data_t *state_data,
-                                  uint8_t destination_selector,
-                                  uint8_t *alert_destination_type,
-                                  uint8_t *alert_acknowledge,
-                                  uint8_t *alert_acknowledge_timeout,
-                                  uint8_t *alert_retries)
+get_bmc_destination_type(pef_config_state_data_t *state_data,
+                         uint8_t destination_selector,
+                         uint8_t *alert_destination_type,
+                         uint8_t *alert_acknowledge,
+                         uint8_t *alert_acknowledge_timeout,
+                         uint8_t *alert_retries)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -468,12 +661,12 @@ get_bmc_lan_conf_destination_type(pef_config_state_data_t *state_data,
 }
 
 pef_err_t
-set_bmc_lan_conf_destination_type(pef_config_state_data_t *state_data,
-                                  uint8_t destination_selector,
-                                  uint8_t alert_destination_type,
-                                  uint8_t alert_acknowledge,
-                                  uint8_t alert_acknowledge_timeout,
-                                  uint8_t alert_retries)
+set_bmc_destination_type(pef_config_state_data_t *state_data,
+                         uint8_t destination_selector,
+                         uint8_t alert_destination_type,
+                         uint8_t alert_acknowledge,
+                         uint8_t alert_acknowledge_timeout,
+                         uint8_t alert_retries)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
@@ -513,13 +706,13 @@ set_bmc_lan_conf_destination_type(pef_config_state_data_t *state_data,
 }
 
 pef_err_t
-get_bmc_lan_conf_destination_addresses(pef_config_state_data_t *state_data,
-                                       uint8_t destination_selector,
-                                       uint8_t *alert_gateway,
-                                       char *alert_ip_address,
-                                       unsigned int alert_ip_address_len,
-                                       char *alert_mac_address,
-                                       unsigned int alert_mac_address_len)
+get_bmc_destination_addresses(pef_config_state_data_t *state_data,
+                              uint8_t destination_selector,
+                              uint8_t *alert_gateway,
+                              char *alert_ip_address,
+                              unsigned int alert_ip_address_len,
+                              char *alert_mac_address,
+                              unsigned int alert_mac_address_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -602,11 +795,11 @@ get_bmc_lan_conf_destination_addresses(pef_config_state_data_t *state_data,
 }
 
 pef_err_t
-set_bmc_lan_conf_destination_addresses(pef_config_state_data_t *state_data,
-                                       uint8_t destination_selector,
-                                       uint8_t alert_gateway,
-                                       char *alert_ip_address,
-                                       char *alert_mac_address)
+set_bmc_destination_addresses(pef_config_state_data_t *state_data,
+                              uint8_t destination_selector,
+                              uint8_t alert_gateway,
+                              char *alert_ip_address,
+                              char *alert_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t alert_ip_address_val = 0;

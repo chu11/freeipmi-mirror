@@ -1357,7 +1357,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
 
   if (pef_config_section_add_keyvalue (state_data,
                                        pef_section,
-                                       "PEF_Startup_Delay",
+                                       "Startup_Delay",
                                        "Give value in seconds",
                                        0,
                                        pef_startup_delay_checkout,
@@ -1368,7 +1368,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
 
   if (pef_config_section_add_keyvalue (state_data,
                                        pef_section,
-                                       "PEF_Alert_Startup_Delay",
+                                       "Alert_Startup_Delay",
                                        "Give value in seconds",
                                        0,
                                        pef_alert_startup_delay_checkout,

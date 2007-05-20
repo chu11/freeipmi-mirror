@@ -505,6 +505,7 @@ policy_number_diff (pef_config_state_data_t *state_data,
     {
       char num[32];
       ret = PEF_DIFF_DIFFERENT;
+      sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -631,6 +632,7 @@ destination_selector_diff (pef_config_state_data_t *state_data,
     {
       char num[32];
       ret = PEF_DIFF_DIFFERENT;
+      sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -757,6 +759,7 @@ channel_number_diff (pef_config_state_data_t *state_data,
     {
       char num[32];
       ret = PEF_DIFF_DIFFERENT;
+      sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -883,6 +886,7 @@ alert_string_set_selector_diff (pef_config_state_data_t *state_data,
     {
       char num[32];
       ret = PEF_DIFF_DIFFERENT;
+      sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -1028,6 +1032,9 @@ struct section *
 pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, int num)
 {
   struct section *sect = NULL;
+  int8_t lan_channel_number;
+  char *strp = NULL;
+  pef_err_t ret;
   char buf[64];
 
   if (num <= 0)
@@ -1085,10 +1092,19 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        number_range_four_bits) < 0) 
     goto cleanup;
 
+  /* XXX: This will mem-leak.  Deal with this when
+   * bmc-config/pef-config are re-designed with a new architecture
+   */
+  ret = get_lan_channel_number (state_data, &lan_channel_number);
+  if (ret == PEF_ERR_SUCCESS)
+    asprintf(&strp, "Give a valid number (LAN = %d)", lan_channel_number);
+  if (!strp)
+    strp = "Give a valid number\n";
+
   if (pef_config_section_add_keyvalue (state_data,
                                        sect,
                                        "Channel_Number",
-                                       "Give a valid number",
+                                       strp,
                                        0,
                                        channel_number_checkout,
                                        channel_number_commit,
