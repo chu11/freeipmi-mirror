@@ -1,3 +1,8 @@
+2007-05-21  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/src/pef-config-sections.c
+	(pef_config_sections_list_create): Re-order sections.
+	
 2007-05-20  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Update.

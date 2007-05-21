@@ -5,9 +5,9 @@ pef_config_SOURCES = \
 	pef-config-argp.c \
 	pef-config-checkout.c \
 	pef-config-commit.c \
+	pef-config-pef-conf-section.c \
 	pef-config-community-string.c \
 	pef-config-lan-alert-destination.c \
-	pef-config-pef-conf-section.c \
 	pef-config-alert-string.c \
 	pef-config-alert-policy-table.c \
 	pef-config-event-filter-table.c \
@@ -33,9 +33,9 @@ noinst_HEADERS = \
 	pef-config-checkout.h \
 	pef-config-commit.h \
 	pef-config-common.h \
+	pef-config-pef-conf-section.h \
 	pef-config-community-string.h \
 	pef-config-lan-alert-destination.h \
-	pef-config-pef-conf-section.h \
 	pef-config-alert-string.h \
 	pef-config-alert-policy-table.h \
 	pef-config-event-filter-table.h \

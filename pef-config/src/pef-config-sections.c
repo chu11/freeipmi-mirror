@@ -15,9 +15,9 @@
 #include "pef-config-sections.h"
 #include "pef-config-utils.h"
 
+#include "pef-config-pef-conf-section.h"
 #include "pef-config-community-string.h"
 #include "pef-config-lan-alert-destination.h"
-#include "pef-config-pef-conf-section.h"
 #include "pef-config-alert-string.h"
 #include "pef-config-alert-policy-table.h"
 #include "pef-config-event-filter-table.h"
@@ -84,6 +84,11 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
       return NULL;
     }
 
+  if (!(sect = pef_config_pef_conf_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, sect) < 0)
+    goto cleanup;
+
   if (!(sect = pef_config_community_string_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
@@ -96,11 +101,6 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
       if (_add_section (&sections, sect) < 0)
 	goto cleanup;
     }
-
-  if (!(sect = pef_config_pef_conf_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
 
   for (i = 0; i < number_of_alert_strings; i++)
     {
