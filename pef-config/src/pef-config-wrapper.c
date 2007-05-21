@@ -487,6 +487,9 @@ set_pef_alert_string (pef_config_state_data_t *state_data,
     }
   memset(alert_string_buf, '\0', alert_string_buf_len);
 
+  if (alert_string && alert_string_len)
+    memcpy(alert_string_buf, alert_string, alert_string_len);
+
   if (!((alert_string_buf_len) % 16))
     blocks = (alert_string_buf_len)/16;
   else
