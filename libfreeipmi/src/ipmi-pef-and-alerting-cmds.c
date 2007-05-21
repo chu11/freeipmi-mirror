@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.19 2007-05-18 18:21:32 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.20 2007-05-21 23:36:55 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -222,9 +222,9 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_alert_policy_table_rq 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "parameter_selector.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {7, "alert_policy_entry_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "alert_policy_entry_number.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3, "policy_number.policy_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "policy_number.enabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "policy_number.policy_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -841,7 +841,9 @@ fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_poli
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_ALERT_POLICY_TABLE);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "alert_policy_entry_number", alert_policy_entry_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET (obj_cmd_rq, "policy_number.policy_type", policy_type);
   FIID_OBJ_SET (obj_cmd_rq, "policy_number.enabled", policy_enabled);
   FIID_OBJ_SET (obj_cmd_rq, "policy_number.policy_number", policy_number);

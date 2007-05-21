@@ -4,6 +4,11 @@
 	(pef_config_sections_list_create): Re-order sections.
 
 	* pef-config/: Various minor bug fixes.
+
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c
+	(tmpl_cmd_set_pef_configuration_alert_policy_table_rq,
+	fill_cmd_set_pef_configuration_parameter_alert_policy_table): Fix
+	fill bugs.
 	
 2007-05-20  Albert Chu <chu11@llnl.gov>
 
