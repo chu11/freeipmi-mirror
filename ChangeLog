@@ -2,6 +2,8 @@
 
 	* pef-config/src/pef-config-sections.c
 	(pef_config_sections_list_create): Re-order sections.
+
+	* pef-config/: Various minor bug fixes.
 	
 2007-05-20  Albert Chu <chu11@llnl.gov>
 

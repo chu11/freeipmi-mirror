@@ -33,18 +33,15 @@ move webpage?
 
 pef-config
 --------
-* pef-config renamed to pef-config
-* .8 manpage and conf.5 manpage
-* how to deal with channel number for alert policy table
-* alert strings
+* conf.5 manpage
 * how to specify event reading type codes
-  - better input for most of event filter section
 
 bmc-config/pef-config
 -------------------
 better parsing/caching for faster commit/checkout
 mem-leaks from strdups, is this ever freed?
 get functions - too much duplication, can be condensed - need to re-architect in some way
+poor use of atoi/strtoul
 
 general
 -------

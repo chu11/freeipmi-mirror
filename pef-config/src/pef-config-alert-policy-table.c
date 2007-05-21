@@ -120,7 +120,7 @@ alert_policy_set (pef_config_state_data_t *state_data,
     tmp_event_specific_alert_string = event_specific_alert_string;
 
   if ((ret = set_bmc_pef_conf_alert_policy_table (state_data,
-                                                  destination_selector,
+                                                  alert_policy_entry_number,
                                                   policy_type,
                                                   policy_enabled,
                                                   policy_number,

@@ -1660,7 +1660,8 @@ generator_id_byte_1_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.generator_id_byte_1 = atoi (kv->value);
+  eft.generator_id_byte_1 = strtol(kv->value, NULL, 0);
+  
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1700,7 +1701,7 @@ generator_id_byte_1_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.generator_id_byte_1)
     ret = PEF_DIFF_SAME;
@@ -1777,7 +1778,7 @@ generator_id_byte_2_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.generator_id_byte_2 = atoi (kv->value);
+  eft.generator_id_byte_2 = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1817,7 +1818,7 @@ generator_id_byte_2_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.generator_id_byte_2)
     ret = PEF_DIFF_SAME;
@@ -1894,7 +1895,7 @@ sensor_type_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.sensor_type = atoi (kv->value);
+  eft.sensor_type = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1934,7 +1935,7 @@ sensor_type_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.sensor_type)
     ret = PEF_DIFF_SAME;
@@ -2011,7 +2012,7 @@ sensor_number_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.sensor_number = atoi (kv->value);
+  eft.sensor_number = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2051,7 +2052,7 @@ sensor_number_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.sensor_number)
     ret = PEF_DIFF_SAME;
@@ -2128,7 +2129,7 @@ event_trigger_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_trigger = atoi (kv->value);
+  eft.event_trigger = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2168,7 +2169,7 @@ event_trigger_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_trigger)
     ret = PEF_DIFF_SAME;
@@ -2245,7 +2246,7 @@ event_data1_offset_mask_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_offset_mask = atoi (kv->value);
+  eft.event_data1_offset_mask = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2285,7 +2286,7 @@ event_data1_offset_mask_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data1_offset_mask)
     ret = PEF_DIFF_SAME;
@@ -2362,7 +2363,7 @@ event_data1_and_mask_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_and_mask = atoi (kv->value);
+  eft.event_data1_and_mask = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2402,7 +2403,7 @@ event_data1_and_mask_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data1_and_mask)
     ret = PEF_DIFF_SAME;
@@ -2479,7 +2480,7 @@ event_data1_compare1_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_compare1 = atoi (kv->value);
+  eft.event_data1_compare1 = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2519,7 +2520,7 @@ event_data1_compare1_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data1_compare1)
     ret = PEF_DIFF_SAME;
@@ -2596,7 +2597,7 @@ event_data1_compare2_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_compare2 = atoi (kv->value);
+  eft.event_data1_compare2 = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2636,7 +2637,7 @@ event_data1_compare2_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data1_compare2)
     ret = PEF_DIFF_SAME;
@@ -2713,7 +2714,7 @@ event_data2_and_mask_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data2_and_mask = atoi (kv->value);
+  eft.event_data2_and_mask = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2753,7 +2754,7 @@ event_data2_and_mask_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data2_and_mask)
     ret = PEF_DIFF_SAME;
@@ -2830,7 +2831,7 @@ event_data2_compare1_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data2_compare1 = atoi (kv->value);
+  eft.event_data2_compare1 = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2870,7 +2871,7 @@ event_data2_compare1_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data2_compare1)
     ret = PEF_DIFF_SAME;
@@ -2947,7 +2948,7 @@ event_data2_compare2_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data2_compare2 = atoi (kv->value);
+  eft.event_data2_compare2 = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2987,7 +2988,7 @@ event_data2_compare2_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data2_compare2)
     ret = PEF_DIFF_SAME;
@@ -3064,7 +3065,7 @@ event_data3_and_mask_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data3_and_mask = atoi (kv->value);
+  eft.event_data3_and_mask = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -3104,7 +3105,7 @@ event_data3_and_mask_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data3_and_mask)
     ret = PEF_DIFF_SAME;
@@ -3181,7 +3182,7 @@ event_data3_compare1_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data3_compare1 = atoi (kv->value);
+  eft.event_data3_compare1 = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -3221,7 +3222,7 @@ event_data3_compare1_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data3_compare1)
     ret = PEF_DIFF_SAME;
@@ -3298,7 +3299,7 @@ event_data3_compare2_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.event_data3_compare2 = atoi (kv->value);
+  eft.event_data3_compare2 = strtol(kv->value, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -3338,7 +3339,7 @@ event_data3_compare2_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = strtol(kv->value, NULL, 0);
 
   if (passed_val == eft.event_data3_compare2)
     ret = PEF_DIFF_SAME;
