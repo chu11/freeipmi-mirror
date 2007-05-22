@@ -277,7 +277,7 @@ Channel Information:
 
 If you have happened to install pdsh on your system, you may use
 dshbak instead of the -B or -C option.  The -B and -C options were
-added since most users will probably not have pdsh installed.
+added since many users may have not installed pdsh.
 
 A whatsup-like tool and library have also been developed called
 ipmidetect.  It performs a similar functionality to whatsup, but
@@ -293,8 +293,7 @@ recent ipmipings received.
 detected:   6: pwopr[0-5]
 undetected: 1: pwopr6
 
-For example, we re-introduce the the bad 'pwopr6' node into the
-hostrange:
+For example, we re-introduce the bad 'pwopr6' node into the hostrange:
 
 > time ipmi-sensors -h "pwopr[0-6]" -u XXX -p YYY -s 10
 pwopr5: 10: CPU3 Vcore (Voltage): 1.25 V (1.04/1.65): [OK]
