@@ -1,12 +1,6 @@
 Release 0.4.0 (?)
 -----------------
 
-ipmi-pef 
-- Assignment: Bala
-- Tasks:
-  - Bmc-config like checkout/commit
-  - Commit check verification
-
 ipmi-chassis
 - Assignment: Ragha
 
@@ -15,9 +9,12 @@ ipmi-fru
 
 Release 0.5.0
 -------------
-ipmi-sdr
-- Assignment: Bala
 
-ipmi-device
-- Assignment: Avati
+libfreeipmi 
+- split lib
+- re-work return codes/error codes
+
+bmc-config/pef-config
+- re-work for faster checkout/commit
+
 
