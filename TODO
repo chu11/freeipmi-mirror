@@ -46,7 +46,6 @@ poor use of atoi/strtoul
 general
 -------
 timeout options for most FreeIPMI tools?
-ipmi 2.0 for all tools?
 sdr caching requires versioning
 tool for getting channel information - in ipmi-device tool for 0.5.0?
 
