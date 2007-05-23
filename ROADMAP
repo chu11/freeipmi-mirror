@@ -17,4 +17,6 @@ libfreeipmi
 bmc-config/pef-config
 - re-work for faster checkout/commit
 
+re-work UDM for advanced IPMI lan connection detection
+
 
