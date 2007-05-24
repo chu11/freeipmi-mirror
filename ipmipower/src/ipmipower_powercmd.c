@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.104 2007-05-05 23:04:03 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.105 2007-05-24 02:56:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1355,6 +1355,18 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
   obj_cipher_suite_record_header = Fiid_obj_create(tmpl_cipher_suite_record_header);
   obj_cipher_suite_record = Fiid_obj_create(tmpl_cipher_suite_record);
   obj_oem_cipher_suite_record = Fiid_obj_create(tmpl_oem_cipher_suite_record);
+
+
+  {
+    int i;
+    for (i = 0; i < ip->cipher_suite_record_data_bytes; i++)
+      {
+        if (i && i % 8 == 0)
+          printf("\n");
+        printf("%02X ", (uint8_t)ip->cipher_suite_record_data[i]);
+      }
+    printf("\n");
+  }
 
   while (bytes_parsed < ip->cipher_suite_record_data_bytes)
     {

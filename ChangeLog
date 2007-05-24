@@ -1,3 +1,14 @@
+2007-05-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Add 'endianbug' workaround for Sun machines.
+
+	* common/src/ipmi-sdr-cache.c (_get_sdr_sensor_record): Fix SDR
+	reservation bugs.
+
+	* common/src/ipmi-sdr-cache.c
+	(_get_sdr_generic_device_locator_record): Fix channel_number
+	reading bug.
+
 2007-05-22  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-hostrange.txt: Fix some typos.

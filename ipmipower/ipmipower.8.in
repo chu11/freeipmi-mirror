@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.69 2007-05-01 02:06:11 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.70 2007-05-24 02:56:57 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -608,6 +608,10 @@ advertise that Per Message Authentication is disabled, but actually
 require it for the protocol. Automatically handled by
 .B ipmipower,
 specific workaround does not need to be specified.  
+
+Sun Fire 4100: The session sequence numbers returned from the BMC are
+the wrong endian.  In order to work around this issue, the "endianseq"
+workaround must be specified.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

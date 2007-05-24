@@ -1113,6 +1113,7 @@ _get_sdr_generic_device_locator_record (sdr_cache_ctx_t ctx,
                                         int debug)
 {
   uint64_t val;
+  uint64_t tmp;
   fiid_obj_t obj = NULL;
   int rv = -1;
   int32_t len;
@@ -1141,8 +1142,12 @@ _get_sdr_generic_device_locator_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj, "direct_access_address", &val);
   sdr_generic_device_locator_record->direct_access_address = val;
   
-  _SDR_FIID_OBJ_GET (obj, "channel_number", &val);
-  sdr_generic_device_locator_record->channel_number = val;
+  tmp = 0;
+  _SDR_FIID_OBJ_GET (obj, "channel_number_ms", &val);
+  tmp = val << 4;
+  _SDR_FIID_OBJ_GET (obj, "channel_number_ls", &val);
+  tmp |= val;
+  sdr_generic_device_locator_record->channel_number = tmp;
   
   _SDR_FIID_OBJ_GET (obj, "device_slave_address", &val);
   sdr_generic_device_locator_record->device_slave_address = val;
@@ -1370,7 +1375,7 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
   int8_t rv = -1;
 
   fiid_obj_t record_header = NULL;
-  fiid_obj_t local_obj_cmd_rs = NULL;
+  fiid_obj_t obj_reserve_sdr_rs = NULL;
   int32_t record_header_len;
   uint8_t *record_header_buf = NULL;
 
@@ -1402,8 +1407,19 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
     }
   memset (record_header_buf, 0, record_header_len);
 
+  _SDR_FIID_OBJ_CREATE(obj_reserve_sdr_rs, tmpl_cmd_reserve_sdr_repository_rs);
+
+  if (ipmi_cmd_reserve_sdr_repository (dev, obj_reserve_sdr_rs) < 0)
+    {
+      ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
+      goto cleanup;
+    }
+  
+  _SDR_FIID_OBJ_GET (obj_reserve_sdr_rs, "reservation_id", &val);
+  reservation_id = (uint16_t) val;
+  
   if (ipmi_cmd_get_sdr (dev, 
-                        0,
+                        reservation_id,
                         record_id, 
                         0, 
                         record_header_len, 
@@ -1428,20 +1444,16 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
   record_length = val;
   record_length += record_header_len;
   
-  /* achu: where does the 16 come from? */
-  if (record_length > 16)
+  _SDR_FIID_OBJ_CLEAR(obj_reserve_sdr_rs);
+
+  if (ipmi_cmd_reserve_sdr_repository (dev, obj_reserve_sdr_rs) < 0)
     {
-      _SDR_FIID_OBJ_CREATE(local_obj_cmd_rs, tmpl_cmd_reserve_sdr_repository_rs);
-      
-      if (ipmi_cmd_reserve_sdr_repository (dev, local_obj_cmd_rs) < 0)
-        {
-          ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
-          goto cleanup;
-        }
-      
-      _SDR_FIID_OBJ_GET (local_obj_cmd_rs, "reservation_id", &val);
-      reservation_id = (uint16_t) val;
+      ctx->errnum = SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION;
+      goto cleanup;
     }
+  
+  _SDR_FIID_OBJ_GET (obj_reserve_sdr_rs, "reservation_id", &val);
+  reservation_id = (uint16_t) val;
   
   if (!(record_data = alloca (record_length)))
     {
@@ -1487,8 +1499,8 @@ _get_sdr_sensor_record (sdr_cache_ctx_t ctx,
  cleanup:
   if (record_header)
     fiid_obj_destroy(record_header);
-  if (local_obj_cmd_rs)
-    fiid_obj_destroy(local_obj_cmd_rs);
+  if (obj_reserve_sdr_rs)
+    fiid_obj_destroy(obj_reserve_sdr_rs);
   return (rv);
 }
 

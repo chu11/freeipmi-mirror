@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.59 2007-03-29 16:36:03 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.60 2007-05-24 02:56:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -291,6 +291,17 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
 		 "session_sequence_number", 
 		 &seq_num);
   
+  if (conf->workaround_flags & WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER)
+    {
+      uint32_t tmp_seq_num = seq_num;
+
+      seq_num = 
+        ((tmp_seq_num & 0xFF000000) >> 24) 
+        | ((tmp_seq_num & 0x00FF0000) >> 8)
+        | ((tmp_seq_num & 0x0000FF00) << 8)
+        | ((tmp_seq_num & 0x000000FF) << 24);
+    }
+
   if (pkt == ACTIVATE_SESSION_RES)
     {
       /* achu: On some buggy BMCs the initial outbound sequence number on
