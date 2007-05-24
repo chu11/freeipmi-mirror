@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.60 2007-05-24 02:56:57 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.61 2007-05-24 13:37:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -291,6 +291,13 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
 		 "session_sequence_number", 
 		 &seq_num);
   
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Sun Fire 4100.
+   *
+   * The session sequence numbers for IPMI 1.5 are the wrong endian.
+   * So we have to flip the bits to workaround it.
+   */
   if (conf->workaround_flags & WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER)
     {
       uint32_t tmp_seq_num = seq_num;
@@ -903,6 +910,40 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
 					      "managed_system_guid",
 					      managed_system_guid,
 					      IPMI_MANAGED_SYSTEM_GUID_LENGTH); 
+
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Sun Fire 4100.
+   *
+   * The key exchange authentication code is the wrong length.  We
+   * need to shorten it.
+   *
+   * Notes: Cipher suite 1,2,3 are the ones that use HMAC-SHA1 and
+   * have the problem.
+   */
+  if (conf->workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION
+      && (ip->cipher_suite_id == 1
+          || ip->cipher_suite_id == 2
+          || ip->cipher_suite_id == 3))
+    {
+      uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
+      int32_t len;
+
+      len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+                              "key_exchange_authentication_code",
+                              buf,
+                              IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+
+      if (len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
+        {
+          Fiid_obj_clear_field(ip->obj_rakp_message_2_res,
+                               "key_exchange_authentication_code");
+          Fiid_obj_set_data(ip->obj_rakp_message_2_res,
+                            "key_exchange_authentication_code",
+                            buf,
+                            IPMI_HMAC_SHA1_DIGEST_LENGTH);
+        }
+    }
 
   if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(ip->authentication_algorithm,
                                                                         password,

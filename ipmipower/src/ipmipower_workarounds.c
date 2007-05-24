@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.2 2007-05-24 02:56:57 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.3 2007-05-24 13:37:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -53,6 +53,7 @@ static char workarounds_buffer[IPMIPOWER_WORKAROUNDS_BUFLEN];
 #define WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR  "endianseq"
 #define WORKAROUND_FLAG_INTEL_2_0_SESSION_STR           "intel20"
 #define WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR      "supermicro20"
+#define WORKAROUND_FLAG_SUN_2_0_SESSION_STR             "sun20"
 
 int
 ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
@@ -80,6 +81,8 @@ ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
         flags |= WORKAROUND_FLAG_INTEL_2_0_SESSION;
       else if (!strcasecmp(tok, WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR))
         flags |= WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION;
+      else if (!strcasecmp(tok, WORKAROUND_FLAG_SUN_2_0_SESSION_STR))
+        flags |= WORKAROUND_FLAG_SUN_2_0_SESSION;
       else
         goto cleanup;
       tok = strtok(NULL, ",");
@@ -144,6 +147,13 @@ ipmipower_workarounds_string(uint32_t workaround_flags)
       strcat(workarounds_buffer, WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR);
       not_first++;
     }
+  if (workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION)
+    {
+      if (not_first)
+        strcat(workarounds_buffer, ",");
+      strcat(workarounds_buffer, WORKAROUND_FLAG_SUN_2_0_SESSION_STR);
+      not_first++;
+    }
 
   return workarounds_buffer;
 }
@@ -154,12 +164,13 @@ ipmipower_workarounds_list(void)
   memset(workarounds_buffer, '\0', IPMIPOWER_WORKAROUNDS_BUFLEN);
   snprintf(workarounds_buffer,
            IPMIPOWER_WORKAROUNDS_BUFLEN,
-           "%s,%s,%s,%s,%s,%s",
+           "%s,%s,%s,%s,%s,%s,%s",
            WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION_STR,
            WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO_STR,
            WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE_STR,
            WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
            WORKAROUND_FLAG_INTEL_2_0_SESSION_STR,
-           WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR);
+           WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR,
+           WORKAROUND_FLAG_SUN_2_0_SESSION_STR);
   return workarounds_buffer;
 }

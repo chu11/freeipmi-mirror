@@ -1,3 +1,7 @@
+2007-05-24  Albert Chu <chu11@llnl.gov>
+	
+	* ipmipower/: Begin work on sun20 workaround.
+
 2007-05-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Add 'endianbug' workaround for Sun machines.

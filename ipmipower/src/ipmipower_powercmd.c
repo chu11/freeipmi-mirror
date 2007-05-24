@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.105 2007-05-24 02:56:57 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.106 2007-05-24 13:37:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1356,18 +1356,6 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
   obj_cipher_suite_record = Fiid_obj_create(tmpl_cipher_suite_record);
   obj_oem_cipher_suite_record = Fiid_obj_create(tmpl_oem_cipher_suite_record);
 
-
-  {
-    int i;
-    for (i = 0; i < ip->cipher_suite_record_data_bytes; i++)
-      {
-        if (i && i % 8 == 0)
-          printf("\n");
-        printf("%02X ", (uint8_t)ip->cipher_suite_record_data[i]);
-      }
-    printf("\n");
-  }
-
   while (bytes_parsed < ip->cipher_suite_record_data_bytes)
     {
       uint64_t record_format, tag_bits;
@@ -1392,6 +1380,18 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           dbg("_calculate_cipher_suite_ids(%s:%d): "
               "invalid tag bits: %x",
               ip->ic->hostname, ip->protocol_state, (uint8_t)tag_bits);
+
+          /* IPMI Workaround (achu)
+           *
+           * Discovered on Sun Fire 4100.
+           *
+           * The tag bits for some of the cipher records are wrong, but
+           * not until the good ones have been parsed.  So just break out
+           * if we had bad ones.
+           */
+          if (conf->workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION)
+            break;
+
           ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
           goto cleanup;
         }
