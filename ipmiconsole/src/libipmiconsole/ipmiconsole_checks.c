@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.2 2007-05-24 13:59:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -759,6 +759,42 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
       && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
+
+  /* IPMI Workaround
+   *
+   * Discovered on Sun Fire 4100.
+   *
+   * The key exchange authentication code is the wrong length.  We
+   * need to shorten it.
+   *
+   * Notes: Cipher suite 1,2,3 are the ones that use HMAC-SHA1 and
+   * have the problem.
+   */
+  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0
+      && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+    {
+      uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
+      int32_t buf_len;
+
+      buf_len = Fiid_obj_get_data(c,
+                                  s->obj_rakp_message_2,
+                                  "key_exchange_authentication_code",
+                                  buf,
+                                  IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+
+      if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
+        {
+          Fiid_obj_clear_field(c,
+                               s->obj_rakp_message_2,
+                               "key_exchange_authentication_code");
+          Fiid_obj_set_data(c,
+                            s->obj_rakp_message_2,
+                            "key_exchange_authentication_code",
+                            buf,
+                            IPMI_HMAC_SHA1_DIGEST_LENGTH);
+        }
+    }
+
 
   if (Fiid_obj_get(c,
 		   s->obj_open_session_response,

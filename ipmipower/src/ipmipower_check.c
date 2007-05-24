@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.61 2007-05-24 13:37:48 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.62 2007-05-24 13:59:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -922,19 +922,17 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
    * have the problem.
    */
   if (conf->workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION
-      && (ip->cipher_suite_id == 1
-          || ip->cipher_suite_id == 2
-          || ip->cipher_suite_id == 3))
+      && (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1))
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-      int32_t len;
+      int32_t buf_len;
 
-      len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
-                              "key_exchange_authentication_code",
-                              buf,
-                              IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+      buf_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+                                  "key_exchange_authentication_code",
+                                  buf,
+                                  IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
 
-      if (len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
+      if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
           Fiid_obj_clear_field(ip->obj_rakp_message_2_res,
                                "key_exchange_authentication_code");

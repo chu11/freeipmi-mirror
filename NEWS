@@ -18,6 +18,7 @@ o Add verbose checkout/commit progress information for large checkout(s)/commit(
 o Add sensor names to ipmi-sel output when possible.
 o Output more descriptive error messages in most FreeIPMI tools.
 o '0x' parsing support in ipmi-raw.
+o Sun IPMI 2.0 workarounds in ipmipower and ipmiconsole.
 o Various bug fixes throughout FreeIPMI.
 
 For Developers

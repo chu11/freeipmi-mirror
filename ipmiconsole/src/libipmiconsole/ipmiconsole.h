@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.9 2007-05-04 14:01:50 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.10 2007-05-24 13:59:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -138,9 +138,15 @@ extern "C" {
  * IPMI SOL implementations.  Mostly involving the authentication
  * codes returned the RAKP2 portion of authentication.  This
  * workaround flag will get around the problem.
+ *
+ * SUN_2_0
+ *
+ * Work around several small IPMI 2.0 compliance problems, mostly
+ * involving invalid lengthed hash keys.
  */
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0      0x00000001
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0 0x00000002
+#define IPMICONSOLE_WORKAROUND_SUN_2_0        0x00000004
 
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 

@@ -2,6 +2,8 @@
 	
 	* ipmipower/: Begin work on sun20 workaround.
 
+	* ipmiconsole/: Begin work on sun 2.0 workarounds.
+
 2007-05-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Add 'endianbug' workaround for Sun machines.
