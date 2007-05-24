@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.9 2007-05-04 14:01:50 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.10 2007-05-24 14:34:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -870,7 +870,10 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 	      comp_code = val;
 	      
 	      if (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
-		  || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED)
+                  || comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED
+		  || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED
+                  || comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION
+                  || comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
 		goto accept_packet;
 	    }
 	  
@@ -2039,6 +2042,27 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
       return 1;
     }
 
+  if (comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("SOL unavailable"));
+      c->errnum = IPMICONSOLE_ERR_SOL_UNAVAILABLE;
+      return -1;
+    }
+
+  if (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("SOL requires no encryption"));
+      c->errnum = IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION;
+      return -1;
+    }
+
+  if (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
+    {
+      IPMICONSOLE_CTX_DEBUG(c, ("SOL requires encryption"));
+      c->errnum = IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION;
+      return -1;
+    }
+
   return 0;
 }
 
@@ -2824,6 +2848,26 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
     {
       assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS);
       
+      /* IPMI Workaround
+       *
+       * Discovered on Sun Fire 4100.
+       *
+       * The Get Channel Payload Support isn't supported in Sun's.  Skip this 
+       * part of the state machine and pray for the best I guess.
+       */
+      if (c->workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0)
+        {
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
+            {
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+              goto calculate_timeout;
+            }
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
+        }
+
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ) < 0)
         {
           s->close_session_flag++;

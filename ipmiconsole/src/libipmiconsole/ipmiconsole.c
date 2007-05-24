@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.8 2007-05-04 14:01:50 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.9 2007-05-24 14:34:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,35 +68,37 @@
  */
 static char *ipmiconsole_errmsgs[] =
   {
-    "success",			/* 0 */
-    "context null",		/* 1 */
-    "context invalid",		/* 2 */
-    "engine already setup",	/* 3 */
-    "engine not setup",		/* 4 */
-    "ctx already submitted",	/* 5 */
-    "ctx not submitted",	/* 6 */
-    "ctx is still submitted",	/* 7 */
-    "ctx is waiting for SOL",   /* 8 */
-    "invalid parmaeters",	/* 9 */
-    "ipmi 2.0 unavailable",	/* 10 */
-    "cipher suite unavailable",	/* 11 */
-    "hostname invalid",		/* 12 */
-    "username invalid",		/* 13 */
-    "password invalid",		/* 14 */
-    "k_g invalid",		/* 15 */
-    "privilege invalid",	/* 16 */
-    "cipher suite invalid",	/* 17 */
-    "SOL unavailable",		/* 18 */
-    "SOL in use",		/* 19 */
-    "SOL not responding",	/* 20 */
-    "SOL session stolen",       /* 21 */
-    "BMC Busy",			/* 22 */
-    "BMC Error",		/* 23 */
-    "session timeout",		/* 24 */
-    "out of memory",		/* 25 */
-    "internal system error",	/* 26 */
-    "internal error",		/* 27 */
-    "errnum out of range",	/* 28 */
+    "success",			  /* 0 */
+    "context null",		  /* 1 */
+    "context invalid",		  /* 2 */
+    "engine already setup",	  /* 3 */
+    "engine not setup",		  /* 4 */
+    "ctx already submitted",	  /* 5 */
+    "ctx not submitted",	  /* 6 */
+    "ctx is still submitted",	  /* 7 */
+    "ctx is waiting for SOL",     /* 8 */
+    "invalid parmaeters",	  /* 9 */
+    "ipmi 2.0 unavailable",	  /* 10 */
+    "cipher suite unavailable",	  /* 11 */
+    "hostname invalid",		  /* 12 */
+    "username invalid",		  /* 13 */
+    "password invalid",		  /* 14 */
+    "k_g invalid",		  /* 15 */
+    "privilege invalid",	  /* 16 */
+    "cipher suite invalid",	  /* 17 */
+    "SOL unavailable",		  /* 18 */
+    "SOL in use",		  /* 19 */
+    "SOL not responding",	  /* 20 */
+    "SOL session stolen",         /* 21 */
+    "SOL requires encryption",    /* 22 */
+    "SOL requires no encryption", /* 23 */
+    "BMC Busy",			  /* 24 */
+    "BMC Error",		  /* 25 */
+    "session timeout",		  /* 26 */
+    "out of memory",		  /* 27 */
+    "internal system error",	  /* 28 */
+    "internal error",		  /* 29 */
+    "errnum out of range",	  /* 30 */
     NULL
   };
 

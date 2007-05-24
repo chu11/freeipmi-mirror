@@ -2,7 +2,8 @@
 	
 	* ipmipower/: Begin work on sun20 workaround.
 
-	* ipmiconsole/: Begin work on sun 2.0 workarounds.
+	* ipmiconsole/: Begin work on sun 2.0 workarounds.  Support
+	additional error outputs.
 
 2007-05-23  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.10 2007-05-24 13:59:39 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.11 2007-05-24 14:34:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -56,13 +56,15 @@ extern "C" {
 #define IPMICONSOLE_ERR_SOL_INUSE                  19
 #define IPMICONSOLE_ERR_SOL_NOT_RESPONDING         20
 #define IPMICONSOLE_ERR_SOL_STOLEN                 21
-#define IPMICONSOLE_ERR_BMC_BUSY                   22
-#define IPMICONSOLE_ERR_BMC_ERROR                  23
-#define IPMICONSOLE_ERR_SESSION_TIMEOUT            24
-#define IPMICONSOLE_ERR_OUT_OF_MEMORY              25
-#define IPMICONSOLE_ERR_SYSTEM_ERROR               26
-#define IPMICONSOLE_ERR_INTERNAL                   27
-#define IPMICONSOLE_ERR_ERRNUMRANGE                28
+#define IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION    22
+#define IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION 23
+#define IPMICONSOLE_ERR_BMC_BUSY                   24
+#define IPMICONSOLE_ERR_BMC_ERROR                  25
+#define IPMICONSOLE_ERR_SESSION_TIMEOUT            26
+#define IPMICONSOLE_ERR_OUT_OF_MEMORY              27
+#define IPMICONSOLE_ERR_SYSTEM_ERROR               28
+#define IPMICONSOLE_ERR_INTERNAL                   29
+#define IPMICONSOLE_ERR_ERRNUMRANGE                30
 
 /* 
  * IPMI Privilege Constants
@@ -141,8 +143,8 @@ extern "C" {
  *
  * SUN_2_0
  *
- * Work around several small IPMI 2.0 compliance problems, mostly
- * involving invalid lengthed hash keys.
+ * Work around several IPMI 2.0 compliance problems, mostly involving
+ * invalid lengthed hash keys and unsupported payload types.
  */
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0      0x00000001
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0 0x00000002

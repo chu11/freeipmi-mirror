@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.14 2007-05-04 14:01:50 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.15 2007-05-24 14:34:14 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -137,6 +137,10 @@ machines.  For more information, see WORKAROUNDS below.
 Modifies the IPMI 2.0 session protocol for non-compliant Supermicro
 machines.  For more information, see WORKAROUNDS below.
 .TP
+.I "-U, --sun-2-0-session"
+Modifies the IPMI 2.0 session protocol for non-compliant Sun
+machines.  For more information, see WORKAROUNDS below.
+.TP
 .I "-H, --help"
 Output help menu and exit.
 .TP
@@ -203,6 +207,11 @@ HMAC-MD5-128.
 Supermicro H8QME with SIMSO daughter card: There are several
 Supermicro IPMI 2.0 bugs on early firmware revisions which can be
 worked around using the -S (--supermicro-2-0-session) option.
+
+Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
+around by specifying the -U (--sun-2-0) workaround.  The workarounds
+include handling invalid lengthed hash keys and unsupported payload
+types.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmiconsole involve a misconfiguration of

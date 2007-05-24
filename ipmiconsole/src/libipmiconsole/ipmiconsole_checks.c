@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.2 2007-05-24 13:59:39 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.3 2007-05-24 14:34:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -766,9 +766,6 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    *
    * The key exchange authentication code is the wrong length.  We
    * need to shorten it.
-   *
-   * Notes: Cipher suite 1,2,3 are the ones that use HMAC-SHA1 and
-   * have the problem.
    */
   if (c->workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0
       && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
