@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.12 2007-05-04 14:01:50 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.13 2007-05-25 03:48:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -349,6 +349,8 @@ main(int argc, char **argv)
     protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_INTEL_2_0;
   else if (conf->supermicro_2_0_session)
     protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
+  else if (conf->sun_2_0_session)
+    protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_SUN_2_0;
   else
     protocol_config.workaround_flags = 0;
 

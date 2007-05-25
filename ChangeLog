@@ -1,4 +1,8 @@
 2007-05-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/: Finish up some sun 2.0 workarounds.
+	
+2007-05-24  Albert Chu <chu11@llnl.gov>
 	
 	* ipmipower/: Begin work on sun20 workaround.
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.12 2007-05-04 14:11:01 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.13 2007-05-25 03:48:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,7 +93,8 @@ _usage(void)
           "-T --deactivate               Deactivate a SOL session only\n"
           "-L --lock-memory              Lock memory\n"
           "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
-          "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n");
+          "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n"
+          "-U --sun-2-0-session          Workaround Sun IPMI bugs\n");
 #ifndef NDEBUG
   fprintf(stderr,
           "-D --debug                    Turn on debugging\n"
@@ -140,6 +141,7 @@ _cmdline_parse(int argc, char **argv)
       {"lock-memory",              0, NULL, 'L'},
       {"intel-2-0-session",        0, NULL, 'I'},
       {"supermicro-2-0-session",   0, NULL, 'S'},
+      {"sun-2-0-session",          0, NULL, 'U'},
 #ifndef NDEBUG
       {"debug",               0, NULL, 'D'},
       {"debugfile",           0, NULL, 'E'},
@@ -154,7 +156,7 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLIS");
+  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLISU");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -284,6 +286,10 @@ _cmdline_parse(int argc, char **argv)
         case 'S':       /* --supermicro-2-0-session */
           conf->supermicro_2_0_session++;
           conf->supermicro_2_0_session_set_on_cmdline++;
+          break;
+        case 'U':       /* --sun-2-0-session */
+          conf->sun_2_0_session++;
+          conf->sun_2_0_session_set_on_cmdline++;
           break;
 #ifndef NDEBUG
         case 'D':	/* --debug */
@@ -466,7 +472,8 @@ _config_file_parse(void)
     dont_steal_flag,
     lock_memory_flag,
     intel_2_0_session_flag,
-    supermicro_2_0_session_flag;
+    supermicro_2_0_session_flag,
+    sun_2_0_session_flag;
   
   /* Notes:
    *
@@ -585,6 +592,17 @@ _config_file_parse(void)
         &supermicro_2_0_session_flag, 
         &(conf->supermicro_2_0_session),
         conf->supermicro_2_0_session_set_on_cmdline
+      },
+      {
+        "sun_2_0_session", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        _cb_bool,
+        1, 
+        0, 
+        &sun_2_0_session_flag, 
+        &(conf->sun_2_0_session),
+        conf->sun_2_0_session_set_on_cmdline
       },
     };
   conffile_t cf = NULL;

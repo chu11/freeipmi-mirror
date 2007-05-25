@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.10 2007-05-24 14:34:14 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.11 2007-05-25 03:48:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2866,6 +2866,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
               goto calculate_timeout;
             }
           s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
+          goto calculate_timeout;
         }
 
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ) < 0)
