@@ -31,6 +31,10 @@ management:
 move ftp server?
 move webpage?
 
+doc:
+----
+lib general overview doc
+
 pef-config
 --------
 * conf.5 manpage
