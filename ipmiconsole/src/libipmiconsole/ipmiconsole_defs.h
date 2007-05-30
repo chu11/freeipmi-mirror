@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.9 2007-05-24 13:59:39 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.10 2007-05-30 03:55:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -384,6 +384,8 @@ struct ipmiconsole_ctx {
   uint32_t debug_flags;
   uint32_t security_flags;
   uint32_t workaround_flags;
+
+  unsigned int status;
 
   /* Pipe for non-fd communication: from Engine to API */
   int enginecomm[2];

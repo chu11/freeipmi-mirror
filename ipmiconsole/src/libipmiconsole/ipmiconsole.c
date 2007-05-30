@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.9 2007-05-24 14:34:14 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.10 2007-05-30 03:55:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -537,6 +537,8 @@ ipmiconsole_ctx_create(char *hostname,
 
   c->workaround_flags = protocol_config->workaround_flags;
 
+  c->status = IPMICONSOLE_CONTEXT_STATUS_NONE;
+
   if (pipe(c->enginecomm) < 0)
     /* errno set via pipe() */
     goto cleanup;
@@ -615,6 +617,20 @@ _is_submitted(ipmiconsole_ctx_t c)
     }
 
   return 0;
+}
+
+int 
+ipmiconsole_ctx_status(ipmiconsole_ctx_t c)
+{
+  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+    return -1;
+
+  /* Do not check if the context is submitted, b/c it may not be.
+   *
+   * Also, do not set errnum == success for this function, it could be
+   * returning IPMICONSOLE_CONTEXT_STATUS_ERROR.
+   */
+  return c->status;
 }
 
 int 

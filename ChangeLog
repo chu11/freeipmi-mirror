@@ -1,3 +1,8 @@
+2007-05-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/: Support new
+	ipmiconsole_ctx_status function.
+
 2007-05-29  Tom Zimmerman <tzimmerman@lnxi.com>
 
 	* pef-config/src/pef-config-alert-policy-table.c

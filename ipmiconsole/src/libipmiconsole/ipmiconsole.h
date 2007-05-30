@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.11 2007-05-24 14:34:14 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.12 2007-05-30 03:55:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -149,6 +149,13 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0      0x00000001
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0 0x00000002
 #define IPMICONSOLE_WORKAROUND_SUN_2_0        0x00000004
+
+/*
+ * Context Status
+ */
+#define IPMICONSOLE_CONTEXT_STATUS_NONE            0
+#define IPMICONSOLE_CONTEXT_STATUS_ERROR           1
+#define IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED 2
 
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 
@@ -402,6 +409,15 @@ int ipmiconsole_ctx_errnum(ipmiconsole_ctx_t c);
  * error code in errnum.
  */
 char *ipmiconsole_ctx_strerror(int errnum);
+
+/* 
+ * ipmiconsole_ctx_status
+ *
+ * Returns the current context status.  Primarily used to determine if
+ * a context submission (submitted non-blocking) has been established
+ * or not.  Returns -1 on error.
+ */
+int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
 
 /* 
  * ipmiconsole_ctx_fd
