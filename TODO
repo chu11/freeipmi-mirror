@@ -54,19 +54,18 @@ code cleanup
 ------------
 param->parameter everywyhere 
 - after ipmi-chassis committed
-<<<<<<< TODO
-merge in freeipmi-udm
-- after ipmi-chassis, ipmi-fru, and ipmi-pef committed
-common stuff for admin priv stuff in tools/manpages
-- after ipmi-pef, ipmi-chassis committed
-- needed for bmc-config, ipmi-pef, ipmi-chassis
-=======
->>>>>>> 1.275
 common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for SDR options in manpages
-<<<<<<< TODO
+common stuff for parsing in bmc-config and pef-config
+
+re-architecture
+---------------
+merge in freeipmi-udm
+- after ipmi-chassis, ipmi-fru, and pef-config committed
+- for 0.4.0 or 0.5.0?
+add header comments to fiid.h
 
 rename variables for better consistency?
 audit errno/kcs/ssif/openipmi errors -> udm errnos
@@ -77,14 +76,3 @@ to refactor
 ipmi-pef
 ipmi-chassis
 ipmi-fru
-=======
-common stuff for parsing in bmc-config and pef-config
-
-re-architecture
----------------
-merge in freeipmi-udm
-- after ipmi-chassis, ipmi-fru, and pef-config committed
-- for 0.4.0 or 0.5.0?
-add header comments to fiid.h
-
->>>>>>> 1.275
