@@ -167,7 +167,10 @@ do {                                                                    \
 #define __OPENIPMI_TRACE
 #define __UDM_TRACE
 #define __ERR_UDM_TRACE
-#define __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs)
+#define __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs)                         \
+do {                                                                    \
+  goto cleanup;                                                         \
+} while (0) 
 #endif /* IPMI_TRACE */
 
 #define __KCS_ERRNUM_TO_UDM_ERRNUM                                \
