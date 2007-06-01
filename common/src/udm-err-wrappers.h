@@ -431,6 +431,28 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define UDM_ERR_INVALID_HOSTNAME(expr)                                  \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INVALID_HOSTNAME;                          \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define UDM_ERR_INVALID_HOSTNAME_CLEANUP(expr)                          \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      dev->errnum = IPMI_ERR_INVALID_HOSTNAME;                          \
+      __UDM_SYSLOG;                                                     \
+      __UDM_TRACE;                                                      \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define UDM_ERR_INVALID_PARAMETERS(expr)                                \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -452,7 +474,6 @@ do {                                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
-
 
 #define UDM_ERR_DRIVER_PATH_REQUIRED(expr)                              \
 do {                                                                    \
