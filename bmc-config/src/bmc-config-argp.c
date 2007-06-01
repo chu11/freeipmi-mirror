@@ -85,23 +85,23 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_DEBUG,
 #endif /* NDEBUG */
   {"checkout", 'o', 0, 0, 
-   "Action is to GET the BMC configuration", 18},
+   "Action is to GET the BMC configuration", 21},
   {"commit", 'i', 0, 0, 
-   "Action is to UPDATE the BMC configuration", 19},
+   "Action is to UPDATE the BMC configuration", 22},
   {"diff", 'd', 0, 0, 
-   "Action is to SHOW THE DIFFERENCES with BMC", 20},
+   "Action is to SHOW THE DIFFERENCES with BMC", 23},
 
   {"filename", 'f', "FILENAME", 0, 
-   "use FILENAME in checkout, commit or diff", 21},
+   "use FILENAME in checkout, commit or diff", 24},
   {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in checkout, commit or diff", 22},
+   "use KEY-PAIR in checkout, commit or diff", 25},
   {"section", 'S', "SECTION", 0,
-   "use SECTION in checkout", 23},
+   "use SECTION in checkout", 26},
   {"listsections", 'L', 0, 0,
-   "List available sections for checkout", 24},
+   "List available sections for checkout", 27},
 
-  {"verbose",   'v', 0, 0,  "Produce verbose output", 20},
-  {"quiet",     'q', 0, 0,  "Do not produce any output", 21},
+  {"verbose",   'v', 0, 0,  "Produce verbose output", 28},
+  {"quiet",     'q', 0, 0,  "Do not produce any output", 29},
   {"silent",    's', 0, OPTION_ALIAS },
   { 0, }
 };

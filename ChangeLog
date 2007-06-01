@@ -5,6 +5,18 @@
 	* REDESIGN: Move notes into TODO.  Remove file.
 
 	* Various minor doc updates.
+
+	* common/doc/argp-common-sdr-options.man: New file.
+
+	* ipmi-sel/ipmi-sel.8.pre.in, ipmi-sensors/ipmi-sensors.8.pre.in:
+	Use common sdr options.
+
+	* common/src/arg-common.h, common/src/arg-common.c (sdr_parse_opt,
+	init_sdr_cmd_args, free_sdr_cmd_args): New functions.
+	
+	* ipmi-sel/, ipmi-sensors/: Use new common SDR arg parsing.
+
+	* Fix argp ordering in remaining tools.
 	
 2007-05-31  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel.h,v 1.5 2007-06-01 04:35:06 chu11 Exp $ 
+   $Id: ipmi-sel.h,v 1.6 2007-06-01 20:56:17 chu11 Exp $ 
    
    ipmi-sel.h - System Event Logger utility.
    
@@ -35,15 +35,13 @@ enum ipmi_sel_argp_option_keys
     DELETE_KEY = 'd', 
     DELETE_ALL_KEY = 'c', 
     HEX_DUMP_KEY = 'x', 
-    DELETE_RANGE_KEY = 'R',
-    FLUSH_CACHE_KEY = 'f', 
-    QUIET_CACHE_KEY = 'Q',
-    SDR_CACHE_DIR_KEY = 200
+    DELETE_RANGE_KEY = 'R'
   };
 
 struct ipmi_sel_arguments
 {
   struct common_cmd_args common;
+  struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int info_wanted;
   int delete_wanted;
@@ -55,10 +53,6 @@ struct ipmi_sel_arguments
   int delete_range2;
   int hex_dump_wanted;
   char *hex_dump_filename;
-  int flush_cache_wanted;
-  int quiet_cache_wanted;
-  int sdr_cache_dir_wanted;
-  char *sdr_cache_dir;
 };
 
 typedef struct ipmi_sel_prog_data

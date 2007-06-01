@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.6 2007-06-01 04:35:07 chu11 Exp $ 
+   $Id: ipmi-sensors.h,v 1.7 2007-06-01 20:56:17 chu11 Exp $ 
    
    ipmi-sensors.h - IPMI Sensors utility.
    
@@ -35,32 +35,26 @@ enum ipmi_sensors_argp_option_keys
     VERBOSE_KEY = 'v', 
     QUIET_READINGS_KEY = 'q',
     SDR_INFO_KEY = 'i', 
-    FLUSH_CACHE_KEY = 'f', 
-    QUIET_CACHE_KEY = 'Q',
     LIST_GROUPS_KEY = 'L', 
     GROUP_KEY = 'g', 
     SENSORS_LIST_KEY = 's', 
-    SDR_CACHE_DIR_KEY = 200,
   };
 
 struct ipmi_sensors_arguments
 {
   struct common_cmd_args common;
+  struct sdr_cmd_args sdr;
   struct hostrange_cmd_args hostrange;
   int verbose_wanted;
   int verbose_count;
   int quiet_readings_wanted;
   int sdr_info_wanted;
-  int flush_cache_wanted;
-  int quiet_cache_wanted;
   int list_groups_wanted;
   int group_wanted;
   char *group;
   int sensors_list_wanted;
   unsigned int *sensors_list;
   unsigned int sensors_list_length;
-  int sdr_cache_dir_wanted;
-  char *sdr_cache_dir;
 };
 
 typedef struct ipmi_sensors_prog_data

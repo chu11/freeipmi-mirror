@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.13 2007-06-01 04:35:06 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.14 2007-06-01 20:56:17 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -64,28 +64,23 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHTYPE,
     ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
 #ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
 #endif
     {"verbose",        VERBOSE_KEY,        0, 0, 
-     "Increase verbosity in output.  More -v adds more verbosity.", 17}, 
+     "Increase verbosity in output.  More -v adds more verbosity.", 21}, 
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,
-     "Do not output sensor readings or thresholds on simple output.", 18},
+     "Do not output sensor readings or thresholds on simple output.", 22},
     {"sdr-info",       SDR_INFO_KEY,       0, 0, 
-     "Show SDR Information.", 19}, 
-    {"flush-cache",    FLUSH_CACHE_KEY,    0, 0, 
-     "Flush sensor cache.", 20}, 
-    {"quiet-cache",    QUIET_CACHE_KEY,    0, 0,
-     "Do not output cache creation information.", 21},
+     "Show SDR Information.", 23}, 
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
-     "List sensor groups.", 22}, 
+     "List sensor groups.", 24}, 
     {"group",          GROUP_KEY,        "GROUP", 0, 
-     "Show sensors belongs to this GROUP.", 23}, 
+     "Show sensors belongs to this GROUP.", 25}, 
     {"sensors",        SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
-     "Show listed sensors.", 24}, 
-    {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
-     "Use DIRECTORY for sensor cache.", 25}, 
+     "Show listed sensors.", 26}, 
     { 0 }
   };
 
@@ -228,12 +223,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case SDR_INFO_KEY:
       cmd_args->sdr_info_wanted = 1;
       break;
-    case FLUSH_CACHE_KEY:
-      cmd_args->flush_cache_wanted = 1;
-      break;
-    case QUIET_CACHE_KEY:
-      cmd_args->quiet_cache_wanted = 1;
-      break;
     case LIST_GROUPS_KEY:
       cmd_args->list_groups_wanted = 1;
       break;
@@ -265,10 +254,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 			 cmd_args->sensors_list_length);
       }
       break;
-    case SDR_CACHE_DIR_KEY:
-      cmd_args->sdr_cache_dir_wanted = 1;
-      cmd_args->sdr_cache_dir = strdup (arg);
-      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -277,6 +262,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
       if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
       return ret;
@@ -289,21 +276,18 @@ void
 ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
+  init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->verbose_wanted = 0;
   cmd_args->verbose_count = 0;
   cmd_args->quiet_readings_wanted = 0;
   cmd_args->sdr_info_wanted = 0;
-  cmd_args->flush_cache_wanted = 0;
-  cmd_args->quiet_cache_wanted = 0;
   cmd_args->list_groups_wanted = 0;
   cmd_args->group_wanted = 0;
   cmd_args->group = NULL;
   cmd_args->sensors_list_wanted = 0;
   cmd_args->sensors_list = NULL;
   cmd_args->sensors_list_length = 0;
-  cmd_args->sdr_cache_dir_wanted = 0;
-  cmd_args->sdr_cache_dir = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }

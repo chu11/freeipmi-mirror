@@ -27,16 +27,7 @@ Delete REC-LIST in SEL
 .TP
 \fB\-\-delete-range=START-END\fR
 Delete records from START to END in SEL
-.TP
-\fB\-f\fR, \fB\-\-flush\-cache\fR
-Flush sensor data repository (SDR) cache.
-.TP
-\fB\-Q\fR, \fB\-\-\quiet\-cache\fR
-Do not output information about cache creation/deletion. Set automatically
-if multiple hosts are input.
-.TP
-\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Use DIRECTORY for sensor data repository (SDR) cache.
+#include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
 .SH "EXAMPLES"

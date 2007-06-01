@@ -44,11 +44,14 @@ enum argp_common_option_keys
     PASSWORD_PROMPT_KEY = 'P',
     AUTHENTICATION_TYPE_KEY = 'a', 
     PRIVILEGE_LEVEL_KEY = 'l',
+    FLUSH_CACHE_KEY = 'f',
+    QUIET_CACHE_KEY = 'Q',
+    SDR_CACHE_DIR_KEY = 135,
     BUFFER_KEY = 'B',
     CONSOLIDATE_KEY = 'C',
     FANOUT_KEY = 'F',
     ELIMINATE_KEY = 'E',
-    DEBUG_KEY = 135
+    DEBUG_KEY = 136
   };
 
 #define ARGP_COMMON_OPTIONS_INBAND                                         \
@@ -101,23 +104,32 @@ enum argp_common_option_keys
      "Use this PRIVILEGE-LEVEL instead of ADMIN.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 12}     
 
+#define ARGP_COMMON_SDR_OPTIONS                                            \
+    {"flush-cache", FLUSH_CACHE_KEY,  0, 0,                                \
+     "Flush sensor SDR cache.", 13},                                       \
+    {"quiet-cache", QUIET_CACHE_KEY,  0, 0,                                \
+     "Do not output cache creation information.", 14},                     \
+    {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0,             \
+     "Use DIRECTORY for sensor cache.", 15} 
+
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
     {"buffer-output", BUFFER_KEY, 0, 0,                                    \
-      "Buffer hostranged output.", 13},                                    \
+      "Buffer hostranged output.", 16},                                    \
     {"consolidate-output", CONSOLIDATE_KEY, 0, 0,                          \
-     "Consolidate hostranged output.", 14},                                \
+     "Consolidate hostranged output.", 17},                                \
     {"fanout", FANOUT_KEY, "NUM", 0,                                       \
-     "Set multiple host fanout.", 15},                                     \
+     "Set multiple host fanout.", 18},                                     \
     {"eliminate", ELIMINATE_KEY, 0, 0,                                     \
-     "Eliminate undetected nodes.", 16}
+     "Eliminate undetected nodes.", 19}
 
 #ifndef NDEBUG
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     DEBUG_KEY, 0, 0, 	                                   \
-     "Turn on debugging.", 17}                                             
+     "Turn on debugging.", 20}                                             
 
 #endif
+
 
 struct common_cmd_args 
 {
@@ -138,6 +150,14 @@ struct common_cmd_args
 #endif /* NDEBUG */
 };
 
+struct sdr_cmd_args
+{  
+  int flush_cache_wanted;
+  int quiet_cache_wanted;
+  int sdr_cache_dir_wanted;
+  char *sdr_cache_dir;
+};
+
 struct hostrange_cmd_args
 {
   int buffer_hostrange_output;
@@ -150,12 +170,22 @@ error_t common_parse_opt (int key,
 			  char *arg, 
 			  struct argp_state *state, 
 			  struct common_cmd_args *common_cmd_args);
+
+error_t sdr_parse_opt (int key, 
+                       char *arg, 
+                       struct argp_state *state, 
+                       struct sdr_cmd_args *sdr_cmd_args);
+
 error_t hostrange_parse_opt (int key, 
                              char *arg, 
                              struct argp_state *state, 
                              struct hostrange_cmd_args *hostrange_cmd_args);
+
 void init_common_cmd_args (struct common_cmd_args *cmd_args);
 void free_common_cmd_args (struct common_cmd_args *cmd_args);
+
+void init_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
+void free_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
 
 void init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
 void free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);

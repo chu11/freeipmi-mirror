@@ -244,7 +244,7 @@ init_sdr_cache (ipmi_sensors_state_data_t *state_data)
   if (sdr_cache_load(state_data->sdr_cache_ctx,
                      state_data->dev,
                      state_data->hostname,
-                     args->sdr_cache_dir,
+                     args->sdr.sdr_cache_dir,
                      &(state_data->sdr_record_list), 
                      &(state_data->sdr_record_count)) < 0)
     {
@@ -271,8 +271,8 @@ init_sdr_cache (ipmi_sensors_state_data_t *state_data)
       if (sdr_cache_create (state_data->sdr_cache_ctx,
                             state_data->dev,
                             state_data->hostname, 
-                            args->sdr_cache_dir,
-                            (args->quiet_cache_wanted) ? 0 : 1,
+                            args->sdr.sdr_cache_dir,
+                            (args->sdr.quiet_cache_wanted) ? 0 : 1,
                             state_data->prog_data->debug_flags) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -285,8 +285,8 @@ init_sdr_cache (ipmi_sensors_state_data_t *state_data)
       if (sdr_cache_create (state_data->sdr_cache_ctx,
                             state_data->dev,
                             state_data->hostname, 
-                            args->sdr_cache_dir,
-                            (args->quiet_cache_wanted) ? 0 : 1,
+                            args->sdr.sdr_cache_dir,
+                            (args->sdr.quiet_cache_wanted) ? 0 : 1,
                             0) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -300,7 +300,7 @@ init_sdr_cache (ipmi_sensors_state_data_t *state_data)
       if (sdr_cache_load(state_data->sdr_cache_ctx,
                          state_data->dev,
                          state_data->hostname,
-                         args->sdr_cache_dir,
+                         args->sdr.sdr_cache_dir,
                          &(state_data->sdr_record_list), 
                          &(state_data->sdr_record_count)) < 0)
         {
@@ -508,13 +508,13 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
   if (args->sdr_info_wanted)
     return display_sdr_repository_info (state_data);
   
-  if (args->flush_cache_wanted)
+  if (args->sdr.flush_cache_wanted)
     {
-      if (!args->quiet_cache_wanted)
+      if (!args->sdr.quiet_cache_wanted)
         pstdout_printf (state_data->pstate, "flushing cache... ");
       if (sdr_cache_flush (state_data->sdr_cache_ctx,
                            state_data->hostname, 
-                           args->sdr_cache_dir) < 0)
+                           args->sdr.sdr_cache_dir) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr, 
@@ -522,7 +522,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                            sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
           goto cleanup;
         }
-      if (!args->quiet_cache_wanted)
+      if (!args->sdr.quiet_cache_wanted)
         pstdout_printf (state_data->pstate, "done\n");
       return 0;
     }
@@ -760,7 +760,7 @@ main (int argc, char **argv)
             }
           
           /* We don't want caching info to output when are doing ranged output */
-          prog_data.args->quiet_cache_wanted = 1;
+          prog_data.args->sdr.quiet_cache_wanted = 1;
         }
 
       if (prog_data.args->hostrange.eliminate)

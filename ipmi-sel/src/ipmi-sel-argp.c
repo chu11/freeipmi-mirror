@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.17 2007-06-01 04:35:06 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.18 2007-06-01 20:56:17 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -62,26 +62,21 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHTYPE,
     ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
 #ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
 #endif
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about SEL.", 18},
+     "Show general information about SEL.", 21},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete given SEL records entry.", 19},
+     "Delete given SEL records entry.", 22},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL entries.", 20},
+     "Delete all SEL entries.", 23},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete records from START to END in SEL.", 21},
+     "Delete records from START to END in SEL.", 24},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
-     "Hex-dump SEL entries optionally to FILE.", 22},
-    {"flush-cache", FLUSH_CACHE_KEY,  0, 0,
-     "Flush sensor SDR cache.", 23},
-    {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
-     "Do not output cache creation information.", 24},
-    {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
-     "Use DIRECTORY for sensor cache.", 25}, 
+     "Hex-dump SEL entries optionally to FILE.", 25},
     { 0 }
   };
 
@@ -355,16 +350,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	  cmd_args->hex_dump_filename = strdup (arg);
 	}
       break;
-    case FLUSH_CACHE_KEY:
-      cmd_args->flush_cache_wanted = 1;
-      break;
-    case QUIET_CACHE_KEY:
-      cmd_args->quiet_cache_wanted = 1;
-      break;
-    case SDR_CACHE_DIR_KEY:
-      cmd_args->sdr_cache_dir_wanted = 1;
-      cmd_args->sdr_cache_dir = strdup (arg);
-      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -373,6 +358,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     default:
       ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = sdr_parse_opt (key, arg, state, &(cmd_args->sdr));
       if (ret == ARGP_ERR_UNKNOWN)
         ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
       return ret;
@@ -385,6 +372,7 @@ void
 ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
+  init_sdr_cmd_args (&(cmd_args->sdr));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->info_wanted = 0;
   cmd_args->delete_wanted = 0;
@@ -396,10 +384,6 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->delete_range2 = 0;
   cmd_args->hex_dump_wanted = 0;
   cmd_args->hex_dump_filename = NULL;
-  cmd_args->flush_cache_wanted = 0;
-  cmd_args->quiet_cache_wanted = 0;
-  cmd_args->sdr_cache_dir_wanted = 0;
-  cmd_args->sdr_cache_dir = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }

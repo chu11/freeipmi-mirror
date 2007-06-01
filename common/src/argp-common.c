@@ -396,10 +396,42 @@ common_parse_opt (int key,
 }
 
 error_t 
+sdr_parse_opt (int key, 
+               char *arg, 
+               struct argp_state *state, 
+               struct sdr_cmd_args *cmd_args)
+{
+  char *ptr;
+  
+  switch (key)
+    {
+    case FLUSH_CACHE_KEY:
+      cmd_args->flush_cache_wanted = 1;
+      break;
+    case QUIET_CACHE_KEY:
+      cmd_args->quiet_cache_wanted = 1;
+      break;
+    case SDR_CACHE_DIR_KEY:
+      cmd_args->sdr_cache_dir_wanted = 1;
+      if (!(cmd_args->sdr_cache_dir = strdup (arg)))
+        {
+          perror("strdup");
+          exit(1);
+        }
+      break;
+
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  
+  return 0;
+}
+
+error_t 
 hostrange_parse_opt (int key, 
-		  char *arg, 
-		  struct argp_state *state, 
-		  struct hostrange_cmd_args *cmd_args)
+                     char *arg, 
+                     struct argp_state *state, 
+                     struct hostrange_cmd_args *cmd_args)
 {
   char *ptr;
   
@@ -481,6 +513,25 @@ free_common_cmd_args (struct common_cmd_args *cmd_args)
     }
   cmd_args->authentication_type = 0;
   cmd_args->privilege_level = 0;
+}
+
+void 
+init_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
+{
+  cmd_args->flush_cache_wanted = 0;
+  cmd_args->quiet_cache_wanted = 0;
+  cmd_args->sdr_cache_dir_wanted = 0;
+  cmd_args->sdr_cache_dir = NULL;
+}
+
+void 
+free_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
+{
+  if (cmd_args->sdr_cache_dir)
+    {
+      free (cmd_args->sdr_cache_dir);
+      cmd_args->sdr_cache_dir = NULL;
+    }
 }
 
 void 

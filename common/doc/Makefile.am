@@ -8,6 +8,7 @@ EXTRA_DIST = \
 	argp-common-debug.man \
 	argp-common-misc.man \
 	argp-common-hostranged-options.man \
-	argp-common-hostranged-text.man
+	argp-common-hostranged-text.man \
+	argp-common-sdr-options.man
 
 	
