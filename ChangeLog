@@ -1,6 +1,10 @@
 2007-06-01  Albert Chu <chu11@llnl.gov>
 
 	* common/src/fiid-wrappers.h: Remove duplicate macros.
+
+	* REDESIGN: Move notes into TODO.  Remove file.
+
+	* Various minor doc updates.
 	
 2007-05-31  Albert Chu <chu11@llnl.gov>
 
