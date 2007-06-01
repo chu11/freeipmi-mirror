@@ -418,6 +418,12 @@ sdr_parse_opt (int key,
           perror("strdup");
           exit(1);
         }
+      if (access (cmd_args->sdr_cache_dir, R_OK|W_OK|X_OK) != 0)
+        {
+          fprintf (stderr, "insufficient permission on sensor cache directory [%s]\n",
+                   cmd_args->sdr_cache_dir);
+          argp_usage (state);
+        }
       break;
 
     default:
