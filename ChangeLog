@@ -1,3 +1,7 @@
+2007-06-01  Albert Chu <chu11@llnl.gov>
+
+	* common/src/fiid-wrappers.h: Remove duplicate macros.
+	
 2007-05-31  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_freeipmi_udm_re_arch
