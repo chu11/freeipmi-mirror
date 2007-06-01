@@ -3,7 +3,8 @@ EXTRA_DIST = \
 	argp-common-outofband.man \
 	argp-common-outofband-hostranged.man \
 	argp-common-authtype.man \
-	argp-common-privlevel.man \
+	argp-common-privlevel-user.man \
+	argp-common-privlevel-admin.man \
 	argp-common-debug.man \
 	argp-common-misc.man \
 	argp-common-hostranged-options.man \

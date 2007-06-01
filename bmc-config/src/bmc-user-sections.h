@@ -24,7 +24,7 @@
 #define _BMC_USER_SECTIONS_H_
 
 #include "bmc-config.h"
-#include "bmc-sections.h"
+#include "bmc-config-sections.h"
 
 int bmc_get_num_users (bmc_config_state_data_t *state_data);
 

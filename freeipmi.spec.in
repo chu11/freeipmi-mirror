@@ -86,14 +86,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 if [ -x /sbin/install-info ]; then
-   /sbin/install-info %{_infodir}/freeipmi.info.gz %{_infodir}/dir
+   #/sbin/install-info %{_infodir}/freeipmi.info.gz %{_infodir}/dir
+   /sbin/install-info %{_infodir}/freeipmi-faq.info.gz %{_infodir}/dir
 fi
 ldconfig
 
 %preun
 if [ $1 = 0 ]; then
    if [ -x /sbin/install-info ]; then
-      /sbin/install-info --delete %{_infodir}/freeipmi.info.gz %{_infodir}/dir
+      #/sbin/install-info --delete %{_infodir}/freeipmi.info.gz %{_infodir}/dir
+      /sbin/install-info --delete %{_infodir}/freeipmi-faq.info.gz %{_infodir}/dir
    fi
 fi
 
@@ -138,7 +140,6 @@ fi
 %doc %{_datadir}/doc/%{name}/INSTALL
 %doc %{_datadir}/doc/%{name}/NEWS
 %doc %{_datadir}/doc/%{name}/README
-%doc %{_datadir}/doc/%{name}/THANKS
 %doc %{_datadir}/doc/%{name}/TODO
 %doc %{_infodir}/*
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping
@@ -164,7 +165,7 @@ fi
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
 %{_sbindir}/ipmi-locate
-%{_sbindir}/ipmi-pef
+%{_sbindir}/pef-config
 %{_sbindir}/ipmi-raw
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors
@@ -179,7 +180,7 @@ fi
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man8/bmc-info.8*
 %{_mandir}/man8/ipmi-locate.8*
-%{_mandir}/man8/ipmi-pef.8*
+%{_mandir}/man8/pef-config.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmi-sel.8*
 %{_mandir}/man8/ipmi-sensors.8*

@@ -1,5 +1,9 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.13.2.1 2007-05-14 02:41:12 chu11 Exp $ 
+<<<<<<< ipmi-sel-argp.c
+   $Id: ipmi-sel-argp.c,v 1.13.2.2 2007-06-01 03:37:15 chu11 Exp $ 
+=======
+   $Id: ipmi-sel-argp.c,v 1.13.2.2 2007-06-01 03:37:15 chu11 Exp $ 
+>>>>>>> 1.16
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -58,23 +62,30 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS_HOSTRANGED, 
+    ARGP_COMMON_OPTIONS_INBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
+    ARGP_COMMON_OPTIONS_AUTHTYPE,
+    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
+#ifndef NDEBUG
+    ARGP_COMMON_OPTIONS_DEBUG,
+#endif
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about SEL.", 17},
+     "Show general information about SEL.", 18},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete given SEL records entry.", 18},
+     "Delete given SEL records entry.", 19},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL entries.", 19},
+     "Delete all SEL entries.", 20},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete records from START to END in SEL.", 20},
+     "Delete records from START to END in SEL.", 21},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
-     "Hex-dump SEL entries optionally to FILE.", 21},
+     "Hex-dump SEL entries optionally to FILE.", 22},
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,
-     "Flush sensor SDR cache.", 22},
+     "Flush sensor SDR cache.", 23},
     {"quiet-cache", QUIET_CACHE_KEY,  0, 0,
-     "Do not output cache creation information.", 23},
+     "Do not output cache creation information.", 24},
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0, 
-     "Use DIRECTORY for sensor cache.", 24}, 
+     "Use DIRECTORY for sensor cache.", 25}, 
     { 0 }
   };
 

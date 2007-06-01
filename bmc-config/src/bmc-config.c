@@ -60,10 +60,10 @@
 
 #include "bmc-config.h"
 #include "bmc-config-argp.h"
-#include "bmc-commit.h"
-#include "bmc-checkout.h"
-#include "bmc-diff.h"
-#include "bmc-sections.h"
+#include "bmc-config-commit.h"
+#include "bmc-config-checkout.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-sections.h"
 
 #include "ipmi-common.h"
 
@@ -84,6 +84,7 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
   state_data->lan_channel_number_initialized = 0;
   state_data->serial_channel_number_initialized = 0;
   state_data->sol_channel_number_initialized = 0;
+  state_data->number_of_lan_destinations_initialized = 0;
 }
 
 static int
@@ -195,7 +196,7 @@ _bmc_config (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
-  if (!(sections = bmc_config_sections_create (&state_data)))
+  if (!(sections = bmc_config_sections_list_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -213,7 +214,7 @@ _bmc_config (void *arg)
     ret = bmc_diff (&state_data);
     break;
   case BMC_ACTION_LIST_SECTIONS:
-    ret = bmc_sections_list (&state_data);
+    ret = bmc_config_sections_list (&state_data);
     break;
   }
   
@@ -231,7 +232,7 @@ _bmc_config (void *arg)
       ipmi_device_destroy (dev);
     }
   if (sections)
-    bmc_config_sections_destroy(&state_data, sections);
+    bmc_config_sections_list_destroy(&state_data, sections);
   return exit_code;
 }
 
@@ -244,6 +245,7 @@ main (int argc, char *argv[])
 
   ipmi_disable_coredump();
 
+  prog_data.progname = argv[0];
   bmc_config_argp (argc, argv, &cmd_args);
 
   if (bmc_config_args_validate (&cmd_args) < 0)

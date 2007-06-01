@@ -46,7 +46,7 @@ extern "C" {
 #define BITS_0(arg)    (bits_extract (arg,  0 , 8))
 #define BITS_1(arg)    (bits_extract (arg,  8, 16))
 #define BITS_2(arg)    (bits_extract (arg, 16, 24))
-#define BITS_3(arg)    (bits_extract (arg, 24, 33))
+#define BITS_3(arg)    (bits_extract (arg, 24, 32))
 #define BITS_4(arg)    (bits_extract (arg, 32, 40))
 #define BITS_5(arg)    (bits_extract (arg, 40, 48))
 #define BITS_6(arg)    (bits_extract (arg, 48, 56))

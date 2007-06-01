@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.9 2007-02-23 03:24:20 balamurugan Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.9.2.1 2007-06-01 03:37:16 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
@@ -193,7 +193,7 @@ extern "C" {
 
 #define IPMI_STRING_SELECTOR_MIN 0x00
 #define IPMI_STRING_SELECTOR_MAX 0x7F
-
+#define IPMI_STRING_SELECTOR_VOLATILE    0x0
 /* To avoid gcc warnings, added +1 in comparison */
 #define IPMI_STRING_SELECTOR_VALID(__val) \
         (((__val+1) >= (IPMI_STRING_SELECTOR_MIN + 1) \
@@ -230,6 +230,9 @@ extern "C" {
         (((__val) == IPMI_GET_PEF_PARAMETER \
           || (__val) == IPMI_GET_PEF_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
+#define IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE    16
+#define IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE_VALID(__val)		\
+  (((__val) <= IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE) ? 1 : 0)
 
 #define IPMI_ALERT_POLICY_ALWAYS_SEND_TO_THIS_DESTINATION                     0x0
 #define IPMI_ALERT_POLICY_PROCEED_TO_NEXT_ENTRY                               0x1
@@ -249,11 +252,11 @@ extern "C" {
   (((__val) == IPMI_ALERT_POLICY_DISABLED ||		\
     (__val) == IPMI_ALERT_POLICY_ENABLED) ? 1 : 0)
 
-#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO     0x0
-#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES    0x1
-#define IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_VALID(__val)		\
-  (((__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_NO ||		\
-    (__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_LOOKUP_YES) ? 1 : 0)
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_NO     0x0
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_YES    0x1
+#define IPMI_EVENT_SPECIFIC_ALERT_STRING_VALID(__val)		\
+  (((__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_NO ||		\
+    (__val) == IPMI_EVENT_SPECIFIC_ALERT_STRING_YES) ? 1 : 0)
 
 
 extern fiid_template_t tmpl_cmd_get_pef_capabilities_rq;
@@ -385,7 +388,7 @@ int8_t fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t ale
 								     uint8_t destination_selector, 
 								     uint8_t channel_number, 
 								     uint8_t alert_string_set_selector, 
-								     uint8_t event_specific_alert_string_lookup, 
+								     uint8_t event_specific_alert_string, 
 								     fiid_obj_t obj_cmd_rq);
 
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.1.2.1 2007-06-01 03:37:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -380,6 +380,7 @@ ipmi_monitoring_sensor_config(int *errnum)
     watchdog2_flag8;
   conffile_t cf = NULL;
   int num;
+  int rv = -1;
   struct conffile_option options[] =
     {
       /*
@@ -1759,9 +1760,13 @@ ipmi_monitoring_sensor_config(int *errnum)
       else
         IPMI_MONITORING_DEBUG(("conffile_parse: %s", buf));
 
-      return -1;
+      goto cleanup;
     }
   
+  rv = 0;
   _ipmi_monitoring_sensor_config_loaded++;
-  return 0;
+ cleanup:
+  if (cf)
+    conffile_handle_destroy(cf);
+  return rv;
 }

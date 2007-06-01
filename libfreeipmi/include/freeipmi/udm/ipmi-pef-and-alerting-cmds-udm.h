@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.8 2007-02-23 03:24:20 balamurugan Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.8.2.1 2007-06-01 03:37:16 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
@@ -106,8 +106,20 @@ int8_t ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_device
 								      uint8_t destination_selector, 
 								      uint8_t channel_number, 
 								      uint8_t alert_string_set_selector, 
-								      uint8_t event_specific_alert_string_lookup, 
+								      uint8_t event_specific_alert_string, 
 								      fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_pef_configuration_parameters_alert_string_keys (ipmi_device_t dev, 
+								    uint8_t string_selector, 
+								    uint8_t filter_number, 
+								    uint8_t set_number_for_string, 
+								    fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_device_t dev, 
+								uint8_t string_selector, 
+								uint8_t block_selector, 
+								uint8_t *string_data, 
+								uint8_t string_data_len, 
+								fiid_obj_t obj_cmd_rs);
+
 
 int8_t ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_device_t dev, 
 							      uint8_t get_parameter, 

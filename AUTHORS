@@ -1,16 +1,22 @@
+Maintainer: 
+Albert Chu <chu11@llnl.gov>
+
+Developers:
 Albert Chu <chu11@llnl.gov>
 Anand Babu <ab@zresearch.com>
 Anand Avati (avati@zresearch.com)
 Balamurugan <bala@zresearch.com>
 Ian Zimmerman <itz@buug.org>
-Jim Garlick <garlick@llnl.gov>
 
 Patch Contributions:
 Dmitry Frolov <frolov@riss-telecom.ru>
 Ingo van Lil <inguin@gmx.de>
 Levi Pearson <lpearson@lnxi.com>
+Tom Zimmerman <tzimmerman@lnxi.com>
 
+Package Maintainers:
+Albert Chu <chu11@llnl.gov> - Redhat RPMs
+Dmitry Frolov <frolov@riss-telecom.ru> - FreeBSD
 
-
-
-
+Web Site:
+Anand Babu <ab@zresearch.com>

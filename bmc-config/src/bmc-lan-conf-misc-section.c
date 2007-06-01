@@ -1,10 +1,10 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-map.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-map.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 static bmc_err_t
 enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
@@ -257,45 +257,45 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *lan_conf_misc_section = NULL;
 
-  if (!(lan_conf_misc_section = bmc_section_create (state_data, "Lan_Conf_Misc")))
+  if (!(lan_conf_misc_section = bmc_config_section_create (state_data, "Lan_Conf_Misc")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_misc_section,
-				"Enable_Gratuitous_ARPs",
-				"Possible values: Yes/No",
-				0,
-				enable_gratuitous_arps_checkout,
-				enable_gratuitous_arps_commit,
-				enable_gratuitous_arps_diff,
-                                yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_misc_section,
+                                       "Enable_Gratuitous_ARPs",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_gratuitous_arps_checkout,
+                                       enable_gratuitous_arps_commit,
+                                       enable_gratuitous_arps_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_misc_section,
-				"Enable_ARP_Response",
-				"Possible values: Yes/No",
-				0,
-				enable_arp_response_checkout,
-				enable_arp_response_commit,
-				enable_arp_response_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_misc_section,
+                                       "Enable_ARP_Response",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_arp_response_checkout,
+                                       enable_arp_response_commit,
+                                       enable_arp_response_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_misc_section,
-				"Gratuitous_ARP_Interval",
-				"Give a number (x 500ms)",
-				0,
-				gratuitous_arp_interval_checkout,
-				gratuitous_arp_interval_commit,
-				gratuitous_arp_interval_diff,
-				number_range_one_byte) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_misc_section,
+                                       "Gratuitous_ARP_Interval",
+                                       "Give a number (x 500ms)",
+                                       0,
+                                       gratuitous_arp_interval_checkout,
+                                       gratuitous_arp_interval_commit,
+                                       gratuitous_arp_interval_diff,
+                                       number_range_one_byte) < 0)
     goto cleanup;
   return lan_conf_misc_section;
 
  cleanup:
   if (lan_conf_misc_section)
-    bmc_section_destroy(state_data, lan_conf_misc_section);
+    bmc_config_section_destroy(state_data, lan_conf_misc_section);
   return NULL;
 }

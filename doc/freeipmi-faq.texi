@@ -2,14 +2,14 @@
 @c This file uses the @command command introduced in Texinfo 4.0.
 @c %**start of header
 @setfilename freeipmi-faq.info
-@settitle GNU FreeIPMI - Frequently Asked Questions
+@settitle FreeIPMI - Frequently Asked Questions
 @finalout
 @c %**end of header
 
 @include version-faq.texi
 
 @copying
-This manual is for GNU FreeIPMI (version @value{VERSION}, @value{UPDATED}).
+This manual is for FreeIPMI (version @value{VERSION}, @value{UPDATED}).
 Copyright @copyright{} 2007 FreeIPMI Core Team
 
 @quotation
@@ -29,7 +29,7 @@ Free Software Foundation raise funds for GNU development.''
 
 @dircategory Platform Management
 @direntry
-* GNU FreeIPMI FAQ: (freeipmi-faq).  FreeIPMI - Frequently Asked Questions
+* FreeIPMI FAQ: (freeipmi-faq).  FreeIPMI - Frequently Asked Questions
 @end direntry
 
 @ifinfo
@@ -39,7 +39,7 @@ Copyright @copyright{} 2002-2007 FreeIPMI Core Team.
 @end ifinfo
 
 @titlepage
-@title GNU FreeIPMI Frequently Asked Questions
+@title FreeIPMI Frequently Asked Questions
 @subtitle Free Intelligent Platform Management System
 @subtitle Version @value{VERSION} updated on @today{}
 @author by Albert Chu @email{chu11@@llnl.gov}
@@ -122,16 +122,15 @@ in-band driver, libfreeipmi, ipmi-sensors, bmc-config, ipmi-sel, and
 bmc-info.  Jim Garlick and Albert Chu at LLNL contributed ipmipower,
 bmc-watchdog, ipmiping, rmcpping, libfreeipmi, and ipmipower support
 in Powerman.  In October 2004, FreeIPMI 0.1.0 was officially released.
-Around same time, FreeIPMI project was accepted by the Free Software
-Foundation as a GNU project.
 
 @node Who maintains FreeIPMI?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
 @section Who maintains FreeIPMI?
 
-Maintenance and development of FreeIPMI is currently shared between
-Lawrence Livermore National Laboratory (LLNL) and Z RESEARCH Inc.
+Primary maintenance of FreeIPMI is managed by Albert Chu at Lawrence
+Livermore National Laboratory (LLNL).  Developers from Zresearch
+continue to aid in development of new features for FreeIPMI.  
 
-(Z RESEARCH Inc. was founded by former members for California Digital Corp.)
+(Note: Z RESEARCH Inc. was founded by former members for California Digital Corp.)
 
 @node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, Who maintains FreeIPMI?, Top
 @section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 

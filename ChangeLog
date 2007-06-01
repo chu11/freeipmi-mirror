@@ -1,3 +1,305 @@
+2007-05-21  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/src/pef-config-sections.c
+	(pef_config_sections_list_create): Re-order sections.
+
+	* pef-config/: Various minor bug fixes.
+
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c
+	(tmpl_cmd_set_pef_configuration_alert_policy_table_rq,
+	fill_cmd_set_pef_configuration_parameter_alert_policy_table): Fix
+	fill bugs.
+
+2007-05-20  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt: Update.
+
+	* pef-config/src/pef-config-alert-policy-table.c
+	(pef_config_alert_policy_table_section_get): Add lan channel
+	number to help for channel number.
+
+	* pef-config/src/pef-config-alert-policy-table.c: Fix diff
+	callback bugs.
+
+	* REDESIGN: Add notes for future.
+
+	* pef-config/: Add Alert String support.
+
+2007-05-19  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt: Talk about bmc-config and ipmi-pef
+	design considerations.
+
+	* ipmi-pef/src/ipmi-pef-event-filter-table.c: Major code cleanup.
+
+	* ipmi-pef/ipmi-pef.8.pre.in: Updated appropriately.
+
+	* pef-config/: Converted from ipmi-pef.  Update all build files
+	and docs appropriately.
+
+	* pef-config/src/pef-config-sections.c
+	(pef_config_sections_list_create): Fix alert policy table bug.
+	
+2007-05-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/: Fix incorrect naming of "policy number" for "entry
+	number" globally.
+
+	* ipmi-pef/src/ipmi-pef-alert-destination.c,
+	ipmi-pef/src/ipmi-pef-alert-destination.h: Renamed to 
+	ipmi-pef/src/ipmi-pef-lan-alert-destination.c and
+	ipmi-pef/src/ipmi-pef-lan-alert-destination.h.
+	
+	* ipmi-pef/: Change "alert_destinations" and
+	"lan_alert_destination" in appropriate locations to clarification.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.h, ipmi-pef/src/ipmi-pef-wrapper.c
+	(get_bmc_lan_conf_community_string,
+	set_bmc_lan_conf_community_string,
+	get_bmc_lan_conf_destination_type,
+	set_bmc_lan_conf_destination_type,
+	get_bmc_lan_conf_destination_addresses,
+	set_bmc_lan_conf_destination_addresses,
+	get_bmc_pef_conf_alert_policy_table,
+	set_bmc_pef_conf_alert_policy_table,
+	get_bmc_pef_conf_event_filter_table,
+	set_bmc_pef_conf_event_filter_table): New functions.
+
+	* libfreeipmi/: Reword "event_specific_alert_string_lookup" to
+	"event_specific_alert_string" based on spec wording.
+
+	* ipmi-pef/: Continued work to rearchitect into bmc-config like
+	architecture.  Add alert policy checkout sections.  Add event
+	filter table sections. Reword "event_specific_alert_string_lookup"
+	to "event_specific_alert_string" everywhere.
+
+	* ipmi-pef/src/ipmi-pef-validate.h,
+	ipmi-pef/src/ipmi-pef-validate.c (number_range_four_bits,
+	number_range_seven_bits, number_range_three_bits,
+	number_range_two_bytes, filter_type_validate,
+	event_severity_validate, policy_type_validate,
+	alert_gateway_validate, alert_destination_type_validate): New
+	functions.
+
+	* bmc-config/src/bmc-config-validate.h,
+	bmc-config/src/bmc-config-validate.c (number_range_two_bytes): New function.
+
+	* bmc-config/src/bmc-sol-conf-section.c (port_validate): Use
+	number_range_two_bytes function.
+
+	* ipmi-pef/src/ipmi-pef-pef-conf-section.h,
+	ipmi-pef/src/ipmi-pef-pef-conf-section.c: Transfer pef conf
+	section from bmc-config.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.h,
+	ipmi-pef/src/ipmi-pef-wrapper.c: Transfer pef wrapper functions
+	from bmc-config.
+
+	* bmc-config/src/bmc-config-argp.c (_create_sectionstr): Fix
+	variable name.
+
+	* tagged pre_ipmi_pef_major_rearch
+
+	* bmc-config/: Remove pef related sections.
+
+	* ipmi-pef/: Complete bmc-config style input/output.
+
+	* tagged post_ipmi_pef_major_rearch
+
+2007-05-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/src/ipmi-pef-validate.h,
+	ipmi-pef/src/ipmi-pef-validate.c: New files.
+
+	* ipmi-pef/: Add initial community string and alert destination
+	sectional support.
+
+	* ipmi-pef/, bmc-config/: Various filename and function name
+	changes for code and filename consistency between the two tools.
+
+2007-05-17  Tom Zimmerman <tzimmerman@lnxi.com>
+
+	* common/src/bit-ops.h: Fix macro bug.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c (get_lan_alert_destination): Fix
+	buffer length bug.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_destination_type,
+	tmpl_cmd_set_lan_configuration_parameters_destination_type_rq,
+	tmpl_cmd_get_lan_configuration_parameters_destination_type_rs):
+	Fix template field ordering bug.
+
+2007-05-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/src/ipmi-pef-map.h, ipmi-pef/src/ipmi-pef-map.c,
+	ipmi-pef/src/ipmi-pef-keys.h, ipmi-pef/src/ipmi-pef-common: New
+	files.
+
+	* ipmi-pef/: Code and makefiles adjusted for new headers and files.
+
+	* ipmi-pef/src/ipmi-pef-utils.c: Add forgotten config header and
+	checks.
+
+	* bmc-config/src/bmc-config.c (_bmc_config_state_data_init):
+	Initialize forgotten field.
+
+	* bmc-config/src/bmc-config.c (main): Initialize progname field.
+
+	* ipmi-pef/: Cache lan_channel_number, number_of_lan_destinations,
+	number_of_alert_policy_entries, number_of_event_filters in
+	state_data.  Adjust functions appropriately for this.  Initialize
+	state_data appropriately.  Fix help message descriptions.  Begin
+	to re-architect args to more resemble bmc-config's.  Add args
+	validation function ipmi_pef_args_validate.  Begin to re-architect
+	main code structure to more like bmc-config's.  Remove
+	get_pef_info() wrapper function.  General code cleanup.
+
+	* ipmi-pef/src/ipmi-pef-info.h, ipmi-pef/src/ipmi-pef-info.c,
+	ipmi-pef/src/ipmi-pef-commit.h, ipmi-pef/src/ipmi-pef-commit.c,
+	ipmi-pef/src/ipmi-pef-checkout.h,
+	ipmi-pef/src/ipmi-pef-checkout.c: New files.
+
+	* bmc-config/src/bmc-sections.c (bmc_config_sections_create),
+	bmc-config/src/bmc-user-sections.c (bmc_user_section_get): Alter
+	indexing method.
+
+	* ipmi-pef/src/ipmi-pef-community-string.c,
+	ipmi-pef/src/ipmi-pef-alert-destination.c,
+	ipmi-pef/src/ipmi-pef-alert-policy-table.c,
+	ipmi-pef/src/ipmi-pef-event-filter-table.c,
+	ipmi-pef/src/ipmi-pef-diff.c, ipmi-pef/src/ipmi-pef-parser.c,
+	ipmi-pef/src/ipmi-pef-sections.c,
+	ipmi-pef/src/ipmi-pef-community-string.h,
+	ipmi-pef/src/ipmi-pef-alert-destination.h,
+	ipmi-pef/src/ipmi-pef-alert-policy-table.h,
+	ipmi-pef/src/ipmi-pef-event-filter-table.h,
+	ipmi-pef/src/ipmi-pef-diff.h, ipmi-pef/src/ipmi-pef-parser.h,
+	ipmi-pef/src/ipmi-pef-sections.h: New files.
+
+	* ipmi-pef/: Change "lan_destinations" and
+	"lan_alert_destinations" to "alert_destinations" globally for
+	consistency.
+
+	* bmc-config/src/bmc-sections.h, bmc-config/src/bmc-sections.c
+	(bmc_sections_list): Correct return type.
+	
+2007-05-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/: Fix string parsing bugs in alert policy table.  Fix
+	event trigger output corner case.  Fix build dependency bug.  Add
+	-e option.  Force user to specify section.  Check for out of mem
+	errors.  Fix some mapping corner cases.  Fix error handling and
+	incorrect logic in mapping to strings functions.  General code
+	cleanup.  Begin re-architect to bmc-config style design.
+
+	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_sensor_config.c
+	(ipmi_monitoring_sensor_config),
+	ipmimonitoring/src/libipmisdrcache/ipmi_sdr_cache.c
+	(_destroy_ctx): Fix mem-leaks.
+
+	* doc/freeipmi.texi, doc/gpl.texi, doc/version-doc.texi,
+	doc/authors.texi, doc/fdl.texi, THANKS: Removed.
+
+	* freeipmi.spec.in, doc/Makefile.am, Makefile.am: Updated
+	appropriately.
+	
+	* various minor doc updates
+	
+2007-05-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-pef/: Do initial support of lan channels and community
+	string support.  Fix thread safety problems.  Add -v and -f
+	option.  Re-adjust options to emulate bmc-config options.  Fix
+	mem-leaks. Fix and add numerous error messages.  Commit community
+	string via file too.  Remove ability to set community string on
+	command line.  Fix various bugs.  Fix output alignment.
+	
+2007-05-15  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/argp-common-privlevel-admin.man,
+	common/doc/argp-common-privlevel-user.man: New files.
+
+	* common/doc/Makefile.am: Updated appropriately for new files.
+
+	* common/doc/argp-common-privlevel.man: Removed file.
+
+	* common/src/arg-common.h: Modify mechanism by which common args
+	are shared so some tools can have a default privilege of admin.
+
+	* ipmi-sensors/, ipmi-sel/, bmc-info/, bmc-config/, ipmi-raw/,
+	ipmi-pef/: Update to use new common macros and includes.  Default
+	privilege of ipmi-pef and ipmi-chassis is now admin.
+
+	* various minor doc updates.
+	
+2007-05-16  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-pef/src/ipmi-pef.c (checkout_pef_lad): added comments.
+
+2007-05-15  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-pef/src/ipmi-pef-utils.c (destination_type_to_string,
+	string_to_destination_type, alert_acknowledge_to_string,
+	string_to_alert_acknowledge, alert_acknowledge_timeout_to_string,
+	string_to_alert_acknowledge_timeout, alert_retries_to_string,
+	string_to_alert_retries, gateway_selector_to_string,
+	string_to_gateway_selector, alert_ip_address_to_string,
+	string_to_alert_ip_address, alert_mac_address_to_string,
+	string_to_alert_mac_address): new functions.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c (_record_string_to_lad,
+	get_number_of_lan_destinations, get_lan_alert_destination,
+	get_lad_list, set_lan_alert_destination): new functions.
+
+	* ipmi-pef/src/ipmi-pef.c (checkout_pef_lad, commit_pef_lad): new
+	functions.
+
+	* ipmi-pef/src/ipmi-pef.c (run_cmd_args): added support to lan
+	alert destination checkout/commit.
+
+2007-05-15  Tom Zimmerman <tzimmerman@lnxi.com>
+
+	* ipmi-pef/src/ipmi-pef-utils.c: Fix #define typo.
+
+2007-05-15  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-pef/src/ipmi-pef-utils.h: fixed ENABLE_FILTER_KEY_STRING
+	typo.
+
+	* ipmi-pef/src/ipmi-pef-wrapper.c (_record_string_to_apt,
+	get_apt_list, set_alert_policy_table): new functions.
+
+	* ipmi-pef/src/ipmi-pef.c (checkout_pef_apt, commit_pef_apt): new
+	functions.
+
+	* ipmi-pef/src/ipmi-pef.c (run_cmd_args): modified according to
+	command line argument changes.
+
+2007-05-15  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-pef-and-alerting-cmds.c
+	(fill_cmd_set_pef_configuration_parameters_alert_strings): uses
+	macro IPMI_PEF_ALERT_STRINGS_BLOCK_SIZE_VALID.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_alert_policy_table):
+	fix to check obj_cmd_rs.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_alert_policy_table):
+	fix to check obj_cmd_rs.
+
+	* libfreeipmi/src/udm/ipmi-pef-and-alerting-cmds-udm.c
+	(ipmi_cmd_set_pef_configuration_parameters_alert_string_keys,
+	ipmi_cmd_set_pef_configuration_parameters_alert_strings): new
+	functions.
+
+2007-05-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring.c (main): Fix error message
+	typo.
+	
 2007-05-13  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-api.h, common/src/ipmi-sdr-api.c: Renamed to

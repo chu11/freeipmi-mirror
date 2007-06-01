@@ -1,10 +1,10 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-map.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-map.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 static bmc_err_t
 id_checkout (bmc_config_state_data_t *state_data,
@@ -446,179 +446,179 @@ bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *rmcpplus_conf_privilege_section = NULL;
 
-  if (!(rmcpplus_conf_privilege_section = bmc_section_create (state_data, "Rmcpplus_Conf_Privilege")))
+  if (!(rmcpplus_conf_privilege_section = bmc_config_section_create (state_data, "Rmcpplus_Conf_Privilege")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_0",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_0_checkout,
-				id_0_commit,
-				id_0_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_0",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_0_checkout,
+                                       id_0_commit,
+                                       id_0_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_1",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_1_checkout,
-				id_1_commit,
-				id_1_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_1",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_1_checkout,
+                                       id_1_commit,
+                                       id_1_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_2",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_2_checkout,
-				id_2_commit,
-				id_2_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_2",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_2_checkout,
+                                       id_2_commit,
+                                       id_2_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_3",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_3_checkout,
-				id_3_commit,
-				id_3_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_3",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_3_checkout,
+                                       id_3_commit,
+                                       id_3_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_4",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_4_checkout,
-				id_4_commit,
-				id_4_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_4",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_4_checkout,
+                                       id_4_commit,
+                                       id_4_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_5",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_5_checkout,
-				id_5_commit,
-				id_5_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_5",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_5_checkout,
+                                       id_5_commit,
+                                       id_5_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_6",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_6_checkout,
-				id_6_commit,
-				id_6_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_6",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_6_checkout,
+                                       id_6_commit,
+                                       id_6_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_7",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_7_checkout,
-				id_7_commit,
-				id_7_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_7",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_7_checkout,
+                                       id_7_commit,
+                                       id_7_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_8",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_8_checkout,
-				id_8_commit,
-				id_8_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_8",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_8_checkout,
+                                       id_8_commit,
+                                       id_8_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_9",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_9_checkout,
-				id_9_commit,
-				id_9_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_9",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_9_checkout,
+                                       id_9_commit,
+                                       id_9_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_10",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_10_checkout,
-				id_10_commit,
-				id_10_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_10",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_10_checkout,
+                                       id_10_commit,
+                                       id_10_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_11",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_11_checkout,
-				id_11_commit,
-				id_11_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_11",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_11_checkout,
+                                       id_11_commit,
+                                       id_11_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_12",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_12_checkout,
-				id_12_commit,
-				id_12_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_12",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_12_checkout,
+                                       id_12_commit,
+                                       id_12_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_13",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_13_checkout,
-				id_13_commit,
-				id_13_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_13",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_13_checkout,
+                                       id_13_commit,
+                                       id_13_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                rmcpplus_conf_privilege_section,
-				"Maximum_Privilege_Cipher_Suite_Id_14",
-				"Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				id_14_checkout,
-				id_14_commit,
-				id_14_diff,
-				rmcpplus_priv_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       rmcpplus_conf_privilege_section,
+                                       "Maximum_Privilege_Cipher_Suite_Id_14",
+                                       "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       id_14_checkout,
+                                       id_14_commit,
+                                       id_14_diff,
+                                       rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
   return rmcpplus_conf_privilege_section;
 
  cleanup:
   if (rmcpplus_conf_privilege_section)
-    bmc_section_destroy (state_data, rmcpplus_conf_privilege_section);
+    bmc_config_section_destroy (state_data, rmcpplus_conf_privilege_section);
   return NULL;
 }
 

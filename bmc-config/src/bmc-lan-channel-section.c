@@ -1,10 +1,10 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-map.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-map.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 /* volatile */
 
@@ -1036,124 +1036,124 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
 {
   struct section * lan_channel_section = NULL;
 
-  if (!(lan_channel_section = bmc_section_create (state_data, "Lan_Channel")))
+  if (!(lan_channel_section = bmc_config_section_create (state_data, "Lan_Channel")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Volatile_Access_Mode",
-				"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-				0,
-				volatile_access_mode_checkout,
-				volatile_access_mode_commit,
-				volatile_access_mode_diff,
-				channel_access_mode_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Volatile_Access_Mode",
+                                       "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
+                                       0,
+                                       volatile_access_mode_checkout,
+                                       volatile_access_mode_commit,
+                                       volatile_access_mode_diff,
+                                       channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Volatile_Enable_User_Level_Auth",
-				"Possible values: Yes/No",
-				0,
-				volatile_enable_user_level_auth_checkout,
-				volatile_enable_user_level_auth_commit,
-				volatile_enable_user_level_auth_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Volatile_Enable_User_Level_Auth",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       volatile_enable_user_level_auth_checkout,
+                                       volatile_enable_user_level_auth_commit,
+                                       volatile_enable_user_level_auth_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Volatile_Enable_Per_Message_Auth",
-				"Possible values: Yes/No",
-				0,
-				volatile_enable_per_msg_auth_checkout,
-				volatile_enable_per_msg_auth_commit,
-				volatile_enable_per_msg_auth_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Volatile_Enable_Per_Message_Auth",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       volatile_enable_per_msg_auth_checkout,
+                                       volatile_enable_per_msg_auth_commit,
+                                       volatile_enable_per_msg_auth_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Volatile_Enable_Pef_Alerting",
-				"Possible values: Yes/No",
-				0,
-				volatile_enable_pef_alerting_checkout,
-				volatile_enable_pef_alerting_commit,
-				volatile_enable_pef_alerting_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Volatile_Enable_Pef_Alerting",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       volatile_enable_pef_alerting_checkout,
+                                       volatile_enable_pef_alerting_commit,
+                                       volatile_enable_pef_alerting_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Volatile_Channel_Privilege_Limit",
-				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				volatile_channel_priv_limit_checkout,
-				volatile_channel_priv_limit_commit,
-				volatile_channel_priv_limit_diff,
-				privilege_level_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Volatile_Channel_Privilege_Limit",
+                                       "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       volatile_channel_priv_limit_checkout,
+                                       volatile_channel_priv_limit_commit,
+                                       volatile_channel_priv_limit_diff,
+                                       privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Non_Volatile_Access_Mode",
-				"Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-				0,
-				non_volatile_access_mode_checkout,
-				non_volatile_access_mode_commit,
-				non_volatile_access_mode_diff,
-				channel_access_mode_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Non_Volatile_Access_Mode",
+                                       "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
+                                       0,
+                                       non_volatile_access_mode_checkout,
+                                       non_volatile_access_mode_commit,
+                                       non_volatile_access_mode_diff,
+                                       channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Non_Volatile_Enable_User_Level_Auth",
-				"Possible values: Yes/No",
-				0,
-				non_volatile_enable_user_level_auth_checkout,
-				non_volatile_enable_user_level_auth_commit,
-				non_volatile_enable_user_level_auth_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Non_Volatile_Enable_User_Level_Auth",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       non_volatile_enable_user_level_auth_checkout,
+                                       non_volatile_enable_user_level_auth_commit,
+                                       non_volatile_enable_user_level_auth_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Non_Volatile_Enable_Per_Message_Auth",
-				"Possible values: Yes/No",
-				0,
-				non_volatile_enable_per_msg_auth_checkout,
-				non_volatile_enable_per_msg_auth_commit,
-				non_volatile_enable_per_msg_auth_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Non_Volatile_Enable_Per_Message_Auth",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       non_volatile_enable_per_msg_auth_checkout,
+                                       non_volatile_enable_per_msg_auth_commit,
+                                       non_volatile_enable_per_msg_auth_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Non_Volatile_Enable_Pef_Alerting",
-				"Possible values: Yes/No",
-				0,
-				non_volatile_enable_pef_alerting_checkout,
-				non_volatile_enable_pef_alerting_commit,
-				non_volatile_enable_pef_alerting_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Non_Volatile_Enable_Pef_Alerting",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       non_volatile_enable_pef_alerting_checkout,
+                                       non_volatile_enable_pef_alerting_commit,
+                                       non_volatile_enable_pef_alerting_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_channel_section,
-				"Non_Volatile_Channel_Privilege_Limit",
-				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-				0,
-				non_volatile_channel_priv_limit_checkout,
-				non_volatile_channel_priv_limit_commit,
-				non_volatile_channel_priv_limit_diff,
-				privilege_level_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_channel_section,
+                                       "Non_Volatile_Channel_Privilege_Limit",
+                                       "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+                                       0,
+                                       non_volatile_channel_priv_limit_checkout,
+                                       non_volatile_channel_priv_limit_commit,
+                                       non_volatile_channel_priv_limit_diff,
+                                       privilege_level_number_validate) < 0)
     goto cleanup;
 
   return lan_channel_section;
 
  cleanup:
   if (lan_channel_section)
-    bmc_section_destroy(state_data, lan_channel_section);
+    bmc_config_section_destroy(state_data, lan_channel_section);
   return NULL;
 }
 

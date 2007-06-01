@@ -228,9 +228,9 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_destination_type_rq =
     {4,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,  "alert_acknowledge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "alert_acknowledge_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,  "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1,  "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3,  "retries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
@@ -523,9 +523,9 @@ fiid_template_t tmpl_cmd_get_lan_configuration_parameters_destination_type_rs =
     {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,  "alert_acknowledge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "alert_acknowledge_timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3,  "retries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -1077,9 +1077,9 @@ fill_cmd_set_lan_configuration_parameters_destination_type (uint8_t channel_numb
   FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
   FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge", alert_acknowledge);
   FIID_OBJ_SET (obj_cmd_rq, "alert_acknowledge_timeout", alert_acknowledge_timeout);
+  FIID_OBJ_SET (obj_cmd_rq, "retries", retries);
   FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
   FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "retries", retries);
 
   return 0;
 }

@@ -1,11 +1,11 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-ipmi-wrapper.h"
-#include "bmc-map.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-utils.h"
+#include "bmc-config-map.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 #define BMC_MAXIPADDRLEN 16
 #define BMC_MAXMACADDRLEN 24
@@ -789,136 +789,136 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *lan_conf_section = NULL;
 
-  if (!(lan_conf_section = bmc_section_create (state_data, "Lan_Conf")))
+  if (!(lan_conf_section = bmc_config_section_create (state_data, "Lan_Conf")))
     goto cleanup;
   
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"IP_Address_Source",
-				"Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
-				0,
-				ip_address_source_checkout,
-				ip_address_source_commit,
-				ip_address_source_diff,
-				ip_address_source_number_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "IP_Address_Source",
+                                       "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
+                                       0,
+                                       ip_address_source_checkout,
+                                       ip_address_source_commit,
+                                       ip_address_source_diff,
+                                       ip_address_source_number_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"IP_Address",
-				"Give valid IP address",
-				0,
-				ip_address_checkout,
-				ip_address_commit,
-				ip_address_diff,
-				ip_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "IP_Address",
+                                       "Give valid IP address",
+                                       0,
+                                       ip_address_checkout,
+                                       ip_address_commit,
+                                       ip_address_diff,
+                                       ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"MAC_Address",
-				"Give valid MAC address",
-				0,
-				mac_address_checkout,
-				mac_address_commit,
-				mac_address_diff,
-				mac_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "MAC_Address",
+                                       "Give valid MAC address",
+                                       0,
+                                       mac_address_checkout,
+                                       mac_address_commit,
+                                       mac_address_diff,
+                                       mac_address_validate) < 0) 
     goto cleanup;
 
   /* TODO: checking valid netmask is not same as checking valid IP */
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Subnet_Mask",
-				"Give valid Subnet Mask",
-				0,
-				subnet_mask_checkout,
-				subnet_mask_commit,
-				subnet_mask_diff,
-				ip_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Subnet_Mask",
+                                       "Give valid Subnet Mask",
+                                       0,
+                                       subnet_mask_checkout,
+                                       subnet_mask_commit,
+                                       subnet_mask_diff,
+                                       ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Default_Gateway_IP_Address",
-				"Give valid IP address",
-				0,
-				default_gateway_address_checkout,
-				default_gateway_address_commit,
-				default_gateway_address_diff,
-				ip_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Default_Gateway_IP_Address",
+                                       "Give valid IP address",
+                                       0,
+                                       default_gateway_address_checkout,
+                                       default_gateway_address_commit,
+                                       default_gateway_address_diff,
+                                       ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Default_Gateway_MAC_Address",
-				"Give valid MAC address",
-				0,
-				default_gateway_mac_address_checkout,
-				default_gateway_mac_address_commit,
-				default_gateway_mac_address_diff,
-				mac_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Default_Gateway_MAC_Address",
+                                       "Give valid MAC address",
+                                       0,
+                                       default_gateway_mac_address_checkout,
+                                       default_gateway_mac_address_commit,
+                                       default_gateway_mac_address_diff,
+                                       mac_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Backup_Gateway_IP_Address",
-				"Give valid IP address",
-				0,
-				backup_gateway_address_checkout,
-				backup_gateway_address_commit,
-				backup_gateway_address_diff,
-				ip_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Backup_Gateway_IP_Address",
+                                       "Give valid IP address",
+                                       0,
+                                       backup_gateway_address_checkout,
+                                       backup_gateway_address_commit,
+                                       backup_gateway_address_diff,
+                                       ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Backup_Gateway_MAC_Address",
-				"Give valid MAC address",
-				0,
-				backup_gateway_mac_address_checkout,
-				backup_gateway_mac_address_commit,
-				backup_gateway_mac_address_diff,
-				mac_address_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Backup_Gateway_MAC_Address",
+                                       "Give valid MAC address",
+                                       0,
+                                       backup_gateway_mac_address_checkout,
+                                       backup_gateway_mac_address_commit,
+                                       backup_gateway_mac_address_diff,
+                                       mac_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Vlan_id",
-				"Give valid unsigned number",
-				0,
-				vlan_id_checkout,
-				vlan_id_commit,
-				vlan_id_diff,
-				vlan_id_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Vlan_id",
+                                       "Give valid unsigned number",
+                                       0,
+                                       vlan_id_checkout,
+                                       vlan_id_commit,
+                                       vlan_id_diff,
+                                       vlan_id_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Vlan_Id_Enable",
-				"Possible values: Yes/No",
-				0,
-				vlan_id_enable_checkout,
-				vlan_id_enable_commit,
-				vlan_id_enable_diff,
-				yes_no_validate) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Vlan_Id_Enable",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       vlan_id_enable_checkout,
+                                       vlan_id_enable_commit,
+                                       vlan_id_enable_diff,
+                                       yes_no_validate) < 0) 
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                lan_conf_section,
-				"Vlan_Priority",
-				"Give valid unsigned number",
-				0,
-				vlan_priority_checkout,
-				vlan_priority_commit,
-				vlan_priority_diff,
-				number_range_one_byte) < 0) 
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       lan_conf_section,
+                                       "Vlan_Priority",
+                                       "Give valid unsigned number",
+                                       0,
+                                       vlan_priority_checkout,
+                                       vlan_priority_commit,
+                                       vlan_priority_diff,
+                                       number_range_one_byte) < 0) 
     goto cleanup;
 
   return lan_conf_section;
 
  cleanup:
   if (lan_conf_section)
-    bmc_section_destroy(state_data, lan_conf_section);
+    bmc_config_section_destroy(state_data, lan_conf_section);
   return NULL;
 }
 

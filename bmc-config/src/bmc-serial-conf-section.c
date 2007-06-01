@@ -1,10 +1,10 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-map.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-map.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 static bmc_err_t
 serial_conf_checkout (bmc_config_state_data_t *state_data,
@@ -850,124 +850,124 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *bmc_serial_conf_section = NULL;
 
-  if (!(bmc_serial_conf_section = bmc_section_create(state_data, "Serial_Conf")))
+  if (!(bmc_serial_conf_section = bmc_config_section_create(state_data, "Serial_Conf")))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Enable_Basic_Mode",
-				"Possible values: Yes/No",
-				0,
-				enable_basic_mode_checkout,
-				enable_basic_mode_commit,
-				enable_basic_mode_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Enable_Basic_Mode",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_basic_mode_checkout,
+                                       enable_basic_mode_commit,
+                                       enable_basic_mode_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Enable_PPP_Mode",
-				"Possible values: Yes/No",
-				0,
-				enable_ppp_mode_checkout,
-				enable_ppp_mode_commit,
-				enable_ppp_mode_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Enable_PPP_Mode",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_ppp_mode_checkout,
+                                       enable_ppp_mode_commit,
+                                       enable_ppp_mode_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Enable_Terminal_Mode",
-				"Possible values: Yes/No",
-				0,
-				enable_terminal_mode_checkout,
-				enable_terminal_mode_commit,
-				enable_terminal_mode_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Enable_Terminal_Mode",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_terminal_mode_checkout,
+                                       enable_terminal_mode_commit,
+                                       enable_terminal_mode_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Connect_Mode",
-				"Possible values: Modem_Connect/Direct_Mode",
-				0,
-				connect_mode_checkout,
-				connect_mode_commit,
-				connect_mode_diff,
-				connect_mode_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Connect_Mode",
+                                       "Possible values: Modem_Connect/Direct_Mode",
+                                       0,
+                                       connect_mode_checkout,
+                                       connect_mode_commit,
+                                       connect_mode_diff,
+                                       connect_mode_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Page_Blackout_Interval",
-				"Give a valid number",
-				0,
-				page_blackout_interval_checkout,
-				page_blackout_interval_commit,
-				page_blackout_interval_diff,
-				number_range_one_byte) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Page_Blackout_Interval",
+                                       "Give a valid number",
+                                       0,
+                                       page_blackout_interval_checkout,
+                                       page_blackout_interval_commit,
+                                       page_blackout_interval_diff,
+                                       number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Call_Retry_Interval",
-				"Give a valid number",
-				0,
-				call_retry_interval_checkout,
-				call_retry_interval_commit,
-				call_retry_interval_diff,
-				number_range_one_byte) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Call_Retry_Interval",
+                                       "Give a valid number",
+                                       0,
+                                       call_retry_interval_checkout,
+                                       call_retry_interval_commit,
+                                       call_retry_interval_diff,
+                                       number_range_one_byte) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Call_Retry_Time",
-				"Give a valid number",
-				BMC_DO_NOT_CHECKOUT,
-				call_retry_interval_checkout,
-				call_retry_interval_commit,
-				call_retry_interval_diff,
-				number_range_one_byte) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Call_Retry_Time",
+                                       "Give a valid number",
+                                       BMC_DO_NOT_CHECKOUT,
+                                       call_retry_interval_checkout,
+                                       call_retry_interval_commit,
+                                       call_retry_interval_diff,
+                                       number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Enable_DTR_Hangup",
-				"Possible values: Yes/No",
-				0,
-				enable_dtr_hangup_checkout,
-				enable_dtr_hangup_commit,
-				enable_dtr_hangup_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Enable_DTR_Hangup",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       enable_dtr_hangup_checkout,
+                                       enable_dtr_hangup_commit,
+                                       enable_dtr_hangup_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Flow_Control",
-				"Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
-				0,
-				flow_control_checkout,
-				flow_control_commit,
-				flow_control_diff,
-				flow_control_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Flow_Control",
+                                       "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
+                                       0,
+                                       flow_control_checkout,
+                                       flow_control_commit,
+                                       flow_control_diff,
+                                       flow_control_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                bmc_serial_conf_section,
-				"Bit_Rate",
-				"Possible values: 9600/19200/38400/57600/115200",
-				0,
-				bit_rate_checkout,
-				bit_rate_commit,
-				bit_rate_diff,
-				bit_rate_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       bmc_serial_conf_section,
+                                       "Bit_Rate",
+                                       "Possible values: 9600/19200/38400/57600/115200",
+                                       0,
+                                       bit_rate_checkout,
+                                       bit_rate_commit,
+                                       bit_rate_diff,
+                                       bit_rate_number_validate) < 0)
     goto cleanup;
 
   return bmc_serial_conf_section;
 
  cleanup:
   if (bmc_serial_conf_section)
-    bmc_section_destroy(state_data, bmc_serial_conf_section);
+    bmc_config_section_destroy(state_data, bmc_serial_conf_section);
   return NULL;
 }

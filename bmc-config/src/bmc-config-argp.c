@@ -64,7 +64,7 @@
 #include "bmc-config-argp.h"
 
 #include "bmc-config.h"
-#include "bmc-sections.h"
+#include "bmc-config-sections.h"
 
 #include "freeipmi-portability.h"
 
@@ -77,34 +77,28 @@ static char args_doc[] = "";
 
 /* The options we understand. */
 static struct argp_option options[] = {
-  /* bmc-config should have a default privilege of ADMIN 
-   * so we cannot use ARGP_COMMON_OPTIONS
-   */
   ARGP_COMMON_OPTIONS_INBAND,
   ARGP_COMMON_OPTIONS_OUTOFBAND,
   ARGP_COMMON_OPTIONS_AUTHTYPE,
-  {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,
-   "Use this PRIVILEGE-LEVEL instead of ADMIN.  "
-   "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 11},
+  ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
 #ifndef NDEBUG
   ARGP_COMMON_OPTIONS_DEBUG,
 #endif /* NDEBUG */
-
   {"checkout", 'o', 0, 0, 
-   "Action is to GET the BMC configuration", 13},
+   "Action is to GET the BMC configuration", 18},
   {"commit", 'i', 0, 0, 
-   "Action is to UPDATE the BMC configuration", 14},
+   "Action is to UPDATE the BMC configuration", 19},
   {"diff", 'd', 0, 0, 
-   "Action is to SHOW THE DIFFERENCES with BMC", 15},
+   "Action is to SHOW THE DIFFERENCES with BMC", 20},
 
   {"filename", 'f', "FILENAME", 0, 
-   "use FILENAME in checkout, commit or diff", 16},
+   "use FILENAME in checkout, commit or diff", 21},
   {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in checkout, commit or diff", 17},
+   "use KEY-PAIR in checkout, commit or diff", 22},
   {"section", 'S', "SECTION", 0,
-   "use SECTION in checkout", 18},
+   "use SECTION in checkout", 23},
   {"listsections", 'L', 0, 0,
-   "List available sections for checkout", 19},
+   "List available sections for checkout", 24},
 
   {"verbose",   'v', 0, 0,  "Produce verbose output", 20},
   {"quiet",     'q', 0, 0,  "Do not produce any output", 21},
@@ -140,21 +134,21 @@ _create_keypair(char *arg)
 static struct sectionstr *
 _create_sectionstr(char *arg)
 {
-  struct sectionstr *kp;
+  struct sectionstr *s;
   
-  if (!(kp = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
+  if (!(s = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
     {
       perror("malloc");
       exit(1);
     }
-  if (!(kp->sectionstr = strdup(arg)))
+  if (!(s->sectionstr = strdup(arg)))
     {
       perror("strdup");
       exit(1);
     }
-  kp->next = NULL;
+  s->next = NULL;
 
-  return kp;
+  return s;
 }
 
 /* Parse a single option. */

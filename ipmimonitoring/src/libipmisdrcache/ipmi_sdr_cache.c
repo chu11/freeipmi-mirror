@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.3 2007-04-28 21:28:00 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.3.2.1 2007-06-01 03:37:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -171,6 +171,7 @@ _destroy_ctx(ipmi_sdr_cache_ctx_t c)
 
   c->magic = ~IPMI_SDR_CACHE_MAGIC;
   c->operation = IPMI_SDR_CACHE_OPERATION_UNINITIALIZED;
+  free(c);
 }
 
 ipmi_sdr_cache_ctx_t

@@ -45,7 +45,13 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    ARGP_COMMON_OPTIONS,
+    ARGP_COMMON_OPTIONS_INBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
+    ARGP_COMMON_OPTIONS_AUTHTYPE,
+    ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
+#ifndef NDEBUG
+    ARGP_COMMON_OPTIONS_DEBUG,
+#endif /* NDEBUG */
     {"get-capabilities", 'c', NULL, 0, "Get the chassis capabilities", 13},
     {"get-status", 's', NULL, 0, "Get the chassis status", 14},
     {"chassis-control", 'C', NULL, 0, "Control the chassis", 15},
@@ -99,6 +105,10 @@ ipmi_chassis_argp_parse (int argc, char **argv,
   error_t err;
   init_common_cmd_args (&(cmd_args->common));
   cmd_args->cmd = -1;
+  /* ADMIN is minimum for ipmi-chassis b/c its needed for many of the
+   * ipmi cmds used
+   */
+  cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   err = argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 
   if (err != 0)

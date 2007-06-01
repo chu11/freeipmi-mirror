@@ -1,10 +1,10 @@
 #include "bmc-config.h"
-#include "bmc-common.h"
-#include "bmc-config-api.h"
-#include "bmc-diff.h"
-#include "bmc-map.h"
-#include "bmc-sections.h"
-#include "bmc-validate.h"
+#include "bmc-config-common.h"
+#include "bmc-config-wrapper.h"
+#include "bmc-config-diff.h"
+#include "bmc-config-map.h"
+#include "bmc-config-sections.h"
+#include "bmc-config-validate.h"
 
 int
 bmc_get_num_users (bmc_config_state_data_t *state_data)
@@ -1647,210 +1647,210 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
   struct section *user_section = NULL;
   char buf[64];
 
-  if (userid < 0)
+  if (userid <= 0)
     {
       fprintf(stderr, "Invalid Userid = %d\n", userid);
       return NULL;
     }
 
-  snprintf(buf, 64, "User%d", userid + 1);
+  snprintf(buf, 64, "User%d", userid);
 
-  if (!(user_section = bmc_section_create(state_data, buf)))
+  if (!(user_section = bmc_config_section_create(state_data, buf)))
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Username",
-				"Give Username",
-				0,
-				username_checkout,
-				username_commit,
-				username_diff,
-				username_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Username",
+                                       "Give Username",
+                                       0,
+                                       username_checkout,
+                                       username_commit,
+                                       username_diff,
+                                       username_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Enable_User",
-				"Possible values: Yes/No or blank to not set",
-				BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-				enable_user_checkout,
-				enable_user_commit,
-				enable_user_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Enable_User",
+                                       "Possible values: Yes/No or blank to not set",
+                                       BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                       enable_user_checkout,
+                                       enable_user_commit,
+                                       enable_user_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Password",
-				"Give password or blank to clear. MAX 16 chars.",
-				BMC_CHECKOUT_KEY_COMMENTED_OUT,
-				password_checkout,
-				password_commit,
-				password_diff,
-				password_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Password",
+                                       "Give password or blank to clear. MAX 16 chars.",
+                                       BMC_CHECKOUT_KEY_COMMENTED_OUT,
+                                       password_checkout,
+                                       password_commit,
+                                       password_diff,
+                                       password_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Password20",
-				"Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
-				BMC_CHECKOUT_KEY_COMMENTED_OUT,
-				password20_checkout,
-				password20_commit,
-				password20_diff,
-				password20_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Password20",
+                                       "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
+                                       BMC_CHECKOUT_KEY_COMMENTED_OUT,
+                                       password20_checkout,
+                                       password20_commit,
+                                       password20_diff,
+                                       password20_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Lan_Enable_IPMI_Msgs",
-				"Possible values: Yes/No",
-				0,
-				lan_enable_ipmi_msgs_checkout,
-				lan_enable_ipmi_msgs_commit,
-				lan_enable_ipmi_msgs_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Lan_Enable_IPMI_Msgs",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       lan_enable_ipmi_msgs_checkout,
+                                       lan_enable_ipmi_msgs_commit,
+                                       lan_enable_ipmi_msgs_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Lan_Enable_Link_Auth",
-				"Possible values: Yes/No",
-				0,
-				lan_enable_link_auth_checkout,
-				lan_enable_link_auth_commit,
-				lan_enable_link_auth_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Lan_Enable_Link_Auth",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       lan_enable_link_auth_checkout,
+                                       lan_enable_link_auth_commit,
+                                       lan_enable_link_auth_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Lan_Enable_Restricted_to_Callback",
-				"Possible values: Yes/No",
-				0,
-				lan_enable_restricted_to_callback_checkout,
-				lan_enable_restricted_to_callback_commit,
-				lan_enable_restricted_to_callback_diff,
-				yes_no_validate) < 0)
-    goto cleanup;
-
-  /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Lan_Enable_Restrict_to_Callback",
-				"Possible values: Yes/No",
-				BMC_DO_NOT_CHECKOUT,
-				lan_enable_restricted_to_callback_checkout,
-				lan_enable_restricted_to_callback_commit,
-				lan_enable_restricted_to_callback_diff,
-				yes_no_validate) < 0)
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Lan_Privilege_Limit",
-				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-				0,
-				lan_privilege_limit_checkout,
-				lan_privilege_limit_commit,
-				lan_privilege_limit_diff,
-				get_privilege_limit_number_validate) < 0)
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Lan_Session_Limit",
-				"Possible values: 0-255, 0 is unlimited",
-				BMC_DO_NOT_CHECKOUT,
-				lan_session_limit_checkout,
-				lan_session_limit_commit,
-				lan_session_limit_diff,
-				number_range_one_byte) < 0)
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"SOL_Payload_Access",
-				"Possible values: Yes/No",
-				0,
-				sol_payload_access_checkout,
-				sol_payload_access_commit,
-				sol_payload_access_diff,
-				yes_no_validate) < 0)
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Serial_Enable_IPMI_Msgs",
-				"Possible values: Yes/No",
-				0,
-				serial_enable_ipmi_msgs_checkout,
-				serial_enable_ipmi_msgs_commit,
-				serial_enable_ipmi_msgs_diff,
-				yes_no_validate) < 0)
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Serial_Enable_Link_Auth",
-				"Possible values: Yes/No",
-				0,
-				serial_enable_link_auth_checkout,
-				serial_enable_link_auth_commit,
-				serial_enable_link_auth_diff,
-				yes_no_validate) < 0)
-    goto cleanup;
-
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Serial_Enable_Restricted_to_Callback",
-				"Possible values: Yes/No",
-				0,
-				serial_enable_restricted_to_callback_checkout,
-				serial_enable_restricted_to_callback_commit,
-				serial_enable_restricted_to_callback_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Lan_Enable_Restricted_to_Callback",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       lan_enable_restricted_to_callback_checkout,
+                                       lan_enable_restricted_to_callback_commit,
+                                       lan_enable_restricted_to_callback_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Serial_Enable_Restrict_to_Callback",
-				"Possible values: Yes/No",
-				BMC_DO_NOT_CHECKOUT,
-				serial_enable_restricted_to_callback_checkout,
-				serial_enable_restricted_to_callback_commit,
-				serial_enable_restricted_to_callback_diff,
-				yes_no_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Lan_Enable_Restrict_to_Callback",
+                                       "Possible values: Yes/No",
+                                       BMC_DO_NOT_CHECKOUT,
+                                       lan_enable_restricted_to_callback_checkout,
+                                       lan_enable_restricted_to_callback_commit,
+                                       lan_enable_restricted_to_callback_diff,
+                                       yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Serial_Privilege_Limit",
-				"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-				0,
-				serial_privilege_limit_checkout,
-				serial_privilege_limit_commit,
-				serial_privilege_limit_diff,
-				get_privilege_limit_number_validate) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Lan_Privilege_Limit",
+                                       "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                                       0,
+                                       lan_privilege_limit_checkout,
+                                       lan_privilege_limit_commit,
+                                       lan_privilege_limit_diff,
+                                       get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_section_add_keyvalue (state_data,
-                                user_section,
-				"Serial_Session_Limit",
-				"Possible values: 0-255, 0 is unlimited",
-				BMC_DO_NOT_CHECKOUT,
-				serial_session_limit_checkout,
-				serial_session_limit_commit,
-				serial_session_limit_diff,
-				number_range_one_byte) < 0)
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Lan_Session_Limit",
+                                       "Possible values: 0-255, 0 is unlimited",
+                                       BMC_DO_NOT_CHECKOUT,
+                                       lan_session_limit_checkout,
+                                       lan_session_limit_commit,
+                                       lan_session_limit_diff,
+                                       number_range_one_byte) < 0)
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "SOL_Payload_Access",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       sol_payload_access_checkout,
+                                       sol_payload_access_commit,
+                                       sol_payload_access_diff,
+                                       yes_no_validate) < 0)
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Serial_Enable_IPMI_Msgs",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       serial_enable_ipmi_msgs_checkout,
+                                       serial_enable_ipmi_msgs_commit,
+                                       serial_enable_ipmi_msgs_diff,
+                                       yes_no_validate) < 0)
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Serial_Enable_Link_Auth",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       serial_enable_link_auth_checkout,
+                                       serial_enable_link_auth_commit,
+                                       serial_enable_link_auth_diff,
+                                       yes_no_validate) < 0)
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Serial_Enable_Restricted_to_Callback",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       serial_enable_restricted_to_callback_checkout,
+                                       serial_enable_restricted_to_callback_commit,
+                                       serial_enable_restricted_to_callback_diff,
+                                       yes_no_validate) < 0)
+    goto cleanup;
+
+  /* achu: For backwards compatability to bmc-config in 0.2.0 */
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Serial_Enable_Restrict_to_Callback",
+                                       "Possible values: Yes/No",
+                                       BMC_DO_NOT_CHECKOUT,
+                                       serial_enable_restricted_to_callback_checkout,
+                                       serial_enable_restricted_to_callback_commit,
+                                       serial_enable_restricted_to_callback_diff,
+                                       yes_no_validate) < 0)
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Serial_Privilege_Limit",
+                                       "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                                       0,
+                                       serial_privilege_limit_checkout,
+                                       serial_privilege_limit_commit,
+                                       serial_privilege_limit_diff,
+                                       get_privilege_limit_number_validate) < 0)
+    goto cleanup;
+
+  if (bmc_config_section_add_keyvalue (state_data,
+                                       user_section,
+                                       "Serial_Session_Limit",
+                                       "Possible values: 0-255, 0 is unlimited",
+                                       BMC_DO_NOT_CHECKOUT,
+                                       serial_session_limit_checkout,
+                                       serial_session_limit_commit,
+                                       serial_session_limit_diff,
+                                       number_range_one_byte) < 0)
     goto cleanup;
 
   return user_section;
 
  cleanup:
   if (user_section)
-    bmc_section_destroy(state_data, user_section);
+    bmc_config_section_destroy(state_data, user_section);
   return NULL;
 }
