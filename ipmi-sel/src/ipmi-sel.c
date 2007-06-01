@@ -433,6 +433,13 @@ _ipmi_sel (pstdout_state_t pstate,
 
   prog_data = (ipmi_sel_prog_data_t *)arg;
 
+  if (!(dev = ipmi_device_create()))
+    {
+      pstdout_perror(pstate, "ipmi_device_create");
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+
   if (hostname && strcmp(hostname, "localhost") != 0)
     {
       if (ipmi_open_outofband (dev,
