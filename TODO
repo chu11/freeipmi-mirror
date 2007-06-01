@@ -65,8 +65,10 @@ common stuff for parsing in bmc-config and pef-config
 
 re-architecture
 ---------------
-merge in freeipmi-udm
-- after ipmi-chassis, ipmi-fru, and pef-config committed
-- for 0.4.0 or 0.5.0?
+libfreeipmi re-arch for better error codes
+libfreeipmi udm - re-arch for inband/outofband/lanplus
+bmc/pef-config - parsing bad, re-design, output error info
 add header comments to fiid.h
-
+rename variables for better consistency?
+audit errno/kcs/ssif/openipmi errors -> udm errnos
+split udm into another lib

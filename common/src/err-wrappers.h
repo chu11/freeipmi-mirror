@@ -39,7 +39,6 @@ extern "C" {
 #include <errno.h>
 
 #include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-utils.h"
 
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 
@@ -70,38 +69,8 @@ do {                                                                    \
   fflush (stderr);                                                      \
   errno = save_errno;                                                   \
 } while (0)
-
-#define __IPMI_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                      \
-do {                                                                    \
-  extern int errno;                                                     \
-  int save_errno = errno;                                               \
-  memset((___dev)->errmsg, '\0', IPMI_ERR_STR_MAX_LEN);                 \
-  if (!ipmi_strerror_cmd_r ((___rs),                                    \
-		      	    (___dev)->net_fn,                           \
-			    (___dev)->errmsg,                           \
-			    IPMI_ERR_STR_MAX_LEN))                      \
-    fprintf (stderr,                                                    \
-	     "%s: %d: %s: errmsg = %s\n", __FILE__,                     \
-	     __LINE__, __PRETTY_FUNCTION__, (___dev)->errmsg);          \
-  fflush(stderr);                                                       \
-  errno = save_errno;                                                   \
-  goto cleanup;                                                         \
-} while (0) 
 #else
 #define __IPMI_TRACE
-#define __IPMI_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                      \
-do {                                                                    \
-  extern int errno;                                                     \
-  int save_errno = errno;                                               \
-  memset((___dev)->errmsg, '\0', IPMI_ERR_STR_MAX_LEN);                 \
-  ipmi_strerror_cmd_r ((___rs),                                         \
-	     	       (___dev)->net_fn,                                \
-		       (___dev)->errmsg,                                \
-		       IPMI_ERR_STR_MAX_LEN);                           \
-  errno = save_errno;                                                   \
-  goto cleanup;                                                         \
-} while (0) 
-
 #endif /* IPMI_TRACE */
 
 #define ERR_LOG(expr)                                                   \
@@ -258,28 +227,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_ENOTSUP(expr)                                               \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = ENOTSUP;                                                  \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-
-#define ERR_ENOTSUP_CLEANUP(expr)                                       \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      errno = ENOTSUP;                                                  \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      goto cleanup;                                                     \
-    }                                                                   \
-} while (0)
-
 #define ERR_EMSGSIZE(expr)                                              \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -300,19 +247,6 @@ do {                                                                    \
       __IPMI_TRACE;                                                     \
       goto cleanup;                                                     \
     }                                                                   \
-} while (0)
-
-#define ERR_IPMI_CMD_CLEANUP(__dev, __lun, __netfn, __rq, __rs)                    \
-do {                                                                               \
-  int8_t __rv;                                                                     \
-  ERR_CLEANUP (!(ipmi_cmd ((__dev),                                                \
-                           (__lun),                                                \
-                           (__netfn),                                              \
-                           (__rq),                                                 \
-                           (__rs)) < 0));                                          \
-  ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));       \
-  if (!__rv)                                                                       \
-    __IPMI_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                      \
 } while (0)
 
 #ifdef __cplusplus

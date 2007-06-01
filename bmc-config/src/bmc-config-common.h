@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-config-common.h,v 1.1 2007-05-18 06:20:32 chu11 Exp $ 
+   $Id: bmc-config-common.h,v 1.2 2007-06-01 04:35:05 chu11 Exp $ 
 
    Copyright (C) 2005 FreeIPMI Core Team
 

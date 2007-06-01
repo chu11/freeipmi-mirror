@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.10 2007-05-18 18:21:32 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.11 2007-06-01 04:35:09 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_UDM_H

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.5 2007-05-14 02:23:48 chu11 Exp $ 
+   $Id: ipmi-sensors.h,v 1.6 2007-06-01 04:35:07 chu11 Exp $ 
    
    ipmi-sensors.h - IPMI Sensors utility.
    

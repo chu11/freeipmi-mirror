@@ -34,6 +34,36 @@ extern "C" {
 #include <freeipmi/ipmi-messaging-support-cmds.h>
 #include <freeipmi/ipmi-ssif-api.h>
 
+enum ipmi_errnum
+  {
+    IPMI_ERR_SUCCESS = 0,
+    IPMI_ERR_NULL_DEVICE = 1,
+    IPMI_ERR_DEVICE_MAGIC = 2,
+    IPMI_ERR_PERMISSION = 3,
+    IPMI_ERR_USERNAME = 4,
+    IPMI_ERR_PASSWORD = 5,
+    IPMI_ERR_PRIVILEGE = 6,
+    IPMI_ERR_AUTHENTICATION_TYPE = 7,
+    IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT = 8,
+    IPMI_ERR_SESSION_TIMEOUT = 9,
+    IPMI_ERR_DEVICE_ALREADY_OPEN = 10,
+    IPMI_ERR_DEVICE_NOT_OPEN = 11,
+    IPMI_ERR_DEVICE_NOT_SUPPORTED = 12,
+    IPMI_ERR_DEVICE_NOT_FOUND = 13,
+    IPMI_ERR_BAD_COMPLETION_CODE = 14,
+    IPMI_ERR_BMC_BUSY = 15,
+    IPMI_ERR_OUT_OF_MEMORY = 16,
+    IPMI_ERR_INVALID_HOSTNAME = 17,
+    IPMI_ERR_INVALID_PARAMETERS = 18,
+    IPMI_ERR_DRIVER_PATH_REQUIRED = 19,
+    IPMI_ERR_INTERNAL_IPMI_ERROR = 20,
+    IPMI_ERR_INTERNAL_SYSTEM_ERROR = 21,
+    IPMI_ERR_INTERNAL_LIBRARY_ERROR = 22,
+    IPMI_ERR_INTERNAL_ERROR = 23,
+    IPMI_ERR_OUTOFRANGE = 24,
+  };
+typedef enum ipmi_errnum ipmi_errnum_type_t;
+
 enum ipmi_driver_type
   {
     IPMI_DEVICE_UNKNOWN = 0,
@@ -52,22 +82,30 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 
 typedef struct ipmi_device *ipmi_device_t;
  
-ipmi_device_t ipmi_open_inband (ipmi_driver_type_t driver_type, 
-				int disable_auto_probe, 
-                                uint16_t driver_address, 
-                                uint8_t reg_space,
-                                char *driver_device, 
-                                uint32_t flags);
+ipmi_device_t ipmi_device_create(void);
 
-ipmi_device_t ipmi_open_outofband (ipmi_driver_type_t driver_type, 
-				   const char *hostname,
-                                   const char *username, 
-                                   const char *password, 
-                                   uint8_t authentication_type, 
-                                   uint8_t privilege_level,
-                                   unsigned int session_timeout,
-                                   unsigned int retry_timeout, 
-                                   uint32_t flags);
+char *ipmi_device_strerror(int errnum);
+
+int ipmi_device_errnum(ipmi_device_t dev);
+
+int ipmi_open_inband (ipmi_device_t,
+		      ipmi_driver_type_t driver_type, 
+		      int disable_auto_probe, 
+		      uint16_t driver_address, 
+		      uint8_t reg_space,
+		      char *driver_device, 
+		      uint32_t flags);
+
+int ipmi_open_outofband (ipmi_device_t,
+			 ipmi_driver_type_t driver_type, 
+			 const char *hostname,
+			 const char *username, 
+			 const char *password, 
+			 uint8_t authentication_type, 
+			 uint8_t privilege_level,
+			 unsigned int session_timeout,
+			 unsigned int retry_timeout, 
+			 uint32_t flags);
 
 int ipmi_cmd (ipmi_device_t dev, 
 	      uint8_t lun, 
@@ -83,7 +121,9 @@ int ipmi_cmd_raw (ipmi_device_t dev,
 		  uint8_t *out, 
 		  size_t out_len);
 
-void ipmi_close_device (ipmi_device_t dev);
+int ipmi_close_device (ipmi_device_t dev);
+
+void ipmi_device_destroy (ipmi_device_t dev);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.13 2007-05-25 03:48:59 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.14 2007-06-01 04:35:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

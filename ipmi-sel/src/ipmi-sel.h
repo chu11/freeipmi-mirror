@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel.h,v 1.4 2007-05-14 02:23:47 chu11 Exp $ 
+   $Id: ipmi-sel.h,v 1.5 2007-06-01 04:35:06 chu11 Exp $ 
    
    ipmi-sel.h - System Event Logger utility.
    

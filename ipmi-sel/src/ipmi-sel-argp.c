@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.16 2007-05-15 21:45:05 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.17 2007-06-01 04:35:06 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    

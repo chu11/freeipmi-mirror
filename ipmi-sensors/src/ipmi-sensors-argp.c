@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.12 2007-05-15 21:45:06 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.13 2007-06-01 04:35:06 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    

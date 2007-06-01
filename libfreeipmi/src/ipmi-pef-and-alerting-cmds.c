@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.20 2007-05-21 23:36:55 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.21 2007-06-01 04:35:09 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

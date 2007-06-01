@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.2 2007-05-16 23:26:59 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.3 2007-06-01 04:35:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
