@@ -51,6 +51,11 @@
 	* bmc-info/, ipmi-sel/, ipmi-sensors/, ipmimonitoring/, ipmi-raw/:
 	Use new pstdout_setup common function for pstdout setup.
 
+	* common/src/ipmi-sdr-cache.h, common/src/ipmi-sdr-cache.c
+	(sdr_cache_create_and_load): New function.
+
+	* ipmi-sel/, ipmi-sensors/: Use new common function.
+
 2007-06-01  Albert Chu <chu11@llnl.gov>
 
 	* common/src/fiid-wrappers.h: Remove duplicate macros.

@@ -2112,3 +2112,101 @@ sdr_cache_load (sdr_cache_ctx_t ctx,
     fclose(fp);
   return rv;
 }
+
+int 
+sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
+                           ipmi_device_t dev,
+                           char *host,
+                           char *user_cache_dir,
+                           int verbose,
+                           int debug,
+                           sdr_record_t **sdr_record_list,
+                           unsigned int *sdr_record_count,
+                           char *errmsg,
+                           unsigned int errmsglen)
+{
+  int rv = -1;
+
+  if (!ctx || ctx->magic != SDR_CACHE_CTX_MAGIC)
+    return -1;
+
+  if (!dev
+      || !sdr_record_list
+      || !sdr_record_count
+      || !errmsg
+      || !errmsglen)
+    {
+      ctx->errnum = SDR_CACHE_CTX_ERR_PARAMETERS;
+      return -1;
+    }
+
+  *sdr_record_list = NULL;
+  *sdr_record_count = 0;
+  if (sdr_cache_load(ctx,
+                     dev,
+                     host,
+                     user_cache_dir,
+                     sdr_record_list,
+                     sdr_record_count) < 0)
+    {
+      if (sdr_cache_ctx_errnum(ctx) != SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST)
+        {
+          if (sdr_cache_ctx_errnum(ctx) == SDR_CACHE_CTX_ERR_CACHE_INVALID
+              || sdr_cache_ctx_errnum(ctx) ==  SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
+            snprintf(errmsg,
+                     errmsglen,
+                     "SDR Cache load failed: %s; SDR cache may need to be flushed and reloaded",
+                     sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(ctx)));
+          else
+            snprintf(errmsg,
+                     errmsglen,
+                     "SDR Cache load failed: %s",
+                     sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(ctx)));
+          goto cleanup;
+        }
+    }
+
+  if (sdr_cache_ctx_errnum(ctx) == SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST)
+    {
+      if (sdr_cache_create (ctx,
+                            dev,
+                            host,
+                            user_cache_dir,
+                            verbose,
+                            debug) < 0)
+        {
+          snprintf(errmsg,
+                   errmsglen,
+                   "SDR Cache creation failed: %s",
+                   sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(ctx)));
+          goto cleanup;
+        }
+
+      if (sdr_cache_load(ctx,
+                         dev,
+                         host,
+                         user_cache_dir,
+                         sdr_record_list,
+                         sdr_record_count) < 0)
+        {
+          snprintf(errmsg,
+                   errmsglen,
+                   "SDR Cache load failed: %s",
+                   sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(ctx)));
+          goto cleanup;
+        }
+    }
+
+  rv = 0;
+ cleanup:
+  if (rv < 0)
+    {
+      if (*sdr_record_count)
+        {
+          free(*sdr_record_list);
+          *sdr_record_list = NULL;
+          *sdr_record_count = 0;
+        }
+    }
+  return (rv);
+}

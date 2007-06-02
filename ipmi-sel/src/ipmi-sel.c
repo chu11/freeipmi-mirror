@@ -49,107 +49,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "pstdout.h"
 #include "hostrange.h"
 
-void
-cleanup_sdr_cache (ipmi_sel_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (state_data->sdr_record_list)
-    {
-      free(state_data->sdr_record_list);
-      state_data->sdr_record_list = NULL;
-      state_data->sdr_record_count = 0;
-    }
-}
-
-int
-init_sdr_cache (ipmi_sel_state_data_t *state_data)
-{
-  struct ipmi_sel_arguments *args = NULL;
-  int rv = -1;
-  
-  assert(state_data);
-  
-  args = state_data->prog_data->args;
-  
-  if (sdr_cache_load(state_data->sdr_cache_ctx,
-                     state_data->dev,
-                     state_data->hostname,
-                     args->sdr.sdr_cache_dir,
-                     &(state_data->sdr_record_list),
-                     &(state_data->sdr_record_count)) < 0)
-    {
-      if (sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) != SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST)
-        {
-          if (sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) == SDR_CACHE_CTX_ERR_CACHE_INVALID
-              || sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) ==  SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "SDR Cache load failed: %s; SDR cache may need to be flushed and reloaded\n",
-                             sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
-          else
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "SDR Cache load failed: %s\n",
-                               sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
-          goto cleanup;
-        }
-    }
-  
-  if (sdr_cache_ctx_errnum(state_data->sdr_cache_ctx) == SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST)
-    {
-#ifndef NDEBUG
-      if (sdr_cache_create (state_data->sdr_cache_ctx,
-                            state_data->dev,
-                            state_data->hostname,
-                            args->sdr.sdr_cache_dir,
-                            (args->sdr.quiet_cache_wanted) ? 0 : 1,
-                            state_data->prog_data->debug_flags) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "SDR Cache creation failed: %s\n",
-                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
-          goto cleanup;
-        }
-#else  /* NDEBUG */
-      if (sdr_cache_create (state_data->sdr_cache_ctx,
-                            state_data->dev,
-                            state_data->hostname,
-                            args->sdr.sdr_cache_dir,
-                            (args->sdr.quiet_cache_wanted) ? 0 : 1,
-                            0) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "SDR Cache creation failed: %s\n",
-                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
-          goto cleanup;
-        }
-#endif /* NDEBUG */
-      
-      if (sdr_cache_load(state_data->sdr_cache_ctx,
-                         state_data->dev,
-                         state_data->hostname,
-                         args->sdr.sdr_cache_dir,
-                         &(state_data->sdr_record_list),
-                         &(state_data->sdr_record_count)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "SDR Cache load failed: %s\n",
-                           sdr_cache_ctx_strerror(sdr_cache_ctx_errnum(state_data->sdr_cache_ctx)));
-          goto cleanup;
-        }
-    }
-  
-  rv = 0;
- cleanup:
-  if (rv < 0)
-    cleanup_sdr_cache(state_data);
-  return (rv);
-}
-
 int 
 display_sel_info (ipmi_sel_state_data_t *state_data)
 {
@@ -319,6 +218,7 @@ int
 run_cmd_args (ipmi_sel_state_data_t *state_data)
 {
   struct ipmi_sel_arguments *args;
+  char errmsg[IPMI_SDR_CACHE_ERRMSGLEN];
   int rv = -1;
 
   assert(state_data);
@@ -408,15 +308,39 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
       return 0;
     }
   
-  if (init_sdr_cache (state_data) < 0)
-    goto cleanup;
+  if (sdr_cache_create_and_load (state_data->sdr_cache_ctx,
+                                 state_data->dev,
+                                 state_data->hostname,
+                                 args->sdr.sdr_cache_dir,
+                                 (args->sdr.quiet_cache_wanted) ? 0 : 1,
+#ifndef NDEBUG
+                                 state_data->prog_data->debug_flags,
+#else  /* NDEBUG */
+                                 0,
+#endif /* NDEBUG */
+                                 &(state_data->sdr_record_list),
+                                 &(state_data->sdr_record_count),
+                                 errmsg,
+                                 IPMI_SDR_CACHE_ERRMSGLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s\n",
+                       errmsg);
+      goto cleanup;
+    }
 
   if (display_sel_records (state_data) < 0)
     goto cleanup;
 
   rv = 0;
  cleanup:
-  cleanup_sdr_cache (state_data);
+  if (state_data->sdr_record_list)
+    {
+      free(state_data->sdr_record_list);
+      state_data->sdr_record_list = NULL;
+      state_data->sdr_record_count = 0;
+    }
   return (rv);
 }
 

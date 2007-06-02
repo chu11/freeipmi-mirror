@@ -196,6 +196,8 @@ typedef struct sdr_record sdr_record_t;
 
 typedef struct sdr_cache_ctx *sdr_cache_ctx_t;
 
+#define IPMI_SDR_CACHE_ERRMSGLEN 1024
+
 sdr_cache_ctx_t sdr_cache_ctx_create(void);
 
 void sdr_cache_ctx_destroy(sdr_cache_ctx_t ctx);
@@ -221,5 +223,16 @@ int sdr_cache_load (sdr_cache_ctx_t ctx,
                     char *user_cache_dir,
 		    sdr_record_t **sdr_record_list, 
                     unsigned int *sdr_record_count);
+
+int sdr_cache_create_and_load (sdr_cache_ctx_t ctx,
+                               ipmi_device_t dev,
+                               char *host,
+                               char *user_cache_dir,
+                               int verbose,
+                               int debug,
+                               sdr_record_t **sdr_record_list,
+                               unsigned int *sdr_record_count,
+                               char *errmsg,
+                               unsigned int errmsglen);
 
 #endif
