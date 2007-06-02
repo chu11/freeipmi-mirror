@@ -37,38 +37,6 @@
 
 #include "freeipmi-portability.h"
 
-#ifndef HAVE_ERROR
-/* Replacement for glibc error() */
-void
-freeipmi_error(int status, int errnum, const char *message, ...)
-{
-	va_list args;
-
-	fflush(stdout);
-	fprintf(stderr, "%s: ", program_invocation_short_name);
-
-	va_start(args, message);
-	vfprintf(stderr, message, args);
-	va_end(args);
-
-	if (errnum) {
-#ifdef HAVE_STRERROR_R
-		char buf[256];
-
-		strerror_r(errnum, buf, sizeof(buf));
-		fprintf(stderr, ": %s", buf);
-#else
-		/* XXX strerror is not not thread safe */
-		fprintf(stderr, ": %s", strerror(errnum));
-#endif
-	}
-
-	putc('\n', stderr);
-	if (status)
-		exit(status);
-}
-#endif
-
 #ifndef HAVE_STRNDUP
 /* Replacement for glibc strndup() */
 char *

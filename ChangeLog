@@ -8,6 +8,12 @@
 	* Globally re-adjust headers accordingly for above change.
 
 	* Cleanup compile warnings.
+
+	* common/src/freeipmi-portability.h,
+	common/src/freeipmi-portability.c (freeipmi_error): Remove
+	function, it and error() are no longer used.
+
+	* configure.ac: Remove check for error().
 	
 2007-06-01  Albert Chu <chu11@llnl.gov>
 

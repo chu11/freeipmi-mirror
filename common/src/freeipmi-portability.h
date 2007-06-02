@@ -106,19 +106,6 @@ freeipmi_strchr (const char* s, int c)
 #endif /* HAVE_STRCHR */
 #endif /* STDC_HEADERS */
 
-/* FreeBSD don't have error() */
-#ifndef HAVE_ERROR
-# if defined(__GNUC__) && __GNUC__ >= 3
-void freeipmi_error(int __status, int __errnum,
-	const char *__format, ...)
-		__attribute__ ((__format__ (__printf0__, 3, 4)));
-# else
-void freeipmi_error(int __status, int __errnum,
-	const char *__format, ...);
-# endif
-# define error	freeipmi_error
-#endif
-
 /* FreeBSD don't have strndup() */
 #ifndef HAVE_STRNDUP
 #define strndup	freeipmi_strndup

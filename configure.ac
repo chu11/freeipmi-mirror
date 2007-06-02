@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.4.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.88 2007-06-02 14:34:53 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.89 2007-06-02 15:49:05 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -251,8 +251,8 @@ AC_FUNC_ALLOCA
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([strchr memcpy memset mlock])
 AC_caolan_FUNC_WHICH_GETHOSTBYNAME_R
-dnl There is no error(), strndup() and getline() on FreeBSD
-AC_CHECK_FUNCS([error strndup getline strerror_r getprogname getpwuid_r])
+dnl There is no strndup() and getline() on FreeBSD
+AC_CHECK_FUNCS([strndup getline strerror_r getprogname getpwuid_r])
 dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
 AC_CHECK_LIB([m], [exp10])
 AC_CHECK_LIB([m], [exp2])
