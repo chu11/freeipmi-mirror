@@ -64,7 +64,6 @@ code cleanup
 ------------
 param->parameter everywyhere 
 - after ipmi-chassis committed
-common funcs for udm setup in tools
 common funcs for pstdout setup in tools
 common funcs for sdr init junk in tools
 common stuff for parsing in bmc-config and pef-config

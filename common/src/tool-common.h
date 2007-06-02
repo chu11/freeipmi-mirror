@@ -20,9 +20,21 @@
 #ifndef _TOOL_COMMON_H
 #define _TOOL_COMMON_H
 
+#include "freeipmi/udm/ipmi-udm.h"
+#include "argp-common.h"
+
+#define IPMI_DEVICE_OPEN_ERRMSGLEN 1024
+
 int ipmi_is_root ();
 
 void ipmi_disable_coredump(void);
+
+ipmi_device_t ipmi_device_open(const char *progname,
+                               const char *hostname,
+                               struct common_cmd_args *cmd_args,
+                               unsigned int debug_flags,
+                               char *errmsg,
+                               unsigned int errmsglen);
 
 /* Turn an input string into a 20-byte binary k_g key */
 int parse_kg(unsigned char *outbuf, int outsz, const char *instr);

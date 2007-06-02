@@ -21,7 +21,7 @@ pef_config_SOURCES = \
 	pef-config-wrapper.c
  
 pef_config_LDADD = ../../common/src/libargpcommon.la \
-		   ../../common/src/libipmicommon.la \
+		   ../../common/src/libtoolcommon.la \
 		   ../../libfreeipmi/src/libfreeipmi.la \
 		   ../../common/src/libfreeipmiportability.la \
 		   ../../common/src/libsdr.la \
@@ -59,7 +59,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libargpcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libipmicommon.la: force-dependency-check
+../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

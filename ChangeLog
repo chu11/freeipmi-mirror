@@ -33,6 +33,12 @@
 	tool-common.h and tool-common.c.
 
 	* Readjust Makefiles and code appropriately for new files.
+
+	* common/src/tool-common.h, common/src/tool-common.c
+	(ipmi_device_open): New function.
+
+	* bmc-config/, bmc-info/, ipmi-raw/, ipmi-sel/, ipmi-sensors/,
+	pef-config/: Use new common function for device opening.
 	
 2007-06-01  Albert Chu <chu11@llnl.gov>
 

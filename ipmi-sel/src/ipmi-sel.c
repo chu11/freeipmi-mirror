@@ -428,107 +428,26 @@ _ipmi_sel (pstdout_state_t pstate,
   ipmi_sel_state_data_t state_data;
   ipmi_sel_prog_data_t *prog_data;
   ipmi_device_t dev = NULL;
+  char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
   int exit_code = -1;
 
   prog_data = (ipmi_sel_prog_data_t *)arg;
 
-  if (!(dev = ipmi_device_create()))
+  if (!(dev = ipmi_device_open(prog_data->progname,
+                               hostname,
+                               &(prog_data->args->common),
+                               prog_data->debug_flags,
+                               errmsg,
+                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
     {
-      pstdout_perror(pstate, "ipmi_device_create");
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "%s\n",
+                      errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
-
-  if (hostname && strcmp(hostname, "localhost") != 0)
-    {
-      if (ipmi_open_outofband (dev,
-                               IPMI_DEVICE_LAN,
-                               hostname,
-                               prog_data->args->common.username,
-                               prog_data->args->common.password,
-                               prog_data->args->common.authentication_type,
-                               prog_data->args->common.privilege_level,
-                               prog_data->args->common.session_timeout,
-                               prog_data->args->common.retry_timeout,
-                               prog_data->debug_flags) < 0)
-        {
-          pstdout_fprintf(pstate,
-                          stderr,
-                          "ipmi_open_outofband: %s\n",
-                          ipmi_device_strerror(ipmi_device_errnum(dev)));
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
-    }
-  else
-    {
-      if (!ipmi_is_root())
-        {
-          pstdout_fprintf(pstate,
-                          stderr,
-                          "%s: %s\n",
-                          prog_data->progname,
-                          ipmi_device_strerror(IPMI_ERR_PERMISSION));
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
-
-      if (prog_data->args->common.driver_type == IPMI_DEVICE_UNKNOWN)
-        {
-          if (ipmi_open_inband (dev,
-                                IPMI_DEVICE_OPENIPMI,
-                                prog_data->args->common.disable_auto_probe,
-                                prog_data->args->common.driver_address,
-                                prog_data->args->common.register_spacing,
-                                prog_data->args->common.driver_device,
-                                prog_data->debug_flags) < 0)
-            {
-              if (ipmi_open_inband (dev,
-                                    IPMI_DEVICE_KCS,
-                                    prog_data->args->common.disable_auto_probe,
-                                    prog_data->args->common.driver_address,
-                                    prog_data->args->common.register_spacing,
-                                    prog_data->args->common.driver_device,
-                                    prog_data->debug_flags) < 0)
-                {
-                  if (ipmi_open_inband (dev,
-                                        IPMI_DEVICE_SSIF,
-                                        prog_data->args->common.disable_auto_probe,
-                                        prog_data->args->common.driver_address,
-                                        prog_data->args->common.register_spacing,
-                                        prog_data->args->common.driver_device,
-                                        prog_data->debug_flags) < 0)
-                    {
-                      pstdout_fprintf(pstate,
-                                      stderr,
-                                      "ipmi_open_inband: %s\n",
-                                      ipmi_device_strerror(ipmi_device_errnum(dev)));
-                      exit_code = EXIT_FAILURE;
-                      goto cleanup;
-                    }
-                }
-            }
-        }
-      else
-        {
-          if (ipmi_open_inband (dev,
-                                prog_data->args->common.driver_type,
-                                prog_data->args->common.disable_auto_probe,
-                                prog_data->args->common.driver_address,
-                                prog_data->args->common.register_spacing,
-                                prog_data->args->common.driver_device,
-                                prog_data->debug_flags) < 0)
-            {
-              pstdout_fprintf(pstate,
-                              stderr,
-                              "ipmi_open_inband: %s\n",
-                              ipmi_device_strerror(ipmi_device_errnum(dev)));
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-        }
-    }
-  
+ 
   memset(&state_data, '\0', sizeof(ipmi_sel_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
