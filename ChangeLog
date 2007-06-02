@@ -59,6 +59,8 @@
 	* ipmi-sel/, ipmi-sensors/: Use new common SDR arg parsing.
 
 	* Fix argp ordering in remaining tools.
+
+	* libfreeipmi/udm/ipmi-udm.c (ipmi_open_inband): Fix logic errors.
 	
 2007-05-31  Albert Chu <chu11@llnl.gov>
 
