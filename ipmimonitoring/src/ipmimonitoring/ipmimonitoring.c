@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.16 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17 2007-06-02 19:48:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,9 +57,9 @@
 
 #include <freeipmi/freeipmi.h>
 #include "ipmi_monitoring.h"
-#include "eliminate.h"
-#include "error.h"
 #include "pstdout.h"
+#include "hostrange.h"
+#include "error.h"
 #include "secure.h"
 
 #ifndef MAXHOSTNAMELEN
@@ -722,15 +722,6 @@ main(int argc, char **argv)
   _secure_initialization();
   _cmdline_parse(argc, argv);
 
-  if (pstdout_init() < 0)
-    {
-      fprintf(stderr,
-              "pstdout_init: %s\n",
-              pstdout_strerror(pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-
   if (ipmi_monitoring_init(flags, &errnum) < 0)
     {
       fprintf(stderr, "ipmi_monitoring_init: %s\n", ipmi_monitoring_ctx_strerror(errnum));
@@ -747,62 +738,16 @@ main(int argc, char **argv)
         }
     }
   
-  if (hostname)
+  if (pstdout_setup(&hostname,
+                    buffer_hostrange_output,
+                    consolidate_hostrange_output,
+                    fanout,
+                    eliminate) < 0)
     {
-      int count;
-
-      if ((count = pstdout_hostnames_count(hostname)) < 0)
-        {
-          fprintf(stderr,
-                  "pstdout_hostnames_count: %s\n",
-                  pstdout_strerror(pstdout_errnum));
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
-
-      if (count > 1)
-        {
-          unsigned int output_flags;
-
-          if (buffer_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else if (consolidate_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else
-            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-
-          if (pstdout_set_output_flags(output_flags) < 0)
-            {
-              fprintf(stderr,
-                      "pstdout_set_output_flags: %s\n",
-                      pstdout_strerror(pstdout_errnum));
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-
-          if (fanout)
-            {
-              if (pstdout_set_fanout(fanout) < 0)
-                {
-                  fprintf(stderr,
-                          "pstdout_set_fanout: %s\n",
-                          pstdout_strerror(pstdout_errnum));
-                  exit_code = EXIT_FAILURE;
-                  goto cleanup;
-                }
-            }
-        }
-
-      if (eliminate)
-        {
-          if (eliminate_nodes(&hostname) < 0)
-            {
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-        }
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
-  
+
   if ((rv = pstdout_launch(hostname,
                            _ipmimonitoring,
                            NULL)) < 0)

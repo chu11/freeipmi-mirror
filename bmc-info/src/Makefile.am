@@ -3,7 +3,7 @@ bmc_info_SOURCES=bmc-info-argp.c bmc-info.c
 bmc_info_LDADD = ../../common/src/libargpcommon.la \
 		 ../../common/src/libtoolcommon.la \
 		 ../../common/src/libpstdout.la \
-		 ../../common/src/libeliminate.la \
+		 ../../common/src/libhostrange.la \
 		 ../../common/src/libcbuf.la \
 		 ../../common/src/libllnlcommon.la \
                  ../../ipmidetect/src/libipmidetect/libipmidetect.la \
@@ -30,7 +30,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libpstdout.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libeliminate.la: force-dependency-check
+../../common/src/libhostrange.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libcbuf.la: force-dependency-check

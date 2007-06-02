@@ -40,6 +40,17 @@
 	* bmc-config/, bmc-info/, ipmi-raw/, ipmi-sel/, ipmi-sensors/,
 	pef-config/: Use new common function for device opening.
 	
+	* libfreeipmi/udm/ipmi-udm.c (ipmi_open_inband): Fix logic errors.
+
+	* common/src/eliminate.h, common/src/eliminate.c: Renamed to
+	hostrange.h and hostrange.c.
+
+	* common/src/hostrange.h, common/src/hostrange.c (pstdout_setup):
+	New function.
+
+	* bmc-info/, ipmi-sel/, ipmi-sensors/, ipmimonitoring/, ipmi-raw/:
+	Use new pstdout_setup common function for pstdout setup.
+
 2007-06-01  Albert Chu <chu11@llnl.gov>
 
 	* common/src/fiid-wrappers.h: Remove duplicate macros.
@@ -60,8 +71,6 @@
 
 	* Fix argp ordering in remaining tools.
 
-	* libfreeipmi/udm/ipmi-udm.c (ipmi_open_inband): Fix logic errors.
-	
 2007-05-31  Albert Chu <chu11@llnl.gov>
 
 	* tagged pre_freeipmi_udm_re_arch

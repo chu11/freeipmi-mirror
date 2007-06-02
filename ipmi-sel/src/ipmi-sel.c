@@ -47,7 +47,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-sel-argp.h"
 #include "ipmi-sel-wrapper.h"
 #include "pstdout.h"
-#include "eliminate.h"
+#include "hostrange.h"
 
 void
 cleanup_sdr_cache (ipmi_sel_state_data_t *state_data)
@@ -485,6 +485,7 @@ main (int argc, char **argv)
   ipmi_sel_prog_data_t prog_data;
   struct ipmi_sel_arguments cmd_args;
   int exit_code;
+  int hosts_count;
   int rv;
 
   ipmi_disable_coredump();
@@ -492,15 +493,6 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_sel_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
-
-  if (pstdout_init() < 0)
-    {
-      fprintf(stderr,
-              "pstdout_init: %s\n",
-              pstdout_strerror(pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
 
 #ifndef NDEBUG
   if (prog_data.args->common.debug)
@@ -511,64 +503,19 @@ main (int argc, char **argv)
   prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
 
-  if (prog_data.args->common.host)
+  if ((hosts_count = pstdout_setup(&(prog_data.args->common.host),
+                                   prog_data.args->hostrange.buffer_hostrange_output,
+                                   prog_data.args->hostrange.consolidate_hostrange_output,
+                                   prog_data.args->hostrange.fanout,
+                                   prog_data.args->hostrange.eliminate)) < 0)
     {
-      int count;
-
-      if ((count = pstdout_hostnames_count(prog_data.args->common.host)) < 0)
-        {
-          fprintf(stderr,
-                  "pstdout_hostnames_count: %s\n",
-                  pstdout_strerror(pstdout_errnum));
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
-
-      if (count > 1)
-        {
-          unsigned int output_flags;
-
-          if (prog_data.args->hostrange.buffer_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else if (prog_data.args->hostrange.consolidate_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else
-            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-
-          if (pstdout_set_output_flags(output_flags) < 0)
-            {
-              fprintf(stderr,
-                      "pstdout_set_output_flags: %s\n",
-                      pstdout_strerror(pstdout_errnum));
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-
-          if (prog_data.args->hostrange.fanout)
-            {
-              if (pstdout_set_fanout(prog_data.args->hostrange.fanout) < 0)
-                {
-                  fprintf(stderr,
-                          "pstdout_set_fanout: %s\n",
-                          pstdout_strerror(pstdout_errnum));
-                  exit_code = EXIT_FAILURE;
-                  goto cleanup;
-                }
-            }
-
-          /* We don't want caching info to output when are doing ranged output */
-          prog_data.args->sdr.quiet_cache_wanted = 1;
-        }
-
-      if (prog_data.args->hostrange.eliminate)
-        {
-          if (eliminate_nodes(&(prog_data.args->common.host)) < 0)
-            {
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-        }
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
+
+  /* We don't want caching info to output when are doing ranged output */
+  if (hosts_count > 1)
+    prog_data.args->sdr.quiet_cache_wanted = 1;
 
   if ((rv = pstdout_launch(prog_data.args->common.host,
                            _ipmi_sel,

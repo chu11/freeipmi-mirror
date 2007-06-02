@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: eliminate.c,v 1.2 2007-04-28 20:06:40 chu11 Exp $
+ *  $Id: hostrange.c,v 1.1 2007-06-02 19:48:14 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -17,9 +17,12 @@
 #include "ipmidetect.h"
 #include "hostlist.h"
 
+#include "pstdout.h"
+#include "hostrange.h"
+
 #define HOSTLIST_BUFLEN 1024
 
-int
+static int
 eliminate_nodes(char **hosts)
 {
   hostlist_t hl = NULL;
@@ -126,4 +129,75 @@ eliminate_nodes(char **hosts)
   if (host)
     free(host);
   return rv;
+}
+
+int 
+pstdout_setup(char **hosts,
+              int buffer_hostrange_output,
+              int consolidate_hostrange_output,
+              int fanout,
+              int eliminate)
+{
+  int hosts_count = 0;
+
+  if (pstdout_init() < 0)
+    {
+      fprintf(stderr,
+              "pstdout_init: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      goto cleanup;
+    }
+
+  if (*hosts)
+    {
+      if ((hosts_count = pstdout_hostnames_count(*hosts)) < 0)
+        {
+          fprintf(stderr,
+                  "pstdout_hostnames_count: %s\n",
+                  pstdout_strerror(pstdout_errnum));
+          goto cleanup;
+        }
+
+      if (hosts_count > 1)
+        {
+          unsigned int output_flags;
+
+          if (buffer_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else if (consolidate_hostrange_output)
+            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+          else
+            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
+
+          if (pstdout_set_output_flags(output_flags) < 0)
+            {
+              fprintf(stderr,
+                      "pstdout_set_output_flags: %s\n",
+                      pstdout_strerror(pstdout_errnum));
+              goto cleanup;
+            }
+
+          if (fanout)
+            {
+              if (pstdout_set_fanout(fanout) < 0)
+                {
+                  fprintf(stderr,
+                          "pstdout_set_fanout: %s\n",
+                          pstdout_strerror(pstdout_errnum));
+                  goto cleanup;
+                }
+            }
+        }
+
+      if (eliminate)
+        {
+          if (eliminate_nodes(hosts) < 0)
+            goto cleanup;
+        }
+    }
+
+  return hosts_count;
+
+ cleanup:
+  return -1;
 }

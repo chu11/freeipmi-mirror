@@ -39,7 +39,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-raw-argp.h"
 #include "tool-common.h"
 #include "pstdout.h"
-#include "eliminate.h"
+#include "hostrange.h"
 
 int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
@@ -393,15 +393,6 @@ main (int argc, char **argv)
   ipmi_raw_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  if (pstdout_init() < 0)
-    {
-      fprintf(stderr,
-              "pstdout_init: %s\n",
-              pstdout_strerror(pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
-
 #ifndef NDEBUG
   if (prog_data.args->common.debug)
     prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
@@ -411,68 +402,14 @@ main (int argc, char **argv)
   prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
 
-  if (prog_data.args->common.host)
+  if (pstdout_setup(&(prog_data.args->common.host),
+                    prog_data.args->hostrange.buffer_hostrange_output,
+                    prog_data.args->hostrange.consolidate_hostrange_output,
+                    prog_data.args->hostrange.fanout,
+                    prog_data.args->hostrange.eliminate) < 0)
     {
-      int count;
-
-      if ((count = pstdout_hostnames_count(prog_data.args->common.host)) < 0)
-        {
-          fprintf(stderr,
-                  "pstdout_hostnames_count: %s\n",
-                  pstdout_strerror(pstdout_errnum));
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
-
-      if (count > 1)
-        {
-          unsigned int output_flags;
-
-          if (prog_data.args->hostrange.buffer_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_BUFFER_STDOUT | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else if (prog_data.args->hostrange.consolidate_hostrange_output)
-            output_flags = PSTDOUT_OUTPUT_STDOUT_DEFAULT | PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          else
-            output_flags = PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME | PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME;
-          if (pstdout_set_output_flags(output_flags) < 0)
-            {
-              fprintf(stderr,
-                      "pstdout_set_output_flags: %s\n",
-                      pstdout_strerror(pstdout_errnum));
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-
-          if (prog_data.args->hostrange.fanout)
-            {
-              if (pstdout_set_fanout(prog_data.args->hostrange.fanout) < 0)
-                {
-                  fprintf(stderr,
-                          "pstdout_set_fanout: %s\n",
-                          pstdout_strerror(pstdout_errnum));
-                  exit_code = EXIT_FAILURE;
-                  goto cleanup;
-                }
-            }
-
-          if (!(prog_data.args->cmd && prog_data.args->cmd_length)
-              && !prog_data.args->cmd_file)
-            {
-              fprintf(stderr,
-                      "Input via stdin not available for multiple hosts\n");
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-        }
-
-      if (prog_data.args->hostrange.eliminate)
-        {
-          if (eliminate_nodes(&(prog_data.args->common.host)) < 0)
-            {
-              exit_code = EXIT_FAILURE;
-              goto cleanup;
-            }
-        }
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
     }
 
   if ((rv = pstdout_launch(prog_data.args->common.host,

@@ -25,7 +25,7 @@ noinst_HEADERS = \
 	secure.h \
 	timeval.h \
 	pstdout.h \
-	eliminate.h 
+	hostrange.h 
 
 noinst_LTLIBRARIES = \
 	libargpcommon.la \
@@ -41,7 +41,7 @@ noinst_LTLIBRARIES = \
 	libcbuf.la \
 	libllnlcommon.la \
 	libpstdout.la \
-	libeliminate.la
+	libhostrange.la
 
 libargpcommon_la_SOURCES = argp-common.c
 libargpcommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
@@ -91,8 +91,8 @@ libpstdout_la_SOURCES = pstdout.c
 libpstdout_la_CPPFLAGS = -D_REENTRANT
 libpstdout_la_LDFLAGS = $(PTHREAD_LIBS)
 
-libeliminate_la_SOURCES = eliminate.c
-libeliminate_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
+libhostrange_la_SOURCES = hostrange.c
+libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
