@@ -1,7 +1,7 @@
 sbin_PROGRAMS=ipmi-locate
 ipmi_locate_SOURCES=ipmi-locate-argp.c ipmi-locate.c
  
-ipmi_locate_LDADD = ../../common/src/libipmicommon.la \
+ipmi_locate_LDADD = ../../common/src/libtoolcommon.la \
 		    ../../libfreeipmi/src/libfreeipmi.la
  
 noinst_HEADERS=ipmi-locate-argp.h
@@ -14,7 +14,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
-../../common/src/libipmicommon.la: force-dependency-check
+../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

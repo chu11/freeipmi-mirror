@@ -15,7 +15,6 @@
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-common.h"
 
 #include "common-utils.h"
 

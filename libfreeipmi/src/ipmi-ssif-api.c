@@ -46,6 +46,9 @@
 #include <assert.h>
 
 #include "freeipmi/ipmi-ssif-api.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-kcs.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "ipmi-semaphores.h"
 

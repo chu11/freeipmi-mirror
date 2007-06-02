@@ -39,7 +39,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "freeipmi-portability.h"
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
-#include "ipmi-common.h"
+#include "tool-common.h"
 
 
 #define _FIID_OBJ_GET(bytes, field, val)               \

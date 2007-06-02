@@ -33,6 +33,7 @@
 #endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
+#include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/ipmi-lan.h"
@@ -51,14 +52,14 @@
 #define IPMI_DEBUG_CHAR_PER_LINE          8
 #define IPMI_DEBUG_DEFAULT_FD STDERR_FILENO
 
-#define IPMI_DPRINTF(args) \
+#define FREEIPMI_DPRINTF(args) \
         do { \
-          ERR (!((ipmi_dprintf args) < 0)); \
+          ERR (!((freeipmi_dprintf args) < 0)); \
         } while(0) 
 
-#define IPMI_DPRINTF_CLEANUP(args) \
+#define FREEIPMI_DPRINTF_CLEANUP(args) \
         do { \
-          ERR_CLEANUP (!((ipmi_dprintf args) < 0)); \
+          ERR_CLEANUP (!((freeipmi_dprintf args) < 0)); \
         } while(0) 
 
 #define IPMI_DEBUG_MAX_UNEXPECTED_BYTES 65536
@@ -99,19 +100,19 @@ _output_str(int fd, char *prefix, char *str)
       char *ptr = str;
 
       if (prefix)
-        IPMI_DPRINTF((fd, "%s", prefix));
+        FREEIPMI_DPRINTF((fd, "%s", prefix));
       while (*ptr != '\0')
         {
           if (*ptr == '\n')
             {
-              IPMI_DPRINTF((fd, "%c", *ptr++));
+              FREEIPMI_DPRINTF((fd, "%c", *ptr++));
               if (prefix)
-                IPMI_DPRINTF((fd, "%s", prefix));
+                FREEIPMI_DPRINTF((fd, "%s", prefix));
             }
           else
-            IPMI_DPRINTF((fd, "%c", *ptr++));
+            FREEIPMI_DPRINTF((fd, "%c", *ptr++));
         }
-      IPMI_DPRINTF((fd, "\n"));
+      FREEIPMI_DPRINTF((fd, "\n"));
     }
 
   return 0;
@@ -129,14 +130,14 @@ _output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
     {
       int i = 0;
       if (prefix)
-        IPMI_DPRINTF ((fd, "%s", prefix));
-      IPMI_DPRINTF ((fd, "[ "));
+        FREEIPMI_DPRINTF ((fd, "%s", prefix));
+      FREEIPMI_DPRINTF ((fd, "[ "));
       while (count < buf_len && i < IPMI_DEBUG_CHAR_PER_LINE)
 	{
-	  IPMI_DPRINTF ((fd, "%02Xh ", buf[count++]));
+	  FREEIPMI_DPRINTF ((fd, "%02Xh ", buf[count++]));
 	  i++;
 	}
-      IPMI_DPRINTF ((fd, "]\n"));
+      FREEIPMI_DPRINTF ((fd, "]\n"));
     }
 
   return 0;
@@ -180,7 +181,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
         }
 
       if (prefix)
-        IPMI_DPRINTF_CLEANUP ((fd, "%s", prefix));
+        FREEIPMI_DPRINTF_CLEANUP ((fd, "%s", prefix));
 
       if (field_len <= 64)
         {
@@ -188,14 +189,14 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 
 	  FIID_ITERATOR_GET_CLEANUP (iter, &val);
 
-          IPMI_DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
+          FREEIPMI_DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
         }
       else
         {
           uint8_t buf[IPMI_DEBUG_MAX_BUF_LEN];
           int len;
 
-          IPMI_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
+          FREEIPMI_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
 
 	  FIID_ITERATOR_GET_DATA_LEN_CLEANUP(len, iter, buf, IPMI_DEBUG_MAX_BUF_LEN);
        

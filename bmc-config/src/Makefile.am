@@ -26,7 +26,7 @@ bmc_config_SOURCES = \
 	bmc-config-validate.c
 
 bmc_config_LDADD = ../../common/src/libargpcommon.la \
-                 ../../common/src/libipmicommon.la \
+                 ../../common/src/libtoolcommon.la \
                  ../../libfreeipmi/src/libfreeipmi.la
 
 AM_CFLAGS = -Wall
@@ -63,7 +63,7 @@ noinst_HEADERS = bmc-config.h \
 ../../common/src/libargpcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libipmicommon.la: force-dependency-check
+../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

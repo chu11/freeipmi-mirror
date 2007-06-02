@@ -3,7 +3,7 @@ ipmi_sensors_SOURCES=ipmi-sensors.c sensors-very-verbose-display.c \
 	ipmi-sensors-argp.c sensors-simple-display.c ipmi-sensors-utils.c \
 	sensors-verbose-display.c
 ipmi_sensors_LDADD = ../../common/src/libargpcommon.la \
-	../../common/src/libipmicommon.la \
+	../../common/src/libtoolcommon.la \
 	../../common/src/libsdr.la \
 	../../common/src/libpstdout.la \
 	../../common/src/libeliminate.la \
@@ -29,7 +29,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libargpcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libipmicommon.la: force-dependency-check
+../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

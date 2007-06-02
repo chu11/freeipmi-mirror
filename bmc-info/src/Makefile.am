@@ -1,7 +1,7 @@
 sbin_PROGRAMS=bmc-info
 bmc_info_SOURCES=bmc-info-argp.c bmc-info.c 
 bmc_info_LDADD = ../../common/src/libargpcommon.la \
-		 ../../common/src/libipmicommon.la \
+		 ../../common/src/libtoolcommon.la \
 		 ../../common/src/libpstdout.la \
 		 ../../common/src/libeliminate.la \
 		 ../../common/src/libcbuf.la \
@@ -24,7 +24,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../common/src/libargpcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libipmicommon.la: force-dependency-check
+../../common/src/libtoolcommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libpstdout.la: force-dependency-check

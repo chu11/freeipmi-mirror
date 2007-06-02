@@ -65,7 +65,7 @@
 #include "bmc-config-diff.h"
 #include "bmc-config-sections.h"
 
-#include "ipmi-common.h"
+#include "tool-common.h"
 #include "freeipmi-portability.h"
 
 void

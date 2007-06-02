@@ -38,6 +38,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-smic-api.h"
 
 #include "ipmi-inband.h"

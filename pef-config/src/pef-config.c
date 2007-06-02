@@ -34,7 +34,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "argp-common.h"
 #include "freeipmi-portability.h"
-#include "ipmi-common.h"
+#include "tool-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 #include "pef-config-checkout.h"

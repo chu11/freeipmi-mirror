@@ -41,6 +41,8 @@
 
 #include "freeipmi/ipmi-kcs-api.h"
 #include "freeipmi/ipmi-kcs.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "ipmi-inband.h"
 #include "ipmi-semaphores.h"
@@ -520,31 +522,31 @@ static uint8_t
 ipmi_kcs_print_state (int fd, uint8_t state)
 {
   /* we assume we have already ioperm'd the space */
-  ipmi_dprintf (fd, "Current KCS state: 0x%x : ", state);
+  freeipmi_dprintf (fd, "Current KCS state: 0x%x : ", state);
   if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
-    ipmi_dprintf (fd, "IDLE_STATE ");
+    freeipmi_dprintf (fd, "IDLE_STATE ");
   } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
-    ipmi_dprintf (fd, "READ_STATE ");
+    freeipmi_dprintf (fd, "READ_STATE ");
   } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
-    ipmi_dprintf (fd, "WRITE_STATE ");
+    freeipmi_dprintf (fd, "WRITE_STATE ");
   } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
-    ipmi_dprintf (fd, "ERROR_STATE ");
+    freeipmi_dprintf (fd, "ERROR_STATE ");
   } else {
-    ipmi_dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
+    freeipmi_dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
   }
   if (state & IPMI_KCS_STATUS_REG_IBF) {
-    ipmi_dprintf (fd, "IBF ");
+    freeipmi_dprintf (fd, "IBF ");
   }
   if (state & IPMI_KCS_STATUS_REG_OBF) {
-    ipmi_dprintf (fd, "OBF ");
+    freeipmi_dprintf (fd, "OBF ");
   }
   if (state & IPMI_KCS_STATUS_REG_OEM1) {
-    ipmi_dprintf (fd, "OEM1 ");
+    freeipmi_dprintf (fd, "OEM1 ");
   }
   if (state & IPMI_KCS_STATUS_REG_OEM2) {
-    ipmi_dprintf (fd, "OEM2 ");
+    freeipmi_dprintf (fd, "OEM2 ");
   }
-  ipmi_dprintf (fd, "\n");
+  freeipmi_dprintf (fd, "\n");
   return (0);
 }
 

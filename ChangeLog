@@ -22,6 +22,17 @@
 	* bmc-config/: Replace use of true/false with 1/0.
 
 	* configure.ac: Remove check for error().
+
+	* libfreeipmi/src/ipmi-common.h, libfreeipmi/src/ipmi-common.c:
+	New files.
+
+	* common/src/ipmi-common.h, common/src/ipmi-common.c: Move lib
+	specific utility functions to libfreeipmi ipmi-common.[ch].
+
+	* common/src/ipmi-common.h, common/src/ipmi-common.c: Rename to
+	tool-common.h and tool-common.c.
+
+	* Readjust Makefiles and code appropriately for new files.
 	
 2007-06-01  Albert Chu <chu11@llnl.gov>
 

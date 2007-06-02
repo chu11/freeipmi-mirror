@@ -6,7 +6,7 @@ noinst_HEADERS = \
 	udm-fiid-wrappers.h \
 	udm-err-wrappers.h \
 	freeipmi-portability.h \
-	ipmi-common.h \
+	tool-common.h \
 	ipmi-ping.h \
 	md2.h \
 	md5.h \
@@ -31,7 +31,7 @@ noinst_LTLIBRARIES = \
 	libargpcommon.la \
 	libbitops.la \
 	libfreeipmiportability.la \
-	libipmicommon.la \
+	libtoolcommon.la \
 	libipmiping.la \
 	libmd2.la \
 	libmd5.la \
@@ -52,8 +52,8 @@ libbitops_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include
 libfreeipmiportability_la_SOURCES = freeipmi-portability.c
 libfreeipmiportability_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
-libipmicommon_la_SOURCES = ipmi-common.c
-libipmicommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
+libtoolcommon_la_SOURCES = tool-common.c
+libtoolcommon_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 
 
 libipmiping_la_SOURCES = ipmi-ping.c
 libipmiping_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 

@@ -39,7 +39,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "argp-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
-#include "ipmi-common.h"
+#include "tool-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "eliminate.h"

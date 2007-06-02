@@ -52,7 +52,8 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sdr-record-types.c \
 	ipmi-sel-record-types.c \
 	ipmi-sensor-and-event-code-tables.c \
-	ipmi-sensor-utils.c
+	ipmi-sensor-utils.c \
+	ipmi-common.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
 # libfreeipmi_la_CPPFLAGS = 
@@ -75,22 +76,19 @@ libfreeipmi_la_LIBADD = \
 	udm/libudm.la \
 	../../common/src/libbitops.la \
 	../../common/src/libfreeipmiportability.la \
-	../../common/src/libipmicommon.la \
 	../../common/src/libmd2.la \
 	../../common/src/libmd5.la \
 	../../common/src/libxmalloc.la
 
 noinst_HEADERS = \
 	ipmi-inband.h \
-	ipmi-semaphores.h
+	ipmi-semaphores.h \
+	ipmi-common.h
 
 udm/libudm.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libbitops.la: force-dependency-check
-	$(MAKE) -C $(dir $@) $(notdir $@)
-
-../../common/src/libipmicommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libfreeipmiportability.la: force-dependency-check

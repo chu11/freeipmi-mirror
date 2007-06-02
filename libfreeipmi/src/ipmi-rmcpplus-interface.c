@@ -40,6 +40,7 @@
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-sol-cmds.h"
+#include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp.h"
 
 #include "err-wrappers.h"

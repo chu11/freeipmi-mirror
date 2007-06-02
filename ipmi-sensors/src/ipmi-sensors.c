@@ -41,7 +41,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "argp-common.h"
 #include "freeipmi-portability.h"
-#include "ipmi-common.h"
+#include "tool-common.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sensors.h"
