@@ -77,3 +77,4 @@ rename variables for better consistency?
 audit errno/kcs/ssif/openipmi errors -> udm errnos
 fix consistency of error codes in all "apis".
 split udm into another lib
+debugging enabled by default?
