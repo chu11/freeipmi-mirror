@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.3 2007-06-01 20:56:17 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4 2007-06-02 17:17:39 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -44,8 +44,6 @@
 #include "argp-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
-
-#include "freeipmi-portability.h"
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 

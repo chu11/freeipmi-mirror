@@ -20,6 +20,7 @@
 #include "bmc-config-utils.h"
 
 #include "bit-ops.h"
+#include "freeipmi-portability.h"
 
 static bmc_err_t 
 set_bmc_user_access (bmc_config_state_data_t *state_data, 

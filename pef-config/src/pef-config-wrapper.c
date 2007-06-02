@@ -34,10 +34,8 @@
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "freeipmi-portability.h"
 #include "ipmi-common.h"
-
-#include "common-utils.h"
+#include "freeipmi-portability.h"
 
 #include "pef-config.h"
 #include "pef-config-common.h"

@@ -35,45 +35,12 @@ extern "C" {
 #include <string.h>
 #include <netdb.h>
 
-#ifndef __cplusplus
-
-#if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L)
-# if !defined(__GNUC__) ||(__GNUC__ < 3)
-  typedef char _Bool;           /* For C compilers without _Bool */
-# endif
-#endif
- 
-#define bool  _Bool
-#define true  1
-#define false 0
- 
-#else
- 
-  /* C++ */
-#define bool  bool
-#define true  true
-#define false false
-#endif
-#define __bool_true_false_are_defined 1
-
 #if  __WORDSIZE == 64
 #define FI_64 "%l"
 #else
 #define FI_64 "%ll"
 #endif
 
-# if ENABLE_NLS
-#  include <libintl.h>
-#  define _(Text) gettext (Text)
-# else
-#  define textdomain(Domain)
-#  define _(Text) Text
-# endif
-# define N_(Text) Text
-
-#if !defined(EBADMSG) && defined(ENOMSG)
-#define EBADMSG	ENOMSG
-#endif
 #if !defined(O_SYNC) && defined(O_FSYNC)
 #define O_SYNC	O_FSYNC
 #endif
@@ -87,15 +54,6 @@ extern "C" {
 #endif
 #ifndef HAVE_EXP2
 #define exp2(x)		(pow(2.0, (x)))
-#endif
-
-/* FreeBSD don't have program_invocation_short_name but have getprogname() */
-#ifndef HAVE_PROGRAM_SHORT_NAME
-# if defined(HAVE_GETPROGNAME)
-#  define program_invocation_short_name (getprogname())
-# else
-#  error "don't know how to get short program name on your platform"
-# endif
 #endif
 
 /* FreeBSD don't have strdupa */

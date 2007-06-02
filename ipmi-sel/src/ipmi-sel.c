@@ -49,8 +49,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "pstdout.h"
 #include "eliminate.h"
 
-#include "freeipmi-portability.h"
-
 void
 cleanup_sdr_cache (ipmi_sel_state_data_t *state_data)
 {
@@ -169,7 +167,7 @@ display_sel_info (ipmi_sel_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr, 
                        "%s: unable to get SEL information\n", 
-                       program_invocation_short_name);
+                       state_data->prog_data->progname);
       return (-1);
     }
   
@@ -236,7 +234,7 @@ display_sel_records (ipmi_sel_state_data_t *state_data)
           pstdout_fprintf (state_data->pstate, 
                            stderr, 
                            "%s: unable to get SEL record\n", 
-                           program_invocation_short_name);
+                           state_data->prog_data->progname);
           return (-1);
         }
       
@@ -284,7 +282,7 @@ hex_display_sel_records (ipmi_sel_state_data_t *state_data, FILE *stream)
 	  pstdout_fprintf (state_data->pstate, 
                            stderr, 
                            "%s: unable to get SEL record\n", 
-                           program_invocation_short_name);
+                           state_data->prog_data->progname);
 	  return (-1);
 	}
       
@@ -367,7 +365,7 @@ run_cmd_args (ipmi_sel_state_data_t *state_data)
 	      pstdout_fprintf (state_data->pstate, 
                                stderr, 
                                "%s: unable to open hex dump file [%s]\n", 
-                               program_invocation_short_name, 
+                               state_data->prog_data->progname,
                                args->hex_dump_filename);
 	    }
 	}

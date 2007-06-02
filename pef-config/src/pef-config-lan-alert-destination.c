@@ -17,6 +17,8 @@
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
+#include "freeipmi-portability.h"
+
 #define PEF_CONFIG_MAXIPADDRLEN 16
 #define PEF_CONFIG_MAXMACADDRLEN 24
 

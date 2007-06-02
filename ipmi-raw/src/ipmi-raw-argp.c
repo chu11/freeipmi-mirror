@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.19 2007-06-02 15:41:49 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.20 2007-06-02 17:17:39 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -92,8 +92,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
         if (*arg == '\0')
           {
-            fprintf (stderr, "%s: invalid hex byte argument\n", 
-                     program_invocation_short_name);
+            fprintf (stderr, "invalid hex byte argument\n");
             argp_usage (state);
             return (-1);
           }
@@ -102,16 +101,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	  {
 	    if (i >= 2)
 	      {
-		fprintf (stderr, "%s: invalid hex byte argument\n", 
-			 program_invocation_short_name);
+		fprintf (stderr, "invalid hex byte argument\n");
 		argp_usage (state);
 		return (-1);
 	      }
 	    
 	    if (isxdigit (arg[i]) == 0)
 	      {
-		fprintf (stderr, "%s: invalid hex byte argument\n", 
-			 program_invocation_short_name);
+		fprintf (stderr, "invalid hex byte argument\n");
 		argp_usage (state);
 		return (-1);
 	      }

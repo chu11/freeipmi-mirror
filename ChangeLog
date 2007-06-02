@@ -13,6 +13,14 @@
 	common/src/freeipmi-portability.c (freeipmi_error): Remove
 	function, it and error() are no longer used.
 
+	* common/src/freeipmi-portability.h: Remove libintl portability.
+	Remove true/false/bool portability.  Remove EBADMSG portability.
+	Remove program_invocation_short_name portability.
+
+	* ipmi-sel/, ipmi-raw/: Remove use of program_invocation_short_name.
+
+	* bmc-config/: Replace use of true/false with 1/0.
+
 	* configure.ac: Remove check for error().
 	
 2007-06-01  Albert Chu <chu11@llnl.gov>

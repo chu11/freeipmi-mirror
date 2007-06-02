@@ -30,7 +30,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
                                                                  IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
 
-  state_data->lan_channel_number_initialized = true;
+  state_data->lan_channel_number_initialized = 1;
   *channel_num = state_data->lan_channel_number;
   return BMC_ERR_SUCCESS;
 }
@@ -48,7 +48,7 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_
                                                                     IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
 
-  state_data->serial_channel_number_initialized = true;
+  state_data->serial_channel_number_initialized = 1;
   *channel_num = state_data->serial_channel_number;
   return BMC_ERR_SUCCESS;
 }
@@ -96,7 +96,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
       goto cleanup;
     }
 
-  state_data->sol_channel_number_initialized = true;
+  state_data->sol_channel_number_initialized = 1;
   state_data->sol_channel_number = val;
 
   *channel_num = state_data->sol_channel_number;
@@ -150,7 +150,7 @@ get_number_of_lan_destinations (bmc_config_state_data_t *state_data, int8_t *num
       goto cleanup;
     }
 
-  state_data->number_of_lan_destinations_initialized = true;
+  state_data->number_of_lan_destinations_initialized = 1;
   state_data->number_of_lan_destinations = val;
 
   *number_of_lan_destinations = state_data->number_of_lan_destinations;

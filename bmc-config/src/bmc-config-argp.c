@@ -66,8 +66,6 @@
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-#include "freeipmi-portability.h"
-
 const char *argp_program_version = PACKAGE_VERSION;
 const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";
 /* Program documentation. */
