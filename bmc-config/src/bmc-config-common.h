@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-config-common.h,v 1.2 2007-06-01 04:35:05 chu11 Exp $ 
+   $Id: bmc-config-common.h,v 1.3 2007-06-02 15:41:48 chu11 Exp $ 
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -62,6 +62,7 @@
 #include <freeipmi/udm/udm.h>
 
 #include "argp-common.h"
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
 #include "ipmi-sensor-api.h"
 #include "xmalloc.h"

@@ -29,7 +29,7 @@
 #endif
 
 #include "xmalloc.h"
-#include "ipmi-common.h"
+#include "freeipmi-portability.h"
 
 /* Prototypes for functions defined here.  */
 #if defined (__STDC__) && __STDC__

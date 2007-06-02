@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.45 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.46 2007-06-02 15:41:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,6 +57,7 @@
 #include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
 
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
 
 extern cbuf_t ttyout;

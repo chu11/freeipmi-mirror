@@ -40,6 +40,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <assert.h>
 
 #include "argp-common.h"
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sel.h"

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.18 2007-06-01 20:56:17 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.19 2007-06-02 15:41:49 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -82,7 +82,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_ARG:
       {
 	int i;
-	int l;
 	long value;
 	
 	if (strlen(arg) >= 2)

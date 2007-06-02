@@ -66,6 +66,7 @@
 #include "bmc-config-sections.h"
 
 #include "ipmi-common.h"
+#include "freeipmi-portability.h"
 
 void
 _bmc_config_state_data_init(bmc_config_state_data_t *state_data)

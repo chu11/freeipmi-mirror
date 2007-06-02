@@ -6,8 +6,6 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
-#include "ipmi-common.h"
-
 static bmc_err_t
 k_r_checkout (bmc_config_state_data_t *state_data,
 	      const struct section *sect,

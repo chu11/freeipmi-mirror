@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.14 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.15 2007-06-02 15:41:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,6 +48,8 @@
 #include "conffile.h"
 #include "error.h"
 #include "secure.h"
+
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
 
 extern struct ipmiconsole_config *conf;

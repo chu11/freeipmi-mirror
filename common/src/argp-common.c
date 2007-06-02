@@ -401,8 +401,6 @@ sdr_parse_opt (int key,
                struct argp_state *state, 
                struct sdr_cmd_args *cmd_args)
 {
-  char *ptr;
-  
   switch (key)
     {
     case FLUSH_CACHE_KEY:

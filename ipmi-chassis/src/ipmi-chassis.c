@@ -36,6 +36,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <freeipmi/udm/udm.h>
 
 #include "argp-common.h"
+#include "freeipmi-portability.h"
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
 #include "ipmi-common.h"

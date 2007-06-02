@@ -33,6 +33,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <assert.h>
 
 #include "argp-common.h"
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
@@ -41,8 +42,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "pef-config-diff.h"
 #include "pef-config-info.h"
 #include "pef-config-sections.h"
-
-#include "freeipmi-portability.h"
 
 void
 _pef_config_state_data_init(pef_config_state_data_t *state_data)

@@ -37,7 +37,6 @@
 #include "freeipmi/udm/ipmi-sel-cmds-udm.h"
 
 #include "freeipmi-portability.h"
-#include "ipmi-common.h"
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sensor-api.h"
 

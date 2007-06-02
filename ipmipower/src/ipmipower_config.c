@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.60 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.61 2007-06-02 15:41:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,6 +54,7 @@
 #include "ipmipower_wrappers.h"
 
 #include "secure.h"
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
       
 extern struct ipmipower_config *conf;

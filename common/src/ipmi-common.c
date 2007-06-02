@@ -155,7 +155,7 @@ parse_kg(unsigned char *outbuf, int outsz, const char *instr)
     {
       if (strlen(instr) > IPMI_MAX_K_G_LENGTH*2+2)
         return -1;
-      p = instr + 2;
+      p = (char *)instr + 2;
       guaranteed_memset(outbuf, 0, IPMI_MAX_K_G_LENGTH);
       for (i = j = 0; i < strlen(p); i+=2, j++)
         {

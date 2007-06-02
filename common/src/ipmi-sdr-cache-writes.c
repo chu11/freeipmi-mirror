@@ -55,6 +55,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <assert.h>
 
 #include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/ipmi-sdr-record-types.h"
 #include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
 #include "freeipmi/udm/ipmi-sensor-cmds-udm.h"
 
@@ -62,7 +64,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
-#include "ipmi-common.h"
 
 #include "ipmi-sdr-cache.h"
 #include "ipmi-sdr-cache-defs.h"

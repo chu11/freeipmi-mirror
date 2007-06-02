@@ -1,6 +1,13 @@
 2007-06-02  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update lib versions for 0.4.0.
+
+	* common/src/ipmi-common.h: Move portability related things to
+	freeipmi-portability.h.
+
+	* Globally re-adjust headers accordingly for above change.
+
+	* Cleanup compile warnings.
 	
 2007-06-01  Albert Chu <chu11@llnl.gov>
 
