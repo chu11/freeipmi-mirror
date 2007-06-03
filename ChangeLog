@@ -1,5 +1,7 @@
 2007-06-02  Albert Chu <chu11@llnl.gov>
 
+	Massive code cleanup.
+
 	* configure.ac: Update lib versions for 0.4.0.
 
 	* common/src/ipmi-common.h: Move portability related things to
@@ -55,6 +57,19 @@
 	(sdr_cache_create_and_load): New function.
 
 	* ipmi-sel/, ipmi-sensors/: Use new common function.
+
+	* libfreeipmi/include/freeipmi/ipmi-lan-param-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-pef-param-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-serial-modem-param-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-sol-param-spec.h: Renamed to
+	libfreeipmi/include/freeipmi/ipmi-lan-parameter-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-pef-parameter-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-serial-modem-parameter-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-sol-parameter-spec.h
+	respecitvely.
+
+	* Globally rename fields/varaibles from "param" to "parameter" for
+	naming consistency.
 
 2007-06-01  Albert Chu <chu11@llnl.gov>
 

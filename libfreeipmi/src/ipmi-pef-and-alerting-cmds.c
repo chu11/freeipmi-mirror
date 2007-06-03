@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.21 2007-06-01 04:35:09 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.22 2007-06-03 00:52:48 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -28,7 +28,7 @@ $Id: ipmi-pef-and-alerting-cmds.c,v 1.21 2007-06-01 04:35:09 chu11 Exp $  */
 #include <errno.h>
 
 #include "freeipmi/ipmi-pef-and-alerting-cmds.h"
-#include "freeipmi/ipmi-pef-param-spec.h"
+#include "freeipmi/ipmi-pef-parameter-spec.h"
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
 
@@ -582,7 +582,7 @@ fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_PEF_CONTROL);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_PEF_CONTROL);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "pef", pef);
   FIID_OBJ_SET (obj_cmd_rq, "pef_event_messages", pef);
@@ -613,7 +613,7 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_PEF_ACTION_GLOBAL_CONTROL);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_PEF_ACTION_GLOBAL_CONTROL);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "alert_action", alert_action);
   FIID_OBJ_SET (obj_cmd_rq, "power_down_action", power_down_action);
@@ -634,7 +634,7 @@ fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_PEF_STARTUP_DELAY);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_PEF_STARTUP_DELAY);
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FIID_OBJ_SET (obj_cmd_rq, "pef_startup_delay", pef_startup_delay);
   return 0;
@@ -649,7 +649,7 @@ fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_a
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_PEF_ALERT_STARTUP_DELAY);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_PEF_ALERT_STARTUP_DELAY);
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FIID_OBJ_SET (obj_cmd_rq, "pef_alert_startup_delay", pef_alert_startup_delay);
   return 0;
@@ -702,7 +702,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_num
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_EVENT_FILTER_TABLE);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_EVENT_FILTER_TABLE);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "filter_number", filter_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
@@ -754,7 +754,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filt
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq,"cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_EVENT_FILTER_TABLE_DATA_1);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "filter_number",  filter_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
@@ -777,7 +777,7 @@ fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_sele
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS); 
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_ALERT_STRING_KEYS); 
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_ALERT_STRING_KEYS); 
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "string_selector", string_selector); 
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
@@ -805,7 +805,7 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS); 
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_ALERT_STRINGS); 
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_ALERT_STRINGS); 
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "string_selector", string_selector); 
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
@@ -840,7 +840,7 @@ fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_poli
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAM_ALERT_POLICY_TABLE);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_PARAMETER_ALERT_POLICY_TABLE);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "alert_policy_entry_number", alert_policy_entry_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);

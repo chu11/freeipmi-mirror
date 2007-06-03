@@ -27,7 +27,7 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-serial-modem-cmds.h"
-#include "freeipmi/ipmi-serial-modem-param-spec.h"
+#include "freeipmi/ipmi-serial-modem-parameter-spec.h"
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
 
@@ -219,7 +219,7 @@ fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);    
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAM_CONNECTION_MODE);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAMETER_CONNECTION_MODE);
   FIID_OBJ_SET (obj_cmd_rq, "basic_mode", basic_mode);
   FIID_OBJ_SET (obj_cmd_rq, "ppp_mode", ppp_mode);
   FIID_OBJ_SET (obj_cmd_rq, "terminal_mode", terminal_mode);
@@ -248,7 +248,7 @@ fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t ch
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAM_IPMI_MESSAGING_COMM_SETTINGS);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAMETER_IPMI_MESSAGING_COMM_SETTINGS);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET (obj_cmd_rq, "dtr_hangup", dtr_hangup);
   FIID_OBJ_SET (obj_cmd_rq, "flow_control", flow_control);
@@ -272,7 +272,7 @@ fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAM_PAGE_BLACKOUT_INTERVAL);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAMETER_PAGE_BLACKOUT_INTERVAL);
   FIID_OBJ_SET (obj_cmd_rq, "page_blackout_interval", page_blackout_interval);
   
   return 0;
@@ -292,7 +292,7 @@ fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_num
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);    
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAM_CALL_RETRY_INTERVAL);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SERIAL_MODEM_PARAMETER_CALL_RETRY_INTERVAL);
   FIID_OBJ_SET (obj_cmd_rq, "call_retry_interval", call_retry_interval);
   
   return 0;

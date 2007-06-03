@@ -27,7 +27,7 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-sol-cmds.h"
-#include "freeipmi/ipmi-sol-param-spec.h"
+#include "freeipmi/ipmi-sol-parameter-spec.h"
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
@@ -423,7 +423,7 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_ENABLE);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_ENABLE);
   FIID_OBJ_SET (obj_cmd_rq, "sol_enable", sol_enable);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
@@ -449,7 +449,7 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_AUTHENTICATION);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_AUTHENTICATION);
   FIID_OBJ_SET (obj_cmd_rq, "sol_privilege_level", sol_privilege_level);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_authentication", force_sol_payload_authentication);
@@ -473,7 +473,7 @@ fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_CHARACTER_ACCUMULATE_INTERVAL_AND_SEND_THRESHOLD);
   FIID_OBJ_SET (obj_cmd_rq, "character_accumulate_interval", character_accumulate_interval);
   FIID_OBJ_SET (obj_cmd_rq, "character_send_threshold", character_send_threshold);
 
@@ -495,7 +495,7 @@ fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_RETRY);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_RETRY);
   FIID_OBJ_SET (obj_cmd_rq, "retry_count", retry_count);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET (obj_cmd_rq, "retry_interval", retry_interval);
@@ -518,7 +518,7 @@ fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t cha
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_NON_VOLATILE_BIT_RATE);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_NON_VOLATILE_BIT_RATE);
   FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
@@ -540,7 +540,7 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_VOLATILE_BIT_RATE);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_VOLATILE_BIT_RATE);
   FIID_OBJ_SET (obj_cmd_rq, "bit_rate", bit_rate);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
@@ -561,7 +561,7 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_PAYLOAD_PORT_NUMBER);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAMETER_SOL_PAYLOAD_PORT_NUMBER);
   FIID_OBJ_SET (obj_cmd_rq, "port_number", port_number);
 
   return 0;
