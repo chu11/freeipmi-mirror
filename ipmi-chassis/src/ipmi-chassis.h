@@ -24,11 +24,12 @@
 #include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
-
+#include "pstdout.h"
 
 struct ipmi_chassis_arguments
 {
   struct common_cmd_args common;
+  struct hostrange_cmd_args hostrange;
   int32_t cmd;
 };
 
@@ -43,6 +44,7 @@ typedef struct ipmi_chassis_state_data
 {
   ipmi_chassis_prog_data_t *prog_data;
   ipmi_device_t dev;
+  pstdout_state_t pstate;
 } ipmi_chassis_state_data_t;
 
 #endif

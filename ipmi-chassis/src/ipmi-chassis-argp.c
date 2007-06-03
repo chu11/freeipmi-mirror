@@ -49,15 +49,16 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHTYPE,
     ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
 #ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
 #endif /* NDEBUG */
-    {"get-capabilities", 'c', NULL, 0, "Get the chassis capabilities", 13},
-    {"get-status", 's', NULL, 0, "Get the chassis status", 14},
-    {"chassis-control", 'C', NULL, 0, "Control the chassis", 15},
-    {"chassis-reset", 'R', NULL, 0, "Reset the chassis (Recommended to use --chassis-control)", 16},
-    {"chassis-identify", 'I', NULL, 0, "Chassis Identification", 17},
-    {"set-capabilities", 'S', NULL, 0, "Set the chassis capabilities", 18},
+    {"get-capabilities", 'c', NULL, 0, "Get the chassis capabilities", 21},
+    {"get-status", 's', NULL, 0, "Get the chassis status", 22},
+    {"chassis-control", 'C', NULL, 0, "Control the chassis", 23},
+    {"chassis-reset", 'R', NULL, 0, "Reset the chassis (Recommended to use --chassis-control)", 24},
+    {"chassis-identify", 'I', NULL, 0, "Chassis Identification", 25},
+    {"set-capabilities", 'S', NULL, 0, "Set the chassis capabilities", 26},
     { 0 }
   };
 
@@ -67,6 +68,7 @@ static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_chassis_arguments *cmd_args = state->input;
+  error_t ret;
   
   switch (key)
     {
@@ -91,8 +93,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return common_parse_opt (key, arg, state, 
-			       &(cmd_args->common));
+      ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+      return ret;
     }
   
   return 0;
@@ -104,6 +108,7 @@ ipmi_chassis_argp_parse (int argc, char **argv,
 {
   error_t err;
   init_common_cmd_args (&(cmd_args->common));
+  init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->cmd = -1;
   /* ADMIN is minimum for ipmi-chassis b/c its needed for many of the
    * ipmi cmds used

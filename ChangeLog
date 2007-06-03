@@ -71,6 +71,8 @@
 	* Globally rename fields/varaibles from "param" to "parameter" for
 	naming consistency.
 
+	* ipmi-chassis/: Pstdout-ized.
+
 2007-06-01  Albert Chu <chu11@llnl.gov>
 
 	* common/src/fiid-wrappers.h: Remove duplicate macros.

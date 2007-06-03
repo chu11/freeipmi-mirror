@@ -51,6 +51,7 @@ if that passes, pass "section" to each appropriate checkout/commit/etc. area
 each area can do whatever they want
 should do everything in chunks when it is possible, do individually if there were errors
 ---
+common stuff for parsing in bmc-config and pef-config
 fix poor use of atoi/strtoul
 
 general
@@ -59,12 +60,6 @@ event handling
 timeout options for most FreeIPMI tools?
 sdr caching requires versioning
 tool for getting channel information - in ipmi-device tool for 0.5.0?
-
-code cleanup
-------------
-param->parameter everywyhere 
-- after ipmi-chassis committed
-common stuff for parsing in bmc-config and pef-config
 
 re-architecture
 ---------------

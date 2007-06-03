@@ -41,6 +41,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "ipmi-chassis-argp.h"
 #include "tool-common.h"
 
+#include "pstdout.h"
+#include "hostrange.h"
 
 #define _FIID_OBJ_GET(bytes, field, val)               \
 do {                                                   \
@@ -170,7 +172,9 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
 }
 
 static int
-_ipmi_chassis (void *arg)
+_ipmi_chassis (pstdout_state_t pstate,
+               const char *hostname,
+               void *arg)
 {
   ipmi_chassis_state_data_t state_data;
   ipmi_chassis_prog_data_t *prog_data;
@@ -181,15 +185,16 @@ _ipmi_chassis (void *arg)
   prog_data = (ipmi_chassis_prog_data_t *)arg;
 
   if (!(dev = ipmi_device_open(prog_data->progname,
-                               prog_data->args->common.host,
+                               hostname,
                                &(prog_data->args->common),
                                prog_data->debug_flags,
                                errmsg,
                                IPMI_DEVICE_OPEN_ERRMSGLEN)))
     {
-      fprintf(stderr,
-              "%s\n",
-              errmsg);
+      pstdout_fprintf(pstate,
+                      stderr,
+                      "%s\n",
+                      errmsg);
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
@@ -197,6 +202,7 @@ _ipmi_chassis (void *arg)
   memset(&state_data, '\0', sizeof(ipmi_chassis_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
+  state_data.pstate = pstate;
 
   if (run_cmd_args (&state_data) < 0)
     {
@@ -220,7 +226,8 @@ main (int argc, char **argv)
   ipmi_chassis_prog_data_t prog_data;
   struct ipmi_chassis_arguments cmd_args;
   int exit_code;
-  
+  int rv;
+
   ipmi_disable_coredump();
   
   prog_data.progname = argv[0];
@@ -236,7 +243,28 @@ main (int argc, char **argv)
   prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
 #endif /* NDEBUG */
   
-  exit_code = _ipmi_chassis (&prog_data);
+  if (pstdout_setup(&(prog_data.args->common.host),
+                    prog_data.args->hostrange.buffer_hostrange_output,
+                    prog_data.args->hostrange.consolidate_hostrange_output,
+                    prog_data.args->hostrange.fanout,
+                    prog_data.args->hostrange.eliminate) < 0)
+    {
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
   
+  if ((rv = pstdout_launch(prog_data.args->common.host,
+                           _ipmi_chassis,
+                           &prog_data)) < 0)
+    {
+      fprintf(stderr,
+              "pstdout_launch: %s\n",
+              pstdout_strerror(pstdout_errnum));
+      exit_code = EXIT_FAILURE;
+      goto cleanup;
+    }
+  
+  exit_code = rv;
+ cleanup:
   return (exit_code);
 }
