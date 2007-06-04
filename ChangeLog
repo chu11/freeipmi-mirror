@@ -1,3 +1,30 @@
+2007-06-01 Raghavendra <raghavendra@zresearch.com>
+
+       * ipmi-chassis/src/ipmi-chassis.c: Implemented Chassis Commands.
+	
+       * ipmi-chassis/src/ipmi-chassis.h: Updated for Chassis support.
+	
+	* libfreeipmi/include/freeipmi/ipmi-cmd-spec.h: Added new
+	commands.
+	
+	* libfreeipmi/include/freeipmi/ipmi-chassis-cmds.h: Added Macros
+	related to ipmi-chassis.
+	
+	* libfreeipmi/src/ipmi-chassis-cmds.c: Added Ipmi command
+	templates related to ipmi-chassis.
+	
+	* libfreeipmi/src/udm/ipmi-chassis-cmds-udm.c: Added Library
+	functions related to ipmi-chassis.
+	
+	* libfreeipmi/include/freeipmi/udm/ipmi-chassis-cmds-udm.h: Macros
+	related to ipmi-chassis.
+	
+	* libfreeipmi/include/Makefile.am: Added an entry for
+	freeipmi/ipmi-chassis-boot-options-param-spec.h.
+	
+       * libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-param-spec.h:
+       New file.
+	
 2007-06-04  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-error.h
@@ -488,7 +515,7 @@
 	* ipmipower/src/ipmipower_prompt.c (_cmd_k_g),
 	common/src/ipmi-common.c (format_kg): Fix k_g buf length bugs.
 	
-2007-05-07  Ragha Vendra <raghavendra@zresearch.com>
+2007-05-07  Raghavendra <raghavendra@zresearch.com>
 
 	* ipmiconsole/src/ipmiconsole/Makefile.am: Fix include path
 	compile issue.
