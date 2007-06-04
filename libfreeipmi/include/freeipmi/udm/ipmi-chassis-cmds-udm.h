@@ -44,8 +44,8 @@ ipmi_cmd_chassis_control (ipmi_device_t dev,
 
 int8_t 
 ipmi_cmd_chassis_identify (ipmi_device_t dev,
-                           uint8_t force_identify,
-                           uint8_t interval,
+                           uint8_t *identify_interval,
+                           uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rs);
 
 int8_t 

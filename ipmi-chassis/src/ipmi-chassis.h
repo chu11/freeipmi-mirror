@@ -40,12 +40,13 @@ enum ipmi_chassis_keys
     IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY,
   };
 
-struct cmd_boot_option{
+struct cmd_boot_option
+{
   int8_t bios_boot_type;
   int8_t lock_out_reset_button;
   int8_t screen_blank;
   int8_t boot_device_selector;
-B  int8_t lock_keyboard;
+  int8_t lock_keyboard;
   int8_t clear_cmos;
   int8_t console_redirection;
   int8_t user_password_bypass;
@@ -53,12 +54,14 @@ B  int8_t lock_keyboard;
   int8_t firmware_bios_verbosity;
 };
 
-struct cmd_identify {
+struct cmd_identify 
+{
   uint8_t interval;
   uint8_t force_identify;
 };
 
-struct cmd_set_capabilities {
+struct cmd_set_capabilities 
+{
   uint8_t flag;
   uint32_t fru_device_addr;
 };

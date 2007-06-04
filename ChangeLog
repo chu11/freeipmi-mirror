@@ -1,4 +1,44 @@
-2007-06-01 Raghavendra <raghavendra@zresearch.com>
+2007-06-04 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-param-spec.h: Renamed to 
+	libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-parameter-spec.h.
+	Adjusted with 2007-06-02 param -> parameter changes.
+
+	* libfreeipmi/include/Makefile.am: Update appropriately for change.
+
+	* libfreeipmi/include/freeipmi/freeipmi.h: Add
+	ipmi-chassis-boot-options-parameter-spec.h.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/ipmi-chassis-cmds-udm.c: Change param -> parameter
+	globally.
+
+	* libfreeipmi/src/ipmi-chassis-cmds-udm.c: Remove use of
+	ERR_EINVAL.  Fix tabbing.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-chassis-cmds-udm.h,
+	libfreeipmi/include/freeipmi/udm/ipmi-chassis-cmds-udm.h
+	(ipmi_cmd_chassis_identify): Fix API.  Use
+	fill_cmd_chassis_identify correctly.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
+	Fix parameter check.
+
+	* libfreeipmi/src/udm/ipmi-chassis-cmds-udm.c
+	(ipmi_cmd_set_system_boot_options_boot_info_acknowledge,
+	ipmi_cmd_set_system_boot_options_boot_flags): Add parameter
+	checks.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c
+	(fill_cmd_set_system_boot_options_boot_flags): Fix parentheses
+	usage.  Fix parameter setting order.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/udm/ipmi-chassis-cmds-udm.c: Fix includes.
+
+	* ipmi-chassis/src/ipmi-chassis.h: Fix brace consistency.
+	
+2007-06-04 Raghavendra <raghavendra@zresearch.com>
 
        * ipmi-chassis/src/ipmi-chassis.c: Implemented Chassis Commands.
 	
