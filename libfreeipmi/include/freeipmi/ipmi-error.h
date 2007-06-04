@@ -31,7 +31,7 @@ extern "C" {
 #include <sys/types.h>
 #include <freeipmi/fiid.h>
 
-#define IPMI_ERR_STR_MAX_LEN                 0x0800
+#define IPMI_ERR_STR_MAX_LEN                 2048
 
 int8_t ipmi_strerror_r (uint8_t cmd, 
                         uint8_t netfn,

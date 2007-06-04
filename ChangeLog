@@ -1,3 +1,8 @@
+2007-06-04  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-error.h
+	(IPMI_ERR_STR_MAX_LEN): Define with number rather than hex.
+	
 2007-06-02  Albert Chu <chu11@llnl.gov>
 
 	Massive code cleanup.
