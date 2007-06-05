@@ -105,7 +105,11 @@
 	* ipmi-chassis/src/ipmi-chassis-argp.c (parse_opt),
 	ipmi-chassis/src/ipmi-chassis.c (chassis_identify): Fix chassis
 	identify usage.
-	
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c,
+	ipmi-chassis/ipmi-chassis.8.pre.in: Put periods on ends of help
+	messages.
+
 2007-06-05 Raghavendra <raghavendra@zresearch.com>
 
        * ipmi-chassis/src/ipmi-chassis.c: Implemented Chassis Commands.
