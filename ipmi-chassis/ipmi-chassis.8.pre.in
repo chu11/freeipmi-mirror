@@ -19,7 +19,7 @@ Get the chassis capabilities
 \fB\-s\fR, \fB\-\-get\-status\fR
 Get the chassis status
 .TP
-\fB\-C\fR, \fB\-\-chassis\-control\fR=\fICONTROL\fR
+\fB\-O\fR, \fB\-\-chassis\-control\fR=\fICONTROL\fR
 Control the chassis.Allowed values are:
 power\-down, power\-up, power\-cycle, hard\-reset,
 diagnostic\-interrupt, soft\-shutdown

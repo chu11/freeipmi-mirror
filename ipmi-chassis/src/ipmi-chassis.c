@@ -750,7 +750,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   /* XXX FIX */
   if (ipmi_cmd_chassis_identify (state_data->dev, 
-                                 &args->args.identify_args.interval, 
+                                 &args->args.identify_args.identify_interval, 
                                  &args->args.identify_args.force_identify, 
                                  cmd_rs) != 0)
     {

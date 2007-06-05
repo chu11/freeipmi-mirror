@@ -56,8 +56,10 @@ struct cmd_boot_option
 
 struct cmd_identify 
 {
-  uint8_t interval;
+  uint8_t identify_interval;
+  uint8_t identify_interval_set;
   uint8_t force_identify;
+  uint8_t force_identify_set;
 };
 
 struct cmd_set_capabilities 

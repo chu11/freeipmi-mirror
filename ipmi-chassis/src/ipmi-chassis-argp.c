@@ -66,10 +66,10 @@ static struct argp_option options[] =
      "Get the chassis capabilities", 21},
     {"get-status", 's', NULL, 0, 
      "Get the chassis status", 22},
-    {"chassis-control", 'C', "CONTROL", 0, 
+    {"chassis-control", 'O', "CONTROL", 0, 
      "Control the chassis. Allowed values are: power-down, power-up, power-cycle, hard-reset, diagnostic-interrupt, soft-shutdown", 23},
     {"chassis-identify", 'I', "IDENTIFY", 0,
-     "Chassis Identification. Allowed values are: turn-off to turn off identification, <interval> to turn on identification for \"interval\" seconds, force to turn on indefinitely", 24},
+     "Chassis Identification. Allowed values are: turn-off to turn off identification, <interval> to turn on identification for 'interval' seconds, force to turn on indefinitely", 24},
     {"get-system-restart-cause", 'R', NULL, 0, 
      "Get system restart cause", 25},
     {"get-power-on-hours-counter", 'H', NULL, 0,
@@ -334,7 +334,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
       if (cmd_args->args.identify_args.force_identify == IPMI_CHASSIS_FORCE_IDENTIFY_OFF)
         {
-          cmd_args->args.identify_args.interval = strtol (arg, &ptr, 10);
+          cmd_args->args.identify_args.identify_interval = strtol (arg, &ptr, 10);
           if (*ptr != '\0')
             {
               fprintf (stderr, "Invalid Chassis Identify value\n");

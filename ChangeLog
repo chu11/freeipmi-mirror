@@ -94,6 +94,10 @@
 	New function.
 
 	* ipmi-chassis/src/ipmi-chassis.c (main): Call ipmi_chassis_args_validate.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c,
+	ipmi-chassis/ipmi-chassis.8.pre.in: Change 'C' option to 'O' to
+	not conflict with another short option.
 	
 2007-06-05 Raghavendra <raghavendra@zresearch.com>
 
