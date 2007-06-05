@@ -75,6 +75,10 @@
 
 	* ipmi-chassis/src/ipmi-chassis.c (set_boot_flags): Remove set in
 	progress for now since no other IPMI tools currently use it.
+
+	* ipmi-chassis/ipmi-chassis.8.pre.in: Use macros appropriately.
+
+	* AUTHORS: Add Ragha.
 	
 2007-06-05 Raghavendra <raghavendra@zresearch.com>
 
