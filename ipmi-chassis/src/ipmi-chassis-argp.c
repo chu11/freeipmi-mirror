@@ -76,7 +76,7 @@ static struct argp_option options[] =
      "Get Power on Hours counter.", 26},
     {"set-power-cycle-interval", 'S', "INTERVAL", 0, 
      "Set Power cycle interval to INTERVAL.", 27},
-    {"set-boot-flags", 'B', NULL, 0, 
+    {"set-boot-flags", 'L', NULL, 0, 
      "Set system boot flags. Allowed flags are: clear-cmos, boot-type, lock-keyboard, boot-device, blank-screen, lock-out-reset-button, firmware-bios-verbosity, force-progress-event-traps, user-password-bypass.", 28},
     {"get-boot-flags", 'G', NULL, 0, 
      "Get system boot-flags.", 29},
@@ -358,7 +358,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
       break;
 
-    case 'C':
+    case 'O':
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Only one command at a time\n");
@@ -441,7 +441,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       break;
 
-    case 'B':
+    case 'L':
       if (cmd_args->cmd != -1)
         {
           fprintf (stderr, "Error: Only one command at a time\n");
