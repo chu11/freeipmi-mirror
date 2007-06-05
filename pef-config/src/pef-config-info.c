@@ -66,7 +66,7 @@ pef_info (pef_config_state_data_t *state_data)
 
   if (alert_action_support)
     {
-      FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+      FIID_OBJ_DESTROY (obj_cmd_rs);
 
       FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs,
                                tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs);
@@ -86,7 +86,7 @@ pef_info (pef_config_state_data_t *state_data)
       printf ("Number of Event Filters:                %d\n", 
 	      (int)val);
 
-      FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+      FIID_OBJ_DESTROY (obj_cmd_rs);
 
       FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs,
                                tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
@@ -106,7 +106,7 @@ pef_info (pef_config_state_data_t *state_data)
       printf ("Number of Alert Policy entries:         %d\n", 
 	      (int)val);
       
-      FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+      FIID_OBJ_DESTROY (obj_cmd_rs);
 
       FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs,
                                tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs);
@@ -129,6 +129,6 @@ pef_info (pef_config_state_data_t *state_data)
   
   rv = PEF_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return (rv);
 }

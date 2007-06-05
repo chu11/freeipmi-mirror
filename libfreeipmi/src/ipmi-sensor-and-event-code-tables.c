@@ -1033,7 +1033,7 @@ _get_12_event_data2_message_offset_03(int offset, uint8_t event_data2, char *buf
 		    (str2 ? str2 : ""));
 	
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  FIID_OBJ_DESTROY(obj);
   return rv;
 }
 
@@ -1114,7 +1114,7 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
   
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  FIID_OBJ_DESTROY(obj);
   return rv;
 }
 
@@ -1155,7 +1155,7 @@ _get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf
   rv = _snprintf(buf, buflen, "%s; %s", str1, str2);
 
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  FIID_OBJ_DESTROY(obj);
   return rv;
 }
 
@@ -1212,7 +1212,7 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[val]);
 
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
   
@@ -1246,7 +1246,7 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
 
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
   
@@ -1297,7 +1297,7 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 			(str2 ? str2 : ""));
       
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
   
@@ -1349,7 +1349,7 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       rv = _snprintf(buf, buflen, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d", str, lun, private_bus_id);
 
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
 
@@ -1385,7 +1385,7 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
 	rv = _snprintf(buf, buflen, "User ID for user that activated session #%d", (int) val);
 
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
   
@@ -1439,7 +1439,7 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str);
 
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
   
@@ -1473,7 +1473,7 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[val]);
 
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
   
@@ -1540,7 +1540,7 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 			event_offset, (str1 ? str1 : ""), ((str1 && str2 && strlen(str2)) ? "; " : ""), (str2 ? str2 : ""));
 
       cleanup:
-	FIID_OBJ_DESTROY_NO_RETURN(obj);
+	FIID_OBJ_DESTROY(obj);
 	return rv;
       }
     case 0x05:
@@ -1632,7 +1632,7 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 		      channel_number, (str) ? "; " : "", str); 
 
     cleanup:
-      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      FIID_OBJ_DESTROY(obj);
       return rv;
     }
   

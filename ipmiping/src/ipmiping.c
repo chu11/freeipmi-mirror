@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.33 2006-04-14 18:35:47 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.34 2007-06-05 21:34:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -59,12 +59,6 @@ _fiid_obj_create(fiid_template_t tmpl)
     ipmi_ping_err_exit("fiid_obj_create: %s", strerror(errno));
 
   return obj;
-}
-
-static void 
-_fiid_obj_destroy(fiid_obj_t obj)
-{
-  fiid_obj_destroy(obj);
 }
 
 static void 
@@ -162,10 +156,10 @@ createpacket(char *buffer,
     }
 #endif
 
-  _fiid_obj_destroy(obj_rmcp_hdr);
-  _fiid_obj_destroy(obj_lan_session_hdr);
-  _fiid_obj_destroy(obj_lan_msg_hdr);
-  _fiid_obj_destroy(obj_cmd);
+  fiid_obj_destroy(obj_rmcp_hdr);
+  fiid_obj_destroy(obj_lan_session_hdr);
+  fiid_obj_destroy(obj_lan_msg_hdr);
+  fiid_obj_destroy(obj_cmd);
 
   return len;
 }
@@ -368,11 +362,11 @@ parsepacket(char *buffer,
   
   retval = 1;
  cleanup:
-  _fiid_obj_destroy(obj_rmcp_hdr);
-  _fiid_obj_destroy(obj_lan_session_hdr);
-  _fiid_obj_destroy(obj_lan_msg_hdr);
-  _fiid_obj_destroy(obj_cmd);
-  _fiid_obj_destroy(obj_lan_msg_trlr);
+  fiid_obj_destroy(obj_rmcp_hdr);
+  fiid_obj_destroy(obj_lan_session_hdr);
+  fiid_obj_destroy(obj_lan_msg_hdr);
+  fiid_obj_destroy(obj_cmd);
+  fiid_obj_destroy(obj_lan_msg_trlr);
   return retval;
 }
 

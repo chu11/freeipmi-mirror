@@ -554,8 +554,8 @@ get_sensor_reading (ipmi_device_t dev,
     }
   
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
-  FIID_OBJ_DESTROY_NO_RETURN(l_obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_DESTROY(l_obj_cmd_rs);
   return (rv);
 }
 

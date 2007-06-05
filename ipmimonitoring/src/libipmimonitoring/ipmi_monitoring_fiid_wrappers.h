@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_fiid_wrappers.h,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_fiid_wrappers.h,v 1.2 2007-06-05 21:34:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,7 +35,7 @@ int32_t Fiid_template_block_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t t
 
 fiid_obj_t Fiid_obj_create(ipmi_monitoring_ctx_t c, fiid_template_t tmpl);
 int8_t Fiid_obj_clear(ipmi_monitoring_ctx_t c, fiid_obj_t obj);
-int8_t Fiid_obj_destroy(ipmi_monitoring_ctx_t c, fiid_obj_t obj);
+void Fiid_obj_destroy(ipmi_monitoring_ctx_t c, fiid_obj_t obj);
 int8_t Fiid_obj_get(ipmi_monitoring_ctx_t c, fiid_obj_t obj, char *field, uint64_t *val);
 int32_t Fiid_obj_get_data(ipmi_monitoring_ctx_t c, fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
 int8_t Fiid_obj_set(ipmi_monitoring_ctx_t c, fiid_obj_t obj, char *field, uint64_t val);

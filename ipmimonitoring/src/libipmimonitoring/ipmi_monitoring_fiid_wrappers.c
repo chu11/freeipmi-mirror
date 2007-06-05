@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_fiid_wrappers.c,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_fiid_wrappers.c,v 1.2 2007-06-05 21:34:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -120,23 +120,14 @@ Fiid_obj_clear(ipmi_monitoring_ctx_t c, fiid_obj_t obj)
   return rv;
 }
 
-int8_t
+void
 Fiid_obj_destroy(ipmi_monitoring_ctx_t c, fiid_obj_t obj) 
 {
-  int8_t rv;
-
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(fiid_obj_valid(obj));
 
-  if ((rv = fiid_obj_destroy(obj)) < 0)
-    {
-      IPMI_MONITORING_DEBUG(("fiid_obj_destroy: %s", fiid_strerror(fiid_obj_errnum(obj))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
-      return -1;
-    }
-    
-  return rv;
+  fiid_obj_destroy(obj);
 }
 
 int8_t

@@ -341,20 +341,6 @@ do {                                            \
 
 #define FIID_OBJ_DESTROY(__obj)                \
 do {                                           \
- if ((__obj))                                  \
-   {                                           \
-     if (fiid_obj_destroy((__obj)) < 0)        \
-       {                                       \
-         __FIID_OBJ_SYSLOG((__obj));           \
-         __FIID_OBJ_TRACE((__obj));            \
-         __FIID_OBJ_SET_ERRNO((__obj));        \
-         return (-1);                          \
-       }                                       \
-   }                                           \
-} while (0)
-
-#define FIID_OBJ_DESTROY_NO_RETURN(__obj)      \
-do {                                           \
   if ((__obj))                                 \
     {                                          \
       fiid_obj_destroy((__obj));               \

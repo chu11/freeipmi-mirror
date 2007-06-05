@@ -228,19 +228,83 @@ int32_t fiid_template_block_len_bytes (fiid_template_t tmpl,
  */
 int8_t fiid_template_compare(fiid_template_t tmpl1, fiid_template_t tmpl2);
 
+/* 
+ * fiid_template_free
+ *
+ * Free's a template created by fiid_obj_template.
+ */
+void fiid_template_free (fiid_field_t *tmpl_dynamic);
+
 /*****************************
  * FIID Object API           *
  *****************************/
 
+/*  
+ * fiid_strerror
+ *
+ * Return statically allocated string describing the specified error.
+ */
 char *fiid_strerror(int32_t errnum);
 
+/* 
+ * fiid_obj_create
+ *
+ * Return a fiid object based on the specified template.  Returns NULL
+ * on error.
+ */
 fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
-int8_t fiid_obj_destroy (fiid_obj_t obj);
+
+/* 
+ * fiid_obj_destroy
+ *
+ * Destroy and free memory from a fiid object.  
+ */
+void fiid_obj_destroy (fiid_obj_t obj);
+
+/* 
+ * fiid_obj_dup
+ *
+ * Create and return a duplicate object from the one specified.
+ * Returns NULL on error.
+ */
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
+
+/* 
+ * fiid_obj_valid
+ *
+ * Returns 1 if the object passed in is a valid fiid object, 0 if not.
+ */
 int8_t fiid_obj_valid(fiid_obj_t obj);
+
+/* 
+ * fiid_obj_packet_valid
+ *
+ * Returns 1 if the object contains a all the data for a valid packet,
+ * 0 if not, -1 on error.  A valid packet is based on the field flags
+ * specified in the original fiid template.  For example, this
+ * function will check if all required fields have been set with the
+ * correct number of bytes.  It will also check that data set within
+ * the object is byte aligned.
+ */
 int8_t fiid_obj_packet_valid(fiid_obj_t obj);
+
+/* 
+ * fiid_obj_template
+ *
+ * Create a template based on what is stored internally within the
+ * object.  Returns NULL on error.  Free the resulting template using
+ * fiid_template_free().
+ */
 fiid_field_t *fiid_obj_template(fiid_obj_t obj);
+
+/* 
+ * fiid_obj_template_compare
+ */
 int8_t fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
+
+/* 
+ * fiid_obj_errnum
+ */
 int32_t fiid_obj_errnum(fiid_obj_t obj);
 
 int32_t fiid_obj_len(fiid_obj_t obj);

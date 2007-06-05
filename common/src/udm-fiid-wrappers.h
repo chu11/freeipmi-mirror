@@ -97,21 +97,7 @@ do {                                                \
     }                                               \
 } while (0)
 
-#define UDM_FIID_OBJ_DESTROY(__obj)            \
-do {                                           \
- if ((__obj))                                  \
-   {                                           \
-     if (fiid_obj_destroy((__obj)) < 0)        \
-       {                                       \
-         __FIID_OBJ_SYSLOG((__obj));           \
-         __FIID_OBJ_TRACE((__obj));            \
-         __FIID_OBJ_SET_UDM_ERRNUM((__obj));   \
-         return (-1);                          \
-       }                                       \
-   }                                           \
-} while (0)
-
-#define UDM_FIID_OBJ_DESTROY_NO_RETURN(__obj)      FIID_OBJ_DESTROY_NO_RETURN(__obj)
+#define UDM_FIID_OBJ_DESTROY(__obj) FIID_OBJ_DESTROY(__obj)
 
 #define UDM_FIID_OBJ_LEN_BYTES(__len, __obj)             \
 do {                                                     \

@@ -95,7 +95,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
   *number_of_lan_alert_destinations = state_data->number_of_lan_alert_destinations;
   rv = PEF_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  FIID_OBJ_DESTROY (obj_cmd_rs);
   return rv;
 }
 
@@ -142,7 +142,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, int8_t *n
   *number_of_alert_strings = state_data->number_of_alert_strings;
   rv = PEF_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -189,7 +189,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, in
   *number_of_alert_policy_entries = state_data->number_of_alert_policy_entries;
   rv = PEF_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 
@@ -236,7 +236,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, int8_t *n
   *number_of_event_filters = state_data->number_of_event_filters;
   rv = PEF_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+  FIID_OBJ_DESTROY (obj_cmd_rs);
   return (rv);
 }
 

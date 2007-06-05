@@ -945,7 +945,7 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
   
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_acpi_table_hdr);
+  FIID_OBJ_DESTROY(obj_acpi_table_hdr);
   return (rv);
 }
 
@@ -1088,7 +1088,7 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
 			    "table_address", 
 			    &table_address);
       
-      FIID_OBJ_DESTROY_NO_RETURN(obj_table);
+      FIID_OBJ_DESTROY(obj_table);
 
       if (ipmi_acpi_get_table (table_address, 
 			       signature, 
@@ -1121,8 +1121,8 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
     free(acpi_table);
   if (rsdt_xsdt_table)
     free(rsdt_xsdt_table);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_table);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_acpi_rsdp_descriptor);
+  FIID_OBJ_DESTROY(obj_table);
+  FIID_OBJ_DESTROY(obj_acpi_rsdp_descriptor);
   return (rv);
 }
 
@@ -1333,8 +1333,8 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_loca
   memcpy(info, &linfo, sizeof(struct ipmi_locate_info));
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (obj_acpi_table_hdr);
-  FIID_OBJ_DESTROY_NO_RETURN (obj_acpi_spmi_table_descriptor);
+  FIID_OBJ_DESTROY (obj_acpi_table_hdr);
+  FIID_OBJ_DESTROY (obj_acpi_spmi_table_descriptor);
   return (rv);
 }
 

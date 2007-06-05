@@ -427,12 +427,12 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcp_hdr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_session_hdr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_hdr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_trlr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected_data);
+  FIID_OBJ_DESTROY(obj_rmcp_hdr);
+  FIID_OBJ_DESTROY(obj_session_hdr);
+  FIID_OBJ_DESTROY(obj_lan_msg_hdr);
+  FIID_OBJ_DESTROY(obj_cmd);
+  FIID_OBJ_DESTROY(obj_lan_msg_trlr);
+  FIID_OBJ_DESTROY(obj_unexpected_data);
   return (rv);
 }
 
@@ -501,9 +501,9 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcp_hdr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected_data);
+  FIID_OBJ_DESTROY(obj_rmcp_hdr);
+  FIID_OBJ_DESTROY(obj_cmd);
+  FIID_OBJ_DESTROY(obj_unexpected_data);
   return (rv);
 }
 

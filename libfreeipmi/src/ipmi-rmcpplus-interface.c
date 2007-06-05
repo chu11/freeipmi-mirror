@@ -123,7 +123,7 @@ _construct_payload_buf(uint8_t payload_type,
  cleanup:
   if (rv < 0)
     memset(payload_buf, '\0', payload_buf_len);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_trlr);
+  FIID_OBJ_DESTROY(obj_lan_msg_trlr);
   return (rv);
 }
 
@@ -844,10 +844,10 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   rv = indx;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_session_hdr_temp);
+  FIID_OBJ_DESTROY(obj_rmcpplus_payload);
+  FIID_OBJ_DESTROY(obj_session_hdr_temp);
   FIID_OBJ_CLEAR_NO_RETURN(obj_rmcpplus_session_trlr_temp);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_session_trlr_temp);
+  FIID_OBJ_DESTROY(obj_rmcpplus_session_trlr_temp);
   return (rv);
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.h,v 1.2 2007-06-05 21:34:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,7 +36,7 @@ int32_t Fiid_template_block_len_bytes(ipmiconsole_ctx_t c, fiid_template_t tmpl,
 fiid_obj_t Fiid_obj_create(ipmiconsole_ctx_t c, fiid_template_t tmpl);
 int8_t Fiid_obj_clear(ipmiconsole_ctx_t c, fiid_obj_t obj);
 int8_t Fiid_obj_clear_field(ipmiconsole_ctx_t c, fiid_obj_t obj, char *field);
-int8_t Fiid_obj_destroy(ipmiconsole_ctx_t c, fiid_obj_t obj);
+void Fiid_obj_destroy(ipmiconsole_ctx_t c, fiid_obj_t obj);
 int8_t Fiid_obj_get(ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t *val);
 int32_t Fiid_obj_get_data(ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
 int8_t Fiid_obj_set(ipmiconsole_ctx_t c, fiid_obj_t obj, char *field, uint64_t val);

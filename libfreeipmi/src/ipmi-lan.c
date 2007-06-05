@@ -439,7 +439,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
  cleanup:
   if (rv < 0)
     guaranteed_memset(pkt, '\0', pkt_len);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_trlr);
+  FIID_OBJ_DESTROY(obj_lan_msg_trlr);
   guaranteed_memset(pwbuf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   return rv;
 }

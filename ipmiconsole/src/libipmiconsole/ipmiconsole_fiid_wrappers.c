@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.2 2007-06-05 21:34:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -141,23 +141,14 @@ Fiid_obj_clear_field(ipmiconsole_ctx_t c, fiid_obj_t obj, char *field)
   return rv;
 }
 
-int8_t
+void
 Fiid_obj_destroy(ipmiconsole_ctx_t c, fiid_obj_t obj) 
 {
-  int8_t rv;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(fiid_obj_valid(obj));
 
-  if ((rv = fiid_obj_destroy(obj)) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_destroy: %s", fiid_strerror(fiid_obj_errnum(obj))));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
-      return -1;
-    }
-    
-  return rv;
+  fiid_obj_destroy(obj);
 }
 
 int8_t

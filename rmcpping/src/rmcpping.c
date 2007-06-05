@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.18 2006-03-07 21:57:15 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.19 2007-06-05 21:34:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -58,12 +58,6 @@ _fiid_obj_create(fiid_template_t tmpl)
   return obj;
 }
  
-static void
-_fiid_obj_destroy(fiid_obj_t obj)
-{
-  fiid_obj_destroy(obj);
-}
-
 static void
 _fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 {
@@ -124,8 +118,8 @@ createpacket(char *buffer,
     }
 #endif
 
-  _fiid_obj_destroy(obj_rmcp_hdr);
-  _fiid_obj_destroy(obj_rmcp_cmd);
+  fiid_obj_destroy(obj_rmcp_hdr);
+  fiid_obj_destroy(obj_rmcp_cmd);
   return len;
 }
 
@@ -194,8 +188,8 @@ parsepacket(char *buffer,
   
   retval = 1;
  cleanup:
-  _fiid_obj_destroy(obj_rmcp_hdr);
-  _fiid_obj_destroy(obj_rmcp_cmd);
+  fiid_obj_destroy(obj_rmcp_hdr);
+  fiid_obj_destroy(obj_rmcp_cmd);
   return retval;
 }
 

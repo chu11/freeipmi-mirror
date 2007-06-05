@@ -435,6 +435,41 @@ fiid_template_compare(fiid_template_t tmpl1, fiid_template_t tmpl2)
   return (1);
 }
 
+void
+fiid_template_free (fiid_field_t *tmpl_dynamic)
+{
+  if (tmpl_dynamic != NULL)
+    xfree (tmpl_dynamic);
+}
+
+static int32_t
+_fiid_obj_field_start_end (fiid_obj_t obj,
+                           char *field,
+                           uint32_t *start,
+                           uint32_t *end)
+{
+  int i = 0;
+  int _start = 0;
+  int _end = 0;
+
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field && start && end);
+
+  for (i = 0; obj->field_data[i].max_field_len != 0; i++)
+    {
+      if (!strcmp (obj->field_data[i].key, field))
+        {
+          _end = _start + obj->field_data[i].max_field_len;
+          *start = _start;
+          *end = _end;
+          return (obj->field_data[i].max_field_len);
+        }
+      _start += obj->field_data[i].max_field_len;
+    }
+
+  obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
+  return (-1);
+}
+
 static int32_t
 _fiid_obj_field_start (fiid_obj_t obj, char *field)
 {
@@ -583,21 +618,18 @@ fiid_obj_create (fiid_template_t tmpl)
   return (NULL);
 }
 
-int8_t
+void
 fiid_obj_destroy (fiid_obj_t obj)
 {
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    return (-1);
+    return;
 
   obj->magic = ~FIID_OBJ_MAGIC;
   obj->errnum = FIID_ERR_SUCCESS;
   xfree(obj->data);
   xfree(obj->field_data);
   xfree(obj);
-  
-  return (0);
 }
-
 
 fiid_obj_t 
 fiid_obj_dup (fiid_obj_t src_obj)

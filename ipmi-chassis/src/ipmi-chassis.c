@@ -263,9 +263,9 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (get_boot_flags_rs);
-  FIID_OBJ_DESTROY_NO_RETURN (boot_info_ack_cmd_rs);
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (get_boot_flags_rs);
+  FIID_OBJ_DESTROY (boot_info_ack_cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -542,7 +542,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -597,7 +597,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -644,7 +644,7 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   rv = 0;
 
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -729,7 +729,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -762,7 +762,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
   
@@ -795,7 +795,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -1104,7 +1104,7 @@ print:
     
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 
@@ -1201,7 +1201,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   rv = 0;
 cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
+  FIID_OBJ_DESTROY (cmd_rs);
   return rv;
 }
 

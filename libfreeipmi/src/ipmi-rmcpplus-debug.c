@@ -244,9 +244,9 @@ _dump_rmcpplus_payload_data(int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_hdr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_trlr);
+  FIID_OBJ_DESTROY(obj_lan_msg_hdr);
+  FIID_OBJ_DESTROY(obj_cmd);
+  FIID_OBJ_DESTROY(obj_lan_msg_trlr);
   return (rv);
 }
 
@@ -307,7 +307,7 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
+  FIID_OBJ_DESTROY(obj_rmcpplus_payload);
   return (rv);
 }
 
@@ -421,7 +421,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                              cmd_data_len) < 0));
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
+  FIID_OBJ_DESTROY(obj_rmcpplus_payload);
   return (rv);  
 }
 
@@ -499,8 +499,8 @@ _dump_rmcpplus_payload_rakp(int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
+  FIID_OBJ_DESTROY(obj_rmcpplus_payload);
+  FIID_OBJ_DESTROY(obj_cmd);
   return (rv);
 }
 
@@ -691,7 +691,7 @@ _dump_rmcpplus_session_trlr(int fd,
 
   rv = indx;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_session_trlr);
+  FIID_OBJ_DESTROY(obj_rmcpplus_session_trlr);
   return (rv);
 }
 
@@ -887,7 +887,7 @@ ipmi_dump_rmcpplus_packet (int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcp_hdr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected_data);
+  FIID_OBJ_DESTROY(obj_rmcp_hdr);
+  FIID_OBJ_DESTROY(obj_unexpected_data);
   return (rv);
 }

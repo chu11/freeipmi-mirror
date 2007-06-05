@@ -1,12 +1,24 @@
 2007-06-05 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c
-	(fiid_template_make, __fiid_template_make, fiid_template_free):
-	Removed functions.
+	(fiid_template_make, __fiid_template_make): Removed functions.
 
 	* libfreeipmi/src/fiid.c (fiid_template_field_lookup): Fix
 	parameter check bugs.
 
+	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_obj_destroy): Make void return function.
+
+	* common/src/fiid-wrappers.h (FIID_OBJ_DESTROY,
+	UDM_FIID_OBJ_DESTROY): Adjust appropriately for change.
+
+	* common/src/fiid-wrappers.h (FIID_OBJ_DESTROY_NO_RETURN,
+	UDM_FIID_OBJ_DESTROY_NO_RETURN): Remove functions, they are no
+	longer necessary.
+
+	* libfreeipmi/, pef-config/, ipmi-chassis/, ipmiconsole/,
+	ipmimonitoring/, ipmiping/, rmcpping/: Adjust for macro and function changes.
+	
 	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c:
 	General code cleanup and commenting.
 	
