@@ -29,10 +29,14 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include <freeipmi/ipmi-chassis-boot-options-param-spec.h>
+#include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
+
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
 #include "argp-common.h"
+
+#include "freeipmi-portability.h"
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
@@ -53,29 +57,51 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHTYPE,
-    {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,
-     "Use this PRIVILEGE-LEVEL instead of ADMIN.  "
-     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 12},
-    {"get-capabilities", 'c', NULL, 0, "Get the chassis capabilities", 13},
-    {"get-status", 's', NULL, 0, "Get the chassis status", 14},
-    {"chassis-control", 'C', "CONTROL", 0, "Control the chassis.Allowed values are: power-down, power-up, power-cycle, hard-reset, diagnostic-interrupt, soft-shutdown", 15},
-    {"chassis-identify", 'I', "IDENTIFY", 0,"Chassis Identification.Allowed values are: turn-off to turn off identification, <interval> to turn on identification for \"interval\" seconds, force to turn on indefinitely", 16},
-    {"get-system-restart-cause", 'R', NULL, 0, "Get system restart cause", 17},
-    {"get-power-on-hours-counter", 'H', NULL, 0,"Get Power on Hours counter", 18},
-    {"set-power-cycle-interval", 'S', "INTERVAL", 0, "Set Power cycle interval to INTERVAL", 19},
-    {"set-boot-flags", 'B', NULL, 0, "Set system boot flags. Allowed flags are: clear-cmos, boot-type, lock-keyboard, boot-device, blank-screen, lock-out-reset-button, firmware-bios-verbosity, force-progress-event-traps, user-password-bypass", 20},
-    {"get-boot-flags", 'G', NULL, 0, "Get system boot-flags", 21},
-    {"boot-type", IPMI_CHASSIS_KEY_BOOT_TYPE, "BOOT_TYPE", OPTION_ARG_OPTIONAL, "Set BIOS boot type to BOOT_TYPE, allowed boot types: pc-compatible or EFI. Should be used with set-boot-flags", 22},
-    {"lock-out-reset-button", IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, "Lock out reset button, allowed values: yes/no. Should be used with set-boot-flags", 23},
-    {"blank-screen", IPMI_CHASSIS_KEY_SCREEN_BLANK, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, "Blank screen, allowed values: yes/no. Should be used with set-boot-flags", 24},
-    {"boot-device", IPMI_CHASSIS_KEY_BOOT_DEVICE_SELECTOR, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, "Set device to boot from to BOOT_DEVICE, allowed devices: pxe, disk, disk-safe, diag, cd-dvd, floppy, bios. Should be used with set-boot-flags", 25},
-    {"lock-keyboard", IPMI_CHASSIS_KEY_LOCK_KEYBOARD, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, "lock keyboard, allowed values: yes/no. Should be used with set-boot-flags", 26},
-    {"clear-cmos", IPMI_CHASSIS_KEY_CLEAR_CMOS, "CLEAR_CMOS", OPTION_ARG_OPTIONAL, "clear-cmos: yes/no. Should be used with set-boot-flags", 27},
-    {"console-redirection", IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION, "REDIRECT_TO_CONSOLE", OPTION_ARG_OPTIONAL, "redirect to console, allowed values: default, suppress, enable. Should be used with set-boot-flags", 28},
-    {"user-password-bypass", IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS, "BYPASS_USER_PASSWORD", OPTION_ARG_OPTIONAL, "Bypass user password, allowed values: yes/no. Should be used with set-boot-flags", 29},
-    {"force-progress-event-traps", IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, "Force progress event traps, allowed values: yes/no. Should be used with set-boot-flags", 30},
-    {"firmware-bios-verbosity", IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, "Select firmware verbosity, allowed levels: default, quiet, verbose. Should be used with set-boot-flags", 31},
-    {"set-power-restore-policy", 'X', "POLICY", 0, "Set power restore policy:list, always-on, restore, always-off", 32},
+    ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
+#ifndef NDEBUG
+    ARGP_COMMON_OPTIONS_DEBUG,
+#endif /* NDEBUG */
+    {"get-capabilities", 'c', NULL, 0, 
+     "Get the chassis capabilities", 21},
+    {"get-status", 's', NULL, 0, 
+     "Get the chassis status", 22},
+    {"chassis-control", 'C', "CONTROL", 0, 
+     "Control the chassis. Allowed values are: power-down, power-up, power-cycle, hard-reset, diagnostic-interrupt, soft-shutdown", 23},
+    {"chassis-identify", 'I', "IDENTIFY", 0,
+     "Chassis Identification. Allowed values are: turn-off to turn off identification, <interval> to turn on identification for \"interval\" seconds, force to turn on indefinitely", 24},
+    {"get-system-restart-cause", 'R', NULL, 0, 
+     "Get system restart cause", 25},
+    {"get-power-on-hours-counter", 'H', NULL, 0,
+     "Get Power on Hours counter", 26},
+    {"set-power-cycle-interval", 'S', "INTERVAL", 0, 
+     "Set Power cycle interval to INTERVAL", 27},
+    {"set-boot-flags", 'B', NULL, 0, 
+     "Set system boot flags. Allowed flags are: clear-cmos, boot-type, lock-keyboard, boot-device, blank-screen, lock-out-reset-button, firmware-bios-verbosity, force-progress-event-traps, user-password-bypass", 28},
+    {"get-boot-flags", 'G', NULL, 0, 
+     "Get system boot-flags", 29},
+    {"boot-type", IPMI_CHASSIS_KEY_BOOT_TYPE, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
+     "Set BIOS boot type to BOOT_TYPE, allowed boot types: pc-compatible or EFI. Should be used with set-boot-flags", 30},
+    {"lock-out-reset-button", IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
+     "Lock out reset button, allowed values: yes/no. Should be used with set-boot-flags", 31},
+    {"blank-screen", IPMI_CHASSIS_KEY_SCREEN_BLANK, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
+     "Blank screen, allowed values: yes/no. Should be used with set-boot-flags", 32},
+    {"boot-device", IPMI_CHASSIS_KEY_BOOT_DEVICE_SELECTOR, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
+     "Set device to boot from to BOOT_DEVICE, allowed devices: pxe, disk, disk-safe, diag, cd-dvd, floppy, bios. Should be used with set-boot-flags", 33},
+    {"lock-keyboard", IPMI_CHASSIS_KEY_LOCK_KEYBOARD, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
+     "lock keyboard, allowed values: yes/no. Should be used with set-boot-flags", 34},
+    {"clear-cmos", IPMI_CHASSIS_KEY_CLEAR_CMOS, "CLEAR_CMOS", OPTION_ARG_OPTIONAL, 
+     "clear-cmos: yes/no. Should be used with set-boot-flags", 35},
+    {"console-redirection", IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION, "REDIRECT_TO_CONSOLE", OPTION_ARG_OPTIONAL, 
+     "redirect to console, allowed values: default, suppress, enable. Should be used with set-boot-flags", 36},
+    {"user-password-bypass", IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS, "BYPASS_USER_PASSWORD", OPTION_ARG_OPTIONAL, 
+     "Bypass user password, allowed values: yes/no. Should be used with set-boot-flags", 37},
+    {"force-progress-event-traps", IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
+     "Force progress event traps, allowed values: yes/no. Should be used with set-boot-flags", 38},
+    {"firmware-bios-verbosity", IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
+     "Select firmware verbosity, allowed levels: default, quiet, verbose. Should be used with set-boot-flags", 39},
+    {"set-power-restore-policy", 'X', "POLICY", 0, 
+     "Set power restore policy:list, always-on, restore, always-off", 40},
     { 0 }
   };
 
@@ -96,9 +122,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case IPMI_CHASSIS_KEY_BOOT_TYPE:
-      if((strncasecmp(arg, "pc-compatible", 13) == 0) && strlen (arg) == 13)
+      if ((strncasecmp(arg, "pc-compatible", 13) == 0) && strlen (arg) == 13)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_PC_COMPATIBLE;
-      else if((strncasecmp(arg, "efi", 3) == 0) && strlen (arg) == 3)
+      else if ((strncasecmp(arg, "efi", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI;
       else
         {
@@ -110,9 +136,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON:
-      if((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -124,9 +150,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_SCREEN_BLANK:
-      if((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -166,9 +192,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_LOCK_KEYBOARD:
-      if((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -180,9 +206,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_CLEAR_CMOS:
-      if((strncasecmp (arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if ((strncasecmp (arg, "yes", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if((strncasecmp (arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if ((strncasecmp (arg, "no", 2) == 0) && strlen (arg) == 2)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -194,9 +220,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION:
-      if((strncasecmp (arg, "default", 7) == 0) && strlen (arg) == 7)
+      if ((strncasecmp (arg, "default", 7) == 0) && strlen (arg) == 7)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_DEFAULT;
-      else if((strncasecmp (arg, "suppress", 8) == 0) && strlen (arg) == 8)
+      else if ((strncasecmp (arg, "suppress", 8) == 0) && strlen (arg) == 8)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_SUPRESS;
       else if ((strncasecmp (arg, "enable", 6) == 0) && strlen (arg) == 6)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_CONSOLE_REDIRECTION_ENABLE;
@@ -211,9 +237,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
 
 
     case IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS:
-      if((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if((strncasecmp(arg, "no", 2) == 0) &&  strlen (arg) == 2)
+      else if ((strncasecmp(arg, "no", 2) == 0) &&  strlen (arg) == 2)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -225,9 +251,9 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS:
-      if((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
+      if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
-      else if((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
+      else if ((strncasecmp(arg, "no", 2) == 0) && strlen (arg) == 2)
         value = IPMI_CHASSIS_BOOT_OPTIONS_DISABLE;
       else
         {
@@ -239,11 +265,11 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY:
-      if((strncasecmp(arg, "quiet", 5) == 0) && strlen (arg) == 5)
+      if ((strncasecmp(arg, "quiet", 5) == 0) && strlen (arg) == 5)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_QUIET;
-      else if((strncasecmp(arg, "default", 7) == 0) && strlen (arg) == 7)
+      else if ((strncasecmp(arg, "default", 7) == 0) && strlen (arg) == 7)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_DEFAULT;
-      else if((strncasecmp (arg, "verbose", 7) == 0) && strlen (arg) == 7)
+      else if ((strncasecmp (arg, "verbose", 7) == 0) && strlen (arg) == 7)
         value = IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_FIRMWARE_BIOS_VERBOSITY_VERBOSE;
       else
         {
@@ -269,8 +295,8 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  int rv;
-  char **ptr = NULL;
+  error_t ret;
+  char *ptr = NULL;
   struct ipmi_chassis_arguments *cmd_args = state->input;
 
   switch (key)
@@ -308,8 +334,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
       if (cmd_args->args.identify_args.force_identify == IPMI_CHASSIS_FORCE_IDENTIFY_OFF)
         {
-          cmd_args->args.identify_args.interval = strtol (arg, ptr, 10);
-          if (ptr && *ptr && **ptr != '\0')
+          cmd_args->args.identify_args.interval = strtol (arg, &ptr, 10);
+          if (*ptr != '\0')
             {
               fprintf (stderr, "Invalid Chassis Identify value\n");
               argp_usage (state);
@@ -369,13 +395,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       cmd_args->cmd = IPMI_CMD_SET_POWER_RESTORE_POLICY;
 
-      if(!strcasecmp (arg, "always-on"))
+      if (!strcasecmp (arg, "always-on"))
         cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST;
-      else if(!strcasecmp (arg, "always-off"))
+      else if (!strcasecmp (arg, "always-off"))
         cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF;
-      else if(!strcasecmp (arg, "restore"))
+      else if (!strcasecmp (arg, "restore"))
         cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST;
-      else if(!strcasecmp (arg, "list"))
+      else if (!strcasecmp (arg, "list"))
         cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_NO_CHANGE;
       else
         {
@@ -392,8 +418,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->cmd = IPMI_CMD_SET_POWER_CYCLE_INTERVAL;
-      cmd_args->args.power_cycle_interval = strtol (arg, ptr, 10);
-      if((ptr && *ptr && **ptr != '\0') || !IPMI_CHASSIS_POWER_CYCLE_INTERVAL_VALID (cmd_args->args.power_cycle_interval))
+      cmd_args->args.power_cycle_interval = strtol (arg, &ptr, 10);
+      if (*ptr != '\0')
         {
           fprintf (stderr, "Invalid power cycle interval\n");
           argp_usage (state);
@@ -408,17 +434,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->cmd = IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS;
-
-      cmd_args->args.boot_option_args.bios_boot_type = -1;
-      cmd_args->args.boot_option_args.clear_cmos = -1;
-      cmd_args->args.boot_option_args.lock_keyboard = -1;
-      cmd_args->args.boot_option_args.boot_device_selector = -1;
-      cmd_args->args.boot_option_args.screen_blank = -1;
-      cmd_args->args.boot_option_args.lock_out_reset_button = -1;
-      cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
-      cmd_args->args.boot_option_args.force_progress_event_traps = -1;
-      cmd_args->args.boot_option_args.user_password_bypass = -1;
-      cmd_args->args.boot_option_args.console_redirection = -1;
       break;
 
     case 'G':
@@ -428,6 +443,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           return -1;
         }
       cmd_args->cmd = IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS;
+      break;
 
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -438,11 +454,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     default:
-      rv = boot_flag_parse_opt (key, arg, state);
+      ret = boot_flag_parse_opt (key, arg, state);
 
-      if (rv == ARGP_ERR_UNKNOWN)
-        return common_parse_opt (key, arg, state,
-                                 &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = common_parse_opt (key, arg, state, &(cmd_args->common));
+      if (ret == ARGP_ERR_UNKNOWN)
+        ret = hostrange_parse_opt (key, arg, state, &(cmd_args->hostrange));
+      return ret;
     }
 
   return 0;
@@ -454,16 +472,23 @@ ipmi_chassis_argp_parse (int argc,
                          char **argv,
 			 struct ipmi_chassis_arguments *cmd_args)
 {
-  error_t err;
   init_common_cmd_args (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->cmd = -1;
+  cmd_args->args.boot_option_args.bios_boot_type = -1;
+  cmd_args->args.boot_option_args.clear_cmos = -1;
+  cmd_args->args.boot_option_args.lock_keyboard = -1;
+  cmd_args->args.boot_option_args.boot_device_selector = -1;
+  cmd_args->args.boot_option_args.screen_blank = -1;
+  cmd_args->args.boot_option_args.lock_out_reset_button = -1;
+  cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
+  cmd_args->args.boot_option_args.force_progress_event_traps = -1;
+  cmd_args->args.boot_option_args.user_password_bypass = -1;
+  cmd_args->args.boot_option_args.console_redirection = -1;
 
   /* ADMIN is minimum for ipmi-chassis b/c its needed for many of the
    * ipmi cmds used
    */
   cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
-  err = argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
-  if (err != 0)
-    exit (EINVAL);
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }

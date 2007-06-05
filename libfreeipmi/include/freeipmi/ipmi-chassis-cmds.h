@@ -78,9 +78,6 @@ extern "C" {
           || (__policy) == IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST \
           || (__policy) == IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF) ? 1 : 0)
 
-#define IPMI_CHASSIS_POWER_CYCLE_INTERVAL_VALID(__interval) \
-       (((((__interval) > 0 || (__interval) == 0)) && (__interval) < 257)? 1 : 0) 
-
 #define IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_UNKNOWN                           0x00
 #define IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_CHASSIS_CONTROL_CMD               0x01
 #define IPMI_CHASSIS_SYSTEM_RESTART_CAUSE_RESET_PUSHBUTTON                  0x02
