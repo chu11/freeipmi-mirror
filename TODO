@@ -61,6 +61,12 @@ timeout options for most FreeIPMI tools?
 sdr caching requires versioning
 tool for getting channel information - in ipmi-device tool for 0.5.0?
 
+ipmi-chassis
+------------
+move set power cycle interval to bmc-config?
+remove set power restore policy b/c its in bmc-config?
+put boot options into bmc-config?
+
 re-architecture
 ---------------
 libfreeipmi re-arch for better error codes
