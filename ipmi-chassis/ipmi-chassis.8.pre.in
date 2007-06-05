@@ -39,7 +39,7 @@ Get Power on Hours counter.
 \fB\-S\fR, \fB\-\-set\-power\-cycle\-interval\fR=\fIINTERVAL\fR
 Set Power cycle interval to INTERVAL.
 .TP
-\fB\-B\fR, \fB\-\-set\-boot\-flags\fR
+\fB\-L\fR, \fB\-\-set\-boot\-flags\fR
 Set system boot flags. Allowed flags are:
 clear\-cmos, boot\-type, lock\-keyboard, boot\-device,
 blank\-screen, lock\-out\-reset\-button,
