@@ -492,3 +492,16 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
 }
+
+int 
+ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args)
+{
+  if (args->cmd < 0)
+    {   
+      fprintf (stderr,
+               "No command specified\n");
+      return -1;
+    }
+
+  return 0;
+}
