@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.19 2007-06-03 00:52:47 chu11 Exp $
+## $Id: Makefile.am,v 1.20 2007-06-05 16:14:19 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -55,6 +55,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sel-record-types.h \
 	freeipmi/ipmi-sensor-and-event-code-tables.h \
 	freeipmi/ipmi-sensor-utils.h \
+	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/udm/udm.h \
 	freeipmi/udm/ipmi-udm.h \
 	freeipmi/udm/ipmi-kcs-api-udm.h \
@@ -71,4 +72,4 @@ nobase_include_HEADERS = \
 	freeipmi/udm/ipmi-sensor-cmds-udm.h \
 	freeipmi/udm/ipmi-sel-cmds-udm.h \
 	freeipmi/udm/ipmi-serial-modem-cmds-udm.h \
-	freeipmi/udm/ipmi-sol-cmds-udm.h
+	freeipmi/udm/ipmi-sol-cmds-udm.h 

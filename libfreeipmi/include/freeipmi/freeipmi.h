@@ -60,6 +60,7 @@ extern "C" {
 #include <freeipmi/ipmi-ssif-api.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
+#include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
 #include <freeipmi/ipmi-device-global-cmds.h>
 #include <freeipmi/ipmi-lan-cmds.h>
 #include <freeipmi/ipmi-messaging-support-cmds.h>

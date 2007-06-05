@@ -1,3 +1,160 @@
+2007-06-05 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-param-spec.h:
+	Renamed to
+	libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-parameter-spec.h.
+	Adjusted with 2007-06-02 param -> parameter changes.
+
+	* libfreeipmi/include/Makefile.am: Update appropriately for change.
+
+	* libfreeipmi/include/freeipmi/freeipmi.h: Add
+	ipmi-chassis-boot-options-parameter-spec.h.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/ipmi-chassis-cmds-udm.c: Change param -> parameter
+	globally.
+
+	* libfreeipmi/src/ipmi-chassis-cmds-udm.c: Remove use of
+	ERR_EINVAL.  Fix tabbing.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-chassis-cmds-udm.h,
+	libfreeipmi/include/freeipmi/udm/ipmi-chassis-cmds-udm.h
+	(ipmi_cmd_chassis_identify): Fix API.  Use
+	fill_cmd_chassis_identify correctly.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
+	Fix parameter check.
+
+	* libfreeipmi/src/udm/ipmi-chassis-cmds-udm.c
+	(ipmi_cmd_set_system_boot_options_boot_info_acknowledge,
+	ipmi_cmd_set_system_boot_options_boot_flags): Add parameter
+	checks.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c
+	(fill_cmd_set_system_boot_options_boot_flags): Fix parentheses
+	usage.  Fix parameter setting order.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/udm/ipmi-chassis-cmds-udm.c: Fix includes.
+
+	* ipmi-chassis/src/ipmi-chassis.h: Fix brace consistency.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c: Fix help output.  Fix
+	--get-boot-flags option bug.  Use common arg macros.  Add --debug
+	option.  Add hostrange options. Fix some tabbing/spacing of code.
+	Consistently use "if (" instead of "if(".  Fix compiler warnings.
+
+	* ipmi-chassis/src/ipmi-chassis.c: Replace use of
+	UDM_FIID_OBJ_DESTROY_NO_RETURN with FIID_OBJ_DESTROY_NO_RETURN.
+	Consistently use "if (" instead of "if(".
+
+	* ipmi-chassis/src/ipmi-chassis.c (_FIID_OBJ_GET_BLOCK): Removed macro.
+
+	* ipmi-chassis/src/ipmi-chassis.c
+	(_FIID_OBJ_GET_WITH_RETURN_VALUE, _FIID_OBJ_GET): Use 'obj' intead
+	of 'bytes'.  Use correct strerror function.  Remove unnecessary
+	set rv = -1.
+
+	* ipmi-chassis/src/ipmi-chassis.c (set_boot_flags): Cleanup
+	variable declarations.
+
+	* ipmi-chassis/src/ipmi-chassis.c (get_chassis_status,
+	get_boot_flags): Fix spacing of output.
+
+	* ipmi-chassis/src/ipmi-chassis.c: Fix incorrect display of
+	ipmi_device_strerror messages. Remove checks for bad comp_code.
+	Fix tabbling/spacing.  General code cleanup.  Output better error
+	messages for all fiid_obj_create calls.  Replace fprintf to stdout
+	with printf.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c (parse_opt): Fix invalid
+	use of strtol.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c (boot_flag_parse_opt,
+	ipmi_chassis_argp_parse): Move initialization code from
+	boot_flag_parse_opt to ipmi_chassis_argp_parse.
+
+	* ipmi-chassis/src/ipmi-chassis.c (get_chassis_status): Don't
+	output "none" if there is nothing to output.
+
+	* ipmi-chassis/src/ipmi-chassis.c (set_boot_flags): Remove set in
+	progress for now since no other IPMI tools currently use it.  Fix
+	cleanup logic.
+
+	* ipmi-chassis/ipmi-chassis.8.pre.in: Use macros appropriately.
+
+	* AUTHORS: Add Ragha.
+
+	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Add get/set system
+	boot options error code/strings.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.h,
+	ipmi-chassis/src/ipmi-chassis-argp.c (ipmi_chassis_args_validate):
+	New function.
+
+	* ipmi-chassis/src/ipmi-chassis.c (main): Call ipmi_chassis_args_validate.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c,
+	ipmi-chassis/ipmi-chassis.8.pre.in: Change 'C' option to 'O' and
+	'B' to 'L' to not conflict with other options.
+
+	* ipmi-chassis/src/ipmi-chassis.h: Remove cmd_set_capabilities,
+	which isn't used.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c (parse_opt),
+	ipmi-chassis/src/ipmi-chassis.c (chassis_identify): Fix chassis
+	identify usage.
+
+	* ipmi-chassis/src/ipmi-chassis-argp.c,
+	ipmi-chassis/ipmi-chassis.8.pre.in: Put periods on ends of help
+	messages.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c
+	(tmpl_cmd_get_chassis_status_rs): Revert to old strings.
+
+	* ipmi-chassis/src/ipmi-chassis.c (get_chassis_status): Use old
+	strings.
+
+	* libfreeipmi/src/ipmi-capabilities-cmds.c
+	(tmpl_cmd_get_chassis_capabilities_rs): Revert to old strings.
+
+	* ipmi-capabilities/src/ipmi-capabilities.c
+	(get_capabilities_status): Use old strings.
+
+	* ipmi-chassis/ipmi-chassis.8.pre.in,
+	ipmi-chassis/src/ipmi-chassis-argp.c: Fix help info language. Fix
+	help info ordering.  Document missing options.  Change 'list'
+	option to -X option to 'list-supported-policies.'  Exit when > 1
+	cmd is input, don't just return -1.  Cleanup error messages.
+
+2007-06-05 Raghavendra <raghavendra@zresearch.com>
+
+       * ipmi-chassis/src/ipmi-chassis.c: Implemented Chassis Commands.
+	
+       * ipmi-chassis/src/ipmi-chassis.h: Updated for Chassis support.
+	
+	* libfreeipmi/include/freeipmi/ipmi-cmd-spec.h: Added new
+	commands.
+	
+	* libfreeipmi/include/freeipmi/ipmi-chassis-cmds.h: Added Macros
+	related to ipmi-chassis.
+	
+	* libfreeipmi/src/ipmi-chassis-cmds.c: Added Ipmi command
+	templates related to ipmi-chassis.
+	
+	* libfreeipmi/src/udm/ipmi-chassis-cmds-udm.c: Added Library
+	functions related to ipmi-chassis.
+	
+	* libfreeipmi/include/freeipmi/udm/ipmi-chassis-cmds-udm.h: Macros
+	related to ipmi-chassis.
+	
+	* libfreeipmi/include/Makefile.am: Added an entry for
+	freeipmi/ipmi-chassis-boot-options-param-spec.h.
+	
+       * libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-param-spec.h:
+       New file.
+	
 2007-06-04  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-error.h
@@ -488,7 +645,7 @@
 	* ipmipower/src/ipmipower_prompt.c (_cmd_k_g),
 	common/src/ipmi-common.c (format_kg): Fix k_g buf length bugs.
 	
-2007-05-07  Ragha Vendra <raghavendra@zresearch.com>
+2007-05-07  Raghavendra <raghavendra@zresearch.com>
 
 	* ipmiconsole/src/ipmiconsole/Makefile.am: Fix include path
 	compile issue.
