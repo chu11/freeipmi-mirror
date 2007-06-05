@@ -51,10 +51,11 @@ do {                                                                    \
     _val_ptr = val;                                                     \
     if ((rv = fiid_obj_get (obj, field, &_val)) < 0)                    \
       {                                                                 \
-        fprintf (stderr,                                                \
-                 "fiid_obj_get: %s: %s\n",                              \
-                 field,                                                 \
-                 fiid_strerror(fiid_obj_errnum(obj)));                  \
+        pstdout_fprintf(state_data->pstate,                             \
+                        stderr,                                         \
+                        "fiid_obj_get: %s: %s\n",                       \
+                        field,                                          \
+                        fiid_strerror(fiid_obj_errnum(obj)));           \
         goto cleanup;                                                   \
       }                                                                 \
     *_val_ptr = _val;                                                   \
@@ -66,11 +67,11 @@ do {                                                                    \
     _val_ptr = val;                                                     \
     if (fiid_obj_get (obj, field, &_val) < 0)                           \
       {                                                                 \
-        fprintf (stderr,                                                \
-                 "fiid_obj_get: %s: %s\n",                              \
-                 field,                                                 \
-                 fiid_strerror(fiid_obj_errnum(obj)));                  \
-        rv = -1;                                                        \
+        pstdout_fprintf(state_data->pstate,                             \
+                        stderr,                                         \
+                        "fiid_obj_get: %s: %s\n",                       \
+                        field,                                          \
+                        fiid_strerror(fiid_obj_errnum(obj)));           \
         goto cleanup;                                                   \
       }                                                                 \
     *_val_ptr = _val;                                                   \
@@ -96,23 +97,20 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (!(get_boot_flags_rs = fiid_obj_create (tmpl_cmd_get_system_boot_options_boot_flags_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed");
-      return rv;
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      goto cleanup;
     }
       
   if (!(boot_info_ack_cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
     {
-      FIID_OBJ_DESTROY_NO_RETURN (get_boot_flags_rs);
-      fprintf (stderr, "fiid_obj_create failed\n");
-      return rv;
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      goto cleanup;
     }
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
     {
-      FIID_OBJ_DESTROY_NO_RETURN (get_boot_flags_rs);
-      FIID_OBJ_DESTROY_NO_RETURN (boot_info_ack_cmd_rs);
-      fprintf (stderr, "fiid_obj_create failed\n");
-      return rv;
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
+      goto cleanup;
     }
 
   if (ipmi_cmd_get_system_boot_options_boot_flags ( state_data->dev, 
@@ -120,8 +118,10 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
                                                   get_boot_flags_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_get_system_boot_options_boot_flags: %s\n", 
-               ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_system_boot_options_boot_flags: %s\n", 
+                      ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       goto cleanup;
     }
 
@@ -239,8 +239,10 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                  bios_shared_mode_override,
                                                  cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_set_sytem_boot_option_boot_flags failed: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_sytem_boot_option_boot_flags failed: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -252,8 +254,10 @@ set_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                               &boot_info_acknowledge,
                                                               boot_info_ack_cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -275,7 +279,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_system_boot_options_boot_flags_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return -1;
     }
   
@@ -284,8 +288,10 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
                                                   IPMI_CHASSIS_BOOT_OPTIONS_NO_BLOCK_SELECTOR,
                                                   cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_get_system_boot_options_boot_flags failed: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_system_boot_options_boot_flags failed: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -300,7 +306,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
       case IPMI_CHASSIS_BOOT_OPTIONS_BOOT_FLAG_BOOT_TYPE_EFI:
         strcat (tmp, "Extensible firmware Interface boot");
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "lock_out_reset_button", &val);
   sprintf (tmp, "Lock out reset buttons        : ");
@@ -314,7 +320,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "screen_blank", &val);
   sprintf (tmp, "Screen blank                  : ");
@@ -328,7 +334,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "boot_device_selector", &val);
   sprintf (tmp, "Boot device selector          : ");
@@ -366,7 +372,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Force boot from default Floppy/primary removable media");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "lock_keyboard", &val);
   sprintf (tmp, "Lock keyboard                 : ");
@@ -380,7 +386,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "clear_cmos", &val);
   sprintf (tmp, "Clear CMOS                    : ");
@@ -394,7 +400,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "console_redirection", &val);
   sprintf (tmp, "Console redirection control   : ");
@@ -412,7 +418,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Enabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
   
   _FIID_OBJ_GET (cmd_rs, "lock_out_sleep_button", &val);
   sprintf (tmp, "Lock out sleep button         : ");
@@ -426,7 +432,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "user_password_bypass", &val);
   sprintf (tmp, "User password bypass          : ");
@@ -440,7 +446,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "lock_out_reset_button", &val);
   sprintf (tmp, "Lock out reset button         : ");
@@ -454,7 +460,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "force_progress_event_traps", &val);
   sprintf (tmp, "Force progress event traps    : ");
@@ -468,7 +474,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "firmware_bios_verbosity", &val);
   sprintf (tmp, "Firmware BIOS verbosity level : ");
@@ -486,7 +492,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Default");
         break;
     }
-  fprintf (stdout, "%s\n", tmp);
+  pstdout_printf (state_data->pstate, "%s\n", tmp);
 
   _FIID_OBJ_GET (cmd_rs, "lock_out_via_power_button", &val);
   sprintf (tmp, "Lock out via power button     : ");
@@ -500,7 +506,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
         strcat (tmp, "Disabled");
         break;
     }
-  fprintf (stdout, "%s\n", tmp); 
+  pstdout_printf (state_data->pstate, "%s\n", tmp); 
   rv = 0;
 cleanup:
   FIID_OBJ_DESTROY (cmd_rs);
@@ -519,7 +525,7 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_power_cycle_interval_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return (-1);
     }
 
@@ -527,8 +533,10 @@ set_power_cycle_interval (ipmi_chassis_state_data_t *state_data)
                                          args->args.power_cycle_interval, 
                                          cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_set_power_cycle_interval: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_power_cycle_interval: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -550,7 +558,7 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_set_power_restore_policy_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return -1;
     }
 
@@ -558,8 +566,10 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
                                          args->args.power_restore_policy, 
                                          cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_set_power_restore_policy: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_set_power_restore_policy: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -580,10 +590,12 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
       if (val)
         strcat (policy_supported, "Restore");
   
-      fprintf (stdout, "Policies supported          : %s\n", policy_supported);
+      pstdout_printf (state_data->pstate, 
+                      "Policies supported          : %s\n", 
+                      policy_supported);
     }
-  rv = 0;
 
+  rv = 0;
 cleanup:
   FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
   return rv;
@@ -602,14 +614,16 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_power_on_hours_counter_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return -1;
     }
   
   if (ipmi_cmd_get_power_on_hours_counter (state_data->dev, cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_get_power_on_hours_counter: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_power_on_hours_counter: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -623,7 +637,10 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   hrs = min / 60;
   min = min % 60;
 
-  fprintf (stdout, "Power on hours             : %d Hours %d Minutes\n", hrs, min);
+  pstdout_printf (state_data->pstate, 
+                  "Power on hours             : %d Hours %d Minutes\n", 
+                  hrs, 
+                  min);
   rv = 0;
 
 cleanup:
@@ -641,14 +658,16 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_system_restart_cause_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return -1;
     }
 
   if (ipmi_cmd_get_system_restart_cause (state_data->dev, cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_get_system_restart_cause: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_system_restart_cause: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -704,7 +723,9 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
         break;
     }
 
-  fprintf (stdout, "Restart cause              : %s\n", restart_cause);
+  pstdout_printf (state_data->pstate, 
+                  "Restart cause              : %s\n", 
+                  restart_cause);
 
   rv = 0;
 cleanup:
@@ -723,7 +744,7 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_chassis_identify_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return (-1);
     }
 
@@ -733,8 +754,10 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
                                  &args->args.identify_args.force_identify, 
                                  cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_chassis_identify: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_chassis_identify: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -756,7 +779,7 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_chassis_control_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return -1;
     }
 
@@ -764,8 +787,10 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
                                 args->args.chassis_control, 
                                 cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_chassis_control: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_chassis_control: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
@@ -785,51 +810,64 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       goto cleanup;
     }
 
   if (ipmi_cmd_get_chassis_status (state_data->dev, cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_get_chassis_status: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_chassis_status: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
   _FIID_OBJ_GET (cmd_rs, "power_is_on", &val);
-  fprintf (stdout, "System Power               : %s\n", val?"on":"off");
+  pstdout_printf (state_data->pstate, 
+                  "System Power               : %s\n", 
+                  val ? "on" : "off");
 
   _FIID_OBJ_GET (cmd_rs, "power_overload", &val);
-  fprintf (stdout, "System Power Overload      : %s\n", val?"true":"false");
+  pstdout_printf (state_data->pstate, 
+                  "System Power Overload      : %s\n", 
+                  val ? "true" : "false");
  
   _FIID_OBJ_GET (cmd_rs, "interlock", &val);
-  fprintf (stdout, "Interlock switch           : %s\n", val?"active":"Inactive");
+  pstdout_printf (state_data->pstate, 
+                  "Interlock switch           : %s\n", 
+                  val ? "active" : "Inactive");
 
   _FIID_OBJ_GET (cmd_rs, "power_fault", &val);
-  fprintf (stdout, "Power fault detected       : %s\n", val?"true":"false");
+  pstdout_printf (state_data->pstate, 
+                  "Power fault detected       : %s\n", 
+                  val ? "true" : "false");
 
   _FIID_OBJ_GET (cmd_rs, "power_control_fault", &val);
-  fprintf (stdout, "Power control fault        : %s\n", val?"true":"false");
+  pstdout_printf (state_data->pstate, 
+                  "Power control fault        : %s\n", 
+                  val ? "true" : "false");
 
   _FIID_OBJ_GET (cmd_rs, "power_restore_policy", &val);
-  fprintf (stdout, "Power restore policy       :");
+  pstdout_printf (state_data->pstate, 
+                  "Power restore policy       :");
 
   switch (val)
     {
       case IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS: 
-        fprintf (stdout, " Always off\n");
+        pstdout_printf (state_data->pstate, " Always off\n");
         break;
 
       case IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE: 
-        fprintf (stdout, " Restore\n");
+        pstdout_printf (state_data->pstate, " Restore\n");
         break;
   
       case IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS:
-        fprintf (stdout, " Always on\n");
+        pstdout_printf (state_data->pstate, " Always on\n");
         break;
 
       case IPMI_POWER_RESTORE_POLICY_UNKNOWN: 
-        fprintf (stdout, " Unknown\n");
+        pstdout_printf (state_data->pstate, " Unknown\n");
         break;
     }
 
@@ -867,182 +905,205 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       temp_val = IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI;
 
 print:
-  fprintf (stdout, "Last Power Event           : ");
+  pstdout_printf (state_data->pstate, "Last Power Event           : ");
   switch (temp_val)
     {
       case IPMI_LAST_POWER_EVENT_AC_FAILED:
-        fprintf (stdout, "ac failed\n");
+        pstdout_printf (state_data->pstate, "ac failed\n");
         break;
 
       case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_OVERLOAD:
-        fprintf (stdout, "power down due to power overload\n");
+        pstdout_printf (state_data->pstate, "power down due to power overload\n");
         break;
 
       case IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED:
-        fprintf (stdout, "power down due to Activation of interlock switch\n");
+        pstdout_printf (state_data->pstate, "power down due to Activation of interlock switch\n");
         break;
 
       case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_FAULT:
-        fprintf (stdout, "power down due to power fault\n");
+        pstdout_printf (state_data->pstate, "power down due to power fault\n");
         break;
 
       case IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI:
-        fprintf (stdout, "power on via ipmi command\n");
+        pstdout_printf (state_data->pstate, "power on via ipmi command\n");
         break;
 
       default:
-        fprintf (stdout, "unknown power event\n");
+        pstdout_printf (state_data->pstate, "unknown power event\n");
         break;
     }
 
-  fprintf (stdout, "Misc Chassis status        :");
+  pstdout_printf (state_data->pstate, "Misc Chassis status        :");
   _FIID_OBJ_GET (cmd_rs, "chassis_intrusion_active", &val);
   if (val)
     {
       misc_chassis_status = 1;
-      fprintf (stdout, " Chassis Intrusion Active");
+      pstdout_printf (state_data->pstate, " Chassis Intrusion Active");
     }
 
   _FIID_OBJ_GET (cmd_rs,  "front_panel_lockout_active", &val);
   if (val) 
     {
       if (misc_chassis_status)
-        fprintf (stdout, "\n                            ");
+        pstdout_printf (state_data->pstate, 
+                        "\n                            ");
 
       misc_chassis_status = 1;
-      fprintf (stdout, " Front panel lockout active");
+      pstdout_printf (state_data->pstate, 
+                      " Front panel lockout active");
     }
 
   _FIID_OBJ_GET (cmd_rs, "drive_fault", &val);
   if (val)
     {
       if (misc_chassis_status)
-        fprintf (stdout, "\n                            ");
+        pstdout_printf (state_data->pstate, 
+                        "\n                            ");
       misc_chassis_status = 1;
-      fprintf (stdout, "                             Drive Fault");
+      pstdout_printf (state_data->pstate, 
+                      "                             Drive Fault");
     }
 
   _FIID_OBJ_GET (cmd_rs, "cooling_fan_fault_detected", &val);
   if (val)
     {
       if (misc_chassis_status)
-        fprintf (stdout, "\n                            ");
+        pstdout_printf (state_data->pstate, 
+                        "\n                            ");
       misc_chassis_status = 1;
-      fprintf (stdout, "                             Cooling fan fault detected");
+      pstdout_printf (state_data->pstate, 
+                      "                             Cooling fan fault detected");
     }
 
   _FIID_OBJ_GET (cmd_rs, "chassis_identify_command_and_state_info_supported", &val);
   if (val)
     {
       if (misc_chassis_status)
-        fprintf (stdout, "\n                            ");
+        pstdout_printf (state_data->pstate, 
+                        "\n                            ");
       misc_chassis_status = 1;
-      fprintf (stdout, "                             Chassis Identify Command and State Info supported");
+      pstdout_printf (state_data->pstate, 
+                      "                             Chassis Identify Command and State Info supported");
 
       _FIID_OBJ_GET (cmd_rs, "chassis_identify_state", &val);
-      fprintf (stdout, "\nChassis Identify state     : ");
+      pstdout_printf (state_data->pstate, 
+                      "\nChassis Identify state     : ");
       switch (val)
         {
             case IPMI_CHASSIS_IDENTIFY_STATE_OFF: 
-                fprintf (stdout, "off\n");
+                pstdout_printf (state_data->pstate, "off\n");
                 break;
             
             case IPMI_CHASSIS_IDENTIFY_STATE_TEMPORARY_ON: 
-                fprintf (stdout, "Timed on\n");
+                pstdout_printf (state_data->pstate, "Timed on\n");
                 break;
         
             case IPMI_CHASSIS_IDENTIFY_STATE_INDEFINITE_ON: 
-                fprintf (stdout, "Indefinite on\n");
+                pstdout_printf (state_data->pstate, "Indefinite on\n");
                 break;
         }
     }
   else if (misc_chassis_status)
-    fprintf (stdout, "\n");
+    pstdout_printf (state_data->pstate, "\n");
   
   if (!misc_chassis_status)
-    fprintf (stdout, "\n");
+    pstdout_printf (state_data->pstate, "\n");
   
   rv = 0;
-  fprintf (stdout, "Front panel capabilities   :");
+  pstdout_printf (state_data->pstate, 
+                  "Front panel capabilities   :");
   _FIID_OBJ_GET_WITH_RETURN_VALUE (cmd_rs, "power_off_button_disabled", &val, rv);
   if (rv)
     {
       if (val)
         {  
           front_panel_capabilities  = 1;
-          fprintf (stdout, " Power off button disabled");
+          pstdout_printf (state_data->pstate, 
+                          " Power off button disabled");
         }
     
       _FIID_OBJ_GET (cmd_rs, "reset_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
-              fprintf (stdout, "\n                            ");
+              pstdout_printf (state_data->pstate, 
+                              "\n                            ");
 
           front_panel_capabilities = 1;
-          fprintf (stdout, " Reset button disabled");
+          pstdout_printf (state_data->pstate, 
+                          " Reset button disabled");
         }
     
       _FIID_OBJ_GET (cmd_rs, "diagnostic_interrupt_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
-              fprintf (stdout, "\n                            ");
+              pstdout_printf (state_data->pstate, 
+                              "\n                            ");
           front_panel_capabilities = 1;
-          fprintf (stdout, " Diagnostic Interrupt Button disabled");
+          pstdout_printf (state_data->pstate, 
+                          " Diagnostic Interrupt Button disabled");
         }
 
       _FIID_OBJ_GET (cmd_rs, "standy_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
-              fprintf (stdout, "\n                            ");
+              pstdout_printf (state_data->pstate, 
+                              "\n                            ");
           front_panel_capabilities = 1;
-          fprintf (stdout, "                            Standby button disabled");
+          pstdout_printf (state_data->pstate, 
+                          "                            Standby button disabled");
         }
     
       _FIID_OBJ_GET (cmd_rs, "power_off_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
-              fprintf (stdout, "\n                            ");
+              pstdout_printf (state_data->pstate, 
+                              "\n                            ");
           front_panel_capabilities = 1;
-          fprintf (stdout, " Power off button disable allowed");
+          pstdout_printf (state_data->pstate, 
+                          " Power off button disable allowed");
         }
      
       _FIID_OBJ_GET (cmd_rs, "reset_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
-              fprintf (stdout, "\n                            ");
+              pstdout_printf (state_data->pstate, 
+                              "\n                            ");
           front_panel_capabilities = 1;
-          fprintf (stdout, " Reset button disable allowed");
+          pstdout_printf (state_data->pstate, 
+                          " Reset button disable allowed");
         }
     
       _FIID_OBJ_GET (cmd_rs, "diagnostic_interrupt_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
-              fprintf (stdout, "\n                            ");
+              pstdout_printf (state_data->pstate, 
+                              "\n                            ");
           front_panel_capabilities = 1;
-          fprintf (stdout, " Diagnostic interrupt button disable allowed");
+          pstdout_printf (state_data->pstate, 
+                          " Diagnostic interrupt button disable allowed");
         }
     
       _FIID_OBJ_GET (cmd_rs, "standby_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
-              fprintf (stdout, "\n                            ");
+              pstdout_printf (state_data->pstate, 
+                              "\n                            ");
           front_panel_capabilities = 1;
-          fprintf (stdout, " Standby button disable allowed");
+          pstdout_printf (state_data->pstate, 
+                          " Standby button disable allowed");
         }
     }
     
-  fprintf (stdout, "\n");
+  pstdout_printf (state_data->pstate, "\n");
     
-  fiid_obj_destroy (cmd_rs);
   rv = 0;
-
 cleanup:
   FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
   return rv;
@@ -1057,77 +1118,89 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
 
   if (!(cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_capabilities_rs)))
     {
-      fprintf (stderr, "fiid_obj_create failed\n");
+      pstdout_perror(state_data->pstate, "fiid_obj_create");
       return (-1);
     }
 
   if (ipmi_cmd_get_chassis_capabilities (state_data->dev, cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd_get_chassis_capabilities: %s\n", 
-               ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
+      pstdout_fprintf(state_data->pstate,
+                      stderr,
+                      "ipmi_cmd_get_chassis_capabilities: %s\n", 
+                      ipmi_device_strerror (ipmi_device_errnum (state_data->dev)));
       goto cleanup;
     }
 
   _FIID_OBJ_GET (cmd_rs,
                  "intrusion_sensor",
                  &val);
-  fprintf (stdout, "Intrusion Sensor           : %s\n",
-     (val ? "Provided" : "Not Provided"));
+  pstdout_printf (state_data->pstate, 
+                  "Intrusion Sensor           : %s\n",
+                  (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
                  "front_panel_lockout",
                  &val);
-  fprintf (stdout, "Front Panel Lockout        : %s\n",
-     (val ? "Provided" : "Not Provided"));
+  pstdout_printf (state_data->pstate, 
+                  "Front Panel Lockout        : %s\n",
+                  (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
                  "diagnostic_interrupt",
                  &val);
-  fprintf (stdout, "Diagnostic Interrupt       : %s\n",
-     (val ? "Provided" : "Not Provided"));
+  pstdout_printf (state_data->pstate, 
+                  "Diagnostic Interrupt       : %s\n",
+                  (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
                  "power_interlock",
                  &val);
-  fprintf (stdout, "Power Interlock            : %s\n",
-     (val ? "Provided" : "Not Provided"));
+  pstdout_printf (state_data->pstate, 
+                  "Power Interlock            : %s\n",
+                  (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
                  "fru_info_device_address",
                  &val);
-  fprintf (stdout, "FRU Info Device Address    : %Xh %s\n",
-     (unsigned char) val,
-     (val ? "" : "(Unspecified)"));
+  pstdout_printf (state_data->pstate, 
+                  "FRU Info Device Address    : %Xh %s\n",
+                  (unsigned char) val,
+                  (val ? "" : "(Unspecified)"));
 
   _FIID_OBJ_GET (cmd_rs,
                  "sdr_device_address",
                  &val);
-  fprintf (stdout, "SDR Device Address         : %Xh\n",
-     (unsigned char) val);
+  pstdout_printf (state_data->pstate, 
+                  "SDR Device Address         : %Xh\n",
+                  (unsigned char) val);
 
   _FIID_OBJ_GET (cmd_rs,
                  "sel_device_address",
                  &val);
-  fprintf (stdout, "SEL Device Address         : %Xh\n",
-     (unsigned char) val);
+  pstdout_printf (state_data->pstate, 
+                  "SEL Device Address         : %Xh\n",
+                  (unsigned char) val);
 
   _FIID_OBJ_GET (cmd_rs,
                  "system_management_device_address",
                  &val);
-  fprintf (stdout, "Sys Mgmt Device Address    : %Xh\n",
-     (unsigned char) val);
+  pstdout_printf (state_data->pstate, 
+                  "Sys Mgmt Device Address    : %Xh\n",
+                  (unsigned char) val);
 
   if (fiid_obj_get (cmd_rs, "bridge_device_address", &val) >= 0) 
     {
-      fprintf (stdout, "Bridge Device Address      : %Xh\n",
-       (unsigned char) val);
+      pstdout_printf (state_data->pstate, 
+                      "Bridge Device Address      : %Xh\n",
+                      (unsigned char) val);
     } 
   else 
     {
-      fprintf (stdout, "Bridge Device Address      : 20h (assuming default)\n");
+      pstdout_printf (state_data->pstate, 
+                      "Bridge Device Address      : 20h (assuming default)\n");
     }
-  rv = 0;
 
+  rv = 0;
 cleanup:
   FIID_OBJ_DESTROY_NO_RETURN (cmd_rs);
   return rv;
@@ -1183,7 +1256,9 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
         break;
     
       default:
-        fprintf (stderr, "Error: No commands given\n");
+        pstdout_fprintf(state_data->pstate,
+                        stderr,
+                        "Error: No commands given\n");
         goto cleanup;
     }
 

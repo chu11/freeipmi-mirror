@@ -51,7 +51,8 @@
 
 	* ipmi-chassis/src/ipmi-chassis.c
 	(_FIID_OBJ_GET_WITH_RETURN_VALUE, _FIID_OBJ_GET): Use 'obj' intead
-	of 'bytes'.  Use correct strerror function.
+	of 'bytes'.  Use correct strerror function.  Remove unnecessary
+	set rv = -1.
 
 	* ipmi-chassis/src/ipmi-chassis.c (set_boot_flags): Cleanup
 	variable declarations.
@@ -61,7 +62,9 @@
 
 	* ipmi-chassis/src/ipmi-chassis.c: Fix incorrect display of
 	ipmi_device_strerror messages. Remove checks for bad comp_code.
-	Fix tabbling/spacing.  General code cleanup.
+	Fix tabbling/spacing.  General code cleanup.  Output better error
+	messages for all fiid_obj_create calls.  Replace fprintf to stdout
+	with printf.
 
 	* ipmi-chassis/src/ipmi-chassis-argp.c (parse_opt): Fix invalid
 	use of strtol.
@@ -74,7 +77,8 @@
 	output "none" if there is nothing to output.
 
 	* ipmi-chassis/src/ipmi-chassis.c (set_boot_flags): Remove set in
-	progress for now since no other IPMI tools currently use it.
+	progress for now since no other IPMI tools currently use it.  Fix
+	cleanup logic.
 
 	* ipmi-chassis/ipmi-chassis.8.pre.in: Use macros appropriately.
 
