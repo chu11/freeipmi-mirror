@@ -822,32 +822,32 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "power_is_on", &val);
+  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_is_on", &val);
   pstdout_printf (state_data->pstate, 
                   "System Power               : %s\n", 
                   val ? "on" : "off");
 
-  _FIID_OBJ_GET (cmd_rs, "power_overload", &val);
+  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_overload", &val);
   pstdout_printf (state_data->pstate, 
                   "System Power Overload      : %s\n", 
                   val ? "true" : "false");
  
-  _FIID_OBJ_GET (cmd_rs, "interlock", &val);
+  _FIID_OBJ_GET (cmd_rs, "current_power_state.interlock", &val);
   pstdout_printf (state_data->pstate, 
                   "Interlock switch           : %s\n", 
                   val ? "active" : "Inactive");
 
-  _FIID_OBJ_GET (cmd_rs, "power_fault", &val);
+  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_fault", &val);
   pstdout_printf (state_data->pstate, 
                   "Power fault detected       : %s\n", 
                   val ? "true" : "false");
 
-  _FIID_OBJ_GET (cmd_rs, "power_control_fault", &val);
+  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_control_fault", &val);
   pstdout_printf (state_data->pstate, 
                   "Power control fault        : %s\n", 
                   val ? "true" : "false");
 
-  _FIID_OBJ_GET (cmd_rs, "power_restore_policy", &val);
+  _FIID_OBJ_GET (cmd_rs, "current_power_state.power_restore_policy", &val);
   pstdout_printf (state_data->pstate, 
                   "Power restore policy       :");
 
@@ -871,35 +871,35 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   temp_val = IPMI_LAST_POWER_EVENT_UNKNOWN;
-  _FIID_OBJ_GET (cmd_rs, "ac_failed", &val);
+  _FIID_OBJ_GET (cmd_rs, "last_power_event.ac_failed", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_AC_FAILED;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "power_down_caused_by_power_overload", &val);
+  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_overload", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_OVERLOAD;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "power_down_caused_by_power_interlock_being_activated", &val);
+  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_interlock_being_activated", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "power_down_caused_by_power_fault", &val);
+  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_down_caused_by_power_fault", &val);
   if (val)
     {
       temp_val = IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_FAULT;
       goto print;
     }
 
-  _FIID_OBJ_GET (cmd_rs, "power_on_entered_via_ipmi", &val);
+  _FIID_OBJ_GET (cmd_rs, "last_power_event.power_on_entered_via_ipmi", &val);
   if (val)
       temp_val = IPMI_LAST_POWER_EVENT_POWER_ON_VIA_IPMI;
 
@@ -933,14 +933,14 @@ print:
     }
 
   pstdout_printf (state_data->pstate, "Misc Chassis status        :");
-  _FIID_OBJ_GET (cmd_rs, "chassis_intrusion_active", &val);
+  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_intrusion_active", &val);
   if (val)
     {
       misc_chassis_status = 1;
       pstdout_printf (state_data->pstate, " Chassis Intrusion Active");
     }
 
-  _FIID_OBJ_GET (cmd_rs,  "front_panel_lockout_active", &val);
+  _FIID_OBJ_GET (cmd_rs,  "misc_chassis_state.front_panel_lockout_active", &val);
   if (val) 
     {
       if (misc_chassis_status)
@@ -952,7 +952,7 @@ print:
                       " Front panel lockout active");
     }
 
-  _FIID_OBJ_GET (cmd_rs, "drive_fault", &val);
+  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.drive_fault", &val);
   if (val)
     {
       if (misc_chassis_status)
@@ -963,7 +963,7 @@ print:
                       "                             Drive Fault");
     }
 
-  _FIID_OBJ_GET (cmd_rs, "cooling_fan_fault_detected", &val);
+  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.cooling_fan_fault_detected", &val);
   if (val)
     {
       if (misc_chassis_status)
@@ -974,7 +974,7 @@ print:
                       "                             Cooling fan fault detected");
     }
 
-  _FIID_OBJ_GET (cmd_rs, "chassis_identify_command_and_state_info_supported", &val);
+  _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_command_and_state_info_supported", &val);
   if (val)
     {
       if (misc_chassis_status)
@@ -984,7 +984,7 @@ print:
       pstdout_printf (state_data->pstate, 
                       "                             Chassis Identify Command and State Info supported");
 
-      _FIID_OBJ_GET (cmd_rs, "chassis_identify_state", &val);
+      _FIID_OBJ_GET (cmd_rs, "misc_chassis_state.chassis_identify_state", &val);
       pstdout_printf (state_data->pstate, 
                       "\nChassis Identify state     : ");
       switch (val)
@@ -1011,7 +1011,7 @@ print:
   rv = 0;
   pstdout_printf (state_data->pstate, 
                   "Front panel capabilities   :");
-  _FIID_OBJ_GET_WITH_RETURN_VALUE (cmd_rs, "power_off_button_disabled", &val, rv);
+  _FIID_OBJ_GET_WITH_RETURN_VALUE (cmd_rs, "front_panel.power_off_button_disabled", &val, rv);
   if (rv)
     {
       if (val)
@@ -1021,7 +1021,7 @@ print:
                           " Power off button disabled");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "reset_button_disabled", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.reset_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -1033,7 +1033,7 @@ print:
                           " Reset button disabled");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "diagnostic_interrupt_button_disabled", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.diagnostic_interrupt_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -1044,7 +1044,7 @@ print:
                           " Diagnostic Interrupt Button disabled");
         }
 
-      _FIID_OBJ_GET (cmd_rs, "standy_button_disabled", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.standy_button_disabled", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -1055,7 +1055,7 @@ print:
                           "                            Standby button disabled");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "power_off_button_disable_allowed", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.power_off_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -1066,7 +1066,7 @@ print:
                           " Power off button disable allowed");
         }
      
-      _FIID_OBJ_GET (cmd_rs, "reset_button_disable_allowed", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.reset_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -1077,7 +1077,7 @@ print:
                           " Reset button disable allowed");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "diagnostic_interrupt_button_disable_allowed", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.diagnostic_interrupt_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)
@@ -1088,7 +1088,7 @@ print:
                           " Diagnostic interrupt button disable allowed");
         }
     
-      _FIID_OBJ_GET (cmd_rs, "standby_button_disable_allowed", &val);
+      _FIID_OBJ_GET (cmd_rs, "front_panel.standby_button_disable_allowed", &val);
       if (val)
         {
           if (front_panel_capabilities)

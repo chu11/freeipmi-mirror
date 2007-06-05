@@ -110,6 +110,12 @@
 	ipmi-chassis/ipmi-chassis.8.pre.in: Put periods on ends of help
 	messages.
 
+	* libfreeipmi/src/ipmi-chassis-cmds.c
+	(tmpl_cmd_get_chassis_status_rs): Revert to old strings.
+
+	* ipmi-chassis/src/ipmi-chassis.c (get_chassis_status): Use old
+	strings.
+
 2007-06-05 Raghavendra <raghavendra@zresearch.com>
 
        * ipmi-chassis/src/ipmi-chassis.c: Implemented Chassis Commands.
