@@ -62,12 +62,6 @@ struct cmd_identify
   uint8_t force_identify_set;
 };
 
-struct cmd_set_capabilities 
-{
-  uint8_t flag;
-  uint32_t fru_device_addr;
-};
-
 struct ipmi_chassis_arguments
 {
   struct common_cmd_args common;
@@ -80,7 +74,6 @@ struct ipmi_chassis_arguments
     uint8_t power_cycle_interval;
     
     struct cmd_identify identify_args;
-    struct cmd_set_capabilities set_capability_args;
     struct cmd_boot_option boot_option_args;
   } args;
 };

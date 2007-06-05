@@ -327,12 +327,23 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
 
       cmd_args->cmd = IPMI_CMD_CHASSIS_IDENTIFY;
-      if ((strncasecmp(arg, "force", 5) == 0) && strlen (arg) == 5)
-        cmd_args->args.identify_args.force_identify = IPMI_CHASSIS_FORCE_IDENTIFY_ON;
-      else
-        cmd_args->args.identify_args.force_identify = IPMI_CHASSIS_FORCE_IDENTIFY_OFF;
+      if ((strncasecmp(arg, "turn-off", 8) == 0) && strlen (arg) == 8)
+        {
+          cmd_args->args.identify_args.identify_interval = 0;
+          cmd_args->args.identify_args.identify_interval_set = 1;
 
-      if (cmd_args->args.identify_args.force_identify == IPMI_CHASSIS_FORCE_IDENTIFY_OFF)
+          cmd_args->args.identify_args.force_identify_set = 0;
+        }
+      else if ((strncasecmp(arg, "force", 5) == 0) && strlen (arg) == 5)
+        {
+          cmd_args->args.identify_args.force_identify = IPMI_CHASSIS_FORCE_IDENTIFY_ON;
+          cmd_args->args.identify_args.force_identify_set = 1;
+
+          /* Need to have identify_interval set if force_identify is set */
+          cmd_args->args.identify_args.identify_interval = 0xFF;
+          cmd_args->args.identify_args.identify_interval_set = 1;
+        }
+      else
         {
           cmd_args->args.identify_args.identify_interval = strtol (arg, &ptr, 10);
           if (*ptr != '\0')
@@ -340,7 +351,11 @@ parse_opt (int key, char *arg, struct argp_state *state)
               fprintf (stderr, "Invalid Chassis Identify value\n");
               argp_usage (state);
             }
+          cmd_args->args.identify_args.force_identify_set = 1;
+
+          cmd_args->args.identify_args.force_identify_set = 0;
         }
+
       break;
 
     case 'C':
@@ -475,6 +490,12 @@ ipmi_chassis_argp_parse (int argc,
   init_common_cmd_args (&(cmd_args->common));
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   cmd_args->cmd = -1;
+
+  cmd_args->args.identify_args.identify_interval = 0;
+  cmd_args->args.identify_args.identify_interval_set = 0;
+  cmd_args->args.identify_args.force_identify = 0;
+  cmd_args->args.identify_args.force_identify_set = 0;
+ 
   cmd_args->args.boot_option_args.bios_boot_type = -1;
   cmd_args->args.boot_option_args.clear_cmos = -1;
   cmd_args->args.boot_option_args.lock_keyboard = -1;

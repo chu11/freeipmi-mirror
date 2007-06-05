@@ -748,10 +748,9 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
       return (-1);
     }
 
-  /* XXX FIX */
   if (ipmi_cmd_chassis_identify (state_data->dev, 
-                                 &args->args.identify_args.identify_interval, 
-                                 &args->args.identify_args.force_identify, 
+                                 (args->args.identify_args.identify_interval_set) ? &args->args.identify_args.identify_interval : NULL, 
+                                 (args->args.identify_args.force_identify_set) ? &args->args.identify_args.force_identify : NULL, 
                                  cmd_rs) != 0)
     {
       pstdout_fprintf(state_data->pstate,
