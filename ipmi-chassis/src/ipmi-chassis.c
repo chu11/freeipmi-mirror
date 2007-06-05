@@ -1131,28 +1131,28 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   _FIID_OBJ_GET (cmd_rs,
-                 "intrusion_sensor",
+                 "capabilities_flags.intrusion_sensor",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Intrusion Sensor           : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
-                 "front_panel_lockout",
+                 "capabilities_flags.front_panel_lockout",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Front Panel Lockout        : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
-                 "diagnostic_interrupt",
+                 "capabilities_flags.diagnostic_interrupt",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Diagnostic Interrupt       : %s\n",
                   (val ? "Provided" : "Not Provided"));
 
   _FIID_OBJ_GET (cmd_rs,
-                 "power_interlock",
+                 "capabilities_flags.power_interlock",
                  &val);
   pstdout_printf (state_data->pstate, 
                   "Power Interlock            : %s\n",

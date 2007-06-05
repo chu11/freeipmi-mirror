@@ -116,6 +116,12 @@
 	* ipmi-chassis/src/ipmi-chassis.c (get_chassis_status): Use old
 	strings.
 
+	* libfreeipmi/src/ipmi-capabilities-cmds.c
+	(tmpl_cmd_get_chassis_capabilities_rs): Revert to old strings.
+
+	* ipmi-capabilities/src/ipmi-capabilities.c
+	(get_capabilities_status): Use old strings.
+
 2007-06-05 Raghavendra <raghavendra@zresearch.com>
 
        * ipmi-chassis/src/ipmi-chassis.c: Implemented Chassis Commands.
