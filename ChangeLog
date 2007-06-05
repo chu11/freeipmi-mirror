@@ -1,6 +1,7 @@
 2007-06-05 Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-param-spec.h: Renamed to 
+	* libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-param-spec.h:
+	Renamed to
 	libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-parameter-spec.h.
 	Adjusted with 2007-06-02 param -> parameter changes.
 
@@ -83,6 +84,10 @@
 	* ipmi-chassis/ipmi-chassis.8.pre.in: Use macros appropriately.
 
 	* AUTHORS: Add Ragha.
+
+	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Add get/set system
+	boot options error code/strings.
 	
 2007-06-05 Raghavendra <raghavendra@zresearch.com>
 

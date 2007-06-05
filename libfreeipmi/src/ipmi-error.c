@@ -147,6 +147,30 @@ ipmi_strerror_r (uint8_t cmd,
         {
         case IPMI_NET_FN_CHASSIS_RQ:
         case IPMI_NET_FN_CHASSIS_RS:
+
+          switch (cmd) 
+            {
+            case IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_SET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED_STR);
+                case IPMI_COMP_CODE_SET_BOOT_OPTION_INVALID_SET_IN_PROGRESS:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_BOOT_OPTION_INVALID_SET_IN_PROGRESS_STR);
+                case IPMI_COMP_CODE_SET_BOOT_OPTION_WRITE_READ_ONLY_PARAMETER:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_BOOT_OPTION_WRITE_READ_ONLY_PARAMETER_STR);
+                case IPMI_COMP_CODE_SET_BOOT_OPTION_READ_WRITE_ONLY_PARAMETER:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_BOOT_OPTION_READ_WRITE_ONLY_PARAMETER_STR);
+                }
+              break;
+            case IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_GET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_GET_BOOT_OPTION_PARAMETER_NOT_SUPPORTED_STR);
+                }
+              break;             
+            }
           break;
         case IPMI_NET_FN_BRIDGE_RQ:
         case IPMI_NET_FN_BRIDGE_RS:
