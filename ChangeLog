@@ -1,5 +1,17 @@
 2007-06-05 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_template_make, __fiid_template_make, fiid_template_free):
+	Removed functions.
+
+	* libfreeipmi/src/fiid.c (fiid_template_field_lookup): Fix
+	parameter check bugs.
+
+	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c:
+	General code cleanup and commenting.
+	
+2007-06-05 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-param-spec.h:
 	Renamed to
 	libfreeipmi/include/freeipmi/ipmi-chassis-boot-options-parameter-spec.h.

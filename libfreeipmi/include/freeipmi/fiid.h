@@ -1,5 +1,5 @@
 /* 
-   fiid.h - FreeIPMI Interface Definition
+   fiid.h - FreeIPMI Interface Definition (FIID)
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -28,6 +28,9 @@ extern "C" {
 
 #include <stdint.h>
 
+/* 
+ * FIID Error Codes
+ */
 #define FIID_ERR_SUCCESS                         0
 #define FIID_ERR_OBJ_NULL                        1 
 #define FIID_ERR_OBJ_INVALID                     2                   
@@ -44,16 +47,21 @@ extern "C" {
 #define FIID_ERR_FLAGS_FIELD_MISMATCH           13
 #define FIID_ERR_TEMPLATE_LENGTH_MISMATCH       14
 #define FIID_ERR_DATA_NOT_BYTE_ALIGNED          15
-
 #define FIID_ERR_REQUIRED_FIELD_MISSING         16
 #define FIID_ERR_FIXED_LENGTH_FIELD_INVALID     17
 #define FIID_ERR_OUTMEM                         18
 #define FIID_ERR_INTERNAL                       19
 #define FIID_ERR_ERRNUMRANGE                    20
 
-#define fiid_template_make(arg...) __fiid_template_make (1, arg, 0)
+/*  
+ * FIID Field Maximum Key Length
+ */
 
-#define FIID_FIELD_MAX 256
+#define FIID_FIELD_MAX_KEY_LEN      256
+
+/* 
+ * FIID Field Flags
+ */
 
 #define FIID_FIELD_REQUIRED         0x00000001
 #define FIID_FIELD_OPTIONAL         0x00000002
@@ -77,39 +85,152 @@ extern "C" {
         ((FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_FIXED \
 	  || FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
 
-#define FIID_FIELD_FLAGS_DEFAULT    (FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)
-
+/* 
+ * fiid_field_t
+ *
+ * Defines a FIID field:
+ *
+ * max_field_len - maximum length of a field in bits
+ * key - field name
+ * flags - indicating field requirements
+ *
+ * An array of field's makes up a FIID template.
+ */
 typedef struct fiid_field
 {
   uint32_t max_field_len;
-  char key[FIID_FIELD_MAX];
+  char key[FIID_FIELD_MAX_KEY_LEN];
   uint32_t flags;
 } fiid_field_t;
 
+/*  
+ * FIID Template
+ *
+ * An array of fiid_field_t's make up a fiid template.  The array should be
+ * terminated with a field with a maximum field length of 0.
+ *
+ * The FIID template should be a multiple of 8 (i.e. byte aligned) otherwise
+ * most of the FIID API will return errors.
+ */
 typedef fiid_field_t fiid_template_t[];
 
 typedef struct fiid_obj *fiid_obj_t;
 
 typedef struct fiid_iterator *fiid_iterator_t;
 
+/*****************************
+ * FIID Template API         *
+ *****************************/
+
+/* 
+ * fiid_template_field_lookup
+ *
+ * Returns 1 if the field is found in the template, 0 if not, -1 on
+ * error.
+ */
 int8_t fiid_template_field_lookup (fiid_template_t tmpl, char *field);
+
+/* 
+ * fiid_template_len
+ *
+ * Returns the total length (in bits) of the all the fields in the
+ * template, -1 on error.
+ */
 int32_t fiid_template_len (fiid_template_t tmpl);
+
+/* 
+ * fiid_template_len_bytes
+ *
+ * Returns the total length (in bytes) of the all the fields in the
+ * template, -1 on error.  Will return an error if template bit length
+ * is not a multiple of 8.
+ */
 int32_t fiid_template_len_bytes (fiid_template_t tmpl);
+
+/* 
+ * fiid_template_field_start
+ *
+ * Returns the offset (in bits) of the beginning of the field within
+ * this template, -1 on error.
+ */
 int32_t fiid_template_field_start (fiid_template_t tmpl, char *field);
+
+/* 
+ * fiid_template_field_start_bytes
+ *
+ * Returns the offset (in bytes) of the beginning of the field within
+ * this template, -1 on error.  Will return an error if field bit
+ * offset is not a multiple of 8.
+ */
 int32_t fiid_template_field_start_bytes (fiid_template_t tmpl, char *field);
+
+/* 
+ * fiid_template_field_end
+ *
+ * Returns the offset (in bits) of the ending of the field within this
+ * template, -1 on error.
+ */
 int32_t fiid_template_field_end (fiid_template_t tmpl, char *field);
+
+/* 
+ * fiid_template_field_end_bytes
+ *
+ * Returns the offset (in bytes) of the ending of the field within
+ * this template, -1 on error.  Will return an error if field bit
+ * offset is not a multiple of 8.
+ */
 int32_t fiid_template_field_end_bytes (fiid_template_t tmpl, char *field);
+
+/* 
+ * fiid_template_field_len
+ *
+ * Returns the maximum length (in bits) of the specified field, -1 on error.
+ */
 int32_t fiid_template_field_len (fiid_template_t tmpl, char *field);
+
+/* 
+ * fiid_template_field_len_bytes
+ *
+ * Returns the maximum length (in bytes) of the specified field, -1 on
+ * error.  Will return an error if the field maximum bit length is not
+ * a multiple of 8.
+ */
 int32_t fiid_template_field_len_bytes (fiid_template_t tmpl, char *field);
+
+/* 
+ * fiid_template_block_len
+ *
+ * Returns the maximum length (in bits) of the block of fields
+ * beginning at 'field_start' and ending at 'field_end'.  Returns -1
+ * on error.
+ */
 int32_t fiid_template_block_len (fiid_template_t tmpl, 
 				 char *field_start, 
 				 char *field_end);
+
+/* 
+ * fiid_template_block_len_bytes
+ *
+ * Returns the maximum length (in bytes) of the block of fields
+ * beginning at 'field_start' and ending at 'field_end'.  Returns -1
+ * on error.  Will return an error if the calculated bit length is not
+ * a multiple of 8.
+ */
 int32_t fiid_template_block_len_bytes (fiid_template_t tmpl, 
 				       char *field_start, 
 				       char *field_end);
+
+/*  
+ * fiid_template_compare
+ *
+ * Returns 1 if the two specified templates are identical, 0 if not,
+ * -1 on error.
+ */
 int8_t fiid_template_compare(fiid_template_t tmpl1, fiid_template_t tmpl2);
-fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
-void fiid_template_free (fiid_field_t *tmpl_dynamic);
+
+/*****************************
+ * FIID Object API           *
+ *****************************/
 
 char *fiid_strerror(int32_t errnum);
 
@@ -141,6 +262,10 @@ int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
 
 int8_t fiid_obj_set_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
 int8_t fiid_obj_get_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
+
+/*****************************
+ * FIID Iterator API         *
+ *****************************/
 
 fiid_iterator_t fiid_iterator_create(fiid_obj_t obj);
 int8_t fiid_iterator_destroy(fiid_iterator_t iter);
