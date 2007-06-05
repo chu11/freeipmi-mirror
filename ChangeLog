@@ -122,6 +122,12 @@
 	* ipmi-capabilities/src/ipmi-capabilities.c
 	(get_capabilities_status): Use old strings.
 
+	* ipmi-chassis/ipmi-chassis.8.pre.in,
+	ipmi-chassis/src/ipmi-chassis-argp.c: Fix help info language. Fix
+	help info ordering.  Document missing options.  Change 'list'
+	option to -X option to 'list-supported-policies.'  Exit when > 1
+	cmd is input, don't just return -1.  Cleanup error messages.
+
 2007-06-05 Raghavendra <raghavendra@zresearch.com>
 
        * ipmi-chassis/src/ipmi-chassis.c: Implemented Chassis Commands.

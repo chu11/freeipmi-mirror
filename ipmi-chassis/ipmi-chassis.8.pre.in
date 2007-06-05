@@ -2,7 +2,7 @@
 .SH NAME
 ipmi-chassis \- manual page for ipmi-chassis.  IPMI Chassis @PACKAGE_VERSION@
 .SH DESCRIPTION
-IPMI Chassis \- Control IPMI Chassis. 
+IPMI Chassis \- Control an IPMI Chassis. 
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
@@ -39,63 +39,63 @@ Get Power on Hours counter.
 \fB\-S\fR, \fB\-\-set\-power\-cycle\-interval\fR=\fIINTERVAL\fR
 Set Power cycle interval to INTERVAL.
 .TP
-\fB\-L\fR, \fB\-\-set\-boot\-flags\fR
-Set system boot flags. Allowed flags are:
-clear\-cmos, boot\-type, lock\-keyboard, boot\-device,
-blank\-screen, lock\-out\-reset\-button,
-firmware\-bios\-verbosity,
-force\-progress\-event\-traps, user\-password\-bypass.
-.TP
 \fB\-G\fR, \fB\-\-get\-boot\-flags\fR
 Get system boot\-flags.
 .TP
+\fB\-L\fR, \fB\-\-set\-boot\-flags\fR
+Set system boot flags. Allowed flags are: boot\-type,
+lock\-out\-reset\-button, blank\-screen, boot\-device, lock\-keyboard,
+clear\-cmos, console\-redirection, force\-progress\-event\-traps,
+firmware\-bios\-verbosity, user\-password\-bypass.
+.TP
 \fB\-\-boot\-type\fR[=\fIBOOT_TYPE\fR]
-Set BIOS boot type to BOOT_TYPE, allowed boot
-types: pc\-compatible or EFI. Should be used with
+Set BIOS boot type to BOOT_TYPE.  Allowed values are:
+pc\-compatible, EFI. Should be used with
 set\-boot\-flags.
 .TP
 \fB\-\-lock\-out\-reset\-button\fR[=\fILOCK_OUT_RESET_BUTTON\fR]
-Lock out reset button, allowed values: yes/no.
+Lock out reset button. Allowed values are: yes/no.
 Should be used with set\-boot\-flags.
 .TP
 \fB\-\-blank\-screen\fR[=\fIBLANK_SCREEN\fR]
-Blank screen, allowed values: yes/no. Should be
+Blank screen. Allowed values are: yes/no. Should be
 used with set\-boot\-flags.
 .TP
 \fB\-\-boot\-device\fR[=\fIBOOT_DEVICE\fR]
-Set device to boot from to BOOT_DEVICE, allowed
-devices: pxe, disk, disk\-safe, diag, cd\-dvd,
+Set device to boot from to BOOT_DEVICE. Allowed
+values are: pxe, disk, disk\-safe, diag, cd\-dvd,
 floppy, bios. Should be used with set\-boot\-flags.
 .TP
 \fB\-\-lock\-keyboard\fR[=\fILOCK_KEYBOARD\fR]
-lock keyboard, allowed values: yes/no. Should be
+Lock the keyboard. Allowed values are: yes/no. Should be
 used with set\-boot\-flags.
 .TP
 \fB\-\-clear\-cmos\fR[=\fICLEAR_CMOS\fR]
-clear\-cmos: yes/no. Should be used with
+Clear the CMOS. yes/no. Should be used with
 set\-boot\-flags.
 .TP
 \fB\-\-console\-redirection\fR[=\fIREDIRECT_TO_CONSOLE\fR]
-redirect to console, allowed values: default,
+redirect to console. Allowed values are: default,
 suppress, enable. Should be used with
 set\-boot\-flags.
 .TP
 \fB\-\-user\-password\-bypass\fR[=\fIBYPASS_USER_PASSWORD\fR]
-Bypass user password, allowed values: yes/no.
+Bypass user password. Allowed values are: yes/no.
 Should be used with set\-boot\-flags.
 .TP
 \fB\-\-force\-progress\-event\-traps\fR[=\fIFORCE_PROGRESS_EVENT_TRAPS\fR]
-Force progress event traps, allowed values:
+Force progress event traps. Allowed values are:
 yes/no. Should be used with set\-boot\-flags.
 .TP
 \fB\-\-firmware\-bios\-verbosity\fR[=\fIFIRMWARE_BIOS_VERBOSITY\fR]
-Select firmware verbosity, allowed levels:
+Select firmware verbosity. Allowed values are:
 default, quiet, verbose. Should be used with
 set\-boot\-flags.
 .TP
 \fB\-X\fR, \fB\-\-set\-power\-restore\-policy\fR=\fIPOLICY\fR
-Set power restore policy:list, always\-on, restore,
-always\-off.
+Set power restore policy.  Allowed values are: list\-supported\-policies, always\-on, restore,
+always\-off.  See current power restore policy via the \-\-get\-status
+option.
 #include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
 .SH "REPORTING BUGS"

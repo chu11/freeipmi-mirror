@@ -76,32 +76,32 @@ static struct argp_option options[] =
      "Get Power on Hours counter.", 26},
     {"set-power-cycle-interval", 'S', "INTERVAL", 0, 
      "Set Power cycle interval to INTERVAL.", 27},
-    {"set-boot-flags", 'L', NULL, 0, 
-     "Set system boot flags. Allowed flags are: clear-cmos, boot-type, lock-keyboard, boot-device, blank-screen, lock-out-reset-button, firmware-bios-verbosity, force-progress-event-traps, user-password-bypass.", 28},
     {"get-boot-flags", 'G', NULL, 0, 
-     "Get system boot-flags.", 29},
+     "Get system boot-flags.", 28},
+    {"set-boot-flags", 'L', NULL, 0, 
+     "Set system boot flags. Allowed flags are: boot-type, lock-out-reset-button, blank-screen, boot-device, lock-keyboard, clear-cmos, console-redirection, force-progress-event-traps, firmware-bios-verbosity, user-password-bypass.", 29},
     {"boot-type", IPMI_CHASSIS_KEY_BOOT_TYPE, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
-     "Set BIOS boot type to BOOT_TYPE, allowed boot types: pc-compatible or EFI. Should be used with set-boot-flags.", 30},
+     "Set BIOS boot type to BOOT_TYPE. Allowed values are: pc-compatible, EFI. Should be used with set-boot-flags.", 30},
     {"lock-out-reset-button", IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
-     "Lock out reset button, allowed values: yes/no. Should be used with set-boot-flags.", 31},
+     "Lock out reset button. Allowed values are: yes/no. Should be used with set-boot-flags.", 31},
     {"blank-screen", IPMI_CHASSIS_KEY_SCREEN_BLANK, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
-     "Blank screen, allowed values: yes/no. Should be used with set-boot-flags.", 32},
+     "Blank screen. Allowed values are: yes/no. Should be used with set-boot-flags.", 32},
     {"boot-device", IPMI_CHASSIS_KEY_BOOT_DEVICE_SELECTOR, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
-     "Set device to boot from to BOOT_DEVICE, allowed devices: pxe, disk, disk-safe, diag, cd-dvd, floppy, bios. Should be used with set-boot-flags.", 33},
+     "Set device to boot from to BOOT_DEVICE. Allowed values are: pxe, disk, disk-safe, diag, cd-dvd, floppy, bios. Should be used with set-boot-flags.", 33},
     {"lock-keyboard", IPMI_CHASSIS_KEY_LOCK_KEYBOARD, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
-     "lock keyboard, allowed values: yes/no. Should be used with set-boot-flags.", 34},
+     "Lock the keyboard. Allowed values are: yes/no. Should be used with set-boot-flags.", 34},
     {"clear-cmos", IPMI_CHASSIS_KEY_CLEAR_CMOS, "CLEAR_CMOS", OPTION_ARG_OPTIONAL, 
-     "clear-cmos: yes/no. Should be used with set-boot-flags.", 35},
+     "Clear the CMOS.  Allowed values are: yes/no. Should be used with set-boot-flags.", 35},
     {"console-redirection", IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION, "REDIRECT_TO_CONSOLE", OPTION_ARG_OPTIONAL, 
-     "redirect to console, allowed values: default, suppress, enable. Should be used with set-boot-flags.", 36},
+     "redirect to console. Allowed values are: default, suppress, enable. Should be used with set-boot-flags.", 36},
     {"user-password-bypass", IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS, "BYPASS_USER_PASSWORD", OPTION_ARG_OPTIONAL, 
-     "Bypass user password, allowed values: yes/no. Should be used with set-boot-flags.", 37},
+     "Bypass user password. Allowed values are: yes/no. Should be used with set-boot-flags.", 37},
     {"force-progress-event-traps", IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
-     "Force progress event traps, allowed values: yes/no. Should be used with set-boot-flags.", 38},
+     "Force progress event traps. Allowed values are: yes/no. Should be used with set-boot-flags.", 38},
     {"firmware-bios-verbosity", IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
-     "Select firmware verbosity, allowed levels: default, quiet, verbose. Should be used with set-boot-flags.", 39},
+     "Select firmware verbosity. Allowed values are: default, quiet, verbose. Should be used with set-boot-flags.", 39},
     {"set-power-restore-policy", 'X', "POLICY", 0, 
-     "Set power restore policy:list, always-on, restore, always-off.", 40},
+     "Set power restore policy.  Allowed values are: list-supported-policies, always-on, restore, always-off.", 40},
     { 0 }
   };
 
@@ -235,7 +235,6 @@ boot_flag_parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->args.boot_option_args.console_redirection = value;
       break;
 
-
     case IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS:
       if ((strncasecmp(arg, "yes", 3) == 0) && strlen (arg) == 3)
         value = IPMI_CHASSIS_BOOT_OPTIONS_ENABLE;
@@ -304,8 +303,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'c':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
       cmd_args->cmd = IPMI_CMD_GET_CHASSIS_CAPABILITIES;
       break;
@@ -313,8 +312,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 's':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
       cmd_args->cmd = IPMI_CMD_GET_CHASSIS_STATUS;
       break;
@@ -322,8 +321,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'I':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
 
       cmd_args->cmd = IPMI_CMD_CHASSIS_IDENTIFY;
@@ -361,8 +360,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'O':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
       cmd_args->cmd = IPMI_CMD_CHASSIS_CONTROL;
       if ((strncasecmp(arg, "power-down", 10) == 0) && strlen (arg) == 10)
@@ -387,8 +386,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'R':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
       cmd_args->cmd = IPMI_CMD_GET_SYSTEM_RESTART_CAUSE;
       break;
@@ -396,40 +395,17 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'H':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
       cmd_args->cmd = IPMI_CMD_GET_POWER_ON_HOURS_COUNTER;
-      break;
-
-    case 'X':
-      if (cmd_args->cmd != -1)
-        {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
-        }
-      cmd_args->cmd = IPMI_CMD_SET_POWER_RESTORE_POLICY;
-
-      if (!strcasecmp (arg, "always-on"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST;
-      else if (!strcasecmp (arg, "always-off"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF;
-      else if (!strcasecmp (arg, "restore"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST;
-      else if (!strcasecmp (arg, "list"))
-        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_NO_CHANGE;
-      else
-        {
-          fprintf (stderr, "Invalid power policy\n");
-          argp_usage (state);
-        }
       break;
 
     case 'S':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
 
       cmd_args->cmd = IPMI_CMD_SET_POWER_CYCLE_INTERVAL;
@@ -441,25 +417,47 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       break;
 
+    case 'G':
+      if (cmd_args->cmd != -1)
+        {
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
+        }
+      cmd_args->cmd = IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS;
+      break;
+
     case 'L':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
 
       cmd_args->cmd = IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS;
       break;
 
-    case 'G':
+    case 'X':
       if (cmd_args->cmd != -1)
         {
-          fprintf (stderr, "Error: Only one command at a time\n");
-          return -1;
+          fprintf (stderr, "Error: Multiple commands specified\n");
+          exit(EXIT_FAILURE);
         }
-      cmd_args->cmd = IPMI_CMD_GET_SYSTEM_BOOT_OPTIONS;
-      break;
+      cmd_args->cmd = IPMI_CMD_SET_POWER_RESTORE_POLICY;
 
+      if (!strcasecmp (arg, "always-on"))
+        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_IS_LOST;
+      else if (!strcasecmp (arg, "always-off"))
+        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWERED_OFF;
+      else if (!strcasecmp (arg, "restore"))
+        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_RESTORE_POWER_TO_STATE_WHEN_AC_WAS_LOST;
+      else if (!strcasecmp (arg, "list-supported-policies"))
+        cmd_args->args.power_restore_policy = IPMI_POWER_RESTORE_POLICY_NO_CHANGE;
+      else
+        {
+          fprintf (stderr, "Invalid power policy\n");
+          argp_usage (state);
+        }
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -497,15 +495,15 @@ ipmi_chassis_argp_parse (int argc,
   cmd_args->args.identify_args.force_identify_set = 0;
  
   cmd_args->args.boot_option_args.bios_boot_type = -1;
-  cmd_args->args.boot_option_args.clear_cmos = -1;
-  cmd_args->args.boot_option_args.lock_keyboard = -1;
-  cmd_args->args.boot_option_args.boot_device_selector = -1;
-  cmd_args->args.boot_option_args.screen_blank = -1;
   cmd_args->args.boot_option_args.lock_out_reset_button = -1;
-  cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
-  cmd_args->args.boot_option_args.force_progress_event_traps = -1;
-  cmd_args->args.boot_option_args.user_password_bypass = -1;
+  cmd_args->args.boot_option_args.screen_blank = -1;
+  cmd_args->args.boot_option_args.boot_device_selector = -1;
+  cmd_args->args.boot_option_args.lock_keyboard = -1;
+  cmd_args->args.boot_option_args.clear_cmos = -1;
   cmd_args->args.boot_option_args.console_redirection = -1;
+  cmd_args->args.boot_option_args.user_password_bypass = -1;
+  cmd_args->args.boot_option_args.force_progress_event_traps = -1;
+  cmd_args->args.boot_option_args.firmware_bios_verbosity = -1;
 
   /* ADMIN is minimum for ipmi-chassis b/c its needed for many of the
    * ipmi cmds used
@@ -520,7 +518,7 @@ ipmi_chassis_args_validate (struct ipmi_chassis_arguments *args)
   if (args->cmd < 0)
     {   
       fprintf (stderr,
-               "No command specified\n");
+               "Error: No command specified\n");
       return -1;
     }
 
