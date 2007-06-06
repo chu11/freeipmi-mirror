@@ -71,7 +71,6 @@ re-architecture
 ---------------
 libfreeipmi re-arch for better error codes
 libfreeipmi udm - re-arch for inband/outofband/lanplus
-add header comments to fiid.h
 rename variables for better consistency?
 audit errno/kcs/ssif/openipmi errors -> udm errnos
 fix consistency of error codes in all "apis".

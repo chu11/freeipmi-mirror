@@ -17,7 +17,8 @@
 	longer necessary.
 
 	* libfreeipmi/, pef-config/, ipmi-chassis/, ipmiconsole/,
-	ipmimonitoring/, ipmiping/, rmcpping/: Adjust for macro and function changes.
+	ipmimonitoring/, ipmiping/, rmcpping/: Adjust for macro and
+	function changes.
 	
 	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c:
 	General code cleanup and commenting.

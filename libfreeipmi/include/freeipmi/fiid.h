@@ -31,6 +31,7 @@ extern "C" {
 /* 
  * FIID Error Codes
  */
+
 #define FIID_ERR_SUCCESS                         0
 #define FIID_ERR_OBJ_NULL                        1 
 #define FIID_ERR_OBJ_INVALID                     2                   
@@ -299,33 +300,193 @@ fiid_field_t *fiid_obj_template(fiid_obj_t obj);
 
 /* 
  * fiid_obj_template_compare
+ *
+ * Returns 1 if the template specified is the one used to create the
+ * object, 0 if not, -1 one rror.
  */
 int8_t fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
 
 /* 
  * fiid_obj_errnum
+ *
+ * Returns the error code for the most recently occurring error.
  */
 int32_t fiid_obj_errnum(fiid_obj_t obj);
 
+/*  
+ * fiid_obj_len
+ * 
+ * Returns the total length (in bits) of data stored within the
+ * object, -1 on error.
+ */
 int32_t fiid_obj_len(fiid_obj_t obj);
-int32_t fiid_obj_len_bytes(fiid_obj_t obj);
-int32_t fiid_obj_field_len(fiid_obj_t obj, char *field);
-int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, char *field);
-int32_t fiid_obj_block_len(fiid_obj_t obj, char *field_start, char *field_end);
-int32_t fiid_obj_block_len_bytes(fiid_obj_t obj, char *field_start, char *field_end);
 
+/*  
+ * fiid_obj_len_bytes
+ * 
+ * Returns the total length (in bytes) of data stored within the
+ * object, -1 on error.  Will return an error if the total bit length
+ * of data is not a multiple of 8.
+ */
+int32_t fiid_obj_len_bytes(fiid_obj_t obj);
+
+/*  
+ * fiid_obj_field_len
+ * 
+ * Returns the length (in bits) of data stored within the
+ * specified field, -1 on error.
+ */
+int32_t fiid_obj_field_len(fiid_obj_t obj, char *field);
+
+/*  
+ * fiid_obj_field_len_bytes
+ * 
+ * Returns the length (in bytes) of data stored within the specified
+ * field, -1 on error.  Will return an error if the bit length of data
+ * is not a multiple of 8.
+ */
+int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, char *field);
+
+/*
+ * fiid_obj_block_len
+ *
+ * Returns the length (in bits) of data stored within the block of
+ * fields beginning at 'field_start' and ending at 'field_end'.
+ * Returns -1 on error.
+ */
+int32_t fiid_obj_block_len(fiid_obj_t obj, 
+                           char *field_start, 
+                           char *field_end);
+
+/* 
+ * fiid_obj_block_len_bytes
+ *
+ * Returns the length (in bytes) of data stored within the block of
+ * fields beginning at 'field_start' and ending at 'field_end'.
+ * Returns -1 on error.  Will return an error if the calculated bit
+ * length is not a multiple of 8.
+ */
+int32_t fiid_obj_block_len_bytes(fiid_obj_t obj, 
+                                 char *field_start, 
+                                 char *field_end);
+
+/*  
+ * fiid_obj_clear
+ * 
+ * Clear all data stored in the object.  Return 0 on success, -1 on
+ * error.
+ */
 int8_t fiid_obj_clear (fiid_obj_t obj);
+
+/*  
+ * fiid_obj_clear_field
+ * 
+ * Clear all data stored in a specified field in the object.  Return 0
+ * on success, -1 on error.
+ */
 int8_t fiid_obj_clear_field (fiid_obj_t obj, char *field);
+
+/*  
+ * fiid_obj_field_lookup
+ * 
+ * Returns 1 if the field is found in the object, 0 if not, -1 on
+ * error.
+ */
 int8_t fiid_obj_field_lookup (fiid_obj_t obj, char *field);
+
+/* 
+ * fiid_obj_set
+ *
+ * Set data in the object for the specified field.  Returns 0 on
+ * success, -1 on error.
+ */
 int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
+
+/* 
+ * fiid_obj_get
+ *
+ * Get data stored in the object for the specified field.  Returns 1
+ * if data was available and returned, 0 if no data was available, -1
+ * one error.
+ */
 int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
-int32_t fiid_obj_set_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
-int32_t fiid_obj_get_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
-int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+
+/* 
+ * fiid_obj_set_data
+ *
+ * Set an array of data in the object for the specified field.
+ * Returns length of data set on success, -1 on error.  The field
+ * specified must begin on a byte boundary and have a maximum bit
+ * length that is a multiple of 8.  Will truncate the data written
+ * if the field maximum length is smaller than the data given.
+ */
+int32_t fiid_obj_set_data (fiid_obj_t obj, 
+                           char *field, 
+                           uint8_t *data, 
+                           uint32_t data_len);
+
+/* 
+ * fiid_obj_get_data
+ *
+ * Get an array of data in the object for the specified field.
+ * Returns length of data read on success, -1 on error.  The field
+ * specified must begin on a byte boundary and have a data bit length
+ * that is a multiple of 8.
+ */
+int32_t fiid_obj_get_data (fiid_obj_t obj, 
+                           char *field, 
+                           uint8_t *data, 
+                           uint32_t data_len);
+
+/* 
+ * fiid_obj_set_all
+ *
+ * Set all fields in the object with the specified array of data.
+ * Returns length of data set on success, -1 on error.  The given data
+ * must fall on a byte boundary of the object.  Will truncate the data
+ * written if the total object maximum length is smaller than the data
+ * given.  Will write as much as possible if data is not large enough
+ * to fill the entire object.
+ */
 int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
 
-int8_t fiid_obj_set_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
-int8_t fiid_obj_get_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
+/* 
+ * fiid_obj_get_all
+ *
+ * Get an array of all data in the object.  Returns length of data
+ * read on success, -1 on error.  
+ */
+int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+
+/* 
+ * fiid_obj_set_block
+ *
+ * Set a block of fields in the object, beginning with 'field_start'
+ * and ending with 'field_end'.  Returns length of data set on
+ * success, -1 on error.  The fields given must fall on a byte
+ * boundary of the object.  Will truncate the data written if the
+ * total block maximum length is smaller than the data given.  Will
+ * write as much as possible if data is not large enough to fill the
+ * entire block.
+ */
+int8_t fiid_obj_set_block (fiid_obj_t obj, 
+                           char *field_start, 
+                           char *field_end, 
+                           uint8_t *data, 
+                           uint32_t data_len);
+
+/* 
+ * fiid_obj_get_all
+ *
+ * Get a block of data in the object, beginning with 'field_start' and
+ * ending with 'field_end'.  Returns length of data read on success,
+ * -1 on error.  Data being read must fall on a byte boundary.
+ */
+int8_t fiid_obj_get_block (fiid_obj_t obj, 
+                           char *field_start, 
+                           char *field_end, 
+                           uint8_t *data, 
+                           uint32_t data_len);
 
 /*****************************
  * FIID Iterator API         *
