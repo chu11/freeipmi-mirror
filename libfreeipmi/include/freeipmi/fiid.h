@@ -492,16 +492,87 @@ int8_t fiid_obj_get_block (fiid_obj_t obj,
  * FIID Iterator API         *
  *****************************/
 
+/*  
+ * fiid_iterator_create
+ *
+ * Create a fiid iterator to iteratate through each field in an
+ * object.  Returns iterator on success, NULL on error.
+ */
 fiid_iterator_t fiid_iterator_create(fiid_obj_t obj);
-int8_t fiid_iterator_destroy(fiid_iterator_t iter);
+
+/*  
+ * fiid_iterator_destroy
+ *
+ * Destroy and free memory from a fiid iterator.  
+ */
+void fiid_iterator_destroy(fiid_iterator_t iter);
+
+/*
+ * fiid_iterator_errnum
+ *
+ * Returns the error code for the most recently occurring error.
+ */
 int32_t fiid_iterator_errnum(fiid_iterator_t iter);
+
+/*  
+ * fiid_iterator_reset
+ *
+ * Reset the iterator back to the beginning.  Returns 0 on success, -1
+ * on error.
+ */
 int8_t fiid_iterator_reset(fiid_iterator_t iter);
+
+/* 
+ * fiid_iterator_next
+ *
+ * Move the iterator to the next field.  Returns 0 on success, -1 on
+ * error.
+ */
 int8_t fiid_iterator_next(fiid_iterator_t iter);
+
+/*  
+ * fiid_iterator_end
+ *
+ * Returns 1 if you are at the end of the iterator, 0 if not, -1
+ * error.
+ */
 int8_t fiid_iterator_end(fiid_iterator_t iter);
+
+/*  
+ * fiid_iterator_field_len
+ *
+ * Returns the number of bits set for the current field.  Returns -1
+ * on error.
+ */
 int32_t fiid_iterator_field_len(fiid_iterator_t iter);
+
+/*  
+ * fiid_iterator_key
+ *
+ * Returns the key name for the current field.  Returns NULL on error.
+ */
 char *fiid_iterator_key(fiid_iterator_t iter);
+
+/*  
+ * fiid_iterator_get
+ *
+ * Get data stored in the object for the current field.  Returns 1
+ * if data was available and returned, 0 if no data was available, -1
+ * one error.
+ */
 int32_t fiid_iterator_get(fiid_iterator_t iter, uint64_t *val);
-int32_t fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len);
+
+/*  
+ * fiid_iterator_get_data
+ *
+ * Get an array of data in the object for the current field.  Returns
+ * length of data read on success, -1 on error.  The current field
+ * must begin on a byte boundary and have a data bit length that is a
+ * multiple of 8.
+ */
+int32_t fiid_iterator_get_data(fiid_iterator_t iter, 
+                               uint8_t *data, 
+                               uint32_t data_len);
 
 #ifdef __cplusplus
 }

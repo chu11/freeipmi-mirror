@@ -1181,7 +1181,10 @@ fiid_obj_set (fiid_obj_t obj,
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
 
-  if ((field_len = _fiid_obj_field_start_end (obj, field, &start_bit_pos, &end_bit_pos)) < 0)
+  if ((field_len = _fiid_obj_field_start_end (obj, 
+                                              field, 
+                                              &start_bit_pos, 
+                                              &end_bit_pos)) < 0)
     return (-1);
 
   if (field_len > 64)
@@ -1335,7 +1338,10 @@ fiid_obj_get (fiid_obj_t obj,
       return (0);
     }
 
-  if ((field_len = _fiid_obj_field_start_end (obj, field, &start_bit_pos, &end_bit_pos)) < 0)
+  if ((field_len = _fiid_obj_field_start_end (obj, 
+                                              field, 
+                                              &start_bit_pos, 
+                                              &end_bit_pos)) < 0)
     return (-1);
   
   if (field_len > 64)
@@ -1842,7 +1848,9 @@ fiid_obj_set_block (fiid_obj_t obj,
       return (-1);
     }
 
-  if ((block_bits_len = _fiid_obj_max_block_len (obj, field_start, field_end)) < 0)
+  if ((block_bits_len = _fiid_obj_max_block_len (obj, 
+                                                 field_start, 
+                                                 field_end)) < 0)
     return (-1);
     
   if (block_bits_len % 8 != 0)
@@ -1908,7 +1916,8 @@ fiid_obj_get_block (fiid_obj_t obj,
                     uint8_t *data, 
                     uint32_t data_len)
 {
-  int32_t block_bits_start, block_bits_max_len, block_bits_set_len, block_bytes_max_len, block_bytes_set_len;
+  int32_t block_bits_start, block_bits_max_len, block_bits_set_len, 
+    block_bytes_max_len, block_bytes_set_len;
   int key_index_start = -1, key_index_end = -1;
   int field_offset; 
   
@@ -2098,8 +2107,9 @@ fiid_iterator_create(fiid_obj_t obj)
     }
   iter->magic = FIID_ITERATOR_MAGIC;
   iter->current_index = 0;
-  /* The -1 below is because field_data_len is length of the array.  The iterator
-   * is concerned about array indexes.
+
+  /* The -1 below is because field_data_len is length of the array.
+   * The iterator is concerned about array indexes.
    */
   iter->last_index = obj->field_data_len - 1;
 
@@ -2120,18 +2130,16 @@ fiid_iterator_create(fiid_obj_t obj)
   return (NULL);
 }
 
-int8_t
+void
 fiid_iterator_destroy(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    return (-1);
+    return;
   
   iter->magic = ~FIID_ITERATOR_MAGIC;
   iter->errnum = FIID_ERR_SUCCESS;
   fiid_obj_destroy(iter->obj);
   xfree(iter);
-  
-  return (0);
 }
 
 int32_t
@@ -2215,7 +2223,9 @@ fiid_iterator_get(fiid_iterator_t iter, uint64_t *val)
 }
 
 int32_t
-fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len)
+fiid_iterator_get_data(fiid_iterator_t iter, 
+                       uint8_t *data, 
+                       uint32_t data_len)
 {
   char *key;
   int32_t rv;
