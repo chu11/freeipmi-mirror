@@ -1,3 +1,13 @@
+2007-06-08 Tom Zimmerman <tzimmerman@lnxi.com>
+
+	* pef-config/: Add sensor names for input/output for sensor_type
+	config.
+
+	* libfreeipmi/include/freeipmi/ipmi-pef-and-alerting-cmds.h: Add
+	event sensor type definitions.
+
+	* pef-config/pef-config.8.pre.in: Updated appropriately.
+	
 2007-06-06 Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/include/freeipmi/fiid.h, libfreeipmi/src/fiid.c

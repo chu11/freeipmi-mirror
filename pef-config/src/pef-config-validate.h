@@ -57,4 +57,8 @@ pef_validate_t event_severity_validate (pef_config_state_data_t *state_data,
                                         const struct section *sect,
                                         const char *value);
 
+pef_validate_t sensor_type_validate (pef_config_state_data_t *state_data,
+                                        const struct section *sect,
+                                        const char *value);
+
 #endif

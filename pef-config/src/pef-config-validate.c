@@ -203,3 +203,13 @@ event_severity_validate (pef_config_state_data_t *state_data,
     return PEF_VALIDATE_VALID_VALUE;
   return PEF_VALIDATE_INVALID_VALUE;
 }
+
+pef_validate_t 
+sensor_type_validate (pef_config_state_data_t *state_data,
+                         const struct section *sect,
+                         const char *value)
+{
+  if (sensor_type_number (value) != -1)
+    return PEF_VALIDATE_VALID_VALUE;
+  return PEF_VALIDATE_INVALID_VALUE;
+}

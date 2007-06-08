@@ -1862,9 +1862,10 @@ sensor_type_checkout (pef_config_state_data_t *state_data,
   if (kv->value)
     free (kv->value);
 
-  if (asprintf (&kv->value, "0x%02X", eft.sensor_type) < 0)
+
+  if (!(kv->value = strdup (sensor_type_string (eft.sensor_type))))
     {
-      perror("asprintf");
+      perror("strdup");
       return PEF_ERR_FATAL_ERROR;
     }
 
@@ -1895,7 +1896,7 @@ sensor_type_commit (pef_config_state_data_t *state_data,
                                &eft)) != PEF_ERR_SUCCESS)
     return ret;
 
-  eft.sensor_type = strtol(kv->value, NULL, 0);
+  eft.sensor_type = sensor_type_number(kv->value);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1935,7 +1936,7 @@ sensor_type_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = sensor_type_number(kv->value);
 
   if (passed_val == eft.sensor_type)
     ret = PEF_DIFF_SAME;
@@ -1943,12 +1944,12 @@ sensor_type_diff (pef_config_state_data_t *state_data,
     {
       char num[32];
       ret = PEF_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.sensor_type);
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
-                   num);
+		   sensor_type_string (eft.sensor_type));
     }
+
   return ret;
 }
 
@@ -3530,12 +3531,12 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
   if (pef_config_section_add_keyvalue (state_data,
                                        sect,
                                        "Sensor_Type",
-                                       "Specify a Sensor Type Number or 0xFF to Match Any",
+                                       "Specify a Sensor Type, For options see the MAN page",
                                        0,
                                        sensor_type_checkout,
                                        sensor_type_commit,
                                        sensor_type_diff,
-                                       number_range_one_byte) < 0) 
+                                       sensor_type_validate) < 0) 
     goto cleanup;
   
   if (pef_config_section_add_keyvalue (state_data,

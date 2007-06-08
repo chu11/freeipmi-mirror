@@ -36,6 +36,23 @@ List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print detailed information.
+.SH "EDITING THE CHECKOUT FILE"
+Options for editing fields in the checkout file are usually listed in
+a comment above the field.  When there are to many options to make it
+practical, they are listed here in the MAN page.
+.TP
+\fB\ Sensor_Type Options\fR 
+Reserved, Temperature, Voltage, Current, Fan,
+Platform_Chassis_Intrusion, Platform_Security_Violation, Processor,
+Power_Supply, Power_Unit, Cooling_Device, FRU_Sensor, Memory,
+Drive_Slot, Post_Memory_Resize, System_Firmware,
+Event_Logging_Disabled, Watchdog1, System_Event, Critical_Interrupt,
+Button, Module_Board, Microcontroller, Add_In_Card, Chassis, Chip_Set,
+Other_FRU, Cable_Interconnect, Terminator, System_Boot_Initiated,
+Boot_Error, OS_Boot, OS_Critical_Stop, Slot_Connector,
+ACPI_Power_State, Watchdog2, Platform_Alert, Entity_Presence,
+Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
+Session_Audit, Version_Change, FRU_State, and Any
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT
