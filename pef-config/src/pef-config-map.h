@@ -21,4 +21,8 @@ int event_severity_number (const char *source);
 
 char *event_severity_string (uint8_t source);
 
+int sensor_type_number (const char *source);
+
+char *sensor_type_string (uint8_t source);
+
 #endif
