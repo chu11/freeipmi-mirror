@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.63 2007-05-01 02:06:11 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.64 2007-06-08 21:37:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1143,9 +1143,12 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 		   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
 		   || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
 	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+#if 0
+      /* Should not reach this point, should be handled by other code */
       else if (pkt == CHASSIS_CONTROL_RES
 	       && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
 	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+#endif
       else if (pkt == CHASSIS_CONTROL_RES 
 	       && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
 	return MSG_TYPE_OPERATION;

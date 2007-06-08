@@ -2,6 +2,14 @@
 
 	* pef-config/src/pef-config-map.h (sensor_type_string,
 	sensor_type_number): Add forgotten function prototypes.
+
+	* ipmipower/src/ipmipower_packet.c (ipmipower_packet_errmsg):
+	Remove error message possibility, should not be possible.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Add new error codes.
+
+	* cmmon/src/udm-err-wrappers.h, libfreeipmi/src/udm/: Support new
+	error codes.
 	
 2007-06-08 Tom Zimmerman <tzimmerman@lnxi.com>
 

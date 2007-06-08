@@ -39,7 +39,9 @@ extern "C" {
 #include <errno.h>
 
 #include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/ipmi-utils.h"
+#include "freeipmi/udm/ipmi-udm.h"
 
 #include "err-wrappers.h"
 
@@ -563,6 +565,34 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define __UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM(__dev, __rs)                                                       \
+do {                                                                                                               \
+  if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_NODE_BUSY) == 1                                            \
+      || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_OUT_OF_SPACE) == 1                                      \
+      || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_SDR_UPDATE_MODE) == 1                                   \
+      || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE) == 1                              \
+      || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_BMC_INIT_MODE) == 1)                                    \
+    (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE_NODE_BUSY;                                                      \
+  else if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_COMMAND_INVALID) == 1                                 \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN) == 1)                     \
+    (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND;                                                \
+  else if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_DATA_TRUNCATED) == 1                          \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1                  \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED) == 1           \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1                       \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1    \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD) == 1                   \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1    \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_DESTINATION_UNAVAILABLE) == 1                      \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1              \
+	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL) == 1)                   \
+    (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID;                                           \
+  else if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)                   \
+    (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE_INSUFFICIENT_PRIVILEGE;                                         \
+  else                                                                                                             \
+    (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE;                                                                \
+} while (0)
+
 /* Note: dev->errnum set in call to ipmi_cmd() - don't call wrapper */
 #define UDM_ERR_IPMI_CMD_CLEANUP(__dev, __lun, __netfn, __rq, __rs)                                        \
 do {                                                                                                       \
@@ -576,7 +606,7 @@ do {                                                                            
   UDM_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
   if (!__rv)                                                                                               \
     {                                                                                                      \
-      (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE;                                                      \
+      __UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM((__dev), (__rs));                                            \
       __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                                             \
     }                                                                                                      \
 } while (0)
