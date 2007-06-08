@@ -1942,7 +1942,6 @@ sensor_type_diff (pef_config_state_data_t *state_data,
     ret = PEF_DIFF_SAME;
   else
     {
-      char num[32];
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
