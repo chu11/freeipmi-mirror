@@ -1,3 +1,7 @@
+2007-06-12 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-udm.c: Adjust UDM error messages.
+	
 2007-06-09 Albert Chu <chu11@llnl.gov>
 
 	* pef-config/src/pef-config-map.h (sensor_type_string,
