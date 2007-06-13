@@ -72,7 +72,7 @@ do {                                                                    \
   snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
             "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
             __LINE__, __PRETTY_FUNCTION__,                              \
-	    ipmi_openipmi_ctx_errnum(dev->io.inband.kcs_ctx));          \
+	    ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx));     \
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
 } while (0)
 

@@ -5,9 +5,9 @@
 %define name @PACKAGE@
 %define version @VERSION@
 %if %{?_with_debug:1}%{!?_with_debug:0}
-%define release 1.debug
+%define release 1.debug%{?dist}
 %else
-%define release 1
+%define release 1%{?dist}
 %endif
 
 Name: %{name}
@@ -17,8 +17,8 @@ License: GPL
 Group: Development/System
 URL: http://www.gnu.org/software/freeipmi/
 Source: ftp://ftp.zresearch.com/pub/freeipmi/LATEST/%{name}-%{version}.tar.gz
-BuildRoot: %{_localstatedir}/tmp/%{name}-%{version}
-BuildRequires: guile-devel readline-devel libgcrypt-devel
+BuildRoot: {_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: libgcrypt-devel
 Summary: FreeIPMI
 %description
 The FreeIPMI project provides "Remote-Console" (out-of-band) and
@@ -215,7 +215,8 @@ fi
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/COPYING.bmc-watchdog
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog
-%config(noreplace) %{_initrddir}/freeipmi-bmc-watchdog
+%{_initrddir}/freeipmi-bmc-watchdog
+%config(noreplace) %{_sysconfdir}/sysconfig/freeipmi-bmc-watchdog
 %config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
@@ -240,6 +241,8 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Wed Jun 13 2007 Phil Knirsch <pknirsch@redhat.com> 0.4.beta0-1
+- Some package cleanup and split of configuration and initscript
 * Fri Feb 28 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
 - Add ipmidetectd subpackage.
 * Fri Feb 16 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1

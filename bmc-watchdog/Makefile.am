@@ -11,7 +11,7 @@ DISTCLEANFILES = .deps/*.P
 
 BMCWATCHDOGLOGdir = $(localstatedir)/log/$(PACKAGE)
 
-EXTRA_DIST = freeipmi-bmc-watchdog.init freeipmi-bmc-watchdog.logrotate
+EXTRA_DIST = freeipmi-bmc-watchdog.init freeipmi-bmc-watchdog.logrotate freeipmi-bmc-watchdog.sysconfig
 
 install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) \
 	$(INSTALL_LOGDIR)
@@ -19,6 +19,8 @@ install-data-local: $(INSTALL_INIT_SCRIPTS) $(INSTALL_LOGROTATE_CONFIG) \
 install-init-scripts:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/init.d
 	$(INSTALL) -m 755 $(srcdir)/freeipmi-bmc-watchdog.init $(DESTDIR)$(sysconfdir)/init.d/freeipmi-bmc-watchdog
+	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(sysconfdir)/sysconfig
+	$(top_srcdir)/install-sh -m 444 $(srcdir)/freeipmi-bmc-watchdog.sysconfig $(DESTDIR)$(sysconfdir)/sysconfig/freeipmi-bmc-watchdog
 
 install-logrotate-config:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/logrotate.d
@@ -30,3 +32,4 @@ install-logdir:
 uninstall-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/freeipmi-bmc-watchdog
 	$(RM) -f $(DESTDIR)$(sysconfdir)/logrotate.d/freeipmi-bmc-watchdog
+	$(RM) -f $(DESTDIR)$(sysconfdir)/sysconfig/freeipmi-bmc-watchdog

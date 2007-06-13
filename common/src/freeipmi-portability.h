@@ -41,6 +41,15 @@ extern "C" {
 #define FI_64 "%ll"
 #endif
 
+# if ENABLE_NLS
+#  include <libintl.h>
+#  define _(Text) gettext (Text)
+# else
+#  define textdomain(Domain)
+#  define _(Text) Text
+# endif
+# define N_(Text) Text
+
 #if !defined(O_SYNC) && defined(O_FSYNC)
 #define O_SYNC	O_FSYNC
 #endif

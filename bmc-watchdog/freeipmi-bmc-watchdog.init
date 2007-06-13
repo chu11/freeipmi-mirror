@@ -4,11 +4,17 @@
 # description: bmc-watchdog startup script
 #
 DAEMON=/usr/sbin/bmc-watchdog
+PIDFILE=/var/run/freeipmi-bmc-watchdog.pid
 LOCKFILE=/var/lock/subsys/freeipmi-bmc-watchdog
+CONFFILE=/etc/sysconfig/freeipmi-bmc-watchdog
 
 . /etc/rc.d/init.d/functions
 
 RETVAL=0
+
+if [ -r $CONFFILE ]; then
+        . $CONFFILE
+fi
 
 case "$1" in
    start)
@@ -24,18 +30,18 @@ case "$1" in
       # initial-countdown = 900 seconds (15 mins)
       # reset-period = 60 seconds
 
-      daemon -20 $DAEMON -d -u 4 -p 0 -a 1 -F -P -L -S -O -i 900 -e 60 
+      daemon -20 $DAEMON $OPTIONS
       RETVAL=$?
       echo
-      [ $RETVAL -eq 0 ] && touch /var/lock/subsys/freeipmi-bmc-watchdog
+      [ $RETVAL -eq 0 ] && touch $LOCKFILE
 	;;
 
   stop)
       echo -n "Shutting down bmc-watchdog: "
-      killproc bmc-watchdog 
+      killproc bmc-watchdog
       RETVAL=$?
       echo
-      [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/freeipmi-bmc-watchdog
+      [ $RETVAL -eq 0 ] && rm -f $LOCKFILE
 	;;
 
   restart|reload)
@@ -48,7 +54,7 @@ case "$1" in
    	RETVAL=$?
 	;;
   condrestart)
-        if test -e /var/lock/subsys/freeipmi-bmc-watchdog; then \
+        if test -e $LOCKFILE; then \
             $0 stop; \
             $0 start; \
             RETVAL=$?; \

@@ -1,3 +1,24 @@
+2007-06-13 Albert Chu <chu11@llnl.gov>
+
+	Merge in Fedora build requirements from Phil Knirsch
+	<pknirsch at redhat dot com>
+
+	* bmc-watchdog/freeipmi-bmc-watchdog.sysconfig: New file.
+
+	* bmc-watchdog/freeipmi-bmc-watchdog.init, bmc-watchdog/: Adjust
+	for new sysconfig file.
+
+	* freeipmi.spec.in: Merge in Fedora build requirements.
+	
+2007-06-13 Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Remove readline-devel and guile-devel build
+	requirements.
+
+	* common/src/udm-err-wrappers.h (__OPENIPMI_SYSLOG): Fix typo.
+
+	* common/src/freeipmi-portability.h: Add back portability macro.
+	
 2007-06-12 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-udm.c: Adjust UDM error messages.
