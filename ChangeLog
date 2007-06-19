@@ -1,3 +1,13 @@
+2007-06-19 Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Follow on fixes from Phil Knirsch's.
+
+	* various doc updates.
+
+	* doc/freeipmi-libraries.txt: New file.
+
+	* freeipmi.spec.in, doc/Makefile.am: Updated for new file.
+	
 2007-06-13 Albert Chu <chu11@llnl.gov>
 
 	Merge in Fedora build requirements from Phil Knirsch

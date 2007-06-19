@@ -157,6 +157,7 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
 %doc %{_datadir}/doc/%{name}/freeipmi-coding.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-hostrange.txt
+%doc %{_datadir}/doc/%{name}/freeipmi-libraries.txt
 %{_libdir}/libipmiconsole*so*
 %{_libdir}/libfreeipmi*so*
 %{_libdir}/libipmidetect*so*
@@ -235,7 +236,7 @@ fi
 
 %files ipmidetectd
 %defattr(-,root,root)
-%config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
+%{_initrddir}/freeipmi-ipmidetectd
 %{_sbindir}/ipmidetectd
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*

@@ -98,39 +98,42 @@ inventory information that can help identify a failed hardware unit.
 @node What is FreeIPMI?, How did it start?, What is IPMI, Top
 @section What is FreeIPMI?
 
-FreeIPMI is a Free Intelligent Platform Management System Software.
-It provides ``Remote-Console'' (out-of-band), ``System Management
-Software'' (in-band) and a development library conforming to the
-Intelligent Platform Management Interface (@acronym{IPMI} v1.5 and
-v2.0) standards.
-
-The FreeIPMI User's Guide concentrates on installation, usage,
-troubleshooting and bug reporting.  It corresponds to the
-@value{VERSION} release.
+FreeIPMI is a collection of Intelligent Platform Management
+@acronym{IPMI} system software.  It provides in-band and out-of-band
+software and a development library conforming to the Intelligent
+Platform Management Interface (@acronym{IPMI} v1.5 and v2.0)
+standards.
 
 @node How did it start?, Who maintains FreeIPMI?, What is FreeIPMI?, Top
 @section How did it start?
 
-In October 2003, California Digital Corp. was contracted by Lawrence
-Livermore National Laboratory (LLNL) for the assembly of Thunder, a
-1024 node Itanium2 cluster.  This project led to the co-development of
-FreeIPMI between California Digital and LLNL by merging the IPMI
-software developed by both organizations.
+In October 2003, California Digital Corp. (CDC) was contracted by
+Lawrence Livermore National Laboratory (LLNL) for the assembly of
+Thunder, a 1024 node Itanium2 cluster.  This led to software
+developers from CDC and LLNL merging the IPMI software developed by
+both organizations into FreeIPMI.
 
 Anand Babu, Balamurugan and Ian Zimmerman at CDC contributed the
 in-band driver, libfreeipmi, ipmi-sensors, bmc-config, ipmi-sel, and
-bmc-info.  Jim Garlick and Albert Chu at LLNL contributed ipmipower,
-bmc-watchdog, ipmiping, rmcpping, libfreeipmi, and ipmipower support
-in Powerman.  In October 2004, FreeIPMI 0.1.0 was officially released.
+bmc-info.  Albert Chu and Jim Garlick at LLNL contributed ipmipower,
+bmc-watchdog, ipmiping, rmcpping, libfreeipmi, and ipmi support in
+Powerman.  In October 2004, FreeIPMI 0.1.0 was officially released.
+
+Since the 0.1.0 release, Z Research developers have contributed
+ipmi-chassis, ipmi-raw, ipmi-locate, and pef-config.  LLNL has
+contributed IPMI 2.0 support, hostrange support, ipmiconsole,
+ipmimonitoring, ipmidetect, and pef-config.
+
+(Note: The original FreeIPMI developers from California Digital
+Corp. are now at Zresearch Inc.)
 
 @node Who maintains FreeIPMI?, FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, How did it start?, Top
 @section Who maintains FreeIPMI?
 
-Primary maintenance of FreeIPMI is managed by Albert Chu at Lawrence
-Livermore National Laboratory (LLNL).  Developers from Zresearch
-continue to aid in development of new features for FreeIPMI.  
-
-(Note: Z RESEARCH Inc. was founded by former members for California Digital Corp.)
+Primary maintenance of FreeIPMI is currently managed by Albert Chu at
+Lawrence Livermore National Laboratory (LLNL).  Overall maintenance of
+FreeIPMI has been handled by staff at CDC, Zresearch, and LLNL during
+the lifetime of FreeIPMI.
 
 @node FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, What is special about FreeIPMI, Who maintains FreeIPMI?, Top
 @section What is the relationship between FreeIPMI, OpenIPMI, Ipmitool, and Ipmiutil? 
@@ -267,8 +270,8 @@ easier.
 4) Additional features
 
 By ``splitting'' various IPMI features into multiple tools, each tool
-is capable of providing the user with easier to use options and
-features, which may not be capable in a ``all in one'' tool.
+is capable of providing the user with options and features, which may
+not be easy or capable in a ``all in one'' tool.
 
 @node SSIF Driver Configuration, x86-64 Compilation, What is special about FreeIPMI, Top
 @section SSIF Driver Configuration
