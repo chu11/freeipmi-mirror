@@ -1,3 +1,9 @@
+2007-06-20 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/: Remove unused obj_lan_msg_trlr from
+	ipmi_device struct.  Re-organize code to follow struct a bit
+	better.
+
 2007-06-19 Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Follow on fixes from Phil Knirsch's.
