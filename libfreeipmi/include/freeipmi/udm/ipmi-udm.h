@@ -92,7 +92,7 @@ char *ipmi_device_strerror(int errnum);
 
 int ipmi_device_errnum(ipmi_device_t dev);
 
-int ipmi_open_inband (ipmi_device_t,
+int ipmi_open_inband (ipmi_device_t dev,
 		      ipmi_driver_type_t driver_type, 
 		      int disable_auto_probe, 
 		      uint16_t driver_address, 
@@ -100,7 +100,7 @@ int ipmi_open_inband (ipmi_device_t,
 		      char *driver_device, 
 		      uint32_t flags);
 
-int ipmi_open_outofband (ipmi_device_t,
+int ipmi_open_outofband (ipmi_device_t dev,
 			 ipmi_driver_type_t driver_type, 
 			 const char *hostname,
 			 const char *username, 

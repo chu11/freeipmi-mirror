@@ -21,6 +21,9 @@
 	libfreeipmi/src/udm/ipmi-lan-interface-udm.c.  Re-work to use
 	modified new API in ipmi-messaging-support-cmds-udm.[ch].
 
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h (ipmi_open_inband,
+	ipmi_open_outofband): Add missing parameter name.
+
 	* Fix minor code comment typos.
 
 2007-06-19 Albert Chu <chu11@llnl.gov>
