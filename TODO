@@ -78,3 +78,4 @@ split udm into another lib
 debugging enabled by default?
 udm strerror - w/ buffer for command specific errors
 udm error messages for common bad completion codes
+udm - workaround flags support
