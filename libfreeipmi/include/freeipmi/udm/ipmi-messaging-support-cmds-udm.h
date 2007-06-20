@@ -30,18 +30,30 @@ extern "C" {
 #include <freeipmi/udm/ipmi-udm.h>
 
 int8_t ipmi_cmd_get_channel_authentication_capabilities (ipmi_device_t dev, 
+                                                         uint8_t channel_number,
+                                                         uint8_t maximum_privilege_level,
 							 fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_session_challenge (ipmi_device_t dev, 
+                                       uint8_t authentication_type,
+                                       uint8_t *user_name,
+                                       uint32_t user_name_len,
 				       fiid_obj_t obj_cmd_rs);
   
 int8_t ipmi_cmd_activate_session (ipmi_device_t dev, 
+                                  uint8_t authentication_type,
+                                  uint8_t maximum_privilege_level,
+                                  uint8_t *challenge_string,
+                                  uint32_t challenge_string_len,
+                                  uint32_t initial_outbound_sequence_number,
 				  fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_session_privilege_level (ipmi_device_t dev, 
+                                             uint8_t privilege_level,
 					     fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_lan_close_session (ipmi_device_t dev, 
+int8_t ipmi_cmd_close_session (ipmi_device_t dev, 
+                               uint32_t close_session_id,
 			       fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_channel_access (ipmi_device_t dev, 
@@ -115,8 +127,6 @@ int8_t ipmi_cmd_set_user_password_v20 (ipmi_device_t dev,
 int8_t ipmi_get_channel_number (ipmi_device_t dev, 
 				uint8_t channel_medium_type);
   
-int8_t ipmi_lan_open_session (ipmi_device_t dev);
-
 #ifdef __cplusplus
 }
 #endif

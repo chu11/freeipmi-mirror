@@ -4,6 +4,23 @@
 	ipmi_device struct.  Re-organize code to follow struct a bit
 	better.
 
+	* libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds-udm.h
+	(ipmi_cmd_close_session): New function.
+
+	* libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds-udm.h
+	(ipmi_cmd_get_channel_authentication_capabilities,
+	ipmi_cmd_get_session_challenge, ipmi_cmd_activate_session,
+	ipmi_cmd_set_session_privilege_level): Re-work APIs to be
+	consistent with rest of UDM library.
+	
+	* libfreeipmi/include/freeipmi/udm/ipmi-messaging-support-cmds-udm.h,
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_lan_open_session, ipmi_lan_close_session): Move to
+	libfreeipmi/src/udm/ipmi-lan-interface-udm.c.  Re-work to use
+	modified new API in ipmi-messaging-support-cmds-udm.[ch].
+
 	* Fix minor code comment typos.
 
 2007-06-19 Albert Chu <chu11@llnl.gov>
