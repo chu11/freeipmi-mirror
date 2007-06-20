@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.11 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.12 2007-06-20 20:59:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -287,8 +287,7 @@ struct ipmiconsole_ctx_session {
    * Session Data
    *
    * These will need to be re-initialized if the session is being reattempted under
-   * a different port  if the activate
-   * The case
+   * a different port.
    */
   struct sockaddr_in addr;
 

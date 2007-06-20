@@ -4,6 +4,8 @@
 	ipmi_device struct.  Re-organize code to follow struct a bit
 	better.
 
+	* Fix minor code comment typos.
+
 2007-06-19 Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Follow on fixes from Phil Knirsch's.
