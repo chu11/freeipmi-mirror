@@ -80,4 +80,8 @@ udm strerror - w/ buffer for command specific errors
 udm error messages for common bad completion codes
 udm - workaround flags support
 udm - ipmi 2.0
+- needs to be re-architected
+- lan_open_session (and subsequently lan_2_0_open_session) need to *not* call ipmi_lan_cmd and such.  These
+  functions should work independently of UDM.
+- this is why there is a mess with the local_dev's and such.
 ipmimonitoring - use UDM + support ipmi 2.0
