@@ -80,3 +80,4 @@ udm strerror - w/ buffer for command specific errors
 udm error messages for common bad completion codes
 udm - workaround flags support
 udm - ipmi 2.0
+ipmimonitoring - use UDM + support ipmi 2.0
