@@ -85,3 +85,4 @@ udm - ipmi 2.0
   functions should work independently of UDM.
 - this is why there is a mess with the local_dev's and such.
 ipmimonitoring - use UDM + support ipmi 2.0
+- now possible since UDM returns legit error codes
