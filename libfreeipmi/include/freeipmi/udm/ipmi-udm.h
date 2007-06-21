@@ -72,11 +72,12 @@ enum ipmi_driver_type
   {
     IPMI_DEVICE_UNKNOWN = 0,
     IPMI_DEVICE_LAN = 1,
-    IPMI_DEVICE_KCS = 2,
-    IPMI_DEVICE_SMIC = 3,
-    IPMI_DEVICE_BT = 4,
-    IPMI_DEVICE_SSIF = 5,
-    IPMI_DEVICE_OPENIPMI = 6,
+    IPMI_DEVICE_LAN_2_0 = 2,
+    IPMI_DEVICE_KCS = 3,
+    IPMI_DEVICE_SMIC = 4,
+    IPMI_DEVICE_BT = 5,
+    IPMI_DEVICE_SSIF = 6,
+    IPMI_DEVICE_OPENIPMI = 7,
   };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 
@@ -110,6 +111,19 @@ int ipmi_open_outofband (ipmi_device_t,
 			 unsigned int session_timeout,
 			 unsigned int retry_timeout, 
 			 uint32_t flags);
+
+int ipmi_open_outofband_2_0 (ipmi_device_t dev,
+                             ipmi_driver_type_t driver_type, 
+                             const char *hostname,
+                             const char *username, 
+                             const char *password, 
+                             const char *k_g,
+                             unsigned int k_g_len,
+                             uint8_t privilege_level,
+                             uint8_t cipher_suite_id,
+                             unsigned int session_timeout,
+                             unsigned int retry_timeout, 
+                             uint32_t flags);
 
 int ipmi_cmd (ipmi_device_t dev, 
 	      uint8_t lun, 

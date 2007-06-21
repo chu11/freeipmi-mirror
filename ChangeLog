@@ -1,3 +1,30 @@
+2007-XX-XX Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-messaging-support-cmds-udm.h,
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_cmd_get_channel_authentication_capabilities_v20): New
+	function.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband_2_0): New
+	function.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Support LAN 2.0
+	device type.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (_ipmi_outofband_2_0_free,
+	_ipmi_outofband_2_0_close, ): New functions.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_cmd, ipmi_cmd_raw,
+	ipmi_close_device): Support LAN 2.0 device.
+
+	* libfreeipmi/src/udm/ipmi-udm-device.h: Add support for IPMI 2.0 in udm.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-lan-interface-udm.h,
+	libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(ipmi_lan_2_0_open_session, ipmi_lan_2_0_close_session,
+	ipmi_lan_2_0_cmd, ipmi_lan_2_0_cmd_raw): New functions.
+	
 2007-06-20 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/: Remove unused obj_lan_msg_trlr from
