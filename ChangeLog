@@ -1,3 +1,12 @@
+2007-06-25 Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sdr-cache-reads.c (GET_UINT_VALUE_BY_KEY,
+	_get_uint_value_by_key): New macros/functions.
+
+	* common/src/ipmi-sdr-cache-reads.c
+	(sdr_cache_read_repository_info_timestamp): Read 32 bit fields w/
+	uint not int.
+	
 2007-06-20 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/: Remove unused obj_lan_msg_trlr from
