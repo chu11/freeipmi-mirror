@@ -5,7 +5,8 @@
 	configured privilege, not user.
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd_raw):
-	Add forgotten permsgauth support.
+	Add forgotten permsgauth support.  Move sequence number increments
+	to cleanup section.
 	
 2007-06-25 Albert Chu <chu11@llnl.gov>
 
