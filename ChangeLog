@@ -3,6 +3,9 @@
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
 	(ipmi_lan_open_session): Call get authentication capabilities with
 	configured privilege, not user.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd_raw):
+	Add forgotten permsgauth support.
 	
 2007-06-25 Albert Chu <chu11@llnl.gov>
 
