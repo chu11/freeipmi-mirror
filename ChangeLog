@@ -1,3 +1,9 @@
+2007-06-26 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(ipmi_lan_open_session): Call get authentication capabilities with
+	configured privilege, not user.
+	
 2007-06-25 Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-cache-reads.c (GET_UINT_VALUE_BY_KEY,
