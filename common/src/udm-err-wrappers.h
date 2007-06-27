@@ -565,7 +565,7 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define __UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM(__dev, __rs)                                                       \
+#define UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM(__dev, __rs)                                                       \
 do {                                                                                                               \
   if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_NODE_BUSY) == 1                                            \
       || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_OUT_OF_SPACE) == 1                                      \
@@ -606,7 +606,7 @@ do {                                                                            
   UDM_ERR_CLEANUP (!((__rv = ipmi_check_completion_code_success ((__rs))) < 0));                           \
   if (!__rv)                                                                                               \
     {                                                                                                      \
-      __UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM((__dev), (__rs));                                            \
+      UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM((__dev), (__rs));                                              \
       __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs);                                                             \
     }                                                                                                      \
 } while (0)
