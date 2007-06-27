@@ -19,7 +19,7 @@ noinst_HEADERS = ipmi-fru.h \
 		 ipmi-fru-argp.h \
 		 ipmi-fru-fiid.h \
 		 ipmi-fru-info-area.h \
-		 ipmi-fru-multirecord-area.c \
+		 ipmi-fru-multirecord-area.h \
 		 ipmi-fru-util.h
  
 AM_CFLAGS = -Wall
