@@ -1,3 +1,10 @@
+2007-06-27 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan.c,
+	libfreeipmi/include/freeipmi/ipmi-lan.h (fill_lan_session_hdr):
+	Rename inbound_sequence_number to session_sequence_number for
+	consistency.
+
 2007-06-26 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c

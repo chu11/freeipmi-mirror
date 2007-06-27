@@ -91,7 +91,7 @@ fiid_template_t tmpl_lan_msg_trlr =
 
 int8_t
 fill_lan_session_hdr  (uint8_t authentication_type, 
-		       uint32_t inbound_sequence_number, 
+		       uint32_t session_sequence_number, 
 		       uint32_t session_id, 
 		       fiid_obj_t obj_lan_session_hdr)
 {
@@ -102,7 +102,7 @@ fill_lan_session_hdr  (uint8_t authentication_type,
 
   FIID_OBJ_CLEAR (obj_lan_session_hdr);
   FIID_OBJ_SET (obj_lan_session_hdr, "authentication_type", authentication_type);
-  FIID_OBJ_SET (obj_lan_session_hdr, "session_sequence_number", inbound_sequence_number);
+  FIID_OBJ_SET (obj_lan_session_hdr, "session_sequence_number", session_sequence_number);
   FIID_OBJ_SET (obj_lan_session_hdr, "session_id", session_id);
 
   /* authentication_code_data calculated in assemble_ipmi_lan_pkt */
