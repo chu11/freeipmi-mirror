@@ -5,6 +5,11 @@
 	Rename inbound_sequence_number to session_sequence_number for
 	consistency.
 
+	* ipmidetect/ipmidetectd.8.in: Fix typos from manpage cut and
+	paste.
+
+	* ipmidetect/: Fix cut and paste typo in GPL release headers.
+
 2007-06-26 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
