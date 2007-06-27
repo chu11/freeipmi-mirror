@@ -1,3 +1,23 @@
+2007-06-27  Albert Chu <chu11@llnl.gov>
+ 
+	* ipmi-fru/: New project.
+
+	* COPYING.ipmi-fru, DISCLAIMER.ipmi-fru: New files.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h
+	libfreeipmi/include/freeipmi/ipmi-fru-inventory-device-cmds.h
+ 	libfreeipmi/include/freeipmi/ipmi-fru-information-storage-definition.h
+ 	libfreeipmi/src/udm/ipmi-fru-inventory-device-cmds-udm.c
+ 	libfreeipmi/src/ipmi-fru-inventory-device-cmds.c
+ 	libfreeipmi/src/ipmi-fru-information-storage-definition.c: New files.
+
+	* configure.ac, Makefile.am, freeipmi.spec.in: Update
+	appropriately for new projct and new files.
+
+	* libfreeipmi/src/ipmi-error.c (ipmi_strerror_r),
+	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Add FRU
+	completion codes/strings.
+	
 2007-06-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan.c,

@@ -2,7 +2,6 @@
    udm.h: IPMI Unified Driver Model (API interface for all IPMI drivers)
 
    Copyright (C) 2005 FreeIPMI Core Team
-
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
@@ -32,6 +31,7 @@ extern "C" {
 #include <freeipmi/udm/ipmi-ssif-api-udm.h>
 #include <freeipmi/udm/ipmi-chassis-cmds-udm.h>
 #include <freeipmi/udm/ipmi-device-global-cmds-udm.h>
+#include <freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h>
 #include <freeipmi/udm/ipmi-lan-cmds-udm.h>
 #include <freeipmi/udm/ipmi-messaging-support-cmds-udm.h>
 #include <freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h>

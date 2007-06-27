@@ -1,0 +1,83 @@
+\."#############################################################################
+\."$Id: ipmi-fru.8.pre.in,v 1.1 2007-06-27 21:35:33 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2007 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-228523
+\."
+\."  This file is part of Ipmi-fru, a tool used for retrieving motherboard
+\."  field replaceable unit (FRU) information. For details, 
+\."  see http://www.llnl.gov/linux/.
+\."
+\."  Ipmi-fru is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."
+\."  Ipmi-fru is distributed in the hope that it will be useful, but WITHOUT
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+\."  for more details.
+\."
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
+\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."#############################################################################
+.TH IPMI-FRU 8 "@ISODATE@" "ipmi-fru @PACKAGE_VERSION@" "System Commands"
+.SH NAME
+ipmi-fru \- manual page for ipmi-fru.  IPMI FRU @PACKAGE_VERSION@
+.SH DESCRIPTION
+Displays Field Replaceable Unit (FRU) Information.
+.SH OPTIONS
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel-user.man>
+.if @WITH_DEBUG@ \{
+#include <@top_srcdir@/common/doc/argp-common-debug.man>
+\}
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
+.TP
+\FB\-e\fR, \fB\-\-device-id\fR
+Specify a specific FRU device ID you wish to retrieve.
+.TP
+\FB\-v\fR, \fB\-\-verbose\fR
+Verbose FRU output.
+.TP
+\FB\-vv\fR, \fB\-\-verbose\fR
+Very verbose FRU output.
+.TP
+\FB\-s\fR, \fB\-\-skip-checks\fR
+Ignore checksums in FRUs. Some FRUs have incorrect checksums, but the
+FRU data is correct.  Use this option to skip the checks checksum.
+Output may be unknown, pray for the best.
+.TP
+\fB\-f\fR, \fB\-\-flush\-cache\fR
+Flush sensor data repository (SDR) cache.
+.TP
+\fB\-Q\fR, \fB\-\-\quiet\-cache\fR
+Do not output information about cache creation/deletion.
+.TP
+\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
+Use DIRECTORY for sensor data repository (SDR) cache.
+#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
+.SH "REPORTING BUGS"
+Report bugs to <@PACKAGE_BUGREPORT@>.
+.SH COPYRIGHT
+Copyright \(co 2003,04,05 FreeIPMI Core Team.  
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+.SH "SEE ALSO"
+The full documentation for
+.B ipmi-fru
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B ipmi-fru
+programs are properly installed at your site, the command
+.IP
+.B info ipmi-fru
+.PP
+should give you access to the complete manual.

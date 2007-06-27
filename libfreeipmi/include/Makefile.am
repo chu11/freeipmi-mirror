@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.20 2007-06-05 16:14:19 chu11 Exp $
+## $Id: Makefile.am,v 1.21 2007-06-27 21:35:34 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -42,6 +42,8 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
 	freeipmi/ipmi-device-global-cmds.h \
+	freeipmi/ipmi-fru-inventory-device-cmds.h \
+	freeipmi/ipmi-fru-information-storage-definition.h \
 	freeipmi/ipmi-lan-cmds.h \
 	freeipmi/ipmi-messaging-support-cmds.h \
 	freeipmi/ipmi-pef-and-alerting-cmds.h \
@@ -64,6 +66,7 @@ nobase_include_HEADERS = \
 	freeipmi/udm/ipmi-ssif-api-udm.h \
 	freeipmi/udm/ipmi-chassis-cmds-udm.h \
 	freeipmi/udm/ipmi-device-global-cmds-udm.h \
+	freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h \
 	freeipmi/udm/ipmi-lan-cmds-udm.h \
 	freeipmi/udm/ipmi-messaging-support-cmds-udm.h \
 	freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h \

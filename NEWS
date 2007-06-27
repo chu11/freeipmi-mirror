@@ -8,6 +8,7 @@ o Added ipmimonitoring
 o Added ipmidetect
 o Added pef-config
 o Added ipmi-chassis
+o Added ipmi-fru
 o Added -T option to ipmiconsole.
 o Re-architected workarounds options for Ipmipower due to increasing number
   of vendor specific workarounds implemented. -W, -S, -Z, -X, -Y options removed.

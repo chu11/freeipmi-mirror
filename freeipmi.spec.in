@@ -154,6 +154,8 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout
 %doc %{_datadir}/doc/%{name}/COPYING.ipmidetect
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect
+%doc %{_datadir}/doc/%{name}/COPYING.ipmi-fru
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
 %doc %{_datadir}/doc/%{name}/freeipmi-coding.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-hostrange.txt
@@ -165,6 +167,7 @@ fi
 %{_sbindir}/bmc-autoconfig
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
+%{_sbindir}/ipmi-fru
 %{_sbindir}/ipmi-locate
 %{_sbindir}/pef-config
 %{_sbindir}/ipmi-raw
@@ -180,6 +183,7 @@ fi
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man8/bmc-info.8*
+%{_mandir}/man8/ipmi-fru.8*
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/pef-config.8*
 %{_mandir}/man8/ipmi-raw.8*
