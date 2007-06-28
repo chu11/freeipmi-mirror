@@ -54,6 +54,10 @@ should do everything in chunks when it is possible, do individually if there wer
 common stuff for parsing in bmc-config and pef-config
 fix poor use of atoi/strtoul
 
+ipmiconsole
+-----------
+blocking equivalents for ipmiconsole_ctx_destroy() or ipmiconsole_engine_teardown()
+
 general
 -------
 event handling
