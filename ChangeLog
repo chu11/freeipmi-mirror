@@ -5,6 +5,10 @@
 
 	* ipmiconsole/src/libipmiconsole: Add flag to close the user_fd
 	within the library if it has never been retrieved by the user.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit, ipmiconsole_engine_submit_block,
+	ipmiconsole_ctx_destroy): Fix locking corner cases and bugs.
 	
 2007-06-27  Albert Chu <chu11@llnl.gov>
  
