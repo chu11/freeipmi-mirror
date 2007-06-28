@@ -1,3 +1,13 @@
+2007-06-28  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h
+	(ipmiconsole_engine_teardown): Remove comment that function
+	'blocks', which is not true.  Bad comment found by Levi Pearson
+	<lpearson@lnxi.com>.
+	
+	* TODO: Update to list ipmiconsole needs blocking equivalents for
+	ipmiconsole_ctx_destroy() and ipmiconsole_engine_teardown().
+	
 2007-06-27  Albert Chu <chu11@llnl.gov>
  
 	* ipmi-fru/: New project.

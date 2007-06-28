@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.13 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.14 2007-06-28 15:45:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -365,8 +365,6 @@ int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
  * ipmiconsole_engine_teardown
  *
  * Teardown the ipmiconsole engine and all contexts submitted to it.
- * Note that the teardown will block until it all active
- * contexts are closed.  
  *
  * Returns 0 on success, -1 on error 
  */
