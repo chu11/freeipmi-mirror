@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.15 2007-06-28 15:53:59 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.16 2007-06-28 22:16:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -366,7 +366,7 @@ int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
  *
  * Teardown the ipmiconsole engine and all contexts submitted to it.
  * Note that the teardown will block until it all active
- * contexts are closed.
+ * ipmi sessions are closed or timeout.
  *
  * Returns 0 on success, -1 on error 
  */
@@ -389,7 +389,9 @@ void ipmiconsole_engine_teardown(void);
  *
  *   IPMI protocol configuration.  See ipmiconsole_protocol_config definition above.
  *
- * Returns ctx on success, NULL on error
+ * Returns ctx on success, NULL on error.
+ *
+ * The user is always responsible for destroying the context.
  */
 ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname,
 					 struct ipmiconsole_ipmi_config *ipmi_config,
@@ -422,7 +424,9 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
 /* 
  * ipmiconsole_ctx_fd
  *
- * Returns a file descriptor for console reading and writing, -1 on error   
+ * Returns a file descriptor for console reading and writing, -1 on
+ * error.  The user is always responsible for closing this file
+ * descriptor.
  */
 int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
 
@@ -439,7 +443,7 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
  * ipmiconsole_ctx_destroy
  *
  * Destroy a context.  Note that this will always fail if the context
- * is still connected to a session.
+ * is still submitted to the engine and connected to a session.
  *
  * Returns 0 on success, -1 on error
  */

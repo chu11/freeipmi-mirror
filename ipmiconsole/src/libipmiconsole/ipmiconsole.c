@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.11 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.12 2007-06-28 22:16:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -552,6 +552,14 @@ ipmiconsole_ctx_create(char *hostname,
       goto cleanup;
     }
   c->session_submitted = 0;
+
+  if ((rv = pthread_mutex_init(&c->user_fd_retrieved_mutex, NULL)) != 0)
+    {
+      errno = rv;
+      goto cleanup;
+    }
+  c->user_fd_retrieved = 0;
+
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c;
 
@@ -641,6 +649,20 @@ ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
   
   if (_is_submitted(c) < 0)
     return -1;
+
+  if (pthread_mutex_lock(&(c->user_fd_retrieved_mutex)) != 0)
+    {
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
+  
+  c->user_fd_retrieved = 1;
+  
+  if (pthread_mutex_unlock(&(c->user_fd_retrieved_mutex)) != 0)
+    {
+      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      return -1;
+    }
 
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c->session.user_fd;

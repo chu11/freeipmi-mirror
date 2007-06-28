@@ -1,7 +1,10 @@
 2007-06-28  Albert Chu <chu11@llnl.gov>
 
-	* TODO: Update to list ipmiconsole needs blocking equivalents for
-	ipmiconsole_ctx_destroy() and ipmiconsole_engine_teardown().
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Add/fix comments
+	for clarification.
+
+	* ipmiconsole/src/libipmiconsole: Add flag to close the user_fd
+	within the library if it has never been retrieved by the user.
 	
 2007-06-27  Albert Chu <chu11@llnl.gov>
  

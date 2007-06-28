@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.10 2007-03-31 04:03:06 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.11 2007-06-28 22:16:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -122,14 +122,22 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
    * read() or EPIPE on a write() when reading/writing on their file
    * descriptor.  The user is then required to close that fd.
    * 
-   * However, we close it if this function is being called for when
-   * something failed during the setup.  We know it failed during
-   * setup if session_submitted is not set.
+   * However, we close it in this function if something failed during
+   * the setup or if the user can't close it b/c it has never been
+   * read (the user_fd_retrieved flag covers both these circumstances).
    */
-#if 0
-  if (!(c->session_submitted) && s->user_fd)
+
+  /* We have to cleanup, so continue on even if locking fails */
+
+  if ((rv = pthread_mutex_lock(&(c->user_fd_retrieved_mutex))))
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
+  if (!c->user_fd_retrieved && s->user_fd)
     close(s->user_fd);
-#endif
+
+  if ((rv = pthread_mutex_unlock(&(c->user_fd_retrieved_mutex))))
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
@@ -223,9 +231,6 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-
-  if (!(c->session_submitted) && s->user_fd)
-    close(s->user_fd);
 
   c->session_submitted = 0;
 
