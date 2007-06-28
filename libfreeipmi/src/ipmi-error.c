@@ -385,6 +385,22 @@ ipmi_strerror_r (uint8_t cmd,
         case IPMI_NET_FN_STORAGE_RS:
           switch(cmd)
             {
+            case IPMI_CMD_READ_FRU_DATA:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_FRU_DEVICE_BUSY:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_FRU_DEVICE_BUSY_STR);
+                }
+              break;
+            case IPMI_CMD_WRITE_FRU_DATA:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_WRITE_PROTECTED_OFFSET:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_WRITE_PROTECTED_OFFSET_STR);
+                case IPMI_COMP_CODE_FRU_DEVICE_BUSY:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_FRU_DEVICE_BUSY_STR);
+                }
+              break;
             case IPMI_CMD_GET_SEL_ENTRY:
               switch (comp_code)
                 {

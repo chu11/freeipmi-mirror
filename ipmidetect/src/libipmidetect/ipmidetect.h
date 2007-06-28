@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.h,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+ *  $Id: ipmidetect.h,v 1.1.8.1 2007-06-28 00:21:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -9,18 +9,18 @@
  *  This file is part of Ipmidetect, tools and libraries for detecting
  *  IPMI nodes in a cluster. For details, see http://www.llnl.gov/linux/.
  *
- *  Ipmiping is free software; you can redistribute it and/or modify
+ *  Ipmidetect is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2 of the License, or (at your
  *  option) any later version.
  *
- *  Ipmiping is distributed in the hope that it will be useful, but
+ *  Ipmidetect is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  *  for more details.
  *
  *  You should have received a copy of the GNU General Public License along
- *  with Ipmiping; if not, write to the Free Software Foundation, Inc.,
+ *  with Ipmidetect; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
 \*****************************************************************************/
 

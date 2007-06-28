@@ -72,7 +72,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #define GET_INT_VALUE_BY_KEY(__ctx, __cache_record, __key, __i) \
 do 							        \
   {							        \
-    if (_get_int_value_by_key (__ctx,                          \
+    if (_get_int_value_by_key (__ctx,                           \
                                __cache_record, 		        \
 			       __key, 			        \
 			       __i) < 0)      	                \
@@ -81,6 +81,20 @@ do 							        \
         goto cleanup;                                           \
       }							        \
   }                                                             \
+ while (0)
+
+#define GET_UINT_VALUE_BY_KEY(__ctx, __cache_record, __key, __i) \
+do 							         \
+  {							         \
+    if (_get_uint_value_by_key (__ctx,                           \
+                                __cache_record, 		 \
+	 		        __key, 			         \
+	 		        __i) < 0)      	                 \
+      {							         \
+        ctx->errnum = SDR_CACHE_CTX_ERR_CACHE_INVALID;           \
+        goto cleanup;                                            \
+      }							         \
+  }                                                              \
  while (0)
 
 #define GET_DOUBLE_VALUE_BY_KEY(__ctx, __cache_record, __key, __d) \
@@ -208,6 +222,40 @@ _get_int_value_by_key (sdr_cache_ctx_t ctx,
 }
 
 static int 
+_get_uint_value_by_key (sdr_cache_ctx_t ctx,
+                        char *cache_record, 
+                        char *key, 
+                        unsigned int *i)
+{
+  char *value_ptr = NULL;
+  int rv = -1;
+  
+  assert(ctx);
+  assert(ctx->magic == SDR_CACHE_CTX_MAGIC);
+  assert(cache_record);
+  assert(key);
+  assert(i);
+
+  if (_get_value_by_key (ctx,
+                         cache_record, 
+			 key, 
+			 &value_ptr) < 0)
+    goto cleanup;
+  
+  if (str2uint (value_ptr, 0, i) < 0)
+    {
+      ctx->errnum = SDR_CACHE_CTX_ERR_CACHE_INVALID;
+      goto cleanup;
+    }
+  
+  rv = 0;
+ cleanup:
+  if (value_ptr)
+    free (value_ptr);
+  return rv;
+}
+
+static int 
 _get_double_value_by_key (sdr_cache_ctx_t ctx,
                           char *cache_record, 
 			  char *key, 
@@ -293,14 +341,14 @@ sdr_cache_read_repository_info_timestamps (sdr_cache_ctx_t ctx,
 			"free_space", 
 			&(sdr_info->free_space));
 #endif
-  GET_INT_VALUE_BY_KEY (ctx,
-                        cache_record, 
-			"most_recent_addition_timestamp", 
-			(int *)addition_timestamp);
-  GET_INT_VALUE_BY_KEY (ctx,
-                        cache_record, 
-			"most_recent_erase_timestamp", 
-			(int *)erase_timestamp);
+  GET_UINT_VALUE_BY_KEY (ctx,
+                         cache_record, 
+                         "most_recent_addition_timestamp", 
+                         addition_timestamp);
+  GET_UINT_VALUE_BY_KEY (ctx,
+                         cache_record, 
+                         "most_recent_erase_timestamp", 
+                         erase_timestamp);
 #if 0
   GET_INT_VALUE_BY_KEY (ctx,
                         cache_record, 

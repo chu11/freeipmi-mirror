@@ -62,6 +62,8 @@ extern "C" {
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-chassis-boot-options-parameter-spec.h>
 #include <freeipmi/ipmi-device-global-cmds.h>
+#include <freeipmi/ipmi-fru-information-storage-definition.h>
+#include <freeipmi/ipmi-fru-inventory-device-cmds.h>
 #include <freeipmi/ipmi-lan-cmds.h>
 #include <freeipmi/ipmi-messaging-support-cmds.h>
 #include <freeipmi/ipmi-pef-and-alerting-cmds.h>

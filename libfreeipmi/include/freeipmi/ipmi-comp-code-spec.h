@@ -443,6 +443,21 @@ extern "C" {
    * FRU Device Commands
    */
 
+#define IPMI_COMP_CODE_WRITE_PROTECTED_OFFSET                             0x80
+#define IPMI_COMP_CODE_WRITE_PROTECTED_OFFSET_STR \
+"write-protected offset. Cannot complete write because one or more " \
+"bytes of FRU data are to a write-protected offset in the FRU device. " \
+"Note that an implementation may have allowed a 'partial write' of the " \
+"data to occur."
+
+#define IPMI_COMP_CODE_FRU_DEVICE_BUSY                                    0x81
+#define IPMI_COMP_CODE_FRU_DEVICE_BUSY_STR \
+"FRU device busy. The requested cannot be completed because the " \
+"implementation of the logical FRU device is in a state where the FRU " \
+"information is temporarily unavailable.  This could be due to a " \
+"condition such as a loss of arbitration if the FRU is implemented as a " \
+"device on a shared bus."
+
   /* 
    * SDR Device Commands
    */

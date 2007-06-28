@@ -1,29 +1,53 @@
-2007-XX-XX Albert Chu <chu11@llnl.gov>
+2007-06-27  Albert Chu <chu11@llnl.gov>
+ 
+	* ipmi-fru/: New project.
 
-	* libfreeipmi/include/freeipmi/udm/ipmi-messaging-support-cmds-udm.h,
-	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
-	(ipmi_cmd_get_channel_authentication_capabilities_v20): New
-	function.
+	* COPYING.ipmi-fru, DISCLAIMER.ipmi-fru: New files.
 
-	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
-	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband_2_0): New
-	function.
+	* libfreeipmi/include/freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h
+	libfreeipmi/include/freeipmi/ipmi-fru-inventory-device-cmds.h
+ 	libfreeipmi/include/freeipmi/ipmi-fru-information-storage-definition.h
+ 	libfreeipmi/src/udm/ipmi-fru-inventory-device-cmds-udm.c
+ 	libfreeipmi/src/ipmi-fru-inventory-device-cmds.c
+ 	libfreeipmi/src/ipmi-fru-information-storage-definition.c: New files.
 
-	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Support LAN 2.0
-	device type.
+	* configure.ac, Makefile.am, freeipmi.spec.in: Update
+	appropriately for new projct and new files.
 
-	* libfreeipmi/src/udm/ipmi-udm.c (_ipmi_outofband_2_0_free,
-	_ipmi_outofband_2_0_close, ): New functions.
+	* libfreeipmi/src/ipmi-error.c (ipmi_strerror_r),
+	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Add FRU
+	completion codes/strings.
+	
+2007-06-27 Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_cmd, ipmi_cmd_raw,
-	ipmi_close_device): Support LAN 2.0 device.
+	* libfreeipmi/src/ipmi-lan.c,
+	libfreeipmi/include/freeipmi/ipmi-lan.h (fill_lan_session_hdr):
+	Rename inbound_sequence_number to session_sequence_number for
+	consistency.
 
-	* libfreeipmi/src/udm/ipmi-udm-device.h: Add support for IPMI 2.0 in udm.
+	* ipmidetect/ipmidetectd.8.in: Fix typos from manpage cut and
+	paste.
 
-	* libfreeipmi/include/freeipmi/udm/ipmi-lan-interface-udm.h,
-	libfreeipmi/src/udm/ipmi-lan-interface-udm.c
-	(ipmi_lan_2_0_open_session, ipmi_lan_2_0_close_session,
-	ipmi_lan_2_0_cmd, ipmi_lan_2_0_cmd_raw): New functions.
+	* ipmidetect/: Fix cut and paste typo in GPL release headers.
+
+2007-06-26 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(ipmi_lan_open_session): Call get authentication capabilities with
+	configured privilege, not user.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd_raw):
+	Add forgotten permsgauth support.  Move sequence number increments
+	to cleanup section.
+	
+2007-06-25 Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sdr-cache-reads.c (GET_UINT_VALUE_BY_KEY,
+	_get_uint_value_by_key): New macros/functions.
+
+	* common/src/ipmi-sdr-cache-reads.c
+	(sdr_cache_read_repository_info_timestamp): Read 32 bit fields w/
+	uint not int.
 	
 2007-06-20 Albert Chu <chu11@llnl.gov>
 
@@ -47,6 +71,9 @@
 	(ipmi_lan_open_session, ipmi_lan_close_session): Move to
 	libfreeipmi/src/udm/ipmi-lan-interface-udm.c.  Re-work to use
 	modified new API in ipmi-messaging-support-cmds-udm.[ch].
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h (ipmi_open_inband,
+	ipmi_open_outofband): Add missing parameter name.
 
 	* Fix minor code comment typos.
 

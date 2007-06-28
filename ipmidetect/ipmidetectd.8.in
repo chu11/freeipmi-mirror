@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmidetectd.8.in,v 1.2 2007-04-26 21:28:23 chu11 Exp $
+\."$Id: ipmidetectd.8.in,v 1.2.8.1 2007-06-28 00:21:45 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -23,11 +23,11 @@
 \."  with Ipmidetect; if not, write to the Free Software Foundation, Inc.,
 \."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
 \."#############################################################################
-.TH pingd 8 "February 2007" "pingd @VERSION@" pingd
+.TH ipmidetectd 8 "February 2007" "ipmidetectd @VERSION@" ipmidetectd
 .SH "NAME"
 ipmidetectd \- IPMI node detection monitoring daemon
 .SH "SYNOPSIS"
-.B pingd [OPTIONS]
+.B ipmidetectd [OPTIONS]
 .br
 .SH "DESCRIPTION"
 The
@@ -68,7 +68,7 @@ Turn on debugging and run daemon in foreground
 \}
 
 .SH "FILES"
-@PINGD_CONF_FILE@
+@IPMIDETECTD_CONF_FILE@
 .SH "ORIGIN"
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
 .SH "SEE ALSO"
