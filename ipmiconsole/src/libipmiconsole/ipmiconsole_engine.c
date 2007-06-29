@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.12 2007-06-29 23:09:17 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.13 2007-06-29 23:25:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1277,7 +1277,7 @@ _ipmiconsole_engine(void *arg)
           goto continue_loop;
         }
 
-      if (poll(poll_data.pfds, (poll_data.ctxs_len * 3), timeout_len) < 0)
+      if (poll(poll_data.pfds, (poll_data.ctxs_len * 3) + 1, timeout_len) < 0)
         {
           IPMICONSOLE_DEBUG(("poll: %s", strerror(errno)));
           goto continue_loop;

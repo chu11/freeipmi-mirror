@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.14 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.15 2007-06-29 23:25:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -473,23 +473,33 @@ main(int argc, char **argv)
     }
 
  cleanup:
+#if 0
   if (fd >= 0)
     {
       printf("\r\n[closing the connection]\r\n");
       close(fd);
     }
+#endif
+  printf("\r\ntime = %u\r\n", time(NULL));
+  ipmiconsole_engine_teardown();
+  printf("\r\ntime = %u\r\n", time(NULL));
   if (c)
     {
       while (1)
         {
           if (ipmiconsole_ctx_destroy(c) < 0)
-	    /* Wait a little bit then try again */
-	    sleep(1);
+            {
+              /* Wait a little bit then try again */
+              printf("\r\nSLEEP\r\n");
+              sleep(1);
+            }
           else
-            break;
+            {
+              printf("\r\nOUT\r\n");
+              break;
+            }
         }
     }
-  ipmiconsole_engine_teardown();
 
 #ifndef NDEBUG
   if (!conf->noraw)
