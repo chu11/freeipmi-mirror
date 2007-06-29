@@ -8,11 +8,11 @@
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
 	(_poll_setup, _ipmiconsole_engine): Re-arch teardown to be quicker
-	by starting the teardown
+	by initializing close_session prior to the processing of contexts.
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c: Support
 	console_engine_ctxs_notifier pipes.  Allows for the engine poll()
-	call to be "interrupted" is engine can react more quickly to 
+	call to be "interrupted" so engine can react more quickly to 
 	calls from user space.
 		
 2007-06-28  Albert Chu <chu11@llnl.gov>
