@@ -1,3 +1,20 @@
+2007-06-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(ipmiconsole_engine_setup): Fix bad debug output corner case.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_teardown_initiate): New function.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_poll_setup, _ipmiconsole_engine): Re-arch teardown to be quicker
+	by starting the teardown
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c: Support
+	console_engine_ctxs_notifier pipes.  Allows for the engine poll()
+	call to be "interrupted" is engine can react more quickly to 
+	calls from user space.
+		
 2007-06-28  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Add/fix comments
