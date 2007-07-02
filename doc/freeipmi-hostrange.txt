@@ -191,13 +191,13 @@ cluster and removes the advantages that IPMI over LAN does not
 interrupt a CPU.
 
 Starting with FreeIPMI 0.4.0 hostrange support has been added into
-ipmi-raw, ipmi-sensors, ipmi-sel, bmc-info, and ipmimonitoring (it has
-existed in ipmipower since 0.1.0).  More than one node at a time can
-be specified on the command line using the hostrange format similar in
-pdsh.  Using a threaded model similar to pdsh, each of the tools will
-create a sliding-window of threads, each executing out-of-band IPMI in
-parallel.  The number of threads in the window can be increased or
-decreased using the fanout -F option.
+ipmi-chassis, ipmi-fru, ipmi-raw, ipmi-sensors, ipmi-sel, bmc-info,
+and ipmimonitoring (it has existed in ipmipower since 0.1.0).  More
+than one node at a time can be specified on the command line using the
+hostrange format similar in pdsh.  Using a threaded model similar to
+pdsh, each of the tools will create a sliding-window of threads, each
+executing out-of-band IPMI in parallel.  The number of threads in the
+window can be increased or decreased using the fanout -F option.
 
 The tools now have similar functionality to pdsh, but all of the IPMI
 communication is done out-of-band.  Ipmipower, which supported
@@ -408,12 +408,6 @@ I imagine many users will want to run ipmimonitoring with the default
 output (each line of output is prepended with "hostname: ").  In this
 mode, you can easily grep for "Warning" and "Critical" and determine
 which nodes have problems via scripts.
-
-ipmipower:
-
-Since each line of output is guaranteed to be only 1 line long, the
-default output (output prefixed with "hostname: ") is probably
-sufficient.
 
 4) Exceptions to the hostrange support in FreeIPMI
 --------------------------------------------------

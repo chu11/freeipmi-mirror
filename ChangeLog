@@ -1,9 +1,14 @@
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.texi, doc/freeipmi-hostrange.txt: Update w/
+	some forgotten 0.4.0 stuff.
+
+2007-07-02  Albert Chu <chu11@llnl.gov>
+
         * freeipmi.spec.in: Fix URL for release.
 
-        * Tagged Release-0_4_0_beta0
-	
+        * Tagged Release-0_4_0_beta0	
+
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
 	* Tagged Release-0_4_0_base.
