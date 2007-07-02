@@ -1,5 +1,11 @@
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
+        * freeipmi.spec.in: Fix URL for release.
+
+        * Tagged Release-0_4_0_beta0
+	
+2007-07-02  Albert Chu <chu11@llnl.gov>
+
 	* Tagged Release-0_4_0_base.
 
 	* Branched Release-0_4_0_branch.
