@@ -443,34 +443,3 @@ struct packet
 
 cannot be used.
 
-7) Bmc-Config/Pef-Config callback design
-----------------------------------------
-
-Bmc-config and pef-config are coded with a archicture that
-reads/writes each configurable field in the BMC separately.
-
-As an example, suppose we have the following BMC configuration file
-we'd like to commit.
-
-FieldA       Value1
-FieldB.1     Value2
-FieldB.2     Value3
-FieldB.3     Value4
-FieldB.4     Value5
-
-Suppose FieldA is read/written using a single IPMI packet and fields
-FieldB.1-FieldB.4 can be read/written using a single IPMI packet.
-
-In the architecture that Bmc-config is currently based on, the above
-would require 5 read requests to read all 5 values.  It would require
-4 read requests (for FieldB.1-FieldB.4) and 5 write requests to write
-the values.
-
-Obviously, this sounds like (and is!) very inefficient and leads to an
-excessive amount code duplication that shouldn't be necessary.  The
-authors acknowledge that a new design should be implemented into
-bmc-config and pef-config.  This design was selected early on b/c most
-configurable values (username, password, ip address, mac address,
-etc.) were like 'FieldA'.  Each read/write of a field was a single
-IPMI command.  However, as time has gone on, its now clear that the
-majority of configurable values are more like FieldB.1-FieldB.4.
