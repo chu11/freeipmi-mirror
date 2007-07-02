@@ -1,5 +1,10 @@
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.texi, doc/freeipmi-hostrange.txt: Update w/
+	some forgotten 0.4.0 stuff.
+	
+2007-07-02  Albert Chu <chu11@llnl.gov>
+
 	* Tagged Release-0_4_0_base.
 
 	* Branched Release-0_4_0_branch.
