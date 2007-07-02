@@ -1,5 +1,11 @@
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
+	* Tagged Release-0_4_0_base.
+
+	* Branched Release-0_4_0_branch.
+
+2007-07-02  Albert Chu <chu11@llnl.gov>
+
 	* configure.ac: Update version for release.
 	
 2007-06-29  Albert Chu <chu11@llnl.gov>
