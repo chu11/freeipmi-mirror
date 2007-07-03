@@ -67,6 +67,7 @@ ipmi_device_open(const char *progname,
       goto cleanup;
     }
 
+  /* XXX UDM_2_0 - need to do driver check LAN vs. LANPLUS */
   if (hostname && strcmp(hostname, "localhost") != 0)
     {
       if (ipmi_open_outofband (dev,

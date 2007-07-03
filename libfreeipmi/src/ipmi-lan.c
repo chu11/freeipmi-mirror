@@ -34,6 +34,7 @@
 #include "freeipmi/ipmi-lan.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-slave-address-spec.h"
 #include "freeipmi/ipmi-utils.h"
@@ -173,7 +174,7 @@ _ipmi_lan_pkt_rq_min_size(uint8_t authentication_type, fiid_obj_t obj_cmd)
       || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
       || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
       || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP) 
-    msg_len += IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
+    msg_len += IPMI_1_5_MAX_PASSWORD_LENGTH;
   
   FIID_TEMPLATE_FIELD_LEN_BYTES (len,
 				 tmpl_lan_session_hdr,
@@ -219,7 +220,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   int32_t len, req_len;
   uint8_t ipmi_msg_len;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  uint8_t pwbuf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
+  uint8_t pwbuf[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t checksum;
   int32_t rv = -1;
 
@@ -227,7 +228,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 	      && fiid_obj_valid(obj_lan_session_hdr) 
 	      && fiid_obj_valid(obj_lan_msg_hdr) 
 	      && fiid_obj_valid(obj_cmd) 
-	      && !(authentication_code_data && authentication_code_data_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+	      && !(authentication_code_data && authentication_code_data_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
 	      && pkt);
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
@@ -283,7 +284,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
       authentication_code_field_ptr = (pkt + indx); 
-      indx += IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
+      indx += IPMI_1_5_MAX_PASSWORD_LENGTH;
     }
   
   ipmi_msg_len_ptr = (pkt + indx);
@@ -345,7 +346,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
     {     
       int32_t authentication_len;
       
-      memset(pwbuf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+      memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
 	  
       FIID_OBJ_FIELD_LEN_BYTES_CLEANUP(authentication_len,
 				       obj_lan_session_hdr,
@@ -356,11 +357,11 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 	  FIID_OBJ_GET_DATA_CLEANUP (obj_lan_session_hdr, 
 				     "authentication_code",
 				     pwbuf,
-				     IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+				     IPMI_1_5_MAX_PASSWORD_LENGTH);
 
           memcpy (authentication_code_field_ptr,
 		  pwbuf,
-		  IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  IPMI_1_5_MAX_PASSWORD_LENGTH);
 	}
       else
 	{
@@ -373,7 +374,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 	    {	 
 	      memcpy (authentication_code_field_ptr,
 		      pwbuf,
-		      IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		      IPMI_1_5_MAX_PASSWORD_LENGTH);
 	    }
 	  else /* IPMI_AUTHENTICATION_TYPE_MD2 || IPMI_AUTHENTICATION_TYPE_MD5 */
 	    {
@@ -398,18 +399,18 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md2_t ctx;
 		  uint8_t digest[MD2_DIGEST_LENGTH];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LENGTH);
+		  ERR_EXIT(IPMI_1_5_MAX_PASSWORD_LENGTH == MD2_DIGEST_LENGTH);
 		  
 		  md2_init(&ctx);
-		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md2_update_data(&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
 		  md2_update_data(&ctx, session_id_buf, session_id_len);
 		  md2_update_data(&ctx, msg_data_ptr, msg_data_count);
 		  md2_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
-		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md2_update_data(&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
 		  md2_finish(&ctx, digest, MD2_DIGEST_LENGTH);
 		  md2_init(&ctx);
 		  
-		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
 		  guaranteed_memset(digest, '\0', MD2_DIGEST_LENGTH);
 		}
 	      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
@@ -417,18 +418,18 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md5_t ctx;
 		  uint8_t digest[MD5_DIGEST_LENGTH];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LENGTH);
+		  ERR_EXIT(IPMI_1_5_MAX_PASSWORD_LENGTH == MD5_DIGEST_LENGTH);
 		  
 		  md5_init(&ctx);
-		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md5_update_data(&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
 		  md5_update_data(&ctx, session_id_buf, session_id_len);
 		  md5_update_data(&ctx, msg_data_ptr, msg_data_count);
 		  md5_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
-		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md5_update_data(&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
 		  md5_finish(&ctx, digest, MD5_DIGEST_LENGTH);
 		  md5_init(&ctx);
 		  
-		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
 		  guaranteed_memset(digest, '\0', MD5_DIGEST_LENGTH);
 		}
 	    }
@@ -440,7 +441,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   if (rv < 0)
     guaranteed_memset(pkt, '\0', pkt_len);
   FIID_OBJ_DESTROY(obj_lan_msg_trlr);
-  guaranteed_memset(pwbuf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+  guaranteed_memset(pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   return rv;
 }
 

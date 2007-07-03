@@ -219,7 +219,8 @@ common_parse_opt (int key,
         }
       break;
     case PASSWORD_KEY:
-      if (arg && strlen (arg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+      /* XXX UDM_2_0 - need to do post check, dependent on LAN or LANPLUS driver chosen */
+      if (arg && strlen (arg) > IPMI_1_5_MAX_PASSWORD_LENGTH)
 	argp_usage (state);
       else 
 	{
@@ -241,8 +242,9 @@ common_parse_opt (int key,
     case PASSWORD_PROMPT_KEY:
       if (cmd_args->password != NULL)
         free (cmd_args->password);
+      /* XXX UDM_2_0 - need to do post check, dependent on LAN or LANPLUS driver chosen */
       arg = getpass ("Password: ");
-      if (arg && strlen (arg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+      if (arg && strlen (arg) > IPMI_1_5_MAX_PASSWORD_LENGTH)
         argp_usage (state);
       if (!(cmd_args->password = strdup (arg)))
         {

@@ -137,12 +137,12 @@ set_bmc_enable_user (bmc_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
+  uint8_t password[IPMI_1_5_MAX_PASSWORD_LENGTH];
   int8_t ret, rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
-  memset (password, 0, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+  memset (password, 0, IPMI_1_5_MAX_PASSWORD_LENGTH);
 
   if (ipmi_cmd_set_user_password (state_data->dev, 
                                   userid, 
