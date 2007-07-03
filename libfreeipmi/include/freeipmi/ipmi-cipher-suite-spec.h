@@ -110,8 +110,9 @@ extern fiid_template_t tmpl_oem_cipher_suite_record;
 	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
 		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)))) ? 1 : 0)
 
+/* To avoid gcc warnings, added +1 in comparison */
 #define IPMI_CIPHER_SUITE_ID_SUPPORTED(__id) \
-   ((((__id) >= 0 && (__id) <= 3) \
+   ((((__id + 1) >= (0 + 1) && (__id) <= 3) \
      || ((__id) >= 6 && (__id) <= 8) \
      || ((__id) >= 11 && (__id) <= 12)) ? 1 : 0)
 

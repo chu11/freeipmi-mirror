@@ -9,6 +9,9 @@
 	(__UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM): Remove
 	IPMI_ERR_BAD_COMPLETION_CODE_NODE_BUSY completion code.  Replace
 	with more generic IPMI_ERR_BMC_BUSY error code.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h
+	(IPMI_CIPHER_SUITE_ID_SUPPORTED): Fix warning.
 	
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
