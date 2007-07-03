@@ -2,6 +2,13 @@
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd,
 	ipmi_lan_cmd_raw): Fix return code bug.
+
+	* libfreeipmi/src/udm/ipmi-udm.c,
+	libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	common/src/udm-err-wrappers.h
+	(__UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM): Remove
+	IPMI_ERR_BAD_COMPLETION_CODE_NODE_BUSY completion code.  Replace
+	with more generic IPMI_ERR_BMC_BUSY error code.
 	
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
