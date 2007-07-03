@@ -1,3 +1,8 @@
+2007-07-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd,
+	ipmi_lan_cmd_raw): Fix return code bug.
+	
 2007-07-02  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi, doc/freeipmi-hostrange.txt: Update w/
