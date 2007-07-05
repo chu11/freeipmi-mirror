@@ -204,6 +204,28 @@ do {                                                                         \
       }                                                                      \
 } while (0)
 
+#define UDM_FIID_OBJ_GET_DATA_LEN(__len, __obj, __field, __data, __data_len)            \
+do {                                                                                    \
+    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
+      {                                                                                 \
+         __FIID_OBJ_SYSLOG((__obj));                                                    \
+         __FIID_OBJ_TRACE((__obj));                                                     \
+         __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                            \
+         return (-1);                                                                   \
+      }                                                                                 \
+} while (0)
+
+#define UDM_FIID_OBJ_GET_DATA_LEN_CLEANUP(__len, __obj, __field, __data, __data_len)    \
+do {                                                                                    \
+    if (((__len) = fiid_obj_get_data ((__obj), (__field), (__data), (__data_len))) < 0) \
+      {                                                                                 \
+         __FIID_OBJ_SYSLOG((__obj));                                                    \
+         __FIID_OBJ_TRACE((__obj));                                                     \
+         __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                            \
+         goto cleanup;                                                                  \
+      }                                                                                 \
+} while (0)
+
 #define UDM_FIID_OBJ_SET_ALL(__obj, __data, __data_len)                     \
 do {                                                                        \
     if (fiid_obj_set_all ((__obj), (__data), (__data_len)) < 0)             \
