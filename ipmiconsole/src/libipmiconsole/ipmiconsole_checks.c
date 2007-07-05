@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.3 2007-05-24 14:34:14 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.4 2007-07-05 17:07:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -806,11 +806,12 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 							    managed_system_random_number,
 							    IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
     return -1;
+
+  /* If this isn't the correct length, consider it a failed authentication code check and return 0 */
   if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system random number length: %d", managed_system_random_number_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
-      return -1;
+      return 0;
     }
 
   if ((managed_system_guid_len = Fiid_obj_get_data(c,
@@ -819,11 +820,12 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 						   managed_system_guid,
 						   IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
     return -1;
+
+  /* If this isn't the correct length, consider it a failed authentication code check and return 0 */
   if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
-      return -1;
+      return 0;
     }
   
   if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(s->authentication_algorithm,
