@@ -1,9 +1,3 @@
-2007-07-05  Albert Chu <chu11@llnl.gov>
-
-	* ipmiconsole/src/libipmiconsole/ipmiconsole_checks.c
-	(ipmiconsole_check_rakp_2_key_exchange_authentication_code):
-	Change error code under a few conditions.
-	
 2007-07-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd,
