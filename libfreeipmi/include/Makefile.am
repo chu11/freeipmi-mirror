@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.20.2.1 2007-06-28 00:21:46 chu11 Exp $
+## $Id: Makefile.am,v 1.20.2.2 2007-07-06 00:10:34 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -60,10 +60,6 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-chassis-boot-options-parameter-spec.h \
 	freeipmi/udm/udm.h \
 	freeipmi/udm/ipmi-udm.h \
-	freeipmi/udm/ipmi-kcs-api-udm.h \
-	freeipmi/udm/ipmi-lan-interface-udm.h \
-	freeipmi/udm/ipmi-openipmi-api-udm.h \
-	freeipmi/udm/ipmi-ssif-api-udm.h \
 	freeipmi/udm/ipmi-chassis-cmds-udm.h \
 	freeipmi/udm/ipmi-device-global-cmds-udm.h \
 	freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h \
