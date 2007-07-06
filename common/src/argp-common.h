@@ -26,6 +26,7 @@
 
 #include <argp.h>
 
+#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/udm/ipmi-udm.h"
 
 enum argp_common_option_keys
@@ -42,7 +43,10 @@ enum argp_common_option_keys
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
     PASSWORD_PROMPT_KEY = 'P',
+    K_G_KEY = 'k', 
+    K_G_PROMPT_KEY = 'K',
     AUTHENTICATION_TYPE_KEY = 'a', 
+    CIPHER_SUITE_ID_KEY = 'I',
     PRIVILEGE_LEVEL_KEY = 'l',
     FLUSH_CACHE_KEY = 'f',
     QUIET_CACHE_KEY = 'Q',
@@ -54,30 +58,20 @@ enum argp_common_option_keys
     DEBUG_KEY = 136
   };
 
+#define ARGP_COMMON_OPTIONS_DRIVER                                          \
+    {"driver-type",    DRIVER_TYPE_KEY, "IPMIDRIVER", 0, 	            \
+     "Use this IPMIDRIVER instead of auto selection.  "		            \
+     "Allowed values are LAN, LAN_2_0, KCS, SMIC, SSIF, and OPENIPMI.", 0}  \
+
 #define ARGP_COMMON_OPTIONS_INBAND                                         \
     {"no-probing",     NO_PROBING_KEY, 0, 0, 	                           \
-     "Do not probe IPMI devices.", 0},		                           \
-    {"driver-type",    DRIVER_TYPE_KEY, "IPMIDRIVER", 0, 	           \
-     "Use this IPMIDRIVER instead of auto selection.  "		           \
-     "Allowed values are KCS, SMIC, SSIF, LAN, and OPENIPMI.", 1},         \
+     "Do not probe IPMI devices.", 1},		                           \
     {"driver-address", DRIVER_ADDRESS_KEY, "DRIVERADDR", 0,                \
      "Use this DRIVERADDR address instead of probed one.", 2}, 	           \
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
      "Use this DEVICE for IPMI driver.", 3},                               \
     {"register-spacing", REGISTER_SPACING_KEY, "REGISTERSPACING", 0,       \
      "Use this REGISTERSPACING instead of the probed one", 4}
-
-#define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                      \
-    {"username",       USERNAME_KEY, "USERNAME", 0, 			          \
-     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 6},         \
-    {"password",       PASSWORD_KEY, "PASSWORD", 0,	                          \
-     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 7},         \
-    {"password-prompt", PASSWORD_PROMPT_KEY, 0, 0,	                          \
-     "Prompt for PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 8},  \
-    {"retry-timeout", RETRY_TIMEOUT_KEY, "RETRY_TIMEOUT", 0,                      \
-     "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 9},         \
-    {"session-timeout", SESSION_TIMEOUT_KEY, "SESSION_TIMEOUT", 0,                \
-     "Use SESSION_TIMEOUT milliseconds before ending a session.", 10}
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                             \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			          \
@@ -89,52 +83,73 @@ enum argp_common_option_keys
      "Connect to IPMIHOST.  IPMIHOST may include host ranges", 5},                \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
+#define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                      \
+    {"username",       USERNAME_KEY, "USERNAME", 0, 			          \
+     "Use USERNAME instead of NULL.", 6},                                         \
+    {"password",       PASSWORD_KEY, "PASSWORD", 0,	                          \
+     "Use PASSWORD instead of NULL.", 7},                                         \
+    {"password-prompt", PASSWORD_PROMPT_KEY, 0, 0,	                          \
+     "Prompt for PASSWORD instead of NULL.", 8},                                  \
+    {"k-g",       K_G_KEY, "K_G", 0,	                                          \
+     "Use K_G key instead of NULL.", 9},                                          \
+    {"k-g-prompt", K_G_PROMPT_KEY, 0, 0,	                                  \
+     "Prompt for K_G instead of NULL.", 10},                                      \
+    {"retry-timeout", RETRY_TIMEOUT_KEY, "RETRY_TIMEOUT", 0,                      \
+     "Use RETRY_TIMEOUT milliseconds before re-sending LAN packets.", 11},        \
+    {"session-timeout", SESSION_TIMEOUT_KEY, "SESSION_TIMEOUT", 0,                \
+     "Use SESSION_TIMEOUT milliseconds before ending a session.", 12}
+
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
     {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 		   \
      "Use AUTHTYPE instead of MD5.  "				           \
-     "Allowed values are NONE, MD2, MD5, and PLAIN.", 11}	           \
+     "Allowed values are NONE, MD2, MD5, and PLAIN.", 12}	           \
+
+#define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                \
+    {"cipher-suite-id",      CIPHER_SUITE_ID_KEY, "CIPHER_SUITE_ID", 0,    \
+     "Use CIPHER_SUITE_ID instead of 3.  "				   \
+     "Allowed values are 0, 1, 2, 3, 6, 7, 8, 11, 12.", 13}	           \
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL_USER                                 \
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
-     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 12}     
+     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 14}     
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN                                \
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of ADMIN.  "		           \
-     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 12}     
+     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 15}     
 
 #define ARGP_COMMON_SDR_OPTIONS                                            \
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,                                \
-     "Flush sensor SDR cache.", 13},                                       \
+     "Flush sensor SDR cache.", 16},                                       \
     {"quiet-cache", QUIET_CACHE_KEY,  0, 0,                                \
-     "Do not output cache creation information.", 14},                     \
+     "Do not output cache creation information.", 17},                     \
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0,             \
-     "Use DIRECTORY for sensor cache.", 15} 
+     "Use DIRECTORY for sensor cache.", 18} 
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
     {"buffer-output", BUFFER_KEY, 0, 0,                                    \
-      "Buffer hostranged output.", 16},                                    \
+      "Buffer hostranged output.", 19},                                    \
     {"consolidate-output", CONSOLIDATE_KEY, 0, 0,                          \
-     "Consolidate hostranged output.", 17},                                \
+     "Consolidate hostranged output.", 20},                                \
     {"fanout", FANOUT_KEY, "NUM", 0,                                       \
-     "Set multiple host fanout.", 18},                                     \
+     "Set multiple host fanout.", 21},                                     \
     {"eliminate", ELIMINATE_KEY, 0, 0,                                     \
-     "Eliminate undetected nodes.", 19}
+     "Eliminate undetected nodes.", 22}
 
 #ifndef NDEBUG
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     DEBUG_KEY, 0, 0, 	                                   \
-     "Turn on debugging.", 20}                                             
+     "Turn on debugging.", 23}                                             
 
 #endif
 
 
 struct common_cmd_args 
 {
-  int disable_auto_probe;
   ipmi_driver_type_t driver_type;
+  int disable_auto_probe;
   unsigned int driver_address;
   char *driver_device;
   unsigned int register_spacing;
@@ -143,7 +158,10 @@ struct common_cmd_args
   char *host;
   char *username;
   char *password;
+  char k_g[IPMI_MAX_K_G_LENGTH];
+  int k_g_configured;
   int authentication_type;
+  int cipher_suite_id;
   int privilege_level;
 #ifndef NDEBUG
   int debug;

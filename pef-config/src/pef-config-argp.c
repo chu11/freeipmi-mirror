@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4 2007-06-02 17:17:39 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4.4.1 2007-07-06 17:49:56 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -61,6 +61,7 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHTYPE,
@@ -69,21 +70,21 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
 #endif /* NDEBUG */
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about PEF configuration.", 21},
+     "Show general information about PEF configuration.", 24},
     {"checkout",   CHECKOUT_KEY,   0, 0,
-     "Action is to GET the PEF configuration", 22},
+     "Action is to GET the PEF configuration", 25},
     {"commit",     COMMIT_KEY,     0, 0,
-     "Action is to UPDATE the PEF configuration", 23},
+     "Action is to UPDATE the PEF configuration", 26},
     {"diff",       DIFF_KEY,       0, 0,
-     "Action is to SHOW THE DIFFERENCES with BMC", 24},
+     "Action is to SHOW THE DIFFERENCES with BMC", 27},
     {"listsections", LIST_SECTIONS_KEY, 0, 0,
-     "List available sections for checkout", 25},
+     "List available sections for checkout", 28},
     {"verbose", VERBOSE_KEY, 0, 0,  
-     "Produce verbose output", 26},
+     "Produce verbose output", 29},
     {"filename", FILENAME_KEY, "FILENAME", 0,
-     "use FILENAME in checkout or commit", 27},
+     "use FILENAME in checkout or commit", 30},
     {"section", SECTIONS_KEY, "SECTION", 0,
-     "use SECTION in checkout", 28},
+     "use SECTION in checkout", 31},
     { 0 }
   };
 

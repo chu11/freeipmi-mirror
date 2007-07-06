@@ -14,3 +14,10 @@ length is 16.
 \fB\-P\fR, \fB\-\-password-prompt\fR
 Prompt for password to avoid possibility of listing
 it in process lists.
+.TP
+\fB\-k\fR, \fB\-\-k-g\fR=\fIK_G\fR
+Use K_G instead of NULL.  
+.TP
+\fB\-K\fR, \fB\-\-k-g-prompt\fR
+Prompt for k-g to avoid possibility of listing
+it in process lists.

@@ -1,8 +1,10 @@
 EXTRA_DIST = \
+	argp-common-driver.man \
 	argp-common-inband.man \
 	argp-common-outofband.man \
 	argp-common-outofband-hostranged.man \
 	argp-common-authtype.man \
+	argp-common-ciphersuiteid.man \
 	argp-common-privlevel-user.man \
 	argp-common-privlevel-admin.man \
 	argp-common-debug.man \
@@ -10,5 +12,3 @@ EXTRA_DIST = \
 	argp-common-hostranged-options.man \
 	argp-common-hostranged-text.man \
 	argp-common-sdr-options.man
-
-	

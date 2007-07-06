@@ -3,8 +3,7 @@
 Connect to IPMIHOST.
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
-Use USERNAME instead of NULL.  Maximum USERNAME
-length is 16.
+Use USERNAME instead of NULL.  
 .TP
 \fB\-p\fR, \fB\-\-password\fR=\fIPASSWORD\fR
 Use PASSWORD instead of NULL.  Maximum PASSWORD
@@ -12,4 +11,11 @@ length is 16.
 .TP
 \fB\-P\fR, \fB\-\-password-prompt\fR
 Prompt for password to avoid possibility of listing
+it in process lists.
+.TP
+\fB\-k\fR, \fB\-\-k-g\fR=\fIK_G\fR
+Use K_G instead of NULL.  
+.TP
+\fB\-K\fR, \fB\-\-k-g-prompt\fR
+Prompt for k-g to avoid possibility of listing
 it in process lists.

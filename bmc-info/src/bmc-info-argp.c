@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.11 2007-06-01 04:35:05 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.11.4.1 2007-07-06 17:49:53 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -51,9 +51,11 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHTYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
 #ifndef NDEBUG

@@ -36,11 +36,13 @@
 #include <argp.h>
 
 #include "freeipmi/ipmi-authentication-type-spec.h"
+#include "freeipmi/ipmi-cipher-suite-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 
 #include "argp-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
+#include "tool-common.h"
 
 /* From David Wheeler's Secure Programming Guide */
 static void *
@@ -66,44 +68,29 @@ common_parse_opt (int key,
 {
   switch (key)
     {
+    case DRIVER_TYPE_KEY: 
+      if (strcasecmp (arg, "lan") == 0)
+        cmd_args->driver_type = IPMI_DEVICE_LAN;
+      else if (strcasecmp (arg, "lan_2_0") == 0)
+        cmd_args->driver_type = IPMI_DEVICE_LAN_2_0;
+      else if (strcasecmp (arg, "kcs") == 0)
+        cmd_args->driver_type = IPMI_DEVICE_KCS;
+      else if (strcasecmp (arg, "smic") == 0)
+        cmd_args->driver_type = IPMI_DEVICE_SMIC;
+      else if (strcasecmp (arg, "bt") == 0)
+        cmd_args->driver_type = IPMI_DEVICE_BT;
+      else if (strcasecmp (arg, "ssif") == 0)
+        cmd_args->driver_type = IPMI_DEVICE_SSIF;
+      else if (strcasecmp (arg, "openipmi") == 0)
+        cmd_args->driver_type = IPMI_DEVICE_OPENIPMI;
+      else 
+        {
+          fprintf(stderr, "invalid driver type specified\n");
+          argp_usage (state);
+        }
+      break;
     case NO_PROBING_KEY:
       cmd_args->disable_auto_probe = 1;
-      break;
-    case DRIVER_TYPE_KEY: /* values 1,2,3,4,5 = lan,kcs,smic,bt.ssif */
-      if (strcasecmp (arg, "lan") == 0)
-	{
-	  cmd_args->driver_type = IPMI_DEVICE_LAN;
-	}
-      else 
-	if (strcasecmp (arg, "kcs") == 0)
-	  {
-	    cmd_args->driver_type = IPMI_DEVICE_KCS;
-	  }
-	else 
-	  if (strcasecmp (arg, "smic") == 0)
-	    {
-	      cmd_args->driver_type = IPMI_DEVICE_SMIC;
-	    }
-	  else 
-	    if (strcasecmp (arg, "bt") == 0)
-	      {
-		cmd_args->driver_type = IPMI_DEVICE_BT;
-	      }
-	    else 
-	      if (strcasecmp (arg, "ssif") == 0)
-		{
-		  cmd_args->driver_type = IPMI_DEVICE_SSIF;
-		}
-	      else 
-		if (strcasecmp (arg, "openipmi") == 0)
-		  {
-		    cmd_args->driver_type = IPMI_DEVICE_OPENIPMI;
-		  }
-		else
-		  {
-		    fprintf(stderr, "invalid driver type specified\n");
-		    argp_usage (state);
-		  }
       break;
     case DRIVER_ADDRESS_KEY:
       {
@@ -200,7 +187,10 @@ common_parse_opt (int key,
       break;
     case USERNAME_KEY:
       if (strlen (arg) > IPMI_MAX_USER_NAME_LENGTH)
-	argp_usage (state);
+        {
+          fprintf (stderr, "username too long\n");
+          argp_usage (state);
+        }
       else 
 	{
 	  if (cmd_args->username != NULL)
@@ -219,9 +209,11 @@ common_parse_opt (int key,
         }
       break;
     case PASSWORD_KEY:
-      /* XXX UDM_2_0 - need to do post check, dependent on LAN or LANPLUS driver chosen */
-      if (arg && strlen (arg) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-	argp_usage (state);
+      if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+        {
+          fprintf (stderr, "password too long\n");
+          argp_usage (state);
+        }
       else 
 	{
 	  if (cmd_args->password != NULL)
@@ -242,15 +234,63 @@ common_parse_opt (int key,
     case PASSWORD_PROMPT_KEY:
       if (cmd_args->password != NULL)
         free (cmd_args->password);
-      /* XXX UDM_2_0 - need to do post check, dependent on LAN or LANPLUS driver chosen */
       arg = getpass ("Password: ");
-      if (arg && strlen (arg) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-        argp_usage (state);
+      if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+        {
+          fprintf (stderr, "password too long\n");
+          argp_usage (state);
+        }
       if (!(cmd_args->password = strdup (arg)))
         {
           perror("strdup");
           exit(1);
         }
+      break;
+    case K_G_KEY:
+      {
+        int rv;
+
+        if (cmd_args->k_g_configured)
+          {
+            memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
+            cmd_args->k_g_configured = 0;
+          }
+
+        if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
+          {
+            fprintf (stderr, "k_g invalid\n");
+            argp_usage (state);
+          }
+        if (rv > 0)
+          cmd_args->k_g_configured++;
+        if (arg)
+          {
+            int n;
+            n = strlen(arg);
+            __secure_memset(arg, '\0', n);
+          }
+      }
+      break;
+    case K_G_PROMPT_KEY:
+      {
+        int rv;
+        
+        if (cmd_args->k_g_configured)
+          {
+            memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
+            cmd_args->k_g_configured = 0;
+          }
+        
+        arg = getpass ("K_g: ");
+        
+        if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
+          {
+            fprintf (stderr, "k_g invalid\n");
+            argp_usage (state);
+          }
+        if (rv > 0)
+          cmd_args->k_g_configured++;
+      }
       break;
     case RETRY_TIMEOUT_KEY:
       {
@@ -328,62 +368,74 @@ common_parse_opt (int key,
 	cmd_args->session_timeout = value;
       }
       break;
-    case AUTHENTICATION_TYPE_KEY: /* values 0,1,2,4 = none,md2,md5,straight */
+    case AUTHENTICATION_TYPE_KEY: 
       if (strcasecmp (arg, "none") == 0)
-	{
-	  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-	}
+        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+      else if (strcasecmp (arg, "md2") == 0)
+        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD2;
+      else if (strcasecmp (arg, "md5") == 0)
+        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
+      else if (strcasecmp (arg, "plain") == 0)
+        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
       else 
-	if (strcasecmp (arg, "md2") == 0)
-	  {
-	    cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD2;
-	  }
-	else 
-	  if (strcasecmp (arg, "md5") == 0)
-	    {
-	      cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
-	    }
-	  else 
-	    if (strcasecmp (arg, "plain") == 0)
-	      {
-		cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
-	      }
-            else 
-              {
-                fprintf(stderr, "invalid authentication type specified\n");
-                argp_usage (state);
-              }
+        {
+          fprintf(stderr, "invalid authentication type specified\n");
+          argp_usage (state);
+        }
       break;
-    case PRIVILEGE_LEVEL_KEY: /* range 1 to 5 = callback,user,operator,admin,oem */
-      if (strcasecmp (arg, "callback") == 0)
-	{
-	  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_CALLBACK;
-	}
-      else 
-	if (strcasecmp (arg, "user") == 0)
+    case CIPHER_SUITE_ID_KEY: 
+      {
+	int value = 0;
+	char *str = NULL;
+	char *tail = NULL;
+	int errnum = 0;
+	
+	str = strdupa (arg);
+	errno = 0;
+	value = strtol (str, &tail, 0);
+	errnum = errno;
+	
+	if (errnum)
 	  {
-	    cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
+	    // overflow
+	    fprintf (stderr, "invalid cipher suite id value\n");
+	    argp_usage (state);
+	    break;
 	  }
-	else 
-	  if (strcasecmp (arg, "operator") == 0)
-	    {
-	      cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-	    }
-	  else 
-	    if (strcasecmp (arg, "admin") == 0)
-	      {
-		cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
-	      }
-	    else 
-	      if (strcasecmp (arg, "oem") == 0)
-		{
-		  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OEM;
-		}
-	      else 
-		{
-                  fprintf(stderr, "invalid privilege level specified\n");
-                  argp_usage (state);
-		}
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid cipher suite id value\n");
+	    argp_usage (state);
+	    break;
+	  }
+
+	if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (value))
+	  {
+	    fprintf (stderr, "invalid cipher suite id value\n");
+	    argp_usage (state);
+	    break;
+	  }
+        cmd_args->cipher_suite_id = value;
+      }
+      break;
+    case PRIVILEGE_LEVEL_KEY: 
+      if (strcasecmp (arg, "callback") == 0)
+        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_CALLBACK;
+      else if (strcasecmp (arg, "user") == 0)
+        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
+      else if (strcasecmp (arg, "operator") == 0)
+        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+      else if (strcasecmp (arg, "admin") == 0)
+        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
+      else if (strcasecmp (arg, "oem") == 0)
+        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OEM;
+      else 
+        {
+          fprintf(stderr, "invalid privilege level specified\n");
+          argp_usage (state);
+        }
       break;
 #ifndef NDEBUG
     case DEBUG_KEY:
@@ -484,7 +536,10 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->host = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;
+  memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
+  cmd_args->k_g_configured = 0;
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
+  cmd_args->cipher_suite_id = 0;
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
 #ifndef NDEBUG
   cmd_args->debug = 0;
@@ -521,6 +576,32 @@ free_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->privilege_level = 0;
 }
 
+void
+verify_common_cmd_args (struct common_cmd_args *cmd_args)
+{
+  if ((cmd_args->driver_type == IPMI_DEVICE_LAN
+       || cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
+      && !cmd_args->host)
+    {
+      fprintf (stderr, "host not specified\n");
+      exit (1);
+    }
+
+  if (cmd_args->host)
+    {
+      /* We default to IPMI 1.5 if the user doesn't specify LAN vs. LAN_2_0 */
+
+      if (cmd_args->driver_type != IPMI_DEVICE_LAN_2_0
+          && cmd_args->password
+          && strlen (cmd_args->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+        {
+          fprintf (stderr, "password too long\n");
+          exit (1);
+        }
+      /* else, 2_0 password length checked in argp_parse() */
+    }
+}
+
 void 
 init_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
@@ -540,6 +621,12 @@ free_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
     }
 }
 
+void
+verify_sdr_cmd_args (struct common_cmd_args *cmd_args)
+{
+  /* nothing right now */
+}
+
 void 
 init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
 {
@@ -555,3 +642,8 @@ free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
   /* nothing right now */
 }
 
+void
+verify_hostrange_cmd_args (struct common_cmd_args *cmd_args)
+{
+  /* nothing right now */
+}

@@ -4,9 +4,11 @@ bmc-info \- manual page for bmc-info.  BMC Info @PACKAGE_VERSION@
 .SH DESCRIPTION
 Displays BMC Information.
 .SH OPTIONS
+#include <@top_srcdir@/common/doc/argp-common-driver.man>
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel-user.man>
 .if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/argp-common-debug.man>

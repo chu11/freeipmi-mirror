@@ -67,41 +67,84 @@ ipmi_device_open(const char *progname,
       goto cleanup;
     }
 
-  /* XXX UDM_2_0 - need to do driver check LAN vs. LANPLUS */
   if (hostname && strcmp(hostname, "localhost") != 0)
     {
-      if (ipmi_open_outofband (dev,
-                               IPMI_DEVICE_LAN,
-                               hostname,
-                               cmd_args->username,
-                               cmd_args->password,
-                               cmd_args->authentication_type,
-                               cmd_args->privilege_level,
-                               cmd_args->session_timeout,
-                               cmd_args->retry_timeout,
-                               debug_flags) < 0)
+      if (cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
-          if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME
-              || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD
-              || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE
-              || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE
-              || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
-              || ipmi_device_errnum(dev) == IPMI_ERR_INVALID_HOSTNAME)
+          if (ipmi_open_outofband_2_0 (dev,
+                                       IPMI_DEVICE_LAN_2_0,
+                                       hostname,
+                                       cmd_args->username,
+                                       cmd_args->password,
+                                       cmd_args->k_g,
+                                       IPMI_MAX_K_G_LENGTH,
+                                       cmd_args->privilege_level,
+                                       cmd_args->cipher_suite_id,
+                                       cmd_args->session_timeout,
+                                       cmd_args->retry_timeout,
+                                       debug_flags) < 0)
             {
-              snprintf(errmsg,
-                       errmsglen,
-                       "%s: %s",
-                       progname,
-                       ipmi_device_strerror(ipmi_device_errnum(dev)));
+              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD
+                  || ipmi_device_errnum(dev) == IPMI_ERR_K_G
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE
+                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE
+                  || ipmi_device_errnum(dev) == IPMI_ERR_CIPHER_SUITE_UNAVAILABLE
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
+                  || ipmi_device_errnum(dev) == IPMI_ERR_INVALID_HOSTNAME
+                  || ipmi_device_errnum(dev) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
+                {
+                  snprintf(errmsg,
+                           errmsglen,
+                           "%s: %s",
+                           progname,
+                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                }
+              else
+                {
+                  snprintf(errmsg,
+                           errmsglen,
+                           "ipmi_open_outofband_2_0: %s",
+                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                }
+              goto cleanup;
             }
-          else
+        }
+      else
+        {
+          if (ipmi_open_outofband (dev,
+                                   IPMI_DEVICE_LAN,
+                                   hostname,
+                                   cmd_args->username,
+                                   cmd_args->password,
+                                   cmd_args->authentication_type,
+                                   cmd_args->privilege_level,
+                                   cmd_args->session_timeout,
+                                   cmd_args->retry_timeout,
+                                   debug_flags) < 0)
             {
-              snprintf(errmsg,
-                       errmsglen,
-                       "ipmi_open_outofband: %s",
-                       ipmi_device_strerror(ipmi_device_errnum(dev)));
+              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE
+                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
+                  || ipmi_device_errnum(dev) == IPMI_ERR_INVALID_HOSTNAME)
+                {
+                  snprintf(errmsg,
+                           errmsglen,
+                           "%s: %s",
+                           progname,
+                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                }
+              else
+                {
+                  snprintf(errmsg,
+                           errmsglen,
+                           "ipmi_open_outofband: %s",
+                           ipmi_device_strerror(ipmi_device_errnum(dev)));
+                }
+              goto cleanup;
             }
-          goto cleanup;
         }
     }
   else
