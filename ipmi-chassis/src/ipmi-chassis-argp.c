@@ -68,7 +68,7 @@ static struct argp_option options[] =
      "Get the chassis status.", 22},
     {"chassis-control", 'O', "CONTROL", 0, 
      "Control the chassis. Allowed values are: power-down, power-up, power-cycle, hard-reset, diagnostic-interrupt, soft-shutdown.", 23},
-    {"chassis-identify", 'I', "IDENTIFY", 0,
+    {"chassis-identify", 'i', "IDENTIFY", 0,
      "Chassis Identification. Allowed values are: turn-off to turn off identification, <interval> to turn on identification for 'interval' seconds, force to turn on indefinitely.", 24},
     {"get-system-restart-cause", 'R', NULL, 0, 
      "Get system restart cause.", 25},
