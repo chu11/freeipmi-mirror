@@ -543,7 +543,7 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
   cmd_args->k_g_configured = 0;
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
-  cmd_args->cipher_suite_id = 0;
+  cmd_args->cipher_suite_id = 3;
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
 #ifndef NDEBUG
   cmd_args->debug = 0;
