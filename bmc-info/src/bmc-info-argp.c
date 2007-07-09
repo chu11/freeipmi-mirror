@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.11.4.1 2007-07-06 17:49:53 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.11.4.2 2007-07-09 20:36:14 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -97,4 +97,6 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

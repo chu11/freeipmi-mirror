@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.18.4.1 2007-07-06 17:49:55 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.18.4.2 2007-07-09 20:36:15 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -388,4 +388,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->hex_dump_filename = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

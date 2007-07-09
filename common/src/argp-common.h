@@ -201,11 +201,14 @@ error_t hostrange_parse_opt (int key,
 
 void init_common_cmd_args (struct common_cmd_args *cmd_args);
 void free_common_cmd_args (struct common_cmd_args *cmd_args);
+void verify_common_cmd_args (struct common_cmd_args *cmd_args);
 
 void init_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
 void free_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
+void verify_sdr_cmd_args (struct common_cmd_args *cmd_args);
 
 void init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
 void free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
+void verify_hostrange_cmd_args (struct common_cmd_args *cmd_args);
 
 #endif

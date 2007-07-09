@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-argp.c,v 1.1.2.3 2007-07-06 17:49:55 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.1.2.4 2007-07-09 20:36:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -133,4 +133,7 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->skip_checks_wanted = 0;
 
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

@@ -265,6 +265,7 @@ bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *args)
   args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, args);
+  verify_common_cmd_args (&(args->common));
 }
 
 int

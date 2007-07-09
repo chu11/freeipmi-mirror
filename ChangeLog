@@ -1,3 +1,27 @@
+2007-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	Re-org UDM and add IPMI 2.0 device support to UDM.
+
+	* common/doc/argp-common-driver.man: New file.
+
+	* common/doc/argp-common-inband.man: Split out driver option.
+
+	* common/doc/argp-common-outofband.man,
+	common/doc/argp-common-outofband-hostranged.man: Add K_g options.
+
+	* common/src/argp-common.c, common/src/argp-common.h: Update for
+	IPMI 2.0 options.
+
+	* common/doc/Makefile.am: Update appropriately for new files.
+
+	* bmc-config/, bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-sel/,
+	ipmi-sensors/, pef-config/: Update manpages and command line option
+	parsing code for above changes.
+
+	* Globally remove IPMI_MAX_AUTHENTICATION_CODE_LENGTH.  Use
+	IPMI_1_5_MAX_PASSWORD_LENGTH and IPMI_2_0_MAX_PASSWORD_LENGTH as
+	needed.
+	
 2007-06-27  Albert Chu <chu11@llnl.gov>
  
 	* ipmi-fru/: New project.

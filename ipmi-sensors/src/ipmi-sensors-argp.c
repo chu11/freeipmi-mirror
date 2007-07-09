@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.14.4.1 2007-07-06 17:49:56 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.14.4.2 2007-07-09 20:36:15 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -292,6 +292,9 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->sensors_list_length = 0;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }
 
 

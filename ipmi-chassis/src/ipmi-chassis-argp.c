@@ -512,6 +512,8 @@ ipmi_chassis_argp_parse (int argc,
    */
   cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }
 
 int 

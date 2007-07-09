@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4.4.1 2007-07-06 17:49:56 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4.4.2 2007-07-09 20:36:16 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -188,6 +188,7 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
    */
   cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
 }
 
 int
