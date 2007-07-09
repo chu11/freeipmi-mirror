@@ -1,3 +1,12 @@
+2007-07-09  Dmitry Frolov <frolov@riss-telecom.ru>
+
+	* acx_pthread.m4, common/src/freeipmi-portability.h,
+	ipmidetect/Makefile.am,
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c:
+	FreeBSD port fixes.
+
+	* ac_ipmi_monitoring_sdr_cache_dir.m4: Fix typo.
+	
 2007-07-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/ipmi-chassis.8.pre.in,
@@ -1676,7 +1685,7 @@
 
 	* bmc-info/src/bmc-info.c (main): Fix corner case.
 	
-2007-01-20  Dmitry Frolov <frolov@riss-telecom.ru>.
+2007-01-20  Dmitry Frolov <frolov@riss-telecom.ru>
 
 	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo.
 	

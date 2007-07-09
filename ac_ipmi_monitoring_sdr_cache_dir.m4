@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: ac_ipmi_monitoring_sdr_cache_dir.m4,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+## $Id: ac_ipmi_monitoring_sdr_cache_dir.m4,v 1.1.10.1 2007-07-09 15:50:08 chu11 Exp $
 ##*****************************************************************************
 
 AC_DEFUN([AC_IPMI_MONITORING_SDR_CACHE_DIR],
@@ -7,7 +7,7 @@ AC_DEFUN([AC_IPMI_MONITORING_SDR_CACHE_DIR],
   IPMI_MONITORING_SDR_CACHE_DIR=/var/cache/ipmimonitoringsdrcache
 
   AC_MSG_CHECKING([for ipmi_monitoring sdr cache dir default path])
-  AC_ARG_WITH([ipmi-monitoring-sensor-sdr-cache-dir],
+  AC_ARG_WITH([ipmi-monitoring-sdr-cache-dir],
     AC_HELP_STRING([--with-ipmi-monitoring-sdr-cache-dir=PATH], 
                    [Specify default ipmi_monitoring sdr cache dir path]),
     [ case "$withval" in

@@ -34,7 +34,7 @@ dnl (with help from M. Frigo), as well as ac_pthread and hb_pthread
 dnl macros posted by AFC to the autoconf macro repository.  We are also
 dnl grateful for the helpful feedback of numerous users.
 dnl
-dnl @version $Id: acx_pthread.m4,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+dnl @version $Id: acx_pthread.m4,v 1.1.12.1 2007-07-09 15:50:08 chu11 Exp $
 dnl @author Steven G. Johnson <stevenj@alum.mit.edu> and Alejandro Forero Cuervo <bachue@bachue.com>
 
 AC_DEFUN([ACX_PTHREAD], [
@@ -75,14 +75,7 @@ fi
 # C compiler flags, and other items are library names, except for "none"
 # which indicates that we try without any flags at all.
 
-# achu
-#
-# libipmiconsole is a library, not an application, so move pthread earlier
-# to override just building with the -pthread flag
-#
-#acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -mthreads pthread --thread-safe -mt"
-#
-acx_pthread_flags="pthreads pthread none -Kthread -kthread lthread -pthread -pthreads -mthreads --thread-safe -mt"
+acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -mthreads pthread --thread-safe -mt"
 
 # The ordering *is* (sometimes) important.  Some notes on the
 # individual items follow:
@@ -114,6 +107,16 @@ case "${host_cpu}-${host_os}" in
         # we'll just look for -pthreads and -lpthread first:
 
         acx_pthread_flags="-pthread -pthreads pthread -mt $acx_pthread_flags"
+        ;;
+
+        *linux*)
+
+        # achu
+        #
+        # libipmiconsole is a library, not an application, so move pthread
+        # earlier to override just building with the -pthread # flag
+        #
+        acx_pthread_flags="pthreads pthread none -Kthread -kthread lthread -pthread -pthreads -mthreads --thread-safe -mt"
         ;;
 esac
 

@@ -34,6 +34,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <netdb.h>
+#include <stdio.h>	/* For FILE definition */
 
 #if  __WORDSIZE == 64
 #define FI_64 "%l"
