@@ -26,9 +26,6 @@ extern "C" {
 #endif
 
 #include <freeipmi/udm/ipmi-udm.h>
-#include <freeipmi/udm/ipmi-kcs-api-udm.h>
-#include <freeipmi/udm/ipmi-lan-interface-udm.h>
-#include <freeipmi/udm/ipmi-ssif-api-udm.h>
 #include <freeipmi/udm/ipmi-chassis-cmds-udm.h>
 #include <freeipmi/udm/ipmi-device-global-cmds-udm.h>
 #include <freeipmi/udm/ipmi-fru-inventory-device-cmds-udm.h>

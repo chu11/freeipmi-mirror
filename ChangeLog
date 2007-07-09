@@ -1,6 +1,54 @@
 2007-XX-XX  Albert Chu <chu11@llnl.gov>
 
-	Re-org UDM and add IPMI 2.0 device support to UDM.
+	Re-org UDM and add IPMI 2.0 device support to UDM (merge from
+	udm_ipmi_2_0_branch).
+
+	* common/src/udm-err-wrappers.h
+	(__UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM): Rename to
+	UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM.
+
+	* common/src/udm-fiid-wrappers.h (UDM_FIID_OBJ_SET,
+	UDM_FIID_OBJ_SET_CLEANUP, UDM_FIID_OBJ_GET_DATA_LEN,
+	UDM_FIID_OBJ_GET_DATA_LEN_CLEANUP): New macros.
+
+	* libfreeipmi/include/freeipmi/udm/freeipmi/udm/ipmi-kcs-api-udm.h,
+	freeipmi/udm/ipmi-lan-interface-udm.h,
+	freeipmi/udm/ipmi-openipmi-api-udm.h,
+	freeipmi/udm/ipmi-ssif-api-udm.h: Moved files to
+	libfreeipmi/src/udm.  No longer distribute as part of libfreeipmi.
+
+	* libfreeipmi/include/Makefile.am,
+	libfreeipmi/src/udm/Makefile.am, libfreeipmi/include/udm/udm.h:
+	Update with .h file move changes.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-messaging-support-cmds-udm.h,
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_cmd_get_channel_authentication_capabilities_v20): New
+	function.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Add new IPMI 2.0
+	UDM error codes.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband_2_0): New
+	function.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c: Split off lan
+	session code to new files.
+
+	* libfreeipmi/src/udm/ipmi-lan-session.h,
+	libfreeipmi/src/udm/ipmi-lan-session.c: New files.  Support both
+	IPMI 1.5 and IPMI 2.0 session code.
+
+	* libfreeipmi/src/udm/ipmi-udm-device.h: Update w/ IPMI 2.0 needs
+	in device structure.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_udm_errmsg,
+	_ipmi_outofband_free, ipmi_cmd, ipmi_cmd_raw): Add IPMI 2.0
+	support.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_2_0_cmd,
+	ipmi_lan_2_0_cmd_raw): New functions.
 
 	* common/doc/argp-common-driver.man: New file.
 
@@ -9,18 +57,22 @@
 	* common/doc/argp-common-outofband.man,
 	common/doc/argp-common-outofband-hostranged.man: Add K_g options.
 
+	* common/doc/Makefile.am: Update appropriately for new files.
+
 	* common/src/argp-common.c, common/src/argp-common.h: Update for
 	IPMI 2.0 options.
 
-	* common/doc/Makefile.am: Update appropriately for new files.
+	* common/src/tool-common.c (ipmi_device_open): Add IPMI 2.0 support.
 
 	* bmc-config/, bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-sel/,
-	ipmi-sensors/, pef-config/: Update manpages and command line option
-	parsing code for above changes.
+	ipmi-sensors/, pef-config/: Update manpages and command line
+	option code.
 
 	* Globally remove IPMI_MAX_AUTHENTICATION_CODE_LENGTH.  Use
 	IPMI_1_5_MAX_PASSWORD_LENGTH and IPMI_2_0_MAX_PASSWORD_LENGTH as
 	needed.
+
+	* General code cleanup throughout.
 	
 2007-06-27  Albert Chu <chu11@llnl.gov>
  
