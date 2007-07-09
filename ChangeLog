@@ -1,3 +1,11 @@
+2007-07-10  Albert Chu <chu11@llnl.gov>
+
+        * freeipmi.spec.in: Fix URL for release.
+
+	* configure.ac: Update version for release.
+
+        * Tagged Release-0_4_0_beta1	
+
 2007-07-09  Dmitry Frolov <frolov@riss-telecom.ru>
 
 	* acx_pthread.m4, common/src/freeipmi-portability.h,
