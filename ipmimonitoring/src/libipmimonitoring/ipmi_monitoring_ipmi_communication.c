@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3 2007-04-27 16:20:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.4 2007-07-09 15:49:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,6 +65,7 @@
 
 #include "secure.h"
 #include "timeval.h"
+#include "freeipmi-portability.h"
 
 #define GETHOSTBYNAME_AUX_BUFLEN 1024
 
