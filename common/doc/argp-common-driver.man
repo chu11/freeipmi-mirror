@@ -1,3 +1,4 @@
+.TP
 \fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
 Use this IPMIDRIVER instead of auto selection.
 Allowed values are LAN, LAN_2_0, KCS, SMIC, SSIF, and OPENIPMI.
