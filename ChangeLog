@@ -50,6 +50,11 @@
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_2_0_cmd,
 	ipmi_lan_2_0_cmd_raw): New functions.
 
+	* libfreeipmi/src/udm/ipmi-udm.c (__guaranteed_memset): New function.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_device_destroy): Do
+	guaranteed memset on destroy.
+
 	* common/doc/argp-common-driver.man: New file.
 
 	* common/doc/argp-common-inband.man: Split out driver option.
