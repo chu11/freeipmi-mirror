@@ -71,7 +71,11 @@ common_parse_opt (int key,
     case DRIVER_TYPE_KEY: 
       if (strcasecmp (arg, "lan") == 0)
         cmd_args->driver_type = IPMI_DEVICE_LAN;
-      else if (strcasecmp (arg, "lan_2_0") == 0)
+      else if (strcasecmp (arg, "lan_2_0") == 0
+               || strcasecmp (arg, "lan20") == 0
+               || strcasecmp (arg, "lan_20") == 0
+               || strcasecmp (arg, "lan2_0") == 0
+               || strcasecmp (arg, "lan2_0") == 0)
         cmd_args->driver_type = IPMI_DEVICE_LAN_2_0;
       else if (strcasecmp (arg, "kcs") == 0)
         cmd_args->driver_type = IPMI_DEVICE_KCS;
