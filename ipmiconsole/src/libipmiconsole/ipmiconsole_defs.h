@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.12 2007-06-20 20:59:31 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.12.2.1 2007-07-10 20:44:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -176,7 +176,8 @@ typedef enum
 #define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH              64
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
  
-#define IPMI_SESSION_SEQUENCE_NUMBER_WINDOW                        16
+#define IPMI_SESSION_SEQUENCE_NUMBER_WINDOW                   16
+#define IPMI_SESSION_MAX_SEQUENCE_NUMBER                      0xFFFFFFFF
 
 #define IPMI_SESSION_SEQUENCE_NUMBER_PREVIOUSLY_RECEIVED_LIST_INIT 0xFFFF;
 

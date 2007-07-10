@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.75.4.1 2007-07-10 20:44:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -108,6 +108,7 @@
  */
 
 #define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
+#define IPMIPOWER_MAX_SEQUENCE_NUMBER    0xFFFFFFFF
 
 #define IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER       1
 #define IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER  0

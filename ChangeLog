@@ -37,9 +37,10 @@
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c: Split off lan
 	session code to new files.
 
-	* libfreeipmi/src/udm/ipmi-lan-session.h,
-	libfreeipmi/src/udm/ipmi-lan-session.c: New files.  Support both
-	IPMI 1.5 and IPMI 2.0 session code.
+	* libfreeipmi/src/udm/ipmi-lan-session-util.h,
+	libfreeipmi/src/udm/ipmi-lan-session-util.c: New files.  Support
+	both IPMI 1.5 and IPMI 2.0 session code.  Add session id and
+	sequence number checking which was previously ignored.
 
 	* libfreeipmi/src/udm/ipmi-udm-device.h: Update w/ IPMI 2.0 needs
 	in device structure.
