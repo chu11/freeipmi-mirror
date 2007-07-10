@@ -8,6 +8,9 @@ libfreeipmi
 - re-work return codes/error codes
 - re-work UDM for advanced IPMI lan connection detection?
 
+workarounds
+- supermicro -> peppercon?
+
 tools
 - support workarounds
 - merge/make options more common

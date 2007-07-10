@@ -78,6 +78,8 @@
 	Add Workaround Support
 
 	* libfreeipmi/: Support workarounds for various vendor compliance issues.
+
+	* common/src/udm-fiid-wrappers.h: Add new wrappers as needed.
 	
 	* doc/freeipmi-workarounds.txt: New file.
 	
