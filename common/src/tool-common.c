@@ -82,6 +82,7 @@ ipmi_device_open(const char *progname,
                                        cmd_args->cipher_suite_id,
                                        cmd_args->session_timeout,
                                        cmd_args->retry_timeout,
+                                       0, /* XXX workaround flags later */
                                        debug_flags) < 0)
             {
               if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME
@@ -121,6 +122,7 @@ ipmi_device_open(const char *progname,
                                    cmd_args->privilege_level,
                                    cmd_args->session_timeout,
                                    cmd_args->retry_timeout,
+                                   0, /* XXX workaround flags later */
                                    debug_flags) < 0)
             {
               if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME
@@ -167,6 +169,7 @@ ipmi_device_open(const char *progname,
                                 cmd_args->driver_address,
                                 cmd_args->register_spacing,
                                 cmd_args->driver_device,
+                                0, /* XXX workaround flags later */
                                 debug_flags) < 0)
             {
               if (ipmi_open_inband (dev,
@@ -175,6 +178,7 @@ ipmi_device_open(const char *progname,
                                     cmd_args->driver_address,
                                     cmd_args->register_spacing,
                                     cmd_args->driver_device,
+                                    0, /* XXX workaround flags later */
                                     debug_flags) < 0)
                 {
                   if (ipmi_open_inband (dev,
@@ -183,6 +187,7 @@ ipmi_device_open(const char *progname,
                                         cmd_args->driver_address,
                                         cmd_args->register_spacing,
                                         cmd_args->driver_device,
+                                        0, /* XXX workaround flags later */
                                         debug_flags) < 0)
                     {
                       snprintf(errmsg,
@@ -202,6 +207,7 @@ ipmi_device_open(const char *progname,
                                 cmd_args->driver_address,
                                 cmd_args->register_spacing,
                                 cmd_args->driver_device,
+                                0, /* XXX workaround flags later */
                                 debug_flags) < 0)
             {
               snprintf(errmsg,

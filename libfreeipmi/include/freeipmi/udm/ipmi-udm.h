@@ -89,6 +89,15 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_FLAGS_NONBLOCKING    0x00000001
 #define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_DEFAULT                     0x00000000
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO      0x00000001
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION 0x00000002
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE   0x00000004
+
+#define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_DEFAULT                 0x00000000
+
+#define IPMI_INBAND_WORKAROUND_FLAGS_DEFAULT                        0x00000000
+
 typedef struct ipmi_device *ipmi_device_t;
  
 ipmi_device_t ipmi_device_create(void);
@@ -96,14 +105,6 @@ ipmi_device_t ipmi_device_create(void);
 char *ipmi_device_strerror(int errnum);
 
 int ipmi_device_errnum(ipmi_device_t dev);
-
-int ipmi_open_inband (ipmi_device_t dev,
-		      ipmi_driver_type_t driver_type, 
-		      int disable_auto_probe, 
-		      uint16_t driver_address, 
-		      uint8_t reg_space,
-		      char *driver_device, 
-		      uint32_t flags);
 
 int ipmi_open_outofband (ipmi_device_t dev,
 			 ipmi_driver_type_t driver_type, 
@@ -114,6 +115,7 @@ int ipmi_open_outofband (ipmi_device_t dev,
 			 uint8_t privilege_level,
 			 unsigned int session_timeout,
 			 unsigned int retry_timeout, 
+                         uint32_t workaround_flags,
 			 uint32_t flags);
 
 int ipmi_open_outofband_2_0 (ipmi_device_t dev,
@@ -127,7 +129,17 @@ int ipmi_open_outofband_2_0 (ipmi_device_t dev,
                              uint8_t cipher_suite_id,
                              unsigned int session_timeout,
                              unsigned int retry_timeout, 
+                             uint32_t workaround_flags,
                              uint32_t flags);
+
+int ipmi_open_inband (ipmi_device_t dev,
+		      ipmi_driver_type_t driver_type, 
+		      int disable_auto_probe, 
+		      uint16_t driver_address, 
+		      uint8_t reg_space,
+		      char *driver_device, 
+                      uint32_t workaround_flags,
+		      uint32_t flags);
 
 int ipmi_cmd (ipmi_device_t dev, 
 	      uint8_t lun, 

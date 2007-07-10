@@ -1,14 +1,20 @@
 Release 0.5.0
 -------------
 
-libfreeipmi 
+libfreeipmi
+- udm support for ipmi 2.0
+- udm support for outofband and ipmi 2.0 workarounds
 - split lib
 - re-work return codes/error codes
+- re-work UDM for advanced IPMI lan connection detection?
+
+tools
+- support workarounds
+- merge/make options more common
+
+ipmipower
+- do same checks offered by udm?
 
 bmc-config/pef-config
 - re-work for faster checkout/commit
-
-re-work UDM for advanced IPMI lan connection detection
-
-ipmi 2.0 for all tools
 
