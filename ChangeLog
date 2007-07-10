@@ -1,7 +1,8 @@
 2007-XX-XX  Albert Chu <chu11@llnl.gov>
 
-	Re-org UDM and add IPMI 2.0 device support to UDM (merge from
-	udm_ipmi_2_0_branch).
+        Merge from udm_ipmi_2_0_branch.
+	
+	Re-org UDM and add IPMI 2.0 device support to UDM.
 
 	* common/src/udm-err-wrappers.h
 	(__UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM): Rename to
@@ -72,6 +73,16 @@
 	* bmc-config/, bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-sel/,
 	ipmi-sensors/, pef-config/: Update manpages and command line
 	option code.
+
+	Add Workaround Support
+
+	* libfreeipmi/: Support workarounds for various vendor compliance issues.
+	
+	* doc/freeipmi-workarounds.txt: New file.
+	
+	* doc/Makefile.am: Updated appropriately.
+	
+	Misc:
 
 	* Globally remove IPMI_MAX_AUTHENTICATION_CODE_LENGTH.  Use
 	IPMI_1_5_MAX_PASSWORD_LENGTH and IPMI_2_0_MAX_PASSWORD_LENGTH as
