@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.3.6.2 2007-07-05 22:16:04 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.3.6.3 2007-07-10 18:16:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -164,9 +164,6 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
   
   s = &(c->session);
-
-  /* HACK TEST */
-  return 1;
 
   if (Fiid_obj_get(c,
 		   s->obj_rmcpplus_session_hdr_rs,

@@ -1,3 +1,9 @@
+2007-07-11  Albert Chu <chu11@llnl.gov>
+	
+       * ipmiconsole/src/libipmiconsole/ipmiconsole_checks.c
+       (ipmiconsole_check_outbound_sequence_number): Remove left over
+       debugging.
+	
 2007-07-10  Albert Chu <chu11@llnl.gov>
 
         * freeipmi.spec.in: Fix URL for release.
