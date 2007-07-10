@@ -132,6 +132,28 @@ do {                                                     \
       }                                                  \
 } while (0)
 
+#define UDM_FIID_OBJ_CLEAR_FIELD(__obj, __field)         \
+do {                                                     \
+    if (fiid_obj_clear_field ((__obj), (__field)) < 0)   \
+      {                                                  \
+         __FIID_OBJ_SYSLOG((__obj));                     \
+         __FIID_OBJ_TRACE((__obj));                      \
+         __FIID_OBJ_SET_UDM_ERRNUM((__obj));             \
+         return (-1);                                    \
+      }                                                  \
+} while (0)
+
+#define UDM_FIID_OBJ_CLEAR_FIELD_CLEANUP(__obj, __field) \
+do {                                                     \
+    if (fiid_obj_clear_field ((__obj), (__field)) < 0)   \
+      {                                                  \
+         __FIID_OBJ_SYSLOG((__obj));                     \
+         __FIID_OBJ_TRACE((__obj));                      \
+         __FIID_OBJ_SET_UDM_ERRNUM((__obj));             \
+         goto cleanup;                                   \
+      }                                                  \
+} while (0)
+
 #define UDM_FIID_OBJ_GET(__obj, __field, __val)               \
 do {                                                          \
     uint64_t __localval = 0, *__localval_ptr;                 \
@@ -180,6 +202,28 @@ do {                                                          \
          __FIID_OBJ_SET_UDM_ERRNUM((__obj));                  \
          goto cleanup;                                        \
       }                                                       \
+} while (0)
+
+#define UDM_FIID_OBJ_SET_DATA(__obj, __field, __data, __data_len)           \
+do {                                                                        \
+    if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0) \
+      {                                                                     \
+         __FIID_OBJ_SYSLOG((__obj));                                        \
+         __FIID_OBJ_TRACE((__obj));                                         \
+         __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
+         return (-1);                                                       \
+      }                                                                     \
+} while (0)
+
+#define UDM_FIID_OBJ_SET_DATA_CLEANUP(__obj, __field, __data, __data_len)   \
+do {                                                                        \
+    if (fiid_obj_set_data ((__obj), (__field), (__data), (__data_len)) < 0) \
+      {                                                                     \
+         __FIID_OBJ_SYSLOG((__obj));                                        \
+         __FIID_OBJ_TRACE((__obj));                                         \
+         __FIID_OBJ_SET_UDM_ERRNUM((__obj));                                \
+         goto cleanup;                                                      \
+      }                                                                     \
 } while (0)
 
 #define UDM_FIID_OBJ_GET_DATA(__obj, __field, __data, __data_len)            \
