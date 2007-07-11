@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75.4.1 2007-07-10 20:44:48 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.75.4.2 2007-07-11 18:14:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -405,8 +405,8 @@ typedef enum
 /* Workaround Flags */
 typedef enum 
   {
-    WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION = 0x01,
-    WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO      = 0x02,
+    WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO      = 0x01,
+    WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION = 0x02,
     WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE   = 0x04,
     WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER  = 0x08,
     WORKAROUND_FLAG_INTEL_2_0_SESSION           = 0x10,

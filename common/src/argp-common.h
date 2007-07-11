@@ -188,6 +188,15 @@ struct hostrange_cmd_args
   int eliminate;
 };
 
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR      "idzero"
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR "forcepermsg"
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR   "unexpectedauth"
+#define IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR  "endianseq"
+
+#define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR       "intel20"
+#define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR  "supermicro20"
+#define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR         "sun20"
+
 unsigned int parse_outofband_workaround_flags(char *str);
 
 unsigned int parse_outofband_2_0_workaround_flags(char *str);

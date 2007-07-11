@@ -58,13 +58,13 @@ parse_outofband_workaround_flags(char *str)
   tok = strtok(s, ",");
   while (tok)
     {
-      if (!strcasecmp(tok, "forcepermsg"))
+      if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR))
         flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-      else if (!strcasecmp(tok, "idzero"))
+      else if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR))
         flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-      else if (!strcasecmp(tok, "unexpectedauth"))
+      else if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR))
         flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-      else if (!strcasecmp(tok, "endianseq"))
+      else if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR))
         flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
       tok = strtok(NULL, ",");
     }
@@ -86,20 +86,11 @@ parse_outofband_2_0_workaround_flags(char *str)
   tok = strtok(s, ",");
   while (tok)
     {
-      if (!strcasecmp(tok, "intel20")
-          || !strcasecmp(tok, "intel_20")
-          || !strcasecmp(tok, "intel_2_0")
-          || !strcasecmp(tok, "intel2_0"))
+      if (!strcasecmp(tok, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR))
         flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-      else if (!strcasecmp(tok, "supermicro20")
-               || !strcasecmp(tok, "supermicro_20")
-               || !strcasecmp(tok, "supermicro_2_0")
-               || !strcasecmp(tok, "supermicro2_0"))
+      else if (!strcasecmp(tok, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR))
         flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-      else if (!strcasecmp(tok, "sun20")
-               || !strcasecmp(tok, "sun_20")
-               || !strcasecmp(tok, "sun_2_0")
-               || !strcasecmp(tok, "sun2_0"))
+      else if (!strcasecmp(tok, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR))
         flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION;
       tok = strtok(NULL, ",");
     }

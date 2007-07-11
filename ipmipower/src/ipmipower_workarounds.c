@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.3 2007-05-24 13:37:48 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.3.4.1 2007-07-11 18:14:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,6 +40,8 @@
 
 #include "wrappers.h"
 
+#include "argp-common.h"
+
 extern struct ipmipower_config *conf;
 
 #define IPMIPOWER_WORKAROUNDS_BUFLEN  4096
@@ -59,41 +61,35 @@ int
 ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
 {
   uint32_t flags = 0;
-  char *s, *tok;
+  unsigned int tmp_flags;
   int ret = -1;
 
   assert(str);
   assert(workaround_flags);
 
-  s = Strdup(str);
-  tok = strtok(s, ",");
-  while (tok)
-    {
-      if (!strcasecmp(tok, WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION_STR))
-        flags |= WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION;
-      else if (!strcasecmp(tok, WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO_STR))
-        flags |= WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO;
-      else if (!strcasecmp(tok, WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE_STR))
-        flags |= WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE;
-      else if (!strcasecmp(tok, WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR))
-        flags |= WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER;
-      else if (!strcasecmp(tok, WORKAROUND_FLAG_INTEL_2_0_SESSION_STR))
-        flags |= WORKAROUND_FLAG_INTEL_2_0_SESSION;
-      else if (!strcasecmp(tok, WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR))
-        flags |= WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION;
-      else if (!strcasecmp(tok, WORKAROUND_FLAG_SUN_2_0_SESSION_STR))
-        flags |= WORKAROUND_FLAG_SUN_2_0_SESSION;
-      else
-        goto cleanup;
-      tok = strtok(NULL, ",");
-    }
+  tmp_flags = parse_outofband_workaround_flags(str);
+  /* convert to ipmipower flags */
+  if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+    flags |= WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO;
+  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+    flags |= WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION;
+  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+    flags |= WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE;
+  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+    flags |= WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER;
 
+  tmp_flags = parse_outofband_2_0_workaround_flags(str);
+  /* convert to ipmipower flags */
+  if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+    flags |= WORKAROUND_FLAG_INTEL_2_0_SESSION;
+  else if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+    flags |= WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION;
+  else if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+    flags |= WORKAROUND_FLAG_SUN_2_0_SESSION;
+  
   *workaround_flags = flags;
-  ret = 0;
-
  cleanup:
-  Free(s);
-  return ret;
+  return 0;
 }
 
 char *
@@ -105,53 +101,53 @@ ipmipower_workarounds_string(uint32_t workaround_flags)
   
   printf("workaround_flags = %x\n", workaround_flags);
 
-  if (workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION)
-    {
-      if (not_first)
-        strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION_STR);
-      not_first++;
-    }
   if (workaround_flags & WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO_STR);
+      strcat(workarounds_buffer, IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR);
+      not_first++;
+    }
+  if (workaround_flags & WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION)
+    {
+      if (not_first)
+        strcat(workarounds_buffer, ",");
+      strcat(workarounds_buffer, IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR);
       not_first++;
     }
   if (workaround_flags & WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE_STR);
+      strcat(workarounds_buffer, IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR);
       not_first++;
     }
   if (workaround_flags & WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR);
+      strcat(workarounds_buffer, IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR);
       not_first++;
     }
   if (workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_INTEL_2_0_SESSION_STR);
+      strcat(workarounds_buffer, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR);
       not_first++;
     }
   if (workaround_flags & WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR);
+      strcat(workarounds_buffer, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR);
       not_first++;
     }
   if (workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_SUN_2_0_SESSION_STR);
+      strcat(workarounds_buffer, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);
       not_first++;
     }
 
@@ -165,12 +161,12 @@ ipmipower_workarounds_list(void)
   snprintf(workarounds_buffer,
            IPMIPOWER_WORKAROUNDS_BUFLEN,
            "%s,%s,%s,%s,%s,%s,%s",
-           WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION_STR,
-           WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO_STR,
-           WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE_STR,
-           WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
-           WORKAROUND_FLAG_INTEL_2_0_SESSION_STR,
-           WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR,
-           WORKAROUND_FLAG_SUN_2_0_SESSION_STR);
+           IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
+           IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
+           IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
+           IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+           IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
+           IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
+           IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);
   return workarounds_buffer;
 }

@@ -21,6 +21,7 @@ ipmipower_SOURCES= \
 	wrappers.c
  
 ipmipower_LDADD = \
+	../../common/src/libargpcommon.la \
 	../../common/src/libcbuf.la \
 	../../common/src/libllnlcommon.la \
 	../../common/src/libtoolcommon.la \
@@ -55,6 +56,9 @@ noinst_HEADERS= \
 	ipmipower_wrappers.h \
 	wrappers.h
  
+../../common/src/libargpcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 ../../common/src/libcbuf.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 

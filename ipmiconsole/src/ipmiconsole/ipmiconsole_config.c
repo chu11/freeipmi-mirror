@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.2 2007-07-11 17:50:30 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.3 2007-07-11 18:14:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -45,6 +45,7 @@
 #include <ipmiconsole.h>
 
 #include "ipmiconsole_config.h"
+#include "argp-common.h"
 #include "conffile.h"
 #include "error.h"
 #include "secure.h"
@@ -110,29 +111,6 @@ _version(void)
 {
   fprintf(stderr, "ipmiconsole %s\n", VERSION);
   exit(0);
-}
-
-static unsigned int
-_workaround_flags_parse(char *str)
-{
-  char *s, *tok;
-  unsigned int flags = 0;
-
-  if (!(s = strdup(str)))
-    err_exit("strdup: %s", strerror(errno));
-  tok = strtok(s, ",");
-  while (tok)
-    {
-      if (!strcasecmp(tok, "intel20"))
-        flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
-      else if (!strcasecmp(tok, "supermicro20"))
-        flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
-      else if (!strcasecmp(tok, "sun20"))
-        flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
-      tok = strtok(NULL, ",");
-    }
-  free(s);
-  return flags;
 }
 
 static void
@@ -305,8 +283,14 @@ _cmdline_parse(int argc, char **argv)
           conf->lock_memory_set_on_cmdline++;
           break;
         case 'W':
-          flags = _workaround_flags_parse(optarg);
-          conf->workaround_flags = flags;
+          flags = parse_outofband_2_0_workaround_flags(optarg);
+          /* convert to ipmiconsole flags */
+          if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+            conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
+          else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+            conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
+          else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+            conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
           conf->workaround_flags_set_on_cmdline = flags;
           break;
 #ifndef NDEBUG
@@ -493,8 +477,14 @@ _cb_workaround_flags(conffile_t cf,
   if (conf->workaround_flags_set_on_cmdline)
     return 0;
 
-  flags = _workaround_flags_parse(data->string);
-  conf->workaround_flags = flags;
+  flags = parse_outofband_2_0_workaround_flags(optarg);
+  /* convert to ipmiconsole flags */
+  if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
+  else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
+  else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
   return 0;
 }
 
