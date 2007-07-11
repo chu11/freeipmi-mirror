@@ -1,5 +1,5 @@
 .TP
-\fB\-l\fR, \fB\-\-privilege\fR=\fIPRIVILEGE\-LEVEL\fR
+\fB\-l\fR, \fB\-\-privilege-level\fR=\fIPRIVILEGE\-LEVEL\fR
 Use this PRIVILEGE\-LEVEL instead of ADMIN.  Allowed
 values are CALLBACK, USER, OPERATOR, ADMIN and
 OEM.

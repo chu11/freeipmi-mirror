@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.2 2007-07-11 20:50:31 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.3 2007-07-11 21:01:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -298,7 +298,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"config",                       1, NULL, 'X'}, 
 #endif /* NDEBUG */
       {"authentication-type",          1, NULL, 'a'},  
-      {"privilege",                    1, NULL, 'l'},
+      {"privilege-level",              1, NULL, 'l'},
       {"ipmi-version",                 1, NULL, 'R'},
       {"cipher-suite-id",              1, NULL, 'I'},
       {"on-if-off",                    0, NULL, 'g'},
@@ -441,7 +441,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->authentication_type = ipmipower_authentication_type_index(optarg);
           conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
           break;
-        case 'l':       /* --privilege */
+        case 'l':       /* --privilege-level */
           conf->privilege = ipmipower_privilege_index(optarg);
           conf->privilege_set_on_cmdline = IPMIPOWER_TRUE;
           break;
@@ -712,8 +712,8 @@ _cb_password(conffile_t cf, struct conffile_data *data,
 
 static int 
 _cb_k_g(conffile_t cf, struct conffile_data *data,
-             char *optionname, int option_type, void *option_ptr,
-             int option_data, void *app_ptr, int app_data) 
+        char *optionname, int option_type, void *option_ptr,
+        int option_data, void *app_ptr, int app_data) 
 {
   int rv;
 
@@ -770,7 +770,7 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &k_g_flag, NULL, 0},
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
        1, 0, &authentication_type_flag, NULL, 0},
-      {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
+      {"privilege-level", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
        1, 0, &privilege_flag, NULL, 0},
       {"ipmi-version", CONFFILE_OPTION_STRING, -1, _cb_ipmi_version,
        1, 0, &ipmi_version_flag, NULL, 0},

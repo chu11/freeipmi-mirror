@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.71.4.1 2007-07-11 20:50:31 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.71.4.2 2007-07-11 21:01:30 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -136,7 +136,7 @@ The currently available authentication types are "auto", "none",
 uses "auto" authentication, which will automatically select the most
 secure authentication mechanism available from the remote machine.
 .TP
-.I "-l, --privilege str"
+.I "-l, --privilege-level str"
 Sets the privilege type to use with 
 .B ipmipower.  
 The currently available privilege types are "auto", "user",
@@ -430,13 +430,13 @@ quit
 .I "authentication_type str"
 specify a new authentication type, auto, none, straight_password_key, md2, or md5.
 .TP
-.I "privilege str"
+.I "privilege-level str"
 specify a new privilege type, auto, user, operator or admin.
 .TP
-.I "ipmi_version str"
+.I "ipmi-version str"
 specify the ipmi version, auto, 1.5 or 2.0.
 .TP
-.I "cipher_suite_id str"
+.I "cipher-suite-id str"
 specify the cipher suite id, auto, 0, 1, 2, 3, 6, 7, 8, 11, 12.
 .TP
 .I "on-if-off [on|off]"

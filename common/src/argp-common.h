@@ -101,22 +101,22 @@ enum argp_common_option_keys
      "Use SESSION_TIMEOUT milliseconds before ending a session.", 12}
 
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
-    {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 		   \
+    {"authentication-type", AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 	   \
      "Use AUTHTYPE instead of MD5.  "				           \
      "Allowed values are NONE, MD2, MD5, and PLAIN.", 12}	           \
 
 #define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                \
-    {"cipher-suite-id",      CIPHER_SUITE_ID_KEY, "CIPHER_SUITE_ID", 0,    \
+    {"cipher-suite-id",     CIPHER_SUITE_ID_KEY, "CIPHER_SUITE_ID", 0,    \
      "Use CIPHER_SUITE_ID instead of 3.  "				   \
      "Allowed values are 0, 1, 2, 3, 6, 7, 8, 11, 12.", 13}	           \
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL_USER                                 \
-    {"privilege",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
+    {"privilege-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 14}     
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN                                \
-    {"privilege",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
+    {"privilege-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of ADMIN.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 15}     
 
