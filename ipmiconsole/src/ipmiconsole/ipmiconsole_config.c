@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.1 2007-07-11 17:22:49 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.2 2007-07-11 17:50:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -118,17 +118,17 @@ _workaround_flags_parse(char *str)
   char *s, *tok;
   unsigned int flags = 0;
 
-  if (!(s = strdup(optarg)))
+  if (!(s = strdup(str)))
     err_exit("strdup: %s", strerror(errno));
   tok = strtok(s, ",");
   while (tok)
     {
       if (!strcasecmp(tok, "intel20"))
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
+        flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
       else if (!strcasecmp(tok, "supermicro20"))
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
+        flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
       else if (!strcasecmp(tok, "sun20"))
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
+        flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
       tok = strtok(NULL, ",");
     }
   free(s);

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.18.4.2 2007-07-09 20:36:15 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.18.4.3 2007-07-11 17:50:30 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -64,21 +64,22 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_AUTHTYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
 #ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
 #endif
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about SEL.", 24},
+     "Show general information about SEL.", 25},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete given SEL records entry.", 25},
+     "Delete given SEL records entry.", 26},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL entries.", 26},
+     "Delete all SEL entries.", 27},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete records from START to END in SEL.", 27},
+     "Delete records from START to END in SEL.", 28},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
-     "Hex-dump SEL entries optionally to FILE.", 28},
+     "Hex-dump SEL entries optionally to FILE.", 29},
     { 0 }
   };
 

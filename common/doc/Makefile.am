@@ -7,6 +7,7 @@ EXTRA_DIST = \
 	argp-common-ciphersuiteid.man \
 	argp-common-privlevel-user.man \
 	argp-common-privlevel-admin.man \
+	argp-common-workaround-flags.man \
 	argp-common-debug.man \
 	argp-common-misc.man \
 	argp-common-hostranged-options.man \

@@ -80,6 +80,15 @@
 	* libfreeipmi/: Support workarounds for various vendor compliance issues.
 
 	* common/src/udm-fiid-wrappers.h: Add new wrappers as needed.
+
+	* common/doc/argp-common-workaround-flags.man: New file.
+
+	* common/src/argp-common.h, common/src/argp-common.c: Support
+	workaround flags.
+
+	* bmc-config/, bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-sel/,
+	ipmi-sensors/, pef-config/: Update manpages and command line
+	option code.
 	
 	* doc/freeipmi-workarounds.txt: New file.
 	

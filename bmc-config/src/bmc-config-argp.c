@@ -80,27 +80,28 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_OUTOFBAND,
   ARGP_COMMON_OPTIONS_AUTHTYPE,
   ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
+  ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
 #ifndef NDEBUG
   ARGP_COMMON_OPTIONS_DEBUG,
 #endif /* NDEBUG */
   {"checkout", 'o', 0, 0, 
-   "Action is to GET the BMC configuration", 24},
+   "Action is to GET the BMC configuration", 25},
   {"commit", 'i', 0, 0, 
-   "Action is to UPDATE the BMC configuration", 25},
+   "Action is to UPDATE the BMC configuration", 26},
   {"diff", 'd', 0, 0, 
-   "Action is to SHOW THE DIFFERENCES with BMC", 26},
+   "Action is to SHOW THE DIFFERENCES with BMC", 27},
 
   {"filename", 'f', "FILENAME", 0, 
-   "use FILENAME in checkout, commit or diff", 27},
+   "use FILENAME in checkout, commit or diff", 28},
   {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in checkout, commit or diff", 28},
+   "use KEY-PAIR in checkout, commit or diff", 29},
   {"section", 'S', "SECTION", 0,
-   "use SECTION in checkout", 29},
+   "use SECTION in checkout", 30},
   {"listsections", 'L', 0, 0,
-   "List available sections for checkout", 30},
+   "List available sections for checkout", 31},
 
-  {"verbose",   'v', 0, 0,  "Produce verbose output", 31},
-  {"quiet",     'q', 0, 0,  "Do not produce any output", 32},
+  {"verbose",   'v', 0, 0,  "Produce verbose output", 32},
+  {"quiet",     'q', 0, 0,  "Do not produce any output", 33},
   {"silent",    's', 0, OPTION_ALIAS },
   { 0, }
 };

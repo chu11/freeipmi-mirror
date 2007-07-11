@@ -55,6 +55,7 @@ enum argp_common_option_keys
     CONSOLIDATE_KEY = 'C',
     FANOUT_KEY = 'F',
     ELIMINATE_KEY = 'E',
+    WORKAROUND_FLAGS_KEY = 'W',
     DEBUG_KEY = 136
   };
 
@@ -119,29 +120,33 @@ enum argp_common_option_keys
      "Use this PRIVILEGE-LEVEL instead of ADMIN.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 15}     
 
+#define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                               \
+    {"workaround-flags",  WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0, 	   \
+     "Specify workarounds to vendor compliance issues.", 16}	           \
+
 #define ARGP_COMMON_SDR_OPTIONS                                            \
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,                                \
-     "Flush sensor SDR cache.", 16},                                       \
+     "Flush sensor SDR cache.", 17},                                       \
     {"quiet-cache", QUIET_CACHE_KEY,  0, 0,                                \
-     "Do not output cache creation information.", 17},                     \
+     "Do not output cache creation information.", 18},                     \
     {"sdr-cache-directory", SDR_CACHE_DIR_KEY, "DIRECTORY", 0,             \
-     "Use DIRECTORY for sensor cache.", 18} 
+     "Use DIRECTORY for sensor cache.", 19} 
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
     {"buffer-output", BUFFER_KEY, 0, 0,                                    \
-      "Buffer hostranged output.", 19},                                    \
+      "Buffer hostranged output.", 20},                                    \
     {"consolidate-output", CONSOLIDATE_KEY, 0, 0,                          \
-     "Consolidate hostranged output.", 20},                                \
+     "Consolidate hostranged output.", 21},                                \
     {"fanout", FANOUT_KEY, "NUM", 0,                                       \
-     "Set multiple host fanout.", 21},                                     \
+     "Set multiple host fanout.", 22},                                     \
     {"eliminate", ELIMINATE_KEY, 0, 0,                                     \
-     "Eliminate undetected nodes.", 22}
+     "Eliminate undetected nodes.", 23}
 
 #ifndef NDEBUG
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     DEBUG_KEY, 0, 0, 	                                   \
-     "Turn on debugging.", 23}                                             
+     "Turn on debugging.", 24}                                             
 
 #endif
 
@@ -183,6 +188,12 @@ struct hostrange_cmd_args
   int eliminate;
 };
 
+unsigned int parse_outofband_workaround_flags(char *str);
+
+unsigned int parse_outofband_2_0_workaround_flags(char *str);
+
+unsigned int parse_inband_workaround_flags(char *str);
+
 error_t common_parse_opt (int key, 
 			  char *arg, 
 			  struct argp_state *state, 
@@ -204,10 +215,10 @@ void verify_common_cmd_args (struct common_cmd_args *cmd_args);
 
 void init_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
 void free_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
-void verify_sdr_cmd_args (struct common_cmd_args *cmd_args);
+void verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args);
 
 void init_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
 void free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
-void verify_hostrange_cmd_args (struct common_cmd_args *cmd_args);
+void verify_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args);
 
 #endif

@@ -21,3 +21,8 @@ ipmipower
 bmc-config/pef-config
 - re-work for faster checkout/commit
 
+manpage
+- use pre.in system for ipmimonitoring, ipmiconsole?
+
+parsing
+- use common parsing when possible?

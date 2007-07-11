@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-argp.c,v 1.1.2.4 2007-07-09 20:36:15 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.1.2.5 2007-07-11 17:50:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,17 +63,18 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_AUTHTYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
 #ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
 #endif
     {"device-id", DEVICE_ID_KEY, "DEVICE_ID", 0,
-     "Specify FRU device ID.", 24},
+     "Specify FRU device ID.", 25},
     {"verbose", VERBOSE_KEY, 0, 0,
-     "Increase verbosity in output.", 25},
+     "Increase verbosity in output.", 26},
     {"skip-checks", SKIP_CHECKS_KEY, 0, 0,
-     "Skip FRU version and checksum checks", 26},
+     "Skip FRU version and checksum checks", 27},
     { 0 }
   };
 

@@ -44,6 +44,76 @@
 #include "pstdout.h"
 #include "tool-common.h"
 
+unsigned int
+parse_outofband_workaround_flags(char *str)
+{
+  char *s, *tok;
+  unsigned int flags = 0;
+
+  if (!(s = strdup(str)))
+    {
+      perror("strdup");
+      exit(1);
+    }
+  tok = strtok(s, ",");
+  while (tok)
+    {
+      if (!strcasecmp(tok, "forcepermsg"))
+        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
+      else if (!strcasecmp(tok, "idzero"))
+        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
+      else if (!strcasecmp(tok, "unexpectedauth"))
+        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+      else if (!strcasecmp(tok, "endianseq"))
+        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+      tok = strtok(NULL, ",");
+    }
+  free(s);
+  return flags;
+}
+
+unsigned int
+parse_outofband_2_0_workaround_flags(char *str)
+{
+  char *s, *tok;
+  unsigned int flags = 0;
+  
+  if (!(s = strdup(str)))
+    {
+      perror("strdup");
+      exit(1);
+    }
+  tok = strtok(s, ",");
+  while (tok)
+    {
+      if (!strcasecmp(tok, "intel20")
+          || !strcasecmp(tok, "intel_20")
+          || !strcasecmp(tok, "intel_2_0")
+          || !strcasecmp(tok, "intel2_0"))
+        flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+      else if (!strcasecmp(tok, "supermicro20")
+               || !strcasecmp(tok, "supermicro_20")
+               || !strcasecmp(tok, "supermicro_2_0")
+               || !strcasecmp(tok, "supermicro2_0"))
+        flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+      else if (!strcasecmp(tok, "sun20")
+               || !strcasecmp(tok, "sun_20")
+               || !strcasecmp(tok, "sun_2_0")
+               || !strcasecmp(tok, "sun2_0"))
+        flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+      tok = strtok(NULL, ",");
+    }
+  free(s);
+  return flags;
+}
+
+unsigned int
+parse_inband_workaround_flags(char *str)
+{
+  /* no inband workarounds to parse yet */
+  return 0;
+}
+
 /* From David Wheeler's Secure Programming Guide */
 static void *
 __secure_memset(void *s, int c, size_t n)
@@ -66,6 +136,8 @@ common_parse_opt (int key,
 		  struct argp_state *state, 
 		  struct common_cmd_args *cmd_args)
 {
+  unsigned int flags;
+
   switch (key)
     {
     case DRIVER_TYPE_KEY: 
@@ -441,6 +513,24 @@ common_parse_opt (int key,
           argp_usage (state);
         }
       break;
+    case WORKAROUND_FLAGS_KEY:
+      flags = parse_outofband_workaround_flags(arg);
+      cmd_args->workaround_flags |= flags;
+      flags = parse_outofband_2_0_workaround_flags(arg);
+      if (flags && cmd_args->workaround_flags)
+        {
+          fprintf (stderr, "specified conflicting workaround options\n");
+          argp_usage (state);
+        }
+      cmd_args->workaround_flags |= flags;
+      flags = parse_inband_workaround_flags(arg);
+      if (flags && cmd_args->workaround_flags)
+        {
+          fprintf (stderr, "specified conflicting workaround options\n");
+          argp_usage (state);
+        }
+      cmd_args->workaround_flags |= flags;
+      break;
 #ifndef NDEBUG
     case DEBUG_KEY:
       cmd_args->flags |= IPMI_FLAGS_DEBUG_DUMP;
@@ -625,7 +715,7 @@ free_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 }
 
 void
-verify_sdr_cmd_args (struct common_cmd_args *cmd_args)
+verify_sdr_cmd_args (struct sdr_cmd_args *cmd_args)
 {
   /* nothing right now */
 }
@@ -646,7 +736,7 @@ free_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
 }
 
 void
-verify_hostrange_cmd_args (struct common_cmd_args *cmd_args)
+verify_hostrange_cmd_args (struct hostrange_cmd_args *cmd_args)
 {
   /* nothing right now */
 }
