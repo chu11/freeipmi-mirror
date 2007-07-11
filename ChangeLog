@@ -81,7 +81,11 @@
 
 	* common/src/udm-fiid-wrappers.h: Add new wrappers as needed.
 
-	* common/doc/argp-common-workaround-flags.man: New file.
+	* common/doc/argp-common-workaround-flags.man,
+	argp-common-workaround-heading-text.man,
+	argp-common-workaround-inband-text.man,
+	argp-common-workaround-outofband-text.man,
+	argp-common-workaround-outofband-2-0-text.man: New files.
 
 	* common/src/argp-common.h, common/src/argp-common.c: Support
 	workaround flags.  
