@@ -56,6 +56,10 @@ Boot_Error, OS_Boot, OS_Critical_Stop, Slot_Connector,
 ACPI_Power_State, Watchdog2, Platform_Alert, Entity_Presence,
 Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
 Session_Audit, Version_Change, FRU_State, and Any
+#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

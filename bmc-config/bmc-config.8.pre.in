@@ -45,6 +45,10 @@ List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print detailed information.
+#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
 .SH "EXAMPLES"
 .B # bmc-config --checkout 
 .PP

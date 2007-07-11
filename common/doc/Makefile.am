@@ -8,6 +8,10 @@ EXTRA_DIST = \
 	argp-common-privlevel-user.man \
 	argp-common-privlevel-admin.man \
 	argp-common-workaround-flags.man \
+	argp-common-workaround-heading-text.man \
+	argp-common-workaround-inband-text.man \
+	argp-common-workaround-outofband-2-0-text.man \
+	argp-common-workaround-outofband-text.man \
 	argp-common-debug.man \
 	argp-common-misc.man \
 	argp-common-hostranged-options.man \

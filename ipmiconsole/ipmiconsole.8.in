@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.16.4.1 2007-07-11 17:22:49 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.16.4.2 2007-07-11 22:34:13 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -181,16 +181,22 @@ Send a DEL character.
 Send a single escape character.
 
 .SH "WORKAROUNDS"
-As can be expected, with so many different vendors implementing their
+With so many different vendors implementing their
 own IPMI solutions, different vendors may implement their IPMI
-protocols slightly differently.  The following lists the handful of
-compliance issues discovered and the workarounds available in 
-.B Ipmiconsole. 
+protocols incorrectly.  The following lists the handful of
+compliance issues discovered and the workarounds currently
+supported.
 
-Note that the following only indicates the hardware that a problem was
-discovered on.  Newer versions of a vendors firmware may fix the
-problems indicated below.  Similar machines from vendors may or may
-not exhibit the same problems.
+When possible, workarounds have been implemented so they will be
+transparent to the user.  However, some will require the user to
+specify a workaround be used via the -W option.  The workarounds
+listed below are listed in the order of their implementation.
+Therefore, workarounds implemented earlier may work for other vendors.
+
+The hardware listed below only indicates the hardware that a problem
+was discovered on.  Newer versions hardware may fix the problems
+indicated below.  Similar machines from vendors may or may not exhibit
+the same problems.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
@@ -207,7 +213,7 @@ bugs are confirmed to be fixed on newer firmware.
 
 Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
 around by specifying the "sun20" workaround.  The workarounds include
-handling invalid lengthed hash keys.
+handling invalid lengthed hash keys and invalid cipher suite records.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmiconsole involve a misconfiguration of

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.71.4.3 2007-07-11 21:54:37 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.71.4.4 2007-07-11 22:34:13 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -542,11 +542,10 @@ Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
 
 .SH "WORKAROUNDS"
-With so many different vendors implementing their
-own IPMI solutions, different vendors may implement their IPMI
-protocols incorrectly.  The following lists the handful of
-compliance issues discovered and the workarounds currently used in 
-.B ipmipower.
+With so many different vendors implementing their own IPMI solutions,
+different vendors may implement their IPMI protocols incorrectly.  The
+following lists the handful of compliance issues discovered and the
+workarounds currently supported.
 
 When possible, the workarounds have been implemented so they will be
 transparent to the user.  However, some will require the user to
@@ -554,15 +553,15 @@ specify a workaround be used via the -W option.  The workarounds
 listed below are listed in the order of their implementation.
 Therefore, workarounds implemented earlier may work for other vendors.
 
-Note that the following only indicates the hardware that a problem was
-discovered on.  Newer versions of a vendors firmware may fix the
-problems indicated below.  Similar machines from vendors may or may
-not exhibit the same problems.
+The hardware listed below only indicates the hardware that a problem
+was discovered on.  Newer versions hardware may fix the problems
+indicated below.  Similar machines from vendors may or may not exhibit
+the same problems.
 
 Intel SR870BN4: BMCs would not respond to retransmissions of a Get
 Session Challenge Request if a previous Get Session Challenge response
 was lost.  Resolved by sending retransmitted Get Session Challenge
-requests from a different source port.
+requests from a different source port.  Automatically handled.
 
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
 packet responses return empty session IDs to the client.  In order to
@@ -577,12 +576,6 @@ it should in fact be null).  In order to work around this issue, the
 unexpected non-null authcodes to be checked as though they were
 expected. This compliance bug is confirmed to be fixed on newer
 firmware.
-
-Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The
-activate session response and close session response packets have
-invalid sequence numbers.  Automatically handled by 
-.B ipmipower,
-specific workaround does not need to be specified.  
 
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
@@ -605,9 +598,7 @@ bugs are confirmed to be fixed on newer firmware.
 
 Supermicro H8QME with SIMSO daughter card: The remote BMC will
 advertise that Per Message Authentication is disabled, but actually
-require it for the protocol. Automatically handled by
-.B ipmipower,
-specific workaround does not need to be specified.  
+require it for the protocol. Automatically handled.
 
 Sun Fire 4100: The session sequence numbers returned from the BMC in
 IPMI 1.5 sessions are the wrong endian.  In order to work around this
