@@ -32,7 +32,6 @@ void ipmi_disable_coredump(void);
 ipmi_device_t ipmi_device_open(const char *progname,
                                const char *hostname,
                                struct common_cmd_args *cmd_args,
-                               unsigned int debug_flags,
                                char *errmsg,
                                unsigned int errmsglen);
 

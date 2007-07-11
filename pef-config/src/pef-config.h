@@ -96,7 +96,6 @@ typedef struct pef_config_prog_data
 { 
   char *progname;
   struct pef_config_arguments *args;
-  uint32_t debug_flags;
 } pef_config_prog_data_t;
 
 typedef struct pef_config_state_data

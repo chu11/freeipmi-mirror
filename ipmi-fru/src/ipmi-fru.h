@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.1.2.2 2007-06-28 00:21:45 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.1.2.3 2007-07-11 17:22:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,7 +65,6 @@ typedef struct ipmi_fru_prog_data
 {
   char *progname;
   struct ipmi_fru_arguments *args;
-  uint32_t debug_flags;
 } ipmi_fru_prog_data_t;
 
 typedef struct ipmi_fru_state_data

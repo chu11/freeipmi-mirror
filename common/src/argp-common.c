@@ -443,7 +443,7 @@ common_parse_opt (int key,
       break;
 #ifndef NDEBUG
     case DEBUG_KEY:
-      cmd_args->debug = 1;
+      cmd_args->flags |= IPMI_FLAGS_DEBUG_DUMP;
       break;
 #endif /* NDEBUG */
     default:
@@ -545,9 +545,8 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->cipher_suite_id = 3;
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
-#ifndef NDEBUG
-  cmd_args->debug = 0;
-#endif /* NDEBUG */
+  cmd_args->workaround_flags = 0;
+  cmd_args->flags = IPMI_FLAGS_DEFAULT;
 }
 
 void 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.14 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.14.4.1 2007-07-11 17:22:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -345,14 +345,7 @@ main(int argc, char **argv)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_DEACTIVATE_ONLY;
   if (conf->lock_memory)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_LOCK_MEMORY;
-  if (conf->intel_2_0_session)
-    protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_INTEL_2_0;
-  else if (conf->supermicro_2_0_session)
-    protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
-  else if (conf->sun_2_0_session)
-    protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_SUN_2_0;
-  else
-    protocol_config.workaround_flags = 0;
+  protocol_config.workaround_flags = conf->workaround_flags;
 
   if (!(c = ipmiconsole_ctx_create(conf->hostname,
 				   &ipmi_config,

@@ -163,9 +163,8 @@ struct common_cmd_args
   int authentication_type;
   int cipher_suite_id;
   int privilege_level;
-#ifndef NDEBUG
-  int debug;
-#endif /* NDEBUG */
+  unsigned int workaround_flags;
+  unsigned int flags;
 };
 
 struct sdr_cmd_args

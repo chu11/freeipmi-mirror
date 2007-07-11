@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.6 2007-06-01 04:35:07 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.6.4.1 2007-07-11 17:22:49 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -89,11 +89,10 @@ Specify if in use SOL sessions should not be stolen by default.
 .I lock-memory enable|disable
 Specify if memory should be locked by default.
 .TP
-.I intel_2_0_session enable|disable
-Specify if workarounds for an Intel ipmi 2.0 session should be used.
-.TP
-.I supermicro_2_0_session enable|disable
-Specify if workarounds for a Supermicro ipmi 2.0 session should be used.
+.I workaround-flags str
+Specify default workaround flags to use.  See
+.B ipmiconsole(8)
+for list of workarounds that can be specified.
 .LP
 .br
 .SH "FILES"

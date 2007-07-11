@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16 2007-06-02 18:18:29 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.1 2007-07-11 17:22:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -89,14 +89,12 @@ _usage(void)
           "-k --k-g str                  K_g Key\n"
           "-K --k-g-prompt               Prompt for K_g Key\n"
 	  "-l --privilege str            Privilege\n"
-	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
+	  "-I --cipher-suite-id num      Cipher Suite Id\n"
           "-C --config                   Select alternate config file\n"
           "-N --dont-steal               Do not steal in use SOL sessions by default\n"
           "-T --deactivate               Deactivate a SOL session only\n"
           "-L --lock-memory              Lock memory\n"
-          "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
-          "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n"
-          "-U --sun-2-0-session          Workaround Sun IPMI bugs\n");
+          "-W --workaround-flags str     Workaround flags\n");
 #ifndef NDEBUG
   fprintf(stderr,
           "-D --debug                    Turn on debugging\n"
@@ -114,6 +112,29 @@ _version(void)
   exit(0);
 }
 
+static unsigned int
+_workaround_flags_parse(char *str)
+{
+  char *s, *tok;
+  unsigned int flags = 0;
+
+  if (!(s = strdup(optarg)))
+    err_exit("strdup: %s", strerror(errno));
+  tok = strtok(s, ",");
+  while (tok)
+    {
+      if (!strcasecmp(tok, "intel20"))
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
+      else if (!strcasecmp(tok, "supermicro20"))
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
+      else if (!strcasecmp(tok, "sun20"))
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
+      tok = strtok(NULL, ",");
+    }
+  free(s);
+  return flags;
+}
+
 static void
 _cmdline_parse(int argc, char **argv)
 { 
@@ -123,6 +144,7 @@ _cmdline_parse(int argc, char **argv)
   char *ptr;
   int c;
   int rv;
+  unsigned int flags;
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
@@ -136,19 +158,17 @@ _cmdline_parse(int argc, char **argv)
       {"k-g",                      1, NULL, 'k'},
       {"k-g-prompt",               1, NULL, 'K'},
       {"privilege",                1, NULL, 'l'},
-      {"cipher-suite-id",          1, NULL, 'c'},
+      {"cipher-suite-id",          1, NULL, 'I'},
       {"config-file",              1, NULL, 'C'}, 
       {"dont-steal",               0, NULL, 'N'},
       {"deactivate",               0, NULL, 'T'},
       {"lock-memory",              0, NULL, 'L'},
-      {"intel-2-0-session",        0, NULL, 'I'},
-      {"supermicro-2-0-session",   0, NULL, 'S'},
-      {"sun-2-0-session",          0, NULL, 'U'},
+      {"workaround-flags",         1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",               0, NULL, 'D'},
-      {"debugfile",           0, NULL, 'E'},
-      {"debugdump",           0, NULL, 'F'},
-      {"noraw",               0, NULL, 'G'},
+      {"debug",                    0, NULL, 'D'},
+      {"debugfile",                0, NULL, 'E'},
+      {"debugdump",                0, NULL, 'F'},
+      {"noraw",                    0, NULL, 'G'},
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -158,7 +178,8 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLISU");
+  /* 'I' is advertised option, 'c' is for backwards compatability */
+  strcat(options, "HVh:u:p:Pk:Kl:c:I:C:NTLW");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -256,6 +277,8 @@ _cmdline_parse(int argc, char **argv)
 	    err_exit("Command Line Error: Invalid privilege level");
 	  conf->privilege_set_on_cmdline++;
 	  break;
+        /* 'I' is advertised option, 'c' is for backwards compatability */
+        case 'I':	/* --cipher-suite-id */
 	case 'c':	/* --cipher-suite-id */
           conf->cipher_suite_id = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
@@ -281,17 +304,10 @@ _cmdline_parse(int argc, char **argv)
           conf->lock_memory++;
           conf->lock_memory_set_on_cmdline++;
           break;
-        case 'I':       /* --intel-2-0-session */
-          conf->intel_2_0_session++;
-          conf->intel_2_0_session_set_on_cmdline++;
-          break;
-        case 'S':       /* --supermicro-2-0-session */
-          conf->supermicro_2_0_session++;
-          conf->supermicro_2_0_session_set_on_cmdline++;
-          break;
-        case 'U':       /* --sun-2-0-session */
-          conf->sun_2_0_session++;
-          conf->sun_2_0_session_set_on_cmdline++;
+        case 'W':
+          flags = _workaround_flags_parse(optarg);
+          conf->workaround_flags = flags;
+          conf->workaround_flags_set_on_cmdline = flags;
           break;
 #ifndef NDEBUG
         case 'D':	/* --debug */
@@ -462,6 +478,26 @@ _cb_bool(conffile_t cf,
   return 0;
 }
 
+static int
+_cb_workaround_flags(conffile_t cf, 
+                     struct conffile_data *data,
+                     char *optionname,
+                     int option_type,
+                     void *option_ptr,
+                     int option_data, 
+                     void *app_ptr, 
+                     int app_data)
+{
+  unsigned int flags;
+
+  if (conf->workaround_flags_set_on_cmdline)
+    return 0;
+
+  flags = _workaround_flags_parse(data->string);
+  conf->workaround_flags = flags;
+  return 0;
+}
+
 static void
 _config_file_parse(void)
 {
@@ -473,9 +509,7 @@ _config_file_parse(void)
     cipher_suite_id_flag,
     dont_steal_flag,
     lock_memory_flag,
-    intel_2_0_session_flag,
-    supermicro_2_0_session_flag,
-    sun_2_0_session_flag;
+    workaround_flags_flag;
   
   /* Notes:
    *
@@ -574,37 +608,15 @@ _config_file_parse(void)
         conf->lock_memory_set_on_cmdline
       },
       {
-        "intel_2_0_session", 
-        CONFFILE_OPTION_BOOL, 
+        "workaround_flags",
+        CONFFILE_OPTION_STRING, 
         -1, 
-        _cb_bool,
+        _cb_workaround_flags,
         1, 
         0, 
-        &intel_2_0_session_flag, 
-        &(conf->intel_2_0_session),
-        conf->intel_2_0_session_set_on_cmdline
-      },
-      {
-        "supermicro_2_0_session", 
-        CONFFILE_OPTION_BOOL, 
-        -1, 
-        _cb_bool,
-        1, 
-        0, 
-        &supermicro_2_0_session_flag, 
-        &(conf->supermicro_2_0_session),
-        conf->supermicro_2_0_session_set_on_cmdline
-      },
-      {
-        "sun_2_0_session", 
-        CONFFILE_OPTION_BOOL, 
-        -1, 
-        _cb_bool,
-        1, 
-        0, 
-        &sun_2_0_session_flag, 
-        &(conf->sun_2_0_session),
-        conf->sun_2_0_session_set_on_cmdline
+        &workaround_flags_flag,
+        NULL,
+        0
       },
     };
   conffile_t cf = NULL;

@@ -85,10 +85,6 @@ enum ipmi_driver_type
   };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 
-#define IPMI_FLAGS_DEFAULT        0x00000000
-#define IPMI_FLAGS_NONBLOCKING    0x00000001
-#define IPMI_FLAGS_DEBUG_DUMP     0x00000010
-
 #define IPMI_OUTOFBAND_WORKAROUND_FLAGS_DEFAULT                     0x00000000
 #define IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO      0x00000001
 #define IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION 0x00000002
@@ -101,6 +97,10 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION         0x00000004
 
 #define IPMI_INBAND_WORKAROUND_FLAGS_DEFAULT                        0x00000000
+
+#define IPMI_FLAGS_DEFAULT        0x00000000
+#define IPMI_FLAGS_NONBLOCKING    0x00000001
+#define IPMI_FLAGS_DEBUG_DUMP     0x00000010
 
 typedef struct ipmi_device *ipmi_device_t;
  

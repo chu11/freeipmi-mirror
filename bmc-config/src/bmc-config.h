@@ -89,7 +89,6 @@ typedef struct bmc_config_prog_data
 {
   char *progname;
   struct bmc_config_arguments *args;
-  uint32_t debug_flags;
 } bmc_config_prog_data_t;
 
 typedef struct bmc_config_state_data

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62 2007-06-02 18:18:29 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.1 2007-07-11 17:22:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -240,6 +240,7 @@ _usage(void)
           "-m --soft             Soft Shutdown OS via ACPI\n"
           "-H --help             Output help menu\n"
           "-V --version          Output version\n"
+          "-W --workaround-flags Workaround flags\n"
           );
   exit(1);
 }

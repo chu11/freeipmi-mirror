@@ -82,7 +82,6 @@ typedef struct ipmi_chassis_prog_data
 {
   char *progname;
   struct ipmi_chassis_arguments *args;
-  uint32_t debug_flags;
 } ipmi_chassis_prog_data_t;
 
 typedef struct ipmi_chassis_state_data

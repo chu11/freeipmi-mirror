@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info.h,v 1.4 2007-03-02 00:56:26 chu11 Exp $ 
+   $Id: bmc-info.h,v 1.4.8.1 2007-07-11 17:22:47 chu11 Exp $ 
    
    bmc-info.h - displays BMC information.
    
@@ -38,7 +38,6 @@ typedef struct bmc_info_prog_data
 {
   char *progname;
   struct bmc_info_arguments *args;
-  uint32_t debug_flags;
 } bmc_info_prog_data_t;
 
 typedef struct bmc_info_state_data

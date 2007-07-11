@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.1.2.2 2007-06-28 00:21:44 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.1.2.3 2007-07-11 17:22:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -299,7 +299,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                  args->sdr.sdr_cache_dir,
                                  (args->sdr.quiet_cache_wanted) ? 0 : 1,
 #ifndef NDEBUG
-                                 state_data->prog_data->debug_flags,
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
 #else  /* NDEBUG */
                                  0,
 #endif /* NDEBUG */
@@ -407,7 +407,6 @@ _ipmi_fru(pstdout_state_t pstate,
   if (!(dev = ipmi_device_open(prog_data->progname,
                                hostname,
                                &(prog_data->args->common),
-                               prog_data->debug_flags,
                                errmsg,
                                IPMI_DEVICE_OPEN_ERRMSGLEN)))
     {
@@ -465,15 +464,6 @@ main (int argc, char **argv)
   ipmi_fru_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-#ifndef NDEBUG
-  if (prog_data.args->common.debug)
-    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
-  else
-    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#else  /* NDEBUG */
-  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#endif /* NDEBUG */
-  
   if ((hosts_count = pstdout_setup(&(prog_data.args->common.host),
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,

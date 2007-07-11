@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.16 2007-06-01 04:35:07 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.16.4.1 2007-07-11 17:22:49 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -81,7 +81,7 @@ types are "user", "operator", and "admin".  If not specified, a
 privilege of "admin" is assumed.  The privilege must be atleast the
 minimum required by the remote BMC to establish a SOL session.
 .TP
-.I "-c, --cipher-suite-id id"
+.I "-I, --cipher-suite-id id"
 Specify the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite ID
 identifies a set of authentication, integrity, and confidentiality
 algorithms to use for IPMI 2.0 communication.  The authentication
@@ -129,17 +129,13 @@ to lock memory to prevent
 sensitive information (such as usernames and passwords) to be
 swappable.
 .TP
-.I "-I, --intel-2-0-session"
-Modifies the IPMI 2.0 session protocol for non-compliant Intel
-machines.  For more information, see WORKAROUNDS below.
-.TP
-.I "-S, --supermicro-2-0-session"
-Modifies the IPMI 2.0 session protocol for non-compliant Supermicro
-machines.  For more information, see WORKAROUNDS below.
-.TP
-.I "-U, --sun-2-0-session"
-Modifies the IPMI 2.0 session protocol for non-compliant Sun
-machines.  For more information, see WORKAROUNDS below.
+.I "-W, --workaround-flags str"
+Inform 
+.B ipmiconsole
+to use one of several possible workarounds to get around vendor
+specific IPMI compliance issues.  Multiple workarounds can be
+specified separated by commas. For information on available
+workarounds, see WORKAROUNDS below.
 .TP
 .I "-H, --help"
 Output help menu and exit.
@@ -198,20 +194,20 @@ not exhibit the same problems.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
-worked around using the the -I (--intel-2-0-session) option.  The
-workrarounds include padding of usernames, automatic acceptance of a
-RAKP 4 response integrity check when using the integrity algorith
+worked around by specifying the "intel20" workaround.  The
+workarounds include padding of usernames, automatic acceptance of a
+RAKP 4 response integrity check when using the integrity algorithm
 MD5-128, and password truncation if the authentication algorithm is
 HMAC-MD5-128.
 
 Supermicro H8QME with SIMSO daughter card: There are several
 Supermicro IPMI 2.0 bugs on early firmware revisions which can be
-worked around using the -S (--supermicro-2-0-session) option.
+worked around using the "supermicro20" workaround.  These compliance
+bugs are confirmed to be fixed on newer firmware.
 
 Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
-around by specifying the -U (--sun-2-0) workaround.  The workarounds
-include handling invalid lengthed hash keys and unsupported payload
-types.
+around by specifying the "sun20" workaround.  The workarounds include
+handling invalid lengthed hash keys.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmiconsole involve a misconfiguration of

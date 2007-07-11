@@ -104,7 +104,6 @@ _bmc_config (void *arg)
   if (!(dev = ipmi_device_open(prog_data->progname,
                                prog_data->args->common.host,
                                &(prog_data->args->common),
-                               prog_data->debug_flags,
                                errmsg,
                                IPMI_DEVICE_OPEN_ERRMSGLEN)))
     {
@@ -173,15 +172,6 @@ main (int argc, char *argv[])
     return (EXIT_FAILURE);
 
   prog_data.args = &cmd_args;
-
-#ifndef NDEBUG
-  if (prog_data.args->common.debug)
-    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
-  else
-    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#else  /* NDEBUG */
-  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#endif /* NDEBUG */
 
   exit_code = _bmc_config(&prog_data);
 

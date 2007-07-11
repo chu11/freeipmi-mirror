@@ -29,7 +29,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
       if (!first_word) 
         {
 #ifndef NDEBUG 
-          if (args->common.debug)
+          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "%d: empty line\n", line_num);
 #endif /* NDEBUG */
           continue;
@@ -38,7 +38,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
       if (first_word[0] == '#') 
         {
 #ifndef NDEBUG 
-          if (args->common.debug)
+          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "Comment on line %d\n", line_num);
 #endif /* NDEBUG */
           continue;
@@ -66,7 +66,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
             }
 
 #ifndef NDEBUG 
-          if (args->common.debug) 
+          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
             fprintf (stderr, "Entering section `%s'\n", section_name);
 #endif /* NDEBUG */
 
@@ -83,7 +83,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
               goto cleanup;
             }
 #ifndef NDEBUG 
-          if (args->common.debug)
+          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "Leaving section `%s'\n", section_name);
 #endif /* NDEBUG */
 
@@ -137,7 +137,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
         }
       
 #ifndef NDEBUG 
-      if (args->common.debug) 
+      if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
         fprintf (stderr, "Trying to set `%s:%s=%s'\n",
                  section_name, key_name, value);
 #endif /* NDEBUG */

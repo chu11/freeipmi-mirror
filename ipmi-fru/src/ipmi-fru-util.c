@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-util.c,v 1.2.2.2 2007-06-28 00:21:44 chu11 Exp $
+ *  $Id: ipmi-fru-util.c,v 1.2.2.3 2007-07-11 17:22:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -638,7 +638,7 @@ ipmi_fru_dump_hex(ipmi_fru_state_data_t *state_data,
   assert(str);
 
 #ifndef NDEBUG
-  if (state_data->prog_data->args->common.debug)
+  if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       int i;
 

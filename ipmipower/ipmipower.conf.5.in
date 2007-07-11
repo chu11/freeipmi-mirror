@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.35 2007-04-28 20:06:40 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.35.8.1 2007-07-11 17:22:49 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,7 +124,9 @@ Specify if consolidate-output is enabled or disabled by default.
 Specify if eliminate is enabled or disabled by default.
 .TP
 .I workaround-flags str
-Specify default workaround flags to use: "forcepermsg", "idzero", "unexpectedauth", "intel20", "supermicro20"
+Specify default workaround flags to use.  See 
+.B ipmipower(8)
+for list of workarounds that can be specified.
 .TP
 .I timeout ms
 Specify the timeout in ms.
