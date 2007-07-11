@@ -84,11 +84,19 @@
 	* common/doc/argp-common-workaround-flags.man: New file.
 
 	* common/src/argp-common.h, common/src/argp-common.c: Support
-	workaround flags.
+	workaround flags.  
+
+	* common/src/argp-common.h, common/src/argp-common.c
+	(parse_outofband_workaround_flags,
+	parse_outofband_2_0_workaround_flags,
+	parse_inband_workaround_flags): New functions.
 
 	* bmc-config/, bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-sel/,
 	ipmi-sensors/, pef-config/: Update manpages and command line
 	option code.
+
+	* ipmipower/, ipmiconsole/: Use common workaround parses in
+	argp-common.
 	
 	* doc/freeipmi-workarounds.txt: New file.
 	
