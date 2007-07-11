@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.35.8.1 2007-07-11 17:22:49 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.35.8.2 2007-07-11 21:54:37 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -105,7 +105,7 @@ currently supports the following privilege types: "auto", "user",
 .I ipmi-version str
 Specify the default IPMI protocol version to use: "auto", "1.5", and "2.0"
 .TP
-.I cipher_suite_id str
+.I cipher-suite-id str
 Specify the default Cipher Suite ID to use: "auto", "0", "1", "2", "3", "6", "7", "8", "11", 12"
 .TP
 .I on-if-off enable|disable

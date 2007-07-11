@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.47 2007-06-02 18:18:29 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.47.4.1 2007-07-11 21:54:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -99,7 +99,7 @@ _cmd_advanced(void)
 {
   cbuf_printf(ttyout, 
               "authentication_type str               - set a new authentication type\n"
-              "privilege str                         - set a new privilege type\n"
+              "privilege_level str                   - set a new privilege type\n"
 	      "ipmi_version str                      - set a new ipmi version\n"
               "cipher_suite_id str                   - set a new cipher suite id\n"
               "on-if-off [on|off]                    - toggle on-if-off functionality\n"
@@ -676,7 +676,7 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "Authentication_Type:          %s\n", 
               ipmipower_authentication_type_string(conf->authentication_type));
-  cbuf_printf(ttyout, "Privilege:                    %s\n", 
+  cbuf_printf(ttyout, "Privilege_Level:              %s\n", 
               ipmipower_privilege_string(conf->privilege));
   cbuf_printf(ttyout, "IPMI_Version:                 %s\n",
               ipmipower_ipmi_version_string(conf->ipmi_version));
@@ -851,13 +851,13 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_version();
               else if (strcmp(argv[0], "quit") == 0)
                 quit = 1;
-              else if (strcmp(argv[0], "authentication_type") == 0)
+              else if (strcmp(argv[0], "authentication-type") == 0)
                 _cmd_authentication_type(argv);
-              else if (strcmp(argv[0], "privilege") == 0)
+              else if (strcmp(argv[0], "privilege-level") == 0)
                 _cmd_privilege(argv);
-              else if (strcmp(argv[0], "ipmi_version") == 0)
+              else if (strcmp(argv[0], "ipmi-version") == 0)
                 _cmd_ipmi_version(argv);
-              else if (strcmp(argv[0], "cipher_suite_id") == 0)
+              else if (strcmp(argv[0], "cipher-suite-id") == 0)
                 _cmd_cipher_suite_id(argv);
               else if (strcmp(argv[0], "on-if-off") == 0)
                 _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");

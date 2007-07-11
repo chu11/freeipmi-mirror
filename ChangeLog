@@ -98,14 +98,12 @@
 	* ipmipower/, ipmiconsole/: Use common workaround parses in
 	argp-common.
 	
-	* doc/freeipmi-workarounds.txt: New file.
-	
 	* doc/Makefile.am: Updated appropriately.
 
 	Unify code:
 
-	* ipmipower/, ipmiconsole/: Where appropriate, adjust command line
-	options to match the rest of FreeIPMI.
+	* Where appropriate, adjust command line options between
+	tools/programs to match more closely.
 	
 	Misc:
 

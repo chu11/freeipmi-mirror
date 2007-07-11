@@ -4,8 +4,7 @@ info_TEXINFOS =  freeipmi-faq.texi
 EXTRA_DIST = \
 	freeipmi-coding.txt \
 	freeipmi-hostrange.txt \
-	freeipmi-libraries.txt \
-	freeipmi-workarounds.txt
+	freeipmi-libraries.txt
 
 docdir = $(datadir)/doc/$(PACKAGE)
 

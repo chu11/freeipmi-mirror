@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.71.4.2 2007-07-11 21:01:30 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.71.4.3 2007-07-11 21:54:37 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -427,7 +427,7 @@ output network help menu
 quit
 .B ipmipower.
 .TP
-.I "authentication_type str"
+.I "authentication-type str"
 specify a new authentication type, auto, none, straight_password_key, md2, or md5.
 .TP
 .I "privilege-level str"
