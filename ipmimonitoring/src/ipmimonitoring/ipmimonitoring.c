@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17 2007-06-02 19:48:15 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.1 2007-07-11 21:21:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,7 +128,7 @@ _usage(void)
           "-p --password pw              Password\n"
           "-P --password-prompt          Prompt for Password\n"
           "-l --privilege-level str      Privilege Level (user, operator, admin)\n"
-          "-a --authentication-type str  Authentication Type (none, straight_password, md2, md5)\n"
+          "-a --authentication-type str  Authentication Type (none, straight_password_key, md2, md5)\n"
           "-s --sensors list             Specify list of sensors to monitor\n"
           "-g --groups list              Specify list of groups to monitor\n"
           "-c --cache-dir str            Specify alternate SDR cache directory\n"

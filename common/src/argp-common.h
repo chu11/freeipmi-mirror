@@ -103,7 +103,7 @@ enum argp_common_option_keys
 #define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
     {"authentication-type", AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 	   \
      "Use AUTHTYPE instead of MD5.  "				           \
-     "Allowed values are NONE, MD2, MD5, and PLAIN.", 12}	           \
+     "Allowed values are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5.", 12}  \
 
 #define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                \
     {"cipher-suite-id",     CIPHER_SUITE_ID_KEY, "CIPHER_SUITE_ID", 0,    \

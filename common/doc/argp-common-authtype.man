@@ -1,4 +1,4 @@
 .TP
 \fB\-a\fR, \fB\-\-authentication\-type\fR=\fIAUTHTYPE\fR
 Use AUTHTYPE instead of MD5.  Allowed values are
-NONE, MD2, MD5, and PLAIN.
+NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5.

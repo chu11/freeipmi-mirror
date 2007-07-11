@@ -438,12 +438,14 @@ common_parse_opt (int key,
     case AUTHENTICATION_TYPE_KEY: 
       if (strcasecmp (arg, "none") == 0)
         cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+      /* keep "plain" for backwards compatability */
+      else if (strcasecmp (arg, "plain") == 0
+               || strcasecmp (arg, "straight_password_key"))
+        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
       else if (strcasecmp (arg, "md2") == 0)
         cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD2;
       else if (strcasecmp (arg, "md5") == 0)
         cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
-      else if (strcasecmp (arg, "plain") == 0)
-        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
       else 
         {
           fprintf(stderr, "invalid authentication type specified\n");
