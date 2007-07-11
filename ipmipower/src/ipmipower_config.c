@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.3 2007-07-11 21:01:30 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.4 2007-07-11 21:47:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -225,22 +225,23 @@ static void
 _usage(void) 
 {
   fprintf(stderr, "Usage: ipmipower [OPTIONS]\n"
-          "-h --hostnames hosts  List of hostnames\n"
-          "-u --username name    Username\n"
-          "-p --password pw      Password\n" 
-          "-P --password-prompt  Prompt for Password\n"
-          "-k --k-g str          K_g Key\n"
-          "-K --k-g-prompt       Prompt for K_g Key\n"
-          "-n --on               Power On\n"
-          "-f --off              Power Off\n"
-          "-c --cycle            Power Cycle\n"
-          "-r --reset            Power Reset\n"
-          "-s --stat             Power Status Query\n"
-          "-j --pulse            Pulse Diagnostic Interrupt\n"
-          "-m --soft             Soft Shutdown OS via ACPI\n"
-          "-H --help             Output help menu\n"
-          "-V --version          Output version\n"
-          "-W --workaround-flags Workaround flags\n"
+          "-h --hostnames hosts           Hostnames\n"
+          "-u --username name             Username\n"
+          "-p --password pw               Password\n" 
+          "-P --password-prompt           Prompt for Password\n"
+          "-k --k-g str                   K_g Key\n"
+          "-K --k-g-prompt                Prompt for K_g Key\n"
+          "-a --authentication-type str   Authentication Type\n"
+          "-l --privilege-level str       Privilege Level\n"
+          "-I --cipher-suite-id num       Cipher Suite ID\n"
+          "-W --workaround-flags str      Workaround flags\n"
+          "-n --on                        Power On\n"
+          "-f --off                       Power Off\n"
+          "-c --cycle                     Power Cycle\n"
+          "-r --reset                     Power Reset\n"
+          "-s --stat                      Power Status Query\n"
+          "-H --help                      Output help menu\n"
+          "-V --version                   Output version\n"
           );
   exit(1);
 }
