@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.71 2007-05-24 13:37:48 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.71.4.1 2007-07-11 20:50:31 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -154,7 +154,7 @@ are "auto", "1.5", and "2.0".  If not specified,
 uses "auto", which will try find an IPMI protocol version that is
 suitable.  IPMI 1.5 is given weight over IPMI 2.0.
 .TP
-.I "-T, --cipher-suite-id id"
+.I "-I, --cipher-suite-id id"
 Set the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite ID identifies
 a set of authentication, integrity, and confidentiality algorithms to 
 use for IPMI 2.0 communication.  The authentication algorithm identifies
@@ -250,7 +250,7 @@ workarounds, see WORKAROUNDS below.
 .I "-D, --debug"
 Turn on debugging output.
 .TP
-.I "-I, --ipmidump"
+.I "-T, --ipmidump"
 Turn on IPMI packet dump output. Warning, the dump output can get
 extremely long.
 .TP

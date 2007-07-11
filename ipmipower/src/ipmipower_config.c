@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.1 2007-07-11 17:22:49 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.2 2007-07-11 20:50:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -271,7 +271,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:Pk:KnfcrsjmHVX:a:l:R:T:gABCEW:DIMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVX:a:l:R:I:gABCEW:DTMLF:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
   char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:T:gABCEW:t:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
@@ -300,7 +300,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"authentication-type",          1, NULL, 'a'},  
       {"privilege",                    1, NULL, 'l'},
       {"ipmi-version",                 1, NULL, 'R'},
-      {"cipher-suite-id",              1, NULL, 'T'},
+      {"cipher-suite-id",              1, NULL, 'I'},
       {"on-if-off",                    0, NULL, 'g'},
       {"wait-until-on",                0, NULL, 'A'},
       {"wait-until-off",               0, NULL, 'B'},
@@ -309,7 +309,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"workaround-flags",             1, NULL, 'W'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
-      {"ipmidump",                     0, NULL, 'I'},
+      {"ipmidump",                     0, NULL, 'T'},
       {"rmcpdump",                     0, NULL, 'M'},
       {"log",                          0, NULL, 'L'},
       {"logfile",                      1, NULL, 'F'},
@@ -449,7 +449,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->ipmi_version = ipmipower_ipmi_version_index(optarg);
 	  conf->ipmi_version_set_on_cmdline = IPMIPOWER_TRUE;
           break;
-        case 'T':       /* --cipher-suite-id */
+        case 'I':       /* --cipher-suite-id */
           conf->cipher_suite_id = ipmipower_cipher_suite_id_index(optarg);
           conf->cipher_suite_id_set_on_cmdline = IPMIPOWER_TRUE;
         case 'g':       /* --on-if-off */
@@ -482,7 +482,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'D':       /* --debug */
           conf->debug = !conf->debug;
           break;
-        case 'I':       /* --ipmidump */
+        case 'T':       /* --ipmidump */
           conf->ipmidump = !conf->ipmidump;
           break;
         case 'M':       /* --rmcpdump */
