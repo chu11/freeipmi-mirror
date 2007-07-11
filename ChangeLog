@@ -3,6 +3,10 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_checks.c
 	(ipmiconsole_check_outbound_sequence_number): Remove left over
 	debugging.
+
+	* ipmipower/ipmipower.conf.5.in: Update w/ forgotten options.
+
+	* ipmiconsole/ipmiconsole.conf.5.in: Update w/ forgotten options.
 	
 2007-07-09  Dmitry Frolov <frolov@riss-telecom.ru>
 
