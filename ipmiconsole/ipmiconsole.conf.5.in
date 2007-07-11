@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.6 2007-06-01 04:35:07 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.6.6.1 2007-07-11 00:15:57 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -94,6 +94,9 @@ Specify if workarounds for an Intel ipmi 2.0 session should be used.
 .TP
 .I supermicro_2_0_session enable|disable
 Specify if workarounds for a Supermicro ipmi 2.0 session should be used.
+.TP
+.I sun_2_0_session enable|disable
+Specify if workarounds for a Sun ipmi 2.0 session should be used.
 .LP
 .br
 .SH "FILES"

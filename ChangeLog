@@ -1836,6 +1836,10 @@
 	* common/src/ipmi-sdr-api.h, common/src/ipmi-sdr-api.c,
 	ipmi-sel/src/ipmi-sel.c, ipmi-sensors/src/ipmi-sensors.c: Add SDR
 	debugging.
+
+	* ipmipower/ipmipower.conf.5.in: Update w/ forgotten options.
+
+	* ipmiconsole/ipmiconsole.conf.5.in: Update w/ forgotten options.
 	
 2006-11-13  Albert Chu <chu11@llnl.gov>
 
