@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.6.4.1 2007-07-11 17:22:49 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.6.4.2 2007-07-11 21:07:19 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,13 +74,13 @@ Specify the default password to use.
 .I k_g str
 Specify the BMC key (K_g) to use.  Prefix with '0x' to enter the key in hex.
 .TP
-.I privilege str
+.I privilege-level str
 Specify the default privilege type to use.  
 .B Ipmiconsole 
 currently supports the following privilege types: "user", "operator",
 and "admin".
 .TP
-.I cipher_suite_id str
+.I cipher-suite-id str
 Specify the default Cipher Suite ID to use: "auto", "0", "1", "2", "3", "6", "7", "8", "11", 12"
 .TP
 .I dont-steal enable|disable

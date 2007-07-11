@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.3 2007-07-11 18:14:47 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.4 2007-07-11 21:07:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -89,7 +89,7 @@ _usage(void)
           "-P --password-prompt          Prompt for Password\n"
           "-k --k-g str                  K_g Key\n"
           "-K --k-g-prompt               Prompt for K_g Key\n"
-	  "-l --privilege str            Privilege\n"
+	  "-l --privilege-level str      Privilege\n"
 	  "-I --cipher-suite-id num      Cipher Suite Id\n"
           "-C --config                   Select alternate config file\n"
           "-N --dont-steal               Do not steal in use SOL sessions by default\n"
@@ -135,7 +135,7 @@ _cmdline_parse(int argc, char **argv)
       {"password-prompt",          1, NULL, 'P'},
       {"k-g",                      1, NULL, 'k'},
       {"k-g-prompt",               1, NULL, 'K'},
-      {"privilege",                1, NULL, 'l'},
+      {"privilege-level",          1, NULL, 'l'},
       {"cipher-suite-id",          1, NULL, 'I'},
       {"config-file",              1, NULL, 'C'}, 
       {"dont-steal",               0, NULL, 'N'},
@@ -243,7 +243,7 @@ _cmdline_parse(int argc, char **argv)
 	      conf->k_g_set_on_cmdline++;
 	    }
           break;
-	case 'l':	/* --privilege */
+	case 'l':	/* --privilege-level */
 	  if (!strcasecmp(optarg, "user"))
 	    conf->privilege = IPMICONSOLE_PRIVILEGE_USER;
 	  else if (!strcasecmp(optarg, "operator"))
@@ -554,7 +554,7 @@ _config_file_parse(void)
         0
       },
       {
-        "privilege", 
+        "privilege-level", 
         CONFFILE_OPTION_STRING, 
         -1,
         _cb_privilege,
@@ -565,7 +565,7 @@ _config_file_parse(void)
         0
       },
       {
-        "cipher_suite_id", 
+        "cipher-suite-id", 
         CONFFILE_OPTION_INT, 
         -1, 
         _cb_cipher_suite_id,
@@ -598,7 +598,7 @@ _config_file_parse(void)
         conf->lock_memory_set_on_cmdline
       },
       {
-        "workaround_flags",
+        "workaround-flags",
         CONFFILE_OPTION_STRING, 
         -1, 
         _cb_workaround_flags,
