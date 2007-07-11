@@ -111,12 +111,12 @@ enum argp_common_option_keys
      "Allowed values are 0, 1, 2, 3, 6, 7, 8, 11, 12.", 13}	           \
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL_USER                                 \
-    {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
+    {"privilege",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 14}     
 
 #define ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN                                \
-    {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
+    {"privilege",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	   \
      "Use this PRIVILEGE-LEVEL instead of ADMIN.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 15}     
 
