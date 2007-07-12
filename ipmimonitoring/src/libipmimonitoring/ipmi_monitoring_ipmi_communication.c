@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.2 2007-07-12 20:17:37 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.3 2007-07-12 21:45:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,10 +90,10 @@ _inband_init(ipmi_monitoring_ctx_t c,
   /* No SSIF b/c user can't specify a driver path ipmimonitoring yet */
   if (ipmi_open_inband (c->comm.dev,
                         IPMI_DEVICE_OPENIPMI,
-                        0,
-                        0,
-                        0,
-                        NULL,
+                        config->disable_auto_probe,
+                        config->driver_address,
+                        config->register_space,
+                        config->driver_device,
                         workaround_flags,
                         flags) < 0)
     {
@@ -101,31 +101,43 @@ _inband_init(ipmi_monitoring_ctx_t c,
 
       if (ipmi_open_inband (c->comm.dev,
                             IPMI_DEVICE_KCS,
-                            0,
-                            0,
-                            0,
-                            NULL,
+                            config->disable_auto_probe,
+                            config->driver_address,
+                            config->register_space,
+                            config->driver_device,
                             workaround_flags,
                             flags) < 0)
         {
           IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
 
-          if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
-            c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
-                   || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
-                   || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
-                   || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INTERNAL_IPMI_ERROR)
-            c->errnum = IPMI_MONITORING_ERR_IPMI;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
-            c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
-          else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INTERNAL_SYSTEM_ERROR)
-            c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
-          else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL;
-          return -1;
+          if (ipmi_open_inband (c->comm.dev,
+                                IPMI_DEVICE_SSIF,
+                                config->disable_auto_probe,
+                                config->driver_address,
+                                config->register_space,
+                                config->driver_device,
+                                workaround_flags,
+                                flags) < 0)
+            {
+              IPMI_MONITORING_DEBUG(("ipmi_cmd: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
+              
+              if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
+                c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
+              else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+                       || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+                       || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
+                       || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INTERNAL_IPMI_ERROR)
+                c->errnum = IPMI_MONITORING_ERR_IPMI;
+              else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
+                c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+              else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INTERNAL_SYSTEM_ERROR)
+                c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+              else
+                c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+              return -1;
+            }
         }
-    }
+    } 
 
   return 0;
 }

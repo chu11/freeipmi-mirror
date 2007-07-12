@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67 2006-12-15 17:26:44 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.1 2007-07-12 21:45:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -116,8 +116,8 @@ struct cmdline_info
   int driver_type_val;
   int driver_address;
   uint32_t driver_address_val;
-  int reg_space;
-  uint8_t reg_space_val;
+  int register_space;
+  uint8_t register_space_val;
   int driver_device;
   char *driver_device_val;
   char *logfile;
@@ -294,8 +294,8 @@ _init_kcs_ipmi(void)
 
   if (cinfo.driver_address)
     l.driver_address = cinfo.driver_address_val;
-  if (cinfo.reg_space)
-    l.reg_space = cinfo.reg_space_val;
+  if (cinfo.register_space)
+    l.register_space = cinfo.register_space_val;
   
   if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
     {
@@ -303,7 +303,7 @@ _init_kcs_ipmi(void)
       return -1;
     }
   
-  if (ipmi_kcs_ctx_set_register_space(kcs_ctx, l.reg_space) < 0)
+  if (ipmi_kcs_ctx_set_register_space(kcs_ctx, l.register_space) < 0)
     {
       _bmclog("ipmi_kcs_ctx_set_register_space: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
       return -1;
@@ -1187,7 +1187,7 @@ _cmdline_parse(int argc, char **argv)
     {"daemon",                0, NULL, 'd'},
     {"driver-type",           1, NULL, 'I'},
     {"driver-address",        1, NULL, 'o'},
-    {"reg-space",             1, NULL, 'R'},
+    {"register-space",        1, NULL, 'R'},
     {"driver-device",         1, NULL, 'E'},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
@@ -1277,8 +1277,8 @@ _cmdline_parse(int argc, char **argv)
             _err_exit("driver-address value invalid");
           break;
         case 'R':
-          cinfo.reg_space++;
-          cinfo.reg_space_val = strtol(optarg, &ptr, 10);
+          cinfo.register_space++;
+          cinfo.register_space_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("reg-space value invalid");
           break;

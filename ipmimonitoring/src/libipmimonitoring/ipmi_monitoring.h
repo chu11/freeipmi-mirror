@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6.8.2 2007-07-12 20:09:09 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.3 2007-07-12 21:45:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -443,11 +443,20 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *
  * disable_auto_probe
  *
+ *   Flag informs the library if in-band driver information should be
+ *   probed or not.
+ *
  * driver_address
+ *
+ *   Use this specified driver address instead of a probed one.
  *
  * register_space
  *
+ *   Use this register space instead of the probed one.
+ *
  * driver_device
+ *
+ *   Use this driver device for the IPMI driver.
  *
  * Configuration information for IPMI Out-of-Band monitoring
  *
@@ -494,6 +503,8 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *   Specifies the packet retransmission timeout length in
  *   milliseconds.  Pass <= 0 to default to 500 (0.5 seconds).
  *
+ * Configuration information for both Inband and Outofband
+ *
  * workaround_flags
  *
  *   Bitwise OR of flags indicating any behavior which should be
@@ -504,12 +515,18 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  */
 struct ipmi_monitoring_ipmi_config
 {
+  int disable_auto_probe;
+  unsigned int driver_address;
+  unsigned int register_space;
+  char *driver_device;
+
   char *username;
   char *password;
   int privilege_level;
   int authentication_type;
   int session_timeout_len;
   int retransmission_timeout_len;
+
   unsigned int workaround_flags;
 };
 
