@@ -635,9 +635,6 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
 void 
 free_common_cmd_args (struct common_cmd_args *cmd_args)
 {
-  cmd_args->disable_auto_probe = 0;
-  cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
-  cmd_args->driver_address = 0;
   if (cmd_args->driver_device != NULL)
     {
       free (cmd_args->driver_device);
@@ -658,8 +655,6 @@ free_common_cmd_args (struct common_cmd_args *cmd_args)
       free (cmd_args->password);
       cmd_args->password = NULL;
     }
-  cmd_args->authentication_type = 0;
-  cmd_args->privilege_level = 0;
 }
 
 void

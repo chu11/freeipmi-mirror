@@ -122,6 +122,9 @@
 	IPMI_1_5_MAX_PASSWORD_LENGTH and IPMI_2_0_MAX_PASSWORD_LENGTH as
 	needed.
 
+	* common/src/argp-common.h, common/src/argp-common.c,
+	common/src/tool-common.c: Adjust for auto_probe logic change.
+
 	* General code cleanup throughout.
 	
 2007-06-27  Albert Chu <chu11@llnl.gov>
