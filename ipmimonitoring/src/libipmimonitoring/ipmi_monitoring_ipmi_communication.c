@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.3 2007-07-12 21:45:12 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.4 2007-07-12 22:26:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -143,9 +143,9 @@ _inband_init(ipmi_monitoring_ctx_t c,
 }
              
 static int
-_outofband_init(ipmi_monitoring_ctx_t c, 
-                const char *hostname,
-                struct ipmi_monitoring_ipmi_config *config)
+_ipmi_1_5_init(ipmi_monitoring_ctx_t c, 
+               const char *hostname,
+               struct ipmi_monitoring_ipmi_config *config)
 {
   uint8_t privilege_level;
   uint8_t authentication_type;
@@ -153,6 +153,10 @@ _outofband_init(ipmi_monitoring_ctx_t c,
   unsigned int retransmission_timeout_len;
   unsigned int workaround_flags;
   unsigned int flags;
+  unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER);
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -172,7 +176,7 @@ _outofband_init(ipmi_monitoring_ctx_t c,
                       && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
                       && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_MD2
                       && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_MD5))
-              || (config->workaround_flags & ~IPMI_MONITORING_WORKAROUND_FLAGS_MASK))))
+              || (config->workaround_flags & ~workaround_flags_mask))))
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return -1;
@@ -213,6 +217,12 @@ _outofband_init(ipmi_monitoring_ctx_t c,
     retransmission_timeout_len = config->retransmission_timeout_len;
   else
     retransmission_timeout_len = IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
+
+   if (retransmission_timeout_len > session_timeout_len)
+     {
+       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+       return -1;
+     }
 
   workaround_flags = 0;
   if (config && config->workaround_flags)
@@ -283,6 +293,196 @@ _outofband_init(ipmi_monitoring_ctx_t c,
   return 0;
 }
 
+static int
+_ipmi_2_0_init(ipmi_monitoring_ctx_t c, 
+               const char *hostname,
+               struct ipmi_monitoring_ipmi_config *config)
+{
+  uint8_t privilege_level;
+  uint8_t cipher_suite_id;
+  unsigned int session_timeout_len;
+  unsigned int retransmission_timeout_len;
+  unsigned int workaround_flags;
+  unsigned int flags;
+  unsigned workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION);
+  assert(c);
+  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert(c->comm.dev);
+  assert(hostname);
+
+  if (strlen(hostname) > MAXHOSTNAMELEN
+      || (config
+          && ((config->username && strlen(config->username) > IPMI_MAX_USER_NAME_LENGTH)
+              || (config->password && strlen(config->password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+              || (config->k_g && config->k_g_len > IPMI_MAX_K_G_LENGTH)
+              || (config->privilege_level >= 0
+                  && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_USER
+                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_OPERATOR
+                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_ADMIN))
+              || (config->cipher_suite_id >= 0
+                  && (config->cipher_suite_id != 0
+                      && config->cipher_suite_id != 1
+                      && config->cipher_suite_id != 2
+                      && config->cipher_suite_id != 3
+                      && config->cipher_suite_id != 6
+                      && config->cipher_suite_id != 7
+                      && config->cipher_suite_id != 8
+                      && config->cipher_suite_id != 11
+                      && config->cipher_suite_id != 12))
+              || (config->workaround_flags & ~workaround_flags_mask))))
+    {
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (config && config->privilege_level >= 0)
+    {
+      if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_USER)
+        privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
+      else if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_OPERATOR)
+        privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+      else
+        privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
+    }
+  else
+    privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT;
+
+  if (config && config->cipher_suite_id > 0)
+    cipher_suite_id = config->cipher_suite_id;
+  else
+    cipher_suite_id = 3;
+
+  if (config && config->session_timeout_len > 0)
+    session_timeout_len = config->session_timeout_len;
+  else
+    session_timeout_len = IPMI_MONITORING_SESSION_TIMEOUT_LENGTH_DEFAULT;
+
+  if (config && config->retransmission_timeout_len > 0)
+    retransmission_timeout_len = config->retransmission_timeout_len;
+  else
+    retransmission_timeout_len = IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
+
+   if (retransmission_timeout_len > session_timeout_len)
+     {
+       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+       return -1;
+     }
+
+  workaround_flags = 0;
+  if (config && config->workaround_flags)
+    {
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+        workaround_flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+        workaround_flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+        workaround_flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+    }
+  
+  if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)
+      && (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS))
+    flags = IPMI_FLAGS_DEBUG_DUMP;
+  else
+    flags = IPMI_FLAGS_DEFAULT;
+
+  if (ipmi_open_outofband_2_0 (c->comm.dev,
+                               IPMI_DEVICE_LAN_2_0,
+                               hostname,
+                               (config) ? config->username : NULL,
+                               (config) ? config->password : NULL,
+                               (config) ? config->k_g : NULL,
+                               (config && config->k_g) ? config->k_g_len : 0,
+                               privilege_level,
+                               cipher_suite_id,
+                               session_timeout_len,
+                               retransmission_timeout_len,
+                               workaround_flags,
+                               flags) < 0)
+    {
+      IPMI_MONITORING_DEBUG(("ipmi_open_outofband_2_0: %s", ipmi_device_strerror(ipmi_device_errnum(c->comm.dev))));
+      if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_USERNAME)
+        c->errnum = IPMI_MONITORING_ERR_USERNAME;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD)
+        c->errnum = IPMI_MONITORING_ERR_PASSWORD;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE)
+        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_K_G)
+        c->errnum = IPMI_MONITORING_ERR_K_G;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_CIPHER_SUITE_UNAVAILABLE)
+        c->errnum = IPMI_MONITORING_ERR_CIPHER_SUITE_UNAVAILABLE;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT)
+        c->errnum = IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
+        c->errnum = IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SESSION_TIMEOUT)
+        c->errnum = IPMI_MONITORING_ERR_SESSION_TIMEOUT;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INVALID_COMMAND
+               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID
+               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE
+               || ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INTERNAL_IPMI_ERROR)
+        c->errnum = IPMI_MONITORING_ERR_IPMI;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
+        c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INSUFFICIENT_PRIVILEGE)
+        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
+        c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INVALID_HOSTNAME)
+        c->errnum = IPMI_MONITORING_ERR_HOSTNAME_INVALID;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INVALID_PARAMETERS)
+        c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INTERNAL_SYSTEM_ERROR)
+        c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+      else
+        c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      return -1;
+    }
+
+  return 0;
+}
+
+static int
+_outofband_init(ipmi_monitoring_ctx_t c, 
+                const char *hostname,
+                struct ipmi_monitoring_ipmi_config *config)
+{
+  assert(c);
+  assert(c->magic == IPMI_MONITORING_MAGIC);
+  assert(c->comm.dev);
+  assert(hostname);
+
+  if (strlen(hostname) > MAXHOSTNAMELEN
+      || (config
+          && ((config->protocol_version >= 0
+               && (config->protocol_version != IPMI_MONITORING_PROTOCOL_VERSION_1_5
+                   && config->protocol_version != IPMI_MONITORING_PROTOCOL_VERSION_2_0)))))
+    {
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (!config 
+      || config->protocol_version < 0
+      || config->protocol_version == IPMI_MONITORING_PROTOCOL_VERSION_1_5)
+    {
+      if (_ipmi_1_5_init(c,
+                         hostname,
+                         config) < 0)
+        return -1;
+    }
+  else
+    {
+      if (_ipmi_2_0_init(c,
+                         hostname,
+                         config) < 0)
+        return -1;
+    }
+
+  return 0;
+}
+
 int 
 ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
                                         const char *hostname,
@@ -302,7 +502,6 @@ ipmi_monitoring_ipmi_communication_init(ipmi_monitoring_ctx_t c,
       goto cleanup;
     }
   
- /* XXX - & 2.0 */
   if (!hostname)
     {
       if (_inband_init(c, config) < 0)

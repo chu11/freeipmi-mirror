@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.11.8.1 2007-07-12 18:19:03 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.11.8.2 2007-07-12 22:26:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -71,8 +71,11 @@ static char *ipmi_monitoring_errmsgs[] =
     "invalid username",
     "invalid password",
     "password verification timeout",
+    "invalid k_g",
     "invalid privilege level",
     "invalid authentication type",
+    "ipmi 2.0 unavailable",
+    "cipher suite unavailable",
     "BMC busy",
     "internal IPMI error",
     "out of memory",

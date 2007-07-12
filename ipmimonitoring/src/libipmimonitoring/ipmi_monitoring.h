@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6.8.3 2007-07-12 21:45:12 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.4 2007-07-12 22:26:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -51,14 +51,17 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_USERNAME                      = 15,
     IPMI_MONITORING_ERR_PASSWORD                      = 16,
     IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT = 17,
-    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL               = 18,
-    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE           = 19,
-    IPMI_MONITORING_ERR_BMC_BUSY                      = 20,
-    IPMI_MONITORING_ERR_IPMI                          = 21,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY                 = 22,
-    IPMI_MONITORING_ERR_SYSTEM_ERROR                  = 23,
-    IPMI_MONITORING_ERR_INTERNAL                      = 24,
-    IPMI_MONITORING_ERR_ERRNUMRANGE                   = 25,
+    IPMI_MONITORING_ERR_K_G                           = 18,
+    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL               = 19,
+    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE           = 20,
+    IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE          = 21,
+    IPMI_MONITORING_ERR_CIPHER_SUITE_UNAVAILABLE      = 22,
+    IPMI_MONITORING_ERR_BMC_BUSY                      = 23,
+    IPMI_MONITORING_ERR_IPMI                          = 24,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                 = 25,
+    IPMI_MONITORING_ERR_SYSTEM_ERROR                  = 26,
+    IPMI_MONITORING_ERR_INTERNAL                      = 27,
+    IPMI_MONITORING_ERR_ERRNUMRANGE                   = 28,
   };
 
 enum ipmi_monitoring_sensor_group
@@ -142,7 +145,13 @@ enum ipmi_monitoring_sensor_bitmask_type
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0x19,
   };
 
-enum ipmi_monitoring_privilege_type
+enum ipmi_monitoring_protocol_version
+  {
+    IPMI_MONITORING_PROTOCOL_VERSION_1_5 = 0x00,
+    IPMI_MONITORING_PROTOCOL_VERSION_2_0 = 0x01,
+  };
+
+enum ipmi_monitoring_privilege
   {
     IPMI_MONITORING_PRIVILEGE_USER     = 0x00,
     IPMI_MONITORING_PRIVILEGE_OPERATOR = 0x01,
@@ -171,6 +180,9 @@ enum ipmi_monitoring_workaround_flags
     IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION = 0x00000002,
     IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE   = 0x00000004,
     IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER  = 0x00000008,
+    IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION           = 0x00000010,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      = 0x00000020,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION             = 0x00000040,
   };
 
 enum ipmi_monitoring_sensor_reading_flags
@@ -460,6 +472,15 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *
  * Configuration information for IPMI Out-of-Band monitoring
  *
+ * protocol_version
+ *
+ *   Indicate the IPMI protocol version to use
+ *
+ *   IPMI_MONITORING_PROTOCOL_VERSION_1_5
+ *   IPMI_MONITORING_PROTOCOL_VERSION_2_0
+ *
+ *   Pass < 0 for default of IPMI_MONITORING_VERSION_1_5.
+ *
  * username
  *
  *   BMC username. Pass NULL ptr for NULL username.  Maximum length of
@@ -468,7 +489,17 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  * password
  *
  *   BMC password. Pass NULL ptr for NULL password.  Maximum length of
- *   16 bytes.
+ *   16 bytes for IPMI 1.5, 20 bytes for IPMI 2.0
+ *
+ * k_g
+ *
+ *   BMC Key for 2-key authentication.  Pass NULL ptr to use password
+ *   as BMC key.
+ *
+ * k_g_len
+ *
+ *   Length of k_g.  Necessary b/c k_g may contain null values or in its
+ *   hex key.  Maximum length of 20 bytes.
  *
  * privilege_level
  *
@@ -492,6 +523,28 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *   IPMI_MONITORING_AUTHENTICATION_TYPE_MD5
  * 
  *   Pass < 0 for default of IPMI_MONITORING_AUTHENTICATION_TYPE_MD5.
+ *
+ * cipher_suite_id
+ *
+ *   Cipher suite identifier to determine authentication, integrity,
+ *   and confidentiality algorithms to use.
+ *
+ *   Supported Cipher Suite IDs
+ *   (Key: A - Authentication Algorithm
+ *         I - Integrity Algorithm
+ *         C - Confidentiality Algorithm)
+ *
+ *   0 - A = None; I = None; C = None
+ *   1 - A = HMAC-SHA1; I = None; C = None
+ *   2 - A = HMAC-SHA1; I = HMAC-SHA1-96; C = None
+ *   3 - A = HMAC-SHA1; I = HMAC-SHA1-96; C = AES-CBC-128
+ *   6 - A = HMAC-MD5; I = None; C = None
+ *   7 - A = HMAC-MD5; I = HMAC-MD5-128; C = None
+ *   8 - A = HMAC-MD5; I = HMAC-MD5-128; C = AES-CBC-128
+ *   11 - A = HMAC-MD5; I = MD5-128; C = None
+ *   12 - A = HMAC-MD5; I = MD5-128; C = AES-CBC-128
+ *
+ *   Pass < 0 for default of 3.
  *
  * session_timeout_len
  *
@@ -520,10 +573,14 @@ struct ipmi_monitoring_ipmi_config
   unsigned int register_space;
   char *driver_device;
 
+  int protocol_version;
   char *username;
   char *password;
+  char *k_g;
+  unsigned int k_g_len;
   int privilege_level;
   int authentication_type;
+  int cipher_suite_id;
   int session_timeout_len;
   int retransmission_timeout_len;
 
