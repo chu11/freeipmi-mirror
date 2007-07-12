@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.4 2007-04-27 16:20:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.4.8.1 2007-07-12 18:19:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,6 +32,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
 
 #include "ipmi_sdr_cache.h"
 #include "list.h"
@@ -89,87 +90,34 @@
 
 #define IPMI_MONITORING_FLAGS_MASK \
   (IPMI_MONITORING_FLAGS_NONE \
-   | IPMI_MONITORING_FLAGS_DEBUG_STDOUT \
-   | IPMI_MONITORING_FLAGS_DEBUG_STDERR \
-   | IPMI_MONITORING_FLAGS_DEBUG_SYSLOG \
+   | IPMI_MONITORING_FLAGS_DEBUG \
    | IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS \
    | IPMI_MONITORING_FLAGS_LOCK_MEMORY)
 
 #define IPMI_MONITORING_WORKAROUND_FLAGS_MASK \
-  (IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO)
+  (IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO \
+   | IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION \
+   | IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE \
+   | IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
 
 #define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK \
   (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE \
    | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS)
 
-
-#define IPMI_MONITORING_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER  1
-#define IPMI_MONITORING_SEQUENCE_NUMBER_WINDOW                8
-#define IPMI_MONITORING_PREVIOUSLY_RECEIVED_LIST_INIT         0xFF
+#define IPMI_MONITORING_AUTHENTICATION_TYPE_DEFAULT           IPMI_AUTHENTICATION_TYPE_MD5
+#define IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT               IPMI_PRIVILEGE_LEVEL_USER
 #define IPMI_MONITORING_SESSION_TIMEOUT_LENGTH_DEFAULT        20000
 #define IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT 500
-#define IPMI_MONITORING_RETRANSMISSION_BACKOFF_COUNT_DEFAULT  2
 
 #define IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH      32
 #define IPMI_MONITORING_MAX_SDR_RECORD_LENGTH       1024
-
-#define IPMI_MONITORING_COMMUNICATION_UNINITIALIZED 0
-#define IPMI_MONITORING_COMMUNICATION_INBAND        1
-#define IPMI_MONITORING_COMMUNICATION_OUTOFBAND     2
-
-#define IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT              IPMI_PRIVILEGE_LEVEL_USER
-#define IPMI_MONITORING_AUTHENTICATION_TYPE_DEFAULT          IPMI_AUTHENTICATION_TYPE_MD5
 
 #define IPMI_MONITORING_MAGIC         0xABCD9876
 
 #define IPMI_MONITORING_PACKET_BUFLEN 1024
 
 struct ipmi_monitoring_communication {
-  int communication_type;
-
-  /* Inband Variables */
-  ipmi_kcs_ctx_t kcs_ctx;
-
-  /* OutofBand Variables */
-  char hostname[MAXHOSTNAMELEN+1];
-  uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint8_t password[IPMI_1_5_MAX_PASSWORD_LENGTH+1];
-  uint8_t privilege_level;
-  uint8_t authentication_type;  
-  unsigned int session_timeout_len;
-  unsigned int retransmission_timeout_len;
-  unsigned int retransmission_backoff_count;
-  uint32_t workaround_flags;
-
-  int ipmi_fd;
-  List sockets_to_close;
-  struct sockaddr_in addr;
-  struct timeval last_ipmi_packet_sent;
-  struct timeval last_ipmi_packet_received;
-
-  uint32_t retransmission_count;
-  uint32_t highest_received_sequence_number;
-  unsigned int previously_received_list;
-  uint8_t requester_sequence_number;
-  uint32_t session_inbound_count;
-
-  fiid_obj_t obj_rmcp_hdr_rq;
-  fiid_obj_t obj_rmcp_hdr_rs;
-  fiid_obj_t obj_lan_session_hdr_rq;
-  fiid_obj_t obj_lan_session_hdr_rs;
-  fiid_obj_t obj_lan_msg_hdr_rq;
-  fiid_obj_t obj_lan_msg_hdr_rs;
-  fiid_obj_t obj_lan_msg_trlr_rs;
-  fiid_obj_t obj_get_channel_authentication_capabilities_rq;
-  fiid_obj_t obj_get_channel_authentication_capabilities_rs;
-  fiid_obj_t obj_get_session_challenge_rq;
-  fiid_obj_t obj_get_session_challenge_rs;
-  fiid_obj_t obj_activate_session_rq;
-  fiid_obj_t obj_activate_session_rs;
-  fiid_obj_t obj_set_session_privilege_level_rq;
-  fiid_obj_t obj_set_session_privilege_level_rs;
-  fiid_obj_t obj_close_session_rq;
-  fiid_obj_t obj_close_session_rs;
+  ipmi_device_t dev;
 };
 
 struct ipmi_sensor_config {

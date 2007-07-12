@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.2 2007-01-31 16:48:18 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.2.8.1 2007-07-12 18:19:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1205,7 +1205,7 @@ ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sensor_readings);
-  assert(c->comm.communication_type);
+  assert(c->comm.dev);
   assert(sdr_record);
   assert(sdr_record_len);
   assert(!sensor_groups || sensor_groups_len);

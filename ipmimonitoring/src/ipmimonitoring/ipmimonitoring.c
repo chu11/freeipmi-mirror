@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.1 2007-07-11 21:21:53 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.2 2007-07-12 18:19:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -56,6 +56,8 @@
 #include <errno.h>
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
+
 #include "ipmi_monitoring.h"
 #include "pstdout.h"
 #include "hostrange.h"
@@ -97,7 +99,6 @@ _config_init(void)
   conf.authentication_type = -1;
   conf.session_timeout_len = -1;
   conf.retransmission_timeout_len = -1;
-  conf.retransmission_backoff_count = -1;
   conf.workaround_flags = 0;
 
   hostname = NULL;
@@ -161,6 +162,7 @@ _cmdline_parse(int argc, char **argv)
   char *ptr;
   char *tok;
   int c;
+  unsigned int flags;
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
@@ -182,9 +184,10 @@ _cmdline_parse(int argc, char **argv)
       {"consolidate-output",   0, NULL, 'C'},
       {"fanout",               1, NULL, 'F'},
       {"eliminate",            0, NULL, 'E'},
+      {"workaround-flags",     1, NULL, 'W'},
 #ifndef NDEBUG
       {"debug",                0, NULL, 'D'},
-      {"debugdump",            0, NULL, 'E'},
+      {"debugdump",            0, NULL, 'G'},
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -193,7 +196,7 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:s:g:c:rqBCF:E");
+  strcat(options, "HVh:u:p:Pl:a:s:g:c:rqBCF:EW:");
 #ifndef NDEBUG
   strcat(options, "DG");
 #endif /* NDEBUG */
@@ -361,9 +364,21 @@ _cmdline_parse(int argc, char **argv)
         case 'E':
           eliminate++;
           break;
+	case 'W':
+	  flags = parse_outofband_workaround_flags(optarg);
+	  /* convert to ipmipower flags */
+	  if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
+	  else if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
+	  else if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+	  else if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+	  break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
-          flags |= IPMI_MONITORING_FLAGS_DEBUG_STDERR;
+          flags |= IPMI_MONITORING_FLAGS_DEBUG;
           break;
         case 'G':       /* --debugdump */
           flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;

@@ -75,6 +75,11 @@
 	ipmi-sensors/, pef-config/: Update manpages and command line
 	option code.
 
+	* ipmimonitoring/src/libipmimonitoring: Re-architect to use UDM
+	and support IPMI 2.0.
+
+	* ipmimonitoring/src/ipmimonitoring.c: Re-work as needed.
+	
 	Add Workaround Support
 
 	* libfreeipmi/: Support workarounds for various vendor compliance issues.
@@ -101,6 +106,8 @@
 
 	* ipmipower/, ipmiconsole/: Use common workaround parses in
 	argp-common.
+
+	* ipmimonitoring/: Add workaround support.
 	
 	* doc/Makefile.am: Updated appropriately.
 

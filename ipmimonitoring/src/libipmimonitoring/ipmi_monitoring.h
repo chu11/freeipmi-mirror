@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6 2007-04-30 05:25:03 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.1 2007-07-12 18:19:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,31 +33,32 @@ extern "C" {
 
 enum ipmi_monitoring_error_codes 
   {
-    IPMI_MONITORING_ERR_SUCCESS                   = 0,
-    IPMI_MONITORING_ERR_CONTEXT_NULL              = 1,
-    IPMI_MONITORING_ERR_CONTEXT_INVALID           = 2,
-    IPMI_MONITORING_ERR_PARAMETERS                = 3,
-    IPMI_MONITORING_ERR_PERMISSION                = 4,
-    IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED     = 5,
-    IPMI_MONITORING_ERR_CONFIG_FILE_PARSE         = 6,
-    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE  = 7,
-    IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION      = 8,
-    IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM      = 9, 
-    IPMI_MONITORING_ERR_HOSTNAME_INVALID          = 10,
-    IPMI_MONITORING_ERR_SENSOR_NOT_FOUND          = 11,
-    IPMI_MONITORING_ERR_NO_SENSOR_READINGS        = 12,
-    IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END  = 13,
-    IPMI_MONITORING_ERR_SESSION_TIMEOUT           = 14,
-    IPMI_MONITORING_ERR_USERNAME                  = 15,
-    IPMI_MONITORING_ERR_PASSWORD                  = 16,
-    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL           = 17,
-    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE       = 18,
-    IPMI_MONITORING_ERR_BMC_BUSY                  = 19,
-    IPMI_MONITORING_ERR_IPMI                      = 20,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY             = 21,
-    IPMI_MONITORING_ERR_SYSTEM_ERROR              = 22,
-    IPMI_MONITORING_ERR_INTERNAL                  = 23,
-    IPMI_MONITORING_ERR_ERRNUMRANGE               = 24,
+    IPMI_MONITORING_ERR_SUCCESS                       = 0,
+    IPMI_MONITORING_ERR_CONTEXT_NULL                  = 1,
+    IPMI_MONITORING_ERR_CONTEXT_INVALID               = 2,
+    IPMI_MONITORING_ERR_PARAMETERS                    = 3,
+    IPMI_MONITORING_ERR_PERMISSION                    = 4,
+    IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED         = 5,
+    IPMI_MONITORING_ERR_CONFIG_FILE_PARSE             = 6,
+    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE      = 7,
+    IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION          = 8,
+    IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM          = 9, 
+    IPMI_MONITORING_ERR_HOSTNAME_INVALID              = 10,
+    IPMI_MONITORING_ERR_SENSOR_NOT_FOUND              = 11,
+    IPMI_MONITORING_ERR_NO_SENSOR_READINGS            = 12,
+    IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END      = 13,
+    IPMI_MONITORING_ERR_SESSION_TIMEOUT               = 14,
+    IPMI_MONITORING_ERR_USERNAME                      = 15,
+    IPMI_MONITORING_ERR_PASSWORD                      = 16,
+    IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT = 17,
+    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL               = 18,
+    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE           = 19,
+    IPMI_MONITORING_ERR_BMC_BUSY                      = 20,
+    IPMI_MONITORING_ERR_IPMI                          = 21,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                 = 22,
+    IPMI_MONITORING_ERR_SYSTEM_ERROR                  = 23,
+    IPMI_MONITORING_ERR_INTERNAL                      = 24,
+    IPMI_MONITORING_ERR_ERRNUMRANGE                   = 25,
   };
 
 enum ipmi_monitoring_sensor_group
@@ -159,16 +160,17 @@ enum ipmi_monitoring_authentication_type
 enum ipmi_monitoring_flags
   {
     IPMI_MONITORING_FLAGS_NONE               = 0x00,
-    IPMI_MONITORING_FLAGS_DEBUG_STDOUT       = 0x01,
-    IPMI_MONITORING_FLAGS_DEBUG_STDERR       = 0x02,
-    IPMI_MONITORING_FLAGS_DEBUG_SYSLOG       = 0x04,
-    IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS = 0x08,
-    IPMI_MONITORING_FLAGS_LOCK_MEMORY        = 0x10,
+    IPMI_MONITORING_FLAGS_DEBUG              = 0x01,
+    IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS = 0x02,
+    IPMI_MONITORING_FLAGS_LOCK_MEMORY        = 0x04,
   };
 
 enum ipmi_monitoring_workaround_flags
   {
-    IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO = 0x00000001,
+    IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO      = 0x00000001,
+    IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION = 0x00000002,
+    IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE   = 0x00000004,
+    IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER  = 0x00000008,
   };
 
 enum ipmi_monitoring_sensor_reading_flags
@@ -482,11 +484,6 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *   Specifies the packet retransmission timeout length in
  *   milliseconds.  Pass <= 0 to default to 500 (0.5 seconds).
  *
- * retransmission_backoff_count
- *
- *   Specifies the packet retransmission count until retransmission
- *   timeout lengths will be backed off.  Pass <= 0 to default to 2.
- *
  * workaround_flags
  *
  *   Bitwise OR of flags indicating any behavior which should be
@@ -503,7 +500,6 @@ struct ipmi_monitoring_ipmi_config
   int authentication_type;
   int session_timeout_len;
   int retransmission_timeout_len;
-  int retransmission_backoff_count;
   unsigned int workaround_flags;
 };
 

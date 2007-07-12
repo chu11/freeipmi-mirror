@@ -26,3 +26,10 @@ manpage
 
 parsing
 - use common parsing when possible?
+
+unify
+- error code names
+- error code strings
+- error code output
+- error code orderings
+- semantics

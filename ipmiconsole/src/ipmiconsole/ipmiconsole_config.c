@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.4 2007-07-11 21:07:20 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.5 2007-07-12 18:19:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -157,7 +157,7 @@ _cmdline_parse(int argc, char **argv)
 
   memset(options, '\0', sizeof(options));
   /* 'I' is advertised option, 'c' is for backwards compatability */
-  strcat(options, "HVh:u:p:Pk:Kl:c:I:C:NTLW");
+  strcat(options, "HVh:u:p:Pk:Kl:c:I:C:NTLW:");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */

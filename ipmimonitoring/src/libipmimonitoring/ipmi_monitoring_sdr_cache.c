@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.4 2007-04-27 04:34:18 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.4.8.1 2007-07-12 18:19:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -475,7 +475,7 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sc);
-  assert(c->comm.communication_type);
+  assert(c->comm.dev);
   assert(filename && strlen(filename));
   
   if (_ipmi_monitoring_sdr_cache_info(c,
@@ -550,7 +550,7 @@ _ipmi_monitoring_sdr_cache_delete(ipmi_monitoring_ctx_t c,
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->sc);
-  assert(c->comm.communication_type);
+  assert(c->comm.dev);
 
   if (ipmi_sdr_cache_delete(c->sc, filename) < 0)
     {
@@ -576,7 +576,7 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
   
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
-  assert(c->comm.communication_type);
+  assert(c->comm.dev);
 
   if (_ipmi_monitoring_sdr_cache_filename(c, hostname, filename, MAXPATHLEN + 1) < 0)
     goto cleanup;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.11 2007-04-30 05:25:03 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.11.8.1 2007-07-12 18:19:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -70,6 +70,7 @@ static char *ipmi_monitoring_errmsgs[] =
     "session timeout",
     "invalid username",
     "invalid password",
+    "password verification timeout",
     "invalid privilege level",
     "invalid authentication type",
     "BMC busy",
