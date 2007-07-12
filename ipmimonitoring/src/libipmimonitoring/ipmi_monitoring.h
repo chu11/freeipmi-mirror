@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6.8.1 2007-07-12 18:19:04 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.2 2007-07-12 20:09:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -438,6 +438,16 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
 
 /* 
  * ipmi_monitoring_ipmi_config
+ *
+ * Configuration information for IPMI Inband monitoring
+ *
+ * disable_auto_probe
+ *
+ * driver_address
+ *
+ * register_space
+ *
+ * driver_device
  *
  * Configuration information for IPMI Out-of-Band monitoring
  *

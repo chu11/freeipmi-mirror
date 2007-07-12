@@ -19,8 +19,13 @@ o Made many command line options consistent across FreeIPMI.  Notable
      maintained for backwards compatability.
 o Renamed configuration file options or interactive prompt options for 
   consistency with command line.
-o Fix various configuration file options or interactive prompt options
+o Fix various configuration file options or interactive prompt option
   inconsistencies with dashes vs. underscores.
+o Fix various library variable names and macros for consistency.  For
+  example:
+  1) ipmi_ver_minor and ipmi_ver_major in struct ipmi_locate_info have
+     been renamed to ipmi_version_minor and ipmi_version_major.
+  2) reg_space has been renamed to register_space globally.
 
 For Developers
 --------------

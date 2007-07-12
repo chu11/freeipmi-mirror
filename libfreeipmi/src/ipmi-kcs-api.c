@@ -112,10 +112,10 @@
 /* IPMI KCS SMS Interface Registers */
 #define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
 #define IPMI_KCS_REG_DATAOUT(sms_io_base)  (sms_io_base)
-#define IPMI_KCS_REG_CMD(sms_io_base, reg_space)     \
-       (sms_io_base + reg_space)
-#define IPMI_KCS_REG_STATUS(sms_io_base, reg_space)  \
-       (sms_io_base + reg_space)
+#define IPMI_KCS_REG_CMD(sms_io_base, register_space)     \
+       (sms_io_base + register_space)
+#define IPMI_KCS_REG_STATUS(sms_io_base, register_space)  \
+       (sms_io_base + register_space)
 
 /* IPMI KCS Control Codes */
 #define IPMI_KCS_CTRL_GET_STATUS       0x60 /* Request Interface Status / 
@@ -153,7 +153,7 @@ struct ipmi_kcs_ctx {
   uint32_t magic;
   int32_t errnum;
   uint16_t driver_address;
-  uint8_t reg_space;
+  uint8_t register_space;
   uint32_t flags;
   uint32_t poll_interval;
 #ifdef __FreeBSD__
@@ -174,7 +174,7 @@ ipmi_kcs_ctx_create(void)
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->driver_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-  ctx->reg_space = IPMI_KCS_SMS_REGISTER_SPACE_DEFAULT;
+  ctx->register_space = IPMI_KCS_SMS_REGISTER_SPACE_DEFAULT;
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->flags = IPMI_KCS_FLAGS_DEFAULT;
   ctx->io_init = 0;
@@ -244,18 +244,18 @@ ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
 }
 
 int8_t 
-ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *reg_space)
+ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *register_space)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  if (!reg_space)
+  if (!register_space)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
       return (-1);
     }
   
-  *reg_space = ctx->reg_space;
+  *register_space = ctx->register_space;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -306,12 +306,12 @@ ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t driver_address)
 }
 
 int8_t 
-ipmi_kcs_ctx_set_register_space(ipmi_kcs_ctx_t ctx, uint8_t reg_space)
+ipmi_kcs_ctx_set_register_space(ipmi_kcs_ctx_t ctx, uint8_t register_space)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  ctx->reg_space = reg_space;
+  ctx->register_space = register_space;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -396,7 +396,7 @@ ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  return _INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->reg_space));
+  return _INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->register_space));
 }
 
 /*
@@ -455,7 +455,7 @@ ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_space));
 }
 
 /*
@@ -477,7 +477,7 @@ ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_space));
 }
 
 #if 0
@@ -489,7 +489,7 @@ ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_space));
 }
 #endif
 

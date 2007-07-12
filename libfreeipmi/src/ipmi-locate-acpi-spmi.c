@@ -1255,18 +1255,18 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_loca
 
   /* IPMI version */
   {
-    uint64_t ipmi_ver_maj, ipmi_ver_min;
+    uint64_t ipmi_version_major, ipmi_version_minor;
 
     FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
 			  "specification_revision.major", 
-			  &ipmi_ver_maj);
+			  &ipmi_version_major);
 
     FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor,
 			  "specification_revision.minor", 
-			  &ipmi_ver_min);
+			  &ipmi_version_minor);
 
-    linfo.ipmi_ver_major = ipmi_ver_maj;
-    linfo.ipmi_ver_minor = ipmi_ver_min;
+    linfo.ipmi_version_major = ipmi_version_majpr;
+    linfo.ipmi_version_minor = ipmi_version_minor;
   }  
 
   /* Interface type - KCS, SMIC, SSIF, BT */
