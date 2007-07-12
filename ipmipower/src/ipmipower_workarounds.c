@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.3.4.1 2007-07-11 18:14:47 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.3.4.2 2007-07-12 22:32:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,7 +62,6 @@ ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
 {
   uint32_t flags = 0;
   unsigned int tmp_flags;
-  int ret = -1;
 
   assert(str);
   assert(workaround_flags);
@@ -88,7 +87,6 @@ ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
     flags |= WORKAROUND_FLAG_SUN_2_0_SESSION;
   
   *workaround_flags = flags;
- cleanup:
   return 0;
 }
 
