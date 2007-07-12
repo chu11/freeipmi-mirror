@@ -65,7 +65,7 @@ o Added libipmimonitoring
 o Added libipmidetect
 o Additional IPMI sub section support in libfreeipmi.
 o Re-architected UDM for more descriptive error codes.
-o Various bug fixes to libipmiconsCole, libfreeipmi.
+o Various bug fixes/performance fixes to libipmiconsole, libfreeipmi.
 
 0.3.3
 -----

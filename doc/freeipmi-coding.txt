@@ -165,7 +165,8 @@ The coding conditions specified above may lead to function names or
 function parameters names that will lead to the functions exceeding
 the 80 column mark or having very long parameter lists.  We accept
 this annoyance (or poor coding style, we admit it), as we consider
-matching the specification as the primary objective of libfreeipmi.
+matching the specification as the primary objective of the coding
+style in libfreeipmi.
 
 For example: 
 
@@ -286,7 +287,7 @@ each packet type.
 C) Relatively difficult to deal with optional fields. (Need flags in
 struct to indicate if a field was set/unset.)
 D) Relatively difficult to deal with variable length fields. (Need len
-parameters in struct. to specify length.)
+parameters in struct to specify length.)
 E) Difficult to do large packet dumps (you only get hex).
 
 Method B: Cast a buffer to a packed struct:
@@ -342,8 +343,8 @@ fiid_template_t tmpl_cmd_set_channel_security_keys_rs =
     {0, "", 0}
   };
 
-The following a few of the API functions used for FIID to give you an
-idea for the API style.
+The following are a few of the API functions used for FIID to give you
+an idea for the fiid API:
 
 fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 int32_t fiid_obj_errnum(fiid_obj_t obj);
@@ -363,7 +364,7 @@ C) Easier to deal with optional fields (just don't set a field).
 D) Easier to deal with variable length fields (set whatever length you want).
 E) Templates describe the packets exactly.
 F) Easy to do large packet dumps (fields and values easily output and identified).
-G) Significantly reduce the amount of marshalling/unmarshalling code needed.
+G) Significantly reduce the amount of unmarshalling/debug code needed.
 
 Cons:
 
@@ -378,7 +379,7 @@ traditional methods.
 
 A) The IPMI specification is very large, so reducing code size weighed
 in as an important factor for the authors.  This allowed there to be
-fewer marshalling/unmarshalling functions and debug output fuctions.
+fewer unmarshalling/debug functions.
 
 B) Although IPMI has a specification, the lack of IPMI compliance from
 vendors is a well known problem in the open-source community.  The
@@ -443,34 +444,3 @@ struct packet
 
 cannot be used.
 
-7) Bmc-Config/Pef-Config callback design
-----------------------------------------
-
-Bmc-config and pef-config are coded with a archicture that
-reads/writes each configurable field in the BMC separately.
-
-As an example, suppose we have the following BMC configuration file
-we'd like to commit.
-
-FieldA       Value1
-FieldB.1     Value2
-FieldB.2     Value3
-FieldB.3     Value4
-FieldB.4     Value5
-
-Suppose FieldA is read/written using a single IPMI packet and fields
-FieldB.1-FieldB.4 can be read/written using a single IPMI packet.
-
-In the architecture that Bmc-config is currently based on, the above
-would require 5 read requests to read all 5 values.  It would require
-4 read requests (for FieldB.1-FieldB.4) and 5 write requests to write
-the values.
-
-Obviously, this sounds like (and is!) very inefficient and leads to an
-excessive amount code duplication that shouldn't be necessary.  The
-authors acknowledge that a new design should be implemented into
-bmc-config and pef-config.  This design was selected early on b/c most
-configurable values (username, password, ip address, mac address,
-etc.) were like 'FieldA'.  Each read/write of a field was a single
-IPMI command.  However, as time has gone on, its now clear that the
-majority of configurable values are more like FieldB.1-FieldB.4.

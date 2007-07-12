@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.10 2007-03-31 04:03:06 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.10.8.1 2007-07-12 20:17:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -91,17 +91,29 @@ static List console_engine_ctxs[IPMICONSOLE_THREAD_COUNT_MAX];
 static unsigned int console_engine_ctxs_count[IPMICONSOLE_THREAD_COUNT_MAX];
 static pthread_mutex_t console_engine_ctxs_mutex[IPMICONSOLE_THREAD_COUNT_MAX];
 
+/* In the core engine code, the poll() may sit for a large number of
+ * seconds, waiting for the next event to happen.  In the meantime, a
+ * user may have submitted a new context or wants to close the engine.
+ * The poll() doesn't know this and will sit until it times out,
+ * letting the user sit and wait for the engine loop to "come around
+ * again" and start processing.  This pipe can be used to "interrupt"
+ * the poll() when the user wants to get things moving a little
+ * faster.
+ */
+static int console_engine_ctxs_notifier[IPMICONSOLE_THREAD_COUNT_MAX][2];
+
 struct _ipmiconsole_poll_data {
   struct pollfd *pfds;
   ipmiconsole_ctx_t *pfds_ctxs;
   unsigned int ctxs_len;
   unsigned int pfds_index;
-  unsigned int teardown;
 };
 
 #define GETHOSTBYNAME_AUX_BUFLEN 1024
 
 #define IPMICONSOLE_SPIN_WAIT_TIME 250000
+
+#define IPMICONSOLE_PIPE_BUFLEN 1024
 
 void
 _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
@@ -122,14 +134,22 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
    * read() or EPIPE on a write() when reading/writing on their file
    * descriptor.  The user is then required to close that fd.
    * 
-   * However, we close it if this function is being called for when
-   * something failed during the setup.  We know it failed during
-   * setup if session_submitted is not set.
+   * However, we close it in this function if something failed during
+   * the setup or if the user can't close it b/c it has never been
+   * read (the user_fd_retrieved flag covers both these circumstances).
    */
-#if 0
-  if (!(c->session_submitted) && s->user_fd)
+
+  /* We have to cleanup, so continue on even if locking fails */
+
+  if ((rv = pthread_mutex_lock(&(c->user_fd_retrieved_mutex))))
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
+  if (!c->user_fd_retrieved && s->user_fd)
     close(s->user_fd);
-#endif
+
+  if ((rv = pthread_mutex_unlock(&(c->user_fd_retrieved_mutex))))
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
@@ -223,9 +243,6 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-
-  if (!(c->session_submitted) && s->user_fd)
-    close(s->user_fd);
 
   c->session_submitted = 0;
 
@@ -628,6 +645,8 @@ ipmiconsole_engine_setup(void)
   memset(console_engine_ctxs, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(List));
   memset(console_engine_ctxs_count, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(unsigned int));
   memset(console_engine_ctxs_mutex, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(pthread_mutex_t));
+  for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
+    memset(console_engine_ctxs_notifier[i], '\0', sizeof(int) * 2);
 
   if (ipmi_rmcpplus_init() < 0)
     {
@@ -645,7 +664,12 @@ ipmiconsole_engine_setup(void)
       console_engine_ctxs_count[i] = 0;
       if ((rv = pthread_mutex_init(&console_engine_ctxs_mutex[i], NULL)) != 0)
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_init: %s", strerror(errno)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_init: %s", strerror(rv)));
+          goto cleanup;
+        }
+      if (pipe(console_engine_ctxs_notifier[i]) < 0)
+        {
+          IPMICONSOLE_DEBUG(("pipe: %s", strerror(errno)));
           goto cleanup;
         }
     }
@@ -670,9 +694,12 @@ ipmiconsole_engine_setup(void)
           pthread_mutex_destroy(&console_engine_ctxs_mutex[i]);
         }
       console_engine_ctxs[i] = NULL;
+      close(console_engine_ctxs_notifier[i][0]);
+      close(console_engine_ctxs_notifier[i][1]);
     }
   if ((rv = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+  
   return -1;
 }
 
@@ -721,6 +748,28 @@ ipmiconsole_engine_thread_count(void)
 }
 
 static int
+_teardown_initiate(void *x, void *arg)
+{
+  ipmiconsole_ctx_t c;
+  struct ipmiconsole_ctx_session *s;
+
+  assert(x);
+
+  c = (ipmiconsole_ctx_t)x;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->session_submitted);
+
+  s = &(c->session);
+
+  if (!s->close_session_flag)
+    s->close_session_flag++;
+
+  return 0;
+}
+
+static int
 _poll_setup(void *x, void *arg)
 {
   ipmiconsole_ctx_t c;
@@ -738,9 +787,6 @@ _poll_setup(void *x, void *arg)
 
   s = &(c->session);
   poll_data = (struct _ipmiconsole_poll_data *)arg;
-
-  if (poll_data->teardown && !s->close_session_flag)
-    s->close_session_flag++;
 
   poll_data->pfds[poll_data->pfds_index*3].fd = s->ipmi_fd;
   poll_data->pfds[poll_data->pfds_index*3].events = 0;
@@ -1103,7 +1149,8 @@ _ipmiconsole_engine(void *arg)
 {
   int rv, ctxs_count = 0;
   unsigned int index;
-  unsigned int teardown = 0;
+  unsigned int teardown_flag = 0;
+  unsigned int teardown_initiated = 0;
 
   assert(arg);
 
@@ -1113,29 +1160,30 @@ _ipmiconsole_engine(void *arg)
 
   free(arg);
 
-  while (!teardown || ctxs_count)
+  while (!teardown_flag || ctxs_count)
     {
       struct _ipmiconsole_poll_data poll_data;
       int i, count;
       unsigned int timeout_len;
       int unlock_console_engine_ctxs_mutex_flag = 0;
       int spin_wait_flag = 0;
+      char buf[IPMICONSOLE_PIPE_BUFLEN];
       
       if ((rv = pthread_mutex_lock(&console_engine_teardown_mutex)))
         {
           /* This is one of the only truly "fatal" conditions */
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-          teardown = 1;
+          teardown_flag = 1;
         }
       
       if (console_engine_teardown)
-        teardown = 1;
+        teardown_flag = 1;
       
       if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
         {
           /* This is one of the only truly "fatal" conditions */
           IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-          teardown = 1;
+          teardown_flag = 1;
         }
 
       memset(&poll_data, '\0', sizeof(struct _ipmiconsole_poll_data));
@@ -1150,13 +1198,31 @@ _ipmiconsole_engine(void *arg)
         {
           /* This is one of the only truly "fatal" conditions */
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-          teardown = 1;
+          teardown_flag = 1;
         }
 
+      /* Note: Set close_session_flag in the contexts before
+       * ipmiconsole_process_ctxs(), so the initiation of the closing
+       * down will begin now rather than the next iteration of the
+       * loop.
+       */
+      if (teardown_flag && !teardown_initiated)
+        {
+          /* XXX: Umm, if this fails, we may not be able to teardown
+           * cleanly.  Break out of the loop I guess. 
+           */
+          if (list_for_each(console_engine_ctxs[index], _teardown_initiate, NULL) < 0)
+            {
+              IPMICONSOLE_DEBUG(("list_for_each: %s", strerror(errno)));
+              break;
+            }
+          teardown_initiated++;
+        }
+      
       if ((ctxs_count = ipmiconsole_process_ctxs(console_engine_ctxs[index], &timeout_len)) < 0)
         goto continue_loop;
       
-      if (!ctxs_count && teardown)
+      if (!ctxs_count && teardown_flag)
         continue;
 
       if (!ctxs_count)
@@ -1165,12 +1231,14 @@ _ipmiconsole_engine(void *arg)
           goto continue_loop;
         }
       poll_data.ctxs_len = ctxs_count;
-      poll_data.teardown = teardown;
 
       /* 
-       * There are 3 pfds per ctx.  One for 'ipmi_fd', 'asynccomm[0]', and 'ipmiconsole_fd'
+       * There are 3 pfds per ctx.  One for 'ipmi_fd', 'asynccomm[0]', and 'ipmiconsole_fd'.
+       *
+       * There is + 1 pfds for the "console_engine_ctxs_notifier".
+       * This will be set up manually here, and not in _poll_setup().
        */
-      if (!(poll_data.pfds = (struct pollfd *)malloc((poll_data.ctxs_len * 3) * sizeof(struct pollfd))))
+      if (!(poll_data.pfds = (struct pollfd *)malloc(((poll_data.ctxs_len * 3) + 1) * sizeof(struct pollfd))))
         {
           IPMICONSOLE_DEBUG(("malloc: %s", strerror(errno)));
           goto continue_loop;
@@ -1192,6 +1260,11 @@ _ipmiconsole_engine(void *arg)
         IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
       unlock_console_engine_ctxs_mutex_flag++;
 
+      /* Setup notifier pipe as last remaining poll data */
+      poll_data.pfds[(poll_data.ctxs_len * 3)].fd = console_engine_ctxs_notifier[index][0];
+      poll_data.pfds[(poll_data.ctxs_len * 3)].events = POLLIN;
+      poll_data.pfds[(poll_data.ctxs_len * 3)].revents = 0;
+      
       if (count != ctxs_count)
         {
           IPMICONSOLE_DEBUG(("list_for_each: invalid length returned: %d", count));
@@ -1204,7 +1277,7 @@ _ipmiconsole_engine(void *arg)
           goto continue_loop;
         }
 
-      if (poll(poll_data.pfds, (poll_data.ctxs_len * 3), timeout_len) < 0)
+      if (poll(poll_data.pfds, (poll_data.ctxs_len * 3) + 1, timeout_len) < 0)
         {
           IPMICONSOLE_DEBUG(("poll: %s", strerror(errno)));
           goto continue_loop;
@@ -1281,6 +1354,13 @@ _ipmiconsole_engine(void *arg)
 	    }
         }
 
+      /* We don't care what's read, just get it off the fd */
+      if (poll_data.pfds[(poll_data.ctxs_len * 3)].revents & POLLIN)
+        {
+          if (read(console_engine_ctxs_notifier[index][0], buf, IPMICONSOLE_PIPE_BUFLEN) < 0)
+            IPMICONSOLE_DEBUG(("read: %s", strerror(errno)));
+        }
+
     continue_loop:
       if (!unlock_console_engine_ctxs_mutex_flag)
         {
@@ -1288,7 +1368,7 @@ _ipmiconsole_engine(void *arg)
             {
               /* This is one of the only truly "fatal" conditions */
               IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-              teardown = 1;
+              teardown_flag = 1;
             }
         }
       if (spin_wait_flag)
@@ -1471,6 +1551,10 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
    */
   c->session_submitted++;
 
+  /* "Interrupt" the engine and tell it to get moving along w/ the new context */
+  if (write(console_engine_ctxs_notifier[index][1], "1", 1) < 0)
+    IPMICONSOLE_DEBUG(("write: %s", strerror(errno)));
+
  cleanup_ctxs:
   if ((rv = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
     {
@@ -1534,6 +1618,13 @@ ipmiconsole_engine_cleanup(void)
       goto engine_cleanup;
     }
 
+  /* "Interrupt" the engine and tell it to get moving along */
+  for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
+    {
+      if (write(console_engine_ctxs_notifier[i][1], "1", 1) < 0)
+        IPMICONSOLE_DEBUG(("write: %s", strerror(errno)));
+    }
+
   if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
@@ -1573,6 +1664,8 @@ ipmiconsole_engine_cleanup(void)
       console_engine_ctxs[i] = NULL;
       console_engine_ctxs[i] = 0;
       pthread_mutex_destroy(&console_engine_ctxs_mutex[i]);
+      close(console_engine_ctxs_notifier[i][0]);
+      close(console_engine_ctxs_notifier[i][1]);
     }
   
   console_engine_is_setup = 0;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.14.4.1 2007-07-11 17:22:49 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.14.4.2 2007-07-12 20:17:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -476,8 +476,8 @@ main(int argc, char **argv)
       while (1)
         {
           if (ipmiconsole_ctx_destroy(c) < 0)
-	    /* Wait a little bit then try again */
-	    sleep(1);
+            /* Wait a little bit then try again */
+            sleep(1);
           else
             break;
         }

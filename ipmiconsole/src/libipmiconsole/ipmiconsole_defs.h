@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.12.2.1 2007-07-10 20:44:48 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.12.2.2 2007-07-12 20:17:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -220,6 +220,7 @@ struct ipmiconsole_ctx_session {
 
   /* File Descriptor User Interface */
   int user_fd;                  /* never touched by this library */
+  int user_fd_retrieved;        /* flag to indicate if the user actually can close the file descriptor */
   int ipmiconsole_fd;
   cbuf_t console_remote_console_to_bmc;
   cbuf_t console_bmc_to_remote_console;
@@ -397,6 +398,8 @@ struct ipmiconsole_ctx {
 
   pthread_mutex_t session_submitted_mutex;
   unsigned int session_submitted;
+  pthread_mutex_t user_fd_retrieved_mutex;
+  unsigned int user_fd_retrieved;
   struct ipmiconsole_ctx_session session; 
 };
 

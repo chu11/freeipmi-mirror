@@ -127,6 +127,89 @@
 
 	* General code cleanup throughout.
 	
+2007-07-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_checks.c
+	(ipmiconsole_check_outbound_sequence_number): Remove left over
+	debugging.
+
+	* ipmipower/ipmipower.conf.5.in: Update w/ forgotten options.
+
+	* ipmiconsole/ipmiconsole.conf.5.in: Update w/ forgotten options.
+	
+2007-07-09  Dmitry Frolov <frolov@riss-telecom.ru>
+
+	* acx_pthread.m4, common/src/freeipmi-portability.h,
+	ipmidetect/Makefile.am,
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring_ipmi_communication.c:
+	FreeBSD port fixes.
+
+	* ac_ipmi_monitoring_sdr_cache_dir.m4: Fix typo.
+	
+2007-07-06  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/ipmi-chassis.8.pre.in,
+	ipmi-chassis/src/ipmi-chassis-argp.c: Change -I option to -i.
+	
+2007-07-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd,
+	ipmi_lan_cmd_raw): Fix return code bug.
+
+	* libfreeipmi/src/udm/ipmi-udm.c,
+	libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	common/src/udm-err-wrappers.h
+	(__UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM): Remove
+	IPMI_ERR_BAD_COMPLETION_CODE_NODE_BUSY completion code.  Replace
+	with more generic IPMI_ERR_BMC_BUSY error code.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h
+	(IPMI_CIPHER_SUITE_ID_SUPPORTED): Fix warning.
+	
+2007-07-02  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi, doc/freeipmi-hostrange.txt: Update w/
+	some forgotten 0.4.0 stuff.
+	
+2007-07-02  Albert Chu <chu11@llnl.gov>
+
+	* Tagged Release-0_4_0_base.
+
+	* Branched Release-0_4_0_branch.
+
+2007-07-02  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Update version for release.
+	
+2007-06-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(ipmiconsole_engine_setup): Fix bad debug output corner case.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_teardown_initiate): New function.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_poll_setup, _ipmiconsole_engine): Re-arch teardown to be quicker
+	by initializing close_session prior to the processing of contexts.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c: Support
+	console_engine_ctxs_notifier pipes.  Allows for the engine poll()
+	call to be "interrupted" so engine can react more quickly to 
+	calls from user space.
+		
+2007-06-28  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Add/fix comments
+	for clarification.
+
+	* ipmiconsole/src/libipmiconsole: Add flag to close the user_fd
+	within the library if it has never been retrieved by the user.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit, ipmiconsole_engine_submit_block,
+	ipmiconsole_ctx_destroy): Fix locking corner cases and bugs.
+	
 2007-06-27  Albert Chu <chu11@llnl.gov>
  
 	* ipmi-fru/: New project.
@@ -1735,7 +1818,7 @@
 
 	* bmc-info/src/bmc-info.c (main): Fix corner case.
 	
-2007-01-20  Dmitry Frolov <frolov@riss-telecom.ru>.
+2007-01-20  Dmitry Frolov <frolov@riss-telecom.ru>
 
 	* libfreeipmi/src/ipmi-openipmi-api.c: Fix typo.
 	

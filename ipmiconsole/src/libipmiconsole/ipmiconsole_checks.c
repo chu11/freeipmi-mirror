@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.3.4.1 2007-07-10 20:44:47 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.3.4.2 2007-07-12 20:17:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -165,8 +165,17 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
   
   s = &(c->session);
 
-  /* HACK TEST */
-  return 1;
+  /* achu: This algorithm is more or less from Appendix A of the IPMI
+   * spec.  It may not be entirely necessary for ipmipower, since the
+   * requester sequence number puts packets into lock-step mode.  Oh
+   * well.
+   *
+   * I know that technically I could remove a lot of code here if I
+   * just let unsigned ints be unsigned ints (i.e. 0x00 - 0xff = 1).
+   * I dunno, I like to see all of the code actually written out b/c
+   * it makes more sense to the casual code reviewer.  Maybe I'll
+   * change it later.
+   */
 
   if (Fiid_obj_get(c,
 		   s->obj_rmcpplus_session_hdr_rs,
@@ -806,6 +815,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 							    managed_system_random_number,
 							    IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
     return -1;
+
   if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system random number length: %d", managed_system_random_number_len));
@@ -819,6 +829,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 						   managed_system_guid,
 						   IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
     return -1;
+
   if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));

@@ -27,7 +27,7 @@ Control the chassis. Allowed values are:
 power\-down, power\-up, power\-cycle, hard\-reset,
 diagnostic\-interrupt, soft\-shutdown.
 .TP
-\fB\-I\fR, \fB\-\-chassis\-identify\fR=\fIIDENTIFY\fR
+\fB\-i\fR, \fB\-\-chassis\-identify\fR=\fIIDENTIFY\fR
 Chassis Identification. Allowed values are:
 turn\-off to turn off identification, <interval> to
 turn on identification for "interval" seconds,
