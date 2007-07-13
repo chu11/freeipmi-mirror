@@ -77,7 +77,7 @@ struct ipmi_locate_info
   char driver_device[IPMI_LOCATE_PATH_MAX];
   uint8_t address_space_id;  /* Memory mapped, IO mapped, SMBus*/
   uint64_t driver_address;
-  uint8_t register_space; /* Register spacing in bytes */
+  uint8_t register_spacing; /* Register spacing in bytes */
 };
 
 int ipmi_locate (ipmi_interface_type_t type, struct ipmi_locate_info *info);

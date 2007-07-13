@@ -83,10 +83,10 @@
 #define IPMI_SMBIOS_INTINFO_TRIGGER_BIT 		0
 #define IPMI_SMBIOS_DEV_INFO_INTNUM_OFFSET 		0x11
 
-#define IPMI_SMBIOS_REGISTER_SPACE_1BYTE_BOUND    0x00
-#define IPMI_SMBIOS_REGISTER_SPACE_4BYTE_BOUND    0x01
-#define IPMI_SMBIOS_REGISTER_SPACE_16BYTE_BOUND   0x02
-#define IPMI_SMBIOS_REGISTER_SPACE_RESERVED       0x03
+#define IPMI_SMBIOS_REGISTER_SPACING_1BYTE_BOUND    0x00
+#define IPMI_SMBIOS_REGISTER_SPACING_4BYTE_BOUND    0x01
+#define IPMI_SMBIOS_REGISTER_SPACING_16BYTE_BOUND   0x02
+#define IPMI_SMBIOS_REGISTER_SPACING_RESERVED       0x03
 
 fiid_template_t tmpl_smbios_ipmi_device_info_record =
   {
@@ -165,28 +165,28 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
   };
 
 static int
-ipmi_smbios_register_space (uint8_t register_space_boundary, uint8_t *register_space)
+ipmi_smbios_register_spacing (uint8_t register_spacing_boundary, uint8_t *register_spacing)
 {
-  ERR_EINVAL (register_space 
-	      && (register_space_boundary == IPMI_SMBIOS_REGISTER_SPACE_1BYTE_BOUND
-		  || register_space_boundary == IPMI_SMBIOS_REGISTER_SPACE_4BYTE_BOUND
-		  || register_space_boundary == IPMI_SMBIOS_REGISTER_SPACE_16BYTE_BOUND
-		  || register_space_boundary == IPMI_SMBIOS_REGISTER_SPACE_RESERVED));
+  ERR_EINVAL (register_spacing 
+	      && (register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_1BYTE_BOUND
+		  || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_4BYTE_BOUND
+		  || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_16BYTE_BOUND
+		  || register_spacing_boundary == IPMI_SMBIOS_REGISTER_SPACING_RESERVED));
 
-  switch (register_space_boundary)
+  switch (register_spacing_boundary)
     {
-    case IPMI_SMBIOS_REGISTER_SPACE_1BYTE_BOUND:
-      *register_space = 0x01;
+    case IPMI_SMBIOS_REGISTER_SPACING_1BYTE_BOUND:
+      *register_spacing = 0x01;
       return (0);
-    case IPMI_SMBIOS_REGISTER_SPACE_4BYTE_BOUND:
-      *register_space = 0x04;
+    case IPMI_SMBIOS_REGISTER_SPACING_4BYTE_BOUND:
+      *register_spacing = 0x04;
       return (0);
-    case IPMI_SMBIOS_REGISTER_SPACE_16BYTE_BOUND:
-      *register_space = 0x10;
+    case IPMI_SMBIOS_REGISTER_SPACING_16BYTE_BOUND:
+      *register_spacing = 0x10;
       return (0);
-    case IPMI_SMBIOS_REGISTER_SPACE_RESERVED:
+    case IPMI_SMBIOS_REGISTER_SPACING_RESERVED:
     default:
-      *register_space = 0;
+      *register_spacing = 0;
       ERR_EINVAL(0);
     }
 }
@@ -398,14 +398,14 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, struct ipmi_locate_
     {
       uint8_t modifier;
       uint8_t lsb;
-      int register_space_boundary;
+      int register_spacing_boundary;
 
       modifier = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET];
       lsb = (modifier >> IPMI_SMBIOS_LSB_BIT) & 1;
       strobed = (strobed & ~1) | lsb;
 
-      register_space_boundary = (modifier >> IPMI_SMBIOS_REGSPACING_SHIFT) & IPMI_SMBIOS_REGSPACING_MASK;
-      ERR_CLEANUP (!(ipmi_smbios_register_space (register_space_boundary, &linfo.register_space) == -1));
+      register_spacing_boundary = (modifier >> IPMI_SMBIOS_REGSPACING_SHIFT) & IPMI_SMBIOS_REGSPACING_MASK;
+      ERR_CLEANUP (!(ipmi_smbios_register_spacing (register_spacing_boundary, &linfo.register_spacing) == -1));
     }
 
   if (linfo.interface_type == IPMI_INTERFACE_SSIF)

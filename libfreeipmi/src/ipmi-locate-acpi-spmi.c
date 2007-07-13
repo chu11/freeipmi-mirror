@@ -1327,7 +1327,7 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, struct ipmi_loca
     FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
 			  "base_address.register_bit_width", 
 			  &reg_bit_width);
-    linfo.register_space = (reg_bit_width / 8);
+    linfo.register_spacing = (reg_bit_width / 8);
   }
 
   memcpy(info, &linfo, sizeof(struct ipmi_locate_info));

@@ -278,7 +278,7 @@ dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *
 	    {
 	      locate_info->driver_address = data[0x06] >> 1;
 	      locate_info->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-	      locate_info->register_space = 0x01;
+	      locate_info->register_spacing = 0x01;
 	      strncpy(locate_info->driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
 	      locate_info->driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
 	    }
@@ -318,13 +318,13 @@ dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *
 	      switch (data[0x10] >> 6)
 		{
 		case 0x0:
-		  locate_info->register_space = 0x01;
+		  locate_info->register_spacing = 0x01;
 		  break;
 		case 0x1:
-		  locate_info->register_space = 0x04;
+		  locate_info->register_spacing = 0x04;
 		  break;
 		case 0x2:
-		  locate_info->register_space = 0x10;
+		  locate_info->register_spacing = 0x10;
 		  break;
 		}
 	    }
@@ -344,8 +344,8 @@ dmi_table (fipmiu32 base, fipmiu16 len, fipmiu16 num, fipmiu16 ver, const char *
 		  locate_info->address_space_id);
 	  printf ("ipmi_locate_info.driver_address = [%X]\n", 
 		  locate_info->driver_address);
-	  printf ("ipmi_locate_info.register_space = [%X]\n", 
-		  locate_info->register_space);
+	  printf ("ipmi_locate_info.register_spacing = [%X]\n", 
+		  locate_info->register_spacing);
 #endif
 	  
 	  if (locate_info->interface_type == interface_type)

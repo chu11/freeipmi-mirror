@@ -64,7 +64,7 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, struct ipmi_locat
       linfo.interface_type = IPMI_INTERFACE_KCS;
       linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
       linfo.driver_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-      linfo.register_space = 1;
+      linfo.register_spacing = 1;
       break;
     case IPMI_INTERFACE_SMIC:
       linfo.ipmi_version_major = 1;
@@ -72,7 +72,7 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, struct ipmi_locat
       linfo.interface_type = IPMI_INTERFACE_SMIC;
       linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
       linfo.driver_address = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
-      linfo.register_space = 1;
+      linfo.register_spacing = 1;
       break;
     case IPMI_INTERFACE_SSIF:
       linfo.ipmi_version_major = 1;
@@ -80,7 +80,7 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, struct ipmi_locat
       linfo.interface_type = IPMI_INTERFACE_SSIF;
       linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
       linfo.driver_address = IPMI_SSIF_SMBUS_SLAVE_ADDRESS;
-      linfo.register_space = 1;
+      linfo.register_spacing = 1;
       break;
     default:
       ERR_EXIT(0);

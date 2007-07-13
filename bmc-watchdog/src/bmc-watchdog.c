@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.2 2007-07-13 15:44:00 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.3 2007-07-13 15:59:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -116,8 +116,8 @@ struct cmdline_info
   int driver_type_val;
   int driver_address;
   uint32_t driver_address_val;
-  int register_space;
-  uint8_t register_space_val;
+  int register_spacing;
+  uint8_t register_spacing_val;
   int driver_device;
   char *driver_device_val;
   char *logfile;
@@ -294,8 +294,8 @@ _init_kcs_ipmi(void)
 
   if (cinfo.driver_address)
     l.driver_address = cinfo.driver_address_val;
-  if (cinfo.register_space)
-    l.register_space = cinfo.register_space_val;
+  if (cinfo.register_spacing)
+    l.register_spacing = cinfo.register_spacing_val;
   
   if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
     {
@@ -303,9 +303,9 @@ _init_kcs_ipmi(void)
       return -1;
     }
   
-  if (ipmi_kcs_ctx_set_register_space(kcs_ctx, l.register_space) < 0)
+  if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, l.register_spacing) < 0)
     {
-      _bmclog("ipmi_kcs_ctx_set_register_space: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      _bmclog("ipmi_kcs_ctx_set_register_spacing: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
       return -1;
     }
   
@@ -1062,7 +1062,7 @@ _usage(void)
           "  -v         --version                    Output version\n"
 	  "  -I STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF)\n"
 	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
-          "  -R INT     --register-space=INT         Base address register spacing in bytes\n"
+          "  -R INT     --register-spacing=INT         Base address register spacing in bytes\n"
 	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
           "  -n         --no-logging                 Turn off all syslogging\n");
@@ -1187,7 +1187,7 @@ _cmdline_parse(int argc, char **argv)
     {"daemon",                0, NULL, 'd'},
     {"driver-type",           1, NULL, 'I'},
     {"driver-address",        1, NULL, 'o'},
-    {"register-space",        1, NULL, 'R'},
+    {"register-spacing",      1, NULL, 'R'},
     {"driver-device",         1, NULL, 'E'},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
@@ -1277,10 +1277,10 @@ _cmdline_parse(int argc, char **argv)
             _err_exit("driver-address value invalid");
           break;
         case 'R':
-          cinfo.register_space++;
-          cinfo.register_space_val = strtol(optarg, &ptr, 10);
+          cinfo.register_spacing++;
+          cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            _err_exit("reg-space value invalid");
+            _err_exit("register-spacing value invalid");
           break;
 	case 'E':
 	  cinfo.driver_device++;

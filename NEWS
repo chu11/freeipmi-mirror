@@ -5,33 +5,35 @@ For Users
 o Added IPMI 2.0 support into many core FreeIPMI tools (-D LAN_2_0)
 o Ported many IPMI compliance workarounds into all tools (-W,
   --workaround-flags option)
+o Ported many features into ipmimonitoring from the other tools.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level
   2) All --auth-type options are now --authentication-type
-  3) The -T option in ipmipower is now the -I option.
-  4) The -c option in ipmiconsole is now the -I option (-c is
+  3) All --reg-space or --register-space options are not --register-spacing
+  4) The -T option in ipmipower is now the -I option for consistency.
+  5) The -c option in ipmiconsole is now the -I option (-c is
      internally maintained for backwards comptability).
-  5) Compliance workaround options in ipmiconsole now follow the convention
+  6) Compliance workaround options in ipmiconsole now follow the convention
      in ipmipower using the -W option.
-  6) The "plain" authentication type argument is now the
+  7) The "plain" authentication type argument is now the
      "straight_password_key" authentication type argument.  "plain" is internally
      maintained for backwards compatability.
 o Renamed configuration file options or interactive prompt options for 
   consistency with command line.
 o Fix various configuration file options or interactive prompt option
   inconsistencies with dashes vs. underscores.
-o Fix various library variable names and macros for consistency.  For
-  example:
-  1) ipmi_ver_minor and ipmi_ver_major in struct ipmi_locate_info have
-     been renamed to ipmi_version_minor and ipmi_version_major.
-  2) reg_space has been renamed to register_space globally.
 
 For Developers
 --------------
 o Added IPMI 2.0 into UDM 
 o Added workarounds into UDM for IPMI 1.5 and IPMI 2.0 known
   compliance issues from vendors.
+o Fix various library variable names and macros for consistency.  For
+  example:
+  1) ipmi_ver_minor and ipmi_ver_major in struct ipmi_locate_info have
+     been renamed to ipmi_version_minor and ipmi_version_major.
+  2) reg_space/register_spacing has been renamed to register_spacing globally.
 
 0.4.0
 -----
