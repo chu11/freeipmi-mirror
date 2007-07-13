@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.16 2007-06-28 22:16:15 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.17 2007-07-13 22:36:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -51,20 +51,19 @@ extern "C" {
 #define IPMICONSOLE_ERR_PASSWORD_INVALID           14
 #define IPMICONSOLE_ERR_K_G_INVALID                15
 #define IPMICONSOLE_ERR_PRIVILEGE_INVALID          16
-#define IPMICONSOLE_ERR_CIPHER_SUITE_INVALID       17
-#define IPMICONSOLE_ERR_SOL_UNAVAILABLE            18
-#define IPMICONSOLE_ERR_SOL_INUSE                  19
-#define IPMICONSOLE_ERR_SOL_NOT_RESPONDING         20
-#define IPMICONSOLE_ERR_SOL_STOLEN                 21
-#define IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION    22
-#define IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION 23
-#define IPMICONSOLE_ERR_BMC_BUSY                   24
-#define IPMICONSOLE_ERR_BMC_ERROR                  25
-#define IPMICONSOLE_ERR_SESSION_TIMEOUT            26
-#define IPMICONSOLE_ERR_OUT_OF_MEMORY              27
-#define IPMICONSOLE_ERR_SYSTEM_ERROR               28
-#define IPMICONSOLE_ERR_INTERNAL                   29
-#define IPMICONSOLE_ERR_ERRNUMRANGE                30
+#define IPMICONSOLE_ERR_SOL_UNAVAILABLE            17
+#define IPMICONSOLE_ERR_SOL_INUSE                  18
+#define IPMICONSOLE_ERR_SOL_NOT_RESPONDING         19
+#define IPMICONSOLE_ERR_SOL_STOLEN                 20
+#define IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION    21
+#define IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION 22
+#define IPMICONSOLE_ERR_BMC_BUSY                   23
+#define IPMICONSOLE_ERR_BMC_ERROR                  24
+#define IPMICONSOLE_ERR_SESSION_TIMEOUT            25
+#define IPMICONSOLE_ERR_OUT_OF_MEMORY              26
+#define IPMICONSOLE_ERR_SYSTEM_ERROR               27
+#define IPMICONSOLE_ERR_INTERNAL                   28
+#define IPMICONSOLE_ERR_ERRNUMRANGE                29
 
 /* 
  * IPMI Privilege Constants
