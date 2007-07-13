@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.5 2007-07-12 18:19:03 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.6 2007-07-13 00:31:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -264,6 +264,8 @@ _cmdline_parse(int argc, char **argv)
 	  if (conf->cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
 	      || conf->cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
             err_exit("Command Line Error: cipher suite id invalid\n");
+          if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (conf->cipher_suite_id))
+            err_exit("Command Line Error: cipher suite id unsupported\n");
           conf->cipher_suite_id_set_on_cmdline++;
 	  break;
 	case 'C':	/* --config-file */
@@ -438,7 +440,9 @@ _cb_cipher_suite_id(conffile_t cf,
   conf->cipher_suite_id = data->intval;
   if (conf->cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
       || conf->cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
-    err_exit("Command Line Error: cipher suite id invalid\n");
+    err_exit("Config File Error: cipher suite id invalid\n");
+  if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (conf->cipher_suite_id))
+    err_exit("Config File Error: cipher suite id unsupported\n");
   return 0;
 }
 

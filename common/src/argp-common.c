@@ -480,9 +480,17 @@ common_parse_opt (int key,
 	    break;
 	  }
 
+        if (value < IPMI_CIPHER_SUITE_ID_MIN
+            || value > IPMI_CIPHER_SUITE_ID_MAX)
+          {
+	    fprintf (stderr, "invalid cipher suite id value\n");
+	    argp_usage (state);
+	    break;
+          }
+
 	if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (value))
 	  {
-	    fprintf (stderr, "invalid cipher suite id value\n");
+	    fprintf (stderr, "unsupported cipher suite id value\n");
 	    argp_usage (state);
 	    break;
 	  }

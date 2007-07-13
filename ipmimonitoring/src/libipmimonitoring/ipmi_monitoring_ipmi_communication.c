@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.4 2007-07-12 22:26:09 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.5 2007-07-13 00:31:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,6 +132,8 @@ _inband_init(ipmi_monitoring_ctx_t c,
                 c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
               else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_INTERNAL_SYSTEM_ERROR)
                 c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;
+              else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_DRIVER_PATH_REQUIRED)
+                c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
               else
                 c->errnum = IPMI_MONITORING_ERR_INTERNAL;
               return -1;
@@ -242,7 +244,7 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
     flags = IPMI_FLAGS_DEBUG_DUMP;
   else
     flags = IPMI_FLAGS_DEFAULT;
-
+  
   if (ipmi_open_outofband (c->comm.dev,
                            IPMI_DEVICE_LAN,
                            hostname,

@@ -1,6 +1,6 @@
 .TP
 \-?, \fB\-\-help\fR
-Give this help list
+Give a help list
 .TP
 \fB\-\-usage\fR
 Give a short usage message

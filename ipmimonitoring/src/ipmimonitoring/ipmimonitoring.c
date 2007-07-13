@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.3 2007-07-12 22:31:59 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.4 2007-07-13 00:31:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,6 +65,7 @@
 #include "hostrange.h"
 #include "error.h"
 #include "secure.h"
+#include "tool-common.h"
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
@@ -79,6 +80,7 @@ static struct ipmi_monitoring_ipmi_config conf;
 static char *hostname;
 static char *username;
 static char *password;
+static char *k_g;
 static int flags;
 static unsigned int record_ids[IPMIMONITORING_MAX_RECORD_IDS];
 static unsigned int record_ids_len;
@@ -95,10 +97,19 @@ static int eliminate;
 static void
 _config_init(void)
 {
+  conf.driver_type = -1;
+  conf.disable_auto_probe = 0;
+  conf.driver_address = 0;
+  conf.register_space = 0;
+  conf.driver_device = NULL;
+
   conf.username = NULL;
   conf.password = NULL;
+  conf.k_g = NULL;
+  conf.k_g_len = 0;
   conf.privilege_level = -1;
   conf.authentication_type = -1;
+  conf.cipher_suite_id = -1;
   conf.session_timeout_len = -1;
   conf.retransmission_timeout_len = -1;
   conf.workaround_flags = 0;
@@ -106,6 +117,7 @@ _config_init(void)
   hostname = NULL;
   username = NULL;
   password = NULL;
+  k_g = NULL;
   flags = 0;
   memset(record_ids, '\0', sizeof(unsigned int) * IPMIMONITORING_MAX_RECORD_IDS);
   record_ids_len = 0;
@@ -130,8 +142,11 @@ _usage(void)
           "-u --username name            Username\n"
           "-p --password pw              Password\n"
           "-P --password-prompt          Prompt for Password\n"
+          "-k --k-g str                  K_g Key\n"
+          "-K --k-g-prompt               Prompt for K_g Key\n"
           "-l --privilege-level str      Privilege Level (user, operator, admin)\n"
           "-a --authentication-type str  Authentication Type (none, straight_password_key, md2, md5)\n"
+          "-I --cipher-suite-id num      Cipher Suite Id\n"
           "-s --sensors list             Specify list of sensors to monitor\n"
           "-g --groups list              Specify list of groups to monitor\n"
           "-c --cache-dir str            Specify alternate SDR cache directory\n"
@@ -143,7 +158,7 @@ _usage(void)
           "-E --eliminate                Eliminate undetected nodes.\n");
 #ifndef NDEBUG
   fprintf(stderr,
-          "-D --debug                    Turn on debugging\n"
+          "-U --debug                    Turn on debugging\n"
           "-G --debugdump                Turn on packet dumps\n");
 #endif /* NDEBUG */
   exit(0);
@@ -161,22 +176,28 @@ _cmdline_parse(int argc, char **argv)
 {
   char options[100];
   char *pw;
+  char *kg;
   char *ptr;
   char *tok;
   int c;
-  unsigned int flags;
+  unsigned int tmp_flags;
+  int rv;
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
     {
       {"help",                 0, NULL, 'H'},
       {"version",              0, NULL, 'V'},
+      {"driver-type",          1, NULL, 'D'},
       {"hostname",             1, NULL, 'h'},
       {"username",             1, NULL, 'u'},
       {"password",             1, NULL, 'p'},
       {"password-prompt",      1, NULL, 'P'},
+      {"k-g",                  1, NULL, 'k'},
+      {"k-g-prompt",           1, NULL, 'K'},
       {"privilege-level",      1, NULL, 'l'},
       {"authentication-type",  1, NULL, 'a'},
+      {"cipher-suite-id",      1, NULL, 'I'},
       {"sensors",              1, NULL, 's'},
       {"groups",               1, NULL, 'g'},
       {"cache-dir",            1, NULL, 'c'},
@@ -188,7 +209,7 @@ _cmdline_parse(int argc, char **argv)
       {"eliminate",            0, NULL, 'E'},
       {"workaround-flags",     1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",                0, NULL, 'D'},
+      {"debug",                0, NULL, 'U'},
       {"debugdump",            0, NULL, 'G'},
 #endif /* NDEBUG */
       {0, 0, 0, 0}
@@ -198,9 +219,9 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:s:g:c:rqBCF:EW:");
+  strcat(options, "HVD:h:u:p:Pk:Kl:a:I:s:g:c:rqBCF:EW:");
 #ifndef NDEBUG
-  strcat(options, "DG");
+  strcat(options, "UG");
 #endif /* NDEBUG */
 
   /* turn off output messages */
@@ -220,6 +241,24 @@ _cmdline_parse(int argc, char **argv)
         case 'V':
           _version();   /* --version */
           break;
+        case 'D':       /* --driver-type */
+          if (strcasecmp (optarg, "lan") == 0)
+            conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_1_5;
+          else if (strcasecmp (optarg, "lan_2_0") == 0
+                   || strcasecmp (optarg, "lan20") == 0
+                   || strcasecmp (optarg, "lan_20") == 0
+                   || strcasecmp (optarg, "lan2_0") == 0
+                   || strcasecmp (optarg, "lan2_0") == 0)
+            conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_2_0;
+          else if (strcasecmp (optarg, "kcs") == 0)
+            conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_KCS;
+          else if (strcasecmp (optarg, "ssif") == 0)
+            conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_SSIF;
+          else if (strcasecmp (optarg, "openipmi") == 0)
+            conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_OPENIPMI;
+          else
+            err_exit("Command Line Error: invalid driver type");
+          break;
         case 'h':       /* --hostname */
           if (strlen(optarg) > MAXHOSTNAMELEN)
             err_exit("Command Line Error: hostname too long");
@@ -238,7 +277,7 @@ _cmdline_parse(int argc, char **argv)
             }
           break;
         case 'p':       /* --password */
-          if (strlen(optarg) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+          if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(password, optarg);
           conf.password = password;
@@ -256,6 +295,32 @@ _cmdline_parse(int argc, char **argv)
             err_exit("password too long");
           strcpy(password, pw);
           conf.password = password;
+          break;
+        case 'k':       /* --k-g */
+          if ((rv = parse_kg(k_g, IPMI_MAX_K_G_LENGTH, optarg)) < 0)
+            err_exit("Command Line Error: Invalid K_g");
+          if (rv > 0)
+            {
+              conf.k_g = k_g;
+              conf.k_g_len = IPMI_MAX_K_G_LENGTH;
+            }
+          if (optarg)
+            {
+              int n;
+              n = strlen(optarg);
+              secure_memset(optarg, '\0', n);
+            }
+          break;
+        case 'K':       /* --k-g-prompt */
+          if (!(kg = getpass("K_g: ")))
+            err_exit("getpass: %s", strerror(errno));
+          if ((rv = parse_kg(k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
+            err_exit("K_g invalid");
+          if (rv > 0)
+            {
+              conf.k_g = k_g;
+              conf.k_g_len = IPMI_MAX_K_G_LENGTH;
+            }
           break;
         case 'l':       /* --privilege-level */
           if (!strcasecmp(optarg, "user"))
@@ -279,6 +344,16 @@ _cmdline_parse(int argc, char **argv)
             conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
           else
             err_exit("Command Line Error: Invalid authentication type");
+          break;
+        case 'I':       /* --cipher-suite-id */
+          conf.cipher_suite_id = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg)))
+            err_exit("Command Line Error: cipher suite id invalid\n");
+          if (conf.cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
+              || conf.cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
+            err_exit("Command Line Error: cipher suite id invalid\n");
+          if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (conf.cipher_suite_id))
+            err_exit("Command Line Error: cipher suite id unsupported\n");
           break;
         case 's':
           tok = strtok(optarg, " ,");
@@ -367,19 +442,19 @@ _cmdline_parse(int argc, char **argv)
           eliminate++;
           break;
 	case 'W':
-	  flags = parse_outofband_workaround_flags(optarg);
-	  /* convert to ipmipower flags */
-	  if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+	  tmp_flags = parse_outofband_workaround_flags(optarg);
+	  /* convert to ipmimonitoring flags */
+	  if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-	  else if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+	  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-	  else if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+	  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-	  else if (flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+	  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
 	  break;
 #ifndef NDEBUG
-        case 'D':       /* --debug */
+        case 'U':       /* --debug */
           flags |= IPMI_MONITORING_FLAGS_DEBUG;
           break;
         case 'G':       /* --debugdump */
@@ -390,6 +465,14 @@ _cmdline_parse(int argc, char **argv)
         default:
           err_exit("unknown command line option '%c'", c);
         }
+    }
+
+  /* IPMI 1.5 password is shorter */
+  if (conf.protocol_version < 0
+      || conf.protocol_version == IPMI_MONITORING_PROTOCOL_VERSION_1_5)
+    {
+      if (strlen(password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+        err_exit("Command Line Error: password too long");
     }
 }
           
@@ -418,7 +501,13 @@ _secure_initialization(void)
       exit(1);
     }
   
-  if (!(password = (char *)secure_malloc(IPMI_1_5_MAX_PASSWORD_LENGTH+1)))
+  if (!(password = (char *)secure_malloc(IPMI_2_0_MAX_PASSWORD_LENGTH+1)))
+    {
+      perror("malloc");
+      exit(1);
+    }
+
+  if (!(k_g = (char *)secure_malloc(IPMI_MAX_K_G_LENGTH)))
     {
       perror("malloc");
       exit(1);
@@ -430,7 +519,13 @@ _secure_initialization(void)
       exit(1);
     }
   
-  if (!(password = (char *)malloc(IPMI_1_5_MAX_PASSWORD_LENGTH+1)))
+  if (!(password = (char *)malloc(IPMI_2_0_MAX_PASSWORD_LENGTH+1)))
+    {
+      perror("malloc");
+      exit(1);
+    }
+
+  if (!(k_g = (char *)malloc(IPMI_MAX_K_G_LENGTH)))
     {
       perror("malloc");
       exit(1);
@@ -717,7 +812,7 @@ _ipmimonitoring(pstdout_state_t pstate,
       pstdout_printf(pstate,
                      "\n");
     }
-
+  
   exit_code = 0;
  cleanup:
   if (c)
@@ -789,13 +884,19 @@ main(int argc, char **argv)
   if (password)
     {
 #ifdef NDEBUG
-      secure_free(password, IPMI_1_5_MAX_PASSWORD_LENGTH+1);
+      secure_free(password, IPMI_2_0_MAX_PASSWORD_LENGTH+1);
 #else  /* !NDEBUG */
       free(password);
 #endif /* !NDEBUG */
     }
-  if (hostname)
-    free(hostname);
+  if (k_g)
+    {
+#ifdef NDEBUG
+      secure_free(k_g, IPMI_MAX_K_G_LENGTH);
+#else  /* !NDEBUG */
+      free(k_g);
+#endif /* !NDEBUG */
+    }
   return (exit_code);
 }
 

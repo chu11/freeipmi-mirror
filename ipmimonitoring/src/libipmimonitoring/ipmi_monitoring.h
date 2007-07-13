@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6.8.4 2007-07-12 22:26:09 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.5 2007-07-13 00:31:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -143,6 +143,13 @@ enum ipmi_monitoring_sensor_bitmask_type
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_SLOT_CONNECTOR                      = 0x17,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG2                           = 0x18,
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0x19,
+  };
+
+enum ipmi_monitoring_driver_type
+  {
+    IPMI_MONITORING_DRIVER_TYPE_KCS      = 0x00,
+    IPMI_MONITORING_DRIVER_TYPE_SSIF     = 0x01,
+    IPMI_MONITORING_DRIVER_TYPE_OPENIPMI = 0x02,
   };
 
 enum ipmi_monitoring_protocol_version
@@ -453,6 +460,16 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *
  * Configuration information for IPMI Inband monitoring
  *
+ * driver_type
+ *
+ *   Use a specific in-band driver.
+ *
+ *   IPMI_MONITORING_DRIVER_TYPE_KCS
+ *   IPMI_MONITORING_DRIVER_TYPE_SSIF
+ *   IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
+ *
+ *    Pass < 0 for default of IPMI_MONITORING_DRIVER_TYPE_KCS.
+ * 
  * disable_auto_probe
  *
  *   Flag informs the library if in-band driver information should be
@@ -568,6 +585,7 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  */
 struct ipmi_monitoring_ipmi_config
 {
+  int driver_type;
   int disable_auto_probe;
   unsigned int driver_address;
   unsigned int register_space;
