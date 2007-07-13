@@ -1,3 +1,9 @@
+2007-07-13  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c: Remove duplicate
+	error code definition.
+	
 2007-07-12  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main): Fix

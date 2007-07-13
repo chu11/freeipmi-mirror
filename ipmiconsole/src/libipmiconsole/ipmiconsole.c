@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.13 2007-06-28 22:23:48 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.13.2.1 2007-07-13 22:37:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -85,7 +85,6 @@ static char *ipmiconsole_errmsgs[] =
     "password invalid",		  /* 14 */
     "k_g invalid",		  /* 15 */
     "privilege invalid",	  /* 16 */
-    "cipher suite invalid",	  /* 17 */
     "SOL unavailable",		  /* 18 */
     "SOL in use",		  /* 19 */
     "SOL not responding",	  /* 20 */
