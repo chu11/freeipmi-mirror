@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17 2007-06-02 19:48:15 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.6.1 2007-07-13 00:23:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -777,8 +777,6 @@ main(int argc, char **argv)
       free(password);
 #endif /* !NDEBUG */
     }
-  if (hostname)
-    free(hostname);
   return (exit_code);
 }
 
