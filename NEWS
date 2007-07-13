@@ -17,8 +17,10 @@ o Made many command line options consistent across FreeIPMI.  Notable
   6) Compliance workaround options in ipmiconsole now follow the convention
      in ipmipower using the -W option.
   7) The "plain" authentication type argument is now the
-     "straight_password_key" authentication type argument.  "plain" is internally
-     maintained for backwards compatability.
+     "straight_password_key" authentication type argument.  "plain" is
+     internally maintained for backwards compatability.
+  8) Short options -I and -R changed to -D and -r for consistency to
+     other tools.  Old -r and -R options are subsequently flipped.
 o Renamed configuration file options or interactive prompt options for 
   consistency with command line.
 o Fix various configuration file options or interactive prompt option

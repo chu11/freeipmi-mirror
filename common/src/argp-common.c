@@ -142,10 +142,6 @@ common_parse_opt (int key,
         cmd_args->driver_type = IPMI_DEVICE_LAN_2_0;
       else if (strcasecmp (arg, "kcs") == 0)
         cmd_args->driver_type = IPMI_DEVICE_KCS;
-      else if (strcasecmp (arg, "smic") == 0)
-        cmd_args->driver_type = IPMI_DEVICE_SMIC;
-      else if (strcasecmp (arg, "bt") == 0)
-        cmd_args->driver_type = IPMI_DEVICE_BT;
       else if (strcasecmp (arg, "ssif") == 0)
         cmd_args->driver_type = IPMI_DEVICE_SSIF;
       else if (strcasecmp (arg, "openipmi") == 0)

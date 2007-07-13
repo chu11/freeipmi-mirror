@@ -125,6 +125,8 @@
 	* common/src/argp-common.h, common/src/argp-common.c,
 	common/src/tool-common.c: Adjust for auto_probe logic change.
 
+	* bmc-watchdog/: Support OpenIPMI driver.
+
 	* General code cleanup throughout.
 	
 2007-07-11  Albert Chu <chu11@llnl.gov>

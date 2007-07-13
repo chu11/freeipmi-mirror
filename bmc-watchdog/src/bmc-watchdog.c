@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.3 2007-07-13 15:59:52 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.4 2007-07-13 17:12:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,8 +65,9 @@
 #include <freeipmi/freeipmi.h>
 
 /* Driver Types */
-#define DRIVER_TYPE_KCS  0
-#define DRIVER_TYPE_SSIF 1
+#define DRIVER_TYPE_KCS      0
+#define DRIVER_TYPE_SSIF     1
+#define DRIVER_TYPE_OPENIPMI 2
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
@@ -161,6 +162,7 @@ char *err_progname = NULL;
 
 ipmi_kcs_ctx_t kcs_ctx = NULL;
 ipmi_ssif_ctx_t ssif_ctx = NULL;
+ipmi_openipmi_ctx_t openipmi_ctx = NULL;
 int driver_type_used = -1;
 
 int cmdline_parsed = 0;
@@ -276,6 +278,33 @@ _err_exit(char *fmt, ...)
 }
 
 static int
+_init_openipmi_ipmi(void)
+{
+  if (!(openipmi_ctx = ipmi_openipmi_ctx_create()))
+    {
+      _bmclog("ipmi_openipmi_ctx_create: %s", strerror(errno));
+      return -1;
+    }
+  
+  if (cinfo.driver_device)
+    {
+      if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, cinfo.driver_device_val) < 0)
+        {
+          _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+          return -1;
+        }
+    }
+  
+  if (ipmi_openipmi_ctx_io_init(openipmi_ctx) < 0)
+    {
+      _bmclog("ipmi_openipmi_ctx_io_init: %s", ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+      return -1;
+    }
+
+  return 0;
+}
+
+static int
 _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
@@ -357,7 +386,7 @@ _init_ssif_ipmi(void)
   
   if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
     {
-      _bmclog("ipmi_ssif_ctx_set_i2c_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+      _bmclog("ipmi_ssif_ctx_set_driver_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
       return -1;
     }
   
@@ -399,18 +428,29 @@ _init_ipmi(void)
 	    _err_exit("Error initializing SSIF IPMI driver");
 	  driver_type_used = DRIVER_TYPE_SSIF;
 	}
+      if (cinfo.driver_type_val == DRIVER_TYPE_OPENIPMI)
+	{
+	  if (_init_openipmi_ipmi() < 0)
+	    _err_exit("Error initializing OPENIPMI IPMI driver");
+	  driver_type_used = DRIVER_TYPE_OPENIPMI;
+	}
     }
   else
     {
-      if (_init_kcs_ipmi() < 0)
-	{
-	  if (_init_ssif_ipmi() < 0)
-	    _err_exit("Error initializing IPMI driver");
-	  else
-	    driver_type_used = DRIVER_TYPE_SSIF;
-	}
+      if (_init_openipmi_ipmi() < 0)
+        {
+          if (_init_kcs_ipmi() < 0)
+            {
+              if (_init_ssif_ipmi() < 0)
+                _err_exit("Error initializing IPMI driver");
+              else
+                driver_type_used = DRIVER_TYPE_SSIF;
+            }
+          else
+            driver_type_used = DRIVER_TYPE_KCS;
+        }
       else
-	driver_type_used = DRIVER_TYPE_KCS;
+        driver_type_used = DRIVER_TYPE_OPENIPMI;
     }
 
   return 0;
@@ -1046,7 +1086,7 @@ _usage(void)
               "COMMANDS:\n"
               "  -s         --set                        Set BMC Watchdog Config\n"
               "  -g         --get                        Get BMC Watchdog Config\n"
-              "  -r         --reset                      Reset BMC Watchdog Timer\n"
+              "  -R         --reset                      Reset BMC Watchdog Timer\n"
               "  -t         --start                      Start BMC Watchdog Timer\n"
               "  -y         --stop                       Stop BMC Watchdog Timer\n"
               "  -c         --clear                      Clear BMC Watchdog Config\n"
@@ -1060,15 +1100,15 @@ _usage(void)
 	  "OPTIONS:\n"
           "  -h         --help                       Output help menu\n"
           "  -v         --version                    Output version\n"
-	  "  -I STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF)\n"
+	  "  -D STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF, OPENIPMI)\n"
 	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
-          "  -R INT     --register-spacing=INT         Base address register spacing in bytes\n"
+          "  -r INT     --register-spacing=INT       Base address register spacing in bytes\n"
 	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
           "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
   fprintf(stderr,
-	  "  -D         --debug                      Turn on debugging\n");
+	  "  -B         --debug                      Turn on debugging\n");
 #endif
   fprintf(stderr, "\n");
 
@@ -1180,14 +1220,14 @@ _cmdline_parse(int argc, char **argv)
     {"version",               0, NULL, 'v'},
     {"set",                   0, NULL, 's'},
     {"get",                   0, NULL, 'g'},
-    {"reset",                 0, NULL, 'r'},
+    {"reset",                 0, NULL, 'R'},
     {"start",                 0, NULL, 't'},
     {"stop",                  0, NULL, 'y'},
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
-    {"driver-type",           1, NULL, 'I'},
+    {"driver-type",           1, NULL, 'D'},
     {"driver-address",        1, NULL, 'o'},
-    {"register-spacing",      1, NULL, 'R'},
+    {"register-spacing",      1, NULL, 'r'},
     {"driver-device",         1, NULL, 'E'},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
@@ -1211,15 +1251,15 @@ _cmdline_parse(int argc, char **argv)
     {"arp-response",          1, NULL, 'A'},
     {"reset-period",          1, NULL, 'e'},
 #ifndef NDEBUG
-    {"debug",                 0, NULL, 'D'},
+    {"debug",                 0, NULL, 'B'},
 #endif
     {0, 0, 0, 0}
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvI:o:R:E:f:nsgrtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
+  strcpy(options, "hvD:o:r:E:f:nsgRtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 #ifndef NDEBUG
-  strcat(options, "D");
+  strcat(options, "B");
 #endif
 
   /* turn off output messages printed by getopt_long */
@@ -1245,7 +1285,7 @@ _cmdline_parse(int argc, char **argv)
         case 'g':
           cinfo.get++;
           break;
-        case 'r':
+        case 'R':
           cinfo.reset++;
           break;
         case 't':
@@ -1260,12 +1300,14 @@ _cmdline_parse(int argc, char **argv)
         case 'd':
           cinfo.daemon++;
           break;
-	case 'I':
+	case 'D':
 	  cinfo.driver_type++;
 	  if (!strcasecmp(optarg, "kcs"))
 	    cinfo.driver_type_val = DRIVER_TYPE_KCS;
 	  else if (!strcasecmp(optarg, "ssif"))
 	    cinfo.driver_type_val = DRIVER_TYPE_SSIF;
+	  else if (!strcasecmp(optarg, "openipmi"))
+	    cinfo.driver_type_val = DRIVER_TYPE_OPENIPMI;
 	  else
 	    _err_exit("driver-type value invalid");
 	  break;
@@ -1276,7 +1318,7 @@ _cmdline_parse(int argc, char **argv)
               || cinfo.driver_address_val <= 0)
             _err_exit("driver-address value invalid");
           break;
-        case 'R':
+        case 'r':
           cinfo.register_spacing++;
           cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
@@ -1400,7 +1442,7 @@ _cmdline_parse(int argc, char **argv)
             _err_exit("reset period value out of range");
           break;
 #ifndef NDEBUG
-        case 'D':
+        case 'B':
           cinfo.debug++;
           break;
 #endif
