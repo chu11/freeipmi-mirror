@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.4 2007-07-13 17:12:27 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.5 2007-07-13 17:44:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,10 +117,10 @@ struct cmdline_info
   int driver_type_val;
   int driver_address;
   uint32_t driver_address_val;
-  int register_spacing;
-  uint8_t register_spacing_val;
   int driver_device;
   char *driver_device_val;
+  int register_spacing;
+  uint8_t register_spacing_val;
   char *logfile;
   int no_logging;
   int timer_use;
@@ -1102,8 +1102,8 @@ _usage(void)
           "  -v         --version                    Output version\n"
 	  "  -D STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF, OPENIPMI)\n"
 	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
-          "  -r INT     --register-spacing=INT       Base address register spacing in bytes\n"
 	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
+          "  -r INT     --register-spacing=INT       Base address register spacing in bytes\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
           "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
@@ -1227,8 +1227,8 @@ _cmdline_parse(int argc, char **argv)
     {"daemon",                0, NULL, 'd'},
     {"driver-type",           1, NULL, 'D'},
     {"driver-address",        1, NULL, 'o'},
-    {"register-spacing",      1, NULL, 'r'},
     {"driver-device",         1, NULL, 'E'},
+    {"register-spacing",      1, NULL, 'r'},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
@@ -1318,16 +1318,17 @@ _cmdline_parse(int argc, char **argv)
               || cinfo.driver_address_val <= 0)
             _err_exit("driver-address value invalid");
           break;
-        case 'r':
-          cinfo.register_spacing++;
-          cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            _err_exit("register-spacing value invalid");
-          break;
 	case 'E':
 	  cinfo.driver_device++;
 	  cinfo.driver_device_val = optarg;
 	  break;
+        case 'r':
+          cinfo.register_spacing++;
+          cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg))
+              || cinfo.register_spacing_val <= 0)
+            _err_exit("register-spacing value invalid");
+          break;
         case 'f':
           cinfo.logfile = optarg;
           break;

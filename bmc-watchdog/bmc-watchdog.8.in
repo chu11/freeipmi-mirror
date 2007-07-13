@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.12.10.3 2007-07-13 17:12:27 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.12.10.4 2007-07-13 17:44:16 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,15 +132,15 @@ fails, the IPMI defined default will be used.  If the io-port number
 is prefixed with a "0x", it is assumed to be a base 16 integer.
 Otherwise, it is assumed to be a base 10 integer.
 .TP
+.B  -E STRING, --driver-device=STRING
+Identify the driver device path the IPMI driver should use.  It not
+specified, a default path will be assumed.
+.TP
 .B  -r INT, --register-spacing=INT
 Specify base address register spacing. If not specified,
 .B bmc-watchdog 
 will attempt to probe for the system's default register spacing.  If
 the probe fails, the IPMI defined default will be used.
-.TP
-.B  -E STRING, --driver-device=STRING
-Identify the driver device path the IPMI driver should use.  It not
-specified, a default path will be assumed.
 .TP
 .B  -f STRING, --logfile=STRING
 Specify an alternate logfile from the default of

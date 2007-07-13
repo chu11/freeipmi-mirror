@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.4 2007-07-13 00:31:52 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.5 2007-07-13 17:44:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,7 +100,7 @@ _config_init(void)
   conf.driver_type = -1;
   conf.disable_auto_probe = 0;
   conf.driver_address = 0;
-  conf.register_space = 0;
+  conf.register_spacing = 0;
   conf.driver_device = NULL;
 
   conf.username = NULL;
@@ -138,6 +138,11 @@ _usage(void)
   fprintf(stderr, "Usage: ipmimonitoring [OPTIONS]\n"
           "-H --help                     Output Help\n"
           "-V --version                  Output Version\n"
+          "-D --driver-type str          Driver Type\n"
+          "   --no-probing               Do not probe for driver info\n"
+          "   --driver-address num       Driver Address\n"
+          "   --driver-device str        Driver Device Path\n"
+          "-r --register-spacing num     Driver Register Spacing\n"
           "-h --hostname str             Hostname(s)\n"
           "-u --username name            Username\n"
           "-p --password pw              Password\n"
@@ -158,8 +163,8 @@ _usage(void)
           "-E --eliminate                Eliminate undetected nodes.\n");
 #ifndef NDEBUG
   fprintf(stderr,
-          "-U --debug                    Turn on debugging\n"
-          "-G --debugdump                Turn on packet dumps\n");
+          "   --debug                    Turn on debugging\n"
+          "   --debugdump                Turn on packet dumps\n");
 #endif /* NDEBUG */
   exit(0);
 }
@@ -189,6 +194,10 @@ _cmdline_parse(int argc, char **argv)
       {"help",                 0, NULL, 'H'},
       {"version",              0, NULL, 'V'},
       {"driver-type",          1, NULL, 'D'},
+      {"no-probing",           0, NULL, 128}, /* no short option */
+      {"driver-address",       1, NULL, 129}, /* no short option */
+      {"driver-device",        1, NULL, 130}, /* no short option */
+      {"register-spacing",     1, NULL, 'r'},
       {"hostname",             1, NULL, 'h'},
       {"username",             1, NULL, 'u'},
       {"password",             1, NULL, 'p'},
@@ -201,7 +210,7 @@ _cmdline_parse(int argc, char **argv)
       {"sensors",              1, NULL, 's'},
       {"groups",               1, NULL, 'g'},
       {"cache-dir",            1, NULL, 'c'},
-      {"regenerate-sdr-cache", 0, NULL, 'r'},
+      {"regenerate-sdr-cache", 0, NULL, 'R'},
       {"quiet-readings",       0, NULL, 'q'},
       {"buffer-output",        0, NULL, 'B'},
       {"consolidate-output",   0, NULL, 'C'},
@@ -209,8 +218,8 @@ _cmdline_parse(int argc, char **argv)
       {"eliminate",            0, NULL, 'E'},
       {"workaround-flags",     1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",                0, NULL, 'U'},
-      {"debugdump",            0, NULL, 'G'},
+      {"debug",                0, NULL, 131}, /* no short option */
+      {"debugdump",            0, NULL, 132}, /* no short option */
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -219,7 +228,7 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVD:h:u:p:Pk:Kl:a:I:s:g:c:rqBCF:EW:");
+  strcat(options, "HVD:r:h:u:p:Pk:Kl:a:I:s:g:c:RqBCF:EW:");
 #ifndef NDEBUG
   strcat(options, "UG");
 #endif /* NDEBUG */
@@ -258,6 +267,24 @@ _cmdline_parse(int argc, char **argv)
             conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_OPENIPMI;
           else
             err_exit("Command Line Error: invalid driver type");
+          break;
+        case 128:       /* --no-probing */
+          conf.disable_auto_probe++;
+          break;
+        case 129:       /* --driver-address */
+          conf.driver_address = strtol(optarg, &ptr, 0);
+          if (ptr != (optarg + strlen(optarg))
+              || conf.driver_address <= 0)
+            err_exit("Command Line Error: driver-address value invalid");
+          break;
+        case 130:       /* --driver-device */
+          conf.driver_device = optarg;
+          break;
+        case 'r':       /* --register-spacing */
+          conf.register_spacing = strtol(optarg, &ptr, 0);
+          if (ptr != (optarg + strlen(optarg))
+              || conf.register_spacing <= 0)
+              err_exit("Command Line Error: register-spacing value invalid");
           break;
         case 'h':       /* --hostname */
           if (strlen(optarg) > MAXHOSTNAMELEN)
@@ -419,7 +446,7 @@ _cmdline_parse(int argc, char **argv)
         case 'c':
           cache_dir = optarg;
           break;
-        case 'r':
+        case 'R':
           regenerate_sdr_cache++;
           break;
         case 'q':
@@ -454,10 +481,10 @@ _cmdline_parse(int argc, char **argv)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
 	  break;
 #ifndef NDEBUG
-        case 'U':       /* --debug */
+        case 131:       /* --debug */
           flags |= IPMI_MONITORING_FLAGS_DEBUG;
           break;
-        case 'G':       /* --debugdump */
+        case 132:       /* --debugdump */
           flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
           break;
 #endif /* NDEBUG */

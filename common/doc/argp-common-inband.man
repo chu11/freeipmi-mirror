@@ -8,5 +8,5 @@ one.
 .TP
 \fB\-\-driver\-device\fR=\fIDEVICE\fR Use this DEVICE for IPMI driver.
 .TP
-\fB\-r\fR, \fB\-\-register\-spacing\fR=\fREGISTERSPACING\fR
+\fB\-r\fR, \fB\-\-register\-spacing\fR=\fRREGISTERSPACING\fR
 Use this REGISTERSPACING instead of the probed one.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6.8.5 2007-07-13 00:31:52 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.6 2007-07-13 17:44:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -479,7 +479,7 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *
  *   Use this specified driver address instead of a probed one.
  *
- * register_space
+ * register_spacing
  *
  *   Use this register space instead of the probed one.
  *
@@ -588,7 +588,7 @@ struct ipmi_monitoring_ipmi_config
   int driver_type;
   int disable_auto_probe;
   unsigned int driver_address;
-  unsigned int register_space;
+  unsigned int register_spacing;
   char *driver_device;
 
   int protocol_version;
