@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.5 2007-07-13 17:44:17 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.6 2007-07-13 18:04:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -142,7 +142,7 @@ _usage(void)
           "   --no-probing               Do not probe for driver info\n"
           "   --driver-address num       Driver Address\n"
           "   --driver-device str        Driver Device Path\n"
-          "-r --register-spacing num     Driver Register Spacing\n"
+          "   --register-spacing num     Driver Register Spacing\n"
           "-h --hostname str             Hostname(s)\n"
           "-u --username name            Username\n"
           "-p --password pw              Password\n"
@@ -197,7 +197,7 @@ _cmdline_parse(int argc, char **argv)
       {"no-probing",           0, NULL, 128}, /* no short option */
       {"driver-address",       1, NULL, 129}, /* no short option */
       {"driver-device",        1, NULL, 130}, /* no short option */
-      {"register-spacing",     1, NULL, 'r'},
+      {"register-spacing",     1, NULL, 131}, /* no short option */
       {"hostname",             1, NULL, 'h'},
       {"username",             1, NULL, 'u'},
       {"password",             1, NULL, 'p'},
@@ -210,7 +210,7 @@ _cmdline_parse(int argc, char **argv)
       {"sensors",              1, NULL, 's'},
       {"groups",               1, NULL, 'g'},
       {"cache-dir",            1, NULL, 'c'},
-      {"regenerate-sdr-cache", 0, NULL, 'R'},
+      {"regenerate-sdr-cache", 0, NULL, 'r'},
       {"quiet-readings",       0, NULL, 'q'},
       {"buffer-output",        0, NULL, 'B'},
       {"consolidate-output",   0, NULL, 'C'},
@@ -218,8 +218,8 @@ _cmdline_parse(int argc, char **argv)
       {"eliminate",            0, NULL, 'E'},
       {"workaround-flags",     1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",                0, NULL, 131}, /* no short option */
-      {"debugdump",            0, NULL, 132}, /* no short option */
+      {"debug",                0, NULL, 132}, /* no short option */
+      {"debugdump",            0, NULL, 133}, /* no short option */
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -280,7 +280,7 @@ _cmdline_parse(int argc, char **argv)
         case 130:       /* --driver-device */
           conf.driver_device = optarg;
           break;
-        case 'r':       /* --register-spacing */
+        case 131:       /* --register-spacing */
           conf.register_spacing = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
               || conf.register_spacing <= 0)
@@ -446,7 +446,7 @@ _cmdline_parse(int argc, char **argv)
         case 'c':
           cache_dir = optarg;
           break;
-        case 'R':
+        case 'r':
           regenerate_sdr_cache++;
           break;
         case 'q':
@@ -481,10 +481,10 @@ _cmdline_parse(int argc, char **argv)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
 	  break;
 #ifndef NDEBUG
-        case 131:       /* --debug */
+        case 132:       /* --debug */
           flags |= IPMI_MONITORING_FLAGS_DEBUG;
           break;
-        case 132:       /* --debugdump */
+        case 133:       /* --debugdump */
           flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
           break;
 #endif /* NDEBUG */

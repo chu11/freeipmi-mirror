@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.11.4.2 2007-07-13 17:44:17 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.11.4.3 2007-07-13 18:04:31 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -114,7 +114,7 @@ module_board, slot_connector, watchdog2.
 .I "-c, --cache-dir dir"
 Specify an alternate directory to read and write SDR caches.
 .TP
-.I "-R, --regenerate-sdr-cache"
+.I "-r, --regenerate-sdr-cache"
 By default 
 .B ipmimonitoring,
 caches the sensor data repository (SDR) of a node for quicker

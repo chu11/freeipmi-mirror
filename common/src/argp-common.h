@@ -38,7 +38,7 @@ enum argp_common_option_keys
     DRIVER_DEVICE_KEY = 132, 
     RETRY_TIMEOUT_KEY = 133, 
     SESSION_TIMEOUT_KEY = 134,
-    REGISTER_SPACING_KEY = 'r',
+    REGISTER_SPACING_KEY = 135,
     HOSTNAME_KEY = 'h', 
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
@@ -50,13 +50,13 @@ enum argp_common_option_keys
     PRIVILEGE_LEVEL_KEY = 'l',
     FLUSH_CACHE_KEY = 'f',
     QUIET_CACHE_KEY = 'Q',
-    SDR_CACHE_DIR_KEY = 135,
+    SDR_CACHE_DIR_KEY = 136,
     BUFFER_KEY = 'B',
     CONSOLIDATE_KEY = 'C',
     FANOUT_KEY = 'F',
     ELIMINATE_KEY = 'E',
     WORKAROUND_FLAGS_KEY = 'W',
-    DEBUG_KEY = 136
+    DEBUG_KEY = 137
   };
 
 #define ARGP_COMMON_OPTIONS_DRIVER                                          \

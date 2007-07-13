@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.5 2007-07-13 17:44:16 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.6 2007-07-13 18:04:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1086,7 +1086,7 @@ _usage(void)
               "COMMANDS:\n"
               "  -s         --set                        Set BMC Watchdog Config\n"
               "  -g         --get                        Get BMC Watchdog Config\n"
-              "  -R         --reset                      Reset BMC Watchdog Timer\n"
+              "  -r         --reset                      Reset BMC Watchdog Timer\n"
               "  -t         --start                      Start BMC Watchdog Timer\n"
               "  -y         --stop                       Stop BMC Watchdog Timer\n"
               "  -c         --clear                      Clear BMC Watchdog Config\n"
@@ -1103,7 +1103,7 @@ _usage(void)
 	  "  -D STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF, OPENIPMI)\n"
 	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
 	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
-          "  -r INT     --register-spacing=INT       Base address register spacing in bytes\n"
+          "  -R INT     --register-spacing=INT       Base address register spacing in bytes\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
           "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
@@ -1220,7 +1220,7 @@ _cmdline_parse(int argc, char **argv)
     {"version",               0, NULL, 'v'},
     {"set",                   0, NULL, 's'},
     {"get",                   0, NULL, 'g'},
-    {"reset",                 0, NULL, 'R'},
+    {"reset",                 0, NULL, 'r'},
     {"start",                 0, NULL, 't'},
     {"stop",                  0, NULL, 'y'},
     {"clear",                 0, NULL, 'c'},
@@ -1228,7 +1228,7 @@ _cmdline_parse(int argc, char **argv)
     {"driver-type",           1, NULL, 'D'},
     {"driver-address",        1, NULL, 'o'},
     {"driver-device",         1, NULL, 'E'},
-    {"register-spacing",      1, NULL, 'r'},
+    {"register-spacing",      1, NULL, 'R'},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
@@ -1285,7 +1285,7 @@ _cmdline_parse(int argc, char **argv)
         case 'g':
           cinfo.get++;
           break;
-        case 'R':
+        case 'r':
           cinfo.reset++;
           break;
         case 't':
@@ -1322,7 +1322,7 @@ _cmdline_parse(int argc, char **argv)
 	  cinfo.driver_device++;
 	  cinfo.driver_device_val = optarg;
 	  break;
-        case 'r':
+        case 'R':
           cinfo.register_spacing++;
           cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg))

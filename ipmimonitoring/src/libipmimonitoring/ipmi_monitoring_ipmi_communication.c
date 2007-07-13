@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.6 2007-07-13 17:44:17 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.7 2007-07-13 18:04:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,7 +98,7 @@ _inband_init(ipmi_monitoring_ctx_t c,
   else
     flags = IPMI_FLAGS_DEFAULT;
 
-  if (config->driver_type < 0)
+  if (!config || config->driver_type < 0)
     {
       if (ipmi_open_inband (c->comm.dev,
                             IPMI_DEVICE_OPENIPMI,

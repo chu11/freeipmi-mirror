@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.12.10.4 2007-07-13 17:44:16 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.12.10.5 2007-07-13 18:04:31 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,7 +79,7 @@ be changed.
 Get BMC Watchdog Configuration and State.  The current
 configuration and state is printed to standard output.
 .TP
-.B  -R, --reset                     
+.B  -r, --reset                     
 Reset BMC Watchdog Timer.  
 .TP
 .B  -t, --start                     
@@ -136,7 +136,7 @@ Otherwise, it is assumed to be a base 10 integer.
 Identify the driver device path the IPMI driver should use.  It not
 specified, a default path will be assumed.
 .TP
-.B  -r INT, --register-spacing=INT
+.B  -R INT, --register-spacing=INT
 Specify base address register spacing. If not specified,
 .B bmc-watchdog 
 will attempt to probe for the system's default register spacing.  If
