@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.1 2007-07-12 21:45:11 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.2 2007-07-13 15:44:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1062,7 +1062,7 @@ _usage(void)
           "  -v         --version                    Output version\n"
 	  "  -I STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF)\n"
 	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
-          "  -R INT     --reg-space=INT              Base address register spacing in bytes\n"
+          "  -R INT     --register-space=INT         Base address register spacing in bytes\n"
 	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
           "  -n         --no-logging                 Turn off all syslogging\n");

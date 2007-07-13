@@ -111,10 +111,10 @@
 	
 	* doc/Makefile.am: Updated appropriately.
 
-	Unify code:
+	Unify code.  
 
-	* Where appropriate, adjust command line options between
-	tools/programs to match more closely.
+	* Adjust command line options between tools/programs to match more
+	closely.
 	
 	Misc:
 
