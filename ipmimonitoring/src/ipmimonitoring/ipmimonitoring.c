@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.6 2007-07-13 18:04:31 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.7 2007-07-13 22:12:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,6 +74,13 @@
 #define IPMIMONITORING_MAX_RECORD_IDS 256
 #define IPMIMONITORING_MAX_GROUPS     64
 #define IPMIMONITORING_BUFLEN         1024
+
+#define IPMIMONITORING_NO_PROBING_KEY       128
+#define IPMIMONITORING_DRIVER_ADDRESS       129
+#define IPMIMONITORING_DRIVER_DEVICE_KEY    130
+#define IPMIMONITORING_REGISTER_SPACING_KEY 131 
+#define IPMIMONITORING_DEBUG_KEY            132
+#define IPMIMONITORING_DEBUGDUMP_KEY        133
 
 static struct ipmi_monitoring_ipmi_config conf;
 
@@ -194,10 +201,10 @@ _cmdline_parse(int argc, char **argv)
       {"help",                 0, NULL, 'H'},
       {"version",              0, NULL, 'V'},
       {"driver-type",          1, NULL, 'D'},
-      {"no-probing",           0, NULL, 128}, /* no short option */
-      {"driver-address",       1, NULL, 129}, /* no short option */
-      {"driver-device",        1, NULL, 130}, /* no short option */
-      {"register-spacing",     1, NULL, 131}, /* no short option */
+      {"no-probing",           0, NULL, IPMIMONITORING_NO_PROBING_KEY}, /* no short option */
+      {"driver-address",       1, NULL, IPMIMONITORING_DRIVER_ADDRESS}, /* no short option */
+      {"driver-device",        1, NULL, IPMIMONITORING_DRIVER_DEVICE_KEY}, /* no short option */
+      {"register-spacing",     1, NULL, IPMIMONITORING_REGISTER_SPACING_KEY}, /* no short option */
       {"hostname",             1, NULL, 'h'},
       {"username",             1, NULL, 'u'},
       {"password",             1, NULL, 'p'},
@@ -218,8 +225,8 @@ _cmdline_parse(int argc, char **argv)
       {"eliminate",            0, NULL, 'E'},
       {"workaround-flags",     1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",                0, NULL, 132}, /* no short option */
-      {"debugdump",            0, NULL, 133}, /* no short option */
+      {"debug",                0, NULL, IPMIMONITORING_DEBUG_KEY}, /* no short option */
+      {"debugdump",            0, NULL, IPMIMONITORING_DEBUGDUMP_KEY}, /* no short option */
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -268,19 +275,19 @@ _cmdline_parse(int argc, char **argv)
           else
             err_exit("Command Line Error: invalid driver type");
           break;
-        case 128:       /* --no-probing */
+        case IPMIMONITORING_NO_PROBING_KEY:          /* --no-probing */
           conf.disable_auto_probe++;
           break;
-        case 129:       /* --driver-address */
+        case IPMIMONITORING_DRIVER_ADDRESS:          /* --driver-address */
           conf.driver_address = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
               || conf.driver_address <= 0)
             err_exit("Command Line Error: driver-address value invalid");
           break;
-        case 130:       /* --driver-device */
+        case IPMIMONITORING_DRIVER_DEVICE_KEY:       /* --driver-device */
           conf.driver_device = optarg;
           break;
-        case 131:       /* --register-spacing */
+        case IPMIMONITORING_REGISTER_SPACING_KEY:    /* --register-spacing */
           conf.register_spacing = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
               || conf.register_spacing <= 0)
@@ -481,10 +488,10 @@ _cmdline_parse(int argc, char **argv)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
 	  break;
 #ifndef NDEBUG
-        case 132:       /* --debug */
+        case IPMIMONITORING_DEBUG_KEY:       /* --debug */
           flags |= IPMI_MONITORING_FLAGS_DEBUG;
           break;
-        case 133:       /* --debugdump */
+        case IPMIMONITORING_DEBUGDUMP_KEY:       /* --debugdump */
           flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
           break;
 #endif /* NDEBUG */

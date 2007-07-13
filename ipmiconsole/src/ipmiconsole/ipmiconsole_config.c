@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.7 2007-07-13 18:18:25 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.8 2007-07-13 22:12:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -52,6 +52,11 @@
 
 #include "freeipmi-portability.h"
 #include "tool-common.h"
+
+#define IPMICONSOLE_DEBUG_KEY     128
+#define IPMICONSOLE_DEBUGFILE_KEY 129
+#define IPMICONSOLE_DEBUGDUMP_KEY 130
+#define IPMICONSOLE_NORAW_KEY     131
 
 extern struct ipmiconsole_config *conf;
 
@@ -143,10 +148,10 @@ _cmdline_parse(int argc, char **argv)
       {"lock-memory",              0, NULL, 'L'},
       {"workaround-flags",         1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",                    0, NULL, 128}, /* no short option */
-      {"debugfile",                0, NULL, 129}, /* no short option */ 
-      {"debugdump",                0, NULL, 130}, /* no short option */
-      {"noraw",                    0, NULL, 131}, /* no short option */
+      {"debug",                    0, NULL, IPMICONSOLE_DEBUG_KEY}, /* no short option */
+      {"debugfile",                0, NULL, IPMICONSOLE_DEBUGFILE_KEY}, /* no short option */ 
+      {"debugdump",                0, NULL, IPMICONSOLE_DEBUGDUMP_KEY}, /* no short option */
+      {"noraw",                    0, NULL, IPMICONSOLE_NORAW_KEY}, /* no short option */
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -293,16 +298,16 @@ _cmdline_parse(int argc, char **argv)
           conf->workaround_flags_set_on_cmdline = flags;
           break;
 #ifndef NDEBUG
-        case 128:	/* --debug */
+        case IPMICONSOLE_DEBUG_KEY:	/* --debug */
           conf->debug++;
           break;
-        case 129:	/* --debugfile */
+        case IPMICONSOLE_DEBUGFILE_KEY:	/* --debugfile */
           conf->debugfile++;
           break;
-        case 130:	/* --debugdump */
+        case IPMICONSOLE_DEBUGDUMP_KEY:	/* --debugdump */
           conf->debugdump++;
           break;
-	case 131:	/* --noraw */
+	case IPMICONSOLE_NORAW_KEY:	/* --noraw */
 	  conf->noraw++;
 	  break;
 #endif /* NDEBUG */
