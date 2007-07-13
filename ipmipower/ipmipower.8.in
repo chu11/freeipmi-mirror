@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.71.4.4 2007-07-11 22:34:13 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.71.4.5 2007-07-13 18:18:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -118,7 +118,7 @@ Output help menu and exit.
 Output version and exit.
 .if @WITH_DEBUG@ \{
 .TP
-.I "-X, --config file"
+.I "--config file"
 Specify alternate configuration file.
 \}
 .LP
@@ -247,22 +247,22 @@ specified separated by commas. For information on available
 workarounds, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{
 .TP
-.I "-D, --debug"
+.I "--debug"
 Turn on debugging output.
 .TP
-.I "-T, --ipmidump"
+.I "--ipmidump"
 Turn on IPMI packet dump output. Warning, the dump output can get
 extremely long.
 .TP
-.I "-M, --rmcpdump"
+.I "--rmcpdump"
 Turn on RMCP packet dump output.  Warning, the dump output can get 
 extremely long.
 .TP
-.I "-L, --log"
+.I "--log"
 Turn on logging.  Default logfile is /tmp/ipmipower.PID, where PID is
 the current process id.
 .TP
-.I "-F, --logfile"
+.I "--logfile"
 Change current logfile.
 \}
 .LP

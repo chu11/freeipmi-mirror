@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.16.4.2 2007-07-11 22:34:13 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.16.4.3 2007-07-13 18:18:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -147,16 +147,16 @@ Output version and exit.
 Specify an alternate configuration file.
 .if @WITH_DEBUG@ \{
 .TP
-.I "-D, --debug"
+.I "--debug"
 Turn on debugging.
 .TP
-.I "-E, --debugfile"
+.I "--debugfile"
 Output debugging to the debugfile rather than to standard output.
 .TP
-.I "-F, --debugdump"
+.I "--debugdump"
 Turn on packet dumps for debugging.
 .TP
-.I "-G, --noraw"
+.I "--noraw"
 Don't enter terminal raw mode.
 \}
 .LP

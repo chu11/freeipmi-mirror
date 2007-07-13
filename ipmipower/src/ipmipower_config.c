@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.4 2007-07-11 21:47:07 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.5 2007-07-13 18:18:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -266,13 +266,8 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   int rv;
   uint32_t flags;
 
-  /* achu: Here's are what options are left and available
-     lower case: deo
-     upper case: GJNOQSUXY
-   */
-
 #ifndef NDEBUG
-  char *options = "h:u:p:Pk:KnfcrsjmHVX:a:l:R:I:gABCEW:DTMLF:t:y:q:b:i:z:v:w:x:";
+  char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:I:gABCEW:t:y:q:b:i:z:v:w:x:";
 #else  /* !NDEBUG */
   char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:T:gABCEW:t:y:q:b:i:z:v:w:x:";
 #endif /* !NDEBUG */
@@ -296,7 +291,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"help",                         0, NULL, 'H'},
       {"version",                      0, NULL, 'V'},
 #ifndef NDEBUG
-      {"config",                       1, NULL, 'X'}, 
+      {"config",                       1, NULL, 128}, /* no short option */
 #endif /* NDEBUG */
       {"authentication-type",          1, NULL, 'a'},  
       {"privilege-level",              1, NULL, 'l'},
@@ -309,11 +304,11 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"eliminate",                    0, NULL, 'E'},
       {"workaround-flags",             1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",                        0, NULL, 'D'},
-      {"ipmidump",                     0, NULL, 'T'},
-      {"rmcpdump",                     0, NULL, 'M'},
-      {"log",                          0, NULL, 'L'},
-      {"logfile",                      1, NULL, 'F'},
+      {"debug",                        0, NULL, 129}, /* no short option */
+      {"ipmidump",                     0, NULL, 130}, /* no short option */
+      {"rmcpdump",                     0, NULL, 131}, /* no short option */
+      {"log",                          0, NULL, 132}, /* no short option */
+      {"logfile",                      1, NULL, 133}, /* no short option */
 #endif /* NDEBUG */
       {"timeout" ,                     1, NULL, 't'},
       {"retry-timeout",                1, NULL, 'y'},
@@ -432,7 +427,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           _version();
           break;
 #ifndef NDEBUG
-        case 'X':
+        case 128:
           if (strlen(optarg) > MAXPATHLEN)
             err_exit("Command Line Error: configuration file pathname too long");
           strcpy(conf->configfile, optarg);
@@ -480,19 +475,19 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->workaround_flags_set_on_cmdline = IPMIPOWER_TRUE;
           break;
 #ifndef NDEBUG
-        case 'D':       /* --debug */
+        case 129:       /* --debug */
           conf->debug = !conf->debug;
           break;
-        case 'T':       /* --ipmidump */
+        case 130:       /* --ipmidump */
           conf->ipmidump = !conf->ipmidump;
           break;
-        case 'M':       /* --rmcpdump */
+        case 131:       /* --rmcpdump */
           conf->rmcpdump = !conf->rmcpdump;
           break;
-	case 'L':       /* --log */
+	case 132:       /* --log */
 	  conf->log = !conf->log;
 	  break;
-	case 'F':       /* --logfile */
+	case 133:       /* --logfile */
           if (strlen(optarg) > MAXPATHLEN)
             err_exit("Command Line Error: log file pathname too long");
 	  memset(conf->logfile, '\0', MAXPATHLEN+1);

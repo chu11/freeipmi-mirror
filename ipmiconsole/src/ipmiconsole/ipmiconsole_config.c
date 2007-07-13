@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.6 2007-07-13 00:31:51 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.7 2007-07-13 18:18:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,10 +98,10 @@ _usage(void)
           "-W --workaround-flags str     Workaround flags\n");
 #ifndef NDEBUG
   fprintf(stderr,
-          "-D --debug                    Turn on debugging\n"
-	  "-E --debugfile                Output debugging to debugfile\n"
-	  "-F --debugdump                Turn on packet dumps\n"
-	  "-G --noraw                    Don't enter raw mode\n");
+          "   --debug                    Turn on debugging\n"
+	  "   --debugfile                Output debugging to debugfile\n"
+	  "   --debugdump                Turn on packet dumps\n"
+	  "   --noraw                    Don't enter raw mode\n");
 #endif /* NDEBUG */
   exit(0);
 }
@@ -143,10 +143,10 @@ _cmdline_parse(int argc, char **argv)
       {"lock-memory",              0, NULL, 'L'},
       {"workaround-flags",         1, NULL, 'W'},
 #ifndef NDEBUG
-      {"debug",                    0, NULL, 'D'},
-      {"debugfile",                0, NULL, 'E'},
-      {"debugdump",                0, NULL, 'F'},
-      {"noraw",                    0, NULL, 'G'},
+      {"debug",                    0, NULL, 128}, /* no short option */
+      {"debugfile",                0, NULL, 129}, /* no short option */ 
+      {"debugdump",                0, NULL, 130}, /* no short option */
+      {"noraw",                    0, NULL, 131}, /* no short option */
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -158,9 +158,6 @@ _cmdline_parse(int argc, char **argv)
   memset(options, '\0', sizeof(options));
   /* 'I' is advertised option, 'c' is for backwards compatability */
   strcat(options, "HVh:u:p:Pk:Kl:c:I:C:NTLW:");
-#ifndef NDEBUG
-  strcat(options, "DEFG");
-#endif /* NDEBUG */
 
   /* turn off output messages */
   opterr = 0;
@@ -296,16 +293,16 @@ _cmdline_parse(int argc, char **argv)
           conf->workaround_flags_set_on_cmdline = flags;
           break;
 #ifndef NDEBUG
-        case 'D':	/* --debug */
+        case 128:	/* --debug */
           conf->debug++;
           break;
-        case 'E':	/* --debugfile */
+        case 129:	/* --debugfile */
           conf->debugfile++;
           break;
-        case 'F':	/* --debugdump */
+        case 130:	/* --debugdump */
           conf->debugdump++;
           break;
-	case 'G':	/* --noraw */
+	case 131:	/* --noraw */
 	  conf->noraw++;
 	  break;
 #endif /* NDEBUG */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.6 2007-07-13 18:04:31 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.7 2007-07-13 18:18:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1108,7 +1108,7 @@ _usage(void)
           "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
   fprintf(stderr,
-	  "  -B         --debug                      Turn on debugging\n");
+	  "             --debug                      Turn on debugging\n");
 #endif
   fprintf(stderr, "\n");
 
@@ -1226,9 +1226,9 @@ _cmdline_parse(int argc, char **argv)
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
     {"driver-type",           1, NULL, 'D'},
-    {"driver-address",        1, NULL, 'o'},
-    {"driver-device",         1, NULL, 'E'},
-    {"register-spacing",      1, NULL, 'R'},
+    {"driver-address",        1, NULL, 128},
+    {"driver-device",         1, NULL, 129},
+    {"register-spacing",      1, NULL, 130},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
@@ -1251,16 +1251,13 @@ _cmdline_parse(int argc, char **argv)
     {"arp-response",          1, NULL, 'A'},
     {"reset-period",          1, NULL, 'e'},
 #ifndef NDEBUG
-    {"debug",                 0, NULL, 'B'},
+    {"debug",                 0, NULL, 128},
 #endif
     {0, 0, 0, 0}
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvD:o:r:E:f:nsgRtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
-#ifndef NDEBUG
-  strcat(options, "B");
-#endif
+  strcpy(options, "hvD:f:nsgRtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 
   /* turn off output messages printed by getopt_long */
   opterr = 0;
@@ -1311,18 +1308,18 @@ _cmdline_parse(int argc, char **argv)
 	  else
 	    _err_exit("driver-type value invalid");
 	  break;
-        case 'o':
+        case 128:
           cinfo.driver_address++;
           cinfo.driver_address_val = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
               || cinfo.driver_address_val <= 0)
             _err_exit("driver-address value invalid");
           break;
-	case 'E':
+	case 129:
 	  cinfo.driver_device++;
 	  cinfo.driver_device_val = optarg;
 	  break;
-        case 'R':
+        case 130:
           cinfo.register_spacing++;
           cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg))
@@ -1443,7 +1440,7 @@ _cmdline_parse(int argc, char **argv)
             _err_exit("reset period value out of range");
           break;
 #ifndef NDEBUG
-        case 'B':
+        case 131:
           cinfo.debug++;
           break;
 #endif
