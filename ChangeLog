@@ -1,3 +1,8 @@
+2007-07-12  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main): Fix
+	free bug.
+	
 2007-07-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_checks.c
