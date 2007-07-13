@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.14 2007-07-13 22:36:54 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.15 2007-07-13 22:41:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -85,19 +85,19 @@ static char *ipmiconsole_errmsgs[] =
     "password invalid",		  /* 14 */
     "k_g invalid",		  /* 15 */
     "privilege invalid",	  /* 16 */
-    "SOL unavailable",		  /* 18 */
-    "SOL in use",		  /* 19 */
-    "SOL not responding",	  /* 20 */
-    "SOL session stolen",         /* 21 */
-    "SOL requires encryption",    /* 22 */
-    "SOL requires no encryption", /* 23 */
-    "BMC Busy",			  /* 24 */
-    "BMC Error",		  /* 25 */
-    "session timeout",		  /* 26 */
-    "out of memory",		  /* 27 */
-    "internal system error",	  /* 28 */
-    "internal error",		  /* 29 */
-    "errnum out of range",	  /* 30 */
+    "SOL unavailable",		  /* 17 */
+    "SOL in use",		  /* 18 */
+    "SOL not responding",	  /* 19 */
+    "SOL session stolen",         /* 20 */
+    "SOL requires encryption",    /* 21 */
+    "SOL requires no encryption", /* 22 */
+    "BMC Busy",			  /* 23 */
+    "BMC Error",		  /* 24 */
+    "session timeout",		  /* 25 */
+    "out of memory",		  /* 26 */
+    "internal system error",	  /* 27 */
+    "internal error",		  /* 28 */
+    "errnum out of range",	  /* 29 */
     NULL
   };
 
