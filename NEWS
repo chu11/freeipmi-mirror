@@ -12,7 +12,7 @@ o Made many command line options consistent across FreeIPMI.  Notable
   1) All --priv-level and --privilege options are now --privilege-level
   2) All --auth-type options are now --authentication-type
   3) All --reg-space or --register-space options are not --register-spacing
-  4) The -T option in ipmipower have been flipped for consistency.
+  4) The -T option and -I option in ipmipower have been flipped for consistency.
   5) The -c option in ipmiconsole is now the -I option (-c is
      internally maintained for backwards comptability).
   6) Compliance workaround options in ipmiconsole now follow the convention
