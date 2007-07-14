@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.64.2.2 2007-07-14 01:29:46 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.64.2.3 2007-07-14 01:50:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1111,7 +1111,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 	       || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
 	return MSG_TYPE_BMC_BUSY;
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
-	return MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT; 
+	return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED; 
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
 	return MSG_TYPE_USERNAME_INVALID; 
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
@@ -1132,7 +1132,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 	return MSG_TYPE_USERNAME_INVALID; 
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
-	return MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT; 
+	return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED; 
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
 		   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
@@ -1142,7 +1142,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 	       && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
 		   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
 		   || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
-	return MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT; 
+	return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED; 
 #if 0
       /* Should not reach this point, should be handled by other code */
       else if (pkt == CHASSIS_CONTROL_RES

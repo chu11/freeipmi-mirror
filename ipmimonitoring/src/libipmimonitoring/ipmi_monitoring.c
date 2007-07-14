@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.11.8.4 2007-07-14 01:29:46 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.11.8.5 2007-07-14 01:50:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,7 +73,8 @@ static char *ipmi_monitoring_errmsgs[] =
     "password verification timeout",
     "k_g invalid",
     "privilege level insufficient",
-    "authentication type unavailable",
+    "privilege level cannot be obtained for this user",
+    "authentication type unavailable for attempted privilege level",
     "ipmi 2.0 unavailable",
     "cipher suite id unavailable",
     "BMC busy",

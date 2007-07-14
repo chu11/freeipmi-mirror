@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.13.4.2 2007-07-14 01:29:46 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.13.4.3 2007-07-14 01:50:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -707,7 +707,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           if (!ret)
             {
               _receive_packet_data_reset(c);
-              c->errnum = IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
+              c->errnum = IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED;
               goto cleanup;
             }
         }

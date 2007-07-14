@@ -588,7 +588,7 @@ do {                                                                            
 	   || ipmi_check_completion_code((__rs), IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL) == 1)                   \
     (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE_REQUEST_DATA_INVALID;                                           \
   else if (ipmi_check_completion_code((__rs), IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)                   \
-    (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE_INSUFFICIENT_PRIVILEGE;                                         \
+    (__dev)->errnum = IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;                                                       \
   else                                                                                                             \
     (__dev)->errnum = IPMI_ERR_BAD_COMPLETION_CODE;                                                                \
 } while (0)

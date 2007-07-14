@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.13.4.3 2007-07-14 01:29:46 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.13.4.4 2007-07-14 01:50:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,36 +34,37 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
-#define IPMICONSOLE_ERR_SUCCESS                       0
-#define IPMICONSOLE_ERR_CONTEXT_NULL                  1
-#define IPMICONSOLE_ERR_CONTEXT_INVALID               2
-#define IPMICONSOLE_ERR_ALREADY_SETUP                 3
-#define IPMICONSOLE_ERR_NOT_SETUP                     4
-#define IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED         5
-#define IPMICONSOLE_ERR_CTX_NOT_SUBMITTED             6
-#define IPMICONSOLE_ERR_CTX_IS_SUBMITTED              7
-#define IPMICONSOLE_ERR_CTX_IS_WAITING                8
-#define IPMICONSOLE_ERR_PARAMETERS                    9
-#define IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE         10
-#define IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE  11
-#define IPMICONSOLE_ERR_HOSTNAME_INVALID             12 
-#define IPMICONSOLE_ERR_USERNAME_INVALID             13
-#define IPMICONSOLE_ERR_PASSWORD_INVALID             14
-#define IPMICONSOLE_ERR_K_G_INVALID                  15
-#define IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT 16
-#define IPMICONSOLE_ERR_SOL_UNAVAILABLE              17
-#define IPMICONSOLE_ERR_SOL_INUSE                    18
-#define IPMICONSOLE_ERR_SOL_NOT_RESPONDING           19
-#define IPMICONSOLE_ERR_SOL_STOLEN                   20
-#define IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION      21
-#define IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION   22
-#define IPMICONSOLE_ERR_BMC_BUSY                     23
-#define IPMICONSOLE_ERR_BMC_ERROR                    24
-#define IPMICONSOLE_ERR_SESSION_TIMEOUT              25
-#define IPMICONSOLE_ERR_OUT_OF_MEMORY                26
-#define IPMICONSOLE_ERR_SYSTEM_ERROR                 27
-#define IPMICONSOLE_ERR_INTERNAL_ERROR               28
-#define IPMICONSOLE_ERR_ERRNUMRANGE                  29
+#define IPMICONSOLE_ERR_SUCCESS                             0
+#define IPMICONSOLE_ERR_CONTEXT_NULL                        1
+#define IPMICONSOLE_ERR_CONTEXT_INVALID                     2
+#define IPMICONSOLE_ERR_ALREADY_SETUP                       3
+#define IPMICONSOLE_ERR_NOT_SETUP                           4
+#define IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED               5
+#define IPMICONSOLE_ERR_CTX_NOT_SUBMITTED                   6
+#define IPMICONSOLE_ERR_CTX_IS_SUBMITTED                    7
+#define IPMICONSOLE_ERR_CTX_IS_WAITING                      8
+#define IPMICONSOLE_ERR_PARAMETERS                          9
+#define IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE               10
+#define IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE        11
+#define IPMICONSOLE_ERR_HOSTNAME_INVALID                   12 
+#define IPMICONSOLE_ERR_USERNAME_INVALID                   13
+#define IPMICONSOLE_ERR_PASSWORD_INVALID                   14
+#define IPMICONSOLE_ERR_K_G_INVALID                        15
+#define IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT       16
+#define IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED 17
+#define IPMICONSOLE_ERR_SOL_UNAVAILABLE                    18
+#define IPMICONSOLE_ERR_SOL_INUSE                          19
+#define IPMICONSOLE_ERR_SOL_NOT_RESPONDING                 20
+#define IPMICONSOLE_ERR_SOL_STOLEN                         21
+#define IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION            22
+#define IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION         23
+#define IPMICONSOLE_ERR_BMC_BUSY                           24
+#define IPMICONSOLE_ERR_BMC_ERROR                          25
+#define IPMICONSOLE_ERR_SESSION_TIMEOUT                    26
+#define IPMICONSOLE_ERR_OUT_OF_MEMORY                      27
+#define IPMICONSOLE_ERR_SYSTEM_ERROR                       28
+#define IPMICONSOLE_ERR_INTERNAL_ERROR                     29
+#define IPMICONSOLE_ERR_ERRNUMRANGE                        30
 
 /* 
  * IPMI Privilege Constants

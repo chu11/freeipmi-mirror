@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.1.10.2 2007-07-14 01:29:46 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.1.10.3 2007-07-14 01:50:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1577,7 +1577,7 @@ ipmiconsole_calculate_errnum(ipmiconsole_ctx_t c,
 	}
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
 	{
-	  c->errnum = IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
+	  c->errnum = IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED;
 	  return 0;
 	}
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
@@ -1641,7 +1641,7 @@ ipmiconsole_calculate_errnum(ipmiconsole_ctx_t c,
 	       && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER
 		   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT))
 	{
-	  c->errnum = IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
+	  c->errnum = IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED;
 	  return 0;
 	}
       

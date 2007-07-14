@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107.4.2 2007-07-14 01:29:47 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.4.3 2007-07-14 01:50:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1665,7 +1665,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
 	  && !priv_check)
 	{
-	  ipmipower_output(MSG_TYPE_USER_HAS_INSUFFICIENT_PRIVILEGE, ip->ic->hostname);	
+	  ipmipower_output(MSG_TYPE_NECESSARY_PRIVILEGE_LEVEL, ip->ic->hostname);	
 	  return -1;
 	}
     }
