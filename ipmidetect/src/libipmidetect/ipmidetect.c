@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.1.8.1 2007-06-28 00:21:46 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.1.8.2 2007-07-14 00:38:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,10 +73,11 @@
 static char * ipmidetect_errmsg[] =
   {
     "success",
-    "ipmidetect handle is null",
+    "ipmidetect handle null",
+    "ipmidetect handle invalid",
     "connection to server error",
     "connection to server timeout",
-    "improper hostname error",
+    "hostname invalid",
     "data already loaded",
     "data not loaded",
     "array or string not large enough to store result",
@@ -87,7 +88,6 @@ static char * ipmidetect_errmsg[] =
     "parse config file error",
     "invalid config file input",
     "internal config file error",
-    "illegal ipmidetect handle",
     "internal system error",
     "error number out of range",
   };
@@ -333,7 +333,7 @@ _read_conffile(ipmidetect_t handle, struct ipmidetect_config *conf)
         if (CONFFILE_IS_PARSE_ERR(errnum))
           handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
         else if (errnum == CONFFILE_ERR_OUTMEM)
-          handle->errnum = IPMIDETECT_ERR_OUTMEM;
+          handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
         else
           handle->errnum = IPMIDETECT_ERR_CONF_INTERNAL;
         goto cleanup;
@@ -359,7 +359,7 @@ _low_timeout_connect(ipmidetect_t handle,
   /* valgrind will report a mem-leak in gethostbyname() */
   if (!(hptr = gethostbyname(hostname)))
     {
-      handle->errnum = IPMIDETECT_ERR_HOSTNAME;
+      handle->errnum = IPMIDETECT_ERR_HOSTNAME_INVALID;
       return -1;
     }
 
@@ -515,7 +515,7 @@ _get_data(ipmidetect_t handle,
 
       if (!ret)
         {
-          handle->errnum = IPMIDETECT_ERR_OUTMEM;
+          handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
           goto cleanup;
         }
     }
@@ -545,13 +545,13 @@ ipmidetect_load_data(ipmidetect_t handle,
 
   if (!(handle->detected_nodes = hostlist_create(NULL)))
     {
-      handle->errnum = IPMIDETECT_ERR_OUTMEM;
+      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
   if (!(handle->undetected_nodes = hostlist_create(NULL)))
     {
-      handle->errnum = IPMIDETECT_ERR_OUTMEM;
+      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
@@ -645,9 +645,9 @@ int
 ipmidetect_errnum(ipmidetect_t handle)
 {
   if (!handle)
-    return IPMIDETECT_ERR_NULLHANDLE;
+    return IPMIDETECT_ERR_HANDLE_NULL;
   else if (handle->magic != IPMIDETECT_MAGIC_NUM)
-    return IPMIDETECT_ERR_MAGIC;
+    return IPMIDETECT_ERR_HANDLE_INVALID;
 
   return handle->errnum;
 }

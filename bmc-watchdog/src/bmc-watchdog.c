@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.9 2007-07-14 00:32:23 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.10 2007-07-14 00:38:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,7 +98,7 @@
          _bmclog("%s: fiid_obj_get: %s", (__func), fiid_strerror(fiid_obj_errnum((__obj)))); \
          if (fiid_obj_errnum((__obj)) == FIID_ERR_SUCCESS) \
            errno = 0; \
-         else if (fiid_obj_errnum((__obj)) == FIID_ERR_OUTMEM)         \
+         else if (fiid_obj_errnum((__obj)) == FIID_ERR_OUT_OF_MEMORY)  \
            errno = ENOMEM; \
          else if (fiid_obj_errnum((__obj)) == FIID_ERR_OVERFLOW)       \
            errno = ENOSPC; \

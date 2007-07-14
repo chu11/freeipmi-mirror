@@ -45,7 +45,7 @@ do {                                               \
   int32_t __errnum = fiid_obj_errnum((___obj));    \
   if (__errnum == FIID_ERR_SUCCESS)                \
     dev->errnum = IPMI_ERR_SUCCESS;                \
-  else if (__errnum == FIID_ERR_OUTMEM)            \
+  else if (__errnum == FIID_ERR_OUT_OF_MEMORY)     \
     dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
   else                                             \
     dev->errnum = IPMI_ERR_LIBRARY_ERROR;          \

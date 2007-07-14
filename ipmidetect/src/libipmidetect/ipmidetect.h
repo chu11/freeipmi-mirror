@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.h,v 1.1.8.1 2007-06-28 00:21:46 chu11 Exp $
+ *  $Id: ipmidetect.h,v 1.1.8.2 2007-07-14 00:38:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,21 +34,21 @@
  */
 
 #define IPMIDETECT_ERR_SUCCESS               0
-#define IPMIDETECT_ERR_NULLHANDLE            1
-#define IPMIDETECT_ERR_CONNECT               2
-#define IPMIDETECT_ERR_CONNECT_TIMEOUT       3
-#define IPMIDETECT_ERR_HOSTNAME              4
-#define IPMIDETECT_ERR_ISLOADED              5
-#define IPMIDETECT_ERR_NOTLOADED             6
-#define IPMIDETECT_ERR_OVERFLOW              7
-#define IPMIDETECT_ERR_PARAMETERS            8
-#define IPMIDETECT_ERR_NULLPTR               9
-#define IPMIDETECT_ERR_OUTMEM               10
-#define IPMIDETECT_ERR_NOTFOUND             11
-#define IPMIDETECT_ERR_CONF_PARSE           12
-#define IPMIDETECT_ERR_CONF_INPUT           13
-#define IPMIDETECT_ERR_CONF_INTERNAL        14
-#define IPMIDETECT_ERR_MAGIC                15
+#define IPMIDETECT_ERR_HANDLE_NULL           1
+#define IPMIDETECT_ERR_HANDLE_INVALID        2
+#define IPMIDETECT_ERR_CONNECT               3
+#define IPMIDETECT_ERR_CONNECT_TIMEOUT       4
+#define IPMIDETECT_ERR_HOSTNAME_INVALID      5
+#define IPMIDETECT_ERR_ISLOADED              6
+#define IPMIDETECT_ERR_NOTLOADED             7
+#define IPMIDETECT_ERR_OVERFLOW              8
+#define IPMIDETECT_ERR_PARAMETERS            9
+#define IPMIDETECT_ERR_NULLPTR              10
+#define IPMIDETECT_ERR_OUT_OF_MEMORY        11
+#define IPMIDETECT_ERR_NOTFOUND             12
+#define IPMIDETECT_ERR_CONF_PARSE           13
+#define IPMIDETECT_ERR_CONF_INPUT           14
+#define IPMIDETECT_ERR_CONF_INTERNAL        15
 #define IPMIDETECT_ERR_INTERNAL             16
 #define IPMIDETECT_ERR_ERRNUMRANGE          17
 
