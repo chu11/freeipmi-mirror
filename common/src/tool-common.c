@@ -84,14 +84,14 @@ ipmi_device_open(const char *progname,
                                        cmd_args->workaround_flags,
                                        cmd_args->flags) < 0)
             {
-              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD
-                  || ipmi_device_errnum(dev) == IPMI_ERR_K_G
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE
-                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE
-                  || ipmi_device_errnum(dev) == IPMI_ERR_CIPHER_SUITE_UNAVAILABLE
+              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_K_G_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
                   || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
-                  || ipmi_device_errnum(dev) == IPMI_ERR_INVALID_HOSTNAME
+                  || ipmi_device_errnum(dev) == IPMI_ERR_HOSTNAME_INVALID
                   || ipmi_device_errnum(dev) == IPMI_ERR_IPMI_2_0_UNAVAILABLE)
                 {
                   snprintf(errmsg,
@@ -124,12 +124,12 @@ ipmi_device_open(const char *progname,
                                    cmd_args->workaround_flags,
                                    cmd_args->flags) < 0)
             {
-              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE
-                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE
+              if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_INVALID
                   || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
-                  || ipmi_device_errnum(dev) == IPMI_ERR_INVALID_HOSTNAME)
+                  || ipmi_device_errnum(dev) == IPMI_ERR_HOSTNAME_INVALID)
                 {
                   snprintf(errmsg,
                            errmsglen,

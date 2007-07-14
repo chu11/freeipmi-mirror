@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.5 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.5.4.1 2007-07-14 00:32:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -82,7 +82,7 @@ static char *ipmi_sdr_cache_errmsgs[] =
     "SDR cache invalid",
     "not found",
     "buffer overflow",
-    "internal system error",
+    "internal error",
     "errnum out of range",
     NULL
   };
@@ -251,7 +251,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
       else if (c->operation == IPMI_SDR_CACHE_OPERATION_READ_CACHE)
         c->errnum = IPMI_SDR_CACHE_ERR_CACHE_CREATE_CTX_SET_TO_READ;
       else
-        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       return -1;
     }
   
@@ -281,7 +281,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
 	       || errno == ENFILE)
 	c->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
       else
-	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
   c->total_bytes_written = 0;
@@ -296,13 +296,13 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
       if (errno == ENOSPC)
 	c->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
       else
-	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
   if (n != 4)
     {
-      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
   c->total_bytes_written += 1;
@@ -312,13 +312,13 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
       if (errno == ENOSPC)
 	c->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
       else
-	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
   if (n != 1)
     {
-      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
   c->total_bytes_written += 1;
@@ -332,13 +332,13 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
       if (errno == ENOSPC)
 	c->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
       else
-	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
   if (n != 2)
     {
-      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
   c->total_bytes_written += 2;
@@ -484,7 +484,7 @@ ipmi_sdr_cache_record_write(ipmi_sdr_cache_ctx_t c,
       if (errno == ENOSPC)
 	c->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
       else
-	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -492,7 +492,7 @@ ipmi_sdr_cache_record_write(ipmi_sdr_cache_ctx_t c,
     {
       /* Try to lseek back to our original spot */
       lseek(c->fd, SEEK_SET, c->total_bytes_written);
-      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       return -1;
     }
   c->total_bytes_written += buflen;
@@ -565,7 +565,7 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
       else if (c->operation == IPMI_SDR_CACHE_OPERATION_CREATE_CACHE)
         c->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CTX_SET_TO_CREATE;
       else
-        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -580,7 +580,7 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
 	       || errno == ELOOP)
 	c->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
       else
-	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -612,7 +612,7 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
 	       || errno == ENFILE)
 	c->errnum = IPMI_SDR_CACHE_ERR_FILESYSTEM;
       else
-	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+	c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -624,7 +624,7 @@ ipmi_sdr_cache_open(ipmi_sdr_cache_ctx_t c, char *filename)
 		      0);
   if (!c->sdr_cache || c->sdr_cache == ((void *) -1))
     {
-      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+      c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
     
@@ -914,7 +914,7 @@ ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t c, char *filename)
       else if (c->operation == IPMI_SDR_CACHE_OPERATION_CREATE_CACHE)
         c->errnum = IPMI_SDR_CACHE_ERR_CACHE_READ_CTX_SET_TO_CREATE;
       else
-        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -930,7 +930,7 @@ ipmi_sdr_cache_delete(ipmi_sdr_cache_ctx_t c, char *filename)
                || errno == ELOOP)
         c->errnum = IPMI_SDR_CACHE_ERR_FILENAME_INVALID;
       else
-        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL;
+        c->errnum = IPMI_SDR_CACHE_ERR_INTERNAL_ERROR;
       return -1;
     }
   

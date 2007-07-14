@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.11.8.2 2007-07-12 22:26:09 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.11.8.3 2007-07-14 00:32:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -71,14 +71,14 @@ static char *ipmi_monitoring_errmsgs[] =
     "invalid username",
     "invalid password",
     "password verification timeout",
-    "invalid k_g",
-    "invalid privilege level",
+    "k_g invalid",
+    "privilege level invalid",
     "invalid authentication type",
     "ipmi 2.0 unavailable",
-    "cipher suite unavailable",
+    "cipher suite id unavailable",
     "BMC busy",
-    "internal IPMI error",
     "out of memory",
+    "internal IPMI error",
     "internal system error",
     "internal error",
     "errnum out of range",
@@ -296,7 +296,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
       if (ipmi_sdr_cache_record_count(c->sc, &record_count) < 0)
         {
           IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       
@@ -311,7 +311,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
                                                            IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
             {
               IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-              c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+              c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
 
@@ -339,7 +339,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
                   goto cleanup;
                 }
               IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_search_record_id: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-              c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+              c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
           
@@ -349,7 +349,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
                                                            IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
             {
               IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-              c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+              c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
           
@@ -368,7 +368,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
       if (!(c->sensor_readings_itr = list_iterator_create(c->sensor_readings)))
         {
           IPMI_MONITORING_DEBUG(("list_iterator_create: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       c->current_sensor_reading = list_next(c->sensor_readings_itr);
@@ -430,7 +430,7 @@ ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
   if (ipmi_sdr_cache_record_count(c->sc, &record_count) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_count: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
       
@@ -445,7 +445,7 @@ ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
                                                        IPMI_MONITORING_MAX_SDR_RECORD_LENGTH)) < 0)
         {
           IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_read: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       
@@ -463,7 +463,7 @@ ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
       if (!(c->sensor_readings_itr = list_iterator_create(c->sensor_readings)))
         {
           IPMI_MONITORING_DEBUG(("list_iterator_create: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       c->current_sensor_reading = list_next(c->sensor_readings_itr);
@@ -783,7 +783,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           event_reading_type_code = 0x0C;
           break;
         default:
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           return -1;
         }
 
@@ -809,7 +809,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           if (errno == EINVAL)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
           else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           return -1;
         }
     }
@@ -862,7 +862,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           sensor_type_code = 0x23;
           break;
         default:
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           return -1;
         }
       
@@ -888,7 +888,7 @@ ipmi_monitoring_bitmask_string(ipmi_monitoring_ctx_t c,
           if (errno == EINVAL)
             c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
           else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           return -1;
         }
     }

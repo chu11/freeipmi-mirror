@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.2.8.1 2007-07-12 18:19:04 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.2.8.2 2007-07-14 00:32:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -120,7 +120,7 @@ _store_sensor_reading(ipmi_monitoring_ctx_t c,
   if (!list_append(c->sensor_readings, s))
     {
       IPMI_MONITORING_DEBUG(("list_append: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -159,7 +159,7 @@ _store_unreadable_sensor_reading(ipmi_monitoring_ctx_t c,
   if (!list_append(c->sensor_readings, s))
     {
       IPMI_MONITORING_DEBUG(("list_append: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -378,7 +378,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   if (len >= sensor_name_len)
     {
       IPMI_MONITORING_DEBUG(("sensor_name buffer short: sensor_name_len = %d; len = %d", sensor_name_len, len));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -395,14 +395,14 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
   
   if (!ret)
     {
       IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-      c->errnum = IPMI_MONITORING_ERR_IPMI;
+      c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
       goto cleanup;
     }
   
@@ -583,7 +583,7 @@ _threshold_sensor_reading(ipmi_monitoring_ctx_t c,
                                &sensor_value) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_sensor_decode_value: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -1157,7 +1157,7 @@ _get_sdr_record_id_and_type(ipmi_monitoring_ctx_t c,
   if (sdr_record_len < sdr_record_header_length)
     {
       IPMI_MONITORING_DEBUG(("invalid sdr length: %d", sdr_record_len));
-      c->errnum = IPMI_MONITORING_ERR_IPMI;
+      c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
       goto cleanup;
     }
 

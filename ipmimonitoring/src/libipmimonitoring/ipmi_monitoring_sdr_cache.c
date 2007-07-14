@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.4.8.1 2007-07-12 18:19:04 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.4.8.2 2007-07-14 00:32:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -120,7 +120,7 @@ _ipmi_monitoring_sdr_cache_info(ipmi_monitoring_ctx_t c,
   if (fill_cmd_get_repository_info(obj_cmd_rq) < 0)
     {
       IPMI_MONITORING_DEBUG(("fill_cmd_get_repository_info: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -134,7 +134,7 @@ _ipmi_monitoring_sdr_cache_info(ipmi_monitoring_ctx_t c,
   if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -144,7 +144,7 @@ _ipmi_monitoring_sdr_cache_info(ipmi_monitoring_ctx_t c,
         IPMI_MONITORING_DEBUG(("fiid_obj_get: %s", strerror(errno)));
       else
         IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-      c->errnum = IPMI_MONITORING_ERR_IPMI;
+      c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
       goto cleanup;
     }
 
@@ -202,7 +202,7 @@ _ipmi_monitoring_sdr_cache_reservation_id(ipmi_monitoring_ctx_t c,
   if (fill_cmd_reserve_sdr_repository(obj_cmd_rq) < 0)
     {
       IPMI_MONITORING_DEBUG(("fill_cmd_reserve_sdr_repository: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -216,7 +216,7 @@ _ipmi_monitoring_sdr_cache_reservation_id(ipmi_monitoring_ctx_t c,
   if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -226,7 +226,7 @@ _ipmi_monitoring_sdr_cache_reservation_id(ipmi_monitoring_ctx_t c,
         IPMI_MONITORING_DEBUG(("fiid_obj_get: %s", strerror(errno)));
       else
         IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-      c->errnum = IPMI_MONITORING_ERR_IPMI;
+      c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
       goto cleanup;
     }
   
@@ -298,7 +298,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
                            obj_cmd_rq) < 0)
         {
           IPMI_MONITORING_DEBUG(("fill_cmd_get_sdr: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       
@@ -312,7 +312,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
       if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
         {
           IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       
@@ -332,7 +332,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
             }
 
           IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-          c->errnum = IPMI_MONITORING_ERR_IPMI;
+          c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
           goto cleanup;
         }
 
@@ -346,7 +346,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
       if (sdr_record_header_len < sdr_record_header_length)
         {
           IPMI_MONITORING_DEBUG(("sdr_record_header_len = %d; sdr_record_header_length = %d", sdr_record_header_len, sdr_record_header_length));
-          c->errnum = IPMI_MONITORING_ERR_IPMI;
+          c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
           goto cleanup;
         }
 
@@ -393,7 +393,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
                            obj_cmd_rq) < 0)
         {
           IPMI_MONITORING_DEBUG(("fill_cmd_get_sdr: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       
@@ -407,7 +407,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
       if ((ret = ipmi_check_completion_code_success(obj_cmd_rs)) < 0)
         {
           IPMI_MONITORING_DEBUG(("ipmi_check_completion_code_success: %s", strerror(errno)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
 
@@ -436,7 +436,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
             }
 
           IPMI_MONITORING_DEBUG(("bad completion code: 0x%X", val));
-          c->errnum = IPMI_MONITORING_ERR_IPMI;
+          c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
           goto cleanup;
         }
       
@@ -496,7 +496,7 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
       else if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_PERMISSION)
         c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
       else
-        c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+        c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -525,9 +525,9 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
         {
           IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_record_write: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
           if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH)
-            c->errnum = IPMI_MONITORING_ERR_IPMI;
+            c->errnum = IPMI_MONITORING_ERR_IPMI_ERROR;
           else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           return -1;
         }
     }
@@ -535,7 +535,7 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
   if (ipmi_sdr_cache_complete(c->sc) < 0)
     {
       IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_complete: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
          
@@ -560,7 +560,7 @@ _ipmi_monitoring_sdr_cache_delete(ipmi_monitoring_ctx_t c,
           if (ipmi_sdr_cache_ctx_errnum(c->sc) == IPMI_SDR_CACHE_ERR_PERMISSION)
             c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION;
           else 
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           return -1;
         }
     }
@@ -589,7 +589,7 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
           if (errno == EPERM || errno == EACCES)
             c->errnum = IPMI_MONITORING_ERR_PERMISSION;
           else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
     }
@@ -622,7 +622,7 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
       else
         {
           IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_open: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
 
@@ -642,7 +642,7 @@ ipmi_monitoring_sdr_cache_load(ipmi_monitoring_ctx_t c,
           else
             {
               IPMI_MONITORING_DEBUG(("ipmi_sdr_cache_open: %s", ipmi_sdr_cache_ctx_strerror(ipmi_sdr_cache_ctx_errnum(c->sc))));
-              c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+              c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
         }
@@ -696,7 +696,7 @@ ipmi_monitoring_sdr_cache_flush(ipmi_monitoring_ctx_t c,
           if (errno == EPERM || errno == EACCES)
             c->errnum = IPMI_MONITORING_ERR_PERMISSION;
           else
-            c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
     }

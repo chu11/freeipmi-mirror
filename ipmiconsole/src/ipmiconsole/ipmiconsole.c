@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.14.4.2 2007-07-12 20:17:36 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.14.4.3 2007-07-14 00:32:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -358,12 +358,11 @@ main(int argc, char **argv)
   if (ipmiconsole_engine_submit_block(c) < 0)
     {
       if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_UNAVAILABLE
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_USERNAME_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PASSWORD_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_K_G_INVALID
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_INVALID
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_INUSE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_NOT_RESPONDING

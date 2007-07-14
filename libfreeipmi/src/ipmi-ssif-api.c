@@ -324,8 +324,8 @@ _ipmi_ssif_read (int dev_fd,
 static char * ipmi_ssif_ctx_errmsg[] =
   {
     "success",
-    "ssif context is null",
-    "ssif context is invalid",
+    "ssif context null",
+    "ssif context invalid",
     "invalid parameter",
     "permission denied",
     "io not initialized",
@@ -334,7 +334,7 @@ static char * ipmi_ssif_ctx_errmsg[] =
     "out of memory",
     "device not found",
     "internal error",
-    "error number out of range",
+    "errnum out of range",
     NULL,
   };
 
@@ -478,7 +478,7 @@ ipmi_ssif_ctx_set_driver_device(ipmi_ssif_ctx_t ctx, char* driver_device)
   
   if (!(ctx->driver_device = strdup(IPMI_DEFAULT_I2C_DEVICE)))
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
       return (-1);
     }
   
@@ -533,7 +533,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
       else if (errno == ENOENT 
 	       || errno == ENOTDIR 
 	       || errno == ENAMETOOLONG)
-	ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOTFOUND;
+	ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL);
       return (-1);
@@ -571,7 +571,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;
       return (-1);
     }
 
@@ -641,7 +641,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;
       goto cleanup_unlock;
     }
   
@@ -698,14 +698,14 @@ _ipmi_ssif_cmd_write(ipmi_ssif_ctx_t ctx,
   
   if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   
   pkt_len = hdr_len + cmd_len;
   if (!(pkt = (uint8_t *)malloc (pkt_len)))
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memset (pkt, 0, pkt_len);
@@ -777,7 +777,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
 
   if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
@@ -785,7 +785,7 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
   
   if (!(pkt = (uint8_t *)malloc(pkt_len)))
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memset (pkt, 0, pkt_len);
@@ -837,7 +837,7 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;
       return (-1); 
     }
 

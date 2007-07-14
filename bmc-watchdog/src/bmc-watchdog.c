@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.8 2007-07-13 22:12:41 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.9 2007-07-14 00:32:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -585,10 +585,9 @@ _cmd(char *str,
 		    errno = EINVAL;
 		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
 		    errno = EPERM;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUTMEM)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUT_OF_MEMORY)
 		    errno = ENOMEM;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_PARAMETERS
-			   || ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_INIT)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED)
 		    errno = EIO;
 		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OVERFLOW)
 		    errno = ENOSPC;
@@ -614,10 +613,9 @@ _cmd(char *str,
 		    errno = EINVAL;
 		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PERMISSION)
 		    errno = EPERM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUTMEM)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)
 		    errno = ENOMEM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_PARAMETERS
-			   || ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_INIT)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED)
 		    errno = EIO;
 		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OVERFLOW)
 		    errno = ENOSPC;

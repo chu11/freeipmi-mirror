@@ -120,15 +120,15 @@ struct ipmi_recv
 static char * ipmi_openipmi_ctx_errmsg[] =
   {
     "success",
-    "openipmi context is null",
-    "openipmi context is invalid",
+    "openipmi context null",
+    "openipmi context invalid",
     "invalid parameter",
     "permission denied",
     "device not found", 
     "io not initialized",
     "out of memory",
     "internal error",
-    "error number out of range",
+    "errnum out of range",
     NULL,
   };
 
@@ -255,7 +255,7 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
     {
       if (!(ctx->driver_device = strdup(device)))
         {
-          ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUTMEM;
+          ctx->errnum = IPMI_OPENIPMI_CTX_ERR_OUT_OF_MEMORY;
           return (-1);
         }
     }
@@ -301,7 +301,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
       else if (errno == ENOENT)
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOTFOUND;
+        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;
       else
         ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
       goto cleanup;
@@ -472,7 +472,7 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_IO_NOT_INITIALIZED;
       return (-1); 
     }
 

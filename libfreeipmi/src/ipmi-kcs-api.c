@@ -134,18 +134,17 @@
 static char * ipmi_kcs_ctx_errmsg[] =
   {
     "success",
-    "kcs context is null",
-    "kcs context is invalid",
+    "kcs context null",
+    "kcs context invalid",
     "invalid parameter",
     "permission denied",
-    "invalid io parameter",
     "io not initialized",
     "buffer too small to hold result",
     "BMC busy",
     "out of memory",
-    "device unavailable",
+    "device not found",
     "internal error",
-    "error number out of range",
+    "errnum out of range",
     NULL,
   };
 
@@ -605,7 +604,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;
       return (-1); 
     }
 
@@ -702,7 +701,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;
       goto cleanup_unlock;
     }
 
@@ -779,14 +778,14 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
   
   if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   
   pkt_len = hdr_len + cmd_len;
   if (!(pkt = (uint8_t *)malloc (pkt_len)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memset (pkt, 0, pkt_len);
@@ -858,7 +857,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 
   if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
@@ -866,7 +865,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
   
   if (!(pkt = (uint8_t *)malloc(pkt_len)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memset (pkt, 0, pkt_len);
@@ -918,7 +917,7 @@ ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;
       return (-1); 
     }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6.8.6 2007-07-13 17:44:17 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.7 2007-07-14 00:32:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,19 +48,19 @@ enum ipmi_monitoring_error_codes
     IPMI_MONITORING_ERR_NO_SENSOR_READINGS            = 12,
     IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END      = 13,
     IPMI_MONITORING_ERR_SESSION_TIMEOUT               = 14,
-    IPMI_MONITORING_ERR_USERNAME                      = 15,
-    IPMI_MONITORING_ERR_PASSWORD                      = 16,
+    IPMI_MONITORING_ERR_USERNAME_INVALID              = 15,
+    IPMI_MONITORING_ERR_PASSWORD_INVALID              = 16,
     IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT = 17,
-    IPMI_MONITORING_ERR_K_G                           = 18,
-    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL               = 19,
-    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE           = 20,
+    IPMI_MONITORING_ERR_K_G_INVALID                   = 18,
+    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INVALID       = 19,
+    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_INVALID   = 20,
     IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE          = 21,
-    IPMI_MONITORING_ERR_CIPHER_SUITE_UNAVAILABLE      = 22,
+    IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE   = 22,
     IPMI_MONITORING_ERR_BMC_BUSY                      = 23,
-    IPMI_MONITORING_ERR_IPMI                          = 24,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY                 = 25,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                 = 24,
+    IPMI_MONITORING_ERR_IPMI_ERROR                    = 25,
     IPMI_MONITORING_ERR_SYSTEM_ERROR                  = 26,
-    IPMI_MONITORING_ERR_INTERNAL                      = 27,
+    IPMI_MONITORING_ERR_INTERNAL_ERROR                = 27,
     IPMI_MONITORING_ERR_ERRNUMRANGE                   = 28,
   };
 

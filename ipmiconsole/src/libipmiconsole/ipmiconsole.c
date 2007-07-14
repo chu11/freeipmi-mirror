@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.11.4.1 2007-07-12 20:17:36 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.11.4.2 2007-07-14 00:32:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,37 +68,36 @@
  */
 static char *ipmiconsole_errmsgs[] =
   {
-    "success",			  /* 0 */
-    "context null",		  /* 1 */
-    "context invalid",		  /* 2 */
-    "engine already setup",	  /* 3 */
-    "engine not setup",		  /* 4 */
-    "ctx already submitted",	  /* 5 */
-    "ctx not submitted",	  /* 6 */
-    "ctx is still submitted",	  /* 7 */
-    "ctx is waiting for SOL",     /* 8 */
-    "invalid parmaeters",	  /* 9 */
-    "ipmi 2.0 unavailable",	  /* 10 */
-    "cipher suite unavailable",	  /* 11 */
-    "hostname invalid",		  /* 12 */
-    "username invalid",		  /* 13 */
-    "password invalid",		  /* 14 */
-    "k_g invalid",		  /* 15 */
-    "privilege invalid",	  /* 16 */
-    "cipher suite invalid",	  /* 17 */
-    "SOL unavailable",		  /* 18 */
-    "SOL in use",		  /* 19 */
-    "SOL not responding",	  /* 20 */
-    "SOL session stolen",         /* 21 */
-    "SOL requires encryption",    /* 22 */
-    "SOL requires no encryption", /* 23 */
-    "BMC Busy",			  /* 24 */
-    "BMC Error",		  /* 25 */
-    "session timeout",		  /* 26 */
-    "out of memory",		  /* 27 */
-    "internal system error",	  /* 28 */
-    "internal error",		  /* 29 */
-    "errnum out of range",	  /* 30 */
+    "success",			   /* 0 */
+    "context null",		   /* 1 */
+    "context invalid",		   /* 2 */
+    "engine already setup",	   /* 3 */
+    "engine not setup",		   /* 4 */
+    "ctx already submitted",	   /* 5 */
+    "ctx not submitted",	   /* 6 */
+    "ctx is still submitted",	   /* 7 */
+    "ctx is waiting for SOL",      /* 8 */
+    "invalid parmaeters",	   /* 9 */
+    "ipmi 2.0 unavailable",	   /* 10 */
+    "cipher suite id unavailable", /* 11 */
+    "hostname invalid",		   /* 12 */
+    "username invalid",		   /* 13 */
+    "password invalid",		   /* 14 */
+    "k_g invalid",		   /* 15 */
+    "privilege level invalid",	   /* 16 */
+    "SOL unavailable",		   /* 17 */
+    "SOL in use",		   /* 18 */
+    "SOL not responding",	   /* 19 */
+    "SOL session stolen",          /* 20 */
+    "SOL requires encryption",     /* 21 */
+    "SOL requires no encryption",  /* 22 */
+    "BMC Busy",			   /* 23 */
+    "BMC Error",		   /* 24 */
+    "session timeout",		   /* 25 */
+    "out of memory",		   /* 26 */
+    "internal system error",	   /* 27 */
+    "internal error",		   /* 28 */
+    "errnum out of range",	   /* 29 */
     NULL
   };
 
@@ -210,7 +209,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -225,7 +224,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -268,7 +267,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
   if (!n)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("select returned 0"));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
@@ -287,7 +286,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
       if (!len)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("enginecomm closed"));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL;
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
 
@@ -303,7 +302,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
           else
             {
               IPMICONSOLE_CTX_DEBUG(c, ("enginecomm returned invalid data: %d", val));
-              c->errnum = IPMICONSOLE_ERR_INTERNAL;
+              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
             }
           goto cleanup;
         }
@@ -333,7 +332,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -348,7 +347,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -606,7 +605,7 @@ _is_submitted(ipmiconsole_ctx_t c)
 
   if (pthread_mutex_lock(&(c->session_submitted_mutex)) != 0)
     {
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
   
@@ -617,7 +616,7 @@ _is_submitted(ipmiconsole_ctx_t c)
   
   if (pthread_mutex_unlock(&(c->session_submitted_mutex)) != 0)
     {
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -656,7 +655,7 @@ ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
 
   if (pthread_mutex_lock(&(c->user_fd_retrieved_mutex)) != 0)
     {
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
   
@@ -664,7 +663,7 @@ ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
   
   if (pthread_mutex_unlock(&(c->user_fd_retrieved_mutex)) != 0)
     {
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -705,7 +704,7 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -720,7 +719,7 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 

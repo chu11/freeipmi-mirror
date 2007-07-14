@@ -48,7 +48,7 @@ do {                                               \
   else if (__errnum == FIID_ERR_OUTMEM)            \
     dev->errnum = IPMI_ERR_OUT_OF_MEMORY;          \
   else                                             \
-    dev->errnum = IPMI_ERR_INTERNAL_LIBRARY_ERROR; \
+    dev->errnum = IPMI_ERR_LIBRARY_ERROR;          \
 } while (0)
 
 #define UDM_FIID_TEMPLATE_LEN_BYTES(__len, __tmpl)          \
@@ -350,7 +350,7 @@ do {                                                   \
       {                                                \
         __FIID_OBJ_SYSLOG((__obj));                    \
         __FIID_OBJ_TRACE((__obj));                     \
-        dev->errnum = IPMI_ERR_INVALID_PARAMETERS;     \
+        dev->errnum = IPMI_ERR_PARAMETERS;             \
 	return (-1);                                   \
       }                                                \
 } while (0)

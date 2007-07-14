@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.3.4.2 2007-07-12 20:17:36 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.3.4.3 2007-07-14 00:32:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,7 +79,7 @@ ipmiconsole_check_checksum(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 				    s->obj_lan_msg_trlr_rs)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_lan_check_checksum: p = %d; %s", p, strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -131,7 +131,7 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
                                                                    s->obj_rmcpplus_session_trlr_rs)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_packet_session_authentication_code: p = %d; %s", p, strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -819,7 +819,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
   if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system random number length: %d", managed_system_random_number_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -833,7 +833,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
   if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
   
@@ -916,7 +916,7 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
   if (managed_system_guid_len != IPMI_MANAGED_SYSTEM_GUID_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_get_data: invalid managed system guid length: %d", managed_system_guid_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 

@@ -114,7 +114,10 @@
 	Unify code.  
 
 	* Adjust command line options between tools/programs to match more
-	closely.
+	consistently.
+
+	* Adjust error code macros and error messages between libraries to
+	match more consistently.
 	
 	Misc:
 
@@ -128,6 +131,17 @@
 	* bmc-watchdog/: Support OpenIPMI driver.
 
 	* General code cleanup throughout.
+
+2007-07-13  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c: Remove duplicate
+	error code definition.
+	
+2007-07-12  Albert Chu <chu11@llnl.gov>
+	
+        * ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main): Fix
+        free bug.
 	
 2007-07-11  Albert Chu <chu11@llnl.gov>
 
