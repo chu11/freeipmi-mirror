@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.14.4.3 2007-07-14 00:32:23 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.14.4.4 2007-07-14 01:29:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -362,7 +362,7 @@ main(int argc, char **argv)
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_USERNAME_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PASSWORD_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_K_G_INVALID
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_INUSE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_NOT_RESPONDING

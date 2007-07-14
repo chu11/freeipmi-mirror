@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.13.4.2 2007-07-14 00:32:24 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.13.4.3 2007-07-14 01:29:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,7 +50,7 @@ extern "C" {
 #define IPMICONSOLE_ERR_USERNAME_INVALID             13
 #define IPMICONSOLE_ERR_PASSWORD_INVALID             14
 #define IPMICONSOLE_ERR_K_G_INVALID                  15
-#define IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INVALID      16
+#define IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT 16
 #define IPMICONSOLE_ERR_SOL_UNAVAILABLE              17
 #define IPMICONSOLE_ERR_SOL_INUSE                    18
 #define IPMICONSOLE_ERR_SOL_NOT_RESPONDING           19

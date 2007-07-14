@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.11.4.2 2007-07-14 00:32:23 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.11.4.3 2007-07-14 01:29:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,36 +68,36 @@
  */
 static char *ipmiconsole_errmsgs[] =
   {
-    "success",			   /* 0 */
-    "context null",		   /* 1 */
-    "context invalid",		   /* 2 */
-    "engine already setup",	   /* 3 */
-    "engine not setup",		   /* 4 */
-    "ctx already submitted",	   /* 5 */
-    "ctx not submitted",	   /* 6 */
-    "ctx is still submitted",	   /* 7 */
-    "ctx is waiting for SOL",      /* 8 */
-    "invalid parmaeters",	   /* 9 */
-    "ipmi 2.0 unavailable",	   /* 10 */
-    "cipher suite id unavailable", /* 11 */
-    "hostname invalid",		   /* 12 */
-    "username invalid",		   /* 13 */
-    "password invalid",		   /* 14 */
-    "k_g invalid",		   /* 15 */
-    "privilege level invalid",	   /* 16 */
-    "SOL unavailable",		   /* 17 */
-    "SOL in use",		   /* 18 */
-    "SOL not responding",	   /* 19 */
-    "SOL session stolen",          /* 20 */
-    "SOL requires encryption",     /* 21 */
-    "SOL requires no encryption",  /* 22 */
-    "BMC Busy",			   /* 23 */
-    "BMC Error",		   /* 24 */
-    "session timeout",		   /* 25 */
-    "out of memory",		   /* 26 */
-    "internal system error",	   /* 27 */
-    "internal error",		   /* 28 */
-    "errnum out of range",	   /* 29 */
+    "success",			    /* 0 */
+    "context null",		    /* 1 */
+    "context invalid",		    /* 2 */
+    "engine already setup",	    /* 3 */
+    "engine not setup",		    /* 4 */
+    "ctx already submitted",	    /* 5 */
+    "ctx not submitted",	    /* 6 */
+    "ctx is still submitted",	    /* 7 */
+    "ctx is waiting for SOL",       /* 8 */
+    "invalid parmaeters",	    /* 9 */
+    "ipmi 2.0 unavailable",	    /* 10 */
+    "cipher suite id unavailable",  /* 11 */
+    "hostname invalid",		    /* 12 */
+    "username invalid",		    /* 13 */
+    "password invalid",		    /* 14 */
+    "k_g invalid",		    /* 15 */
+    "privilege level insufficient", /* 16 */
+    "SOL unavailable",		    /* 17 */
+    "SOL in use",		    /* 18 */
+    "SOL not responding",	    /* 19 */
+    "SOL session stolen",           /* 20 */
+    "SOL requires encryption",      /* 21 */
+    "SOL requires no encryption",   /* 22 */
+    "BMC Busy",			    /* 23 */
+    "BMC Error",		    /* 24 */
+    "session timeout",		    /* 25 */
+    "out of memory",		    /* 26 */
+    "internal system error",	    /* 27 */
+    "internal error",		    /* 28 */
+    "errnum out of range",	    /* 29 */
     NULL
   };
 

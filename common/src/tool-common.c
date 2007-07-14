@@ -87,8 +87,8 @@ ipmi_device_open(const char *progname,
               if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_INVALID
                   || ipmi_device_errnum(dev) == IPMI_ERR_K_G_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
                   || ipmi_device_errnum(dev) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
                   || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
                   || ipmi_device_errnum(dev) == IPMI_ERR_HOSTNAME_INVALID
@@ -126,8 +126,8 @@ ipmi_device_open(const char *progname,
             {
               if (ipmi_device_errnum(dev) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INVALID
-                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_INVALID
+                  || ipmi_device_errnum(dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                  || ipmi_device_errnum(dev) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
                   || ipmi_device_errnum(dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
                   || ipmi_device_errnum(dev) == IPMI_ERR_HOSTNAME_INVALID)
                 {

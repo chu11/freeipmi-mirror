@@ -5,8 +5,10 @@ For Users
 o Added IPMI 2.0 support into many core FreeIPMI tools (-D LAN_2_0)
 o Ported many IPMI compliance workarounds into all tools (-W,
   --workaround-flags option)
-o Ported many features into ipmimonitoring from the other tools.
+o Ported many features from other tools into ipmimonitoring. 
 o Added openipmi driver to bmc-watchdog.
+o Try to refine error messages to users even more so than before to provide
+  better ideas on the errors occurring.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level

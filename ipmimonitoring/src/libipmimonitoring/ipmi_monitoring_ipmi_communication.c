@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.8 2007-07-14 00:32:24 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.9 2007-07-14 01:29:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -315,10 +315,10 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
         c->errnum = IPMI_MONITORING_ERR_USERNAME_INVALID;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_INVALID)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_INVALID)
-        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_AUTHENTICATION_TYPE_INVALID)
-        c->errnum = IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_INVALID;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
+        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE)
+        c->errnum = IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SESSION_TIMEOUT)
@@ -331,7 +331,7 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INSUFFICIENT_PRIVILEGE)
-        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INVALID;
+        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
         c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_HOSTNAME_INVALID)
@@ -461,8 +461,8 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
         c->errnum = IPMI_MONITORING_ERR_USERNAME_INVALID;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PASSWORD_INVALID)
         c->errnum = IPMI_MONITORING_ERR_PASSWORD_INVALID;
-      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_INVALID)
-        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INVALID;
+      else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
+        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_K_G_INVALID)
         c->errnum = IPMI_MONITORING_ERR_K_G_INVALID;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE)
@@ -481,7 +481,7 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INSUFFICIENT_PRIVILEGE)
-        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INVALID;
+        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
         c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_HOSTNAME_INVALID)
@@ -605,7 +605,7 @@ ipmi_monitoring_ipmi_sendrecv(ipmi_monitoring_ctx_t c,
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BMC_BUSY)
         c->errnum = IPMI_MONITORING_ERR_BMC_BUSY;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_BAD_COMPLETION_CODE_INSUFFICIENT_PRIVILEGE)
-        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INVALID;
+        c->errnum = IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_OUT_OF_MEMORY)
         c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       else if (ipmi_device_errnum(c->comm.dev) == IPMI_ERR_SYSTEM_ERROR)

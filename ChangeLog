@@ -130,6 +130,9 @@
 
 	* bmc-watchdog/: Support OpenIPMI driver.
 
+	* Globally try to make error messages in all libs and tools more
+	useful.
+
 	* General code cleanup throughout.
 
 2007-07-13  Albert Chu <chu11@llnl.gov>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.21.4.1 2007-07-14 01:01:20 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.21.4.2 2007-07-14 01:29:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,11 +54,11 @@ static char *ipmipower_outputs[] =
     "password invalid",
     "password length invalid",
     "k_g invalid",
-    "privilege level invalid",
+    "privilege level insufficient",
+    "user has insufficient privilege",
     "operation invalid",
     "authentication type invalid",
     "usable authentication type/privilege combination not found",
-    "cannot authenticate at given privilege",
     "cipher suite id unavailable",
     "usable cipher suite id not found",
     "password verification timeout",

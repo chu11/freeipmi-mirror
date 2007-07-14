@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107.4.1 2007-07-14 01:01:20 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.4.2 2007-07-14 01:29:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1042,7 +1042,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	}
       else
 	{
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	
+	  ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
 	  return -1;
 	}
     }
@@ -1065,7 +1065,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
-	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_INVALID, ip->ic->hostname);	
+	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
 	      return -1;
 	    }
 	  else
@@ -1663,18 +1663,9 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege) ? 1 : 0;
       
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
-	  && conf->privilege != PRIVILEGE_TYPE_AUTO 
 	  && !priv_check)
 	{
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	
-	  return -1;
-	}
-      
-      if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
-	  && conf->privilege == PRIVILEGE_TYPE_AUTO 
-	  && !priv_check)
-	{
-	  ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
+	  ipmipower_output(MSG_TYPE_USER_HAS_INSUFFICIENT_PRIVILEGE, ip->ic->hostname);	
 	  return -1;
 	}
     }
