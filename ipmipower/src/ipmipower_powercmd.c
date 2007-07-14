@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.4.1 2007-07-14 01:01:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -638,7 +638,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    {
 	      if (!ipmipower_check_rakp_2_key_exchange_authentication_code(ip, pkt))
 		{
-		  ipmipower_output(MSG_TYPE_PASSWORD, ip->ic->hostname); /* XXX - permission denied? */
+		  ipmipower_output(MSG_TYPE_PASSWORD_INVALID, ip->ic->hostname); 
 		  goto cleanup;
 		}
 	    }
@@ -646,7 +646,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    {
 	      if (!ipmipower_check_rakp_4_integrity_check_value(ip, pkt))
 		{
-		  ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname); /* XXX - permission denied? */
+		  ipmipower_output(MSG_TYPE_K_G_INVALID, ip->ic->hostname); 
 		  goto cleanup;
 		}
 	    }
@@ -782,7 +782,7 @@ _has_timed_out(ipmipower_powercmd_t ip)
           if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
             ipmipower_output(MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT, ip->ic->hostname);
           else
-            ipmipower_output(MSG_TYPE_TIMEDOUT, ip->ic->hostname);
+            ipmipower_output(MSG_TYPE_SESSION_TIMEOUT, ip->ic->hostname);
         }
       return 1;
     }
@@ -1003,7 +1003,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
       || (strlen(conf->username)
 	  && !authentication_status_non_null_username))
     {
-      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
+      ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
       return -1;
     }
 
@@ -1034,7 +1034,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
-	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname);
 	      return -1;
 	    }
 	  else
@@ -1042,7 +1042,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	}
       else
 	{
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	/* XXX - permission denied? */
+	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	
 	  return -1;
 	}
     }
@@ -1065,7 +1065,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
-	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);	/* XXX - permission denied? */
+	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_INVALID, ip->ic->hostname);	
 	      return -1;
 	    }
 	  else
@@ -1156,14 +1156,14 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
       || (strlen(conf->username)
 	  && !authentication_status_non_null_username))
     {
-      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
+      ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname); 
       return -1;
     }
 
   if ((conf->k_g_configured != IPMIPOWER_TRUE && authentication_status_k_g)
       || (conf->k_g_configured == IPMIPOWER_TRUE && !authentication_status_k_g))
     {
-      ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);	/* XXX - permission denied? */
+      ipmipower_output(MSG_TYPE_K_G_INVALID, ip->ic->hostname);	
       return -1;
     }
 
@@ -1203,7 +1203,7 @@ _check_ipmi_2_0_authentication_capabilities_error(ipmipower_powercmd_t ip)
             return 0;
           else
             {
-              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              ipmipower_output(MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname); 
               return -1;
             }
         }
@@ -1314,7 +1314,7 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
         {
           dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
               ip->ic->hostname, ip->protocol_state);
-          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           
           ip->retry_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
@@ -1392,7 +1392,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           if (conf->workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION)
             break;
 
-          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           goto cleanup;
         }
 
@@ -1401,7 +1401,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           dbg("_calculate_cipher_suite_ids(%s:%d): "
               "invalid record format: %x",
               ip->ic->hostname, ip->protocol_state, (uint8_t)record_format);
-          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           goto cleanup;
         }
 
@@ -1533,7 +1533,7 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
           dbg("_determine_cipher_suite_id_to_use(%s:%d): "
               " cipher suite not found: %x",
               ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
-          ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); /* XXX - permission denied? */
+          ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
           return -1;
         }
     }
@@ -1564,7 +1564,7 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
           dbg("_determine_cipher_suite_id_to_use(%s:%d): "
               " can't find usable cipher suite",
               ip->ic->hostname, ip->protocol_state);
-          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
           return -1;
         }
       
@@ -1666,7 +1666,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	  && conf->privilege != PRIVILEGE_TYPE_AUTO 
 	  && !priv_check)
 	{
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	/* XXX - permission denied? */
+	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	
 	  return -1;
 	}
       
@@ -1674,7 +1674,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	  && conf->privilege == PRIVILEGE_TYPE_AUTO 
 	  && !priv_check)
 	{
-	  ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); /* XXX - permission denied? */
+	  ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
 	  return -1;
 	}
     }
@@ -1689,7 +1689,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
           /* Lets try the next Cipher Suite ID if there is one */
           if (ip->cipher_suite_id_ranking_index == (cipher_suite_id_ranking_count - 1))
             {
-              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname);
               return -1;
             }
           else
@@ -1714,7 +1714,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
               
               if (!cipher_suite_found)
                 {
-                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
                   return -1;
                 }
               
@@ -1932,7 +1932,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
               if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
                 {
-                  ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+                  ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
                   return -1;
                 }
 
@@ -1950,9 +1950,15 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
       else if (conf->ipmi_version == IPMI_VERSION_1_5)
 	{
+          /* achu: This else if statement block might not be
+           * accessible anymore, b/c if the user configured
+           * IPMI_VERSION_1_5, a get authentication capabilties for
+           * v20 shouldn't have been sent.  We'll leave this code here
+           * anyways.
+           */
           if (!ipmi_1_5)
             {
-              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              ipmipower_output(MSG_TYPE_IPMI_1_5_UNAVAILABLE, ip->ic->hostname); 
               return -1;
             }
           /* else we continue with the IPMI 1.5 protocol */
@@ -1973,7 +1979,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	  
 	  if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
 	    {
-	      ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+	      ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
 	      return -1;
 	    }
 	  
@@ -1983,7 +1989,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           if (!ipmi_2_0)
             {
-              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              ipmipower_output(MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname); 
               return -1;
             }
           /* else we continue with the IPMI 2.0 protocol */
@@ -2022,7 +2028,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
         {
-          ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
           return -1;
         }
 

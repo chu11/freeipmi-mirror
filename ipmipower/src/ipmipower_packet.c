@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.64 2007-06-08 21:37:53 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.64.2.1 2007-07-14 01:01:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1109,13 +1109,13 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 		 ip->ic->hostname, ip->protocol_state, pkt);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
 	       || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-	return MSG_TYPE_BMCBUSY;
+	return MSG_TYPE_BMC_BUSY;
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_INVALID; 
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
-	return MSG_TYPE_USERNAME; /* XXX - permission denied? */
+	return MSG_TYPE_USERNAME_INVALID; 
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
-	return MSG_TYPE_CIPHER_SUITE;
+	return MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE;
     }
   else
     {
@@ -1129,30 +1129,30 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
       else if (pkt == GET_SESSION_CHALLENGE_RES 
 	       && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME 
 		   || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
-	return MSG_TYPE_USERNAME; /* XXX - permission denied? */
+	return MSG_TYPE_USERNAME_INVALID; 
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_INVALID; 
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
 		   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
 		   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
-	return MSG_TYPE_BMCBUSY;
+	return MSG_TYPE_BMC_BUSY;
       else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES 
 	       && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
 		   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
 		   || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_INVALID; 
 #if 0
       /* Should not reach this point, should be handled by other code */
       else if (pkt == CHASSIS_CONTROL_RES
 	       && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_INVALID; 
 #endif
       else if (pkt == CHASSIS_CONTROL_RES 
 	       && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
-	return MSG_TYPE_OPERATION;
+	return MSG_TYPE_OPERATION_INVALID;
     }
  
-  return MSG_TYPE_BMCERROR;
+  return MSG_TYPE_BMC_ERROR;
 }

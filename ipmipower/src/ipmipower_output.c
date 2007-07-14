@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.21 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.21.4.1 2007-07-14 01:01:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,26 +50,27 @@ static char *ipmipower_outputs[] =
     "off",
     "ok",
     "permission denied",
-    "invalid username",
-    "invalid password",
-    "invalid password length",
-    "invalid k_g",
-    "cannot obtain proper privilege level",
-    "invalid operation",
-    "invalid authentication type",
+    "username invalid",
+    "password invalid",
+    "password length invalid",
+    "k_g invalid",
+    "privilege level invalid",
+    "operation invalid",
+    "authentication type invalid",
     "usable authentication type/privilege combination not found",
     "cannot authenticate at given privilege",
-    "invalid cipher suite used",
-    "usable cipher suite not found",
-    "password verification timed out",
-    "timed out",
+    "cipher suite id unavailable",
+    "usable cipher suite id not found",
+    "password verification timeout",
+    "session timeout",
     "not discovered",
     "bad connection",
     "unknown node name",
     "out of resources",
-    "ipmi version not supported",
-    "bmc busy",
-    "bmc error"
+    "ipmi 1.5 unavailable",
+    "ipmi 2.0 unavailable",
+    "BMC busy",
+    "BMC error"
   };
 
 void
