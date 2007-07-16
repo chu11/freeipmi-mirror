@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.11.4.3 2007-07-13 18:04:31 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.1 2007-07-16 23:51:37 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -178,114 +178,19 @@ Output help menu and exit.
 Output version and exit.
 .if @WITH_DEBUG@ \{
 .TP
-.I "-D, --debug"
+.I "--debug"
 Turn on debugging.
 .TP
-.I "-G, --debugdump"
+.I "--debugdump"
 Turn on packet dumps for debugging.
 \}
 .LP
 
-.SH "HOSTRANGED OUTPUT"
-The host input specified by the user can accept multiple hosts for
-parallel out of band communication and output. Multiple hosts can be
-input either as an explicit comma seperated lists of hosts or a range
-of hostnames in the general form: prefix[n-m,l-k,...], where n < m and
-l < k, etc. The later form should not be confused with regular
-expression character classes (also denoted by []). For example,
-foo[19] does not represent foo1 or foo9, but rather represents a
-degenerate range: foo19.
-.LP
-This range syntax is meant only as a convenience on clusters with a
-prefixNN naming convention and specification of ranges should not be
-considered necessary -- the list foo1,foo9 could be specified as such,
-or by the range foo[1,9].
-.LP
-Some examples of range usage follow:
-.nf
-    foo[01-05] instead of foo01,foo02,foo03,foo04,foo05
-    foo[7,9-10] instead of foo7,foo9,foo10
-    foo[0-3] instead of foo0,foo1,foo2,foo3
-.fi
-.LP
-As a reminder to the reader, some shells will interpret brackets ([
-and ]) for pattern matching. Depending on your shell, it may be
-necessary to enclose ranged lists within quotes.
-.LP
-By default, standard output from each node specified will be output
-with the hostname prepended to each line. Although this output is
-readable in many situations, it may be difficult to read in other
-situations. For example, output from multiple nodes may be mixed
-together. The \fB\-B\fR and \fB\-C\fR options can be used to change
-this default.
-.LP
-In-band IPMI Communication will be used when the host "localhost" is
-specified.  This allows the user to add the localhost into the
-hostranged output.
-
-.SH "WORKAROUNDS"
-With so many different vendors implementing their
-own IPMI solutions, different vendors may implement their IPMI
-protocols incorrectly.  The following lists the handful of
-compliance issues discovered and the workarounds currently
-supported.
-
-When possible, workarounds have been implemented so they will be
-transparent to the user.  However, some will require the user to
-specify a workaround be used via the -W option.  The workarounds
-listed below are listed in the order of their implementation.
-Therefore, workarounds implemented earlier may work for other vendors.
-
-The hardware listed below only indicates the hardware that a problem
-was discovered on.  Newer versions hardware may fix the problems
-indicated below.  Similar machines from vendors may or may not exhibit
-the same problems.
-
-Intel SR870BN4: BMCs would not respond to retransmissions of a Get
-Session Challenge Request if a previous Get Session Challenge response
-was lost.  Resolved by sending retransmitted Get Session Challenge
-requests from a different source port.  Automatically handled.
-
-Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
-packet responses return empty session IDs to the client.  In order to
-work around this issue, the "idzero" workaround must be specified.
-The option will allow empty session IDs to be accepted by the client.
-This problem is apparently fixed in later firmware releases.
-
-Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
-disabled, packet responses contain non-null authentication data (when
-it should in fact be null).  In order to work around this issue, the
-"unexpectedauth" workaround must be specified.  The option will allow
-unexpected non-null authcodes to be checked as though they were
-expected. This compliance bug is confirmed to be fixed on newer
-firmware.
-
-IBM eServer 325: The remote BMC will advertise that Per Message
-Authentication is disabled, but actually require it for the protocol.
-In order to work around this issue, the "forcepermsg" workaround must
-be specified.  The option will force Per Message Authentication to be
-used no matter what is advertised by the remote BMC.
-
-Supermicro H8QME with SIMSO daughter card: The remote BMC will
-advertise that Per Message Authentication is disabled, but actually
-require it for the protocol. Automatically handled.
-
-Intel SE7520AF2 with Intel Server Management Module (Professional
-Edition): There are a number of Intel IPMI 2.0 bugs which can be
-worked around by specifying the "intel20" workaround.  The
-workarounds include padding of usernames, automatic acceptance of a
-RAKP 4 response integrity check when using the integrity algorithm
-MD5-128, and password truncation if the authentication algorithm is
-HMAC-MD5-128.
-
-Supermicro H8QME with SIMSO daughter card: There are several
-Supermicro IPMI 2.0 bugs on early firmware revisions which can be
-worked around using the "supermicro20" workaround.  These compliance
-bugs are confirmed to be fixed on newer firmware.
-
-Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
-around by specifying the "sun20" workaround.  The workarounds include
-handling invalid lengthed hash keys and invalid cipher suite records.
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
 
 .SH "KNOWN ISSUES"
 Interpretation rules have not been written for all sensors

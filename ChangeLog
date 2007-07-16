@@ -133,6 +133,9 @@
 	* Globally try to make error messages in all libs and tools more
 	useful.
 
+	* Cleaned up manpages to use as much "common" files in common/doc
+	as possible.
+
 	* General code cleanup throughout.
 
 2007-07-13  Albert Chu <chu11@llnl.gov>

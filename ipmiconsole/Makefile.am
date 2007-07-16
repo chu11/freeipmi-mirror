@@ -1,6 +1,11 @@
 SUBDIRS = src
 
-dist_man_MANS = ipmiconsole.8 ipmiconsole.conf.5 libipmiconsole.3
+MANS_CPP = ipmiconsole.8
 
-CLEANFILES = *~
-DISTCLEANFILES = .deps/*.P
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	cpp -P -I. -x c $@.pre -o $@
+
+dist_man_MANS = $(MANS_CPP) ipmiconsole.conf.5 libipmiconsole.3
+
+CLEANFILES = $(MANS_CPP) *~
+DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P

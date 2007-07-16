@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.71.4.5 2007-07-13 18:18:25 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.1 2007-07-16 23:51:37 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -541,72 +541,10 @@ Determine the power status of foo[0-2] with non-null username and password
 Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
 
-.SH "WORKAROUNDS"
-With so many different vendors implementing their own IPMI solutions,
-different vendors may implement their IPMI protocols incorrectly.  The
-following lists the handful of compliance issues discovered and the
-workarounds currently supported.
-
-When possible, the workarounds have been implemented so they will be
-transparent to the user.  However, some will require the user to
-specify a workaround be used via the -W option.  The workarounds
-listed below are listed in the order of their implementation.
-Therefore, workarounds implemented earlier may work for other vendors.
-
-The hardware listed below only indicates the hardware that a problem
-was discovered on.  Newer versions hardware may fix the problems
-indicated below.  Similar machines from vendors may or may not exhibit
-the same problems.
-
-Intel SR870BN4: BMCs would not respond to retransmissions of a Get
-Session Challenge Request if a previous Get Session Challenge response
-was lost.  Resolved by sending retransmitted Get Session Challenge
-requests from a different source port.  Automatically handled.
-
-Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
-packet responses return empty session IDs to the client.  In order to
-work around this issue, the "idzero" workaround must be specified.
-The option will allow empty session IDs to be accepted by the client.
-This problem is apparently fixed in later firmware releases.
-
-Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
-disabled, packet responses contain non-null authentication data (when
-it should in fact be null).  In order to work around this issue, the
-"unexpectedauth" workaround must be specified.  The option will allow
-unexpected non-null authcodes to be checked as though they were
-expected. This compliance bug is confirmed to be fixed on newer
-firmware.
-
-IBM eServer 325: The remote BMC will advertise that Per Message
-Authentication is disabled, but actually require it for the protocol.
-In order to work around this issue, the "forcepermsg" workaround must
-be specified.  The option will force Per Message Authentication to be
-used no matter what is advertised by the remote BMC.
-
-Intel SE7520AF2 with Intel Server Management Module (Professional
-Edition): There are a number of Intel IPMI 2.0 bugs which can be
-worked around by specifying the "intel20" workaround.  The
-workarounds include padding of usernames, automatic acceptance of a
-RAKP 4 response integrity check when using the integrity algorithm
-MD5-128, and password truncation if the authentication algorithm is
-HMAC-MD5-128.
-
-Supermicro H8QME with SIMSO daughter card: There are several
-Supermicro IPMI 2.0 bugs on early firmware revisions which can be
-worked around using the "supermicro20" workaround.  These compliance
-bugs are confirmed to be fixed on newer firmware.
-
-Supermicro H8QME with SIMSO daughter card: The remote BMC will
-advertise that Per Message Authentication is disabled, but actually
-require it for the protocol. Automatically handled.
-
-Sun Fire 4100: The session sequence numbers returned from the BMC in
-IPMI 1.5 sessions are the wrong endian.  In order to work around this
-issue, the "endianseq" workaround must be specified.
-
-Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
-around by specifying the "sun20" workaround.  The workarounds include
-handling invalid lengthed hash keys and invalid cipher suite records.
+#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the
