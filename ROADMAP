@@ -2,34 +2,15 @@ Release 0.5.0
 -------------
 
 libfreeipmi
-- udm support for ipmi 2.0
-- udm support for outofband and ipmi 2.0 workarounds
 - split lib
-- re-work return codes/error codes
 - re-work UDM for advanced IPMI lan connection detection?
-
-workarounds
-- supermicro -> peppercon?
-
-tools
-- support workarounds
-- merge/make options more common
-
-ipmipower
-- do same checks offered by udm?
 
 bmc-config/pef-config
 - re-work for faster checkout/commit
 
 manpage
-- use pre.in system for ipmimonitoring, ipmiconsole?
+- commonize remaining options between all tools
+- hostrange text in ipmipower
 
 parsing
-- use common parsing when possible?
-
-unify
-- error code names
-- error code strings
-- error code output
-- error code orderings
-- semantics
+- make cmdline parsing more common
