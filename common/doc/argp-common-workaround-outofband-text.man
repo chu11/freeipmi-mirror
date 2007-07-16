@@ -1,0 +1,29 @@
+
+Intel SR870BN4: BMCs would not respond to retransmissions of a Get
+Session Challenge Request if a previous Get Session Challenge response
+was lost.  Resolved by sending retransmitted Get Session Challenge
+requests from a different source port.  Automatically handled.
+
+Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
+packet responses return empty session IDs to the client.  In order to
+work around this issue, the "idzero" workaround must be specified.
+The option will allow empty session IDs to be accepted by the client.
+This problem is apparently fixed in later firmware releases.
+
+Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
+disabled, packet responses contain non-null authentication data (when
+it should in fact be null).  In order to work around this issue, the
+"unexpectedauth" workaround must be specified.  The option will allow
+unexpected non-null authcodes to be checked as though they were
+expected. This compliance bug is confirmed to be fixed on newer
+firmware.
+
+IBM eServer 325: The remote BMC will advertise that Per Message
+Authentication is disabled, but actually require it for the protocol.
+In order to work around this issue, the "forcepermsg" workaround must
+be specified.  The option will force Per Message Authentication to be
+used no matter what is advertised by the remote BMC.
+
+Supermicro H8QME with SIMSO daughter card: The remote BMC will
+advertise that Per Message Authentication is disabled, but actually
+require it for the protocol. Automatically handled.
