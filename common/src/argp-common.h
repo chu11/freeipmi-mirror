@@ -197,11 +197,13 @@ struct hostrange_cmd_args
 #define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR  "supermicro20"
 #define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR         "sun20"
 
-unsigned int parse_outofband_workaround_flags(char *str);
+int parse_driver_type(char *str);
 
-unsigned int parse_outofband_2_0_workaround_flags(char *str);
+int parse_outofband_workaround_flags(char *str);
 
-unsigned int parse_inband_workaround_flags(char *str);
+int parse_outofband_2_0_workaround_flags(char *str);
+
+int parse_inband_workaround_flags(char *str);
 
 error_t common_parse_opt (int key, 
 			  char *arg, 

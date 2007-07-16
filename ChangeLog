@@ -125,8 +125,8 @@
 	IPMI_1_5_MAX_PASSWORD_LENGTH and IPMI_2_0_MAX_PASSWORD_LENGTH as
 	needed.
 
-	* common/src/argp-common.h, common/src/argp-common.c,
-	common/src/tool-common.c: Adjust for auto_probe logic change.
+	* common/src/argp-common.h, common/src/argp-common.c: General
+	cleanup to allow for more common code use.
 
 	* bmc-watchdog/: Support OpenIPMI driver.
 

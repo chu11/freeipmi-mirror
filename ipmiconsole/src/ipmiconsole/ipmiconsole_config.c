@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.8 2007-07-13 22:12:41 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.9 2007-07-16 22:17:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -127,7 +127,7 @@ _cmdline_parse(int argc, char **argv)
   char *ptr;
   int c;
   int rv;
-  unsigned int flags;
+  int flags;
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] =

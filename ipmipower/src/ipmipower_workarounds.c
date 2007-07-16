@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.3.4.2 2007-07-12 22:32:00 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.3.4.3 2007-07-16 22:17:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -61,7 +61,7 @@ int
 ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
 {
   uint32_t flags = 0;
-  unsigned int tmp_flags;
+  int tmp_flags;
 
   assert(str);
   assert(workaround_flags);

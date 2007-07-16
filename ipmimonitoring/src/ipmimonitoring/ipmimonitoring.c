@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.7 2007-07-13 22:12:42 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.8 2007-07-16 22:17:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -192,7 +192,8 @@ _cmdline_parse(int argc, char **argv)
   char *ptr;
   char *tok;
   int c;
-  unsigned int tmp_flags;
+  int tmp_type;
+  int tmp_flags;
   int rv;
 
 #if HAVE_GETOPT_LONG
@@ -258,22 +259,19 @@ _cmdline_parse(int argc, char **argv)
           _version();   /* --version */
           break;
         case 'D':       /* --driver-type */
-          if (strcasecmp (optarg, "lan") == 0)
+          if ((tmp_type = parse_driver_type(optarg)) < 0)
+            err_exit("Command Line Error: invalid driver type");
+          if (tmp_type == IPMI_DEVICE_LAN)
             conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_1_5;
-          else if (strcasecmp (optarg, "lan_2_0") == 0
-                   || strcasecmp (optarg, "lan20") == 0
-                   || strcasecmp (optarg, "lan_20") == 0
-                   || strcasecmp (optarg, "lan2_0") == 0
-                   || strcasecmp (optarg, "lan2_0") == 0)
+          else if (tmp_type == IPMI_DEVICE_LAN_2_0)
             conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_2_0;
-          else if (strcasecmp (optarg, "kcs") == 0)
+          else if (tmp_type == IPMI_DEVICE_KCS)
             conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_KCS;
-          else if (strcasecmp (optarg, "ssif") == 0)
+          else if (tmp_type == IPMI_DEVICE_SSIF)
             conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_SSIF;
-          else if (strcasecmp (optarg, "openipmi") == 0)
+          else if (tmp_type == IPMI_DEVICE_OPENIPMI)
             conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_OPENIPMI;
           else
-            err_exit("Command Line Error: invalid driver type");
           break;
         case IPMIMONITORING_NO_PROBING_KEY:          /* --no-probing */
           conf.disable_auto_probe++;

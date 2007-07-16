@@ -44,18 +44,44 @@
 #include "pstdout.h"
 #include "tool-common.h"
 
-unsigned int
+#define WORKAROUND_FLAG_BUFLEN 1024
+
+int
+parse_driver_type(char *str)
+{
+  assert(str);
+
+  if (strcasecmp (str, "lan") == 0)
+    return IPMI_DEVICE_LAN;
+  else if (strcasecmp (str, "lan_2_0") == 0
+           || strcasecmp (str, "lan20") == 0
+           || strcasecmp (str, "lan_20") == 0
+           || strcasecmp (str, "lan2_0") == 0
+           || strcasecmp (str, "lan2_0") == 0)
+    return IPMI_DEVICE_LAN_2_0;
+  else if (strcasecmp (str, "kcs") == 0)
+    return IPMI_DEVICE_KCS;
+  else if (strcasecmp (str, "ssif") == 0)
+    return IPMI_DEVICE_SSIF;
+  else if (strcasecmp (str, "openipmi") == 0)
+    return IPMI_DEVICE_OPENIPMI;
+
+  return -1;
+}
+
+int
 parse_outofband_workaround_flags(char *str)
 {
-  char *s, *tok;
-  unsigned int flags = 0;
+  char buf[WORKAROUND_FLAG_BUFLEN+1];
+  char *tok;
+  int flags = 0;
 
-  if (!(s = strdup(str)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  tok = strtok(s, ",");
+  assert(str);
+
+  memset(buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
+  strncpy(buf, str, WORKAROUND_FLAG_BUFLEN);
+
+  tok = strtok(buf, ",");
   while (tok)
     {
       if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR))
@@ -68,22 +94,22 @@ parse_outofband_workaround_flags(char *str)
         flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
       tok = strtok(NULL, ",");
     }
-  free(s);
   return flags;
 }
 
-unsigned int
+int
 parse_outofband_2_0_workaround_flags(char *str)
 {
-  char *s, *tok;
-  unsigned int flags = 0;
+  char buf[WORKAROUND_FLAG_BUFLEN+1];
+  char *tok;
+  int flags = 0;
   
-  if (!(s = strdup(str)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  tok = strtok(s, ",");
+  assert(str);
+
+  memset(buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
+  strncpy(buf, str, WORKAROUND_FLAG_BUFLEN);
+
+  tok = strtok(buf, ",");
   while (tok)
     {
       if (!strcasecmp(tok, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR))
@@ -94,13 +120,14 @@ parse_outofband_2_0_workaround_flags(char *str)
         flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION;
       tok = strtok(NULL, ",");
     }
-  free(s);
   return flags;
 }
 
-unsigned int
+int
 parse_inband_workaround_flags(char *str)
 {
+  assert(str);
+
   /* no inband workarounds to parse yet */
   return 0;
 }
@@ -127,30 +154,17 @@ common_parse_opt (int key,
 		  struct argp_state *state, 
 		  struct common_cmd_args *cmd_args)
 {
-  unsigned int flags;
+  int tmp;
 
   switch (key)
     {
     case DRIVER_TYPE_KEY: 
-      if (strcasecmp (arg, "lan") == 0)
-        cmd_args->driver_type = IPMI_DEVICE_LAN;
-      else if (strcasecmp (arg, "lan_2_0") == 0
-               || strcasecmp (arg, "lan20") == 0
-               || strcasecmp (arg, "lan_20") == 0
-               || strcasecmp (arg, "lan2_0") == 0
-               || strcasecmp (arg, "lan2_0") == 0)
-        cmd_args->driver_type = IPMI_DEVICE_LAN_2_0;
-      else if (strcasecmp (arg, "kcs") == 0)
-        cmd_args->driver_type = IPMI_DEVICE_KCS;
-      else if (strcasecmp (arg, "ssif") == 0)
-        cmd_args->driver_type = IPMI_DEVICE_SSIF;
-      else if (strcasecmp (arg, "openipmi") == 0)
-        cmd_args->driver_type = IPMI_DEVICE_OPENIPMI;
-      else 
+      if ((tmp = parse_driver_type (arg)) < 0)
         {
           fprintf(stderr, "invalid driver type specified\n");
           argp_usage (state);
         }
+      cmd_args->driver_type = tmp;
       break;
     case NO_PROBING_KEY:
       cmd_args->disable_auto_probe = 1;
@@ -511,22 +525,22 @@ common_parse_opt (int key,
         }
       break;
     case WORKAROUND_FLAGS_KEY:
-      flags = parse_outofband_workaround_flags(arg);
-      cmd_args->workaround_flags |= flags;
-      flags = parse_outofband_2_0_workaround_flags(arg);
-      if (flags && cmd_args->workaround_flags)
+      tmp = parse_outofband_workaround_flags(arg);
+      cmd_args->workaround_flags |= tmp;
+      tmp = parse_outofband_2_0_workaround_flags(arg);
+      if (tmp && cmd_args->workaround_flags)
         {
           fprintf (stderr, "specified conflicting workaround options\n");
           argp_usage (state);
         }
-      cmd_args->workaround_flags |= flags;
-      flags = parse_inband_workaround_flags(arg);
-      if (flags && cmd_args->workaround_flags)
+      cmd_args->workaround_flags |= tmp;
+      tmp = parse_inband_workaround_flags(arg);
+      if (tmp && cmd_args->workaround_flags)
         {
           fprintf (stderr, "specified conflicting workaround options\n");
           argp_usage (state);
         }
-      cmd_args->workaround_flags |= flags;
+      cmd_args->workaround_flags |= tmp;
       break;
 #ifndef NDEBUG
     case DEBUG_KEY:
