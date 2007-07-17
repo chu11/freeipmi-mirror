@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmidetect.8.in,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+\."$Id: ipmidetect.8.in,v 1.2 2007-07-17 15:57:01 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,10 +100,10 @@ or by the range foo[1,9].
 
 Some examples of range usage follow:
 
-List all nodes among foo01,foo02,...,foo05 that are up and down 
+List all nodes among foo01,foo02,...,foo05 that are detected/undetected 
     ipmidetect foo[01-05]
 
-List all nodes among foo7,foo9,foo10 that are up and down
+List all nodes among foo7,foo9,foo10 that are detected/undetected
     ipmidetect foo[7,9-10]
 
 As a reminder to the reader, some shells will interpret brackets ('['

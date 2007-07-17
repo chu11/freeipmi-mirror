@@ -1,6 +1,6 @@
 .TH IPMI-SENSORS 8 "@ISODATE@" "IPMI Sensors version @PACKAGE_VERSION@" "System Commands"
 .SH NAME
-ipmi-sensors \- manual page for sensors.  IPMI Sensors version @PACKAGE_VERSION@
+ipmi-sensors \- manual page for ipmi-sensors.  IPMI Sensors version @PACKAGE_VERSION@
 .SH DESCRIPTION
 IPMI Sensors displays current readings of sensors chips through BMC
 .SH OPTIONS
