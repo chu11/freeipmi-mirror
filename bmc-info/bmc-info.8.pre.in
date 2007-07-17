@@ -15,7 +15,8 @@ Displays BMC Information.
 \}
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>

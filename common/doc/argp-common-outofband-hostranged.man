@@ -1,7 +1,7 @@
 .TP
 \fB\-h\fR, \fB\-\-hostname\fR=\fIIPMIHOST\fR
 Connect to IPMIHOST.  IPMIHOST may include host ranges.  See
-HOSTRANGED OUTPUT below.
+HOSTRANGED SUPPORT below.
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Use USERNAME instead of NULL.  Maximum USERNAME

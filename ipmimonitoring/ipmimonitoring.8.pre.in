@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.1 2007-07-16 23:51:37 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.2 2007-07-17 00:21:39 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,7 +78,7 @@ the IPMI defined default will be used.
 .TP
 .I "-h, --hostname host"
 Specify the remote host or hosts to connect to.  May include host
-ranges. See HOSTRANGED OUTPUT below.
+ranges. See HOSTRANGED SUPPORT below.
 .TP
 .I "-u, --username name"
 Specify the username to use to establish communication.  If not
@@ -136,7 +136,7 @@ Buffer hostranged output. Each node's standard output will output
 after the node has completed its IPMI operation. When specifying this
 option, data may appear to output slower to the user since the the
 entire IPMI operation must complete before any data can be output.
-See HOSTRANGED OUTPUT below for additional information.
+See HOSTRANGED SUPPORT below for additional information.
 .TP
 .I "-C, --consolidate-output"
 Consolidate hostranged output. The complete standard output from
@@ -145,7 +145,7 @@ output are not output twice. A header will list those nodes with the
 consolidated output. When this option is specified, no output can be
 seen until the IPMI operations to all nodes has completed. If the
 user breaks out of the program early, all currently consolidated
-output will be dumped. See HOSTRANGED OUTPUT below for additional
+output will be dumped. See HOSTRANGED SUPPORT below for additional
 information.
 .TP
 .I "-F, --fanout num"
@@ -153,7 +153,7 @@ Set multiple host fanout. A "sliding window" (or fanout) algorithm is
 used for parallel IPMI communication so that slower nodes or timed out
 nodes will not impede parallel communication. The maximum number of
 threads available at the same time is limited by the fanout. The
-default is 64. See HOSTRANGED OUTPUT below for additional
+default is 64. See HOSTRANGED SUPPORT below for additional
 information.
 .TP
 .I "-E, --eleminate"
@@ -164,7 +164,7 @@ timing out due to several nodes being removed from service in a large
 cluster. The
 .B ipmidetectd
 daemon must be running on the node executing the command. See
-HOSTRANGED OUTPUT below for additional information.
+HOSTRANGED SUPPORT below for additional information.
 .TP
 .I "-W, --workaround-flags str"
 Specify workarounds to vendor compliance issues.  Multiple workarounds
@@ -186,7 +186,8 @@ Turn on packet dumps for debugging.
 \}
 .LP
 
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>

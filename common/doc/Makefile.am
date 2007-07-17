@@ -15,5 +15,7 @@ EXTRA_DIST = \
 	argp-common-debug.man \
 	argp-common-misc.man \
 	argp-common-hostranged-options.man \
-	argp-common-hostranged-text.man \
+	argp-common-hostranged-text-main.man \
+	argp-common-hostranged-text-options.man \
+	argp-common-hostranged-text-ipmipower-options.man \
 	argp-common-sdr-options.man

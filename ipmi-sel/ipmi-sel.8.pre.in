@@ -32,7 +32,8 @@ Delete REC-LIST in SEL
 Delete records from START to END in SEL
 #include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>

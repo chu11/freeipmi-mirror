@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.1 2007-07-16 23:51:37 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.2 2007-07-17 00:21:39 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -226,7 +226,7 @@ Consolidate
 output.  Consolidated output can be used to shorten output if the
 number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
-their power control operation. See HOST RANGES below.
+their power control operation. See HOSTRANGED SUPPORT below.
 .TP
 .I "-E, --eliminate"
 Eliminate hosts determined as undetected by
@@ -235,7 +235,7 @@ This attempts to remove the common issue of execution timing out due
 to several nodes being removed from service in a large cluster. The
 .B ipmidetectd
 daemon must be running on the node executing the command.  Only works
-in non-interactive mode.  See HOST RANGES below for additional
+in non-interactive mode.  See HOSTRANGED SUPPORT below for additional
 information.
 .TP
 .I "-W, --workaround-flags str"
@@ -500,36 +500,8 @@ specify a new ping percent
 .TP
 .I "ping-consec-count num"
 specify a new ping consec count
-.SH "HOST RANGES"
-As noted above, 
-.B ipmipower
-accepts a range of hostnames in the general form: prefix[n-m,l-k,...],
-where n < m and l < k, etc., as an alternative to explicit comma
-seperated lists of hosts.  This form should not be confused with
-regular expression character classes (also denoted by []). For
-example, foo[19] does not represent foo1 or foo9, but rather
-represents a degenerate range: foo19.
-.LP
-This range syntax is meant only as a convenience on clusters with a
-prefixNN naming convention and specification of ranges should not be
-considered necessary -- the list foo1,foo9 could be specified as such,
-or by the range foo[1,9].
-.LP
-Some examples of range usage follow:
-.nf
-    foo[01-05] instead of foo01,foo02,foo03,foo04,foo05
-    foo[7,9-10] instead of foo7,foo9,foo10
-    foo[0-3] instead of foo0,foo1,foo2,foo3
-.fi
-.LP
-As a reminder to the reader, some shells will interpret brackets ([
-and ]) for pattern matching.  Depending on your shell, it may be
-necessary to enclose ranged lists within quotes.
-.LP
-By default, power control results will be output one to each
-line. Although this output is readable in many situations, it may be
-difficult to read in other situations. The \fB\-C\fR option can be
-used to change this default.
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-text-ipmipower-options.man>
 .SH "EXAMPLES"
 .LP
 Determine the power status of foo[0-2] with null username and password
