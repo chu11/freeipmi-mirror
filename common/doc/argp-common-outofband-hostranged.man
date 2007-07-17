@@ -9,7 +9,7 @@ length is 16.
 .TP
 \fB\-p\fR, \fB\-\-password\fR=\fIPASSWORD\fR
 Use PASSWORD instead of NULL.  Maximum PASSWORD
-length is 16.  
+length is 16 for IPMI 1.5 and 20 for IPMI 2.0.  
 .TP
 \fB\-P\fR, \fB\-\-password-prompt\fR
 Prompt for password to avoid possibility of listing

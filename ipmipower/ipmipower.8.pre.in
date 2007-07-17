@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.2 2007-07-17 00:21:39 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.3 2007-07-17 16:08:38 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,12 +55,13 @@ See EXAMPLES below for examples of how ipmipower is commonly used.
 The following options are the most common options used with  
 .B ipmipower.
 .TP
-.I "-h, --hostnames host1,host2,..."
+.I "-h, --hostname host1,host2,..."
 Specify the list of remote hosts to be controlled by 
 .B ipmipower.  
 This option is required if a power command (--on, --off, --cycle,
 --reset, --stat, --pulse, or --soft) is specified on the command line.
-Hostnames may be specified in a range format; see HOST RANGES below.
+Hostnames may be specified in a range format; see HOSTRANGED SUPPORT
+below.
 .TP
 .I "-u, --username name"
 Sets the username to use when authenticating with the remote host.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.6 2007-07-13 22:12:42 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.7 2007-07-17 16:08:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -232,7 +232,7 @@ static void
 _usage(void) 
 {
   fprintf(stderr, "Usage: ipmipower [OPTIONS]\n"
-          "-h --hostnames hosts           Hostnames\n"
+          "-h --hostname hosts            Hostname(s)\n"
           "-u --username name             Username\n"
           "-p --password pw               Password\n" 
           "-P --password-prompt           Prompt for Password\n"
@@ -282,7 +282,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 #if HAVE_GETOPT_LONG
   struct option long_options[] = 
     {
+      /* hostnames (plural) maintained for backwards compatability */
       {"hostnames",                    1, NULL, 'h'},
+      {"hostname",                     1, NULL, 'h'},
       {"username",                     1, NULL, 'u'},
       {"password",                     1, NULL, 'p'},
       {"password-prompt",              0, NULL, 'P'},
@@ -341,9 +343,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
     {  
       switch (c) 
         {
-        case 'h':       /* --hostnames */
+        case 'h':       /* --hostname */
           if ((conf->hosts = hostlist_create(optarg)) == NULL)
-            err_exit("Error: Hostnames incorrectly formatted");
+            err_exit("Error: Hostname(s) incorrectly formatted");
           hostlist_uniq(conf->hosts);
           conf->hosts_count = hostlist_count(conf->hosts);
           conf->hosts_set_on_cmdline = IPMIPOWER_TRUE;
@@ -576,9 +578,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
  */
     
 static int 
-_cb_hostnames(conffile_t cf, struct conffile_data *data,
-              char *optionname, int option_type, void *option_ptr, 
-              int option_data, void *app_ptr, int app_data) 
+_cb_hostname(conffile_t cf, struct conffile_data *data,
+             char *optionname, int option_type, void *option_ptr, 
+             int option_data, void *app_ptr, int app_data) 
 {
   int i;
   
@@ -586,12 +588,12 @@ _cb_hostnames(conffile_t cf, struct conffile_data *data,
     return 0;
   
   if ((conf->hosts = hostlist_create(NULL)) == NULL)
-    err_exit("Config File Error: Hostnames incorrectly formatted");
+    err_exit("Config File Error: Hostname(s) incorrectly formatted");
   
   for (i = 0; i < data->stringlist_len; i++) 
     {
       if (hostlist_push(conf->hosts, data->stringlist[i]) == 0)
-        err_exit("Config File Error: Hostnames incorrectly formatted");
+        err_exit("Config File Error: Hostname(s) incorrectly formatted");
     }
   
   hostlist_uniq(conf->hosts);
@@ -753,7 +755,7 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
 void 
 ipmipower_config_conffile_parse(char *configfile) 
 {
-  int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
+  int hostname_flag, hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
     wait_until_on_flag, wait_until_off_flag, consolidate_output_flag, 
     eliminate_flag,
@@ -763,8 +765,11 @@ ipmipower_config_conffile_parse(char *configfile)
 
   struct conffile_option options[] = 
     {
-      {"hostnames", CONFFILE_OPTION_LIST_STRING, -1, _cb_hostnames, 
+      /* hostnames (plural) maintained for backwards compatability */
+      {"hostnames", CONFFILE_OPTION_LIST_STRING, -1, _cb_hostname, 
        1, 0, &hostnames_flag, NULL, 0},
+      {"hostname", CONFFILE_OPTION_LIST_STRING, -1, _cb_hostname, 
+       1, 0, &hostname_flag, NULL, 0},
       {"username", CONFFILE_OPTION_STRING, -1, _cb_username,
        1, 0, &username_flag, NULL, 0},
       {"password", CONFFILE_OPTION_STRING, -1, _cb_password, 
@@ -866,7 +871,7 @@ ipmipower_config_check_values(void)
     err_exit("Error: Ping consec count must be larger than ping packet count");
 
   if (conf->powercmd != POWER_CMD_NONE && conf->hosts == NULL)
-    err_exit("Error: Must specify target hostnames in non-interactive mode");
+    err_exit("Error: Must specify target hostname(s) in non-interactive mode");
 
   if (conf->authentication_type == AUTHENTICATION_TYPE_NONE 
       && strlen(conf->password) > 0)

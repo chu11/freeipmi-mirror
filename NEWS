@@ -13,19 +13,21 @@ o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level
   2) All --auth-type options are now --authentication-type
-  3) All --reg-space or --register-space options are not --register-spacing
-  4) The -T option and -I option in ipmipower have been flipped for consistency.
-  5) The -c option in ipmiconsole is now the -I option (-c is
-     internally maintained for backwards comptability).
-  6) Compliance workaround options in ipmiconsole now follow the convention
+  3) All --reg-space or --register-space options are now --register-spacing
+  4) In ipmipower, --hostnames (plural) is now --hostname (not-plural).  
+     Internally --hostnames is maintained for backwards compatability.
+  5) The -T option and -I option in ipmipower have been flipped for consistency.
+  6) The -c option in ipmiconsole is now the -I option.  The -c option is
+     internally maintained for backwards comptability.
+  7) Compliance workaround options in ipmiconsole now follow the convention
      in ipmipower using the -W option.
-  7) The "plain" authentication type argument is now the
+  8) The "plain" authentication type argument is now the
      "straight_password_key" authentication type argument.  "plain" is
      internally maintained for backwards compatability.
-  8) Short option -I changed to -D in bmc-watchdog for consistency to
+  9) Short option -I changed to -D in bmc-watchdog for consistency to
      other tools.
-  9) The short option -r for --register-spacing has been removed.
-  10) Short options for most debugging options have been removed.
+  10) The short option -r for --register-spacing has been removed.
+  11) Short options for most debugging options have been removed.
 o Renamed configuration file options or interactive prompt options for 
   consistency with command line.
 o Fix various configuration file options or interactive prompt option

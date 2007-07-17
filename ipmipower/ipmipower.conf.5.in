@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.35.8.3 2007-07-12 20:17:37 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.35.8.4 2007-07-17 16:08:38 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,20 +63,20 @@ Note that it is possible to list the username and password in the
 configuration file.  If this data is stored in a configuration file,
 system administrators should limit access to this file.
 .TP
-.I hostnames host1 host2 host3 ...
-Specify the default hostnames.  Multiple hostnames or hostname ranges
+.I hostname host1 host2 host3 ...
+Specify the default hostname(s).  Multiple hostnames or hostname ranges
 can be specified by separating each range by whitespace.  See
 .B ipmipower (1)
 for information on hostname ranges.  For example, any of the following
 configuration listings would be acceptable:
 
-hostnames host1 host2 host3 foo1 bar1
+hostname host1 host2 host3 foo1 bar1
 
-hostnames host1,host2,host3,foo1,bar1
+hostname host1,host2,host3,foo1,bar1
 
-hostnames host[1-3] foo1 bar1
+hostname host[1-3] foo1 bar1
 
-hostnames host[1-3] foo1,bar1
+hostname host[1-3] foo1,bar1
 
 At most 64 hostnames or hostname ranges can be separted by whitespace. 
 .TP
