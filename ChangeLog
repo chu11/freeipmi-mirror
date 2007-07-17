@@ -118,6 +118,11 @@
 
 	* Adjust error code macros and error messages between libraries to
 	match more consistently.
+
+	Manpages.
+
+	* Globally cleaned up manpages.  Attempt to use more "common"
+	manpages out of common/doc.
 	
 	Misc:
 
@@ -132,9 +137,6 @@
 
 	* Globally try to make error messages in all libs and tools more
 	useful.
-
-	* Cleaned up manpages to use as much "common" files in common/doc
-	as possible.
 
 	* General code cleanup throughout.
 

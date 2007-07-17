@@ -1,8 +1,9 @@
 EXTRA_DIST = \
 	argp-common-driver.man \
 	argp-common-inband.man \
-	argp-common-outofband.man \
-	argp-common-outofband-hostranged.man \
+	argp-common-outofband-common.man \
+	argp-common-outofband-hostname.man \
+	argp-common-outofband-hostname-hostranged.man \
 	argp-common-authtype.man \
 	argp-common-ciphersuiteid.man \
 	argp-common-privlevel-user.man \

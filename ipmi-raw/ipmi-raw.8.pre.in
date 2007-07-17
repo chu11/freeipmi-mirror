@@ -9,7 +9,8 @@ IPMI Raw \- executes IPMI commands by hex values.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/argp-common-driver.man>
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-common.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
 #include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel-user.man>

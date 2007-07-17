@@ -1,7 +1,4 @@
 .TP
-\fB\-h\fR, \fB\-\-hostname\fR=\fIIPMIHOST\fR
-Connect to IPMIHOST.
-.TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Use USERNAME instead of NULL.  
 .TP
