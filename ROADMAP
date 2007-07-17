@@ -10,7 +10,6 @@ bmc-config/pef-config
 
 manpage
 - commonize remaining options between all tools
-- hostrange text in ipmipower
 
 parsing
 - make cmdline parsing more common
