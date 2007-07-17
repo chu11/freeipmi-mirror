@@ -138,6 +138,10 @@
 
 	* General code cleanup throughout.
 
+2007-07-17  Albert Chu <chu11@llnl.gov>
+
+	* Various manpage typo fixes.
+	
 2007-07-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,

@@ -1,6 +1,6 @@
-.TH FREEIPMI "1" "December 2005" "FreeIPMI Raw [ipmi-raw-0.2.0]" "User Commands"
+.TH IPMI-RAW 8 "@ISODATE@" "IPMI Raw version @PACKAGE_VERSION@" "User Commands"
 .SH NAME
-FreeIPMI \- manual page for FreeIPMI Raw [ipmi-raw-0.2.0]
+ipmi-raw \- manual page for ipmi-raw.  IPMI Raw version @PACKAGE_VERSION@
 .SH SYNOPSIS
 .B ipmi-raw
 [\fIOPTION\fR...] <lun> <netfn> [\fICOMMAND-HEX-BYTES\fR]

@@ -1,6 +1,6 @@
 .TH BMC-CONFIG 8 "@ISODATE@" "bmc-config @PACKAGE_VERSION@" "System Commands"
 .SH NAME
-bmc-config \- manual page for bmc-config.  IPMI BMC Configurator version @PACKAGE_VERSION@
+bmc-config \- manual page for bmc-config.  BMC Config version @PACKAGE_VERSION@
 .SH DESCRIPTION
 IPMI BMC Configurator is used to get and set BMC configurations.  The
 majority of configuration operations require ADMIN privilege when

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.1.2.1 2007-07-16 23:51:36 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.1.2.2 2007-07-17 16:01:05 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,7 +25,7 @@
 \."############################################################################
 .TH ipmiconsole 8 "@ISODATE@" "ipmiconsole @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-ipmiconsole \- IPMI power control utility
+ipmiconsole \- IPMI console utility
 .SH "SYNOPSIS"
 .B ipmiconsole
 .I "[OPTIONS]"
