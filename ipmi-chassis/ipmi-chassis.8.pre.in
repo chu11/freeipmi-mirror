@@ -7,7 +7,7 @@ IPMI Chassis \- Control an IPMI Chassis.
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
-#include <@top_srcdir@/common/doc/argp-common-privlevel-user.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel-admin.man>
 .if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/argp-common-debug.man>
 \}
