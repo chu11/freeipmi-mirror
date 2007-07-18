@@ -13,11 +13,15 @@ Displays BMC Information.
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
 #include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel-user.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/argp-common-debug.man>
 \}
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>

@@ -2,13 +2,15 @@
 -----
 For Users
 ---------
-o Added IPMI 2.0 support into many core FreeIPMI tools (-D LAN_2_0)
-o Ported many IPMI compliance workarounds into all tools (-W,
-  --workaround-flags option)
+o Added previously missing IPMI 2.0 support into other FreeIPMI
+  tools (-D LAN_2_0)
+o Ported previously missing IPMI compliance workarounds into other
+  FreeIPMI tools (-W, --workaround-flags option)
 o Ported many features from other tools into ipmimonitoring. 
 o Added openipmi driver to bmc-watchdog.
-o Try to refine error messages to users even more so than before to provide
-  better ideas on the errors occurring.
+o Refined many error messages to provide more accurate descriptions of
+  errors.
+o Updated most manpages with additional information.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level
@@ -28,9 +30,12 @@ o Made many command line options consistent across FreeIPMI.  Notable
      other tools.
   10) The short option -r for --register-spacing has been removed.
   11) Short options for most debugging options have been removed.
-o Renamed configuration file options or interactive prompt options for 
-  consistency with command line.
-o Fix various configuration file options or interactive prompt option
+o Similarly, renamed configuration file options or interactive prompt
+  options for consistency with command line.
+o Similarly, update ipmipower interactive commands for consistency
+  with command line.
+o Similarly, updated manpages for consistency across tools.
+o Fixed various configuration file options or interactive prompt option
   inconsistencies with dashes vs. underscores.
 
 For Developers

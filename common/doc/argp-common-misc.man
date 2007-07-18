@@ -1,5 +1,5 @@
 .TP
-\-?, \fB\-\-help\fR
+\fB\-?\fR, \fB\-\-help\fR
 Output a help list and exit.
 .TP
 \fB\-\-usage\fR

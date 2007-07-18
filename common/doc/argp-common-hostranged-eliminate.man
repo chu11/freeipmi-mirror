@@ -1,0 +1,10 @@
+.TP
+\fB\-E\fR, \fB\-\-eliminate\fR
+Eliminate hosts determined as undetected by 
+.B ipmidetect.  
+This attempts to remove the common issue of hostranged execution
+timing out due to several nodes being removed from service in a large
+cluster.  The
+.B ipmidetectd 
+daemon must be running on the node executing the command.  See
+HOSTRANGED SUPPORT below for additional information.

@@ -102,7 +102,10 @@ set\-boot\-flags.
 Set power restore policy.  Allowed values are: list\-supported\-policies, always\-on, restore,
 always\-off.  See current power restore policy via the \-\-get\-status
 option.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>

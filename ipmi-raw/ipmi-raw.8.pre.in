@@ -28,7 +28,10 @@ required user privilege will depend on the raw commands executed.
 .TP
 \fB\-f\fR, \fB\-\-file\fR=\fICMD\-FILE\fR
 Read command requests from CMD\-FILE.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>

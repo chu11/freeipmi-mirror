@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.5 2007-07-18 16:22:25 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.6 2007-07-18 18:14:45 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,56 +63,38 @@ user must have atleast OPERATOR or ADMINISTRATOR privileges to run the
 --on, --off, --reset, --cycle, --pulse, or --soft power control
 commands.  The user must have atleast USER privileges to determine the
 power status of the machine through --stat.
+#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
 .TP
-.I "-p, --password pw"
-Sets the password to use when authenticating with the BMC.  If not
-specified, a null password is assumed.
-.TP
-.I "-P, --password-prompt"
-Prompt for password to avoid possibility of listing it in process
-lists.
-.TP
-.I "-k, --k-g str"
-Sets the K_g BMC Key to use when authenticating with the BMC for
-ipmi 2.0.  If not specified, a null key is assumed.  To input the key
-in hexadecimal form, prefix the string with '0x'.  E.g., the key 'abc'
-can be entered with the either the string 'abc' or the
-string '0x616263'
-.TP
-.I "-K, --k-g-prompt"
-Prompt for K_g to avoid possibility of listing it in process
-lists.  To input the key in hexadecimal form, prefix the string
-with '0x'.
-.TP
-.I "-n, --on"
+\fB\-n\fR, \fB\-\-on\fR
 Power on the target hosts.
 .TP
-.I "-f, --off"
+\fB\-f\fR, \fB\-\-off\fR
 Power off the target hosts.
 .TP
-.I "-c, --cycle"
+\fB\-c\fR, \fB\-\-cycle\fR
 Power cycle the target hosts.
 .TP
-.I "-r, --reset"
+\fB\-r\fR, \fB\-\-reset\fR
 Reset the target hosts.
 .TP
-.I "-s, --stat"
+\fB\-s\fR, \fB\-\-stat\fR
 Get power status of the target hosts.
 .TP
-.I "-j, --pulse"
+\fB\-j\fR, \fB\-\-pulse\fR
 Send power diagnostic interrupt to target hosts.
 .TP
-.I "-m, --soft"
+\fB\-m\fR, \fB\-\-soft\fR
 Initiate a soft-shutdown of the OS via ACPI.
 .TP
-.I "-H, --help"
+\fB\-H\fR, \fB\-\-help\fR
 Output help menu and exit.
 .TP
-.I "-V, --version"
+\fB\-V\fR, \fB\-\-version\fR
 Output version and exit.
 .if @WITH_DEBUG@ \{
 .TP
-.I "--config file"
+\fB\-\-config file\fR
 Specify alternate configuration file.
 \}
 .LP
@@ -121,44 +103,34 @@ The following advanced options are used to change the default behavior
 of 
 .B ipmipower.
 .TP
-.I "-a, --authentication-type str"
-Sets the IPMI 1.5 authentication type to use with 
-.B ipmipower.  
-The currently available authentication types are "auto", "none",
-"straight_password_key", "md2", and "md5".  If not specified, 
-.B ipmipower
-uses "auto" authentication, which will automatically select the most
-secure authentication mechanism available from the remote machine.
+\fB\-a\fR, \fB\-\-authentication\-type\fR=\fIAUTHTYPE\fR
+Specify the IPMI 1.5 authentication type to use.  The currently
+available authentication types are AUTO, NONE, STRAIGHT_PASSWORD_KEY,
+MD2, and MD5.  Defaults to AUTO to automatically select the 
+most secure authentication mechanism available.
 .TP
-.I "-l, --privilege-level str"
-Sets the privilege type to use with 
-.B ipmipower.  
-The currently available privilege types are "auto", "user",
-"operator", and "admin".  If not specified,
-.B ipmipower
-uses "auto", which will automatically select the minimal privilege
-required for the power control operation selected.  Atleast the
-"operator" is required for --on, --off, --cycle, --reset, --pulse, or
---soft.  The "user" privilege is sufficient for --stat.
+\fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Specify the privilege level to be used.  The currently available
+privilege leves are AUTO, USER, OPERATOR, AND ADMIN.
+Defaults to AUTO to automatically select the minimal privilege
+required for the power control operation selected.
 .TP
-.I "-R, --ipmi-version version"
-Set the IPMI protocol version to use.  The currently available versions
-are "auto", "1.5", and "2.0".  If not specified,
-.B ipmipower
-uses "auto", which will try find an IPMI protocol version that is
-suitable.  IPMI 1.5 is given weight over IPMI 2.0.
+\fB\-R\fR, \fB\-\-ipmi\-version\fR=\fIIPMIVERSION\fR
+Specify the IPMI protocol version to use.  Set the IPMI protocol
+version to use.  The currently available versions are AUTO, 1.5, and
+2.0.  Defaults to AUTO to automatically select a suitable protocol
+version.
 .TP
-.I "-I, --cipher-suite-id id"
-Set the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite ID identifies
-a set of authentication, integrity, and confidentiality algorithms to 
-use for IPMI 2.0 communication.  The authentication algorithm identifies
-the algorithm to use for session setup, the integrity algorithm identifies
-the algorithm to use for session packet signatures, and the confidentiality
-algorithm identifies the algorithm to use for payload encryption.  If not specified
-.B ipmipower
-uses the "auto" cipher suite, which will automatically select the most
-secure sipher suite available from the remote machine.  The following
-cipher suite id's are currently supported:
+\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER_SUITE_ID\fR
+Specify the IPMI 2.0 cipher suite ID to use.  The Cipher Suite ID
+identifies a set of authentication, integrity, and confidentiality
+algorithms to use for IPMI 2.0 communication.  The authentication
+algorithm identifies the algorithm to use for session setup, the
+integrity algorithm identifies the algorithm to use for session packet
+signatures, and the confidentiality algorithm identifies the algorithm
+to use for payload encryption.  Defaults to cipher suite ID AUTO to
+automatically select the most secure cipher suite ID available.  The
+following cipher suite IDs are currently supported:
 .sp
 auto - Select the most secure cipher suite available from the remote machine
 .sp
@@ -192,7 +164,7 @@ auto - Select the most secure cipher suite available from the remote machine
 \." .sp
 \." 14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
 .TP
-.I "-g, --on-if-off"
+\fR\-g\fR, \fB\-\-on\-if\-off\fR
 The IPMI specification does not require the power cycle or hard reset
 commands to turn on a machine that is currently powered off.  This
 option will force
@@ -200,63 +172,40 @@ option will force
 to issue a power on command instead of a power cycle or hard reset
 command if the remote machine's power is currently off.
 .TP
-.I "-A, --wait-until-on"
-The IPMI specification allows power on commands to return prior the
+\fR\-A\fR, \fB\-\-wait\-until\-on\fR
+The IPMI specification allows power on commands to return prior to the
 power on actually taking place.  This option will force
 .B ipmipower 
 to regularly query the remote BMC and return only after the machine
 has powered on.
 .TP
-.I "-B, --wait-until-off"
+\fR\-B\fR, \fB\-\-wait\-until\-off\fR
 The IPMI specification allows power off commands to return prior the
 power off actually taking place.  This option will force
 .B ipmipower 
 to regularly query the remote BMC and return only after the machine
 has powered off.
-.TP
-.I "-C, --consolidate-output"
-Consolidate 
-.B ipmipower 
-output.  Consolidated output can be used to shorten output if the
-number of nodes being power controlled is quite large.  However,
-hostrange output will only output after all machines have completed
-their power control operation. See HOSTRANGED SUPPORT below.
-.TP
-.I "-E, --eliminate"
-Eliminate hosts determined as undetected by
-.B ipmidetect.
-This attempts to remove the common issue of execution timing out due
-to several nodes being removed from service in a large cluster. The
-.B ipmidetectd
-daemon must be running on the node executing the command.  Only works
-in non-interactive mode.  See HOSTRANGED SUPPORT below for additional
-information.
-.TP
-.I "-W, --workaround-flags str"
-Informs
-.B ipmipower
-to use one of the several possible workarounds to get around vendor
-specific IPMI compliance issues.  Multiple workarounds can be
-specified separated by commas. For information on available
-workarounds, see WORKAROUNDS below.
+#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .if @WITH_DEBUG@ \{
 .TP
-.I "--debug"
+\fB\-\-debug\fR
 Turn on debugging output.
 .TP
-.I "--ipmidump"
+\fB\-\-ipmidump\fR
 Turn on IPMI packet dump output. Warning, the dump output can get
 extremely long.
 .TP
-.I "--rmcpdump"
+\fB\-\-rmcpdump\fR
 Turn on RMCP packet dump output.  Warning, the dump output can get 
 extremely long.
 .TP
-.I "--log"
+\fB\-\-log\fR
 Turn on logging.  Default logfile is /tmp/ipmipower.PID, where PID is
 the current process id.
 .TP
-.I "--logfile"
+\fB\-\-logfile\fR
 Change current logfile.
 \}
 .LP
@@ -265,106 +214,96 @@ The following options are used to change the behavior of
 .B ipmipower's 
 network behavior.
 .TP
-.I "-t, --timeout ms"
-Sets the timeout in milliseconds.  
-.B Ipmipower 
-uses the timeout value to determine when to give up on a power control
-command.  If not specified, a default timeout of 20000 milliseconds
-(20 seconds) is used.
+\fB\-t\fR, \fB\-\-timeout\fR=\fBMILLISECONDS\fR
+Specify the timeout length in milliseconds.  The timeout value is used
+to determine when to give up on a power control command.  Defaults to
+20000 milliseconds (20 seconds).
 .TP
-.I "-y, --retry-timeout ms"
-Sets the retry-timeout in milliseconds.  IPMI over LAN requires a
-series of packets to be sent back and forth to a remote host BMC.
-When a response to any individual packet is not received after
-retry-timeout milliseconds,
-.B ipmipower
-will retry sending that packet.  If not specified, packet
-retransmissions will occur after 400 milliseconds (0.4 seconds).  The
-value "ms" must be less than the timeout length specified with
---timeout.  Packet retransmissions can be disabled by setting the
-retry-timeout length to 0.
+\fB\-y\fR, \fB\-\-retry\-timeout\fR=\fBMILLISECONDS\fR
+Specify the retry timeout length in milliseconds.  The retry timeout
+value is used to determine when to retransmit a packet with the series
+of packets IPMI over LAN must transmit.  Defaults to 400 milliseconds
+(0.4 seconds).  The value must be length than the session timeout.
+Packet retransmissions can be disabled by setting this value to 0.
 
-Note how this option differs from the "--timeout" option above.  The
-"--timeout" option refers to the entire amount of time the IPMI
-protocol has to complete a power control operation.  The
-"--retry-timeout" option refers to the amount of time any individual
-packet within the IPMI protocol has to complete.
+Note how this option differs from the session timeout specified above.
+The session timeout refers to the entire amount of time the IPMI 
+protocol has to complete a power control operation.  The retry timeout
+refers to an individual packet within the IPMI protocol.
 .TP
-.I "-q, --retry-wait-timeout ms"
-Sets the retry-wait-timeout in milliseconds.  The retry-wait-timeout
-is similar to the 'retry-timeout' above, but is used specifically for
-power completion verification in the "--wait-until-on" and
-"--wait-until-off" options.
+\fB\-q\fR, \fB\-\-retry\-wait\-timeout\fR=\fBMILLISECONDS\fR
+Specify the retry wait timeout in milliseconds.  The retry wait timeout
+is similar to the retry timeout above, but is used specifically for
+power completion verification with the \fB\-\-wait\-until\-on\fR and
+\fB\-\-wait\-until\-off\fR options.
 .TP
-.I "-b, --retry-backoff-count num"
-After every retry-backoff-count retransmissions, 
-.B ipmipower 
-will increase the retry-timeout length by another factor for the
-duration of the current power control operation.  This is done to
-reduce network traffic and allow BMC buffers to empty.  If not
-specified, retry-backoff-count is 8.  Retransmission backoff can be
-disabled by setting the retry backoff count to 0.
+\fB\-b\fR, \fB\-\-retry\-backoff\-count\fR=\fBCOUNT\fR
+Specify the retry backout count for retransmissions.  After ever COUNT
+retransmissions, the retry timeout length will be increased by another
+factor.  Defaults to 8.  Backoff count calculations can be disabled by
+setting this value to 0.
 .TP
-.I "-i, --ping-interval ms"
+\fB\-i\fR, \fB\-\-ping\-interval\fR=\fBMILLISECONDS\fR
+Specify the ping interval and timeout length in milliseconds.  When
+running in interactive mode, RMCP (Remote Management Control Protocol)
+discovery messages will be sent to all configured remote hosts every
+MILLISECONDS to confirm their support of IPMI.  Power commands cannot
+be sent to a host until it is discovered (or re-discovered if
+previously lost).  Defaults to 5000 milliseconds (5 seconds).  Ping
+discovery messages can be disabled by setting this valu to 0.  RMCP
+ping discovery messages are automatically disabled in non-interactive
+mode.
 .TP
-.I "-z, --ping-timeout ms"
-When running in interactive mode, 
-.B ipmipower 
-will send RMCP (Remote Management Control Protocol) ping discovery
-messages every ping-interval milliseconds to discover all remote hosts
-and confirm its support of IPMI.  Power comamnds cannot be sent to a
-host until it is discovered (or possibly re-discovered).  A remote
-host is considered undiscovered if the host does not respond to RMCP
-ping messages within ping-timeout milliseconds.  When a host is
-considered undiscovered, power control commands will not be sent to
-it.  If not specified, ping-interval is 5000 milliseconds (5 seconds)
-and ping-timeout is 30000 milliseconds (30 seconds).  Ping discovery
-requests can be disabled by setting the ping interval to 0.  If ping
-discovery messages are disabled, power commands will be attempted
-without knowledge of the host's existence or its support of IPMI.  The
-value of ping-interval must be less than the ping-timeout length.
-RMCP ping discovery messages are automatically disabled in
-non-interactive mode.
+\fB\-z\fR, \fB\-\-ping\-timeout\fR=\fBMILLISECONDS\fR
+Specify the ping timeout length in milliseconds.  When running in
+interactive mode, RMCP (Remote Management Control Protocol) messages
+discovery will be sent to all configured remote hosts to confirm their
+support of IPMI. A remote host is considered undiscovered if the host
+does not respond in MILLISECONDS time.  Defaults to 30000 milliseconds
+(30 seconds).  This value must be less than the ping timeout interval
+described above.
 .TP
-.I "-v, --ping-packet-count num"
+\fB\-v\fR, \fB\-\-ping\-packet\-count\fR=\fBCOUNT\fR
+Specify the ping packet count size.  Defaults to 10.  See the
+\fB\-\-ping-percent\-fR option below for more information on this
+option.
 .TP
-.I "-w, --ping-percent num"
-Since IPMI is based off of a UDP protocol, it is difficult for
-.B ipmipower
-to distinguish between a missing machine and a bad network connection
-when running in interactive mode.  For example, suppose a link
-consistently drops 80% of the packets to a particular machine.  The
-power control operation may have difficulty completing, although a
-recent pong response from RMCP makes
-.B ipmipower 
-believe the machine is up and functioning properly.  
+\fB\-w\fR, \fB\-\-ping\-percent\fR=\fBCOUNT\fR
+Specify the ping percent value.  Defaults to 50.
 
-The --ping-packet-count and --ping-percent options are used to
-alleviate this problem.
-.B Ipmipower 
-will monitor RMCP ping packets in ping-packet-count chunks.  If
+Since IPMI is based on UDP, it is
+difficult for
+.B ipmipower
+to distinguish between a missing machine and a bad (or heavily loaded)
+network connection in interactive mode.  when running in interactive
+mode.  For example, suppose a link consistently drops 80% of the
+packets to a particular machine.  The power control operation may have
+difficulty completing, although a recent pong response from RMCP makes
 .B ipmipower 
-does not receive a response to greater than ping-percent of those
+believe the machine is up and functioning properly.
+
+The ping packet acount and percent options are used to alleviate this
+problem.
+.B Ipmipower 
+will monitor RMCP ping packets in packet count chunks.  If
+.B ipmipower 
+does not receive a response to greater than ping percentof those
 packets,
 .B ipmipower 
 will assume the link to this node is bad and will not send power
 control operations to that node until the connection is determined to
-be reliable.  If not specified, ping-packet-count is 10 and
-ping-percent is 50.  This heuristic can be disabled by setting either
-ping-packet-count or ping-percent to 0.  This feature is not used if
-ping-interval is set to 0.  Note that the --ping-percent option takes
-an integer as an argument, not a decimal.
+be reliable.  This heuristic can be disabled by setting either the
+ping packet count or ping percent to 0.  This feature is not used if
+ping interval is set to 0.
 .TP
-.I "-x, --ping-consec-count num"
-Ping-consec-count is another heuristic used to determine if a node
-should be considered discovered, undiscovered, or with a bad
-connection.  If a valid RMCP pong response was received for the last
-ping-consec-count RMCP ping packets, a node will be considered
-discovered, regardless if ping-packet-count and ping-percent
-statistically consider the link to be unreliable.  If not specified,
-ping-consec-count is 5.  This feature can be disabled by setting
-ping-consec-count to 0.  This feature is not used if ping-interval,
---ping-packet-count, or --ping-percent are set to 0.
+\fB\-x\fR, \fB\-\-ping\-consec\-count\fR=\fBCOUNT\fR
+Specify the ping consecutive count.  This is another heuristic used to
+determine if a node should be considered discovered, undiscovered, or
+with a bad connection.  If a valid RMCP pong response was received for
+the last COUNT ping packets, a node will be considered discovered,
+regardless of other heuristics listed above.  Defaults to 5.  This
+heuristic can be disabled by setting this value to 0.  This feature is
+not used if other ping features described above are disabled.
 .LP
 .SH "INTERACTIVE COMMANDS"
 .B ipmipower

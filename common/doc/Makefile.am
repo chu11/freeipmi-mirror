@@ -18,7 +18,10 @@ EXTRA_DIST = \
 	argp-common-workaround-outofband-text.man \
 	argp-common-debug.man \
 	argp-common-misc.man \
-	argp-common-hostranged-options.man \
+	argp-common-hostranged-buffer.man \
+	argp-common-hostranged-consolidate.man \
+	argp-common-hostranged-fanout.man \
+	argp-common-hostranged-eliminate.man \
 	argp-common-hostranged-text-main.man \
 	argp-common-hostranged-text-options.man \
 	argp-common-sdr-options.man

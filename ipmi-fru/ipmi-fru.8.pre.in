@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.1.2.9 2007-07-18 16:51:54 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.1.2.10 2007-07-18 18:14:44 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -67,7 +67,10 @@ Do not output information about cache creation/deletion.
 .TP
 \fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
 Use DIRECTORY for sensor data repository (SDR) cache.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>

@@ -34,7 +34,10 @@ Delete REC-LIST in SEL
 \fB\-\-delete-range=START-END\fR
 Delete records from START to END in SEL
 #include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
