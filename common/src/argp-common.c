@@ -512,7 +512,8 @@ common_parse_opt (int key,
         cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
       else if (strcasecmp (arg, "operator") == 0)
         cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-      else if (strcasecmp (arg, "admin") == 0)
+      else if (strcasecmp (arg, "admin") == 0
+               || strcasecmp (arg, "administrator") == 0)
         cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
       else if (strcasecmp (arg, "oem") == 0)
         cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OEM;

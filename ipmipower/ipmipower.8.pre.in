@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.4 2007-07-18 00:23:00 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.5 2007-07-18 16:22:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,22 +54,15 @@ See EXAMPLES below for examples of how ipmipower is commonly used.
 .SH "BASIC OPTIONS"
 The following options are the most common options used with  
 .B ipmipower.
+#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
 .TP
-.I "-h, --hostname host1,host2,..."
-Specify the list of remote hosts to be controlled by 
-.B ipmipower.  
-This option is required if a power command (--on, --off, --cycle,
---reset, --stat, --pulse, or --soft) is specified on the command line.
-Hostnames may be specified in a range format; see HOSTRANGED SUPPORT
-below.
-.TP
-.I "-u, --username name"
-Sets the username to use when authenticating with the remote host.
-The user must have OPERATOR or ADMINISTRATOR privilege to run the
+\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+Specify the username to use when authenticating with the remote host.
+If not specified, a null (i.e. anonymous) username is assumed.  The
+user must have atleast OPERATOR or ADMINISTRATOR privileges to run the
 --on, --off, --reset, --cycle, --pulse, or --soft power control
-commands.  The user only needs USER privileges to determine the power
-status of the machine through --stat.  If not specified, a null
-(i.e. anonymous) username is assumed.
+commands.  The user must have atleast USER privileges to determine the
+power status of the machine through --stat.
 .TP
 .I "-p, --password pw"
 Sets the password to use when authenticating with the BMC.  If not
