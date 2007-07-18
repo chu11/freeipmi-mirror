@@ -4,6 +4,8 @@
 
 	* ipmi-sensors/ipmi-sensors.8.pre.in: Fix formatting typo.
 
+	* ipmi-sel/ipmi-sel.8.pre.in: Fix examples.
+
 	* ipmimonitoring/ipmimonitoring.8.in: Fix option instructions.
 	
 2007-07-17  Albert Chu <chu11@llnl.gov>
