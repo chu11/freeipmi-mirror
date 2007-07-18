@@ -18,6 +18,8 @@ o Made many command line options consistent across FreeIPMI.  Notable
   3) All --reg-space or --register-space options are now --register-spacing
   4) In ipmipower, --hostnames (plural) is now --hostname (not-plural).  
      Internally --hostnames is maintained for backwards compatability.
+  5) In ipmipower, --timeout is now --session-timeout.
+     Internally, --timeout is maintained for backwards compatability.
   5) The -T option and -I option in ipmipower have been flipped for consistency.
   6) The -c option in ipmiconsole is now the -I option.  The -c option is
      internally maintained for backwards comptability.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.47.4.1 2007-07-11 21:54:37 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.47.4.2 2007-07-18 22:37:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -123,7 +123,7 @@ static void
 _cmd_network(void)
 {
   cbuf_printf(ttyout, 
-              "timeout len                     - set a new timeout length\n"
+              "session-timeout len             - set a new session timeout length\n"
               "retry-timeout len               - set a new retry timeout length\n"
               "retry-wait-timeout len          - set a new retry timeout length\n"
               "retry-backoff-count num         - set a new retry backoff count\n"
@@ -704,7 +704,7 @@ _cmd_config(void)
   if (conf->log)
     cbuf_printf(ttyout, "Logfile:                      %s\n", conf->logfile);
 #endif /* NDEBUG */
-  cbuf_printf(ttyout, "Timeout:                      %d ms\n", conf->timeout_len);
+  cbuf_printf(ttyout, "Session Timeout:              %d ms\n", conf->session_timeout_len);
   cbuf_printf(ttyout, "Retry Timeout:                %d ms\n", conf->retry_timeout_len);
   cbuf_printf(ttyout, "Retry Wait Timeout:           %d ms\n", conf->retry_wait_timeout_len);
   cbuf_printf(ttyout, "Retry Backoff Count:          %d\n", conf->retry_backoff_count);
@@ -889,9 +889,9 @@ ipmipower_prompt_process_cmdline(void)
                 cbuf_printf(ttyout, "Ipmipower by Albert Chu <chu11@llnl.gov>\n");
               else if (strcmp(argv[0], "config") == 0)
                 _cmd_config();
-              else if (strcmp(argv[0], "timeout") == 0)
-                _cmd_set_int(argv, &conf->timeout_len, "timeout", 0, 
-                             IPMIPOWER_TIMEOUT_MIN, IPMIPOWER_TIMEOUT_MAX);
+              else if (strcmp(argv[0], "session-timeout") == 0)
+                _cmd_set_int(argv, &conf->session_timeout_len, "timeout", 0, 
+                             IPMIPOWER_SESSION_TIMEOUT_MIN, IPMIPOWER_SESSION_TIMEOUT_MAX);
               else if (strcmp(argv[0], "retry-timeout") == 0)
                 _cmd_set_int(argv, &conf->retry_timeout_len, "retry-timeout", 1,
                              IPMIPOWER_RETRY_TIMEOUT_MIN, conf->timeout_len);

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.35.8.4 2007-07-17 16:08:38 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.35.8.5 2007-07-18 22:37:14 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,7 +128,7 @@ Specify default workaround flags to use.  See
 .B ipmipower(8)
 for list of workarounds that can be specified.
 .TP
-.I timeout ms
+.I session-timeout ms
 Specify the timeout in ms.
 .TP
 .I retry-timeout ms

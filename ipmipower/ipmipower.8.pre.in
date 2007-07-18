@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.8 2007-07-18 21:47:11 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.9 2007-07-18 22:37:14 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -214,10 +214,10 @@ The following options are used to change the behavior of
 .B ipmipower's 
 network behavior.
 .TP
-\fB\-t\fR, \fB\-\-timeout\fR=\fBMILLISECONDS\fR
-Specify the timeout length in milliseconds.  The timeout value is used
-to determine when to give up on a power control command.  Defaults to
-20000 milliseconds (20 seconds).
+\fB\-t\fR, \fB\-\-session-timeout\fR=\fBMILLISECONDS\fR
+Specify the session timeout length in milliseconds.  The session
+timeout value is used to determine when to give up on a power control
+command.  Defaults to 20000 milliseconds (20 seconds).
 .TP
 \fB\-y\fR, \fB\-\-retry\-timeout\fR=\fBMILLISECONDS\fR
 Specify the retry timeout length in milliseconds.  The retry timeout
@@ -407,7 +407,7 @@ specify a new log file, no str for default
 .I "config"
 output the current configuration 
 .TP
-.I "timeout ms"
+.I "session-timeout ms"
 specify a new timeout length
 .TP
 .I "retry-timeout ms"

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.8 2007-07-18 18:14:45 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.9 2007-07-18 22:37:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -123,7 +123,7 @@ ipmipower_config_setup(void)
   ipmipower_config_default_logfile(conf->logfile, MAXPATHLEN);
   conf->logfile_fd = -1;
 #endif /* NDEBUG */
-  conf->timeout_len = 20000;     /* 20 seconds */
+  conf->session_timeout_len = 20000;     /* 20 seconds */
   conf->retry_timeout_len = 400; /* .4 seconds  */
   conf->retry_wait_timeout_len = 500; /* .5 seconds  */
   conf->retry_backoff_count = 8;
@@ -147,7 +147,7 @@ ipmipower_config_setup(void)
   conf->consolidate_output_set_on_cmdline = IPMIPOWER_FALSE;
   conf->eliminate_set_on_cmdline = IPMIPOWER_FALSE;
   conf->workaround_flags_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->session_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->retry_wait_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set_on_cmdline = IPMIPOWER_FALSE;
@@ -180,8 +180,8 @@ _config_common_checks(char *str)
   if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
     err_exit("%s: invalid cipher suite id", str);
 
-  if (conf->timeout_len < IPMIPOWER_TIMEOUT_MIN 
-      || conf->timeout_len > IPMIPOWER_TIMEOUT_MAX)
+  if (conf->session_timeout_len < IPMIPOWER_TIMEOUT_MIN 
+      || conf->session_timeout_len > IPMIPOWER_TIMEOUT_MAX)
     err_exit("%s: timeout out of range", str);
   
   if (conf->retry_timeout_len != 0 
@@ -319,7 +319,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"log",                          0, NULL, IPMIPOWER_LOG_KEY}, /* no short option */
       {"logfile",                      1, NULL, IPMIPOWER_LOGFILE_KEY}, /* no short option */
 #endif /* NDEBUG */
+      /* timeout maintained for backwards compatability */
       {"timeout" ,                     1, NULL, 't'},
+      {"session-timeout" ,             1, NULL, 't'},
       {"retry-timeout",                1, NULL, 'y'},
       {"retry-wait-timeout",           1, NULL, 'q'},
       {"retry-backoff-count",          1, NULL, 'b'},
@@ -503,11 +505,11 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           strcpy(conf->logfile, optarg);
 	  break;
 #endif /* !NDEBUG */
-        case 't':       /* --timeout */
-          conf->timeout_len = strtol(optarg, &ptr, 10);
+        case 't':       /* --session-timeout */
+          conf->session_timeout_len = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: timeout length invalid\n");
-          conf->timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+            err_exit("Command Line Error: session timeout length invalid\n");
+          conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
           break;
         case 'y':       /* --retry-timeout */
           conf->retry_timeout_len = strtol(optarg, &ptr, 10);
@@ -759,7 +761,7 @@ ipmipower_config_conffile_parse(char *configfile)
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
     wait_until_on_flag, wait_until_off_flag, consolidate_output_flag, 
     eliminate_flag,
-    workaround_flags_flag, timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
+    workaround_flags_flag, session_timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
     retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
     ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
 
@@ -799,9 +801,13 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &eliminate_flag, NULL, 0},
       {"workaround-flags", CONFFILE_OPTION_STRING, -1, _cb_workaround_flags,
        1, 0, &workaround_flags_flag, NULL, 0},
+      /* timeout maintained for backwards compatability */
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
-       1, 0, &timeout_flag, &(conf->timeout_len), 
-       conf->timeout_len_set_on_cmdline},
+       1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
+       conf->session_timeout_len_set_on_cmdline},
+      {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+       1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
+       conf->session_timeout_len_set_on_cmdline},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &retry_timeout_flag, &(conf->retry_timeout_len), 
        conf->retry_timeout_len_set_on_cmdline},
@@ -860,8 +866,8 @@ ipmipower_config_conffile_parse(char *configfile)
 void 
 ipmipower_config_check_values(void) 
 {
-  if (conf->retry_timeout_len > conf->timeout_len)
-    err_exit("Error: Timeout length must be longer than retry timeout length");
+  if (conf->retry_timeout_len > conf->session_timeout_len)
+    err_exit("Error: Session timeout length must be longer than retry timeout length");
   
   if (conf->ping_interval_len > conf->ping_timeout_len)
     err_exit("Error: Ping timeout interval length must be "

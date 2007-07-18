@@ -10,6 +10,7 @@ Displays BMC Information.
 #include <@top_srcdir@/common/doc/argp-common-outofband-username-user.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-timeout.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
 #include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel-user.man>

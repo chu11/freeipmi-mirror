@@ -16,6 +16,7 @@ options will not be retrieved or set.
 #include <@top_srcdir@/common/doc/argp-common-outofband-username-admin.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-timeout.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
 #include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>
 #include <@top_srcdir@/common/doc/argp-common-privlevel-admin.man>

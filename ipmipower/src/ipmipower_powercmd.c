@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107.4.3 2007-07-14 01:50:28 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.4.4 2007-07-18 22:37:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -765,14 +765,14 @@ static int
 _has_timed_out(ipmipower_powercmd_t ip) 
 {
   struct timeval cur_time, result;
-  unsigned int timeout_len;
+  unsigned int session_timeout_len;
     
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->time_begin), &result);
-  timeval_millisecond_calc(&result, &timeout_len);
+  timeval_millisecond_calc(&result, &session_timeout_len);
 
   /* Must use >=, otherwise we could potentially spin */
-  if (timeout_len >= conf->timeout_len) 
+  if (session_timeout_len >= conf->session_timeout_len) 
     {
       /* Don't bother outputting timeout if we have finished the power
          control operation */
@@ -829,7 +829,7 @@ _retry_packets(ipmipower_powercmd_t ip)
     return 0;
 
   /* Do we have enough time to retransmit? */
-  timeval_add_ms(&cur_time, conf->timeout_len, &end_time);
+  timeval_add_ms(&cur_time, conf->session_timeout_len, &end_time);
   timeval_sub(&end_time, &cur_time, &result);
   timeval_millisecond_calc(&result, &time_left);
   if (time_left < retry_timeout_len)
@@ -2298,7 +2298,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
  done:
   Gettimeofday(&cur_time, NULL);
-  timeval_add_ms(&(ip->time_begin), conf->timeout_len, &end_time);
+  timeval_add_ms(&(ip->time_begin), conf->session_timeout_len, &end_time);
   timeval_sub(&end_time, &cur_time, &result);
   timeval_millisecond_calc(&result, &timeout);
 
@@ -2325,7 +2325,7 @@ ipmipower_powercmd_process_pending(int *timeout)
 {
   ListIterator itr;
   ipmipower_powercmd_t ip;
-  int min_timeout = conf->timeout_len;
+  int min_timeout = conf->session_timeout_len;
   int num_pending;
 
   assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */

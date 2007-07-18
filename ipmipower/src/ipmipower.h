@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75.4.5 2007-07-14 01:50:28 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.75.4.6 2007-07-18 22:37:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,23 +73,23 @@
 #define IPMIPOWER_MINNODES                 1
 #define IPMIPOWER_MAXNODES                 1024
 
-#define IPMIPOWER_TIMEOUT_MIN              1000   /* 1 second */
-#define IPMIPOWER_TIMEOUT_MAX              120000 /* 120 seconds */
+#define IPMIPOWER_SESSION_TIMEOUT_MIN      1000   /* 1 second */
+#define IPMIPOWER_SESSION_TIMEOUT_MAX      120000 /* 120 seconds */
 
 #define IPMIPOWER_RETRY_TIMEOUT_MIN        50     /* .05 seconds */
-#define IPMIPOWER_RETRY_TIMEOUT_MAX        IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_RETRY_TIMEOUT_MAX        IPMIPOWER_SESSION_TIMEOUT_MAX
 
 #define IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN   50     /* .05 seconds */
-#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MAX   IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MAX   IPMIPOWER_SESSION_TIMEOUT_MAX
 
 #define IPMIPOWER_RETRY_BACKOFF_COUNT_MIN  1
 #define IPMIPOWER_RETRY_BACKOFF_COUNT_MAX  200
 
 #define IPMIPOWER_PING_INTERVAL_MIN        250   /* .25 seconds */
-#define IPMIPOWER_PING_INTERVAL_MAX        IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_PING_INTERVAL_MAX        IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_PING_TIMEOUT_MIN         IPMIPOWER_TIMEOUT_MIN
-#define IPMIPOWER_PING_TIMEOUT_MAX         IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_PING_TIMEOUT_MIN         IPMIPOWER_SESSION_TIMEOUT_MIN
+#define IPMIPOWER_PING_TIMEOUT_MAX         IPMIPOWER_SESSION_TIMEOUT_MAX
 
 #define IPMIPOWER_PING_PACKET_COUNT_MIN    2
 #define IPMIPOWER_PING_PACKET_COUNT_MAX    20
@@ -583,7 +583,7 @@ struct ipmipower_config
   char                     logfile[MAXPATHLEN+1];
   int                      logfile_fd;
 #endif /* NDEBUG */
-  int                      timeout_len;
+  int                      session_timeout_len;
   int                      retry_timeout_len;
   int                      retry_wait_timeout_len;
   int                      retry_backoff_count; 
@@ -608,7 +608,7 @@ struct ipmipower_config
   ipmipower_bool_t         workaround_flags_set_on_cmdline;
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
   ipmipower_bool_t         eliminate_set_on_cmdline;
-  ipmipower_bool_t         timeout_len_set_on_cmdline;
+  ipmipower_bool_t         session_timeout_len_set_on_cmdline;
   ipmipower_bool_t         retry_timeout_len_set_on_cmdline;
   ipmipower_bool_t         retry_wait_timeout_len_set_on_cmdline;
   ipmipower_bool_t         retry_backoff_count_set_on_cmdline;

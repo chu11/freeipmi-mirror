@@ -246,7 +246,6 @@ void
 bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *args)
 {
   init_common_cmd_args (&(args->common));
-  args->silent = 0;
   args->verbose = 0;
   args->filename = NULL;
   args->keypairs = NULL;

@@ -7,6 +7,7 @@ EXTRA_DIST = \
 	argp-common-outofband-username-admin.man \
 	argp-common-outofband-password.man \
 	argp-common-outofband-k-g.man \
+	argp-common-outofband-timeout.man \
 	argp-common-authtype.man \
 	argp-common-ciphersuiteid.man \
 	argp-common-privlevel-user.man \
