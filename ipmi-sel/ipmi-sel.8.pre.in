@@ -20,19 +20,20 @@ IPMI System Event Logger is used to view and delete SEL entries.
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-i\fR, \fB\-\-info\fR
-Show SEL info
-.TP
-\fB\-x [FILE]\fR, \fB\-\-hex-dump[=FILE]\fR
-Output a hexadecimal dump of the SEL
+Show general information about the SEL.
 .TP
 \fB\-c\fR, \fB\-\-delete-all\fR
-Delete all records in SEL
+Delete all SEL records.
 .TP
 \fB\-d REC-LIST\fR, \fB\-\-delete=REC-LIST\fR
-Delete REC-LIST in SEL
+Delete records by record id in the SEL.  Accepts space or comma
+separated lists.
 .TP
 \fB\-\-delete-range=START-END\fR
-Delete records from START to END in SEL
+Delete record ids from START to END in the SEL.
+.TP
+\fB\-x [FILE]\fR, \fB\-\-hex-dump[=FILE]\fR
+Hex-dump SEL entries optionally into a FILE.
 #include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
@@ -47,32 +48,11 @@ Delete records from START to END in SEL
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP
-Show all SEL entries.
+Show all SEL records.
 .PP
 .B # ipmi-sel --delete=44,82
 .PP
-Delete entries 44 and 82.
-.PP
-.B # ipmi-sel --delete-all
-.PP
-Delete all entries in SEL.
-.PP
-.B # ipmi-sel --info
-.PP
-Delete range of entries 12 to 42.
-.PP
-.B # ipmi-sel --delete-range 12-42
-.PP
-Show SEL version and general information.
-.PP
-.B # ipmi-sel --hex-dump
-.PP
-Dump SEL data in Hex format.
-.PP
-.B # ipmi-sel -x /var/log/sel.dmp
-.PP
-Dump SEL data in hex format to file /var/log/sel.dmp.
-.PP
+Delete records 44 and 82.
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.1.2.10 2007-07-18 18:14:44 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.1.2.11 2007-07-18 21:47:10 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,27 +46,19 @@ Displays Field Replaceable Unit (FRU) Information.
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \FB\-e\fR, \fB\-\-device-id\fR
-Specify a specific FRU device ID you wish to retrieve.
+Specify a specific FRU device ID.
 .TP
 \FB\-v\fR, \fB\-\-verbose\fR
-Verbose FRU output.
+Increase verbosity in output.
 .TP
 \FB\-vv\fR, \fB\-\-verbose\fR
 Very verbose FRU output.
 .TP
 \FB\-s\fR, \fB\-\-skip-checks\fR
-Ignore checksums in FRUs. Some FRUs have incorrect checksums, but the
+Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
 FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.
-.TP
-\fB\-f\fR, \fB\-\-flush\-cache\fR
-Flush sensor data repository (SDR) cache.
-.TP
-\fB\-Q\fR, \fB\-\-\quiet\-cache\fR
-Do not output information about cache creation/deletion.
-.TP
-\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Use DIRECTORY for sensor data repository (SDR) cache.
+#include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>

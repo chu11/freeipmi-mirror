@@ -27,7 +27,7 @@ required user privilege will depend on the raw commands executed.
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-f\fR, \fB\-\-file\fR=\fICMD\-FILE\fR
-Read command requests from CMD\-FILE.
+Specify a file to read command requests from.
 #include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>

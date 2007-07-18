@@ -26,28 +26,28 @@ options will not be retrieved or set.
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
-Fetch configuration information from BMC.
+Fetch configuration information from the BMC.
 .TP
 \fB\-i\fR, \fB\-\-commit\fR
-Update configuration information to BMC.
+Update configuration information to the BMC from a config file or key pairs.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
-Show differences between BMC and config file or key pairs.
+Show differences between the BMC and a config file or key pairs.
 .TP
 \fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
-Use this file for BMC checkout/commit.
+Specify a BMC config file for BMC checkout/commit/diff.
 .TP
 \fB\-k\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
-Use KEY=VALUE pairs for checkout/commit/diff.  This option can be used multiple times.
+Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be used multiple times.
 .TP
 \fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
-Use SECTION for checkout.  This option can be used multiple times.
+Specify a SECTION for checkout.  This option can be used multiple times.
 .TP
 \fB\-L\fR, \fB\-\-listsections\fR
 List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
-Print detailed information.
+Print additional detailed information.
 #include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
 #include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
@@ -55,31 +55,31 @@ Print detailed information.
 .SH "EXAMPLES"
 .B # bmc-config --checkout 
 .PP
-Show all BMC configuration to console.
+Output all BMC configuration information to the console.
 .PP
 .B # bmc-config --checkout --filename=bmc-data1.conf
 .PP
-Store all BMC configuration to bmc-data1.conf.
+Store all BMC configuration information in bmc-data1.conf.
 .PP
 .B # bmc-config --diff -f bmc-data2.conf
 .PP
-Show all difference between BMC and bmc-data2.conf file.
+Show all difference between the current BMC configuration and the bmc-data2.conf file.
 .PP
 .B # bmc-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
 .PP
-Show difference with BMC of key 'gratuitous_arp_interval' and value '4'.
+Show difference with the current BMC and the 'gratuitous_arp_interval' of value '8'.
 .PP
 .B # bmc-config --commit -f bmc-data1.conf
 .PP
-Commit all configuration values from bmc-data1.conf file to BMC.
+Commit all configuration values from bmc-data1.conf file to the BMC.
 .PP
 .B # bmc-config --commit --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
-Commit key 'gratuitous_arp_interval' of value '4' to BMC.
+Commit key 'gratuitous_arp_interval' of value '4' to the BMC.
 .PP
 .B # bmc-config --commit -f bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
-Commit all configuration values from bmc-data-updt.conf and key 'gratuitous_arp_interval' of value '4' to BMC.
+Commit all configuration values from bmc-data-updt.conf and key 'gratuitous_arp_interval' of value '4' to the BMC.
 .PP
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.

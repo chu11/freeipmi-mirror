@@ -37,6 +37,7 @@ o Similarly, update ipmipower interactive commands for consistency
 o Similarly, updated manpages for consistency across tools.
 o Fixed various configuration file options or interactive prompt option
   inconsistencies with dashes vs. underscores.
+o Removed the quiet and silent options from bmc-config.
 
 For Developers
 --------------

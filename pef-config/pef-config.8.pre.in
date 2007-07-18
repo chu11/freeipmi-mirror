@@ -20,28 +20,28 @@ PEF configuration utility.
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-i\fR, \fB\-\-info\fR
-Show PEF information
+Show general information about PEF configuration.
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
-Fetch configuration information from BMC.
+Fetch configuration information from the BMC.
 .TP
 \fB\-i\fR, \fB\-\-commit\fR
-Update configuration information to BMC.
+Update configuration information to the BMC from a config file.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
-Show differences between BMC and config file or key pairs.
+Show differences between the BMC and a config file.
 .TP
 \fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
-Use this file for BMC checkout/commit.
+Specify a PEF config file for PEF checkout/commit/diff.
 .TP
 \fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
-Use SECTION for checkout.  This option can be used multiple times.
+Specify a SECTION for checkout.  This option can be used multiple times.
 .TP
 \fB\-L\fR, \fB\-\-listsections\fR
 List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
-Print detailed information.
+Print additional detailed information.
 .SH "EDITING THE CHECKOUT FILE"
 Options for editing fields in the checkout file are usually listed in
 a comment above the field.  When there are to many options to make it

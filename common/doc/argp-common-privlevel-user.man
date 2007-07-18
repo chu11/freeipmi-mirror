@@ -1,5 +1,5 @@
 .TP
 \fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
 Specify the privilege level to be used.  The currently available
-privilege leves are CALLBACK, USER, OPERATOR, ADMIN, and OEM.
+privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM.
 Defaults to USER if not specified.

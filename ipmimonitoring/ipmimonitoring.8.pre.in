@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.3 2007-07-18 20:03:12 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.4 2007-07-18 21:47:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -61,17 +61,17 @@ is cached in
 .TP
 \fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
 Specify the privilege level to be used.  The currently available
-privilege leves are USER, OPERATOR, and ADMIN.
+privilege levels are USER, OPERATOR, and ADMIN.
 Defaults to USER if not specified.
 #include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .TP
 \fB\-s\fR, \fB\-\-sensors list\fR
 Specify a list of sensors record ids to specifically monitor.  List of
-sensors can be separated by spaces or commas.
+sensors can be separated by commas.
 .TP
 \fB\-g\fR, \fB\-\-groups list\fR
 Specify a list of groups to specifically monitor.  List of groups can
-be separated by spaces or commas.  The available groups are:
+be separated by commas.  The available groups are:
 TEMPERATURE, VOLTAGE, CURRENT, FAN, PHYSICAL_SECURITY,
 PLATFORM_SECURITY_VIOLATION_ATTEMPT, PROCESSOR, POWER_SUPPLY,
 POWER_UNIT, MEMORY, DRIVE_SLOT, SYSTEM_FIRMWARE_PROGRESS,

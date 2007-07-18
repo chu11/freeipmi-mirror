@@ -75,7 +75,6 @@ struct sectionstr
 struct bmc_config_arguments
 {
   struct common_cmd_args common;
-  unsigned char silent;
   unsigned char verbose;
 
   char *filename;

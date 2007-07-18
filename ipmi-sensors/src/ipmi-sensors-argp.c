@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.14.4.3 2007-07-11 17:50:30 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.14.4.4 2007-07-18 21:47:11 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -73,17 +73,17 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
 #endif
     {"verbose",        VERBOSE_KEY,        0, 0, 
-     "Increase verbosity in output.  More -v adds more verbosity.", 25}, 
+     "Increase verbosity in output.  May be specified multiple times.", 25}, 
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,
      "Do not output sensor readings or thresholds on simple output.", 26},
     {"sdr-info",       SDR_INFO_KEY,       0, 0, 
-     "Show SDR Information.", 27}, 
+     "Show sendor data repository (SDR) information.", 27}, 
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
      "List sensor groups.", 28}, 
-    {"group",          GROUP_KEY,        "GROUP", 0, 
-     "Show sensors belongs to this GROUP.", 29}, 
+    {"group",          GROUP_KEY,        "GROUP-NAME", 0, 
+     "Show sensors belonging to a specific group.", 29}, 
     {"sensors",        SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
-     "Show listed sensors.", 30}, 
+     "Show sensors by record id.  Accepts space or comma separated lists", 30}, 
     { 0 }
   };
 

@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4.4.3 2007-07-11 17:50:30 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4.4.4 2007-07-18 21:47:12 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -73,19 +73,19 @@ static struct argp_option options[] =
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about PEF configuration.", 25},
     {"checkout",   CHECKOUT_KEY,   0, 0,
-     "Action is to GET the PEF configuration", 26},
+     "Fetch configuration information from the BMC.", 26},
     {"commit",     COMMIT_KEY,     0, 0,
-     "Action is to UPDATE the PEF configuration", 27},
+     "Update configuration information to the BMC from a config file.", 27},
     {"diff",       DIFF_KEY,       0, 0,
-     "Action is to SHOW THE DIFFERENCES with BMC", 28},
+     "Show differences between the BMC and a config file.", 28},
     {"listsections", LIST_SECTIONS_KEY, 0, 0,
-     "List available sections for checkout", 29},
+     "List available sections for checkout.", 29},
     {"verbose", VERBOSE_KEY, 0, 0,  
-     "Produce verbose output", 30},
+     "Print additional detailed information.", 30},
     {"filename", FILENAME_KEY, "FILENAME", 0,
-     "use FILENAME in checkout or commit", 31},
+     "Specify a PEF config file for PEF checkout/commit/diff.", 31},
     {"section", SECTIONS_KEY, "SECTION", 0,
-     "use SECTION in checkout", 32},
+     "Specify a SECTION for checkout.", 32},
     { 0 }
   };
 

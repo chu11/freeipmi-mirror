@@ -32,16 +32,16 @@ use hostranged output across a cluster and want to consolidate the
 output.
 .TP
 \fB\-i\fR, \fB\-\-sdr\-info\fR
-Show sensor data repository (SDR) Info
+Show sensor data repository (SDR) information
 .TP
 \fB\-L\fR, \fB\-\-list\-groups\fR
-List sensor groups
+List sensor groups.
 .TP
 \fB\-g\fR GROUP-NAME, \fB\-\-group\fR=\fIGROUP\-NAME\fR
-List sensors from group
+Show sensors belonging to a specific group.
 .TP
 \fB\-s\fR "SENSORS-LIST", \fB\-\-sensors=\fR"SENSORS-LIST"
-List given sensors.  Accepts space or comma separated lists.
+Show sensors by record id.  Accepts space or comma separated lists.
 #include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
 #include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>

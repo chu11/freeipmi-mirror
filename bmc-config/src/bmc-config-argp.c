@@ -85,24 +85,21 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_DEBUG,
 #endif /* NDEBUG */
   {"checkout", 'o', 0, 0, 
-   "Action is to GET the BMC configuration", 25},
+   "Fetch configuration information from the BMC.", 25},
   {"commit", 'i', 0, 0, 
-   "Action is to UPDATE the BMC configuration", 26},
+   "Update configuration information to the BMC from a config file or key pairs.", 26},
   {"diff", 'd', 0, 0, 
-   "Action is to SHOW THE DIFFERENCES with BMC", 27},
-
+   "Show differences between the BMC and a config file or key pairs.", 27},
   {"filename", 'f', "FILENAME", 0, 
-   "use FILENAME in checkout, commit or diff", 28},
+   "Specify a BMC config file for BMC checkout/commit/diff.", 28},
   {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in checkout, commit or diff", 29},
+   "Specify KEY=VALUE pairs for checkout/commit/diff.", 29},
   {"section", 'S', "SECTION", 0,
-   "use SECTION in checkout", 30},
+   "Specify a SECTION for checkout.", 30},
   {"listsections", 'L', 0, 0,
-   "List available sections for checkout", 31},
-
-  {"verbose",   'v', 0, 0,  "Produce verbose output", 32},
-  {"quiet",     'q', 0, 0,  "Do not produce any output", 33},
-  {"silent",    's', 0, OPTION_ALIAS },
+   "List available sections for checkout.", 31},
+  {"verbose",   'v', 0, 0,  
+   "Print additional detailed information.", 32},
   { 0, }
 };
 
@@ -161,10 +158,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case 'q': 
-    case 's':
-      args->silent = 1;
-      break;
     case 'v':
       args->verbose = 1;
       break;

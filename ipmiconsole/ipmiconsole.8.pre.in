@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.1.2.3 2007-07-18 20:03:12 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.1.2.4 2007-07-18 21:47:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,7 +62,7 @@ SOL session abilities.
 .TP
 \fB\-l\fR, \fB\-\-privilege-level\fR=\fIPRIVILEGE\-LEVEL\fR
 Specify the privilege level to be used.  The currently available
-privilege leves are CALLBACK, USER, OPERATOR, ADMIN, and OEM.
+privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM.
 Defaults to ADMIN if not specified.  The privilege must be atleast the
 minimum required by the remote host to establish a SOL session.
 #include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>

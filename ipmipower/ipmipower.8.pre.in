@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.7 2007-07-18 20:03:12 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.8 2007-07-18 21:47:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -111,7 +111,7 @@ most secure authentication mechanism available.
 .TP
 \fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
 Specify the privilege level to be used.  The currently available
-privilege leves are AUTO, USER, OPERATOR, and ADMIN.
+privilege levels are AUTO, USER, OPERATOR, and ADMIN.
 Defaults to AUTO to automatically select the minimal privilege
 required for the power control operation selected.
 .TP
