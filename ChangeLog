@@ -1,3 +1,7 @@
+2007-07-18  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/ipmi-chassis.8.pre.in: Fix default priv level typo.
+	
 2007-07-17  Albert Chu <chu11@llnl.gov>
 
 	* Various manpage typo fixes.
