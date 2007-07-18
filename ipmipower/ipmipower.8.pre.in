@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.6 2007-07-18 18:14:45 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.7 2007-07-18 20:03:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -95,7 +95,7 @@ Output version and exit.
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-config file\fR
-Specify alternate configuration file.
+Specify an alternate configuration file.
 \}
 .LP
 .SH "ADVANCED OPTIONS"
@@ -111,7 +111,7 @@ most secure authentication mechanism available.
 .TP
 \fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
 Specify the privilege level to be used.  The currently available
-privilege leves are AUTO, USER, OPERATOR, AND ADMIN.
+privilege leves are AUTO, USER, OPERATOR, and ADMIN.
 Defaults to AUTO to automatically select the minimal privilege
 required for the power control operation selected.
 .TP

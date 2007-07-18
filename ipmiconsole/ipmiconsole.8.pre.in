@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.1.2.2 2007-07-17 16:01:05 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.1.2.3 2007-07-18 20:03:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,113 +50,59 @@ Often (although not always), console redirection must be directed to
 an alternate COM port.  This is typically configured in the BIOS.
 
 .SH "OPTIONS"
+#include <@top_srcdir@/common/doc/argp-common-outofband-hostname.man>
 .TP
-.I "-h, --hostname host"
-Specify the remote host to connect to.
+\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+Specify the username to use when authenticating with the remote host.
+If not specified, a null (i.e. anonymous) username is assumed.  The
+user must a high enough privilege to establish a SOL session and have
+SOL session abilities.
+#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
 .TP
-.I "-u, --username name"
-Specify the username to use to establish communication.  If not
-specified, the NULL user is assumed.  The user must have a high enough
-privilege to establish an SOL session.
+\fB\-l\fR, \fB\-\-privilege-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Specify the privilege level to be used.  The currently available
+privilege leves are CALLBACK, USER, OPERATOR, ADMIN, and OEM.
+Defaults to ADMIN if not specified.  The privilege must be atleast the
+minimum required by the remote host to establish a SOL session.
+#include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>
 .TP
-.I "-p, --password pw"
-Specify the password to use to establish communication.  If not
-specified, a NULL password is assumed.
-.TP
-.I "-P, --password-prompt"
-Prompt for password to avoid possibility of listing it in process
-lists.
-.TP
-.I "-k, --k-g str"
-Specify the K_g BMC key to use for authentication.  If not specified, a
-NULL key is assumed.  The key may be entered in hex by prefixing with '0x'.
-.TP
-.I "-K, --k-g-prompt"
-Prompt for K_g to avoid possibility of listing it in process
-lists.  The key may be entered in hex by prefixing with '0x'.
-.TP
-.I "-l, --privilege str"
-Specify the privilege type to use.  The currently available privilege
-types are "user", "operator", and "admin".  If not specified, a
-privilege of "admin" is assumed.  The privilege must be atleast the
-minimum required by the remote BMC to establish a SOL session.
-.TP
-.I "-I, --cipher-suite-id id"
-Specify the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite ID
-identifies a set of authentication, integrity, and confidentiality
-algorithms to use for IPMI 2.0 communication.  The authentication
-algorithm identifies the algorithm to use for session setup, the
-integrity algorithm identifies the algorithm to use for session packet
-signatures, and the confidentiality algorithm identifies the algorithm
-to use for payload encryption.  If not specified, cipher suite id 3 is
-assumed.
-.sp
-0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
-.sp
-1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
-.sp
-2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
-.sp
-3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
-.sp
-6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
-.sp
-7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
-.sp
-8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
-.sp
-11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None
-.sp
-12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128
-.TP
-.I "-N, --dont-steal"
-Under most circumstances, if SOL is detected as being in use,
+\fB\-N\fR, \fB\-\-dont-steal\fR
+Do not steal an SOL session if one is already detected as being in
+use.  Under most circumstances, if SOL is detected as being in use,
 .B ipmiconsole
 will attempt to steal the SOL session away from the previous session.
 This default behavior exists for several reasons, most notably that
 earlier SOL sessions may have not been able to be deactivate properly.
-This options changes the default behavior to return an error if SOL is
-already detected as being in use.
 .TP
-.I "-T, --deactivate"
-If an SOL session is detected as being in use, deactivate the
-session and exit.
+\fB\-T\fR, \fB\-\-deactivate\fR
+Deactivate a SOL session if one is detected as being in use and exit.
 .TP
-.I "-L, --lock-memory"
-Inform
-.B ipmiconsole 
-to lock memory to prevent
-sensitive information (such as usernames and passwords) to be
-swappable.
+\fB\-L\fR, \fB\-\-lock-memory\fR
+Lock sensitive information (such as usernames and passwords) in
+memory.
+#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .TP
-.I "-W, --workaround-flags str"
-Inform 
-.B ipmiconsole
-to use one of several possible workarounds to get around vendor
-specific IPMI compliance issues.  Multiple workarounds can be
-specified separated by commas. For information on available
-workarounds, see WORKAROUNDS below.
-.TP
-.I "-H, --help"
+\fB\-H\fR, \fB\-\-help\fR
 Output help menu and exit.
 .TP
-.I "-V, --version"
+\fB\-V\fR, \fB\-\-version\fR
 Output version and exit.
 .TP
-.I "-C, --config file"
+\fB\-C\fR, \fB\-\-config file\fR
 Specify an alternate configuration file.
 .if @WITH_DEBUG@ \{
 .TP
-.I "--debug"
+\fB\-\-debug\fR
 Turn on debugging.
 .TP
-.I "--debugfile"
+\fB\-\-debugfile\fR
 Output debugging to the debugfile rather than to standard output.
 .TP
-.I "--debugdump"
+\fB\-\-debugdump\fR
 Turn on packet dumps for debugging.
 .TP
-.I "--noraw"
+\fB\-\-noraw\fR
 Don't enter terminal raw mode.
 \}
 .LP

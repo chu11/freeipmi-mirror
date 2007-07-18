@@ -33,6 +33,7 @@ output.
 .TP
 \fB\-i\fR, \fB\-\-sdr\-info\fR
 Show sensor data repository (SDR) Info
+.TP
 \fB\-L\fR, \fB\-\-list\-groups\fR
 List sensor groups
 .TP

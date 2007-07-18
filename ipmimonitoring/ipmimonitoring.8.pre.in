@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.2 2007-07-17 00:21:39 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.3 2007-07-18 20:03:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,71 +50,38 @@ is cached in
 
 .SH "OPTIONS"
 .TP
-.I "-D, --driver-type str"
-Specify the IPMI driver type to use.  The currently available types
-are "lan", "lan_2_0", "kcs", "ssif", and "openipmi".  If not specified
-in-band drivers will be probed and the IPMI 1.5 protocol will be
-assumed.
+#include <@top_srcdir@/common/doc/argp-common-driver.man>
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-username-user.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-ciphersuiteid.man>
 .TP
-.I "--no-probing"
-Do not probe for the IPMI device.  Use values specified on the command
-line.
+\fB\-l\fR, \fB\-\-privilege\-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Specify the privilege level to be used.  The currently available
+privilege leves are USER, OPERATOR, and ADMIN.
+Defaults to USER if not specified.
+#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .TP
-.I "--driver-address num"
-Identify the System Base Address for the IPMI Driver.  If not
-specified, the system's default address will be probed for.  If the
-probe fails, the IPMI defined default will be used.  If the address is
-prefixed with a "0x", it is assumed to be a base 16 integer.
-Otherwise, it is assumed to be a base 10 integer.
-.TP
-.I "--driver-device str"
-Identify the driver device path the IPMI driver should use.  It not
-specified, a default path will be assumed.
-.TP
-.I "-r, --register-spacing num"
-Specify base address register spacing. If not specified,
-the register spcing will be probed for.  If the probe fails,
-the IPMI defined default will be used.
-.TP
-.I "-h, --hostname host"
-Specify the remote host or hosts to connect to.  May include host
-ranges. See HOSTRANGED SUPPORT below.
-.TP
-.I "-u, --username name"
-Specify the username to use to establish communication.  If not
-specified, the NULL user is assumed.
-.TP
-.I "-p, --password pw"
-Specify the password to use to establish communication.  If not
-specified, a NULL password is assumed.
-.TP
-.I "-l, --privilege str"
-Specify the privilege type to use.  The currently available privilege
-types are "user", "operator", and "admin".  If not specified, a
-privilege of "admin" is assumed.  
-.TP
-.I "-a, --authentication-type str"
-Specify the authentication mechanism to use.  The currently available
-authentication mechanisms are "none", "straight_password_key", "md2",
-and "md5".  If not specified, "md5" is assumed.
-.TP
-.I "-s, --sensors list"
+\fB\-s\fR, \fB\-\-sensors list\fR
 Specify a list of sensors record ids to specifically monitor.  List of
 sensors can be separated by spaces or commas.
 .TP
-.I "-g, --groups list"
+\fB\-g\fR, \fB\-\-groups list\fR
 Specify a list of groups to specifically monitor.  List of groups can
 be separated by spaces or commas.  The available groups are:
-temperature, voltage, current, fan, physical_security,
-platform_security_violation_attempt, processor, power_supply,
-power_unit, memory, drive_slot, system_firmware_progress,
-event_logging_disabled, system_event, critical_interrupt,
-module_board, slot_connector, watchdog2.
+TEMPERATURE, VOLTAGE, CURRENT, FAN, PHYSICAL_SECURITY,
+PLATFORM_SECURITY_VIOLATION_ATTEMPT, PROCESSOR, POWER_SUPPLY,
+POWER_UNIT, MEMORY, DRIVE_SLOT, SYSTEM_FIRMWARE_PROGRESS,
+EVENT_LOGGING_DISABLED, SYSTEM_EVENT, CRITICAL_INTERRUPT,
+MODULE_BOARD, SLOT_CONNECTOR, WATCHDOG2.
 .TP
-.I "-c, --cache-dir dir"
+\fB\-c\fR, \fB\-\-cache-dir dir\fR
 Specify an alternate directory to read and write SDR caches.
 .TP
-.I "-r, --regenerate-sdr-cache"
+\fB\-r\fR, \fB\-\-regenerate-sdr-cache\fR
 By default 
 .B ipmimonitoring,
 caches the sensor data repository (SDR) of a node for quicker
@@ -125,63 +92,28 @@ This option informs
 to regenerate an SDR cache.  This is often used if the firmware for a
 remote node has been changed.
 .TP
-.I "-q, --quiet-readings"
+\fB\-q\fR, \fB\-\-quiet-readings\fR
 Do not output sensor reading values, only Nominal, Warning, or
 Critical states.  This option is particularly useful if you want to
 use hostranged output across a cluster and want to consolidate the
 output.
+#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .TP
-.I "-B, --buffer-output"
-Buffer hostranged output. Each node's standard output will output
-after the node has completed its IPMI operation. When specifying this
-option, data may appear to output slower to the user since the the
-entire IPMI operation must complete before any data can be output.
-See HOSTRANGED SUPPORT below for additional information.
-.TP
-.I "-C, --consolidate-output"
-Consolidate hostranged output. The complete standard output from
-every node specified will be consolidated so that nodes with identical
-output are not output twice. A header will list those nodes with the
-consolidated output. When this option is specified, no output can be
-seen until the IPMI operations to all nodes has completed. If the
-user breaks out of the program early, all currently consolidated
-output will be dumped. See HOSTRANGED SUPPORT below for additional
-information.
-.TP
-.I "-F, --fanout num"
-Set multiple host fanout. A "sliding window" (or fanout) algorithm is
-used for parallel IPMI communication so that slower nodes or timed out
-nodes will not impede parallel communication. The maximum number of
-threads available at the same time is limited by the fanout. The
-default is 64. See HOSTRANGED SUPPORT below for additional
-information.
-.TP
-.I "-E, --eleminate"
-Eliminate hosts determined as undetected by
-.B ipmidetect.
-This attempts to remove the common issue of hostranged execution
-timing out due to several nodes being removed from service in a large
-cluster. The
-.B ipmidetectd
-daemon must be running on the node executing the command. See
-HOSTRANGED SUPPORT below for additional information.
-.TP
-.I "-W, --workaround-flags str"
-Specify workarounds to vendor compliance issues.  Multiple workarounds
-can be specified separated by commas.  See WORKAROUNDS below list of
-available workarounds.
-.TP
-.I "-H, --help"
+\fB\-H\fR, \fB\-\-help\fR
 Output help menu and exit.
 .TP
-.I "-V, --version"
+\fB\-V\fR, \fB\-\-version\fR
 Output version and exit.
 .if @WITH_DEBUG@ \{
 .TP
-.I "--debug"
+\fB\-\-debug\fR
 Turn on debugging.
 .TP
-.I "--debugdump"
+\fB\-\-debugdump\fR
 Turn on packet dumps for debugging.
 \}
 .LP
