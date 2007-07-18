@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.in,v 1.11.6.1 2007-07-18 20:12:11 chu11 Exp $
+\."$Id: ipmimonitoring.8.in,v 1.11.6.2 2007-07-18 20:13:42 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,7 +78,7 @@ sensors can be separated by commas.
 .TP
 .I "-g, --groups list"
 Specify a list of groups to specifically monitor.  List of groups can
-be separated by spaces or commas.  The available groups are:
+be separated by commas.  The available groups are:
 temperature, voltage, current, fan, physical_security,
 platform_security_violation_attempt, processor, power_supply,
 power_unit, memory, drive_slot, system_firmware_progress,
