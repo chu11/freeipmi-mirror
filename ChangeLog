@@ -3,6 +3,8 @@
 	* ipmi-chassis/ipmi-chassis.8.pre.in: Fix default priv level typo.
 
 	* ipmi-sensors/ipmi-sensors.8.pre.in: Fix formatting typo.
+
+	* ipmimonitoring/ipmimonitoring.8.in: Fix option instructions.
 	
 2007-07-17  Albert Chu <chu11@llnl.gov>
 
