@@ -1,18 +1,23 @@
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
-Use USERNAME instead of NULL.  
+Specify the username to use when authenticating with the remote host.
+If not specified, a null (i.e. anonymous) username is assumed.
 .TP
 \fB\-p\fR, \fB\-\-password\fR=\fIPASSWORD\fR
-Use PASSWORD instead of NULL.  Maximum PASSWORD
-length is 16 for IPMI 1.5 and 20 for IPMI 2.0.  
+Specify the password to use when authenticationg with the remote host.
+If not specified, a null password is assumed.  Maximum password length
+is 16 for IPMI 1.5 and 20 for IPMI 2.0.
 .TP
 \fB\-P\fR, \fB\-\-password-prompt\fR
 Prompt for password to avoid possibility of listing
 it in process lists.
 .TP
 \fB\-k\fR, \fB\-\-k-g\fR=\fIK_G\fR
-Use K_G instead of NULL.  
+Specify the K_g BMC key to use when authenticating with the remote
+host for IPMI 2.0.  If not specified, a null key is assumed.  To input
+the key in hexadecimal form, prefix the string with '0x'.  E.g., the
+key 'abc' can be entered with the either the string 'abc' or the
+string '0x616263'
 .TP
 \fB\-K\fR, \fB\-\-k-g-prompt\fR
-Prompt for k-g to avoid possibility of listing
-it in process lists.
+Prompt for k-g to avoid possibility of listing it in process lists.

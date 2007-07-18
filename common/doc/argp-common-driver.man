@@ -1,4 +1,5 @@
 .TP
 \fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
-Use this IPMIDRIVER instead of auto selection.
-Allowed values are LAN, LAN_2_0, KCS, SSIF, and OPENIPMI.
+Specify the in-band driver type to use instead of doing an auto
+selection.  The currently available driver types are lan, lan_2_0,
+kcs, ssif, and openipmi.

@@ -508,9 +508,7 @@ common_parse_opt (int key,
       }
       break;
     case PRIVILEGE_LEVEL_KEY: 
-      if (strcasecmp (arg, "callback") == 0)
-        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_CALLBACK;
-      else if (strcasecmp (arg, "user") == 0)
+      if (strcasecmp (arg, "user") == 0)
         cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
       else if (strcasecmp (arg, "operator") == 0)
         cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
