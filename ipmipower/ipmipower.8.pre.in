@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.3 2007-07-17 16:08:38 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.4 2007-07-18 00:23:00 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -502,7 +502,11 @@ specify a new ping percent
 .I "ping-consec-count num"
 specify a new ping consec count
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-ipmipower-options.man>
+.LP
+By default, standard output from each node specified will be output
+with the hostname prepended to each line.  Although this output is
+readable in many situations, it may be difficult to read in other
+situations. The \fB\-C\fR option can be used to change this default.
 .SH "EXAMPLES"
 .LP
 Determine the power status of foo[0-2] with null username and password

@@ -1,5 +1,0 @@
-.LP
-By default, standard output from each node specified will be output
-with the hostname prepended to each line.  Although this output is
-readable in many situations, it may be difficult to read in other
-situations. The \fB\-C\fR option can be used to change this default.
