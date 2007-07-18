@@ -57,7 +57,7 @@ Show all difference between BMC and bmc-data2.conf file.
 .PP
 .B # bmc-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
 .PP
-Show difference with BMC of key 'gratuitous_arp_interval' and value '4'.
+Show difference with BMC of key 'gratuitous_arp_interval' and value '8'.
 .PP
 .B # bmc-config --commit -f bmc-data1.conf
 .PP
