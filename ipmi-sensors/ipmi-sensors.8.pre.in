@@ -7,7 +7,7 @@ IPMI Sensors displays current readings of sensors chips through BMC
 #include <@top_srcdir@/common/doc/argp-common-driver.man>
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-username.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-username-user.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>

@@ -10,7 +10,11 @@ IPMI Raw \- executes IPMI commands by hex values.
 #include <@top_srcdir@/common/doc/argp-common-driver.man>
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-username.man>
+.TP
+\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+Specify the username to use when authenticating with the remote host.
+If not specified, a null (i.e. anonymous) username is assumed.  The
+required user privilege will depend on the raw commands executed.
 #include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>

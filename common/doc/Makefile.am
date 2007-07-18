@@ -3,7 +3,8 @@ EXTRA_DIST = \
 	argp-common-inband.man \
 	argp-common-outofband-hostname.man \
 	argp-common-outofband-hostname-hostranged.man \
-	argp-common-outofband-username.man \
+	argp-common-outofband-username-user.man \
+	argp-common-outofband-username-admin.man \
 	argp-common-outofband-password.man \
 	argp-common-outofband-k-g.man \
 	argp-common-authtype.man \

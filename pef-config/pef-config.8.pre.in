@@ -7,7 +7,7 @@ PEF configuration utility.
 #include <@top_srcdir@/common/doc/argp-common-driver.man>
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-hostname.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-username.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband-username-admin.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
 #include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
 #include <@top_srcdir@/common/doc/argp-common-authtype.man>
