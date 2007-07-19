@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.47.4.2 2007-07-18 22:37:14 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.47.4.3 2007-07-19 16:43:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -123,15 +123,15 @@ static void
 _cmd_network(void)
 {
   cbuf_printf(ttyout, 
-              "session-timeout len             - set a new session timeout length\n"
-              "retry-timeout len               - set a new retry timeout length\n"
-              "retry-wait-timeout len          - set a new retry timeout length\n"
-              "retry-backoff-count num         - set a new retry backoff count\n"
-              "ping-interval len               - set a new ping interval length\n"
-              "ping-timeout len                - set a new ping timeout length\n"
-              "ping-packet-count num           - set a new ping packet count\n"
-              "ping-percent num                - set a new ping percent number\n"
-              "ping-consec-count num           - set a new ping consec count\n");
+              "session-timeout len               - set a new session timeout length\n"
+              "retransmission-timeout len        - set a new retransmission timeout length\n"
+              "retransmission-wait-timeout len   - set a new retransmission timeout length\n"
+              "retransmission-backoff-count num  - set a new retransmission backoff count\n"
+              "ping-interval len                 - set a new ping interval length\n"
+              "ping-timeout len                  - set a new ping timeout length\n"
+              "ping-packet-count num             - set a new ping packet count\n"
+              "ping-percent num                  - set a new ping percent number\n"
+              "ping-consec-count num             - set a new ping consec count\n");
 }
 
 static void 
@@ -705,9 +705,9 @@ _cmd_config(void)
     cbuf_printf(ttyout, "Logfile:                      %s\n", conf->logfile);
 #endif /* NDEBUG */
   cbuf_printf(ttyout, "Session Timeout:              %d ms\n", conf->session_timeout_len);
-  cbuf_printf(ttyout, "Retry Timeout:                %d ms\n", conf->retry_timeout_len);
-  cbuf_printf(ttyout, "Retry Wait Timeout:           %d ms\n", conf->retry_wait_timeout_len);
-  cbuf_printf(ttyout, "Retry Backoff Count:          %d\n", conf->retry_backoff_count);
+  cbuf_printf(ttyout, "Retransmission Timeout:       %d ms\n", conf->retransmission_timeout_len);
+  cbuf_printf(ttyout, "Retransmission Wait Timeout:  %d ms\n", conf->retransmission_wait_timeout_len);
+  cbuf_printf(ttyout, "Retransmission Backoff Count: %d\n", conf->retransmission_backoff_count);
   cbuf_printf(ttyout, "Ping Interval:                %d ms\n", conf->ping_interval_len);
   cbuf_printf(ttyout, "Ping Timeout:                 %d ms\n", conf->ping_timeout_len);
   cbuf_printf(ttyout, "Ping Packet Count:            %d\n", conf->ping_packet_count);
@@ -892,18 +892,18 @@ ipmipower_prompt_process_cmdline(void)
               else if (strcmp(argv[0], "session-timeout") == 0)
                 _cmd_set_int(argv, &conf->session_timeout_len, "timeout", 0, 
                              IPMIPOWER_SESSION_TIMEOUT_MIN, IPMIPOWER_SESSION_TIMEOUT_MAX);
-              else if (strcmp(argv[0], "retry-timeout") == 0)
-                _cmd_set_int(argv, &conf->retry_timeout_len, "retry-timeout", 1,
-                             IPMIPOWER_RETRY_TIMEOUT_MIN, conf->timeout_len);
-              else if (strcmp(argv[0], "retry-wait-timeout") == 0)
-                _cmd_set_int(argv, &conf->retry_wait_timeout_len, 
-			     "retry-wait-timeout", 1,
-                             IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN, conf->timeout_len);
-              else if (strcmp(argv[0], "retry-backoff-count") == 0)
-                _cmd_set_int(argv, &conf->retry_backoff_count, 
-                             "retry-backoff-count", 1,
-                             IPMIPOWER_RETRY_BACKOFF_COUNT_MIN,
-                             IPMIPOWER_RETRY_BACKOFF_COUNT_MAX);
+              else if (strcmp(argv[0], "retransmission-timeout") == 0)
+                _cmd_set_int(argv, &conf->retransmission_timeout_len, "retransmission-timeout", 1,
+                             IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, conf->session_timeout_len);
+              else if (strcmp(argv[0], "retransmission-wait-timeout") == 0)
+                _cmd_set_int(argv, &conf->retransmission_wait_timeout_len, 
+			     "retransmission-wait-timeout", 1,
+                             IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN, conf->session_timeout_len);
+              else if (strcmp(argv[0], "retransmission-backoff-count") == 0)
+                _cmd_set_int(argv, &conf->retransmission_backoff_count, 
+                             "retransmission-backoff-count", 1,
+                             IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN,
+                             IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX);
               else if (strcmp(argv[0], "ping-interval") == 0)
                 _cmd_set_int(argv, &conf->ping_interval_len, "ping-interval", 1, 
                              IPMIPOWER_PING_INTERVAL_MIN, conf->ping_timeout_len);

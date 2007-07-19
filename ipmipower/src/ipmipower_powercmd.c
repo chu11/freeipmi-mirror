@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107.4.4 2007-07-18 22:37:14 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.4.5 2007-07-19 16:43:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -211,7 +211,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    * Protocol State Machine Variables
    */
   Gettimeofday(&(ip->time_begin), NULL);
-  ip->retry_count = 0;
+  ip->retransmission_count = 0;
   ip->close_timeout = 0;
 
   /*
@@ -562,7 +562,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
           if (pkt != AUTHENTICATION_CAPABILITIES_V20_RES)
             ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
           
-          ip->retry_count = 0;  /* important to reset */
+          ip->retransmission_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
 	  goto cleanup;
 	}
@@ -615,7 +615,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
               if (pkt != OPEN_SESSION_RES)
                 ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
 
-	      ip->retry_count = 0;  /* important to reset */
+	      ip->retransmission_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
 	      goto cleanup;
 	    }
@@ -731,7 +731,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	      if (pkt == CLOSE_SESSION_RES)
 		goto close_session_workaround;
 	      
-	      ip->retry_count = 0;  /* important to reset */
+	      ip->retransmission_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
 	      goto cleanup;
 	    }
@@ -745,7 +745,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * close the session anyways.
    */
  close_session_workaround:
-  ip->retry_count = 0;  /* important to reset */
+  ip->retransmission_count = 0;  /* important to reset */
   Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
   rv = 1;
 
@@ -800,16 +800,16 @@ _retry_packets(ipmipower_powercmd_t ip)
   struct timeval cur_time, end_time, result;
   unsigned int time_since_last_ipmi_send;
   unsigned int time_left;
-  unsigned int retry_timeout_len;
+  unsigned int retransmission_timeout_len;
 
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
-      || conf->retry_timeout_len == 0             /* no retransmissions */
+      || conf->retransmission_timeout_len == 0             /* no retransmissions */
       || (((conf->wait_until_on == IPMIPOWER_TRUE
             && ip->cmd == POWER_CMD_POWER_ON)
            || (conf->wait_until_off == IPMIPOWER_TRUE
                && ip->cmd == POWER_CMD_POWER_OFF))
-	  && conf->retry_wait_timeout_len == 0))
+	  && conf->retransmission_wait_timeout_len == 0))
     return 0;
 
   /* Did we timeout on this packet? */
@@ -817,27 +817,27 @@ _retry_packets(ipmipower_powercmd_t ip)
        && ip->cmd == POWER_CMD_POWER_ON)
       || (conf->wait_until_off == IPMIPOWER_TRUE
           && ip->cmd == POWER_CMD_POWER_OFF))
-    retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_wait_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_wait_timeout_len;
+    retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
   else
-    retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
+    retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_timeout_len;
 
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->ic->last_ipmi_send), &result);
   timeval_millisecond_calc(&result, &time_since_last_ipmi_send);
 
-  if (time_since_last_ipmi_send < retry_timeout_len)
+  if (time_since_last_ipmi_send < retransmission_timeout_len)
     return 0;
 
   /* Do we have enough time to retransmit? */
   timeval_add_ms(&cur_time, conf->session_timeout_len, &end_time);
   timeval_sub(&end_time, &cur_time, &result);
   timeval_millisecond_calc(&result, &time_left);
-  if (time_left < retry_timeout_len)
+  if (time_left < retransmission_timeout_len)
     return 0;
 
-  ip->retry_count++;
+  ip->retransmission_count++;
   dbg("_retry_packets(%s:%d): Sending retry, retry count=%d",
-      ip->ic->hostname, ip->protocol_state, ip->retry_count);
+      ip->ic->hostname, ip->protocol_state, ip->retransmission_count);
 
   if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
@@ -1316,7 +1316,7 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
               ip->ic->hostname, ip->protocol_state);
           ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           
-          ip->retry_count = 0;  /* important to reset */
+          ip->retransmission_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
           return -1;
         }
@@ -2304,17 +2304,17 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
   /* shorter timeout b/c of retransmission timeout */
   if (conf->wait_until_off
-      && conf->retry_wait_timeout_len)
+      && conf->retransmission_wait_timeout_len)
     {
-      int retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_wait_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_wait_timeout_len;
-      if (timeout > retry_timeout_len)
-        timeout = retry_timeout_len;
+      int retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
+      if (timeout > retransmission_timeout_len)
+        timeout = retransmission_timeout_len;
     }
-  else if (conf->retry_timeout_len) 
+  else if (conf->retransmission_timeout_len) 
     {
-      int retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
-      if (timeout > retry_timeout_len)
-        timeout = retry_timeout_len;
+      int retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_timeout_len;
+      if (timeout > retransmission_timeout_len)
+        timeout = retransmission_timeout_len;
     }
 
   return (int)timeout;

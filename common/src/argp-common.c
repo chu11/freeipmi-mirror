@@ -369,7 +369,7 @@ common_parse_opt (int key,
           cmd_args->k_g_configured++;
       }
       break;
-    case RETRY_TIMEOUT_KEY:
+    case RETRANSMISSION_TIMEOUT_KEY:
       {
 	int value = 0;
 	char *str = NULL;
@@ -384,7 +384,7 @@ common_parse_opt (int key,
 	if (errnum)
 	  {
 	    // overflow
-	    fprintf (stderr, "invalid packet retry timeout value\n");
+	    fprintf (stderr, "invalid packet retransmission timeout value\n");
 	    argp_usage (state);
 	    break;
 	  }
@@ -392,7 +392,7 @@ common_parse_opt (int key,
 	if (tail[0] != '\0')
 	  {
 	    // invalid integer format
-	    fprintf (stderr, "invalid packet retry timeout value\n");
+	    fprintf (stderr, "invalid packet retransmission timeout value\n");
 	    argp_usage (state);
 	    break;
 	  }
@@ -400,11 +400,11 @@ common_parse_opt (int key,
 	if (value < 0)
 	  {
 	    // negative number
-	    fprintf (stderr, "invalid packet retry timeout value\n");
+	    fprintf (stderr, "invalid packet retransmission timeout value\n");
 	    argp_usage (state);
 	    break;
 	  }
-	cmd_args->retry_timeout = value;
+	cmd_args->retransmission_timeout = value;
       }
       break;
     case SESSION_TIMEOUT_KEY:
@@ -636,7 +636,7 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->driver_device = NULL;
   cmd_args->register_spacing = 0;
   cmd_args->session_timeout = 0;
-  cmd_args->retry_timeout = 0;
+  cmd_args->retransmission_timeout = 0;
   cmd_args->host = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;

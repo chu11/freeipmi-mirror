@@ -10,7 +10,7 @@ o Ported many features from other tools into ipmimonitoring.
 o Added openipmi driver to bmc-watchdog.
 o Refined many error messages to provide more accurate descriptions of
   errors.
-o Updated most manpages with additional information.
+o Updated most manpages with full and clearer information.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level
@@ -32,10 +32,9 @@ o Made many command line options consistent across FreeIPMI.  Notable
      other tools.
   10) The short option -r for --register-spacing has been removed.
   11) Short options for most debugging options have been removed.
+  12) All "--retry" options are now "--retransmission" options.
 o Similarly, renamed configuration file options or interactive prompt
   options for consistency with command line.
-o Similarly, update ipmipower interactive commands for consistency
-  with command line.
 o Similarly, updated manpages for consistency across tools.
 o Fixed various configuration file options or interactive prompt option
   inconsistencies with dashes vs. underscores.

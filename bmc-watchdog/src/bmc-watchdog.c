@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.10 2007-07-14 00:38:42 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.11 2007-07-19 16:43:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -85,10 +85,11 @@
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
 
-#define BMC_WATCHDOG_DRIVER_ADDRESS_KEY    128
-#define BMC_WATCHDOG_DRIVER_DEVICE_KEY     129
-#define BMC_WATCHDOG_REGISTER_SPACING_KEY  130
-#define BMC_WATCHDOG_DEBUG_KEY             131
+#define BMC_WATCHDOG_NO_PROBING_KEY        128
+#define BMC_WATCHDOG_DRIVER_ADDRESS_KEY    129
+#define BMC_WATCHDOG_DRIVER_DEVICE_KEY     130
+#define BMC_WATCHDOG_REGISTER_SPACING_KEY  131
+#define BMC_WATCHDOG_DEBUG_KEY             132
 
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
@@ -120,6 +121,7 @@ struct cmdline_info
   int daemon;
   int driver_type;
   int driver_type_val;
+  int no_probing;
   int driver_address;
   uint32_t driver_address_val;
   int driver_device;
@@ -314,10 +316,13 @@ _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
 
-  if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
+  if (!cinfo.no_probing)
     {
-      _bmclog("ipmi_locate: %s", strerror(errno));
-      return -1;
+      if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
+        {
+          _bmclog("ipmi_locate: %s", strerror(errno));
+          return -1;
+        }
     }
 
   if (!(kcs_ctx = ipmi_kcs_ctx_create()))
@@ -331,16 +336,22 @@ _init_kcs_ipmi(void)
   if (cinfo.register_spacing)
     l.register_spacing = cinfo.register_spacing_val;
   
-  if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
+  if (!cinfo.no_probing || cinfo.driver_address)
     {
-      _bmclog("ipmi_kcs_ctx_set_driver_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-      return -1;
+      if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
+        {
+          _bmclog("ipmi_kcs_ctx_set_driver_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+          return -1;
+        }
     }
   
-  if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, l.register_spacing) < 0)
+  if (!cinfo.no_probing || cinfo.register_spacing)
     {
-      _bmclog("ipmi_kcs_ctx_set_register_spacing: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-      return -1;
+      if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, l.register_spacing) < 0)
+        {
+          _bmclog("ipmi_kcs_ctx_set_register_spacing: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+          return -1;
+        }
     }
   
   if (ipmi_kcs_ctx_set_flags(kcs_ctx, IPMI_KCS_FLAGS_NONBLOCKING) < 0)
@@ -363,12 +374,14 @@ _init_ssif_ipmi(void)
 {
   struct ipmi_locate_info l;
 
-  if (ipmi_locate(IPMI_INTERFACE_SSIF, &l) < 0)
+  if (!cinfo.no_probing)
     {
-      _bmclog("ipmi_locate: %s", strerror(errno));
-      return -1;
+      if (ipmi_locate(IPMI_INTERFACE_SSIF, &l) < 0)
+        {
+          _bmclog("ipmi_locate: %s", strerror(errno));
+          return -1;
+        }
     }
-
   if (!(ssif_ctx = ipmi_ssif_ctx_create()))
     {
       _bmclog("ipmi_ssif_ctx_create: %s", strerror(errno));
@@ -383,16 +396,22 @@ _init_ssif_ipmi(void)
       l.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   
-  if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
+  if (!cinfo.no_probing || cinfo.driver_address)
     {
-      _bmclog("ipmi_ssif_ctx_set_driver_address: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-      return -1;
+      if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
+        {
+          _bmclog("ipmi_ssif_ctx_set_driver_address: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+          return -1;
+        }
     }
   
-  if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
+  if (!cinfo.no_probing || cinfo.driver_device)
     {
-      _bmclog("ipmi_ssif_ctx_set_driver_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-      return -1;
+      if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
+        {
+          _bmclog("ipmi_ssif_ctx_set_driver_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+          return -1;
+        }
     }
   
   if (ipmi_ssif_ctx_set_flags(ssif_ctx, IPMI_SSIF_FLAGS_NONBLOCKING) < 0)
@@ -1104,9 +1123,10 @@ _usage(void)
           "  -h         --help                       Output help menu\n"
           "  -v         --version                    Output version\n"
 	  "  -D STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF, OPENIPMI)\n"
-	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
-	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
-          "  -R INT     --register-spacing=INT       Base address register spacing in bytes\n"
+          "             --no-probing                 Do not probe for In-band defaults\n"
+	  "             --driver-address=INT         Base address for IPMI driver\n"
+	  "             --driver-device=STRING       Driver device to use\n"
+          "             --register-spacing=INT       Base address register spacing in bytes\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
           "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
@@ -1229,6 +1249,7 @@ _cmdline_parse(int argc, char **argv)
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
     {"driver-type",           1, NULL, 'D'},
+    {"no-probing",            0, NULL, BMC_WATCHDOG_NO_PROBING_KEY},
     {"driver-address",        1, NULL, BMC_WATCHDOG_DRIVER_ADDRESS_KEY},
     {"driver-device",         1, NULL, BMC_WATCHDOG_DRIVER_DEVICE_KEY},
     {"register-spacing",      1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
@@ -1311,6 +1332,9 @@ _cmdline_parse(int argc, char **argv)
 	  else
 	    _err_exit("driver-type value invalid");
 	  break;
+        case BMC_WATCHDOG_NO_PROBING_KEY:
+          cinfo.no_probing++;
+          break;
         case BMC_WATCHDOG_DRIVER_ADDRESS_KEY:
           cinfo.driver_address++;
           cinfo.driver_address_val = strtol(optarg, &ptr, 0);

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.5.0.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.89.4.4 2007-07-16 23:51:36 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.89.4.5 2007-07-19 16:43:43 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -44,7 +44,7 @@ AC_CONFIG_FILES([
 	ipmi-fru/ipmi-fru.8.pre
         ipmiping/Makefile ipmiping/src/Makefile
         rmcpping/Makefile rmcpping/src/Makefile
-        bmc-watchdog/bmc-watchdog.8 \
+        bmc-watchdog/bmc-watchdog.8.pre \
         ipmipower/ipmipower.8.pre \
         ipmipower/ipmipower.conf.5 \
 	ipmiconsole/ipmiconsole.8.pre \

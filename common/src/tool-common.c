@@ -80,7 +80,7 @@ ipmi_device_open(const char *progname,
                                        cmd_args->privilege_level,
                                        cmd_args->cipher_suite_id,
                                        cmd_args->session_timeout,
-                                       cmd_args->retry_timeout,
+                                       cmd_args->retransmission_timeout,
                                        cmd_args->workaround_flags,
                                        cmd_args->flags) < 0)
             {
@@ -120,7 +120,7 @@ ipmi_device_open(const char *progname,
                                    cmd_args->authentication_type,
                                    cmd_args->privilege_level,
                                    cmd_args->session_timeout,
-                                   cmd_args->retry_timeout,
+                                   cmd_args->retransmission_timeout,
                                    cmd_args->workaround_flags,
                                    cmd_args->flags) < 0)
             {

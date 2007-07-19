@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.9 2007-07-18 22:37:14 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.10 2007-07-19 16:43:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,9 +124,9 @@ ipmipower_config_setup(void)
   conf->logfile_fd = -1;
 #endif /* NDEBUG */
   conf->session_timeout_len = 20000;     /* 20 seconds */
-  conf->retry_timeout_len = 400; /* .4 seconds  */
-  conf->retry_wait_timeout_len = 500; /* .5 seconds  */
-  conf->retry_backoff_count = 8;
+  conf->retransmission_timeout_len = 400; /* .4 seconds  */
+  conf->retransmission_wait_timeout_len = 500; /* .5 seconds  */
+  conf->retransmission_backoff_count = 8;
   conf->ping_interval_len = 5000; /* 5 seconds */
   conf->ping_timeout_len = 30000; /* 30 seconds */
   conf->ping_packet_count = 10;
@@ -148,9 +148,9 @@ ipmipower_config_setup(void)
   conf->eliminate_set_on_cmdline = IPMIPOWER_FALSE;
   conf->workaround_flags_set_on_cmdline = IPMIPOWER_FALSE;
   conf->session_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->retry_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->retry_wait_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->retry_backoff_count_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_FALSE;
   conf->ping_interval_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->ping_timeout_len_set_on_cmdline = IPMIPOWER_FALSE;
   conf->ping_packet_count_set_on_cmdline = IPMIPOWER_FALSE;
@@ -180,24 +180,24 @@ _config_common_checks(char *str)
   if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
     err_exit("%s: invalid cipher suite id", str);
 
-  if (conf->session_timeout_len < IPMIPOWER_TIMEOUT_MIN 
-      || conf->session_timeout_len > IPMIPOWER_TIMEOUT_MAX)
+  if (conf->session_timeout_len < IPMIPOWER_SESSION_TIMEOUT_MIN 
+      || conf->session_timeout_len > IPMIPOWER_SESSION_TIMEOUT_MAX)
     err_exit("%s: timeout out of range", str);
   
-  if (conf->retry_timeout_len != 0 
-      && (conf->retry_timeout_len < IPMIPOWER_RETRY_TIMEOUT_MIN 
-          || conf->retry_timeout_len > IPMIPOWER_RETRY_TIMEOUT_MAX))
-    err_exit("%s: retry timeout out of range", str);
+  if (conf->retransmission_timeout_len != 0 
+      && (conf->retransmission_timeout_len < IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN 
+          || conf->retransmission_timeout_len > IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX))
+    err_exit("%s: retransmission timeout out of range", str);
 
-  if (conf->retry_wait_timeout_len != 0 
-      && (conf->retry_wait_timeout_len < IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN 
-          || conf->retry_wait_timeout_len > IPMIPOWER_RETRY_WAIT_TIMEOUT_MAX))
-    err_exit("%s: retry wait timeout out of range", str);
+  if (conf->retransmission_wait_timeout_len != 0 
+      && (conf->retransmission_wait_timeout_len < IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN 
+          || conf->retransmission_wait_timeout_len > IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MAX))
+    err_exit("%s: retransmission wait timeout out of range", str);
   
-  if (conf->retry_backoff_count != 0 
-      && (conf->retry_backoff_count < IPMIPOWER_RETRY_BACKOFF_COUNT_MIN 
-          || conf->retry_backoff_count > IPMIPOWER_RETRY_BACKOFF_COUNT_MAX))
-    err_exit("%s: retry backoff count out of range", str);
+  if (conf->retransmission_backoff_count != 0 
+      && (conf->retransmission_backoff_count < IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN 
+          || conf->retransmission_backoff_count > IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX))
+    err_exit("%s: retransmission backoff count out of range", str);
 
   if (conf->ping_interval_len != 0 
       && (conf->ping_interval_len < IPMIPOWER_PING_INTERVAL_MIN 
@@ -322,9 +322,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       /* timeout maintained for backwards compatability */
       {"timeout" ,                     1, NULL, 't'},
       {"session-timeout" ,             1, NULL, 't'},
-      {"retry-timeout",                1, NULL, 'y'},
-      {"retry-wait-timeout",           1, NULL, 'q'},
-      {"retry-backoff-count",          1, NULL, 'b'},
+      {"retransmission-timeout",       1, NULL, 'y'},
+      {"retransmission-wait-timeout",  1, NULL, 'q'},
+      {"retransmission-backoff-count", 1, NULL, 'b'},
       {"ping-interval",                1, NULL, 'i'},
       {"ping-timeout",                 1, NULL, 'z'},
       {"ping-packet-count",            1, NULL, 'v'},
@@ -511,23 +511,23 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
             err_exit("Command Line Error: session timeout length invalid\n");
           conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
           break;
-        case 'y':       /* --retry-timeout */
-          conf->retry_timeout_len = strtol(optarg, &ptr, 10);
+        case 'y':       /* --retransmission-timeout */
+          conf->retransmission_timeout_len = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: retry timeout length invalid\n");
-          conf->retry_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+            err_exit("Command Line Error: retransmission timeout length invalid\n");
+          conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
           break;
-        case 'q':       /* --retry-wait-timeout */
-          conf->retry_wait_timeout_len = strtol(optarg, &ptr, 10);
+        case 'q':       /* --retransmission-wait-timeout */
+          conf->retransmission_wait_timeout_len = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: retry wait timeout length invalid\n");
-          conf->retry_wait_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+            err_exit("Command Line Error: retransmission wait timeout length invalid\n");
+          conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
           break;
-        case 'b':       /* --retry-backoff-count */
-          conf->retry_backoff_count = strtol(optarg, &ptr, 10);
+        case 'b':       /* --retransmission-backoff-count */
+          conf->retransmission_backoff_count = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: retry backoff count invalid\n");
-          conf->retry_backoff_count_set_on_cmdline = IPMIPOWER_TRUE;
+            err_exit("Command Line Error: retransmission backoff count invalid\n");
+          conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_TRUE;
           break;
         case 'i':       /* --ping-interval */
           conf->ping_interval_len = strtol(optarg, &ptr, 10);
@@ -760,9 +760,8 @@ ipmipower_config_conffile_parse(char *configfile)
   int hostname_flag, hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
     wait_until_on_flag, wait_until_off_flag, consolidate_output_flag, 
-    eliminate_flag,
-    workaround_flags_flag, session_timeout_flag, retry_timeout_flag, retry_wait_timeout_flag, 
-    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
+    eliminate_flag, workaround_flags_flag, session_timeout_flag, retransmission_timeout_flag, 
+    retransmission_wait_timeout_flag, retransmission_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
     ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
 
   struct conffile_option options[] = 
@@ -808,15 +807,15 @@ ipmipower_config_conffile_parse(char *configfile)
       {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
-      {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
-       1, 0, &retry_timeout_flag, &(conf->retry_timeout_len), 
-       conf->retry_timeout_len_set_on_cmdline},
-      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
-       1, 0, &retry_wait_timeout_flag, &(conf->retry_wait_timeout_len), 
-       conf->retry_wait_timeout_len_set_on_cmdline},
-      {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
-       1, 0, &retry_backoff_count_flag, &(conf->retry_backoff_count), 
-       conf->retry_backoff_count_set_on_cmdline},
+      {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+       1, 0, &retransmission_timeout_flag, &(conf->retransmission_timeout_len), 
+       conf->retransmission_timeout_len_set_on_cmdline},
+      {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+       1, 0, &retransmission_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
+       conf->retransmission_wait_timeout_len_set_on_cmdline},
+      {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
+       1, 0, &retransmission_backoff_count_flag, &(conf->retransmission_backoff_count), 
+       conf->retransmission_backoff_count_set_on_cmdline},
       {"ping-interval", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &ping_interval_flag, &(conf->ping_interval_len), 
        conf->ping_interval_len_set_on_cmdline},
@@ -866,8 +865,8 @@ ipmipower_config_conffile_parse(char *configfile)
 void 
 ipmipower_config_check_values(void) 
 {
-  if (conf->retry_timeout_len > conf->session_timeout_len)
-    err_exit("Error: Session timeout length must be longer than retry timeout length");
+  if (conf->retransmission_timeout_len > conf->session_timeout_len)
+    err_exit("Error: Session timeout length must be longer than retransmission  timeout length");
   
   if (conf->ping_interval_len > conf->ping_timeout_len)
     err_exit("Error: Ping timeout interval length must be "

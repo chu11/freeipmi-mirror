@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75.4.6 2007-07-18 22:37:14 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.75.4.7 2007-07-19 16:43:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,41 +64,41 @@
  * ipmipower limits 
  */
  
-#define IPMIPOWER_MIN_TTY_BUF              1024*4
-#define IPMIPOWER_MAX_TTY_BUF              1024*32
+#define IPMIPOWER_MIN_TTY_BUF                       1024*4
+#define IPMIPOWER_MAX_TTY_BUF                       1024*32
 
-#define IPMIPOWER_MIN_CONNECTION_BUF       1024*2
-#define IPMIPOWER_MAX_CONNECTION_BUF       1024*4
+#define IPMIPOWER_MIN_CONNECTION_BUF                1024*2
+#define IPMIPOWER_MAX_CONNECTION_BUF                1024*4
 
-#define IPMIPOWER_MINNODES                 1
-#define IPMIPOWER_MAXNODES                 1024
+#define IPMIPOWER_MINNODES                          1
+#define IPMIPOWER_MAXNODES                          1024
 
-#define IPMIPOWER_SESSION_TIMEOUT_MIN      1000   /* 1 second */
-#define IPMIPOWER_SESSION_TIMEOUT_MAX      120000 /* 120 seconds */
+#define IPMIPOWER_SESSION_TIMEOUT_MIN               1000   /* 1 second */
+#define IPMIPOWER_SESSION_TIMEOUT_MAX               120000 /* 120 seconds */
 
-#define IPMIPOWER_RETRY_TIMEOUT_MIN        50     /* .05 seconds */
-#define IPMIPOWER_RETRY_TIMEOUT_MAX        IPMIPOWER_SESSION_TIMEOUT_MAX
+#define IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN        50     /* .05 seconds */
+#define IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX        IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN   50     /* .05 seconds */
-#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MAX   IPMIPOWER_SESSION_TIMEOUT_MAX
+#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN   50     /* .05 seconds */
+#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MAX   IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_RETRY_BACKOFF_COUNT_MIN  1
-#define IPMIPOWER_RETRY_BACKOFF_COUNT_MAX  200
+#define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN  1
+#define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX  200
 
-#define IPMIPOWER_PING_INTERVAL_MIN        250   /* .25 seconds */
-#define IPMIPOWER_PING_INTERVAL_MAX        IPMIPOWER_SESSION_TIMEOUT_MAX
+#define IPMIPOWER_PING_INTERVAL_MIN                 250   /* .25 seconds */
+#define IPMIPOWER_PING_INTERVAL_MAX                 IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_PING_TIMEOUT_MIN         IPMIPOWER_SESSION_TIMEOUT_MIN
-#define IPMIPOWER_PING_TIMEOUT_MAX         IPMIPOWER_SESSION_TIMEOUT_MAX
+#define IPMIPOWER_PING_TIMEOUT_MIN                  IPMIPOWER_SESSION_TIMEOUT_MIN
+#define IPMIPOWER_PING_TIMEOUT_MAX                  IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_PING_PACKET_COUNT_MIN    2
-#define IPMIPOWER_PING_PACKET_COUNT_MAX    20
+#define IPMIPOWER_PING_PACKET_COUNT_MIN             2
+#define IPMIPOWER_PING_PACKET_COUNT_MAX             20
 
-#define IPMIPOWER_PING_PERCENT_MIN         1
-#define IPMIPOWER_PING_PERCENT_MAX         100
+#define IPMIPOWER_PING_PERCENT_MIN                  1
+#define IPMIPOWER_PING_PERCENT_MAX                  100
 
-#define IPMIPOWER_PING_CONSEC_COUNT_MIN    2
-#define IPMIPOWER_PING_CONSEC_COUNT_MAX    20
+#define IPMIPOWER_PING_CONSEC_COUNT_MIN             2
+#define IPMIPOWER_PING_CONSEC_COUNT_MAX             20
 
 /* 
  * ipmi specifics for ipmipower
@@ -426,7 +426,7 @@ struct ipmipower_powercmd {
    * Protocol State Machine Variables 
    */
   struct timeval time_begin;
-  unsigned int retry_count;
+  unsigned int retransmission_count;
   uint8_t close_timeout;
 
   /*
@@ -584,9 +584,9 @@ struct ipmipower_config
   int                      logfile_fd;
 #endif /* NDEBUG */
   int                      session_timeout_len;
-  int                      retry_timeout_len;
-  int                      retry_wait_timeout_len;
-  int                      retry_backoff_count; 
+  int                      retransmission_timeout_len;
+  int                      retransmission_wait_timeout_len;
+  int                      retransmission_backoff_count; 
   int                      ping_interval_len;
   int                      ping_timeout_len;
   int                      ping_packet_count;
@@ -609,9 +609,9 @@ struct ipmipower_config
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
   ipmipower_bool_t         eliminate_set_on_cmdline;
   ipmipower_bool_t         session_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retry_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retry_wait_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retry_backoff_count_set_on_cmdline;
+  ipmipower_bool_t         retransmission_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retransmission_wait_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retransmission_backoff_count_set_on_cmdline;
   ipmipower_bool_t         ping_interval_len_set_on_cmdline;
   ipmipower_bool_t         ping_timeout_len_set_on_cmdline; 
   ipmipower_bool_t         ping_consec_count_set_on_cmdline;

@@ -36,7 +36,7 @@ enum argp_common_option_keys
     NO_PROBING_KEY = 130, 
     DRIVER_ADDRESS_KEY = 131, 
     DRIVER_DEVICE_KEY = 132, 
-    RETRY_TIMEOUT_KEY = 133, 
+    RETRANSMISSION_TIMEOUT_KEY = 133, 
     SESSION_TIMEOUT_KEY = 134,
     REGISTER_SPACING_KEY = 135,
     HOSTNAME_KEY = 'h', 
@@ -89,7 +89,7 @@ enum argp_common_option_keys
      "If not specified, a null (i.e. anonymous) username is assumed.", 6},                         \
     {"password",       PASSWORD_KEY, "PASSWORD", 0,	                                           \
      "Specify the password to use when authenticationg with the remote host. "                     \
-     "If not specified, a null password is assumed.", 7}                                           \
+     "If not specified, a null password is assumed.", 7},                                          \
     {"password-prompt", PASSWORD_PROMPT_KEY, 0, 0,	                                           \
      "Prompt for password to avoid possibility of listing it in process lists.", 8},               \
     {"k-g",       K_G_KEY, "K_G", 0,	                                                           \
@@ -97,8 +97,8 @@ enum argp_common_option_keys
      "If not specified, a null key is assumed.", 9},                                               \
     {"k-g-prompt", K_G_PROMPT_KEY, 0, 0,	                                                   \
      "Prompt for k-g to avoid possibility of listing it in process lists.", 10},                   \
-    {"retry-timeout", RETRY_TIMEOUT_KEY, "MILLISECONDS", 0,                                        \
-     "Specify the packet retransmission timeout in milliseconds. "                                 \ 
+    {"retransmission-timeout", RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                      \
+     "Specify the packet retransmission timeout in milliseconds. "                                 \
      "Defaults to 20000 milliseconds (20 seconds) if not specified.", 11},                         \
     {"session-timeout", SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                                    \
      "Specify the session timeout in milliseconds. "                                               \
@@ -122,7 +122,7 @@ enum argp_common_option_keys
      "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
      "Defaults to USER if not specified.", 14}     
 
-#define ARGP_COMMON_OPTIONS_PRIVLEVEL_USER                                                          \
+#define ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN                                                         \
     {"privilege-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                            \
      "Specify  the  privilege  level to be used. "		                                    \
      "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
@@ -130,7 +130,7 @@ enum argp_common_option_keys
 
 #define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                               \
     {"workaround-flags",  WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0, 	   \
-     "Specify workarounds to vendor compliance issues.", 16}	           \
+     "Specify workarounds to vendor compliance issues.", 16}
 
 #define ARGP_COMMON_SDR_OPTIONS                                                                                      \
     {"flush-cache", FLUSH_CACHE_KEY,  0, 0,                                                                          \
@@ -166,7 +166,7 @@ struct common_cmd_args
   char *driver_device;
   unsigned int register_spacing;
   unsigned int session_timeout;
-  unsigned int retry_timeout;
+  unsigned int retransmission_timeout;
   char *host;
   char *username;
   char *password;

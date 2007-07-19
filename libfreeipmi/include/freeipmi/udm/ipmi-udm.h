@@ -118,7 +118,7 @@ int ipmi_open_outofband (ipmi_device_t dev,
 			 uint8_t authentication_type, 
 			 uint8_t privilege_level,
 			 unsigned int session_timeout,
-			 unsigned int retry_timeout, 
+			 unsigned int retransmission_timeout, 
                          uint32_t workaround_flags,
 			 uint32_t flags);
 
@@ -132,7 +132,7 @@ int ipmi_open_outofband_2_0 (ipmi_device_t dev,
                              uint8_t privilege_level,
                              uint8_t cipher_suite_id,
                              unsigned int session_timeout,
-                             unsigned int retry_timeout, 
+                             unsigned int retransmission_timeout, 
                              uint32_t workaround_flags,
                              uint32_t flags);
 

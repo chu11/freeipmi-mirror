@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.12.10.7 2007-07-13 18:23:22 chu11 Exp $
+\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.1 2007-07-19 16:43:44 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,35 +68,35 @@ See EXAMPLES below for examples of how bmc-watchdog is commonly used.
 The following commands are available to
 .B bmc-watchdog.
 .TP
-.I  "-s, --set"
+\fB\-s\fR, \fB\-\-set\fR
 Set BMC Watchdog Configuration.  BMC watchdog timer configuration
 values can be set using the set command options listed below under SET
 OPTIONS.  If a particular configuration parameter is not specified on
 the command line, the current configuration of that parameter will not
 be changed.
 .TP
-.I  "-g, --get"
+\fB\-g\fR, \fB\-\-get\fR
 Get BMC Watchdog Configuration and State.  The current
 configuration and state is printed to standard output.
 .TP
-.I  "-r, --reset"
+\fB\-r\fR, \fB\-\-reset\fR
 Reset BMC Watchdog Timer.  
 .TP
-.I  "-t, --start"                   
+\fB\-t\fR, \fB\-\-start\fR                   
 Start BMC Watchdog Timer.  Does nothing if the timer is currently
-running.  Identical to --reset command when the timer is stopped with
+running.  Identical to \fB\-\-reset command when the timer is stopped with
 the exception of the start command options listed below under START
 OPTIONS.
 .TP
-.I  "-y, --stop"
+\fB\-y\fR, \fB\-\-stop\fR
 Stop BMC Watchdog Timer.  Stops the current timer.
 .TP
-.I  "-c, --clear"
+\fB\-c\fR, \fB\-\-clear\fR
 Clear BMC Watchdog Configuration.  Clears all configuration values
 for the watchdog timer, except for timer use, which is kept at 
 its current value.
 .TP
-.I  "-d, --daemon"
+\fB\-d\fR, \fB\-\-daemon\fR
 Run 
 .B bmc-watchdog 
 as a daemon.  Configurable BMC watchdog timer options are listed below
@@ -105,53 +105,35 @@ daemon will reset the timer at specified periodic intervals.
 Everytime the BMC watchdog timer is reset, a log entry will be
 generated in the bmc-watchdog log.  The default log is stored at
 /var/log/freeipmi/bmc-watchdog.log.  The daemon can be stopped using
-the --stop command, --clear command, or by setting the stop_timer flag
-on the --set command.
+the \fB\-\-stop\fR command, \fB\-\-clear\fR command, or by setting the
+stop_timer flag on the \fB\-\-set\fR command.
 .SH "OPTIONS"
 The following options can be used by any command.
 .TP
-.I  "-h, --help"
-Output the help menu.  If a specific command (--set, --get, --reset,
---start, --stop, --clear, or --daemon) is listed on the command
-line, only the specific options for that command will be listed.
+\fB\-h\fR, \fB\-\-help\fR
+Output the help menu.  If a specific command (\fB\-\-set\fR,
+\fB\-\-get\fR, \fB\-\-reset\fR, \fB\-\-start\fR, \fB\-\-stop\fR,
+\fB\-\-clear\fR, or \fB\-\-daemon\fR) is listed on the command line,
+only the specific options for that command will be listed.
 .TP
-.I  "-v, --version"
+\fB\-v\fR, \fB\-\-version\fR
 Output the program version.
+.TP 
+\fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR 
+Specify the driver type to use instead of doing an auto selection.
+The currently available inband drivers are KCS, SSIF, and OPENIPMI.
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
 .TP
-.I  "-D STRING, --driver-type=STRING"
-Identify the IPMI driver type to use.  The available driver types are
-"kcs", "ssif", and "openipmi".  If not specified,
-.B bmc-watchdog
-will search for one to use.
-.TP
-.I  "--driver-address=INT"
-Identify the System Base Address for the IPMI Driver.  If not specified, 
-.B bmc-watchdog 
-will attempt to probe for the system's default address.  If the probe
-fails, the IPMI defined default will be used.  If the io-port number
-is prefixed with a "0x", it is assumed to be a base 16 integer.
-Otherwise, it is assumed to be a base 10 integer.
-.TP
-.I  "--driver-device=STRING"
-Identify the driver device path the IPMI driver should use.  It not
-specified, a default path will be assumed.
-.TP
-.I  "--register-spacing=INT"
-Specify base address register spacing. If not specified,
-.B bmc-watchdog 
-will attempt to probe for the system's default register spacing.  If
-the probe fails, the IPMI defined default will be used.
-.TP
-.I  "-f STRING, --logfile=STRING"
+\fB\-f STRING\fR, \fB\-\-logfile=FILE\fR
 Specify an alternate logfile from the default of
 /var/log/freeipmi/bmc-watchdog.log.
 .TP
-.I  "-n, --no-logging"
+\fB\-n\fR, \fB\-\-no-logging\fR
 Turns off all logging done by 
 .B bmc-watchdog.  
 .if @WITH_DEBUG@ \{
 .TP
-.I  "--debug"
+\fB\-\-debug\fR
 Turns on debugging.  All data written and read from the BMC is dumped
 to stderr.
 \}
@@ -159,64 +141,64 @@ to stderr.
 The following options can be used by the set command to set or clear
 various BMC watchdog configuration parameters.
 .TP
-.I  "-u INT, --timer-use=INT"
+\fB\-u INT\fR, \fB\-\-timer-use=INT\fR
 Set timer use.  The timer use value can be set to one of the
 following: 1 = BIOS FRB2, 2 = BIOS POST, 3 = OS_LOAD, 4 = SMS OS, 5 =
 OEM.
 .TP
-.I  "-m INT, --stop-timer=INT"
+\fB\-m INT\fR, \fB\-\-stop-timer=INT\fR
 Set Stop Timer Flag.  A flag value of 0 stops the current BMC watchdog
 timer.  A value of 1 doesn't turn off the current watchdog timer.
 .TP
-.I  "-l INT, --log=INT"
+\fB\-l INT\fR, \fB\-\-log=INT\fR
 Set Log Flag.  A flag value of 0 turns logging on.  A value of 1 turns
 logging off.
 .TP
-.I  "-a INT, --timeout-action=INT"
+\fB\-a INT\fR, \fB\-\-timeout-action=INT\fR
 Set timeout action.  The timeout action can be set to one of the
 following: 0 = No action, 1 = Hard Reset, 2 = Power Down, 3 = Power
 Cycle.
 .TP
-.I  "-p INT, --pre-timeout-interrupt=INT"
+\fB\-p INT\fR, \fB\-\-pre-timeout-interrupt=INT\fR
 Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-.I  "-z SECS, --pre-timeout-interval=SECS"  
+\fB\-z SECS\fR, \fB\-\-pre-timeout-interval=SECONDS\fR  
 Set pre-timeout interval in seconds.
 .TP
-.I  "-F, --clear-bios-frb2"
+\fB\-F\fR, \fB\-\-clear-bios-frb2\fR
 Clear  BIOS FRB2 Timer Use Flag.
 .TP
-.I  "-P, --clear-bios-post"
+\fB\-P\fR, \fB\-\-clear-bios-post\fR
 Clear BIOS POST Timer Use Flag.
 .TP
-.I  "-L, --clear-os-load"
+\fB\-L\fR, \fB\-\-clear-os-load\fR
 Clear OS Load Timer Use Flag.
 .TP
-.I  "-S, --clear-sms-os"
+\fB\-S\fR, \fB\-\-clear-sms-os\fR
 Clear SMS/OS Timer Use Flag.
 .TP
-.I  "-O, --clear-oem"
+\fB\-O\fR, \fB\-\-clear-oem\fR
 Clear OEM Timer Use Flag.
 .TP
-.I  "-i SECS, --initial-countdown=SECS"
+\fB\-i SECS\fR, \fB\-\-initial-countdown=SECONDS\fR
 Set initial countdown in seconds.
 .TP
-.I  "-w, --start-after-set"
+\fB\-w\fR, \fB\-\-start-after-set\fR
 Start timer after set command if timer is stopped.  This is typically
 used when
 .B bmc-watchdog
 is used as a cronjob.  This can be used to automatically start the
 timer after it has been set the first time.
 .TP
-.I  "-x, --reset-after-set"
+\fB\-x\fR, \fB\-\-reset-after-set\fR
 Reset timer after set command if timer is running.
 .TP
-.I  "-j, --start-if-stopped"
+\fB\-j\fR, \fB\-\-start-if-stopped\fR
 Don't execute set command if timer is stopped, just start timer.
 .TP
-.I  "-k, --reset-if-running"
+\fB\-k\fR, \fB\-\-reset-if-running\fR
 Don't execute set command if timer is running, just reset timer. This
 is typically used when
 .B bmc-watchdog
@@ -226,13 +208,13 @@ has been initially started.
 .SH "START OPTIONS"
 The following options can be used by the start command.
 .TP
-.I  "-G INT, --gratuitous-arp=INT"
+\fB\-G INT\fR, \fB\-\-gratuitous-arp=INT\fR
 Suspend or don't suspend gratuitous ARPs while the BMC timer is
 running.  A flag value of 1 suspends gratuitous ARPs.  A value of 0
 will not suspend gratuitous ARPs.  If this option is not specified,
 gratuitous ARPs will not be suspended.
 .TP
-.I  "-A INT, --arp-response=INT"
+\fB\-A INT\fR, \fB\-\-arp-response=INT\fR
 Suspend or don't suspend BMC-generated ARP responses while the BMC
 timer is running.  A flag value of 1 suspends ARP responses.  A value
 of 0 will not suspend ARP responses.  If this option is not specified,
@@ -242,59 +224,59 @@ ARP responses will not be suspended.
 The following options can be used by the daemon command to set the
 initial BMC watchdog configuration parameters.
 .TP
-.I  "-u INT, --timer-use=INT"
+\fB\-u INT\fR, \fB\-\-timer-use=INT\fR
 Set timer use.  The timer use value can be set to one of the
 following: 1 = BIOS FRB2, 2 = BIOS POST, 3 = OS_LOAD, 4 = SMS OS, 5 =
 OEM.
 .TP
-.I  "-l INT, --log=INT"
+\fB\-l INT\fR, \fB\-\-log=INT\fR
 Set Log Flag.  A flag value of 0 turns logging on.  A value of 1 turns
 logging off.
 .TP
-.I  "-a INT, --timeout-action=INT"
+\fB\-a INT\fR, \fB\-\-timeout-action=INT\fR
 Set timeout action.  The timeout action can be set to one of the
 following: 0 = No action, 1 = Hard Reset, 2 = Power Down, 3 = Power
 Cycle.
 .TP
-.I  "-p INT, --pre-timeout-interrupt=INT"
+\fB\-p INT\fR, \fB\-\-pre-timeout-interrupt=INT\fR
 Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-.I  "-z SECS, --pre-timeout-interval=SECS"  
+\fB\-z SECS\fR, \fB\-\-pre-timeout-interval=SECONDS\fR  
 Set pre-timeout interval in seconds.
 .TP
-.I  "-F, --clear-bios-frb2"
+\fB\-F\fR, \fB\-\-clear-bios-frb2\fR
 Clear  BIOS FRB2 Timer Use Flag.
 .TP
-.I  "-P, --clear-bios-post"
+\fB\-P\fR, \fB\-\-clear-bios-post\fR
 Clear BIOS POST Timer Use Flag.
 .TP
-.I  "-L, --clear-os-load"
+\fB\-L\fR, \fB\-\-clear-os-load\fR
 Clear OS Load Timer Use Flag.
 .TP
-.I  "-S, --clear-sms-os"
+\fB\-S\fR, \fB\-\-clear-sms-os\fR
 Clear SMS/OS Timer Use Flag.
 .TP
-.I  "-O, --clear-oem"
+\fB\-O\fR, \fB\-\-clear-oem\fR
 Clear OEM Timer Use Flag.
 .TP
-.I  "-i SECS, --initial-countdown=SECS"
+\fB\-i SECS\fR, \fB\-\-initial-countdown=SECONDS\fR
 Set initial countdown in seconds.
 .TP
-.I  "-G INT, --gratuitous-arp=INT"
+\fB\-G INT\fR, \fB\-\-gratuitous-arp=INT\fR
 Suspend or don't suspend gratuitous ARPs while the BMC timer is
 running.  A flag value of 1 suspends gratuitous ARPs.  A value of 0
 will not suspend gratuitous ARPs.  If this option is not specified,
 gratuitous ARPs will not be suspended.
 .TP
-.I  "-A INT, --arp-response=INT"
+\fB\-A INT\fR, \fB\-\-arp-response=INT\fR
 Suspend or don't suspend BMC-generated ARP responses while the BMC
 timer is running.  A flag value of 1 suspends ARP responses.  A value
 of 0 will not suspend ARP responses.  If this option is not specified,
 ARP responses will not be suspended.
 .TP
-.I  "-e, --reset-period"
+\fB\-e\fR, \fB\-\-reset-period\fR
 Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"
