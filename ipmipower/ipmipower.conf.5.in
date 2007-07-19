@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.35.8.5 2007-07-18 22:37:14 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.35.8.6 2007-07-19 18:01:00 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,12 +63,13 @@ Note that it is possible to list the username and password in the
 configuration file.  If this data is stored in a configuration file,
 system administrators should limit access to this file.
 .TP
-.I hostname host1 host2 host3 ...
-Specify the default hostname(s).  Multiple hostnames or hostname ranges
-can be specified by separating each range by whitespace.  See
+\fBhostname\fR \fIIPMIHOST1 IPMIHOST2 IPMIHOST3 ...\fR
+Specify the default remote host(s) to communicate with.
+Multiple hostnames or hostname ranges
+may be specified by separating each range by whitespace.  See
 .B ipmipower (1)
-for information on hostname ranges.  For example, any of the following
-configuration listings would be acceptable:
+for information on hostranges under HOSTRANGED SUPPORT.  For example,
+any of the following configuration listings would be acceptable:
 
 hostname host1 host2 host3 foo1 bar1
 
@@ -80,85 +81,80 @@ hostname host[1-3] foo1,bar1
 
 At most 64 hostnames or hostname ranges can be separted by whitespace. 
 .TP
-.I username str
+\fBusername\fR \fIUSERNAME\fR
 Specify the default username to use.
 .TP
-.I password str
+\fBpassword\fR \fIPASSWORD\fR
 Specify the default password to use.
 .TP
-.I k_g str
-Specify the BMC key (K_g) to use.  Prefix the string with '0x' to
-specify the key in hexadecimal.
+\fBk_g\fR \fIK_G\fR
+Specify the default BMC key (K_g) to use.  To input the key in
+hexadecimal form, prefix the string with '0x'.
 .TP
-.I authentication-type str
-Specify the default authentication type to use.  
-.B Ipmipower 
-currently supports the following authentication types:
-"auto", "none", "straight_password_key", "md2", and "md5".
+\fBauthentication-type\fR \fIAUTHTYPE\fR
+Specify the default IPMI 1.5 authentication type to use.  The
+currently available authentication types are NONE,
+STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
-.I privilege str
-Specify the default privilege type to use.  
-.B Ipmipower 
-currently supports the following privilege types: "auto", "user",
-"operator", and "admin".
+\fBprivilege-level\fR \fIPRIVILEGE-LEVEL\fR
+Specify the default privilege type to use.  The currently available
+privilege levels are AUTO, USER, OPERATOR, and ADMIN.
 .TP
-.I ipmi-version str
-Specify the default IPMI protocol version to use: "auto", "1.5", and "2.0"
+\fBipmi-version\fR \fIIPMIVERSION\fR
+Specify the default IPMI protocol version to use.  The currently
+available versions are AUTO, 1.5, and 2.0.
 .TP
-.I cipher-suite-id str
-Specify the default Cipher Suite ID to use: "auto", "0", "1", "2", "3", "6", "7", "8", "11", 12"
+\fBcipher-suite-id\fR \fICIPHER_SUITE_ID\fR
+Specify the default cipher suite ID to use.  The currently supported
+cipher suite IDs are AUTO, 0, 1, 2, 3, 6, 7, 8, 11, 12.
 .TP
-.I on-if-off enable|disable
-Specify if on-if-off is enabled or disabled by default.
+\fBon-if-off\fR \fIENABLE|DISABLE\fR
+Specify if on-if-off functionality is enabled or disabled by default.
 .TP
-.I wait-until-on enable|disable
-Specify if wait-until-on is enabled or disabled by default.
+\fBwait-until-on\fR \fIENABLE|DISABLE\fR
+Specify if wait-until-on functionality is enabled or disabled by default.
 .TP
-.I wait-until-off enable|disable
-Specify if wait-until-off is enabled or disabled by default.
+\fBwait-until-off\fR \fIENABLE|DISABLE\fR
+Specify if wait-until-off functionality is enabled or disabled by default.
 .TP
-.I consolidate-output enable|disable
-Specify if consolidate-output is enabled or disabled by default.
+\fBconsolidate-output\fR \fIENABLE|DISABLE\fR
+Specify if consolidate-output functionality is enabled or disabled by default.
 .TP
-.I eliminate enable|disable
-Specify if eliminate is enabled or disabled by default.
+\fBeliminate\fR \fIENABLE|DISABLE\fR
+Specify if eliminate functionality is enabled or disabled by default.
 .TP
-.I workaround-flags str
-Specify default workaround flags to use.  See 
+\fBworkaround-flags\fR \fIWORKAROUNDS\fR
+Specify the default workaround to vendor compliance issues.  See 
+WORKAROUNDS in
 .B ipmipower(8)
-for list of workarounds that can be specified.
+for a list of available workarounds.
 .TP
-.I session-timeout ms
-Specify the timeout in ms.
+\fBsession-timeout\fR \fIMILLISECONDS\fR
+Specify the default session timeout length in milliseconds.
 .TP
-.I retry-timeout ms
-Specify the retry timeout in ms.  See
-.B ipmipower (1)
-for an explanation on the difference between this is the timeout option.
+\fBretry-timeout\fR \fIMILLISECONDS\fR
+Specify the default retransmission timeout length in milliseconds.
 .TP
-.I retry-wait-timeout ms
-Specify the retry wait timeout in ms.  See
-.B ipmipower (1)
-for an explanation on the difference between this is the above timeout
-options.
+\fBretry-wait-timeout\fR \fIMILLISECONDS\fR
+Specify the default retransmission wait timeout length in milliseconds.
 .TP
-.I retry-backoff-count num
-Specify the retry backoff count
+\fBretry-backoff-count\fR \fICOUNT\fR
+Specify the default retransmission backoff count for retransmissions.
 .TP 
-.I ping-interval ms
-Specify the ping interval length in ms.
+\fBping-interval\fR \fIMILLISECONDS\fR
+Specify the default ping interval length in milliseconds.
 .TP
-.I ping-timeout ms
-Specify the ping timeout length in ms.
+\fBping-timeout\fR \fIMILLISECONDS\fR
+Specify the default ping timeout length in milliseconds.
 .TP
-.I ping-packet-count num
-Specify a new ping packet count
+\fBping-packet-count\fR \fICOUNT\fR
+Specify the default ping packet count size.
 .TP
-.I ping-percent num
-Specify a new ping percent
+\fBping-percent\fR \fIPERCENT\fR
+Specify the default ping percent value.
 .TP
-.I ping-consec-count num
-Specify a new ping consec count
+\fBping-consec-count\fR \fICOUNT\fR
+Specify the default ping consecutive count value.
 .LP
 .br
 .SH "FILES"

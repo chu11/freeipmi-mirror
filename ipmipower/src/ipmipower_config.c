@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.10 2007-07-19 16:43:45 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.11 2007-07-19 18:01:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -232,7 +232,7 @@ static void
 _usage(void) 
 {
   fprintf(stderr, "Usage: ipmipower [OPTIONS]\n"
-          "-h --hostname=IPMIHOST                  Hostname(s)\n"
+          "-h --hostname=IPMIHOST1,IPMIHOST2,...   Hostname(s)\n"
           "-u --username=USERNAME                  Username\n"
           "-p --password=PASSWORD                  Password\n" 
           "-P --password-prompt                    Prompt for Password\n"

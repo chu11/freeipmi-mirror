@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.10 2007-07-19 16:43:45 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.11 2007-07-19 18:01:00 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,7 +132,7 @@ to use for payload encryption.  Defaults to cipher suite ID AUTO to
 automatically select the most secure cipher suite ID available.  The
 following cipher suite IDs are currently supported:
 .sp
-auto - Select the most secure cipher suite available from the remote machine
+AUTO - Select the most secure cipher suite available from the remote machine
 .sp
 0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
 .sp
@@ -214,7 +214,7 @@ The following options are used to change the behavior of
 .B ipmipower's 
 network behavior.
 .TP
-\fB\-t\fR, \fB\-\-session-timeout\fR=\fBMILLISECONDS\fR
+\fB\-t\fR, \fB\-\-session\-timeout\fR=\fBMILLISECONDS\fR
 Specify the session timeout length in milliseconds.  The session
 timeout value is used to determine when to give up on a power control
 command.  Defaults to 20000 milliseconds (20 seconds).
@@ -234,21 +234,21 @@ retransmission timeout refers to an individual packet within the IPMI
 protocol.
 .TP
 \fB\-q\fR, \fB\-\-retransmission\-wait\-timeout\fR=\fBMILLISECONDS\fR
-Specify the retransmission wait timeout in milliseconds.  The
+Specify the retransmission wait timeout length in milliseconds.  The
 retransmission wait timeout is similar to the retransmission timeout
 above, but is used specifically for power completion verification with
 the \fB\-\-wait\-until\-on\fR and \fB\-\-wait\-until\-off\fR options.
 .TP
 \fB\-b\fR, \fB\-\-retransmission\-backoff\-count\fR=\fBCOUNT\fR
-Specify the retransmission backout count for retransmissions.  After
+Specify the retransmission backoff count for retransmissions.  After
 ever COUNT retransmissions, the retransmission timeout length will be
 increased by another factor.  Defaults to 8.  Backoff count
 calculations can be disabled by setting this value to 0.
 .TP
 \fB\-i\fR, \fB\-\-ping\-interval\fR=\fBMILLISECONDS\fR
-Specify the ping interval and timeout length in milliseconds.  When
-running in interactive mode, RMCP (Remote Management Control Protocol)
-discovery messages will be sent to all configured remote hosts every
+Specify the ping interval length in milliseconds.  When running in
+interactive mode, RMCP (Remote Management Control Protocol) discovery
+messages will be sent to all configured remote hosts every
 MILLISECONDS to confirm their support of IPMI.  Power commands cannot
 be sent to a host until it is discovered (or re-discovered if
 previously lost).  Defaults to 5000 milliseconds (5 seconds).  Ping
@@ -270,7 +270,7 @@ Specify the ping packet count size.  Defaults to 10.  See the
 \fB\-\-ping-percent\-fR option below for more information on this
 option.
 .TP
-\fB\-w\fR, \fB\-\-ping\-percent\fR=\fBCOUNT\fR
+\fB\-w\fR, \fB\-\-ping\-percent\fR=\fBPERCENT\fR
 Specify the ping percent value.  Defaults to 50.
 
 Since IPMI is based on UDP, it is

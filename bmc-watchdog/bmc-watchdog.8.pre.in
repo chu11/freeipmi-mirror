@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.1 2007-07-19 16:43:44 chu11 Exp $
+\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.2 2007-07-19 18:01:00 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,7 +124,7 @@ Specify the driver type to use instead of doing an auto selection.
 The currently available inband drivers are KCS, SSIF, and OPENIPMI.
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
 .TP
-\fB\-f STRING\fR, \fB\-\-logfile=FILE\fR
+\fB\-f STRING\fR, \fB\-\-logfile=\fIFILE\fR
 Specify an alternate logfile from the default of
 /var/log/freeipmi/bmc-watchdog.log.
 .TP
@@ -141,12 +141,12 @@ to stderr.
 The following options can be used by the set command to set or clear
 various BMC watchdog configuration parameters.
 .TP
-\fB\-u INT\fR, \fB\-\-timer-use=INT\fR
+\fB\-u INT\fR, \fB\-\-timer-use=\fIINT\fR
 Set timer use.  The timer use value can be set to one of the
 following: 1 = BIOS FRB2, 2 = BIOS POST, 3 = OS_LOAD, 4 = SMS OS, 5 =
 OEM.
 .TP
-\fB\-m INT\fR, \fB\-\-stop-timer=INT\fR
+\fB\-m INT\fR, \fB\-\-stop-timer=\fIINT\fR
 Set Stop Timer Flag.  A flag value of 0 stops the current BMC watchdog
 timer.  A value of 1 doesn't turn off the current watchdog timer.
 .TP
@@ -154,17 +154,17 @@ timer.  A value of 1 doesn't turn off the current watchdog timer.
 Set Log Flag.  A flag value of 0 turns logging on.  A value of 1 turns
 logging off.
 .TP
-\fB\-a INT\fR, \fB\-\-timeout-action=INT\fR
+\fB\-a INT\fR, \fB\-\-timeout-action=\fIINT\fR
 Set timeout action.  The timeout action can be set to one of the
 following: 0 = No action, 1 = Hard Reset, 2 = Power Down, 3 = Power
 Cycle.
 .TP
-\fB\-p INT\fR, \fB\-\-pre-timeout-interrupt=INT\fR
+\fB\-p INT\fR, \fB\-\-pre-timeout-interrupt=\fIINT\fR
 Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-\fB\-z SECS\fR, \fB\-\-pre-timeout-interval=SECONDS\fR  
+\fB\-z SECS\fR, \fB\-\-pre-timeout-interval=\fISECONDS\fR  
 Set pre-timeout interval in seconds.
 .TP
 \fB\-F\fR, \fB\-\-clear-bios-frb2\fR
@@ -182,7 +182,7 @@ Clear SMS/OS Timer Use Flag.
 \fB\-O\fR, \fB\-\-clear-oem\fR
 Clear OEM Timer Use Flag.
 .TP
-\fB\-i SECS\fR, \fB\-\-initial-countdown=SECONDS\fR
+\fB\-i SECS\fR, \fB\-\-initial-countdown=\fISECONDS\fR
 Set initial countdown in seconds.
 .TP
 \fB\-w\fR, \fB\-\-start-after-set\fR
@@ -208,13 +208,13 @@ has been initially started.
 .SH "START OPTIONS"
 The following options can be used by the start command.
 .TP
-\fB\-G INT\fR, \fB\-\-gratuitous-arp=INT\fR
+\fB\-G INT\fR, \fB\-\-gratuitous-arp=\fIINT\fR
 Suspend or don't suspend gratuitous ARPs while the BMC timer is
 running.  A flag value of 1 suspends gratuitous ARPs.  A value of 0
 will not suspend gratuitous ARPs.  If this option is not specified,
 gratuitous ARPs will not be suspended.
 .TP
-\fB\-A INT\fR, \fB\-\-arp-response=INT\fR
+\fB\-A INT\fR, \fB\-\-arp-response=\fIINT\fR
 Suspend or don't suspend BMC-generated ARP responses while the BMC
 timer is running.  A flag value of 1 suspends ARP responses.  A value
 of 0 will not suspend ARP responses.  If this option is not specified,
@@ -224,26 +224,26 @@ ARP responses will not be suspended.
 The following options can be used by the daemon command to set the
 initial BMC watchdog configuration parameters.
 .TP
-\fB\-u INT\fR, \fB\-\-timer-use=INT\fR
+\fB\-u INT\fR, \fB\-\-timer-use=\fIINT\fR
 Set timer use.  The timer use value can be set to one of the
 following: 1 = BIOS FRB2, 2 = BIOS POST, 3 = OS_LOAD, 4 = SMS OS, 5 =
 OEM.
 .TP
-\fB\-l INT\fR, \fB\-\-log=INT\fR
+\fB\-l INT\fR, \fB\-\-log=\fIINT\fR
 Set Log Flag.  A flag value of 0 turns logging on.  A value of 1 turns
 logging off.
 .TP
-\fB\-a INT\fR, \fB\-\-timeout-action=INT\fR
+\fB\-a INT\fR, \fB\-\-timeout-action=\fIINT\fR
 Set timeout action.  The timeout action can be set to one of the
 following: 0 = No action, 1 = Hard Reset, 2 = Power Down, 3 = Power
 Cycle.
 .TP
-\fB\-p INT\fR, \fB\-\-pre-timeout-interrupt=INT\fR
+\fB\-p INT\fR, \fB\-\-pre-timeout-interrupt=\fIINT\fR
 Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-\fB\-z SECS\fR, \fB\-\-pre-timeout-interval=SECONDS\fR  
+\fB\-z SECS\fR, \fB\-\-pre-timeout-interval=\fISECONDS\fR  
 Set pre-timeout interval in seconds.
 .TP
 \fB\-F\fR, \fB\-\-clear-bios-frb2\fR
@@ -261,16 +261,16 @@ Clear SMS/OS Timer Use Flag.
 \fB\-O\fR, \fB\-\-clear-oem\fR
 Clear OEM Timer Use Flag.
 .TP
-\fB\-i SECS\fR, \fB\-\-initial-countdown=SECONDS\fR
+\fB\-i SECS\fR, \fB\-\-initial-countdown=\fISECONDS\fR
 Set initial countdown in seconds.
 .TP
-\fB\-G INT\fR, \fB\-\-gratuitous-arp=INT\fR
+\fB\-G INT\fR, \fB\-\-gratuitous-arp=\fIINT\fR
 Suspend or don't suspend gratuitous ARPs while the BMC timer is
 running.  A flag value of 1 suspends gratuitous ARPs.  A value of 0
 will not suspend gratuitous ARPs.  If this option is not specified,
 gratuitous ARPs will not be suspended.
 .TP
-\fB\-A INT\fR, \fB\-\-arp-response=INT\fR
+\fB\-A INT\fR, \fB\-\-arp-response=\fIINT\fR
 Suspend or don't suspend BMC-generated ARP responses while the BMC
 timer is running.  A flag value of 1 suspends ARP responses.  A value
 of 0 will not suspend ARP responses.  If this option is not specified,
