@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107.4.6 2007-07-24 00:59:45 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.4.7 2007-07-24 19:56:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -229,18 +229,18 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    */
   ip->previously_received_list = 0xFF;
 
-  if (conf->privilege == PRIVILEGE_LEVEL_AUTO)
+  if (conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
     {
       /* Following are default minimum privileges according to the IPMI
        * specification 
        */
       if (cmd == POWER_CMD_POWER_STATUS)
-        ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
+        ip->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
       else
-        ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+        ip->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
     }
   else
-    ip->privilege = ipmipower_ipmi_privilege_level(conf->privilege);
+    ip->privilege_level = ipmipower_ipmi_privilege_level(conf->privilege_level);
 
   /* IPMI 1.5 */
 
@@ -284,9 +284,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * of an actual privilege.
        */
       if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
-	ip->requested_maximum_privilege = ip->privilege;
+	ip->requested_maximum_privilege_level = ip->privilege_level;
       else
-	ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
+	ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
       memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
       ip->sik_key_ptr = ip->sik_key;
       ip->sik_key_len = IPMI_MAX_SIK_KEY_LENGTH;
@@ -1022,7 +1022,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
       else if (authentication_type_none)
 	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
-      else if (conf->privilege == PRIVILEGE_LEVEL_AUTO)
+      else if (conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
 	{
 	  /* achu: It may not seem possible to get to this point
 	   * since the check for anonymous_login, null_username,
@@ -1031,7 +1031,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	   * could be enabled (shame on you evil vendor!!) or
 	   * authentication at this privilege level isn't allowed.
 	   */
-	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	  if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
 	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname);
@@ -1062,7 +1062,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
       else
 	{
-	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	  if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
 	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
@@ -1080,13 +1080,13 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
   if (authentication_type_try_higher_priv)
     {
       /* Try a higher privilege level */
-      if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER)
-	ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR)
-	ip->privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
+      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
+	ip->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+	ip->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
       else
 	err_exit("_check_authentication_privileges: invalid privilege state: %d", 
-		 ip->privilege);
+		 ip->privilege_level);
 
       return 1;
     }
@@ -1638,8 +1638,8 @@ _check_open_session_error(ipmipower_powercmd_t ip)
   /* A rmcpplus status error takes precedence over a privilege error */
   if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
     {
-      if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
-	  && conf->privilege == PRIVILEGE_LEVEL_AUTO)
+      if (ip->requested_maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
+	  && conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
 	{
 	  if (ip->cmd == POWER_CMD_POWER_STATUS)
 	    {
@@ -1660,7 +1660,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	    }
 	}
       else
-	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege) ? 1 : 0;
+	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege_level) ? 1 : 0;
       
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
 	  && !priv_check)
@@ -1820,7 +1820,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            managed_system_random_number,
                                            managed_system_random_number_len,
                                            ip->name_only_lookup,
-                                           ip->privilege,
+                                           ip->privilege_level,
                                            username,
                                            username_len,
                                            &(ip->sik_key_ptr),

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.12 2007-07-24 00:59:45 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.13 2007-07-24 19:56:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -105,7 +105,7 @@ ipmipower_config_setup(void)
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
-  conf->privilege = PRIVILEGE_LEVEL_AUTO;
+  conf->privilege_level = PRIVILEGE_LEVEL_AUTO;
   conf->ipmi_version = IPMI_VERSION_AUTO;
   conf->cipher_suite_id = CIPHER_SUITE_ID_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
@@ -138,7 +138,7 @@ ipmipower_config_setup(void)
   conf->username_set_on_cmdline = IPMIPOWER_FALSE;
   conf->password_set_on_cmdline = IPMIPOWER_FALSE;
   conf->authentication_type_set_on_cmdline = IPMIPOWER_FALSE;
-  conf->privilege_set_on_cmdline = IPMIPOWER_FALSE;
+  conf->privilege_level_set_on_cmdline = IPMIPOWER_FALSE;
   conf->ipmi_version_set_on_cmdline = IPMIPOWER_FALSE;
   conf->cipher_suite_id_set_on_cmdline = IPMIPOWER_FALSE;
   conf->on_if_off_set_on_cmdline = IPMIPOWER_FALSE;
@@ -171,8 +171,8 @@ _config_common_checks(char *str)
   if (conf->authentication_type == AUTHENTICATION_TYPE_INVALID) 
     err_exit("%s: invalid authentication_type", str);
 
-  if (conf->privilege == PRIVILEGE_LEVEL_INVALID)
-    err_exit("%s: invalid privilege", str);
+  if (conf->privilege_level == PRIVILEGE_LEVEL_INVALID)
+    err_exit("%s: invalid privilege level", str);
 
   if (conf->ipmi_version == IPMI_VERSION_INVALID)
     err_exit("%s: invalid ipmi version", str);
@@ -303,6 +303,8 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"config",                       1, NULL, IPMIPOWER_CONFIG_KEY}, /* no short option */
 #endif /* NDEBUG */
       {"authentication-type",          1, NULL, 'a'},  
+      /* privilege maintained for backwards compatability */
+      {"privilege",                    1, NULL, 'l'},
       {"privilege-level",              1, NULL, 'l'},
       {"ipmi-version",                 1, NULL, 'R'},
       {"cipher-suite-id",              1, NULL, 'I'},
@@ -322,8 +324,14 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       /* timeout maintained for backwards compatability */
       {"timeout" ,                     1, NULL, 't'},
       {"session-timeout" ,             1, NULL, 't'},
+      /* retry-timeout maintained for backwards comptability */
+      {"retry-timeout",                1, NULL, 'y'},
       {"retransmission-timeout",       1, NULL, 'y'},
+      /* retry-wait-timeout maintained for backwards comptability */
+      {"retry-wait-timeout",           1, NULL, 'q'},
       {"retransmission-wait-timeout",  1, NULL, 'q'},
+      /* retry-backoff-count maintained for backwards comptability */
+      {"retry-backoff-count",          1, NULL, 'b'},
       {"retransmission-backoff-count", 1, NULL, 'b'},
       {"ping-interval",                1, NULL, 'i'},
       {"ping-timeout",                 1, NULL, 'z'},
@@ -449,8 +457,8 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
           break;
         case 'l':       /* --privilege-level */
-          conf->privilege = ipmipower_privilege_level_index(optarg);
-          conf->privilege_set_on_cmdline = IPMIPOWER_TRUE;
+          conf->privilege_level = ipmipower_privilege_level_index(optarg);
+          conf->privilege_level_set_on_cmdline = IPMIPOWER_TRUE;
           break;
 	case 'R':	/* --ipmi-version */
           conf->ipmi_version = ipmipower_ipmi_version_index(optarg);
@@ -619,15 +627,15 @@ _cb_authentication_type(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
-_cb_privilege(conffile_t cf, struct conffile_data *data,
-              char *optionname, int option_type, void *option_ptr, 
-              int option_data, void *app_ptr, int app_data) 
+_cb_privilege_level(conffile_t cf, struct conffile_data *data,
+                    char *optionname, int option_type, void *option_ptr, 
+                    int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->privilege_set_on_cmdline == IPMIPOWER_TRUE)
+  if (conf->privilege_level_set_on_cmdline == IPMIPOWER_TRUE)
     return 0;
 
-  /* Incorrect privilege checked in _config_common_checks */
-  conf->privilege = ipmipower_privilege_level_index(data->string);
+  /* Incorrect privilege level checked in _config_common_checks */
+  conf->privilege_level = ipmipower_privilege_level_index(data->string);
   return 0;
 }
 
@@ -757,12 +765,14 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
 void 
 ipmipower_config_conffile_parse(char *configfile) 
 {
-  int hostname_flag, hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
-    privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, 
-    wait_until_on_flag, wait_until_off_flag, consolidate_output_flag, 
-    eliminate_flag, workaround_flags_flag, session_timeout_flag, retransmission_timeout_flag, 
-    retransmission_wait_timeout_flag, retransmission_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
-    ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
+  int hostname_flag, hostnames_flag, username_flag, password_flag, k_g_flag, 
+    authentication_type_flag, privilege_flag, privilege_level_flag, cipher_suite_id_backwards_flag, 
+    cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, wait_until_on_flag, wait_until_off_flag, 
+    consolidate_output_flag, eliminate_flag, workaround_flags_flag, timeout_flag, session_timeout_flag, 
+    retry_timeout_flag, retransmission_timeout_flag, retry_wait_timeout_flag, 
+    retransmission_wait_timeout_flag, retry_backoff_count_flag, retransmission_backoff_count_flag, 
+    ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
+    ping_consec_count_flag;
 
   struct conffile_option options[] = 
     {
@@ -779,11 +789,17 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &k_g_flag, NULL, 0},
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
        1, 0, &authentication_type_flag, NULL, 0},
-      {"privilege-level", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
+      /* "privilege" maintained for backwards compatability */
+      {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
        1, 0, &privilege_flag, NULL, 0},
+      {"privilege-level", CONFFILE_OPTION_STRING, -1, _cb_privilege_level, 
+       1, 0, &privilege_level_flag, NULL, 0},
       {"ipmi-version", CONFFILE_OPTION_STRING, -1, _cb_ipmi_version,
        1, 0, &ipmi_version_flag, NULL, 0},
+      /* cipher suite id w/ underscores maintained for backwards compatability */
       {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
+       1, 0, &cipher_suite_id_backwards_flag, NULL, 0},
+      {"cipher-suite-id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
        1, 0, &cipher_suite_id_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), 
@@ -802,17 +818,29 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &workaround_flags_flag, NULL, 0},
       /* timeout maintained for backwards compatability */
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
-       1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
+       1, 0, &timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
       {"session-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &session_timeout_flag, &(conf->session_timeout_len), 
        conf->session_timeout_len_set_on_cmdline},
+      /* retry-timeout for backwards comptability */
+      {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+       1, 0, &retry_timeout_flag, &(conf->retransmission_timeout_len), 
+       conf->retransmission_timeout_len_set_on_cmdline},
       {"retransmission-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &retransmission_timeout_flag, &(conf->retransmission_timeout_len), 
        conf->retransmission_timeout_len_set_on_cmdline},
+      /* retry-wait-timeout for backwards comptability */
+      {"retry-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
+       1, 0, &retry_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
+       conf->retransmission_wait_timeout_len_set_on_cmdline},
       {"retransmission-wait-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &retransmission_wait_timeout_flag, &(conf->retransmission_wait_timeout_len), 
        conf->retransmission_wait_timeout_len_set_on_cmdline},
+      /* retry-backoff-count for backwards compatability */
+      {"retry-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
+       1, 0, &retry_backoff_count_flag, &(conf->retransmission_backoff_count), 
+       conf->retransmission_backoff_count_set_on_cmdline},
       {"retransmission-backoff-count", CONFFILE_OPTION_INT, -1, _cb_int,
        1, 0, &retransmission_backoff_count_flag, &(conf->retransmission_backoff_count), 
        conf->retransmission_backoff_count_set_on_cmdline},

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.10 2007-07-24 00:59:43 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.11 2007-07-24 19:56:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -140,6 +140,8 @@ _cmdline_parse(int argc, char **argv)
       {"password-prompt",          1, NULL, 'P'},
       {"k-g",                      1, NULL, 'k'},
       {"k-g-prompt",               1, NULL, 'K'},
+      /* privilege maintained for backwards compatability */
+      {"privilege",                1, NULL, 'l'},
       {"privilege-level",          1, NULL, 'l'},
       {"cipher-suite-id",          1, NULL, 'I'},
       {"config-file",              1, NULL, 'C'}, 
@@ -403,7 +405,7 @@ _cb_k_g(conffile_t cf,
 }
 
 static int
-_cb_privilege(conffile_t cf, 
+_cb_privilege_level(conffile_t cf, 
 		    struct conffile_data *data,
 		    char *optionname,
 		    int option_type,
@@ -507,6 +509,7 @@ _config_file_parse(void)
     password_flag, 
     k_g_flag,
     privilege_flag, 
+    privilege_level_flag, 
     cipher_suite_id_flag,
     dont_steal_flag,
     lock_memory_flag,
@@ -564,14 +567,26 @@ _config_file_parse(void)
         NULL, 
         0
       },
+      /* privilege maintained for backwards compatability */
       {
-        "privilege-level", 
+        "privilege", 
         CONFFILE_OPTION_STRING, 
         -1,
         _cb_privilege,
         1, 
         0, 
         &privilege_flag,
+        NULL, 
+        0
+      },
+      {
+        "privilege-level", 
+        CONFFILE_OPTION_STRING, 
+        -1,
+        _cb_privilege_level,
+        1, 
+        0, 
+        &privilege_level_flag,
         NULL, 
         0
       },

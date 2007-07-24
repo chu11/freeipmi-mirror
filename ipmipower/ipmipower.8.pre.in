@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.11 2007-07-19 18:01:00 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.12 2007-07-24 19:56:14 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -205,7 +205,7 @@ extremely long.
 Turn on logging.  Default logfile is /tmp/ipmipower.PID, where PID is
 the current process id.
 .TP
-\fB\-\-logfile\fR
+\fB\-\-logfile\fR=\fFILE\fR
 Change current logfile.
 \}
 .LP
@@ -313,9 +313,9 @@ provides the following interactive commands at the ipmipower> prompt.
 Before any power commands (on, off, cycle, reset, stat, pulse, or
 soft) can be used, hostnames must be configured into
 .B ipmipower, 
-either through the command prompt or the hostnames command below.
+either through the command prompt or the hostname command below.
 .TP
-.I "hostnames [str]"
+.I "hostname [str]"
 specify a new set of hosts, no str to unconfigure all hosts
 .TP
 .I "username [str]"

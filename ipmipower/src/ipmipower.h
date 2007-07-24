@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75.4.8 2007-07-24 00:59:44 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.75.4.9 2007-07-24 19:56:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -436,7 +436,7 @@ struct ipmipower_powercmd {
   unsigned int session_inbound_count;
   uint32_t highest_received_sequence_number;
   unsigned int previously_received_list;
-  uint8_t privilege;
+  uint8_t privilege_level;
 
   /* IPMI 1.5 specific */
   ipmipower_bool_t permsgauth_enabled;
@@ -445,7 +445,7 @@ struct ipmipower_powercmd {
   /* IPMI 2.0 specific */
   uint8_t cipher_suite_id;
   unsigned int cipher_suite_id_ranking_index;
-  uint8_t requested_maximum_privilege;
+  uint8_t requested_maximum_privilege_level;
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
   uint8_t confidentiality_algorithm;
@@ -565,7 +565,7 @@ struct ipmipower_config
   char                     configfile[MAXPATHLEN+1];
 
   authentication_type_t    authentication_type;
-  privilege_level_t        privilege;
+  privilege_level_t        privilege_level;
   ipmi_version_t           ipmi_version;
   cipher_suite_id_t        cipher_suite_id;
   ipmipower_bool_t         on_if_off;
@@ -599,7 +599,7 @@ struct ipmipower_config
   ipmipower_bool_t         password_set_on_cmdline;
   ipmipower_bool_t         k_g_set_on_cmdline;
   ipmipower_bool_t         authentication_type_set_on_cmdline;
-  ipmipower_bool_t         privilege_set_on_cmdline;
+  ipmipower_bool_t         privilege_level_set_on_cmdline;
   ipmipower_bool_t         ipmi_version_set_on_cmdline;
   ipmipower_bool_t         cipher_suite_id_set_on_cmdline;
   ipmipower_bool_t         on_if_off_set_on_cmdline;

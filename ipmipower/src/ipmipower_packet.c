@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.64.2.4 2007-07-24 00:59:45 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.64.2.5 2007-07-24 19:56:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -762,7 +762,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
     {
       if (fill_cmd_get_channel_authentication_capabilities_v20(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                               ip->privilege, 
+                                                               ip->privilege_level, 
                                                                IPMI_GET_IPMI_V20_EXTENDED_DATA,
                                                                ip->obj_authentication_capabilities_v20_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
@@ -773,7 +773,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     {
       if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                           ip->privilege, 
+                                                           ip->privilege_level, 
                                                            ip->obj_authentication_capabilities_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_get_channel_authentication_capabilities: %s", 
@@ -810,7 +810,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  ip->ic->hostname, ip->protocol_state);
       
       if (fill_cmd_activate_session(authentication_type, 
-				    ip->privilege, 
+				    ip->privilege_level, 
 				    challenge_string,
 				    challenge_string_len,
                                     IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER,
@@ -835,7 +835,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == OPEN_SESSION_REQ)
     {
       if (fill_rmcpplus_open_session (ip->initial_message_tag + ip->message_tag_count,
-                                      ip->requested_maximum_privilege,
+                                      ip->requested_maximum_privilege_level,
                                       ip->remote_console_session_id,
                                       ip->authentication_algorithm,
                                       ip->integrity_algorithm,
@@ -852,7 +852,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                         managed_system_session_id,
                                         ip->remote_console_random_number,
                                         IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                        ip->privilege,
+                                        ip->privilege_level,
                                         ip->name_only_lookup,
                                         username,
                                         username_len,
@@ -916,7 +916,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                                                                                          managed_system_random_number_len,
                                                                                                          ip->remote_console_session_id,
                                                                                                          name_only_lookup,
-                                                                                                         ip->privilege,
+                                                                                                         ip->privilege_level,
                                                                                                          username,
                                                                                                          username_len,
                                                                                                          key_exchange_authentication_code,

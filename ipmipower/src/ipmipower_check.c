@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.62.4.1 2007-07-10 20:44:48 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.62.4.2 2007-07-24 19:56:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -762,21 +762,21 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
    * So check that we get back what we sent.
    */
   if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
-    rv = (val == ip->requested_maximum_privilege) ? 1 : 0;
+    rv = (val == ip->requested_maximum_privilege_level) ? 1 : 0;
   else
     {
-      if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER
+      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_USER
 	  && (val == IPMI_PRIVILEGE_LEVEL_USER
 	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 	      || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
-      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
+      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	       && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
      rv = 1;
-      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
+      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
 	       && (val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
@@ -789,7 +789,7 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
         "invalid privilege: %x, expected: %x",
         ip->ic->hostname, ip->protocol_state,
         (unsigned int)val,
-        (unsigned int)ip->requested_maximum_privilege);
+        (unsigned int)ip->requested_maximum_privilege_level);
   
   return (rv);
 }
@@ -955,7 +955,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
                                                                         managed_system_guid,
                                                                         managed_system_guid_len,
                                                                         ip->name_only_lookup,
-                                                                        ip->privilege,
+                                                                        ip->privilege_level,
                                                                         username,
                                                                         username_len,
                                                                         ip->obj_rakp_message_2_res)) < 0)

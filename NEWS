@@ -35,8 +35,10 @@ o Made many command line options consistent across FreeIPMI.  Notable
   10) The short option -r for --register-spacing has been removed.
   11) Short options for most debugging options have been removed.
   12) All "--retry" options are now "--retransmission" options.
+     Backwards compatability with old options has been maintained.
 o Similarly, renamed configuration file options or interactive prompt
-  options for consistency with command line.
+  options for consistency with the command line.  Backwards
+  compatability has been maintained as much as possible.
 o Similarly, updated manpages for consistency across tools.
 o Fixed various configuration file options or interactive prompt option
   inconsistencies with dashes vs. underscores.

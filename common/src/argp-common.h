@@ -61,7 +61,7 @@ enum argp_common_option_keys
 
 #define ARGP_COMMON_OPTIONS_DRIVER                                                           \
     {"driver-type",    DRIVER_TYPE_KEY, "IPMIDRIVER", 0, 	                             \
-     "Specify  the  driver  type to use instead of doing an auto selection.", 0}
+     "Specify the driver type to use instead of doing an auto selection.", 0}
 
 #define ARGP_COMMON_OPTIONS_INBAND                                                           \
     {"no-probing",     NO_PROBING_KEY, 0, 0, 	                                             \
