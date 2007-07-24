@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107.4.5 2007-07-19 16:43:45 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.4.6 2007-07-24 00:59:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,12 +47,12 @@
 #endif /* !TIME_WITH_SYS_TIME */
 
 #include "ipmipower.h"
-#include "ipmipower_authentication.h"
-#include "ipmipower_cipher_suite.h"
+#include "ipmipower_authentication_type.h"
+#include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
-#include "ipmipower_privilege.h"
+#include "ipmipower_privilege_level.h"
 #include "ipmipower_check.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
@@ -229,7 +229,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    */
   ip->previously_received_list = 0xFF;
 
-  if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+  if (conf->privilege == PRIVILEGE_LEVEL_AUTO)
     {
       /* Following are default minimum privileges according to the IPMI
        * specification 
@@ -240,7 +240,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
         ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
     }
   else
-    ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
+    ip->privilege = ipmipower_ipmi_privilege_level(conf->privilege);
 
   /* IPMI 1.5 */
 
@@ -1022,7 +1022,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
       else if (authentication_type_none)
 	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
-      else if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+      else if (conf->privilege == PRIVILEGE_LEVEL_AUTO)
 	{
 	  /* achu: It may not seem possible to get to this point
 	   * since the check for anonymous_login, null_username,
@@ -1639,7 +1639,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
   if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
     {
       if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
-	  && conf->privilege == PRIVILEGE_TYPE_AUTO)
+	  && conf->privilege == PRIVILEGE_LEVEL_AUTO)
 	{
 	  if (ip->cmd == POWER_CMD_POWER_STATUS)
 	    {

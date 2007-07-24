@@ -46,10 +46,27 @@
 
 #define WORKAROUND_FLAG_BUFLEN 1024
 
-int
-parse_driver_type(char *str)
+int 
+parse_inband_driver_type(char *str)
 {
-  assert(str);
+  if (!str)
+    return -1;
+
+  if (strcasecmp (str, "kcs") == 0)
+    return IPMI_DEVICE_KCS;
+  else if (strcasecmp (str, "ssif") == 0)
+    return IPMI_DEVICE_SSIF;
+  else if (strcasecmp (str, "openipmi") == 0)
+    return IPMI_DEVICE_OPENIPMI;
+  
+  return -1;
+}
+
+int 
+parse_outofband_driver_type(char *str)
+{
+  if (!str)
+    return -1;
 
   if (strcasecmp (str, "lan") == 0)
     return IPMI_DEVICE_LAN;
@@ -59,13 +76,57 @@ parse_driver_type(char *str)
            || strcasecmp (str, "lan2_0") == 0
            || strcasecmp (str, "lan2_0") == 0)
     return IPMI_DEVICE_LAN_2_0;
-  else if (strcasecmp (str, "kcs") == 0)
-    return IPMI_DEVICE_KCS;
-  else if (strcasecmp (str, "ssif") == 0)
-    return IPMI_DEVICE_SSIF;
-  else if (strcasecmp (str, "openipmi") == 0)
-    return IPMI_DEVICE_OPENIPMI;
+  
+  return -1;
+}
 
+int
+parse_driver_type(char *str)
+{
+  int ret;
+
+  if (!str)
+    return -1;
+
+  if ((ret = parse_inband_driver_type(str)) < 0)
+    ret = parse_outofband_driver_type(str);
+
+  return ret;
+}
+
+int
+parse_authentication_type(char *str)
+{
+  if (!str)
+    return -1;
+
+  if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_NONE_STR) == 0)
+    return IPMI_AUTHENTICATION_TYPE_NONE;
+  /* keep "plain" for backwards compatability */
+  else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR_OLD) == 0
+           || strcasecmp (str, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR))
+    return IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
+  else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_MD2_STR) == 0)
+    return IPMI_AUTHENTICATION_TYPE_MD2;
+  else if (strcasecmp (str, IPMI_AUTHENTICATION_TYPE_MD5_STR) == 0)
+    return IPMI_AUTHENTICATION_TYPE_MD5;
+
+  return -1;
+}
+int
+parse_privilege_level(char *str)
+{
+  if (!str)
+    return -1;
+
+  if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_USER_STR) == 0)
+    return IPMI_PRIVILEGE_LEVEL_USER;
+  else if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_OPERATOR_STR) == 0)
+    return IPMI_PRIVILEGE_LEVEL_OPERATOR;
+  else if (strcasecmp (str, IPMI_PRIVILEGE_LEVEL_ADMIN_STR) == 0
+           || strcasecmp (str, IPMI_PRIVILEGE_LEVEL_ADMIN_STR2) == 0)
+    return IPMI_PRIVILEGE_LEVEL_ADMIN;
+  
   return -1;
 }
 
@@ -76,7 +137,8 @@ parse_outofband_workaround_flags(char *str)
   char *tok;
   int flags = 0;
 
-  assert(str);
+  if (!str)
+    return -1;
 
   memset(buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
   strncpy(buf, str, WORKAROUND_FLAG_BUFLEN);
@@ -104,7 +166,8 @@ parse_outofband_2_0_workaround_flags(char *str)
   char *tok;
   int flags = 0;
   
-  assert(str);
+  if (!str)
+    return -1;
 
   memset(buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
   strncpy(buf, str, WORKAROUND_FLAG_BUFLEN);
@@ -126,7 +189,8 @@ parse_outofband_2_0_workaround_flags(char *str)
 int
 parse_inband_workaround_flags(char *str)
 {
-  assert(str);
+  if (!str)
+    return -1;
 
   /* no inband workarounds to parse yet */
   return 0;
@@ -446,21 +510,12 @@ common_parse_opt (int key,
       }
       break;
     case AUTHENTICATION_TYPE_KEY: 
-      if (strcasecmp (arg, "none") == 0)
-        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-      /* keep "plain" for backwards compatability */
-      else if (strcasecmp (arg, "plain") == 0
-               || strcasecmp (arg, "straight_password_key"))
-        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
-      else if (strcasecmp (arg, "md2") == 0)
-        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD2;
-      else if (strcasecmp (arg, "md5") == 0)
-        cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
-      else 
+      if ((tmp = parse_authentication_type (arg)) < 0)
         {
           fprintf(stderr, "invalid authentication type specified\n");
           argp_usage (state);
         }
+      cmd_args->authentication_type = tmp;
       break;
     case CIPHER_SUITE_ID_KEY: 
       {
@@ -508,32 +563,36 @@ common_parse_opt (int key,
       }
       break;
     case PRIVILEGE_LEVEL_KEY: 
-      if (strcasecmp (arg, "user") == 0)
-        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
-      else if (strcasecmp (arg, "operator") == 0)
-        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-      else if (strcasecmp (arg, "admin") == 0
-               || strcasecmp (arg, "administrator") == 0)
-        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
-      else if (strcasecmp (arg, "oem") == 0)
-        cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OEM;
-      else 
+      if ((tmp = parse_privilege_level (arg)) < 0)
         {
           fprintf(stderr, "invalid privilege level specified\n");
           argp_usage (state);
         }
+      cmd_args->privilege_level = tmp;
       break;
     case WORKAROUND_FLAGS_KEY:
-      tmp = parse_outofband_workaround_flags(arg);
+      if ((tmp = parse_outofband_workaround_flags(arg)) < 0)
+        {
+          fprintf(stderr, "invalid workaround flags specified\n");
+          argp_usage (state);
+        }
       cmd_args->workaround_flags |= tmp;
-      tmp = parse_outofband_2_0_workaround_flags(arg);
+      if ((tmp = parse_outofband_2_0_workaround_flags(arg)) < 0)
+        {
+          fprintf(stderr, "invalid workaround flags specified\n");
+          argp_usage (state);
+        }
       if (tmp && cmd_args->workaround_flags)
         {
           fprintf (stderr, "specified conflicting workaround options\n");
           argp_usage (state);
         }
       cmd_args->workaround_flags |= tmp;
-      tmp = parse_inband_workaround_flags(arg);
+      if ((tmp = parse_inband_workaround_flags(arg)) < 0)
+        {
+          fprintf(stderr, "invalid workaround flags specified\n");
+          argp_usage (state);
+        }
       if (tmp && cmd_args->workaround_flags)
         {
           fprintf (stderr, "specified conflicting workaround options\n");

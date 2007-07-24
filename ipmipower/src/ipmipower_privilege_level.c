@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_privilege.c,v 1.7 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower_privilege_level.c,v 1.1.2.1 2007-07-24 00:59:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,44 +38,55 @@
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
 
-#include "ipmipower_privilege.h"
+#include "ipmipower_privilege_level.h"
 #include "ipmipower_wrappers.h"
 
-privilege_type_t 
-ipmipower_privilege_index(char *str) 
+#include "argp-common.h"
+
+#define IPMIPOWER_PRIVILEGE_BUFLEN  4096
+
+/* we're single threaded, so we are being lazy */
+static char privilege_buffer[IPMIPOWER_PRIVILEGE_BUFLEN];
+
+privilege_level_t 
+ipmipower_privilege_level_index(char *str) 
 {
+  int tmp;
+
   assert(str != NULL);
 
   if (!strcasecmp(str, "auto"))
-    return PRIVILEGE_TYPE_AUTO;
-  else if (!strcasecmp(str, "user"))
-    return PRIVILEGE_TYPE_USER;
-  else if (!strcasecmp(str, "operator"))
-    return PRIVILEGE_TYPE_OPERATOR;
-  else if (!strcasecmp(str, "admin"))
-    return PRIVILEGE_TYPE_ADMIN;
-  else 
-    return PRIVILEGE_TYPE_INVALID;
+    return PRIVILEGE_LEVEL_AUTO;
+
+  tmp = parse_privilege_level(str);
+  if (tmp == IPMI_PRIVILEGE_LEVEL_USER)
+    return PRIVILEGE_LEVEL_USER;
+  else if (tmp == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+    return PRIVILEGE_LEVEL_OPERATOR;
+  else if (tmp == IPMI_PRIVILEGE_LEVEL_ADMIN)
+    return PRIVILEGE_LEVEL_ADMIN;
+  else
+    return PRIVILEGE_LEVEL_INVALID;
 }
 
 char *
-ipmipower_privilege_string(privilege_type_t priv) 
+ipmipower_privilege_level_string(privilege_level_t priv) 
 {
-  assert(PRIVILEGE_TYPE_VALID_OR_AUTO(priv));
+  assert(PRIVILEGE_LEVEL_VALID_OR_AUTO(priv));
 
   switch(priv) 
     {
-    case PRIVILEGE_TYPE_AUTO:
+    case PRIVILEGE_LEVEL_AUTO:
       return "auto";
       break;
-    case PRIVILEGE_TYPE_USER:
-      return "user";
+    case PRIVILEGE_LEVEL_USER:
+      return IPMI_PRIVILEGE_LEVEL_USER_STR;
       break;
-    case PRIVILEGE_TYPE_OPERATOR:
-      return "operator";
+    case PRIVILEGE_LEVEL_OPERATOR:
+      return IPMI_PRIVILEGE_LEVEL_OPERATOR_STR;
       break;
-    case PRIVILEGE_TYPE_ADMIN:
-      return "admin";
+    case PRIVILEGE_LEVEL_ADMIN:
+      return IPMI_PRIVILEGE_LEVEL_ADMIN_STR;
       break;
     default:
       err_exit("ipmipower_privilege_string: Invalid Privilege Type: %d\n", priv);
@@ -85,29 +96,37 @@ ipmipower_privilege_string(privilege_type_t priv)
 }
 
 char *
-ipmipower_privilege_list(void) 
+ipmipower_privilege_level_list(void) 
 {
-  return "auto, user, operator, admin";
+  memset(privilege_buffer, '\0', IPMIPOWER_PRIVILEGE_BUFLEN);
+
+  snprintf(privilege_buffer,
+           IPMIPOWER_PRIVILEGE_BUFLEN,
+           "auto, %s, %s, %s",
+           IPMI_PRIVILEGE_LEVEL_USER_STR,
+           IPMI_PRIVILEGE_LEVEL_OPERATOR_STR,
+           IPMI_PRIVILEGE_LEVEL_ADMIN_STR);
+  return privilege_buffer;
 }
 
 uint8_t
-ipmipower_ipmi_privilege_type(privilege_type_t priv)
+ipmipower_ipmi_privilege_level(privilege_level_t priv)
 {
-  assert(PRIVILEGE_TYPE_VALID(priv));
+  assert(PRIVILEGE_LEVEL_VALID(priv));
 
   switch(priv) 
     {
-    case PRIVILEGE_TYPE_USER:
+    case PRIVILEGE_LEVEL_USER:
       return IPMI_PRIVILEGE_LEVEL_USER;
       break;
-    case PRIVILEGE_TYPE_OPERATOR:
+    case PRIVILEGE_LEVEL_OPERATOR:
       return IPMI_PRIVILEGE_LEVEL_OPERATOR;
       break;
-    case PRIVILEGE_TYPE_ADMIN:
+    case PRIVILEGE_LEVEL_ADMIN:
       return IPMI_PRIVILEGE_LEVEL_ADMIN;
       break;
     default:
-      err_exit("ipmipower_ipmi_privilege_type: Invalid Privilege Type: %d\n", priv);
+      err_exit("ipmipower_ipmi_privilege_level: Invalid Privilege Type: %d\n", priv);
     }
   
   return 0;                  /* NOT_REACHED */

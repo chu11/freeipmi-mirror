@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.11 2007-07-19 18:01:00 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.12 2007-07-24 00:59:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -44,11 +44,11 @@
 #include <errno.h>
 
 #include "ipmipower_config.h"
-#include "ipmipower_authentication.h"
-#include "ipmipower_cipher_suite.h"
+#include "ipmipower_authentication_type.h"
+#include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_ipmi_version.h"
 #include "ipmipower_output.h"
-#include "ipmipower_privilege.h"
+#include "ipmipower_privilege_level.h"
 #include "ipmipower_util.h"
 #include "ipmipower_workarounds.h"
 #include "ipmipower_wrappers.h"
@@ -105,7 +105,7 @@ ipmipower_config_setup(void)
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
-  conf->privilege = PRIVILEGE_TYPE_AUTO;
+  conf->privilege = PRIVILEGE_LEVEL_AUTO;
   conf->ipmi_version = IPMI_VERSION_AUTO;
   conf->cipher_suite_id = CIPHER_SUITE_ID_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
@@ -171,7 +171,7 @@ _config_common_checks(char *str)
   if (conf->authentication_type == AUTHENTICATION_TYPE_INVALID) 
     err_exit("%s: invalid authentication_type", str);
 
-  if (conf->privilege == PRIVILEGE_TYPE_INVALID)
+  if (conf->privilege == PRIVILEGE_LEVEL_INVALID)
     err_exit("%s: invalid privilege", str);
 
   if (conf->ipmi_version == IPMI_VERSION_INVALID)
@@ -449,7 +449,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
           break;
         case 'l':       /* --privilege-level */
-          conf->privilege = ipmipower_privilege_index(optarg);
+          conf->privilege = ipmipower_privilege_level_index(optarg);
           conf->privilege_set_on_cmdline = IPMIPOWER_TRUE;
           break;
 	case 'R':	/* --ipmi-version */
@@ -627,7 +627,7 @@ _cb_privilege(conffile_t cf, struct conffile_data *data,
     return 0;
 
   /* Incorrect privilege checked in _config_common_checks */
-  conf->privilege = ipmipower_privilege_index(data->string);
+  conf->privilege = ipmipower_privilege_level_index(data->string);
   return 0;
 }
 

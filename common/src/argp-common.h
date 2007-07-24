@@ -204,7 +204,26 @@ struct hostrange_cmd_args
 #define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR  "supermicro20"
 #define IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR         "sun20"
 
+#define IPMI_AUTHENTICATION_TYPE_NONE_STR                               "none"
+#define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR              "straight_password_key"
+#define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR_OLD          "plain"
+#define IPMI_AUTHENTICATION_TYPE_MD2_STR                                "md2"
+#define IPMI_AUTHENTICATION_TYPE_MD5_STR                                "md5"
+
+#define IPMI_PRIVILEGE_LEVEL_USER_STR                                   "user" 
+#define IPMI_PRIVILEGE_LEVEL_OPERATOR_STR                               "operator"
+#define IPMI_PRIVILEGE_LEVEL_ADMIN_STR                                  "admin"
+#define IPMI_PRIVILEGE_LEVEL_ADMIN_STR2                                 "administrator"
+
+int parse_inband_driver_type(char *str);
+
+int parse_outofband_driver_type(char *str);
+
 int parse_driver_type(char *str);
+
+int parse_authentication_type(char *str);
+
+int parse_privilege_level(char *str);
 
 int parse_outofband_workaround_flags(char *str);
 

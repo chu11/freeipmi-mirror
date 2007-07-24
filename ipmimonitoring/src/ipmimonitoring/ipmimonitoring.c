@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.8 2007-07-16 22:17:08 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.9 2007-07-24 00:59:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -192,8 +192,7 @@ _cmdline_parse(int argc, char **argv)
   char *ptr;
   char *tok;
   int c;
-  int tmp_type;
-  int tmp_flags;
+  int tmp;
   int rv;
 
 #if HAVE_GETOPT_LONG
@@ -259,19 +258,19 @@ _cmdline_parse(int argc, char **argv)
           _version();   /* --version */
           break;
         case 'D':       /* --driver-type */
-          if ((tmp_type = parse_driver_type(optarg)) < 0)
-            err_exit("Command Line Error: invalid driver type");
-          if (tmp_type == IPMI_DEVICE_LAN)
+          tmp = parse_driver_type(optarg);
+          if (tmp == IPMI_DEVICE_LAN)
             conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_1_5;
-          else if (tmp_type == IPMI_DEVICE_LAN_2_0)
+          else if (tmp == IPMI_DEVICE_LAN_2_0)
             conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_2_0;
-          else if (tmp_type == IPMI_DEVICE_KCS)
+          else if (tmp == IPMI_DEVICE_KCS)
             conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_KCS;
-          else if (tmp_type == IPMI_DEVICE_SSIF)
+          else if (tmp == IPMI_DEVICE_SSIF)
             conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_SSIF;
-          else if (tmp_type == IPMI_DEVICE_OPENIPMI)
+          else if (tmp == IPMI_DEVICE_OPENIPMI)
             conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_OPENIPMI;
           else
+            err_exit("Command Line Error: invalid driver type");
           break;
         case IPMIMONITORING_NO_PROBING_KEY:          /* --no-probing */
           conf.disable_auto_probe++;
@@ -355,24 +354,25 @@ _cmdline_parse(int argc, char **argv)
             }
           break;
         case 'l':       /* --privilege-level */
-          if (!strcasecmp(optarg, "user"))
-            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_USER;
-          else if (!strcasecmp(optarg, "operator"))
-            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_OPERATOR;
-          else if (!strcasecmp(optarg, "admin")
-                   || !strcasecmp(optarg, "administrator"))
-            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_ADMIN;
+          tmp = parse_privilege_level(optarg);
+          if (tmp == IPMI_PRIVILEGE_LEVEL_USER)
+            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_USER;
+          else if (tmp == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR;
+          else if (tmp == IPMI_PRIVILEGE_LEVEL_ADMIN)
+            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN;
           else
             err_exit("Command Line Error: Invalid privilege level");
           break;
         case 'a':       /* --authentication-type */
-          if (!strcasecmp(optarg, "none"))
+          tmp = parse_authentication_type(optarg);
+          if (tmp == IPMI_AUTHENTICATION_TYPE_NONE)
             conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_NONE;
-          else if (!strcasecmp(optarg, "straight_password_key"))
+          else if (tmp == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
             conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
-          else if (!strcasecmp(optarg, "md2"))
+          else if (tmp == IPMI_AUTHENTICATION_TYPE_MD2)
             conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD2;
-          else if (!strcasecmp(optarg, "md5"))
+          else if (tmp == IPMI_AUTHENTICATION_TYPE_MD5)
             conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
           else
             err_exit("Command Line Error: Invalid authentication type");
@@ -474,16 +474,25 @@ _cmdline_parse(int argc, char **argv)
           eliminate++;
           break;
 	case 'W':
-	  tmp_flags = parse_outofband_workaround_flags(optarg);
+	  if ((tmp = parse_outofband_workaround_flags(optarg)) < 0)
+            err_exit("Command Line Error: invalid workaround flags");
 	  /* convert to ipmimonitoring flags */
-	  if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+	  if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-	  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+	  if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-	  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+	  if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-	  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+	  if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
 	    conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+	  if ((tmp = parse_outofband_2_0_workaround_flags(optarg)) < 0)
+            err_exit("Command Line Error: invalid workaround flags");
+          if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+          if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+          if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+            conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
 	  break;
 #ifndef NDEBUG
         case IPMIMONITORING_DEBUG_KEY:       /* --debug */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.3.4.3 2007-07-16 22:17:09 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.3.4.4 2007-07-24 00:59:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -66,24 +66,28 @@ ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
   assert(str);
   assert(workaround_flags);
 
-  tmp_flags = parse_outofband_workaround_flags(str);
+  if ((tmp_flags = parse_outofband_workaround_flags(str)) < 0)
+    return -1;
+
   /* convert to ipmipower flags */
   if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
     flags |= WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO;
-  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+  if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
     flags |= WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION;
-  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+  if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
     flags |= WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE;
-  else if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+  if (tmp_flags & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
     flags |= WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER;
 
-  tmp_flags = parse_outofband_2_0_workaround_flags(str);
+  if ((tmp_flags = parse_outofband_2_0_workaround_flags(str)) < 0)
+    return -1;
+
   /* convert to ipmipower flags */
   if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     flags |= WORKAROUND_FLAG_INTEL_2_0_SESSION;
-  else if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     flags |= WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION;
-  else if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+  if (tmp_flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     flags |= WORKAROUND_FLAG_SUN_2_0_SESSION;
   
   *workaround_flags = flags;

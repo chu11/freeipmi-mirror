@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_cipher_suite.h,v 1.1 2006-03-14 14:58:26 chu11 Exp $
+ *  $Id: ipmipower_cipher_suite_id.h,v 1.1.2.1 2007-07-24 00:59:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,8 +25,8 @@
 \*****************************************************************************/
 
 
-#ifndef _IPMIPOWER_CIPHER_SUITE_H
-#define _IPMIPOWER_CIPHER_SUITE_H
+#ifndef _IPMIPOWER_CIPHER_SUITE_ID_H
+#define _IPMIPOWER_CIPHER_SUITE_ID_H
 
 #include "ipmipower.h"
 
@@ -55,4 +55,4 @@ char *ipmipower_cipher_suite_id_list(void);
  */
 uint8_t ipmipower_ipmi_cipher_suite_id(cipher_suite_id_t id);
 
-#endif /* _IPMIPOWER_CIPHER_SUITE_H */
+#endif /* _IPMIPOWER_CIPHER_SUITE_ID_H */

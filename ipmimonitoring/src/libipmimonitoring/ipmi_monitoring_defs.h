@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.4.8.1 2007-07-12 18:19:04 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.4.8.2 2007-07-24 00:59:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,10 +77,10 @@
 
 #define IPMI_MONITORING_MAX_PASSWORD_LENGTH  IPMI_MAX_1_5_PASSWORD_LENGTH
 
-#define IPMI_MONITORING_PRIVILEGE_VALID(__val) \
-        (((__val) == IPMI_MONITORING_PRIVILEGE_USER \
-          || (__val) == IPMI_MONITORING_PRIVILEGE_OPERATOR \
-          || (__val) == IPMI_MONITORING_PRIVILEGE_ADMIN) ? 1 : 0)
+#define IPMI_MONITORING_PRIVILEGE_LEVEL_VALID(__val) \
+        (((__val) == IPMI_MONITORING_PRIVILEGE_LEVEL_USER \
+          || (__val) == IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR \
+          || (__val) == IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN) ? 1 : 0)
 
 #define IPMI_MONITORING_AUTHENTICATION_TYPE_VALID(__val) \
         (((__val) == IPMI_MONITORING_AUTHENTICATION_TYPE_NONE \

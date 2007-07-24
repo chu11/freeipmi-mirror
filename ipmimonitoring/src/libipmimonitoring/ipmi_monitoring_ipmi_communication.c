@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.10 2007-07-14 01:50:28 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.8.11 2007-07-24 00:59:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -223,9 +223,9 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
           && ((config->username && strlen(config->username) > IPMI_MAX_USER_NAME_LENGTH)
               || (config->password && strlen(config->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
               || (config->privilege_level >= 0
-                  && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_USER
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_OPERATOR
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_ADMIN))
+                  && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_USER
+                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
+                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN))
               || (config->authentication_type >= 0
                   && (config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_NONE
                       && config->authentication_type != IPMI_MONITORING_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
@@ -239,9 +239,9 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
 
   if (config && config->privilege_level >= 0)
     {
-      if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_USER)
+      if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_LEVEL_USER)
         privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
-      else if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_OPERATOR)
+      else if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR)
         privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
       else
         privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
@@ -373,9 +373,9 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
               || (config->password && strlen(config->password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
               || (config->k_g && config->k_g_len > IPMI_MAX_K_G_LENGTH)
               || (config->privilege_level >= 0
-                  && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_USER
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_OPERATOR
-                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_ADMIN))
+                  && (config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_USER
+                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
+                      && config->privilege_level != IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN))
               || (config->cipher_suite_id >= 0
                   && (config->cipher_suite_id != 0
                       && config->cipher_suite_id != 1
@@ -394,9 +394,9 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
 
   if (config && config->privilege_level >= 0)
     {
-      if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_USER)
+      if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_LEVEL_USER)
         privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
-      else if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_OPERATOR)
+      else if (config->privilege_level == IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR)
         privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
       else
         privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;

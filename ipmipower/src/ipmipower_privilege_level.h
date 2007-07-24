@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication.h,v 1.3 2006-03-08 17:11:14 chu11 Exp $
+ *  $Id: ipmipower_privilege_level.h,v 1.1.2.1 2007-07-24 00:59:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,29 +25,29 @@
 \*****************************************************************************/
 
 
-#ifndef _IPMIPOWER_AUTHENTICATION_H
-#define _IPMIPOWER_AUTHENTICATION_H
+#ifndef _IPMIPOWER_PRIVILEGE_LEVEL_H
+#define _IPMIPOWER_PRIVILEGE_LEVEL_H
 
 #include "ipmipower.h"
 
-/* ipmipower_authentication_type_index
- * - Return the index of the specified authentication_type 
+/* ipmipower_privilege_index
+ * - Return the index of the specified privilege type 
  */
-authentication_type_t ipmipower_authentication_type_index(char *str);
+privilege_level_t ipmipower_privilege_level_index(char *str);
 
-/* ipmipower_authentication_type_string
- * - Return static string description of authentication_type 
+/* ipmipower_privilege_string
+ * - Return static string description of privilege type 
  */
-char *ipmipower_authentication_type_string(authentication_type_t at);
+char *ipmipower_privilege_level_string(privilege_level_t priv);
 
-/* ipmipower_authentication_type_list
- * - Return static string list of all available authentication types
+/* ipmipower_privilege_list
+ * - Return static string list of all available privilege types
  */
-char *ipmipower_authentication_type_list(void);
+char *ipmipower_privilege_level_list(void);
 
-/* ipmipower_ipmi_authentication_type
- * - Return IPMI authentication type according to authentication_type_t type
+/* ipmipower_ipmi_privilege_level
+ * - Return IPMI privilege type according to privilege_level_t type
  */
-uint8_t ipmipower_ipmi_authentication_type(authentication_type_t at);
+uint8_t ipmipower_ipmi_privilege_level(privilege_level_t priv);
 
-#endif /* _IPMIPOWER_AUTHENTICATION_H */
+#endif /* _IPMIPOWER_PRIVILEGE_LEVEL_H */

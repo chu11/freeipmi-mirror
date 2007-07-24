@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75.4.7 2007-07-19 16:43:45 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.75.4.8 2007-07-24 00:59:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -190,7 +190,7 @@ typedef enum
   ((__c) > POWER_CMD_NONE && \
    (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
 
-#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE(__c) \
+#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c) \
   ((__c) == POWER_CMD_POWER_OFF \
    || (__c) == POWER_CMD_POWER_ON \
    || (__c) == POWER_CMD_POWER_CYCLE \
@@ -311,23 +311,23 @@ typedef enum
   ((__a) >= AUTHENTICATION_TYPE_AUTO && \
    (__a) <= AUTHENTICATION_TYPE_MD5)
 
-/* Privilege Types */
+/* Privilege Level Types */
 typedef enum 
   {
-    PRIVILEGE_TYPE_INVALID   = 0x00,
-    PRIVILEGE_TYPE_AUTO      = 0x01,
-    PRIVILEGE_TYPE_USER      = 0x02,
-    PRIVILEGE_TYPE_OPERATOR  = 0x03,
-    PRIVILEGE_TYPE_ADMIN     = 0x04,
-  } privilege_type_t;
+    PRIVILEGE_LEVEL_INVALID   = 0x00,
+    PRIVILEGE_LEVEL_AUTO      = 0x01,
+    PRIVILEGE_LEVEL_USER      = 0x02,
+    PRIVILEGE_LEVEL_OPERATOR  = 0x03,
+    PRIVILEGE_LEVEL_ADMIN     = 0x04,
+  } privilege_level_t;
 
-#define PRIVILEGE_TYPE_VALID(__p) \
-  ((__p) >= PRIVILEGE_TYPE_USER && \
-   (__p) <= PRIVILEGE_TYPE_ADMIN)
+#define PRIVILEGE_LEVEL_VALID(__p) \
+  ((__p) >= PRIVILEGE_LEVEL_USER && \
+   (__p) <= PRIVILEGE_LEVEL_ADMIN)
 
-#define PRIVILEGE_TYPE_VALID_OR_AUTO(__p) \
-  ((__p) >= PRIVILEGE_TYPE_AUTO && \
-   (__p) <= PRIVILEGE_TYPE_ADMIN)
+#define PRIVILEGE_LEVEL_VALID_OR_AUTO(__p) \
+  ((__p) >= PRIVILEGE_LEVEL_AUTO && \
+   (__p) <= PRIVILEGE_LEVEL_ADMIN)
 
 /* Cipher_Suite Ids */
 typedef enum 
@@ -565,7 +565,7 @@ struct ipmipower_config
   char                     configfile[MAXPATHLEN+1];
 
   authentication_type_t    authentication_type;
-  privilege_type_t         privilege;
+  privilege_level_t        privilege;
   ipmi_version_t           ipmi_version;
   cipher_suite_id_t        cipher_suite_id;
   ipmipower_bool_t         on_if_off;

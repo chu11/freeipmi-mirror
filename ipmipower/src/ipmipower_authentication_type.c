@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication.c,v 1.4 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: ipmipower_authentication_type.c,v 1.1.2.1 2007-07-24 00:59:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,23 +38,34 @@
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
 
-#include "ipmipower_authentication.h"
+#include "ipmipower_authentication_type.h"
 #include "ipmipower_wrappers.h"
+
+#include "argp-common.h"
+
+#define IPMIPOWER_AUTHENTICATION_BUFLEN  4096
+
+/* we're single threaded, so we are being lazy */
+static char authentication_buffer[IPMIPOWER_AUTHENTICATION_BUFLEN];
 
 authentication_type_t 
 ipmipower_authentication_type_index(char *str) 
 {
+  int tmp;
+
   assert(str != NULL);
 
   if (!strcasecmp(str, "auto"))
     return AUTHENTICATION_TYPE_AUTO;
-  else if (!strcasecmp(str, "none"))
+
+  tmp = parse_authentication_type(str);
+  if (tmp == IPMI_AUTHENTICATION_TYPE_NONE)
     return AUTHENTICATION_TYPE_NONE;
-  else if (!strcasecmp(str, "straight_password_key"))
+  else if (tmp == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
     return AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
-  else if (!strcasecmp(str, "md2"))
+  else if (tmp == IPMI_AUTHENTICATION_TYPE_MD2)
     return AUTHENTICATION_TYPE_MD2;
-  else if (!strcasecmp(str, "md5"))
+  else if (tmp == IPMI_AUTHENTICATION_TYPE_MD5)
     return AUTHENTICATION_TYPE_MD5;
   else 
     return AUTHENTICATION_TYPE_INVALID;
@@ -71,16 +82,16 @@ ipmipower_authentication_type_string(authentication_type_t at)
       return "auto";
       break;
     case AUTHENTICATION_TYPE_NONE:
-      return "none";
+      return IPMI_AUTHENTICATION_TYPE_NONE_STR;
       break;
     case AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY:
-      return "straight_password_key";
+      return IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR;
       break;
     case AUTHENTICATION_TYPE_MD2:
-      return "md2";
+      return IPMI_AUTHENTICATION_TYPE_MD2_STR;
       break;
     case AUTHENTICATION_TYPE_MD5:
-      return "md5";
+      return IPMI_AUTHENTICATION_TYPE_MD5_STR;
       break;
     default:
       err_exit("ipmipower_authentication_type_string: Invalid Authentication Type: %d\n", at);
@@ -92,7 +103,16 @@ ipmipower_authentication_type_string(authentication_type_t at)
 char *
 ipmipower_authentication_type_list(void) 
 {
-  return "auto, none, straight_password_key, md2, md5";
+  memset(authentication_buffer, '\0', IPMIPOWER_AUTHENTICATION_BUFLEN);
+
+  snprintf(authentication_buffer, 
+           IPMIPOWER_AUTHENTICATION_BUFLEN,
+           "auto, %s, %s, %s, %s",
+           IPMI_AUTHENTICATION_TYPE_NONE_STR,
+           IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR,
+           IPMI_AUTHENTICATION_TYPE_MD2_STR,
+           IPMI_AUTHENTICATION_TYPE_MD5_STR);
+  return authentication_buffer;
 }
 
 uint8_t

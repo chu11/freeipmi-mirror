@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_privilege.h,v 1.6 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_authentication_type.h,v 1.1.2.1 2007-07-24 00:59:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,29 +25,29 @@
 \*****************************************************************************/
 
 
-#ifndef _IPMIPOWER_PRIVILEGE_H
-#define _IPMIPOWER_PRIVILEGE_H
+#ifndef _IPMIPOWER_AUTHENTICATION_TYPE_H
+#define _IPMIPOWER_AUTHENTICATION_TYPE_H
 
 #include "ipmipower.h"
 
-/* ipmipower_privilege_index
- * - Return the index of the specified privilege type 
+/* ipmipower_authentication_type_index
+ * - Return the index of the specified authentication_type 
  */
-privilege_type_t ipmipower_privilege_index(char *str);
+authentication_type_t ipmipower_authentication_type_index(char *str);
 
-/* ipmipower_privilege_string
- * - Return static string description of privilege type 
+/* ipmipower_authentication_type_string
+ * - Return static string description of authentication_type 
  */
-char *ipmipower_privilege_string(privilege_type_t priv);
+char *ipmipower_authentication_type_string(authentication_type_t at);
 
-/* ipmipower_privilege_list
- * - Return static string list of all available privilege types
+/* ipmipower_authentication_type_list
+ * - Return static string list of all available authentication types
  */
-char *ipmipower_privilege_list(void);
+char *ipmipower_authentication_type_list(void);
 
-/* ipmipower_ipmi_privilege_type
- * - Return IPMI privilege type according to privilege_type_t type
+/* ipmipower_ipmi_authentication_type
+ * - Return IPMI authentication type according to authentication_type_t type
  */
-uint8_t ipmipower_ipmi_privilege_type(privilege_type_t priv);
+uint8_t ipmipower_ipmi_authentication_type(authentication_type_t at);
 
-#endif /* _IPMIPOWER_PRIVILEGE_H */
+#endif /* _IPMIPOWER_AUTHENTICATION_TYPE_H */

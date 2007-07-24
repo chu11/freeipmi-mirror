@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.9 2007-07-16 22:17:08 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.10 2007-07-24 00:59:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -127,7 +127,7 @@ _cmdline_parse(int argc, char **argv)
   char *ptr;
   int c;
   int rv;
-  int flags;
+  int tmp;
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
@@ -246,12 +246,12 @@ _cmdline_parse(int argc, char **argv)
 	    }
           break;
 	case 'l':	/* --privilege-level */
-	  if (!strcasecmp(optarg, "user"))
+          tmp = parse_privilege_level(optarg);
+	  if (tmp == IPMI_PRIVILEGE_LEVEL_USER)
 	    conf->privilege = IPMICONSOLE_PRIVILEGE_USER;
-	  else if (!strcasecmp(optarg, "operator"))
+	  else if (tmp == IPMI_PRIVILEGE_LEVEL_OPERATOR)
 	    conf->privilege = IPMICONSOLE_PRIVILEGE_OPERATOR;
-	  else if (!strcasecmp(optarg, "admin")
-		   || !strcasecmp(optarg, "administrator"))
+	  else if (tmp == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    conf->privilege = IPMICONSOLE_PRIVILEGE_ADMIN;
 	  else
 	    err_exit("Command Line Error: Invalid privilege level");
@@ -287,15 +287,16 @@ _cmdline_parse(int argc, char **argv)
           conf->lock_memory_set_on_cmdline++;
           break;
         case 'W':
-          flags = parse_outofband_2_0_workaround_flags(optarg);
+          if ((tmp = parse_outofband_2_0_workaround_flags(optarg)) < 0)
+            err_exit("Command Line Error: invalid workaround flags\n");
           /* convert to ipmiconsole flags */
-          if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+          if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
             conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
-          else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+          if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
             conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
-          else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+          if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
             conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
-          conf->workaround_flags_set_on_cmdline = flags;
+          conf->workaround_flags_set_on_cmdline++;
           break;
 #ifndef NDEBUG
         case IPMICONSOLE_DEBUG_KEY:	/* --debug */
@@ -411,18 +412,21 @@ _cb_privilege(conffile_t cf,
 		    void *app_ptr,
 		    int app_data)
 {
+  int tmp;
+
   if (conf->privilege_set_on_cmdline)
     return 0;
-
-  if (!strcasecmp(data->string, "user"))
+  
+  tmp = parse_privilege_level(data->string);
+  if (tmp == IPMI_PRIVILEGE_LEVEL_USER)
     conf->privilege = IPMICONSOLE_PRIVILEGE_USER;
-  else if (!strcasecmp(data->string, "operator"))
+  else if (tmp == IPMI_PRIVILEGE_LEVEL_OPERATOR)
     conf->privilege = IPMICONSOLE_PRIVILEGE_OPERATOR;
-  else if (!strcasecmp(data->string, "admin")
-	   || !strcasecmp(data->string, "administrator"))
+  else if (tmp == IPMI_PRIVILEGE_LEVEL_ADMIN)
     conf->privilege = IPMICONSOLE_PRIVILEGE_ADMIN;
   else
     err_exit("Config File Error: Invalid privilege level");
+
   return 0;
 }
 
@@ -478,18 +482,19 @@ _cb_workaround_flags(conffile_t cf,
                      void *app_ptr, 
                      int app_data)
 {
-  unsigned int flags;
+  int tmp;
 
   if (conf->workaround_flags_set_on_cmdline)
     return 0;
 
-  flags = parse_outofband_2_0_workaround_flags(optarg);
+  if ((tmp = parse_outofband_2_0_workaround_flags(data->string)) < 0)
+    err_exit("Config File Error: invalid workaround flags\n");
   /* convert to ipmiconsole flags */
-  if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
-  else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  else if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
-  else if (flags & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+  else if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
   return 0;
 }

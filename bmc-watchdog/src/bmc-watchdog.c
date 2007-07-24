@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.11 2007-07-19 16:43:44 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.12 2007-07-24 00:59:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,6 +63,7 @@
 #endif
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 /* Driver Types */
 #define DRIVER_TYPE_KCS      0
@@ -1236,7 +1237,8 @@ _cmdline_parse(int argc, char **argv)
   char options[100];
   char *ptr;
   int help_opt = 0;
-  
+  int tmp;
+
 #if HAVE_GETOPT_LONG
   struct option long_options[] = {
     {"help",                  0, NULL, 'h'},
@@ -1323,13 +1325,14 @@ _cmdline_parse(int argc, char **argv)
           break;
 	case 'D':
 	  cinfo.driver_type++;
-	  if (!strcasecmp(optarg, "kcs"))
+          tmp = parse_inband_driver_type(optarg);
+          if (tmp == IPMI_DEVICE_KCS)
 	    cinfo.driver_type_val = DRIVER_TYPE_KCS;
-	  else if (!strcasecmp(optarg, "ssif"))
+          else if (tmp == IPMI_DEVICE_SSIF)
 	    cinfo.driver_type_val = DRIVER_TYPE_SSIF;
-	  else if (!strcasecmp(optarg, "openipmi"))
+          else if (tmp == IPMI_DEVICE_OPENIPMI)
 	    cinfo.driver_type_val = DRIVER_TYPE_OPENIPMI;
-	  else
+          else
 	    _err_exit("driver-type value invalid");
 	  break;
         case BMC_WATCHDOG_NO_PROBING_KEY:

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.64.2.3 2007-07-14 01:50:28 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.64.2.4 2007-07-24 00:59:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,7 +38,7 @@
 #include <stdint.h>
 
 #include "ipmipower_packet.h"
-#include "ipmipower_authentication.h"
+#include "ipmipower_authentication_type.h"
 #include "ipmipower_wrappers.h"
 
 extern struct ipmipower_config *conf;

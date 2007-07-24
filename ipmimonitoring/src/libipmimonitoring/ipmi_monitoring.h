@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6.8.9 2007-07-14 01:50:27 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.8.10 2007-07-24 00:59:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -161,9 +161,9 @@ enum ipmi_monitoring_protocol_version
 
 enum ipmi_monitoring_privilege
   {
-    IPMI_MONITORING_PRIVILEGE_USER     = 0x00,
-    IPMI_MONITORING_PRIVILEGE_OPERATOR = 0x01,
-    IPMI_MONITORING_PRIVILEGE_ADMIN    = 0x02,
+    IPMI_MONITORING_PRIVILEGE_LEVEL_USER     = 0x00,
+    IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR = 0x01,
+    IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN    = 0x02,
   };
 
 enum ipmi_monitoring_authentication_type
@@ -525,11 +525,11 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *
  *   Supported privilege levels:
  *
- *   IPMI_MONITORING_PRIVILEGE_USER
- *   IPMI_MONITORING_PRIVILEGE_OPERATOR
- *   IPMI_MONITORING_PRIVILEGE_ADMIN
+ *   IPMI_MONITORING_PRIVILEGE_LEVEL_USER
+ *   IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
+ *   IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN
  *
- *   Pass < 0 for default of IPMI_MONITORING_PRIVILEGE_USER.
+ *   Pass < 0 for default of IPMI_MONITORING_PRIVILEGE_LEVEL_USER.
  *
  * authentication_type
  * 
