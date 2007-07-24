@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4.4.4 2007-07-18 21:47:12 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4.4.5 2007-07-24 20:30:39 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -64,8 +64,8 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
 #ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,

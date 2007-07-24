@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.11 2007-07-24 19:56:14 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.12 2007-07-24 20:30:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -572,7 +572,7 @@ _config_file_parse(void)
         "privilege", 
         CONFFILE_OPTION_STRING, 
         -1,
-        _cb_privilege,
+        _cb_privilege_level,
         1, 
         0, 
         &privilege_flag,

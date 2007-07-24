@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.12 2007-07-24 00:59:42 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.13 2007-07-24 20:30:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1254,6 +1254,8 @@ _cmdline_parse(int argc, char **argv)
     {"no-probing",            0, NULL, BMC_WATCHDOG_NO_PROBING_KEY},
     {"driver-address",        1, NULL, BMC_WATCHDOG_DRIVER_ADDRESS_KEY},
     {"driver-device",         1, NULL, BMC_WATCHDOG_DRIVER_DEVICE_KEY},
+    /* "reg-space" maintained for backwards compatability */
+    {"reg-space",             1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
     {"register-spacing",      1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},

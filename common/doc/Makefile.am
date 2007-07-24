@@ -8,10 +8,10 @@ EXTRA_DIST = \
 	argp-common-outofband-password.man \
 	argp-common-outofband-k-g.man \
 	argp-common-outofband-timeout.man \
-	argp-common-authtype.man \
-	argp-common-ciphersuiteid.man \
-	argp-common-privlevel-user.man \
-	argp-common-privlevel-admin.man \
+	argp-common-authentication-type.man \
+	argp-common-cipher-suite-id.man \
+	argp-common-privilege-level-user.man \
+	argp-common-privilege-level-admin.man \
 	argp-common-workaround-flags.man \
 	argp-common-workaround-heading-text.man \
 	argp-common-workaround-inband-text.man \

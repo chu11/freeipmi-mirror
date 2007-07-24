@@ -83,6 +83,7 @@ enum argp_common_option_keys
      "Specify the remote host(s) to communicate with.", 5},                                  \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
+/* retry-timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                       \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			                           \
      "Specify the username to use when authenticating with the remote host. "                      \
@@ -97,6 +98,9 @@ enum argp_common_option_keys
      "If not specified, a null key is assumed.", 9},                                               \
     {"k-g-prompt", K_G_PROMPT_KEY, 0, 0,	                                                   \
      "Prompt for k-g to avoid possibility of listing it in process lists.", 10},                   \
+    {"retry-timeout", RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                   \
+     "Specify the packet retransmission timeout in milliseconds. "                                 \
+     "Defaults to 20000 milliseconds (20 seconds) if not specified.", 11},                         \
     {"retransmission-timeout", RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                      \
      "Specify the packet retransmission timeout in milliseconds. "                                 \
      "Defaults to 20000 milliseconds (20 seconds) if not specified.", 11},                         \
@@ -104,8 +108,12 @@ enum argp_common_option_keys
      "Specify the session timeout in milliseconds. "                                               \
      "Defaults to 1000 milliseconds (1 second) if not specified.", 12}
 
-#define ARGP_COMMON_OPTIONS_AUTHTYPE                                                                \
-    {"authentication-type", AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 	                            \
+#define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \
+    {"auth-type", AUTHENTICATION_TYPE_KEY, "AUTHENTICATION_TYPE", OPTION_HIDDEN, 	            \
+     "Specify the IPMI 1.5 authentication type to use. "                                            \
+     "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
+     "Defaults to MD5 if not specified", 12},                                                       \
+    {"authentication-type", AUTHENTICATION_TYPE_KEY, "AUTHENTICATION_TYPE", 0, 	                    \
      "Specify the IPMI 1.5 authentication type to use. "                                            \
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
      "Defaults to MD5 if not specified", 12}
@@ -116,15 +124,23 @@ enum argp_common_option_keys
      "The currently supported cipher suite ids are: 0, 1, 2, 3, 6, 7, 8, 11, 12. "                  \
      "Defaults to 3 if not specified.", 13}
 
-#define ARGP_COMMON_OPTIONS_PRIVLEVEL_USER                                                          \
+#define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
+    {"priv-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
+     "Specify the privilege level to be used. "		                                            \
+     "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
+     "Defaults to USER if not specified.", 14},                                                     \
     {"privilege-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                            \
-     "Specify  the  privilege  level to be used. "		                                    \
+     "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
      "Defaults to USER if not specified.", 14}     
 
-#define ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN                                                         \
+#define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
+    {"priv-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
+     "Specify the privilege level to be used. "		                                            \
+     "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
+     "Defaults to ADMIN if not specified.", 14},                                                    \
     {"privilege-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                            \
-     "Specify  the  privilege  level to be used. "		                                    \
+     "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
      "Defaults to ADMIN if not specified.", 14}     
 

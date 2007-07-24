@@ -16,8 +16,11 @@ o Updated most manpages with full and clearer information.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level
+     Backwards compatability has been maintained when possible.
   2) All --auth-type options are now --authentication-type
+     Backwards compatability has been maintained when possible.
   3) All --reg-space or --register-space options are now --register-spacing
+     Backwards compatability has been maintained when possible.
   4) In ipmipower, --hostnames (plural) is now --hostname (not-plural).  
      Internally --hostnames is maintained for backwards compatability.
   5) In ipmipower, --timeout is now --session-timeout.
