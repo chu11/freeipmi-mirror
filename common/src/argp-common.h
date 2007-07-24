@@ -36,27 +36,30 @@ enum argp_common_option_keys
     NO_PROBING_KEY = 130, 
     DRIVER_ADDRESS_KEY = 131, 
     DRIVER_DEVICE_KEY = 132, 
-    RETRANSMISSION_TIMEOUT_KEY = 133, 
-    SESSION_TIMEOUT_KEY = 134,
-    REGISTER_SPACING_KEY = 135,
+    RETRY_TIMEOUT_KEY = 133,
+    RETRANSMISSION_TIMEOUT_KEY = 134, 
+    SESSION_TIMEOUT_KEY = 135,
+    REGISTER_SPACING_KEY = 136,
     HOSTNAME_KEY = 'h', 
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
     PASSWORD_PROMPT_KEY = 'P',
     K_G_KEY = 'k', 
     K_G_PROMPT_KEY = 'K',
+    AUTH_TYPE_KEY = 137, 
     AUTHENTICATION_TYPE_KEY = 'a', 
     CIPHER_SUITE_ID_KEY = 'I',
+    PRIV_LEVEL_KEY = 138,
     PRIVILEGE_LEVEL_KEY = 'l',
     FLUSH_CACHE_KEY = 'f',
     QUIET_CACHE_KEY = 'Q',
-    SDR_CACHE_DIR_KEY = 136,
+    SDR_CACHE_DIR_KEY = 139,
     BUFFER_KEY = 'B',
     CONSOLIDATE_KEY = 'C',
     FANOUT_KEY = 'F',
     ELIMINATE_KEY = 'E',
     WORKAROUND_FLAGS_KEY = 'W',
-    DEBUG_KEY = 137
+    DEBUG_KEY = 140
   };
 
 #define ARGP_COMMON_OPTIONS_DRIVER                                                           \
@@ -108,8 +111,9 @@ enum argp_common_option_keys
      "Specify the session timeout in milliseconds. "                                               \
      "Defaults to 1000 milliseconds (1 second) if not specified.", 12}
 
+/* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \
-    {"auth-type", AUTHENTICATION_TYPE_KEY, "AUTHENTICATION_TYPE", OPTION_HIDDEN, 	            \
+    {"auth-type", AUTH_TYPE_KEY, "AUTHENTICATION_TYPE", OPTION_HIDDEN, 	                            \
      "Specify the IPMI 1.5 authentication type to use. "                                            \
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
      "Defaults to MD5 if not specified", 12},                                                       \
@@ -124,8 +128,9 @@ enum argp_common_option_keys
      "The currently supported cipher suite ids are: 0, 1, 2, 3, 6, 7, 8, 11, 12. "                  \
      "Defaults to 3 if not specified.", 13}
 
+/* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
-    {"priv-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
+    {"priv-level",  PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                               \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
      "Defaults to USER if not specified.", 14},                                                     \
@@ -134,8 +139,9 @@ enum argp_common_option_keys
      "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
      "Defaults to USER if not specified.", 14}     
 
+/* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
-    {"priv-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
+    {"priv-level",  PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                               \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
      "Defaults to ADMIN if not specified.", 14},                                                    \

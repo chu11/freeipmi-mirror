@@ -433,6 +433,8 @@ common_parse_opt (int key,
           cmd_args->k_g_configured++;
       }
       break;
+    /* RETRY_TIMEOUT_KEY for backwards compatability */
+    case RETRY_TIMEOUT_KEY:
     case RETRANSMISSION_TIMEOUT_KEY:
       {
 	int value = 0;
@@ -509,6 +511,8 @@ common_parse_opt (int key,
 	cmd_args->session_timeout = value;
       }
       break;
+    /* AUTH_TYPE_KEY for backwards compatability */
+    case AUTH_TYPE_KEY:
     case AUTHENTICATION_TYPE_KEY: 
       if ((tmp = parse_authentication_type (arg)) < 0)
         {
@@ -562,6 +566,8 @@ common_parse_opt (int key,
         cmd_args->cipher_suite_id = value;
       }
       break;
+    /* PRIV_LEVEL_KEY for backwards compatability */
+    case PRIV_LEVEL_KEY:
     case PRIVILEGE_LEVEL_KEY: 
       if ((tmp = parse_privilege_level (arg)) < 0)
         {
