@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.9 2007-07-24 00:59:43 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.10 2007-07-24 21:28:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -143,22 +143,23 @@ static void
 _usage(void)
 {
   fprintf(stderr, "Usage: ipmimonitoring [OPTIONS]\n"
-          "-H --help                     Output Help\n"
-          "-V --version                  Output Version\n"
           "-D --driver-type str          Driver Type\n"
           "   --no-probing               Do not probe for driver info\n"
           "   --driver-address num       Driver Address\n"
           "   --driver-device str        Driver Device Path\n"
           "   --register-spacing num     Driver Register Spacing\n"
-          "-h --hostname str             Hostname(s)\n"
-          "-u --username name            Username\n"
-          "-p --password pw              Password\n"
-          "-P --password-prompt          Prompt for Password\n"
-          "-k --k-g str                  K_g Key\n"
-          "-K --k-g-prompt               Prompt for K_g Key\n"
-          "-l --privilege-level str      Privilege Level (user, operator, admin)\n"
-          "-a --authentication-type str  Authentication Type (none, straight_password_key, md2, md5)\n"
-          "-I --cipher-suite-id num      Cipher Suite Id\n"
+
+
+          "-h --hostname=IPMIHOST                Specify remote host(s)\n"
+          "-u --username=USERNAME                Specify username\n"
+          "-p --password=PASSWORD                Specify password\n"
+          "-P --password-prompt                  Prompt for password\n"
+          "-k --k-g=K_G                          Specify the K_g key\n"
+          "-K --k-g-prompt                       Prompt for K_g Key\n"
+          "-l --privilege-level=PRIVILEGE-LEVEL  Specify privilege level\n"
+          "-I --cipher-suite-id=CIPHER_SUITE_ID  Specify cipher suite ID\n"
+          "-W --workaround-flags=WORKAROUNDS     Specify workarounds\n"
+
           "-s --sensors list             Specify list of sensors to monitor\n"
           "-g --groups list              Specify list of groups to monitor\n"
           "-c --cache-dir str            Specify alternate SDR cache directory\n"
@@ -167,7 +168,10 @@ _usage(void)
           "-B --buffer-output            Buffer hostranged output\n"
           "-C --consolidate-output       Consolidate hostranged output\n"
           "-F --fanout num               Set multiple host fanout\n"
-          "-E --eliminate                Eliminate undetected nodes.\n");
+          "-E --eliminate                Eliminate undetected nodes.\n"
+          "-H --help                     Output help\n"
+          "-V --version                  Output version\n"
+          );
 #ifndef NDEBUG
   fprintf(stderr,
           "   --debug                    Turn on debugging\n"

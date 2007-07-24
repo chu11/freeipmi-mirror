@@ -79,14 +79,20 @@ enum argp_common_option_keys
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                                        \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			                     \
      "Specify the remote host to communicate with.", 5},		                     \
+    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                    \
+    ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
+
+#define ARGP_COMMON_OPTIONS_OUTOFBAND_NO_TIMEOUT                                             \
+    {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			                     \
+     "Specify the remote host to communicate with.", 5},		                     \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED                                             \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			                     \
      "Specify the remote host(s) to communicate with.", 5},                                  \
-    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
+    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                    \
+    ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
 
-/* retry-timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                       \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			                           \
      "Specify the username to use when authenticating with the remote host. "                      \
@@ -100,7 +106,10 @@ enum argp_common_option_keys
      "Specify the K_g BMC key to use when authenticating with the remote host for IPMI 2.0. "      \
      "If not specified, a null key is assumed.", 9},                                               \
     {"k-g-prompt", K_G_PROMPT_KEY, 0, 0,	                                                   \
-     "Prompt for k-g to avoid possibility of listing it in process lists.", 10},                   \
+     "Prompt for k-g to avoid possibility of listing it in process lists.", 10}
+
+/* retry-timeout is maintained for backwards compatability */
+#define ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT                                                      \
     {"retry-timeout", RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                   \
      "Specify the packet retransmission timeout in milliseconds. "                                 \
      "Defaults to 20000 milliseconds (20 seconds) if not specified.", 11},                         \
@@ -132,26 +141,26 @@ enum argp_common_option_keys
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
     {"priv-level",  PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                               \
      "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
      "Defaults to USER if not specified.", 14},                                                     \
     {"privilege-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                            \
      "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
      "Defaults to USER if not specified.", 14}     
 
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
     {"priv-level",  PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                               \
      "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
      "Defaults to ADMIN if not specified.", 14},                                                    \
     {"privilege-level",  PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                            \
      "Specify the privilege level to be used. "		                                            \
-     "The currently available privilege levels are CALLBACK, USER, OPERATOR, ADMIN, and OEM. "	    \
+     "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
      "Defaults to ADMIN if not specified.", 14}     
 
-#define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                               \
-    {"workaround-flags",  WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0, 	   \
+#define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                                                        \
+    {"workaround-flags",  WORKAROUND_FLAGS_KEY, "WORKAROUNDS", 0, 	                            \
      "Specify workarounds to vendor compliance issues.", 16}
 
 #define ARGP_COMMON_SDR_OPTIONS                                                                                      \

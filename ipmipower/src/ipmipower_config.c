@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.13 2007-07-24 19:56:15 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.14 2007-07-24 21:28:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -232,23 +232,23 @@ static void
 _usage(void) 
 {
   fprintf(stderr, "Usage: ipmipower [OPTIONS]\n"
-          "-h --hostname=IPMIHOST1,IPMIHOST2,...   Hostname(s)\n"
-          "-u --username=USERNAME                  Username\n"
-          "-p --password=PASSWORD                  Password\n" 
-          "-P --password-prompt                    Prompt for Password\n"
-          "-k --k-g=K_G                            K_g Key\n"
-          "-K --k-g-prompt                         Prompt for K_g Key\n"
-          "-a --authentication-type=AUTHTYPE       Authentication Type\n"
-          "-l --privilege-level=PRIVILEGE-LEVEL    Privilege Level\n"
-          "-I --cipher-suite-id=CIPHER_SUITE_ID    Cipher Suite ID\n"
-          "-W --workaround-flags=WORKAROUNDS       Workaround flags\n"
-          "-n --on                                 Power On\n"
-          "-f --off                                Power Off\n"
-          "-c --cycle                              Power Cycle\n"
-          "-r --reset                              Power Reset\n"
-          "-s --stat                               Power Status Query\n"
-          "-H --help                               Output help menu\n"
-          "-V --version                            Output version\n"
+          "-h --hostname=IPMIHOST1,IPMIHOST2,...         Specify remote host(s)\n"
+          "-u --username=USERNAME                        Specify username\n"
+          "-p --password=PASSWORD                        Specify password\n" 
+          "-P --password-prompt                          Prompt for password\n"
+          "-k --k-g=K_G                                  Specify the K_g key\n"
+          "-K --k-g-prompt                               Prompt for K_g Key\n"
+          "-a --authentication-type=AUTHENTICATION_TYPE  Specify authentication type\n"
+          "-l --privilege-level=PRIVILEGE-LEVEL          Specify privilege level\n"
+          "-I --cipher-suite-id=CIPHER_SUITE_ID          Specify cipher suite ID\n"
+          "-W --workaround-flags=WORKAROUNDS             Specify workarounds\n"
+          "-n --on                                       Power On host(s)\n"
+          "-f --off                                      Power Off host(s)\n"
+          "-c --cycle                                    Power Cycle host(s)\n"
+          "-r --reset                                    Power Reset host(s)\n"
+          "-s --stat                                     Power Status Query host(s)\n"
+          "-H --help                                     Output help\n"
+          "-V --version                                  Output version\n"
           );
   exit(1);
 }

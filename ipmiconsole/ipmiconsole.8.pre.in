@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.1.2.6 2007-07-24 20:30:38 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.1.2.7 2007-07-24 21:28:04 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -81,16 +81,11 @@ Deactivate a SOL session if one is detected as being in use and exit.
 \fB\-L\fR, \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .TP
-\fB\-H\fR, \fB\-\-help\fR
-Output help menu and exit.
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Output version and exit.
-.TP
-\fB\-C\fR, \fB\-\-config file\fR
+\fB\-C\fR, \fB\-\-config file\fR=\fIFILE\fR
 Specify an alternate configuration file.
+#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debug\fR
