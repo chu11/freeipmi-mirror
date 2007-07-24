@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.13 2007-07-24 20:30:36 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.14 2007-07-24 23:47:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1121,8 +1121,8 @@ _usage(void)
 
   fprintf(stderr,
 	  "OPTIONS:\n"
-          "  -h         --help                       Output help menu\n"
-          "  -v         --version                    Output version\n"
+          "  -H         --help                       Output help menu\n"
+          "  -V         --version                    Output version\n"
 	  "  -D STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF, OPENIPMI)\n"
           "             --no-probing                 Do not probe for In-band defaults\n"
 	  "             --driver-address=INT         Base address for IPMI driver\n"
@@ -1241,8 +1241,8 @@ _cmdline_parse(int argc, char **argv)
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] = {
-    {"help",                  0, NULL, 'h'},
-    {"version",               0, NULL, 'v'},
+    {"help",                  0, NULL, 'H'},
+    {"version",               0, NULL, 'V'},
     {"set",                   0, NULL, 's'},
     {"get",                   0, NULL, 'g'},
     {"reset",                 0, NULL, 'r'},
@@ -1285,7 +1285,7 @@ _cmdline_parse(int argc, char **argv)
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvD:f:nsgRtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
+  strcpy(options, "HVD:f:nsgRtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 
   /* turn off output messages printed by getopt_long */
   opterr = 0;
@@ -1298,10 +1298,10 @@ _cmdline_parse(int argc, char **argv)
     {
       switch(c) 
         {
-        case 'h':
+        case 'H':
           help_opt++;
           break;
-        case 'v':
+        case 'V':
           _version();
           break;
         case 's':
