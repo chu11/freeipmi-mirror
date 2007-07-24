@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.6 2007-07-24 20:30:39 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.7 2007-07-24 23:38:02 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -85,7 +85,7 @@ monitoring on subsequent executions of
 .B ipmimonitoring.
 This option informs
 .B ipmimonitoring 
-to regenerate an SDR cache.  This is often used if the firmware for a
+to regenerate the SDR cache.  This is often used if the firmware for a
 remote node has been changed.
 .TP
 \fB\-q\fR, \fB\-\-quiet-readings\fR

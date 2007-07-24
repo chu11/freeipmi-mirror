@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.1.2.3 2007-07-11 17:22:48 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.1.2.4 2007-07-24 23:38:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -464,7 +464,7 @@ main (int argc, char **argv)
   ipmi_fru_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup(&(prog_data.args->common.host),
+  if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,
                                    prog_data.args->hostrange.fanout,
@@ -478,7 +478,7 @@ main (int argc, char **argv)
   if (hosts_count > 1)
     prog_data.args->sdr.quiet_cache_wanted = 1;
 
-  if ((rv = pstdout_launch(prog_data.args->common.host,
+  if ((rv = pstdout_launch(prog_data.args->common.hostname,
                            _ipmi_fru,
                            &prog_data)) < 0)
     {

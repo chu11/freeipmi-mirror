@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.2 2007-07-19 18:01:00 chu11 Exp $
+\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.3 2007-07-24 23:38:01 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -108,21 +108,13 @@ generated in the bmc-watchdog log.  The default log is stored at
 the \fB\-\-stop\fR command, \fB\-\-clear\fR command, or by setting the
 stop_timer flag on the \fB\-\-set\fR command.
 .SH "OPTIONS"
-The following options can be used by any command.
-.TP
-\fB\-h\fR, \fB\-\-help\fR
-Output the help menu.  If a specific command (\fB\-\-set\fR,
-\fB\-\-get\fR, \fB\-\-reset\fR, \fB\-\-start\fR, \fB\-\-stop\fR,
-\fB\-\-clear\fR, or \fB\-\-daemon\fR) is listed on the command line,
-only the specific options for that command will be listed.
-.TP
-\fB\-v\fR, \fB\-\-version\fR
-Output the program version.
+The following options are generic and can be used by any command.
 .TP 
 \fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR 
 Specify the driver type to use instead of doing an auto selection.
 The currently available inband drivers are KCS, SSIF, and OPENIPMI.
 #include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-f STRING\fR, \fB\-\-logfile=\fIFILE\fR
 Specify an alternate logfile from the default of

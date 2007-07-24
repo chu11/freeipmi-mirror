@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.1.2.7 2007-07-24 21:28:04 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.1.2.8 2007-07-24 23:38:02 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -66,6 +66,7 @@ privilege levels are USER, OPERATOR, and ADMIN.  Defaults to ADMIN if
 not specified.  The privilege must be atleast the minimum required by
 the remote host to establish a SOL session.
 #include <@top_srcdir@/common/doc/argp-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 .TP
 \fB\-N\fR, \fB\-\-dont-steal\fR
 Do not steal an SOL session if one is already detected as being in
@@ -84,7 +85,6 @@ memory.
 .TP
 \fB\-C\fR, \fB\-\-config file\fR=\fIFILE\fR
 Specify an alternate configuration file.
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
 #include <@top_srcdir@/common/doc/argp-common-misc.man>
 .if @WITH_DEBUG@ \{
 .TP

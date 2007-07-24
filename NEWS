@@ -40,6 +40,7 @@ o Made many command line options consistent across FreeIPMI.  Notable
   11) Short options for most debugging options have been removed.
   12) All "--retry" options are now "--retransmission" options.
      Backwards compatability with old options has been maintained.
+  13) -H options have been changed to -? for consistency.
 o Similarly, renamed configuration file options or interactive prompt
   options for consistency with the command line.  Backwards
   compatability has been maintained as much as possible.

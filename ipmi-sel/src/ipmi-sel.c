@@ -417,7 +417,7 @@ main (int argc, char **argv)
   ipmi_sel_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup(&(prog_data.args->common.host),
+  if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,
                                    prog_data.args->hostrange.fanout,
@@ -431,7 +431,7 @@ main (int argc, char **argv)
   if (hosts_count > 1)
     prog_data.args->sdr.quiet_cache_wanted = 1;
 
-  if ((rv = pstdout_launch(prog_data.args->common.host,
+  if ((rv = pstdout_launch(prog_data.args->common.hostname,
                            _ipmi_sel,
                            &prog_data)) < 0)
     {

@@ -102,7 +102,7 @@ _bmc_config (void *arg)
   prog_data = (bmc_config_prog_data_t *)arg;
 
   if (!(dev = ipmi_device_open(prog_data->progname,
-                               prog_data->args->common.host,
+                               prog_data->args->common.hostname,
                                &(prog_data->args->common),
                                errmsg,
                                IPMI_DEVICE_OPEN_ERRMSGLEN)))

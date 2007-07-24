@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.13 2007-07-24 21:28:04 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.14 2007-07-24 23:38:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -60,10 +60,10 @@
 #define IPMICONSOLE_DEACTIVATE_KEY  'T'
 #define IPMICONSOLE_LOCK_MEMORY_KEY 'L'
 
-#define IPMICONSOLE_DEBUG_KEY       128
-#define IPMICONSOLE_DEBUGFILE_KEY   129
-#define IPMICONSOLE_DEBUGDUMP_KEY   130
-#define IPMICONSOLE_NORAW_KEY       131
+#define IPMICONSOLE_DEBUG_KEY       160
+#define IPMICONSOLE_DEBUGFILE_KEY   161
+#define IPMICONSOLE_DEBUGDUMP_KEY   162
+#define IPMICONSOLE_NORAW_KEY       163
 
 const char *argp_program_version = "ipmiconsole " PACKAGE_VERSION "\n";
 
@@ -146,13 +146,13 @@ cmdline_parse (int key,
 
   switch(key)
     {
-    case 'h':       /* --hostname */
+    case ARGP_HOSTNAME_KEY:       /* --hostname */
       if (strlen(arg) > MAXHOSTNAMELEN)
         err_exit("Command Line Error: hostname too long");
       strcpy(conf->hostname, arg);
       conf->hostname_set_on_cmdline++;
       break;
-    case 'u':       /* --username */
+    case ARGP_USERNAME_KEY:       /* --username */
       if (strlen(arg) > IPMI_MAX_USER_NAME_LENGTH)
         err_exit("Command Line Error: username too long");
       strcpy(conf->username, arg);
@@ -164,7 +164,7 @@ cmdline_parse (int key,
           secure_memset(arg, '\0', n);
         }
       break;
-    case 'p':       /* --password */
+    case ARGP_PASSWORD_KEY:       /* --password */
       if (strlen(arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         err_exit("Command Line Error: password too long");
       strcpy(conf->password, arg);
@@ -176,7 +176,7 @@ cmdline_parse (int key,
           secure_memset(arg, '\0', n);
         }
       break;
-    case 'P':       /* --password-prompt */
+    case ARGP_PASSWORD_PROMPT_KEY:       /* --password-prompt */
       if (!(pw = getpass("Password: ")))
             err_exit("getpass: %s", strerror(errno));
       if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -184,7 +184,7 @@ cmdline_parse (int key,
       strcpy(conf->password, pw);
       conf->password_set_on_cmdline++;
       break;
-    case 'k':       /* --k-g */
+    case ARGP_K_G_KEY:       /* --k-g */
       if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
         err_exit("Command Line Error: Invalid K_g");
       if (rv > 0)
@@ -199,7 +199,7 @@ cmdline_parse (int key,
           secure_memset(arg, '\0', n);
         }
       break;
-    case 'K':       /* --k-g-prompt */
+    case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
       if (!(kg = getpass("K_g: ")))
         err_exit("getpass: %s", strerror(errno));
       if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
@@ -210,7 +210,7 @@ cmdline_parse (int key,
           conf->k_g_set_on_cmdline++;
         }
       break;
-    case 'l':	/* --privilege-level */
+    case ARGP_PRIVILEGE_LEVEL_KEY:	/* --privilege-level */
       tmp = parse_privilege_level(arg);
       if (tmp == IPMI_PRIVILEGE_LEVEL_USER)
         conf->privilege = IPMICONSOLE_PRIVILEGE_USER;
@@ -223,8 +223,8 @@ cmdline_parse (int key,
       conf->privilege_set_on_cmdline++;
       break;
       /* 'I' is advertised option, 'c' is for backwards compatability */
-    case 'I':	/* --cipher-suite-id */
     case 'c':	/* --cipher-suite-id */
+    case ARGP_CIPHER_SUITE_ID_KEY:	/* --cipher-suite-id */
       conf->cipher_suite_id = strtol(arg, &ptr, 10);
       if (ptr != (arg + strlen(arg)))
         err_exit("Command Line Error: cipher suite id invalid\n");
@@ -235,23 +235,23 @@ cmdline_parse (int key,
         err_exit("Command Line Error: cipher suite id unsupported\n");
       conf->cipher_suite_id_set_on_cmdline++;
       break;
-    case 'C':	/* --config-file */
+    case IPMICONSOLE_CONFIG_FILE_KEY:	/* --config-file */
       if (!(conf->config_file = strdup(arg)))
         err_exit("strdup: %s", strerror(errno));
       break;
-    case 'N':       /* --dont-steal */
+    case IPMICONSOLE_DONT_STEAL_KEY:       /* --dont-steal */
       conf->dont_steal++;
       conf->dont_steal_set_on_cmdline++;
       break;
-    case 'T':       /* --deactivate */
+    case IPMICONSOLE_DEACTIVATE_KEY:       /* --deactivate */
       conf->deactivate++;
       conf->deactivate_set_on_cmdline++;
       break;
-    case 'L':       /* --lock-memory */
+    case IPMICONSOLE_LOCK_MEMORY_KEY:       /* --lock-memory */
       conf->lock_memory++;
       conf->lock_memory_set_on_cmdline++;
       break;
-    case 'W':
+    case ARGP_WORKAROUND_FLAGS_KEY:
       if ((tmp = parse_outofband_2_0_workaround_flags(arg)) < 0)
         err_exit("Command Line Error: invalid workaround flags\n");
       /* convert to ipmiconsole flags */
@@ -637,7 +637,7 @@ ipmiconsole_config_setup(int argc, char **argv)
   assert(argv);
 
   _config_default();
-  argp_parse (&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
   _config_file_parse();
 
   if (!strlen(conf->hostname))

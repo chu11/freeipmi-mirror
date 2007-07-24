@@ -222,7 +222,7 @@ common_parse_opt (int key,
 
   switch (key)
     {
-    case DRIVER_TYPE_KEY: 
+    case ARGP_DRIVER_TYPE_KEY: 
       if ((tmp = parse_driver_type (arg)) < 0)
         {
           fprintf(stderr, "invalid driver type specified\n");
@@ -230,10 +230,10 @@ common_parse_opt (int key,
         }
       cmd_args->driver_type = tmp;
       break;
-    case NO_PROBING_KEY:
+    case ARGP_NO_PROBING_KEY:
       cmd_args->disable_auto_probe = 1;
       break;
-    case DRIVER_ADDRESS_KEY:
+    case ARGP_DRIVER_ADDRESS_KEY:
       {
 	int value = 0;
 	char *str = NULL;
@@ -271,7 +271,7 @@ common_parse_opt (int key,
 	cmd_args->driver_address = value;
       }
       break;
-    case DRIVER_DEVICE_KEY:
+    case ARGP_DRIVER_DEVICE_KEY:
       if (cmd_args->driver_device != NULL)
 	free (cmd_args->driver_device);
       if (!(cmd_args->driver_device = strdup (arg)))
@@ -280,7 +280,7 @@ common_parse_opt (int key,
           exit(1);
         }
       break;
-    case REGISTER_SPACING_KEY:
+    case ARGP_REGISTER_SPACING_KEY:
       {
         int value = 0;
 	char *str = NULL;
@@ -317,16 +317,16 @@ common_parse_opt (int key,
 	cmd_args->register_spacing = value;
       }
       break;
-    case HOSTNAME_KEY:
-      if (cmd_args->host != NULL)
-	free (cmd_args->host);
-      if (!(cmd_args->host = strdup (arg)))
+    case ARGP_HOSTNAME_KEY:
+      if (cmd_args->hostname != NULL)
+	free (cmd_args->hostname);
+      if (!(cmd_args->hostname = strdup (arg)))
         {
           perror("strdup");
           exit(1);
         }
       break;
-    case USERNAME_KEY:
+    case ARGP_USERNAME_KEY:
       if (strlen (arg) > IPMI_MAX_USER_NAME_LENGTH)
         {
           fprintf (stderr, "username too long\n");
@@ -349,7 +349,7 @@ common_parse_opt (int key,
           __secure_memset(arg, '\0', n);
         }
       break;
-    case PASSWORD_KEY:
+    case ARGP_PASSWORD_KEY:
       if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
           fprintf (stderr, "password too long\n");
@@ -372,7 +372,7 @@ common_parse_opt (int key,
           __secure_memset(arg, '\0', n);
         }
       break;
-    case PASSWORD_PROMPT_KEY:
+    case ARGP_PASSWORD_PROMPT_KEY:
       if (cmd_args->password != NULL)
         free (cmd_args->password);
       arg = getpass ("Password: ");
@@ -387,7 +387,7 @@ common_parse_opt (int key,
           exit(1);
         }
       break;
-    case K_G_KEY:
+    case ARGP_K_G_KEY:
       {
         int rv;
 
@@ -412,7 +412,7 @@ common_parse_opt (int key,
           }
       }
       break;
-    case K_G_PROMPT_KEY:
+    case ARGP_K_G_PROMPT_KEY:
       {
         int rv;
         
@@ -433,9 +433,9 @@ common_parse_opt (int key,
           cmd_args->k_g_configured++;
       }
       break;
-    /* RETRY_TIMEOUT_KEY for backwards compatability */
-    case RETRY_TIMEOUT_KEY:
-    case RETRANSMISSION_TIMEOUT_KEY:
+    /* ARGP_RETRY_TIMEOUT_KEY for backwards compatability */
+    case ARGP_RETRY_TIMEOUT_KEY:
+    case ARGP_RETRANSMISSION_TIMEOUT_KEY:
       {
 	int value = 0;
 	char *str = NULL;
@@ -473,7 +473,7 @@ common_parse_opt (int key,
 	cmd_args->retransmission_timeout = value;
       }
       break;
-    case SESSION_TIMEOUT_KEY:
+    case ARGP_SESSION_TIMEOUT_KEY:
       {
 	int value = 0;
 	char *str = NULL;
@@ -511,9 +511,9 @@ common_parse_opt (int key,
 	cmd_args->session_timeout = value;
       }
       break;
-    /* AUTH_TYPE_KEY for backwards compatability */
-    case AUTH_TYPE_KEY:
-    case AUTHENTICATION_TYPE_KEY: 
+    /* ARGP_AUTH_TYPE_KEY for backwards compatability */
+    case ARGP_AUTH_TYPE_KEY:
+    case ARGP_AUTHENTICATION_TYPE_KEY: 
       if ((tmp = parse_authentication_type (arg)) < 0)
         {
           fprintf(stderr, "invalid authentication type specified\n");
@@ -521,7 +521,7 @@ common_parse_opt (int key,
         }
       cmd_args->authentication_type = tmp;
       break;
-    case CIPHER_SUITE_ID_KEY: 
+    case ARGP_CIPHER_SUITE_ID_KEY: 
       {
 	int value = 0;
 	char *str = NULL;
@@ -566,9 +566,9 @@ common_parse_opt (int key,
         cmd_args->cipher_suite_id = value;
       }
       break;
-    /* PRIV_LEVEL_KEY for backwards compatability */
-    case PRIV_LEVEL_KEY:
-    case PRIVILEGE_LEVEL_KEY: 
+    /* ARGP_PRIV_LEVEL_KEY for backwards compatability */
+    case ARGP_PRIV_LEVEL_KEY:
+    case ARGP_PRIVILEGE_LEVEL_KEY: 
       if ((tmp = parse_privilege_level (arg)) < 0)
         {
           fprintf(stderr, "invalid privilege level specified\n");
@@ -576,7 +576,7 @@ common_parse_opt (int key,
         }
       cmd_args->privilege_level = tmp;
       break;
-    case WORKAROUND_FLAGS_KEY:
+    case ARGP_WORKAROUND_FLAGS_KEY:
       if ((tmp = parse_outofband_workaround_flags(arg)) < 0)
         {
           fprintf(stderr, "invalid workaround flags specified\n");
@@ -607,7 +607,7 @@ common_parse_opt (int key,
       cmd_args->workaround_flags |= tmp;
       break;
 #ifndef NDEBUG
-    case DEBUG_KEY:
+    case ARGP_DEBUG_KEY:
       cmd_args->flags |= IPMI_FLAGS_DEBUG_DUMP;
       break;
 #endif /* NDEBUG */
@@ -626,13 +626,13 @@ sdr_parse_opt (int key,
 {
   switch (key)
     {
-    case FLUSH_CACHE_KEY:
+    case ARGP_FLUSH_CACHE_KEY:
       cmd_args->flush_cache_wanted = 1;
       break;
-    case QUIET_CACHE_KEY:
+    case ARGP_QUIET_CACHE_KEY:
       cmd_args->quiet_cache_wanted = 1;
       break;
-    case SDR_CACHE_DIR_KEY:
+    case ARGP_SDR_CACHE_DIR_KEY:
       cmd_args->sdr_cache_dir_wanted = 1;
       if (!(cmd_args->sdr_cache_dir = strdup (arg)))
         {
@@ -664,13 +664,13 @@ hostrange_parse_opt (int key,
   
   switch (key)
     {
-    case BUFFER_KEY:
+    case ARGP_BUFFER_KEY:
       cmd_args->buffer_hostrange_output = 1;
       break;
-    case CONSOLIDATE_KEY:
+    case ARGP_CONSOLIDATE_KEY:
       cmd_args->consolidate_hostrange_output = 1;
       break;
-    case FANOUT_KEY:
+    case ARGP_FANOUT_KEY:
       cmd_args->fanout = strtol(arg, &ptr, 10);
       if ((ptr != (arg + strlen(arg)))
           || (cmd_args->fanout < PSTDOUT_FANOUT_MIN)
@@ -681,7 +681,7 @@ hostrange_parse_opt (int key,
           break;
         }
       break;
-    case ELIMINATE_KEY:
+    case ARGP_ELIMINATE_KEY:
       cmd_args->eliminate = 1;
       break;
 
@@ -702,7 +702,7 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->register_spacing = 0;
   cmd_args->session_timeout = 0;
   cmd_args->retransmission_timeout = 0;
-  cmd_args->host = NULL;
+  cmd_args->hostname = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;
   memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
@@ -722,10 +722,10 @@ free_common_cmd_args (struct common_cmd_args *cmd_args)
       free (cmd_args->driver_device);
       cmd_args->driver_device = NULL;
     }
-  if (cmd_args->host != NULL)
+  if (cmd_args->hostname != NULL)
     {
-      free (cmd_args->host);
-      cmd_args->host = NULL;
+      free (cmd_args->hostname);
+      cmd_args->hostname = NULL;
     }
   if (cmd_args->username != NULL)
     {
@@ -744,13 +744,13 @@ verify_common_cmd_args (struct common_cmd_args *cmd_args)
 {
   if ((cmd_args->driver_type == IPMI_DEVICE_LAN
        || cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
-      && !cmd_args->host)
+      && !cmd_args->hostname)
     {
-      fprintf (stderr, "host not specified\n");
+      fprintf (stderr, "hostname not specified\n");
       exit (1);
     }
 
-  if (cmd_args->host)
+  if (cmd_args->hostname)
     {
       /* We default to IPMI 1.5 if the user doesn't specify LAN vs. LAN_2_0 */
 
