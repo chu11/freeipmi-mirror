@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.16 2007-07-25 17:15:49 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.17 2007-07-25 18:39:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,6 +100,18 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
+    /*
+     * achu:
+     *
+     * argp's help/usage layout has various bugs when the description
+     * buffer gets to 150 characters in length.  So we're going to shorten
+     * argp usage help output.  I'll keep alot of the original text in #if
+     * 0's around for the future (or just documentation).
+     *
+     * b/c of the text shortening, we could use the argp-common.h
+     * macros.  But for now, we'll use differnet ones.
+     */
+#if 0
     {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
      "Specify the IPMI 1.5 authentication type to use. "                                            
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " 
@@ -117,6 +129,17 @@ static struct argp_option cmdline_options[] =
      "Specify the privilege level to be used. "                                                     
      "The currently available privilege levels are AUTO, USER, OPERATOR, and ADMIN. "                
      "Defaults to AUTO if not specified.", 14},
+#else
+    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
+     "Specify the IPMI 1.5 authentication type to use.", 12},
+    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         
+     "Specify the IPMI 2.0 cipher suite ID to use.", 13},
+    /* maintain "privilege" for backwards compatability */
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            
+     "Specify the privilege level to be used.", 14},
+    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,                            
+     "Specify the privilege level to be used.", 14},
+#endif
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,
     ARGP_COMMON_HOSTRANGED_ELIMINATE,
@@ -184,7 +207,7 @@ static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
 
 static char cmdline_args_doc[] = "";
 
-static char cmdline_doc[] = "IPMIMonitoring - IPMI Seneor Monitoring Utility";
+static char cmdline_doc[] = "ipmipower - IPMI power control utility";
 
 static struct argp cmdline_argp = {cmdline_options,
                                    cmdline_parse,

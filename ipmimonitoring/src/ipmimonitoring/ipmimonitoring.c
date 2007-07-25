@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.13 2007-07-25 17:15:49 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.14 2007-07-25 18:39:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -142,7 +142,7 @@ static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
 
 static char cmdline_args_doc[] = "";
 
-static char cmdline_doc[] = "IPMIMonitoring - IPMI Seneor Monitoring Utility";
+static char cmdline_doc[] = "IPMIMonitoring - IPMI Sensor Monitoring Utility";
 
 static struct argp cmdline_argp = {cmdline_options,
                                    cmdline_parse,

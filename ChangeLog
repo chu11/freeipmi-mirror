@@ -119,10 +119,16 @@
 	* Adjust error code macros and error messages between libraries to
 	match more consistently.
 
-	Manpages.
+	Argp
 
-	* Globally cleaned up manpages.  Attempt to use more "common"
-	manpages out of common/doc.
+	* Use argp instead of getopt in ipmipower, ipmiconsole, and
+	ipmimonitoring for consistency.
+
+	Usage/help/documentation
+
+	* Globally cleaned up usage output, help output, manpages, etc.
+	Attempt to use more "common" manpages out of common/doc.  Make
+	descriptions more consistent across tools.
 	
 	Misc:
 
