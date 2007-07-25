@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.5 2007-07-25 21:23:31 chu11 Exp $
+\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.6 2007-07-25 21:58:09 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -122,7 +122,7 @@ Output the program version and exit.
 \fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR 
 Specify the driver type to use instead of doing an auto selection.
 The currently available inband drivers are KCS, SSIF, and OPENIPMI.
-#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
 .TP
 \fB\-f STRING\fR, \fB\-\-logfile=\fIFILE\fR
 Specify an alternate logfile from the default of

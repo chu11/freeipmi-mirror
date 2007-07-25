@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.1.2.13 2007-07-24 20:30:38 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.1.2.14 2007-07-25 21:58:15 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,21 +30,21 @@ ipmi-fru \- manual page for ipmi-fru.  IPMI FRU @PACKAGE_VERSION@
 .SH DESCRIPTION
 Displays Field Replaceable Unit (FRU) Information.
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common-driver.man>
-#include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-username-user.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-timeout.man>
-#include <@top_srcdir@/common/doc/argp-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/argp-common-cipher-suite-id.man>
-#include <@top_srcdir@/common/doc/argp-common-privilege-level-user.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .if @WITH_DEBUG@ \{
-#include <@top_srcdir@/common/doc/argp-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
 \}
-#include <@top_srcdir@/common/doc/argp-common-misc.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \FB\-e\fR, \fB\-\-device-id\fR
 Specify a specific FRU device ID.
@@ -59,17 +59,17 @@ Very verbose FRU output.
 Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
 FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.
-#include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

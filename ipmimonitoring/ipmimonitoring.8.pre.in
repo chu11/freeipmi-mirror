@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.7 2007-07-24 23:38:02 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.8 2007-07-25 21:58:15 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,16 +50,16 @@ is cached in
 
 .SH "OPTIONS"
 .TP
-#include <@top_srcdir@/common/doc/argp-common-driver.man>
-#include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-username-user.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/argp-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/argp-common-cipher-suite-id.man>
-#include <@top_srcdir@/common/doc/argp-common-privilege-level-user.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .TP
 \fB\-s\fR, \fB\-\-sensors list\fR
 Specify a list of sensors record ids to specifically monitor.  List of
@@ -93,11 +93,11 @@ Do not output sensor reading values, only Nominal, Warning, or
 Critical states.  This option is particularly useful if you want to
 use hostranged output across a cluster and want to consolidate the
 output.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .TP
 \fB\-H\fR, \fB\-\-help\fR
 Output help menu and exit.
@@ -114,12 +114,12 @@ Turn on packet dumps for debugging.
 \}
 .LP
 
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
 
 .SH "KNOWN ISSUES"
 Interpretation rules have not been written for all sensors

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.16 2007-07-25 21:23:32 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.17 2007-07-25 21:58:15 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,7 +54,7 @@ See EXAMPLES below for examples of how ipmipower is commonly used.
 .SH "BASIC OPTIONS"
 The following options are the most common options used with  
 .B ipmipower.
-#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
 .TP
 \fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
@@ -63,8 +63,8 @@ user must have atleast OPERATOR or ADMINISTRATOR privileges to run the
 --on, --off, --reset, --cycle, --pulse, or --soft power control
 commands.  The user must have atleast USER privileges to determine the
 power status of the machine through --stat.
-#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
 .TP
 \fB\-n\fR, \fB\-\-on\fR
 Power on the target hosts.
@@ -185,9 +185,9 @@ power off actually taking place.  This option will force
 .B ipmipower 
 to regularly query the remote BMC and return only after the machine
 has powered off.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debug\fR
@@ -437,7 +437,7 @@ Specify a new ping percent.
 .TP
 \fBping-consec-count\fR \fICOUNT\fR
 Specify a new ping consec count.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 .LP
 By default, standard output from each node specified will be output
 with the hostname prepended to each line.  Although this output is
@@ -454,10 +454,10 @@ Determine the power status of foo[0-2] with non-null username and password
 Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
 
-#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

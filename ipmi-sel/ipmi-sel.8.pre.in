@@ -4,21 +4,21 @@ ipmi-sel \- manual page for ipmi-sel.  IPMI System Event Logger version @PACKAGE
 .SH DESCRIPTION
 IPMI System Event Logger is used to view and delete SEL entries.
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common-driver.man>
-#include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-username-user.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-timeout.man>
-#include <@top_srcdir@/common/doc/argp-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/argp-common-cipher-suite-id.man>
-#include <@top_srcdir@/common/doc/argp-common-privilege-level-user.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .if @WITH_DEBUG@ \{
-#include <@top_srcdir@/common/doc/argp-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
 \}
-#include <@top_srcdir@/common/doc/argp-common-misc.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.
@@ -35,17 +35,17 @@ Delete record ids from START to END in the SEL.
 .TP
 \fB\-x [FILE]\fR, \fB\-\-hex-dump[=FILE]\fR
 Hex-dump SEL entries optionally into a FILE.
-#include <@top_srcdir@/common/doc/argp-common-sdr-options.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

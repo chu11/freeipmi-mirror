@@ -4,21 +4,21 @@ ipmi-chassis \- manual page for ipmi-chassis.  IPMI Chassis @PACKAGE_VERSION@
 .SH DESCRIPTION
 IPMI Chassis \- Control an IPMI Chassis. 
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common-driver.man>
-#include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-username-admin.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-password.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-k-g.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-timeout.man>
-#include <@top_srcdir@/common/doc/argp-common-authentication-type.man>
-#include <@top_srcdir@/common/doc/argp-common-cipher-suite-id.man>
-#include <@top_srcdir@/common/doc/argp-common-privilege-level-admin.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-admin.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .if @WITH_DEBUG@ \{
-#include <@top_srcdir@/common/doc/argp-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
 \}
-#include <@top_srcdir@/common/doc/argp-common-misc.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-c\fR, \fB\-\-get\-capabilities\fR
 Get chassis capabilities.  This command returns information on which
@@ -114,16 +114,16 @@ chassis behaves when AC power returns after an AC power loss.
 Supported values: LIST\-SUPPORTED\-POLICIES, ALWAYS\-ON, RESTORE,
 ALWAYS\-OFF.  See current power restore policy via the
 \fB\-\-get\-status\fR option.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-buffer.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-consolidate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-fanout.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-eliminate.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text-options.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/argp-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT
