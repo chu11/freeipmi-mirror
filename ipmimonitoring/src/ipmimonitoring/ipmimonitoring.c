@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.11 2007-07-24 23:38:02 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.12 2007-07-25 00:35:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,6 +55,8 @@
 #include <assert.h>
 #include <errno.h>
 
+#include <argp.h>
+
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
 
@@ -103,7 +105,7 @@ static int consolidate_hostrange_output;
 static int fanout;
 static int eliminate;
 
-const char *argp_program_version = "ipmiconsole " PACKAGE_VERSION "\n";
+const char *argp_program_version = "ipmimonitoring " VERSION "\n";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
@@ -111,7 +113,7 @@ static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
-    ARGP_COMMON_OPTIONS_OUTOFBAND_NO_TIMEOUT,
+    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
@@ -123,9 +125,9 @@ static struct argp_option cmdline_options[] =
      "Specify a list of groups to specifically monitor.", 25},
     {"cache-dir", IPMIMONITORING_CACHE_DIR_KEY, "DIRECTORY", 0,
      "Specify an alternate directory to read and write SDR caches..", 26},
-    {"regenerate-sdr-cache", IPMIMONITORING_REGENERATE_SDR_CACHE_KEY, NULL, 0,
+    {"regenerate-sdr-cache", IPMIMONITORING_REGENERATE_SDR_CACHE_KEY, 0, 0,
      "Regenerate the SDR cache.", 27},
-    {"quiet-readings", IPMIMONITORING_QUIET_READINGS_KEY, NULL, 0,
+    {"quiet-readings", IPMIMONITORING_QUIET_READINGS_KEY, 0, 0,
      "Do not output sensor reading values, only Nominal, Warning, or Critical states.", 28},
 #ifndef NDEBUG
     {"debug", IPMIMONITORING_DEBUG_KEY, 0, 0,

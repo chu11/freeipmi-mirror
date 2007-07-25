@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.14 2007-07-24 21:28:05 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.15 2007-07-25 00:35:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -43,6 +43,8 @@
 #endif /* HAVE_GETOPT_H */
 #include <errno.h>
 
+#include <argp.h>
+
 #include "ipmipower_config.h"
 #include "ipmipower_authentication_type.h"
 #include "ipmipower_cipher_suite_id.h"
@@ -57,15 +59,138 @@
 #include "freeipmi-portability.h"
 #include "tool-common.h"
       
-#define IPMIPOWER_CONFIG_KEY   128
-#define IPMIPOWER_DEBUG_KEY    129
-#define IPMIPOWER_IPMIDUMP_KEY 130
-#define IPMIPOWER_RMCPDUMP_KEY 131
-#define IPMIPOWER_LOG_KEY      132
-#define IPMIPOWER_LOGFILE_KEY  133
-
 extern struct ipmipower_config *conf;
 extern struct ipmipower_connection *ics;
+
+const char *argp_program_version = "ipmipower " VERSION "\n";
+
+const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+
+
+#define IPMIPOWER_ON_KEY                       'n'
+#define IPMIPOWER_OFF_KEY                      'f'
+#define IPMIPOWER_CYCLE_KEY                    'c'
+#define IPMIPOWER_RESET_KEY                    'r'
+#define IPMIPOWER_STAT_KEY                     's'
+#define IPMIPOWER_PULSE_KEY                    'j'
+#define IPMIPOWER_SOFT_KEY                     'm'
+
+#define IPMIPOWER_IPMI_VERSION_KEY             'R'
+#define IPMIPOWER_ON_IF_OFF_KEY                'g'
+#define IPMIPOWER_WAIT_UNTIL_OFF_KEY           'A'
+#define IPMIPOWER_WAIT_UNTIL_ON_KEY            'B'
+
+#define IPMIPOWER_RETRY_WAIT_TIMEOUT           160
+#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT  'q'
+#define IPMIPOWER_RETRY_BACKOFF_COUNT          161
+#define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT 'b'
+#define IPMIPOWER_PING_INTERVAL                'i'
+#define IPMIPOWER_PING_TIMEOUT                 'z'
+#define IPMIPOWER_PING_PACKET_COUNT            'v'
+#define IPMIPOWER_PING_PERCENT                 'w'
+#define IPMIPOWER_PING_CONSEC_COUNT            'x'
+
+#define IPMIPOWER_CONFIG_KEY                    162
+#define IPMIPOWER_DEBUG_KEY                     163
+#define IPMIPOWER_IPMIDUMP_KEY                  164
+#define IPMIPOWER_RMCPDUMP_KEY                  165
+#define IPMIPOWER_LOG_KEY                       166
+#define IPMIPOWER_LOGFILE_KEY                   167
+
+static struct argp_option cmdline_options[] =
+  {
+    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
+    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION_TYPE", 0,                 
+     "Specify the IPMI 1.5 authentication type to use. "                                            
+     "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " 
+     "Defaults to MD5 if not specified", 12},
+    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER_SUITE_ID", 0,                         
+     "Specify the IPMI 2.0 cipher suite ID to use. "                                                
+     "The currently supported cipher suite ids are: AUTO, 0, 1, 2, 3, 6, 7, 8, 11, 12. "            
+     "Defaults to AUTO if not specified.", 13},
+    /* maintain "privilege" for backwards compatability */
+    {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            
+     "Specify the privilege level to be used. "                                                     
+     "The currently available privilege levels are AUTO, USER, OPERATOR, and ADMIN. "               
+     "Defaults to AUTO if not specified.", 14},
+    {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,                            
+     "Specify the privilege level to be used. "                                                     
+     "The currently available privilege levels are AUTO, USER, OPERATOR, and ADMIN. "                
+     "Defaults to AUTO if not specified.", 14},
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,
+    ARGP_COMMON_HOSTRANGED_ELIMINATE,
+    {"on", IPMIPOWER_ON_KEY, 0, 0,
+     "Power on the target hosts.", 24},
+    {"off", IPMIPOWER_OFF_KEY, 0, 0,
+     "Power off the target hosts.", 25},
+    {"cycle", IPMIPOWER_CYCLE_KEY, 0, 0,
+     "Power cycle the target hosts.", 26},
+    {"reset", IPMIPOWER_RESET_KEY, 0, 0,
+     "Reset the target hosts.", 27},
+    {"stat", IPMIPOWER_STAT_KEY, 0, 0,
+     "Get power status of the target hosts.", 28},
+    {"pulse", IPMIPOWER_PULSE_KEY, 0, 0,
+     "Send power diagnostic interrupt to target hosts.", 29},
+    {"soft", IPMIPOWER_SOFT_KEY, 0, 0,
+     "Initiate a soft-shutdown of the OS via ACPI.", 30},
+    {"config", IPMIPOWER_CONFIG_KEY, "FILE", 0,
+     "Specify an alternate configuration file.", 31},
+    {"ipmi-version", IPMIPOWER_IPMI_VERSION_KEY, "IPMIVERSION", 0,
+     "Specify the IPMI protocol version to use.", 32},
+    {"on-if-off", IPMIPOWER_ON_IF_OFF_KEY, 0, 0,
+     "Issue a power on command instead of a power cycle or hard reset "
+     "command if the remote machine's power is currently off.", 33},
+    {"wait-until-off", IPMIPOWER_WAIT_UNTIL_OFF_KEY, 0, 0,
+     "Regularly query the remote BMC and return only after the machine has powered off.", 34},
+    {"wait-until-on", IPMIPOWER_WAIT_UNTIL_ON_KEY, 0, 0,
+     "Regularly query the remote BMC and return only after the machine has powered on.", 34},
+    /* retry-wait-timeout maintained for backwards comptability */
+    {"retry-wait-timeout", IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT, "MILLISECONDS", OPTION_HIDDEN,
+     "Specify the retransmission timeout length in milliseconds.", 35},
+    {"retransmission-wait-timeout", IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT, "MILLISECONDS", 0,
+     "Specify the retransmission timeout length in milliseconds.", 35},
+    /* retry-backoff-count maintained for backwards comptability */
+    {"retry-backoff-count", IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT, "COUNT", OPTION_HIDDEN,
+     "Specify the retransmission backoff count for retransmissions.", 36},
+    {"retransmission-backoff-count", IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT, "COUNT", 0,
+     "Specify the retransmission backoff count for retransmissions.", 36},
+    {"ping-interval", IPMIPOWER_PING_INTERVAL, "MILLISECONDS", 0,
+     "Specify the ping interval length in milliseconds.", 37},
+    {"ping-timeout", IPMIPOWER_PING_TIMEOUT, "MILLISECONDS", 0,
+     "Specify the ping timeout length in milliseconds.", 38},
+    {"ping-packet-count", IPMIPOWER_PING_PACKET_COUNT, "COUNT", 0,
+     "Specify the ping packet count size.", 39},
+    {"ping-percent", IPMIPOWER_PING_PERCENT, "PERCENT", 0,
+     "Specify the ping percent value.", 40},
+    {"ping-consec-count", IPMIPOWER_PING_CONSEC_COUNT, "COUNT", 0,
+     "Specify the ping consecutive count.", 41},
+#ifndef NDEBUG
+    {"debug", IPMIPOWER_DEBUG_KEY, 0, 0,
+     "Turn on debugging.", 42},
+    {"ipmidump", IPMIPOWER_IPMIDUMP_KEY, 0, 0,
+     "Turn on IPMI packet dump output.", 43},
+    {"rmcpdump", IPMIPOWER_RMCPDUMP_KEY, 0, 0,
+     "Turn on RMCP packet dump output.", 44},
+    {"log", IPMIPOWER_LOG_KEY, 0, 0,
+     "Turn on logging.", 45},
+    {"logfile", IPMIPOWER_LOGFILE_KEY, "FILE", 0,
+     "Specify alternate logfile.", 46},
+#endif
+    { 0 }
+  };
+
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
+
+static char cmdline_args_doc[] = "";
+
+static char cmdline_doc[] = "IPMIMonitoring - IPMI Seneor Monitoring Utility";
+
+static struct argp cmdline_argp = {cmdline_options,
+                                   cmdline_parse,
+                                   cmdline_args_doc,
+                                   cmdline_doc};
+
 
 void 
 ipmipower_config_default_logfile(char *buf, int buflen)
@@ -225,362 +350,255 @@ _config_common_checks(char *str)
     err_exit("%s: ping consec out of range", str);
 }
 
-/* _usage
- * - output usage 
- */
-static void 
-_usage(void) 
+static error_t
+cmdline_parse (int key,
+               char *arg,
+               struct argp_state *state)
 {
-  fprintf(stderr, "Usage: ipmipower [OPTIONS]\n"
-          "-h --hostname=IPMIHOST1,IPMIHOST2,...         Specify remote host(s)\n"
-          "-u --username=USERNAME                        Specify username\n"
-          "-p --password=PASSWORD                        Specify password\n" 
-          "-P --password-prompt                          Prompt for password\n"
-          "-k --k-g=K_G                                  Specify the K_g key\n"
-          "-K --k-g-prompt                               Prompt for K_g Key\n"
-          "-a --authentication-type=AUTHENTICATION_TYPE  Specify authentication type\n"
-          "-l --privilege-level=PRIVILEGE-LEVEL          Specify privilege level\n"
-          "-I --cipher-suite-id=CIPHER_SUITE_ID          Specify cipher suite ID\n"
-          "-W --workaround-flags=WORKAROUNDS             Specify workarounds\n"
-          "-n --on                                       Power On host(s)\n"
-          "-f --off                                      Power Off host(s)\n"
-          "-c --cycle                                    Power Cycle host(s)\n"
-          "-r --reset                                    Power Reset host(s)\n"
-          "-s --stat                                     Power Status Query host(s)\n"
-          "-H --help                                     Output help\n"
-          "-V --version                                  Output version\n"
-          );
-  exit(1);
-}
-
-/* _version
- * - output version
- */
-static void 
-_version(void) 
-{
-  fprintf(stderr, "ipmipower %s\n", VERSION);
-  exit(1);
-}
-
-void 
-ipmipower_config_cmdline_parse(int argc, char **argv) 
-{
-  char c;
   char *ptr;
   char *pw;
   char *kg;
   int rv;
   uint32_t flags;
 
-#ifndef NDEBUG
-  char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:I:gABCEW:t:y:q:b:i:z:v:w:x:";
-#else  /* !NDEBUG */
-  char *options = "h:u:p:Pk:KnfcrsjmHVa:l:R:T:gABCEW:t:y:q:b:i:z:v:w:x:";
-#endif /* !NDEBUG */
-    
-#if HAVE_GETOPT_LONG
-  struct option long_options[] = 
+  switch (key) 
     {
-      /* hostnames (plural) maintained for backwards compatability */
-      {"hostnames",                    1, NULL, 'h'},
-      {"hostname",                     1, NULL, 'h'},
-      {"username",                     1, NULL, 'u'},
-      {"password",                     1, NULL, 'p'},
-      {"password-prompt",              0, NULL, 'P'},
-      {"k-g",                          1, NULL, 'k'},
-      {"k-g-prompt",                   0, NULL, 'K'},
-      {"on",                           0, NULL, 'n'},
-      {"off",                          0, NULL, 'f'},
-      {"cycle",                        0, NULL, 'c'},
-      {"reset",                        0, NULL, 'r'},
-      {"stat",                         0, NULL, 's'},
-      {"pulse",                        0, NULL, 'j'},
-      {"soft",                         0, NULL, 'm'},
-      {"help",                         0, NULL, 'H'},
-      {"version",                      0, NULL, 'V'},
-#ifndef NDEBUG
-      {"config",                       1, NULL, IPMIPOWER_CONFIG_KEY}, /* no short option */
-#endif /* NDEBUG */
-      {"authentication-type",          1, NULL, 'a'},  
-      /* privilege maintained for backwards compatability */
-      {"privilege",                    1, NULL, 'l'},
-      {"privilege-level",              1, NULL, 'l'},
-      {"ipmi-version",                 1, NULL, 'R'},
-      {"cipher-suite-id",              1, NULL, 'I'},
-      {"on-if-off",                    0, NULL, 'g'},
-      {"wait-until-on",                0, NULL, 'A'},
-      {"wait-until-off",               0, NULL, 'B'},
-      {"consolidate-output",           0, NULL, 'C'},
-      {"eliminate",                    0, NULL, 'E'},
-      {"workaround-flags",             1, NULL, 'W'},
-#ifndef NDEBUG
-      {"debug",                        0, NULL, IPMIPOWER_DEBUG_KEY}, /* no short option */
-      {"ipmidump",                     0, NULL, IPMIPOWER_IPMIDUMP_KEY}, /* no short option */
-      {"rmcpdump",                     0, NULL, IPMIPOWER_RMCPDUMP_KEY}, /* no short option */
-      {"log",                          0, NULL, IPMIPOWER_LOG_KEY}, /* no short option */
-      {"logfile",                      1, NULL, IPMIPOWER_LOGFILE_KEY}, /* no short option */
-#endif /* NDEBUG */
-      /* timeout maintained for backwards compatability */
-      {"timeout" ,                     1, NULL, 't'},
-      {"session-timeout" ,             1, NULL, 't'},
-      /* retry-timeout maintained for backwards comptability */
-      {"retry-timeout",                1, NULL, 'y'},
-      {"retransmission-timeout",       1, NULL, 'y'},
-      /* retry-wait-timeout maintained for backwards comptability */
-      {"retry-wait-timeout",           1, NULL, 'q'},
-      {"retransmission-wait-timeout",  1, NULL, 'q'},
-      /* retry-backoff-count maintained for backwards comptability */
-      {"retry-backoff-count",          1, NULL, 'b'},
-      {"retransmission-backoff-count", 1, NULL, 'b'},
-      {"ping-interval",                1, NULL, 'i'},
-      {"ping-timeout",                 1, NULL, 'z'},
-      {"ping-packet-count",            1, NULL, 'v'},
-      {"ping-percent",                 1, NULL, 'w'},
-      {"ping-consec-count",            1, NULL, 'x'},
-      {0, 0, 0, 0},
-    };
-#endif /* HAVE_GETOPT_LONG */
-
-  /* turn off output messages */
-  opterr = 0;
-
-#if HAVE_GETOPT_LONG
-  while ((c = getopt_long(argc, argv, options, long_options, NULL)) != -1)
-#else  /* !HAVE_GETOPT_LONG */
-  while ((c = getopt(argc, argv, options)) != -1)
-#endif /* !HAVE_GETOPT_LONG */
-    {  
-      switch (c) 
+    case ARGP_HOSTNAME_KEY:       /* --hostname */
+      if ((conf->hosts = hostlist_create(arg)) == NULL)
+        err_exit("Error: Hostname(s) incorrectly formatted");
+      hostlist_uniq(conf->hosts);
+      conf->hosts_count = hostlist_count(conf->hosts);
+      conf->hosts_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_USERNAME_KEY:       /* --username */
+      if (strlen(arg) > IPMI_MAX_USER_NAME_LENGTH)
+        err_exit("Command Line Error: username too long");
+      strcpy(conf->username, arg);
+      conf->username_set_on_cmdline = IPMIPOWER_TRUE;
+      if (arg)
         {
-        case 'h':       /* --hostname */
-          if ((conf->hosts = hostlist_create(optarg)) == NULL)
-            err_exit("Error: Hostname(s) incorrectly formatted");
-          hostlist_uniq(conf->hosts);
-          conf->hosts_count = hostlist_count(conf->hosts);
-          conf->hosts_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'u':       /* --username */
-          if (strlen(optarg) > IPMI_MAX_USER_NAME_LENGTH)
-            err_exit("Command Line Error: username too long");
-          strcpy(conf->username, optarg);
-          conf->username_set_on_cmdline = IPMIPOWER_TRUE;
-          if (optarg)
-            {
-              int n;
-              n = strlen(optarg);
-              secure_memset(optarg, '\0', n);
-            }
-          break;
-        case 'p':       /* --password */
-          if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-            err_exit("Command Line Error: password too long");
-          strcpy(conf->password, optarg);
-          conf->password_set_on_cmdline = IPMIPOWER_TRUE;
-          if (optarg)
-            {
-              int n;
-              n = strlen(optarg);
-              secure_memset(optarg, '\0', n);
-            }
-          break;
-        case 'P':       /* --password-prompt */
-          if (!(pw = getpass("Password: ")))
-            err_exit("getpass: %s", strerror(errno));
-          if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-            err_exit("password too long");
-          strcpy(conf->password, pw);
-          conf->password_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'k':       /* --k-g */
-          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, optarg)) < 0)
-            err_exit("Command Line Error: Invalid K_g");
-          if (rv > 0)
-            {
-              conf->k_g_configured = IPMIPOWER_TRUE;
-              conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
-            }
-          if (optarg)
-            {
-              int n;
-              n = strlen(optarg);
-              secure_memset(optarg, '\0', n);
-            }
-          break;
-        case 'K':       /* --k-g-prompt */
-          if (!(kg = getpass("K_g: ")))
-            err_exit("getpass: %s", strerror(errno));
-          if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
-            err_exit("Command Line Error: Invalid K_g");
-          if (rv > 0)
-            {
-              conf->k_g_configured = IPMIPOWER_TRUE;
-              conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
-            }
-          break;
-        case 'n':       /* --on */ 
-          conf->powercmd = POWER_CMD_POWER_ON;
-          break;
-        case 'f':       /* --off */ 
-          conf->powercmd = POWER_CMD_POWER_OFF;
-          break;
-        case 'c':       /* --cycle */ 
-          conf->powercmd = POWER_CMD_POWER_CYCLE;
-          break;
-        case 'r':       /* --reset */ 
-          conf->powercmd = POWER_CMD_POWER_RESET;
-          break;
-        case 's':       /* --stat */ 
-          conf->powercmd = POWER_CMD_POWER_STATUS;
-          break;
-        case 'j':       /* --pulse */
-          conf->powercmd = POWER_CMD_PULSE_DIAG_INTR;
-          break;
-        case 'm':       /* --soft */
-          conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
-          break;
-        case 'H':       /* --help */
-          _usage();
-          break;
-        case 'V':       /* --version */
-          _version();
-          break;
-#ifndef NDEBUG
-        case IPMIPOWER_CONFIG_KEY:         /* --config */
-          if (strlen(optarg) > MAXPATHLEN)
-            err_exit("Command Line Error: configuration file pathname too long");
-          strcpy(conf->configfile, optarg);
-          break;
-#endif /* !NDEBUG */
-        case 'a':       /* --authentication-type */
-          conf->authentication_type = ipmipower_authentication_type_index(optarg);
-          conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'l':       /* --privilege-level */
-          conf->privilege_level = ipmipower_privilege_level_index(optarg);
-          conf->privilege_level_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-	case 'R':	/* --ipmi-version */
-          conf->ipmi_version = ipmipower_ipmi_version_index(optarg);
-	  conf->ipmi_version_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'I':       /* --cipher-suite-id */
-          conf->cipher_suite_id = ipmipower_cipher_suite_id_index(optarg);
-          conf->cipher_suite_id_set_on_cmdline = IPMIPOWER_TRUE;
-        case 'g':       /* --on-if-off */
-          conf->on_if_off = !conf->on_if_off;
-          conf->on_if_off_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'A':       /* --wait-until-on */
-          conf->wait_until_on = !conf->wait_until_on;
-          conf->wait_until_on_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'B':       /* --wait-until-off */
-          conf->wait_until_off = !conf->wait_until_off;
-          conf->wait_until_off_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'C':       /* --consolidate-output */
-          conf->consolidate_output = IPMIPOWER_TRUE;
-          conf->consolidate_output_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'E':       /* --eliminate */
-          conf->eliminate = IPMIPOWER_TRUE;
-          conf->eliminate_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'W':       /* --workaround-flags */
-          if (ipmipower_workarounds_parse(optarg, &flags) < 0)
-            err_exit("Command Line Error: invalid workaround specified");
-          conf->workaround_flags = flags;
-          conf->workaround_flags_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-#ifndef NDEBUG
-        case IPMIPOWER_DEBUG_KEY:          /* --debug */
-          conf->debug = !conf->debug;
-          break;
-        case IPMIPOWER_IPMIDUMP_KEY:       /* --ipmidump */
-          conf->ipmidump = !conf->ipmidump;
-          break;
-        case IPMIPOWER_RMCPDUMP_KEY:       /* --rmcpdump */
-          conf->rmcpdump = !conf->rmcpdump;
-          break;
-	case IPMIPOWER_LOG_KEY:            /* --log */
-	  conf->log = !conf->log;
-	  break;
-	case IPMIPOWER_LOGFILE_KEY:        /* --logfile */
-          if (strlen(optarg) > MAXPATHLEN)
-            err_exit("Command Line Error: log file pathname too long");
-	  memset(conf->logfile, '\0', MAXPATHLEN+1);
-          strcpy(conf->logfile, optarg);
-	  break;
-#endif /* !NDEBUG */
-        case 't':       /* --session-timeout */
-          conf->session_timeout_len = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: session timeout length invalid\n");
-          conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'y':       /* --retransmission-timeout */
-          conf->retransmission_timeout_len = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: retransmission timeout length invalid\n");
-          conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'q':       /* --retransmission-wait-timeout */
-          conf->retransmission_wait_timeout_len = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: retransmission wait timeout length invalid\n");
-          conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'b':       /* --retransmission-backoff-count */
-          conf->retransmission_backoff_count = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: retransmission backoff count invalid\n");
-          conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'i':       /* --ping-interval */
-          conf->ping_interval_len = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: ping interval length invalid\n");
-          conf->ping_interval_len_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'z':       /* --ping-timeout */
-          conf->ping_timeout_len = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: ping timeout length invalid\n");
-          conf->ping_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'v':       /* --ping-packet-count */
-          conf->ping_packet_count = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: ping packet count invalid\n");
-          conf->ping_packet_count_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'w':       /* --ping-percent */
-          conf->ping_percent = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: ping percent invalid\n");
-          conf->ping_percent_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        case 'x':       /* --ping-consec-count */
-          conf->ping_consec_count = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            err_exit("Command Line Error: ping consec count invalid\n");
-          conf->ping_consec_count_set_on_cmdline = IPMIPOWER_TRUE;
-          break;
-        default:
-          fprintf(stderr, "Error: command line option error\n");
-          _usage();
-          break;
+          int n;
+          n = strlen(arg);
+          secure_memset(arg, '\0', n);
         }
-    }
-  
+      break;
+    case ARGP_PASSWORD_KEY:       /* --password */
+      if (strlen(arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+        err_exit("Command Line Error: password too long");
+      strcpy(conf->password, arg);
+      conf->password_set_on_cmdline = IPMIPOWER_TRUE;
+      if (arg)
+        {
+          int n;
+          n = strlen(arg);
+          secure_memset(arg, '\0', n);
+        }
+      break;
+    case ARGP_PASSWORD_PROMPT_KEY:       /* --password-prompt */
+      if (!(pw = getpass("Password: ")))
+        err_exit("getpass: %s", strerror(errno));
+      if (strlen(pw) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+        err_exit("password too long");
+      strcpy(conf->password, pw);
+      conf->password_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_K_G_KEY:       /* --k-g */
+      if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
+        err_exit("Command Line Error: Invalid K_g");
+      if (rv > 0)
+        {
+          conf->k_g_configured = IPMIPOWER_TRUE;
+          conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
+        }
+      if (arg)
+        {
+          int n;
+          n = strlen(arg);
+          secure_memset(arg, '\0', n);
+        }
+      break;
+    case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
+      if (!(kg = getpass("K_g: ")))
+        err_exit("getpass: %s", strerror(errno));
+      if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
+        err_exit("Command Line Error: Invalid K_g");
+      if (rv > 0)
+        {
+          conf->k_g_configured = IPMIPOWER_TRUE;
+          conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
+        }
+      break;
+    case IPMIPOWER_ON_KEY:       /* --on */ 
+      conf->powercmd = POWER_CMD_POWER_ON;
+      break;
+    case IPMIPOWER_OFF_KEY:       /* --off */ 
+      conf->powercmd = POWER_CMD_POWER_OFF;
+      break;
+    case IPMIPOWER_CYCLE_KEY:       /* --cycle */ 
+      conf->powercmd = POWER_CMD_POWER_CYCLE;
+      break;
+    case IPMIPOWER_RESET_KEY:       /* --reset */ 
+      conf->powercmd = POWER_CMD_POWER_RESET;
+      break;
+    case IPMIPOWER_STAT_KEY:       /* --stat */ 
+      conf->powercmd = POWER_CMD_POWER_STATUS;
+      break;
+    case IPMIPOWER_PULSE_KEY:       /* --pulse */
+      conf->powercmd = POWER_CMD_PULSE_DIAG_INTR;
+      break;
+    case IPMIPOWER_SOFT_KEY:       /* --soft */
+      conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
+      break;
+#ifndef NDEBUG
+    case IPMIPOWER_CONFIG_KEY:         /* --config */
+      if (strlen(arg) > MAXPATHLEN)
+        err_exit("Command Line Error: configuration file pathname too long");
+      strcpy(conf->configfile, arg);
+      break;
+#endif /* !NDEBUG */
+    case ARGP_AUTHENTICATION_TYPE_KEY:       /* --authentication-type */
+      conf->authentication_type = ipmipower_authentication_type_index(arg);
+      conf->authentication_type_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    /* ARGP_PRIVILEGE_KEY for backwards compatability */
+    case ARGP_PRIVILEGE_KEY:
+    case ARGP_PRIVILEGE_LEVEL_KEY:       /* --privilege-level */
+      conf->privilege_level = ipmipower_privilege_level_index(arg);
+      conf->privilege_level_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_IPMI_VERSION_KEY:	/* --ipmi-version */
+      conf->ipmi_version = ipmipower_ipmi_version_index(arg);
+      conf->ipmi_version_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_CIPHER_SUITE_ID_KEY:       /* --cipher-suite-id */
+      conf->cipher_suite_id = ipmipower_cipher_suite_id_index(arg);
+      conf->cipher_suite_id_set_on_cmdline = IPMIPOWER_TRUE;
+    case IPMIPOWER_ON_IF_OFF_KEY:       /* --on-if-off */
+      conf->on_if_off = !conf->on_if_off;
+      conf->on_if_off_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_WAIT_UNTIL_OFF_KEY:       /* --wait-until-on */
+      conf->wait_until_on = !conf->wait_until_on;
+      conf->wait_until_on_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
+      conf->wait_until_off = !conf->wait_until_off;
+      conf->wait_until_off_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_CONSOLIDATE_OUTPUT_KEY:       /* --consolidate-output */
+      conf->consolidate_output = IPMIPOWER_TRUE;
+      conf->consolidate_output_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_ELIMINATE_KEY:       /* --eliminate */
+      conf->eliminate = IPMIPOWER_TRUE;
+      conf->eliminate_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_WORKAROUND_FLAGS_KEY:       /* --workaround-flags */
+      if (ipmipower_workarounds_parse(arg, &flags) < 0)
+        err_exit("Command Line Error: invalid workaround specified");
+      conf->workaround_flags = flags;
+      conf->workaround_flags_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+#ifndef NDEBUG
+    case IPMIPOWER_DEBUG_KEY:          /* --debug */
+      conf->debug = !conf->debug;
+      break;
+    case IPMIPOWER_IPMIDUMP_KEY:       /* --ipmidump */
+      conf->ipmidump = !conf->ipmidump;
+      break;
+    case IPMIPOWER_RMCPDUMP_KEY:       /* --rmcpdump */
+      conf->rmcpdump = !conf->rmcpdump;
+      break;
+    case IPMIPOWER_LOG_KEY:            /* --log */
+      conf->log = !conf->log;
+      break;
+    case IPMIPOWER_LOGFILE_KEY:        /* --logfile */
+      if (strlen(arg) > MAXPATHLEN)
+        err_exit("Command Line Error: log file pathname too long");
+      memset(conf->logfile, '\0', MAXPATHLEN+1);
+      strcpy(conf->logfile, arg);
+      break;
+#endif /* !NDEBUG */
+    case ARGP_SESSION_TIMEOUT_KEY:       /* --session-timeout */
+      conf->session_timeout_len = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: session timeout length invalid\n");
+      conf->session_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case ARGP_RETRANSMISSION_TIMEOUT_KEY:       /* --retransmission-timeout */
+      conf->retransmission_timeout_len = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: retransmission timeout length invalid\n");
+      conf->retransmission_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    /* IPMIPOWER_RETRY_WAIT_TIMEOUT for backwards compatability */
+    case IPMIPOWER_RETRY_WAIT_TIMEOUT:
+    case IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT:       /* --retransmission-wait-timeout */
+      conf->retransmission_wait_timeout_len = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: retransmission wait timeout length invalid\n");
+      conf->retransmission_wait_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    /* IPMIPOWER_RETRY_BACKOFF_COUNT for backwards compatability */
+    case IPMIPOWER_RETRY_BACKOFF_COUNT:
+    case IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT:       /* --retransmission-backoff-count */
+      conf->retransmission_backoff_count = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: retransmission backoff count invalid\n");
+      conf->retransmission_backoff_count_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_PING_INTERVAL:       /* --ping-interval */
+      conf->ping_interval_len = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: ping interval length invalid\n");
+      conf->ping_interval_len_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_PING_TIMEOUT:       /* --ping-timeout */
+      conf->ping_timeout_len = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: ping timeout length invalid\n");
+      conf->ping_timeout_len_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_PING_PACKET_COUNT:       /* --ping-packet-count */
+      conf->ping_packet_count = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: ping packet count invalid\n");
+      conf->ping_packet_count_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_PING_PERCENT:       /* --ping-percent */
+      conf->ping_percent = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: ping percent invalid\n");
+      conf->ping_percent_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case IPMIPOWER_PING_CONSEC_COUNT:       /* --ping-consec-count */
+      conf->ping_consec_count = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: ping consec count invalid\n");
+      conf->ping_consec_count_set_on_cmdline = IPMIPOWER_TRUE;
+      break;
+    case '?':
+    default:
+      return ARGP_ERR_UNKNOWN;
+    } 
+
+  return 0;
+}
+
+static void
+post_cmdline_parse_verify(void)
+{
   _config_common_checks("Command Line Error");
   
-  if (optind < argc)
-    _usage();
-
   if (conf->powercmd != POWER_CMD_NONE)
     conf->ping_interval_len = 0;     /* force pings to be off */
+}
+
+void 
+ipmipower_config_cmdline_parse(int argc, char **argv)
+{
+  argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  post_cmdline_parse_verify();
 }
 
 /*

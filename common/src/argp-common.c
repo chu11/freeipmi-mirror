@@ -664,10 +664,10 @@ hostrange_parse_opt (int key,
   
   switch (key)
     {
-    case ARGP_BUFFER_KEY:
+    case ARGP_BUFFER_OUTPUT_KEY:
       cmd_args->buffer_hostrange_output = 1;
       break;
-    case ARGP_CONSOLIDATE_KEY:
+    case ARGP_CONSOLIDATE_OUTPUT_KEY:
       cmd_args->consolidate_hostrange_output = 1;
       break;
     case ARGP_FANOUT_KEY:

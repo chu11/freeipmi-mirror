@@ -37,6 +37,7 @@ enum argp_common_option_keys
     ARGP_DRIVER_DEVICE_KEY = 132, 
     ARGP_RETRY_TIMEOUT_KEY = 133, /* for backwards compatability */
     ARGP_RETRANSMISSION_TIMEOUT_KEY = 134, 
+    ARGP_TIMEOUT_KEY = 135,  /* for backwards compatability */
     ARGP_SESSION_TIMEOUT_KEY = 135,
     ARGP_REG_SPACE_KEY = 136, /* for backwards compatability */
     ARGP_REGISTER_SPACING_KEY = 137,
@@ -49,17 +50,18 @@ enum argp_common_option_keys
     ARGP_AUTH_TYPE_KEY = 138, /* for backwards compatability */
     ARGP_AUTHENTICATION_TYPE_KEY = 'a', 
     ARGP_CIPHER_SUITE_ID_KEY = 'I',
-    ARGP_PRIV_LEVEL_KEY = 139, /* for backwards compatability */
+    ARGP_PRIVILEGE_KEY = 139, /* for backwards compatability */
+    ARGP_PRIV_LEVEL_KEY = 140, /* for backwards compatability */
     ARGP_PRIVILEGE_LEVEL_KEY = 'l',
     ARGP_FLUSH_CACHE_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_DIR_KEY = 140,
-    ARGP_BUFFER_KEY = 'B',
-    ARGP_CONSOLIDATE_KEY = 'C',
+    ARGP_SDR_CACHE_DIR_KEY = 141,
+    ARGP_BUFFER_OUTPUT_KEY = 'B',
+    ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 141
+    ARGP_DEBUG_KEY = 142
   };
 
 #define ARGP_COMMON_OPTIONS_DRIVER                                                           \
@@ -96,6 +98,11 @@ enum argp_common_option_keys
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON,                                                    \
     ARGP_COMMON_OPTIONS_OUTOFBAND_TIMEOUT
 
+#define ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT                                  \
+    {"hostname",       ARGP_HOSTNAME_KEY, "IPMIHOST", 0, 			             \
+     "Specify the remote host(s) to communicate with.", 5},                                  \
+    ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
+
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                       \
     {"username",       ARGP_USERNAME_KEY, "USERNAME", 0, 			                   \
      "Specify the username to use when authenticating with the remote host. "                      \
@@ -119,6 +126,9 @@ enum argp_common_option_keys
     {"retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                 \
      "Specify the packet retransmission timeout in milliseconds. "                                 \
      "Defaults to 20000 milliseconds (20 seconds) if not specified.", 11},                         \
+    {"timeout", ARGP_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                   \
+     "Specify the session timeout in milliseconds. "                                               \
+     "Defaults to 1000 milliseconds (1 second) if not specified.", 12},                            \
     {"session-timeout", ARGP_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                               \
      "Specify the session timeout in milliseconds. "                                               \
      "Defaults to 1000 milliseconds (1 second) if not specified.", 12}
@@ -175,12 +185,24 @@ enum argp_common_option_keys
      "Specify an alternate directory for sensor data repository (SDR) caches to be stored or read from.", 19} 
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                     \
-    {"buffer-output", ARGP_BUFFER_KEY, 0, 0,                               \
-      "Buffer hostranged output.", 20},                                    \
-    {"consolidate-output", ARGP_CONSOLIDATE_KEY, 0, 0,                     \
-     "Consolidate hostranged output.", 21},                                \
+    ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT,                                  \
+    ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,                             \
+    ARGP_COMMON_HOSTRANGED_FANOUT,                                         \
+    ARGP_COMMON_HOSTRANGED_ELIMINATE
+
+#define ARGP_COMMON_HOSTRANGED_BUFFER_OUTPUT                               \
+    {"buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                        \
+      "Buffer hostranged output.", 20}
+
+#define ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT                          \
+    {"consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,              \
+     "Consolidate hostranged output.", 21}
+
+#define ARGP_COMMON_HOSTRANGED_FANOUT                                      \
     {"fanout", ARGP_FANOUT_KEY, "NUM", 0,                                  \
-     "Specify multiple host fanout.", 22},                                 \
+     "Specify multiple host fanout.", 22}
+
+#define ARGP_COMMON_HOSTRANGED_ELIMINATE                                   \
     {"eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                \
      "Eliminate undetected nodes.", 23}
 

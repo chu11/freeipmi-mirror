@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.14 2007-07-24 23:38:02 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.15 2007-07-25 00:35:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,7 +65,7 @@
 #define IPMICONSOLE_DEBUGDUMP_KEY   162
 #define IPMICONSOLE_NORAW_KEY       163
 
-const char *argp_program_version = "ipmiconsole " PACKAGE_VERSION "\n";
+const char *argp_program_version = "ipmiconsole " VERSION "\n";
 
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
