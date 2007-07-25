@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.14 2007-07-25 00:35:18 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.15 2007-07-25 17:15:49 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -103,7 +103,7 @@ The following advanced options are used to change the default behavior
 of 
 .B ipmipower.
 .TP
-\fB\-a\fR, \fB\-\-authentication\-type\fR=\fIAUTHENTICATION_TYPE\fR
+\fB\-a\fR, \fB\-\-authentication\-type\fR=\fIAUTHENTICATION-TYPE\fR
 Specify the IPMI 1.5 authentication type to use.  The currently
 available authentication types are AUTO, NONE, STRAIGHT_PASSWORD_KEY,
 MD2, and MD5.  Defaults to AUTO to automatically select the 
@@ -121,7 +121,7 @@ version to use.  The currently available versions are AUTO, 1.5, and
 2.0.  Defaults to AUTO to automatically select a suitable protocol
 version.
 .TP
-\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER_SUITE_ID\fR
+\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
 Specify the IPMI 2.0 cipher suite ID to use.  The Cipher Suite ID
 identifies a set of authentication, integrity, and confidentiality
 algorithms to use for IPMI 2.0 communication.  The authentication
@@ -313,128 +313,130 @@ provides the following interactive commands at the ipmipower> prompt.
 Before any power commands (on, off, cycle, reset, stat, pulse, or
 soft) can be used, hostnames must be configured into
 .B ipmipower, 
-either through the command prompt or the hostname command below.
+either through the command prompt or the hostname command below.  The
+parameters and options to the commands below mirror their appropriate
+command line options.
 .TP
-.I "hostname [str]"
-specify a new set of hosts, no str to unconfigure all hosts
+\fBhostname\fR \fI[IPMIHOST(s)]\fR
+Specify a new set of hosts.  No input to unconfigure all hosts.
 .TP
-.I "username [str]"
-specify a new username, no str for null username
+\fBusername\fR \fI[USERNAME]\fR
+Specify a new username.  No input for null username.
 .TP
-.I "password [str]"
-specify a new password, no str for null password
+\fBpassword\fR \fI[PASSWORD]\fR
+Specify a new password.  No input for null password.
 .TP
-.I "k_g [str]"
-specify a new K_g BMC Key, no str for null, prefix with '0x' to enter
-a key in hexadecimal
+\fBk_g\fR \fI[K_G]\fR
+Specify a new K_g BMC Key.  No input for null key.  Prefix with '0x'
+to enter a key in hexadecimal
 .TP
-.I "on [host(s)]"
-turns on all hosts, or only the specified host(s).
+\fBon\fR \fI[IPMIHOST(s)]\fR
+Turn on all configured hosts or specified hosts.
 .TP
-.I "off [host(s)]"
-turns off all hosts, or only the specified host(s).
+\fBoff\fR \fI[IPMIHOST(s)]\fR
+Turn off all configured hosts or specified hosts.
 .TP
-.I "cycle [host(s)]"
-power cycle all hosts, or specified host(s).
+\fBcycle\fR \fI[IPMIHOST(s)]\fR
+Power cycle all configured hosts or specified hosts.
 .TP
-.I "reset [host(s)]"
-hard reset all hosts or specified host(s).
+\fBreset\fR \fI[IPMIHOST(s)]\fR
+Reset all configured hosts or specified hosts.
 .TP
-.I "stat [host(s)]"
-queries power status for all hosts, or only the specified host(s).
+\fBstat\fR \fI[IPMIHOST(s)]\fR
+Query power status for all configured hosts or specified hosts.
 .TP
-.I "pulse [host(s)]"
-send pulse diagnostic interrupt to all hosts, or only the specified host(s).
+\fBpulse\fR \fI[IPMIHOST(s)]\fR
+Pulse diagnostic interrupt all configured hosts or specified hosts.
 .TP
-.I "soft [host(s)]"
-Initiate a soft-shutdown of the OS via ACPI to all hosts, or only the specified host(s).
+\fBsoft\fR \fI[IPMIHOST(s)]\fR
+Initiate a soft-shutdown for all configured hosts or specified hosts. 
 .TP
-.I help
-output help menu
+\fBhelp\fR
+Output help menu.
 .TP
-.I advanced
-output advanced help menu
+\fBadvanced\fR
+Output advanced help menu.
 .TP
-.I network
-output network help menu
+\fBnetwork\fR
+Output network help menu.
 .TP
-.I "quit"
-quit
+\fBquit\fR
+Quit program.
 .B ipmipower.
 .TP
-.I "authentication-type str"
-specify a new authentication type, auto, none, straight_password_key, md2, or md5.
+\fBauthentication-type\fR \fIAUTHENTICATION-TYPE\fR
+Specify the authentication type to use.
 .TP
-.I "privilege-level str"
-specify a new privilege type, auto, user, operator or admin.
+\fBprivilege-level\fR \fIPRIVILEGE-LEVEL\fR
+Specify the privilege level to use.
 .TP
-.I "ipmi-version str"
-specify the ipmi version, auto, 1.5 or 2.0.
+\fBipmi-version\fR \fIIPMIVERSION\fR
+Specify the ipmi version to use.
 .TP
-.I "cipher-suite-id str"
-specify the cipher suite id, auto, 0, 1, 2, 3, 6, 7, 8, 11, 12.
+\fBcipher-suite-id\fR \fICIPHER-SUITE-ID\fR
+Specify the cipher suite id to use.
 .TP
-.I "on-if-off [on|off]"
-toggle on-if-off functionality.
+\fBon-if-off\fR \fI[on|off]\fR
+Toggle on-if-off functionality.
 .TP
-.I "wait-until-on [on|off]"
-toggle wait-until-on functionality.
+\fBwait-until-on\fR \fI[on|off]\fR
+Toggle wait-until-on functionality.
 .TP
-.I "wait-until-off [on|off]"
-toggle wait-until-off functionality.
+\fBwait-until-off\fR \fI[on|off]\fR
+Toggle wait-until-off functionality.
 .TP
-.I "consolidate-output [on|off]"
-toggle consolidate-output functionality
+\fBconsolidate-output\fR \fI[on|off]\fR
+Toggle consolidate-output functionality
 .TP
-.I "workaround-flags str"
-specify workaround options.
+\fBworkaround-flags\fR \fIWORKAROUNDS\fR
+Specify workaround flags.
 .if @WITH_DEBUG@ \{
 .TP
-.I "debug [on|off]"
-toggle debug output
+\fBdebug\fR \fI[on|off]\fR
+Toggle debug output.
 .TP
-.I "ipmidump [on|off]"
-toggle IPMI dump output
+\fBipmidump\fR \fI[on|off]\fR
+Toggle IPMI dump output.
 .TP
-.I "rmcpdump [on|off]"
-toggle RMCP dump output
+\fBrmcpdump\fR \fI[on|off]\fR
+Toggle RMCP dump output.
 .TP
-.I "log [on|off]"
-toggle logging output
+\fBlog\fR \fI[on|off]\fR
+Toggle logging output.
 .TP
-.I "logfile [str]"
-specify a new log file, no str for default
+\fBlogfile\fR \fI[FILE]\fR
+Specify a new log file.  No input for default.
 \}
 .TP
-.I "config"
-output the current configuration 
+\fBconfig\fR
+Output the current configuration.
 .TP
-.I "session-timeout ms"
-specify a new timeout length
+\fBsession-timeout\fR \fIMILLISECONDS\fR
+Specify a new session timeout length.
 .TP
-.I "retransmission-timeout ms"
-specify a new retransmission timeout length
+\fBretransmission-timeout\fR \fIMILLISECONDS\fR
+Specify a new retransmiision timeout length.
 .TP
-.I "retransmission-wait-timeout ms"
-specify a new retransmission-wait timeout length
+\fBretransmission-wait-timeout\fR \fIMILLISECONDS\fR
+Specify a new retransmission wait timeout length.
 .TP
-.I "retransmission-backoff-count num"
-specify a new retransmission backoff count
+\fBretransmission-backoff-count\fR \fICOUNT\fR
+Specify a new retransmission backoff count.
 .TP
-.I "ping-interval ms"
-specify a new ping interval length
+\fBping-interval\fR \fIMILLISECONDS\fR
+Specify a new ping interval length.
 .TP
-.I "ping-timeout ms"
-specify a new ping timeout length
+\fBping-timeout\fR \fIMILLISECONDS\fR
+Specify a new ping timeout length.
 .TP
-.I "ping-packet-count num"
-specify a new ping packet count
+\fBping-packet-count\fR \fICOUNT\fR
+Specify a new ping packet count.
 .TP
-.I "ping-percent num"
-specify a new ping percent
+\fBping-percent\fR \fIPERCENT\fR
+Specify a new ping percent.
 .TP
-.I "ping-consec-count num"
-specify a new ping consec count
+\fBping-consec-count\fR \fICOUNT\fR
+Specify a new ping consec count.
 #include <@top_srcdir@/common/doc/argp-common-hostranged-text-main.man>
 .LP
 By default, standard output from each node specified will be output

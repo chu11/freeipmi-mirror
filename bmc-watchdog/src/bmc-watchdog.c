@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.14 2007-07-24 23:47:19 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.15 2007-07-25 17:15:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1107,13 +1107,13 @@ _usage(void)
               "Usage: bmc-watchdog <COMMAND> [OPTIONS]... [COMMAND_OPTIONS]...\n\n");
       fprintf(stderr,
               "COMMANDS:\n"
-              "  -s         --set                        Set BMC Watchdog Config\n"
-              "  -g         --get                        Get BMC Watchdog Config\n"
-              "  -r         --reset                      Reset BMC Watchdog Timer\n"
-              "  -t         --start                      Start BMC Watchdog Timer\n"
-              "  -y         --stop                       Stop BMC Watchdog Timer\n"
-              "  -c         --clear                      Clear BMC Watchdog Config\n"
-              "  -d         --daemon                     Run in Daemon Mode\n\n");
+              "  -s         --set                            Set BMC Watchdog Config\n"
+              "  -g         --get                            Get BMC Watchdog Config\n"
+              "  -r         --reset                          Reset BMC Watchdog Timer\n"
+              "  -t         --start                          Start BMC Watchdog Timer\n"
+              "  -y         --stop                           Stop BMC Watchdog Timer\n"
+              "  -c         --clear                          Clear BMC Watchdog Config\n"
+              "  -d         --daemon                         Run in Daemon Mode\n\n");
     }
   else
     fprintf(stderr,
@@ -1121,18 +1121,18 @@ _usage(void)
 
   fprintf(stderr,
 	  "OPTIONS:\n"
-          "  -H         --help                       Output help menu\n"
-          "  -V         --version                    Output version\n"
-	  "  -D STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF, OPENIPMI)\n"
-          "             --no-probing                 Do not probe for In-band defaults\n"
-	  "             --driver-address=INT         Base address for IPMI driver\n"
-	  "             --driver-device=STRING       Driver device to use\n"
-          "             --register-spacing=INT       Base address register spacing in bytes\n"
-          "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
-          "  -n         --no-logging                 Turn off all syslogging\n");
+          "  -H         --help                               Output help menu\n"
+          "  -V         --version                            Output version\n"
+	  "  -D STRING  --driver-type=STRING                 IPMI driver type (KCS, SSIF, OPENIPMI)\n"
+          "             --no-probing                         Do not probe for In-band defaults\n"
+	  "             --driver-address=DRIVER-ADDRESS      Base address for IPMI driver\n"
+	  "             --driver-device=DEVICE               Driver device to use\n"
+          "             --register-spacing=REGISTER-SPACING  Base address register spacing in bytes\n"
+          "  -f STRING  --logfile=FILE                       Specify alternate logfile\n"
+          "  -n         --no-logging                         Turn off all syslogging\n");
 #ifndef NDEBUG
   fprintf(stderr,
-	  "             --debug                      Turn on debugging\n");
+	  "             --debug                              Turn on debugging\n");
 #endif
   fprintf(stderr, "\n");
 

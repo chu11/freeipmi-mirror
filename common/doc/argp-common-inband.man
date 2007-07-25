@@ -2,7 +2,7 @@
 \fB\-\-no\-probing\fR
 Do not probe IPMI devices for default settings.
 .TP
-\fB\-\-driver\-address\fR=\fIDRIVERADDR\fR
+\fB\-\-driver\-address\fR=\fIDRIVER-ADDRESS\fR
 Specify the in-band driver address to be used instead of the probed
 value.
 .TP
@@ -10,7 +10,7 @@ value.
 Specify the in-band driver device path to be used instead of the
 probed path.
 .TP
-\fB\fB\-\-register\-spacing\fR=\fRREGISTERSPACING\fR
+\fB\fB\-\-register\-spacing\fR=\fRREGISTER-SPACING\fR
 Specify the in-band driver register spacing instead of the
 probed value.
 

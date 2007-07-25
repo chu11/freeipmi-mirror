@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.15 2007-07-25 00:35:18 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.16 2007-07-25 17:15:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,11 +100,11 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
-    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION_TYPE", 0,                 
+    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
      "Specify the IPMI 1.5 authentication type to use. "                                            
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " 
      "Defaults to MD5 if not specified", 12},
-    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER_SUITE_ID", 0,                         
+    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         
      "Specify the IPMI 2.0 cipher suite ID to use. "                                                
      "The currently supported cipher suite ids are: AUTO, 0, 1, 2, 3, 6, 7, 8, 11, 12. "            
      "Defaults to AUTO if not specified.", 13},

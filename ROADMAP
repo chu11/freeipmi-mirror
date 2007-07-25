@@ -9,7 +9,6 @@ bmc-config/pef-config
 - re-work for faster checkout/commit
 
 cleanup
-- ipmipower manpage interactive stuff
 - argp --help output in general
    - priv  not aligned
    - cipher not aligned

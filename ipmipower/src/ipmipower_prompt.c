@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.47.4.5 2007-07-24 19:56:15 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.47.4.6 2007-07-25 17:15:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -76,62 +76,62 @@ static void
 _cmd_help(void) 
 {
   cbuf_printf(ttyout, 
-              "hostname [IPMIHOST]             - set a new set of hostnames\n"
-              "username [USERNAME]             - set a new username (no str for null)\n"
-              "password [PASSWORD]             - set a new password (no str for null)\n"
-              "k_g [K_G]                       - set a new k_g (no str for null)\n"
-              "on [IPMIHOST(s)]                - turn on all nodes, or listed node\n"
-              "off [IPMIHOST(s)]               - turn off all nodes, or listed node\n"
-              "cycle [IPMIHOST(s)]             - power cycle all nodes, or listed node\n"
-              "reset [IPMIHOST(s)]             - hard reset all nodes, or listed node\n"
-              "stat [IPMIHOST(s)]              - list power of all nodes, or listed node\n"
-              "pulse [IPMIHOST(s)]             - send pulse diagnostic interrupt to all nodes, or listed nodes\n"
-              "soft [IPMIHOST(s)]              - soft shutdown all nodes, or listed nodes\n"
-              "help                            - output this help menu\n"
-              "advanced                        - output advanced help menu\n"
-              "network                         - output network help menu\n"
-              "version                         - output ipmipower version\n"
-              "quit                            - quit program\n");
+              "hostname [IPMIHOST]             - Specify a new set of hosts.  No input to unconfigure all hosts.\n"
+              "username [USERNAME]             - Specify a new username.  No input for null username.\n"
+              "password [PASSWORD]             - Specify a new password.  No input for null password.\n"
+              "k_g [K_G]                       - Specify a new K_g BMC Key.  No input for null key.\n"
+              "on [IPMIHOST(s)]                - Turn on all configured hosts or specified hosts.\n"
+              "off [IPMIHOST(s)]               - Turn off all configured hosts or specified hosts.\n"
+              "cycle [IPMIHOST(s)]             - Power cycle all configured hosts or specified hosts.\n"
+              "reset [IPMIHOST(s)]             - Reset all configured hosts or specified hosts.\n"
+              "stat [IPMIHOST(s)]              - Query power status for all configured hosts or specified hosts.\n"
+              "pulse [IPMIHOST(s)]             - Pulse diagnostic interrupt all configured hosts or specified hosts.\n"
+              "soft [IPMIHOST(s)]              - Initiate a soft-shutdown for all configured hosts or specified hosts.\n"
+              "help                            - Output help menu.\n"
+              "advanced                        - Output advanced help menu.\n"
+              "network                         - Output network help menu.\n"
+              "version                         - Quit program.\n"
+              "quit                            - Quit program.\n");
 }
 
 static void 
 _cmd_advanced(void) 
 {
   cbuf_printf(ttyout, 
-              "authentication-type AUTHTYPE          - set a new authentication type\n"
-              "privilege-level PRIVILEGE-LEVEL       - set a new privilege type\n"
-	      "ipmi-version VERSION                  - set a new ipmi version\n"
-              "cipher-suite-id CIPHER_SUITE_ID       - set a new cipher suite id\n"
-              "on-if-off [on|off]                    - toggle on-if-off functionality\n"
-              "wait-until-on [on|off]                - toggle wait-until-on functionality\n"
-              "wait-until-off [on|off]               - toggle wait-until-off functionality\n"
-              "consolidate-output [on|off]           - toggle consolidate-output functionality\n"
-              "workaround-flags WORKAROUNDS          - set new workaround flags\n");
+              "authentication-type AUTHENTICATION-TYPE - Specify the authentication type to use.\n"
+              "privilege-level PRIVILEGE-LEVEL         - Specify the privilege level to use.\n"
+	      "ipmi-version IPMIVERSION                - Specify the ipmi version to use.\n"
+              "cipher-suite-id CIPHER-SUITE-ID         - Specify the cipher suite id to use.\n"
+              "on-if-off [on|off]                      - Toggle on-if-off functionality.\n"
+              "wait-until-on [on|off]                  - Toggle wait-until-on functionality.\n"
+              "wait-until-off [on|off]                 - Toggle wait-until-off functionality.\n"
+              "consolidate-output [on|off]             - Toggle consolidate-output functionality.\n"
+              "workaround-flags WORKAROUNDS            - Specify workaround flags.\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
-              "debug [on|off]                        - toggle debug to stderr\n"
-              "ipmidump [on|off]                     - toggle IPMI dump output\n"
-              "rmcpdump [on|off]                     - toggle RMCP dump output\n"
-	      "log [on|off]                          - toggle logging\n"
-	      "logfile [FILE]                        - set a new logfile (no str for default)\n");
+              "debug [on|off]                          - Toggle debug to stderr.\n"
+              "ipmidump [on|off]                       - Toggle IPMI dump output.\n"
+              "rmcpdump [on|off]                       - Toggle RMCP dump output.\n"
+	      "log [on|off]                            - Toggle logging output.\n"
+	      "logfile [FILE]                          - Specify a new log file.  No input for default.\n");
 #endif /* NDEBUG */
   cbuf_printf(ttyout,
-              "config                                - output current configuration\n");
+              "config                                  - Output current configuration.\n");
 } 
 
 static void
 _cmd_network(void)
 {
   cbuf_printf(ttyout, 
-              "session-timeout MILLISECONDS               - set a new session timeout length\n"
-              "retransmission-timeout MILLISECONDS        - set a new retransmission timeout length\n"
-              "retransmission-wait-timeout MILLISECONDS   - set a new retransmission timeout length\n"
-              "retransmission-backoff-count COUNT         - set a new retransmission backoff count\n"
-              "ping-interval MILLISECONDS                 - set a new ping interval length\n"
-              "ping-timeout MILLISECONDS                  - set a new ping timeout length\n"
-              "ping-packet-count COUNT                    - set a new ping packet count\n"
-              "ping-percent COUNT                         - set a new ping percent number\n"
-              "ping-consec-count COUNT                    - set a new ping consec count\n");
+              "session-timeout MILLISECONDS               - Specify a new session timeout length.\n"
+              "retransmission-timeout MILLISECONDS        - Specify a new retransmission timeout length.\n"
+              "retransmission-wait-timeout MILLISECONDS   - Specify a new retransmission timeout length.\n"
+              "retransmission-backoff-count COUNT         - Specify a new retransmission backoff count.\n"
+              "ping-interval MILLISECONDS                 - Specify a new ping interval length.\n"
+              "ping-timeout MILLISECONDS                  - Specify a new ping timeout length.\n"
+              "ping-packet-count COUNT                    - Specify a new ping packet count.\n"
+              "ping-percent COUNT                         - Specify a new ping percent number.\n"
+              "ping-consec-count COUNT                    - Specify a new ping consec count.\n");
 }
 
 static void 

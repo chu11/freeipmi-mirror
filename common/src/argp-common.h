@@ -72,13 +72,13 @@ enum argp_common_option_keys
 #define ARGP_COMMON_OPTIONS_INBAND                                                           \
     {"no-probing",     ARGP_NO_PROBING_KEY, 0, 0, 	                                     \
      "Do not probe IPMI devices for default settings.", 1},                                  \
-    {"driver-address", ARGP_DRIVER_ADDRESS_KEY, "DRIVERADDR", 0,                             \
+    {"driver-address", ARGP_DRIVER_ADDRESS_KEY, "DRIVER-ADDRESS", 0,                         \
      "Specify the in-band driver address to be used instead of the probed value.", 2}, 	     \
     {"driver-device",  ARGP_DRIVER_DEVICE_KEY, "DEVICE", 0,                                  \
      "Specify the in-band driver device path to be used instead of the probed path.", 3},    \
-    {"reg-space", ARGP_REG_SPACE_KEY, "REGISTERSPACING", OPTION_HIDDEN,                      \
+    {"reg-space", ARGP_REG_SPACE_KEY, "REGISTER-SPACING", OPTION_HIDDEN,                     \
      "Specify the in-band driver register spacing instead of the probed value.", 4},         \
-    {"register-spacing", ARGP_REGISTER_SPACING_KEY, "REGISTERSPACING", 0,                    \
+    {"register-spacing", ARGP_REGISTER_SPACING_KEY, "REGISTER-SPACING", 0,                   \
      "Specify the in-band driver register spacing instead of the probed value.", 4}
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                                        \
@@ -135,17 +135,17 @@ enum argp_common_option_keys
 
 /* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \
-    {"auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION_TYPE", OPTION_HIDDEN, 	                    \
+    {"auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN, 	                    \
      "Specify the IPMI 1.5 authentication type to use. "                                            \
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
      "Defaults to MD5 if not specified", 12},                                                       \
-    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION_TYPE", 0, 	            \
+    {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0, 	            \
      "Specify the IPMI 1.5 authentication type to use. "                                            \
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
      "Defaults to MD5 if not specified", 12}
 
 #define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                                         \
-    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER_SUITE_ID", 0,                         \
+    {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         \
      "Specify the IPMI 2.0 cipher suite ID to use. "				                    \
      "The currently supported cipher suite ids are: 0, 1, 2, 3, 6, 7, 8, 11, 12. "                  \
      "Defaults to 3 if not specified.", 13}

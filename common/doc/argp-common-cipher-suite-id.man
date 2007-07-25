@@ -1,5 +1,5 @@
 .TP
-\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER_SUITE_ID\fR
+\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
 Specify the IPMI 2.0 cipher suite ID to use.  The Cipher Suite ID
 identifies a set of authentication, integrity, and confidentiality
 algorithms to use for IPMI 2.0 communication.  The authentication

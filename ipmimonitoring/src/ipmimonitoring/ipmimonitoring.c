@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.12 2007-07-25 00:35:18 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.13 2007-07-25 17:15:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -402,10 +402,10 @@ cmdline_parse (int key,
     case IPMIMONITORING_QUIET_READINGS_KEY:
       quiet_readings++;
       break;
-    case ARGP_BUFFER_KEY:
+    case ARGP_BUFFER_OUTPUT_KEY:
       buffer_hostrange_output++;
       break;
-    case ARGP_CONSOLIDATE_KEY:
+    case ARGP_CONSOLIDATE_OUTPUT_KEY:
       consolidate_hostrange_output++;
       break;
     case ARGP_FANOUT_KEY:

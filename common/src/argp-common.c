@@ -56,7 +56,11 @@ parse_inband_driver_type(char *str)
     return IPMI_DEVICE_KCS;
   else if (strcasecmp (str, "ssif") == 0)
     return IPMI_DEVICE_SSIF;
-  else if (strcasecmp (str, "openipmi") == 0)
+  /* support "open" for those that might be used to 
+   * ipmitool.
+   */
+  else if (strcasecmp (str, "open") == 0
+           || strcasecmp (str, "openipmi") == 0)
     return IPMI_DEVICE_OPENIPMI;
   
   return -1;
@@ -70,7 +74,11 @@ parse_outofband_driver_type(char *str)
 
   if (strcasecmp (str, "lan") == 0)
     return IPMI_DEVICE_LAN;
-  else if (strcasecmp (str, "lan_2_0") == 0
+  /* support "lanplus" for those that might be used to ipmitool.
+   * support typo variants to ease. 
+   */
+  else if (strcasecmp (str, "lanplus") == 0
+           || strcasecmp (str, "lan_2_0") == 0
            || strcasecmp (str, "lan20") == 0
            || strcasecmp (str, "lan_20") == 0
            || strcasecmp (str, "lan2_0") == 0
