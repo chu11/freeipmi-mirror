@@ -11,4 +11,7 @@ bmc-config/pef-config
 cleanup
 - ipmipower manpage interactive stuff
 - argp --help output in general
+   - priv  not aligned
+   - cipher not aligned
 - argp - order of help output in ipmipower
+- argp - authentication type in the middle of sessiontimeout & retry timeout
