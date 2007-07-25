@@ -13,5 +13,6 @@ cleanup
 - argp --help output in general
    - priv  not aligned
    - cipher not aligned
+   - ipmi-chassis, never fixed
 - argp - order of help output in ipmipower
 - argp - authentication type in the middle of sessiontimeout & retry timeout
