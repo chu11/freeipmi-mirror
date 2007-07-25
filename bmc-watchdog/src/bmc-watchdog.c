@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.15 2007-07-25 17:15:47 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.16 2007-07-25 17:30:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1107,13 +1107,13 @@ _usage(void)
               "Usage: bmc-watchdog <COMMAND> [OPTIONS]... [COMMAND_OPTIONS]...\n\n");
       fprintf(stderr,
               "COMMANDS:\n"
-              "  -s         --set                            Set BMC Watchdog Config\n"
-              "  -g         --get                            Get BMC Watchdog Config\n"
-              "  -r         --reset                          Reset BMC Watchdog Timer\n"
-              "  -t         --start                          Start BMC Watchdog Timer\n"
-              "  -y         --stop                           Stop BMC Watchdog Timer\n"
-              "  -c         --clear                          Clear BMC Watchdog Config\n"
-              "  -d         --daemon                         Run in Daemon Mode\n\n");
+              "  -s         --set                            Set BMC Watchdog Config.\n"
+              "  -g         --get                            Get BMC Watchdog Config.\n"
+              "  -r         --reset                          Reset BMC Watchdog Timer.\n"
+              "  -t         --start                          Start BMC Watchdog Timer.\n"
+              "  -y         --stop                           Stop BMC Watchdog Timer.\n"
+              "  -c         --clear                          Clear BMC Watchdog Config.\n"
+              "  -d         --daemon                         Run in Daemon Mode.\n\n");
     }
   else
     fprintf(stderr,
@@ -1121,18 +1121,18 @@ _usage(void)
 
   fprintf(stderr,
 	  "OPTIONS:\n"
-          "  -H         --help                               Output help menu\n"
-          "  -V         --version                            Output version\n"
-	  "  -D STRING  --driver-type=STRING                 IPMI driver type (KCS, SSIF, OPENIPMI)\n"
-          "             --no-probing                         Do not probe for In-band defaults\n"
-	  "             --driver-address=DRIVER-ADDRESS      Base address for IPMI driver\n"
-	  "             --driver-device=DEVICE               Driver device to use\n"
-          "             --register-spacing=REGISTER-SPACING  Base address register spacing in bytes\n"
-          "  -f STRING  --logfile=FILE                       Specify alternate logfile\n"
+          "  -H         --help                               Output help menu.\n"
+          "  -V         --version                            Output version.\n"
+	  "  -D STRING  --driver-type=IPMIDRIVER             Specify IPMI driver type.\n"
+          "             --no-probing                         Do not probe driver for default settings.\n"
+	  "             --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
+	  "             --driver-device=DEVICE               Specify driver device path.\n"
+          "             --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
+          "  -f STRING  --logfile=FILE                       Specify an alternate logfile\n"
           "  -n         --no-logging                         Turn off all syslogging\n");
 #ifndef NDEBUG
   fprintf(stderr,
-	  "             --debug                              Turn on debugging\n");
+	  "             --debug                              Turn on debugging.\n");
 #endif
   fprintf(stderr, "\n");
 
@@ -1142,35 +1142,35 @@ _usage(void)
 
   if (cinfo.set || cinfo.daemon)
     fprintf(stderr,
-            "  -u INT     --timer-use=INT              Set timer use\n"
+            "  -u INT     --timer-use=INT              Set timer use.\n"
             "             %d = BIOS FRB2\n"
             "             %d = BIOS POST\n"
             "             %d = OS_LOAD\n"
             "             %d = SMS OS\n"
             "             %d = OEM\n"
-            "  -m INT     --stop-timer=INT             Set Stop Timer Flag\n"
+            "  -m INT     --stop-timer=INT             Set Stop Timer Flag.\n"
             "             %d = Stop Timer\n"
             "             %d = Don't Stop timer\n"
-            "  -l INT     --log=INT                    Set Log Flag\n"
+            "  -l INT     --log=INT                    Set Log Flag.\n"
             "             %d = Enable Log\n"
             "             %d = Disable Log\n"
-            "  -a INT     --timeout-action=INT         Set timeout action\n"
+            "  -a INT     --timeout-action=INT         Set timeout action.\n"
             "             %d = No action\n" 
             "             %d = Hard Reset\n"
             "             %d = Power Down\n"
             "             %d = Power Cycle\n"
-            "  -p INT     --pre-timeout-interrupt=INT  Set pre-timeout interrupt\n"
+            "  -p INT     --pre-timeout-interrupt=INT  Set pre-timeout interrupt.\n"
             "             %d = None\n" 
             "             %d = SMI\n" 
             "             %d = NMI\n" 
             "             %d = Messaging Interrupt\n"
-            "  -z SECS    --pre-timeout-interval=SECS  Set pre-timeout interval in seconds\n"
-            "  -F         --clear-bios-frb2            Clear BIOS FRB2 Timer Use Flag\n"
-            "  -P         --clear-bios-post            Clear BIOS POST Timer Use Flag\n"
-            "  -L         --clear-os-load              Clear OS Load Timer Use Flag\n"
-            "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag\n"
-            "  -O         --clear-oem                  Clear OEM Timer Use Flag\n"
-            "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds\n",
+            "  -z SECS    --pre-timeout-interval=SECS  Set pre-timeout interval in seconds.\n"
+            "  -F         --clear-bios-frb2            Clear BIOS FRB2 Timer Use Flag.\n"
+            "  -P         --clear-bios-post            Clear BIOS POST Timer Use Flag.\n"
+            "  -L         --clear-os-load              Clear OS Load Timer Use Flag.\n"
+            "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag.\n"
+            "  -O         --clear-oem                  Clear OEM Timer Use Flag.\n"
+            "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds.\n",
             IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2,
             IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST,
             IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD, 
@@ -1190,16 +1190,16 @@ _usage(void)
             IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
   if (cinfo.set)
     fprintf(stderr,
-            "  -w         --start-after-set            Start timer after set if timer is stopped\n"
-            "  -x         --reset-after-set            Reset timer after set if timer is running\n"
-            "  -j         --start-if-stopped           Don't set if timer is stopped, just start\n"
-            "  -k         --reset-if-running           Don't set if timer is running, just reset\n");
+            "  -w         --start-after-set            Start timer after set if timer is stopped.\n"
+            "  -x         --reset-after-set            Reset timer after set if timer is running.\n"
+            "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"
+            "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
   if (cinfo.start || cinfo.daemon)
     fprintf(stderr, 
-            "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs\n"
+            "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs.\n"
             "             %d = Suspend Gratuitous ARPs\n"
             "             %d = Do Not Suspend Gratuitous ARPs\n"
-            "  -A INT     --arp-response=INT           Suspend ARP Responses\n"
+            "  -A INT     --arp-response=INT           Suspend ARP Responses.\n"
             "             %d = Suspend ARP Responses\n"
             "             %d = Do Not Suspend ARP Responses\n",
             IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND,
@@ -1208,7 +1208,7 @@ _usage(void)
             IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND);
   if (cinfo.daemon)
     fprintf(stderr, 
-            "  -e SECS    --reset-period=SECS          Time interval before resetting timer\n");
+            "  -e SECS    --reset-period=SECS          Specify time interval before resetting timer.\n");
               
   if (cinfo.set || cinfo.start || cinfo.daemon)
     fprintf(stderr, "\n");
