@@ -9,7 +9,5 @@ bmc-config/pef-config
 - re-work for faster checkout/commit
 
 cleanup
-- argp - order of help output in ipmipower
-- argp - authentication type in the middle of sessiontimeout & retry timeout
 - cleanup common/ argp code
 

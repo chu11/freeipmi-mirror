@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.15 2007-07-25 17:15:49 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.16 2007-07-25 21:23:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -206,7 +206,7 @@ Turn on logging.  Default logfile is /tmp/ipmipower.PID, where PID is
 the current process id.
 .TP
 \fB\-\-logfile\fR=\fFILE\fR
-Specify alternate logfile.
+Specify an alternate logfile.
 \}
 .LP
 .SH "NETWORK OPTIONS"

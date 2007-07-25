@@ -175,18 +175,18 @@ enum argp_common_option_keys
     {"auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN, 	                    \
      "Specify the IPMI 1.5 authentication type to use. "                                            \
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
-     "Defaults to MD5 if not specified", 12},                                                       \
+     "Defaults to MD5 if not specified", 13},                                                       \
     {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0, 	            \
      "Specify the IPMI 1.5 authentication type to use. "                                            \
      "The currently available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2, and MD5. " \
-     "Defaults to MD5 if not specified", 12}
+     "Defaults to MD5 if not specified", 13}
 #else
 /* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                     \
     {"auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN, 	                    \
-     "Specify the IPMI 1.5 authentication type to use.", 12},                                       \
+     "Specify the IPMI 1.5 authentication type to use.", 13},                                       \
     {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0, 	            \
-     "Specify the IPMI 1.5 authentication type to use.", 12}
+     "Specify the IPMI 1.5 authentication type to use.", 13}
 #endif
 
 #if 0 /* see achu comments near top of file */
@@ -194,11 +194,11 @@ enum argp_common_option_keys
     {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         \
      "Specify the IPMI 2.0 cipher suite ID to use. "				                    \
      "The currently supported cipher suite ids are: 0, 1, 2, 3, 6, 7, 8, 11, 12. "                  \
-     "Defaults to 3 if not specified.", 13}
+     "Defaults to 3 if not specified.", 14}
 #else
 #define ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID                                                         \
     {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         \
-     "Specify the IPMI 2.0 cipher suite ID to use.", 13}
+     "Specify the IPMI 2.0 cipher suite ID to use.", 14}
 #endif
 
 #if 0 /* see achu comments near top of file */
@@ -207,36 +207,36 @@ enum argp_common_option_keys
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to USER if not specified.", 14},                                                     \
+     "Defaults to USER if not specified.", 15},                                                     \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to USER if not specified.", 14}     
+     "Defaults to USER if not specified.", 15}     
 
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to ADMIN if not specified.", 14},                                                    \
+     "Defaults to ADMIN if not specified.", 15},                                                    \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
      "Specify the privilege level to be used. "		                                            \
      "The currently available privilege levels are USER, OPERATOR, and ADMIN. "	                    \
-     "Defaults to ADMIN if not specified.", 14}     
+     "Defaults to ADMIN if not specified.", 15}     
 #else
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER                                                    \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
-     "Specify the privilege level to be used.", 14},                                                \
+     "Specify the privilege level to be used.", 15},                                                \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
-     "Specify the privilege level to be used.", 14}     
+     "Specify the privilege level to be used.", 15}     
 
 /* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN                                                   \
     {"priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                          \
-     "Specify the privilege level to be used.", 14},                                                \
+     "Specify the privilege level to be used.", 15},                                                \
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 	                    \
-     "Specify the privilege level to be used.", 14}     
+     "Specify the privilege level to be used.", 15}     
 #endif
 
 #define ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS                                                        \

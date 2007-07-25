@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.4 2007-07-24 23:47:19 chu11 Exp $
+\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.5 2007-07-25 21:23:31 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -110,7 +110,7 @@ stop_timer flag on the \fB\-\-set\fR command.
 .SH "OPTIONS"
 The following options are generic and can be used by any command.
 .TP
-\fB\-H\fR, \fB\-\-help\fR
+\fB\-?\fR, \fB\-\-help\fR
 Output the help menu.  If a specific command (\fB\-\-set\fR,
 \fB\-\-get\fR, \fB\-\-reset\fR, \fB\-\-start\fR, \fB\-\-stop\fR,
 \fB\-\-clear\fR, or \fB\-\-daemon\fR) is listed on the command line,

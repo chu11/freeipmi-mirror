@@ -2,17 +2,21 @@
 -----
 For Users
 ---------
-o Added previously missing IPMI 2.0 support into other FreeIPMI
-  tools (-D LAN_2_0)
-o Ported previously missing IPMI compliance workarounds into other
-  FreeIPMI tools (-W, --workaround-flags option)
+o Added previously missing IPMI 2.0 (-D LAN_2_0) support into most
+  other FreeIPMI tools (ipmi-chassis, ipmi-fru, ipmi-sensors,
+  ipmi-sel, ipmi-raw, ipmimonitoring).
+o Ported IPMI compliance workarounds (-W, --workaround-flags option)
+  into most other FreeIPMI tools (ipmi-chassis, ipmi-fru,
+  ipmi-sensors, ipmi-sel, ipmi-raw, ipmimonitoring, ipmiconsole,
+  bmc-config, pef-config).
 o Ported many features from other tools into ipmimonitoring. 
 o Added openipmi driver to bmc-watchdog.
 o Refined many error messages to provide more accurate descriptions of
   errors.
 o Removed CALLBACK and OEM privilege capabilities in most tools, since
   there's no point to them.
-o Converted many tools to use argp instead of getopt for consistency.
+o Converted some tools (ipmimonitoring, ipmiconsole, ipmipower) to use
+  argp instead of getopt for consistency between tools.
 o Updated most manpages with full and clearer information.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
@@ -36,17 +40,25 @@ o Made many command line options consistent across FreeIPMI.  Notable
      internally maintained for backwards compatability.
   9) Short option -I changed to -D in bmc-watchdog for consistency to
      other tools.
-  10) The short option -r for --register-spacing has been removed.
+  10) The short option -r for --register-spacing has been removed in
+      many tools for consistency with other in-band command line options.
   11) Short options for most debugging options have been removed.
   12) All "--retry" options are now "--retransmission" options.
-     Backwards compatability with old options has been maintained.
-  13) -H options have been changed to -? for consistency.
+      Backwards compatability has been maintained when possible.
+  13) All -H and -h (help) options have been changed to -? for
+      consistency with all tools. Backwards compatability has been
+      maintained when possible.
+  14) All -v (version) options have been changed to -V for consistency
+      with all tools. Backwards compatability has been maintained when
+      possible.
 o Similarly, renamed configuration file options or interactive prompt
   options for consistency with the command line.  Backwards
-  compatability has been maintained as much as possible.
+  compatability has been maintained when possible.
+o Similarly, fixed inconsistencies with dashes vs. underscores in
+  command line options, configuration file options, or interactive
+  prompt options.  Backwards compatability has been maintained when
+  possible.
 o Similarly, updated manpages for consistency across tools.
-o Fixed various configuration file options or interactive prompt option
-  inconsistencies with dashes vs. underscores.
 o Removed the quiet and silent options from bmc-config.
 
 For Developers
@@ -60,9 +72,13 @@ o Fix various library variable names and macros for consistency.  For
      been renamed to ipmi_version_minor and ipmi_version_major.
   2) reg_space/register_spacing has been renamed to register_spacing globally.
   3) privilege has been replaced to privilege_level globally.
-  4) Various FreeIPMI library error codes have been renamed for consistency.
+  4) Various library error codes have been renamed for consistency.
      For example OUTMEM has been changed to OUT_OF_MEMORY globally.
-
+  5) Various error codes and messages have been renamed/redone to give
+     more useful information.  For example, IPMI_ERR_PRIVILEGE is now
+     IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED (and the error message
+     has been updated as well).
+     
 0.4.0
 -----
 

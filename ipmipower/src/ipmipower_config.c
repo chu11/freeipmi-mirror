@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.17 2007-07-25 18:39:23 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.18 2007-07-25 21:23:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,9 +80,13 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 #define IPMIPOWER_WAIT_UNTIL_OFF_KEY           'A'
 #define IPMIPOWER_WAIT_UNTIL_ON_KEY            'B'
 
-#define IPMIPOWER_RETRY_WAIT_TIMEOUT           160
+#define IPMIPOWER_RETRY_TIMEOUT_KEY            160
+#define IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY   'y'
+#define IPMIPOWER_TIMEOUT_KEY                  161
+#define IPMIPOWER_SESSION_TIMEOUT_KEY          't'
+#define IPMIPOWER_RETRY_WAIT_TIMEOUT           162
 #define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT  'q'
-#define IPMIPOWER_RETRY_BACKOFF_COUNT          161
+#define IPMIPOWER_RETRY_BACKOFF_COUNT          163
 #define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT 'b'
 #define IPMIPOWER_PING_INTERVAL                'i'
 #define IPMIPOWER_PING_TIMEOUT                 'z'
@@ -90,16 +94,16 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 #define IPMIPOWER_PING_PERCENT                 'w'
 #define IPMIPOWER_PING_CONSEC_COUNT            'x'
 
-#define IPMIPOWER_CONFIG_KEY                    162
-#define IPMIPOWER_DEBUG_KEY                     163
-#define IPMIPOWER_IPMIDUMP_KEY                  164
-#define IPMIPOWER_RMCPDUMP_KEY                  165
-#define IPMIPOWER_LOG_KEY                       166
-#define IPMIPOWER_LOGFILE_KEY                   167
+#define IPMIPOWER_CONFIG_KEY                    164
+#define IPMIPOWER_DEBUG_KEY                     165
+#define IPMIPOWER_IPMIDUMP_KEY                  166
+#define IPMIPOWER_RMCPDUMP_KEY                  167
+#define IPMIPOWER_LOG_KEY                       168
+#define IPMIPOWER_LOGFILE_KEY                   169
 
 static struct argp_option cmdline_options[] =
   {
-    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
+    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT,
     /*
      * achu:
      *
@@ -109,7 +113,7 @@ static struct argp_option cmdline_options[] =
      * 0's around for the future (or just documentation).
      *
      * b/c of the text shortening, we could use the argp-common.h
-     * macros.  But for now, we'll use differnet ones.
+     * macros.  But for now, we'll still use our own coded one.
      */
 #if 0
     {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
@@ -131,14 +135,14 @@ static struct argp_option cmdline_options[] =
      "Defaults to AUTO if not specified.", 14},
 #else
     {"authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                 
-     "Specify the IPMI 1.5 authentication type to use.", 12},
+     "Specify the IPMI 1.5 authentication type to use.", 13},
     {"cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                         
-     "Specify the IPMI 2.0 cipher suite ID to use.", 13},
+     "Specify the IPMI 2.0 cipher suite ID to use.", 14},
     /* maintain "privilege" for backwards compatability */
     {"privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                            
-     "Specify the privilege level to be used.", 14},
+     "Specify the privilege level to be used.", 15},
     {"privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,                            
-     "Specify the privilege level to be used.", 14},
+     "Specify the privilege level to be used.", 15},
 #endif
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_CONSOLIDATE_OUTPUT,
@@ -168,37 +172,48 @@ static struct argp_option cmdline_options[] =
      "Regularly query the remote BMC and return only after the machine has powered off.", 34},
     {"wait-until-on", IPMIPOWER_WAIT_UNTIL_ON_KEY, 0, 0,
      "Regularly query the remote BMC and return only after the machine has powered on.", 34},
+    /* don't use the argp-common headers, we need to support backwards compatible short options */
+    /* maintain "retry-timeout" for backwards compatability */
+    {"retry-timeout", IPMIPOWER_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
+     "Specify the packet retransmission timeout in milliseconds.", 35},
+    {"retransmission-timeout", IPMIPOWER_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,
+     "Specify the packet retransmission timeout in milliseconds.", 35},
+    /* maintain "timeout" for backwards compatability */
+    {"timeout", IPMIPOWER_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
+     "Specify the session timeout in milliseconds.", 36},
+    {"session-timeout", IPMIPOWER_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,
+     "Specify the session timeout in milliseconds.", 36},
     /* retry-wait-timeout maintained for backwards comptability */
-    {"retry-wait-timeout", IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT, "MILLISECONDS", OPTION_HIDDEN,
-     "Specify the retransmission timeout length in milliseconds.", 35},
+    {"retry-wait-timeout", IPMIPOWER_RETRY_WAIT_TIMEOUT, "MILLISECONDS", OPTION_HIDDEN,
+     "Specify the retransmission timeout length in milliseconds.", 37},
     {"retransmission-wait-timeout", IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT, "MILLISECONDS", 0,
-     "Specify the retransmission timeout length in milliseconds.", 35},
+     "Specify the retransmission timeout length in milliseconds.", 37},
     /* retry-backoff-count maintained for backwards comptability */
-    {"retry-backoff-count", IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT, "COUNT", OPTION_HIDDEN,
-     "Specify the retransmission backoff count for retransmissions.", 36},
+    {"retry-backoff-count", IPMIPOWER_RETRY_BACKOFF_COUNT, "COUNT", OPTION_HIDDEN,
+     "Specify the retransmission backoff count for retransmissions.", 38},
     {"retransmission-backoff-count", IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT, "COUNT", 0,
-     "Specify the retransmission backoff count for retransmissions.", 36},
+     "Specify the retransmission backoff count for retransmissions.", 38},
     {"ping-interval", IPMIPOWER_PING_INTERVAL, "MILLISECONDS", 0,
-     "Specify the ping interval length in milliseconds.", 37},
+     "Specify the ping interval length in milliseconds.", 39},
     {"ping-timeout", IPMIPOWER_PING_TIMEOUT, "MILLISECONDS", 0,
-     "Specify the ping timeout length in milliseconds.", 38},
+     "Specify the ping timeout length in milliseconds.", 40},
     {"ping-packet-count", IPMIPOWER_PING_PACKET_COUNT, "COUNT", 0,
-     "Specify the ping packet count size.", 39},
+     "Specify the ping packet count size.", 41},
     {"ping-percent", IPMIPOWER_PING_PERCENT, "PERCENT", 0,
-     "Specify the ping percent value.", 40},
+     "Specify the ping percent value.", 42},
     {"ping-consec-count", IPMIPOWER_PING_CONSEC_COUNT, "COUNT", 0,
-     "Specify the ping consecutive count.", 41},
+     "Specify the ping consecutive count.", 43},
 #ifndef NDEBUG
     {"debug", IPMIPOWER_DEBUG_KEY, 0, 0,
-     "Turn on debugging.", 42},
+     "Turn on debugging.", 44},
     {"ipmidump", IPMIPOWER_IPMIDUMP_KEY, 0, 0,
-     "Turn on IPMI packet dump output.", 43},
+     "Turn on IPMI packet dump output.", 45},
     {"rmcpdump", IPMIPOWER_RMCPDUMP_KEY, 0, 0,
-     "Turn on RMCP packet dump output.", 44},
+     "Turn on RMCP packet dump output.", 46},
     {"log", IPMIPOWER_LOG_KEY, 0, 0,
-     "Turn on logging.", 45},
+     "Turn on logging.", 47},
     {"logfile", IPMIPOWER_LOGFILE_KEY, "FILE", 0,
-     "Specify alternate logfile.", 46},
+     "Specify an alternate logfile.", 48},
 #endif
     { 0 }
   };

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.16 2007-07-25 17:30:55 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.17 2007-07-25 21:23:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1121,7 +1121,7 @@ _usage(void)
 
   fprintf(stderr,
 	  "OPTIONS:\n"
-          "  -H         --help                               Output help menu.\n"
+          "  -?         --help                               Output help menu.\n"
           "  -V         --version                            Output version.\n"
 	  "  -D STRING  --driver-type=IPMIDRIVER             Specify IPMI driver type.\n"
           "             --no-probing                         Do not probe driver for default settings.\n"
@@ -1241,7 +1241,7 @@ _cmdline_parse(int argc, char **argv)
 
 #if HAVE_GETOPT_LONG
   struct option long_options[] = {
-    {"help",                  0, NULL, 'H'},
+    {"help",                  0, NULL, '?'},
     {"version",               0, NULL, 'V'},
     {"set",                   0, NULL, 's'},
     {"get",                   0, NULL, 'g'},
@@ -1298,9 +1298,15 @@ _cmdline_parse(int argc, char **argv)
     {
       switch(c) 
         {
+        case '?':
+          /* 'h' maintained for backwards compatability */
+        case 'h':
+          /* 'H" for consistency with other tools */
         case 'H':
           help_opt++;
           break;
+        /* 'v' maintained for backwards compatability */
+        case 'v':
         case 'V':
           _version();
           break;
