@@ -16,3 +16,5 @@ cleanup
    - ipmi-chassis, never fixed
 - argp - order of help output in ipmipower
 - argp - authentication type in the middle of sessiontimeout & retry timeout
+- cleanup common/ argp code
+
