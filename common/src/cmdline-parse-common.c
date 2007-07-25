@@ -1,5 +1,5 @@
 /*
-   argp-common.c: common work for argp for all freeipmi tools.
+   cmdline-parse-common.c: common code command line parsing
    Copyright (C) 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@
 #include "freeipmi/ipmi-cipher-suite-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 #include "tool-common.h"

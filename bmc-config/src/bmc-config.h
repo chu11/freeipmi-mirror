@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 #define CIPHER_SUITE_LEN 16
 

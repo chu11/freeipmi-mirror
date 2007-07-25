@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.3.4.4 2007-07-24 00:59:46 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.3.4.5 2007-07-25 21:50:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,7 +40,7 @@
 
 #include "wrappers.h"
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 extern struct ipmipower_config *conf;
 

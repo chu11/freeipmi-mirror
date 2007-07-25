@@ -23,7 +23,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "pstdout.h"
 
 enum ipmi_chassis_keys

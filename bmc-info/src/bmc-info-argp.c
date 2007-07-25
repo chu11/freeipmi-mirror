@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.11.4.4 2007-07-24 20:30:36 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.11.4.5 2007-07-25 21:50:00 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -31,7 +31,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 

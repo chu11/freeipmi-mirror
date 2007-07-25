@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw.h,v 1.3.8.1 2007-07-11 17:22:48 chu11 Exp $ 
+   $Id: ipmi-raw.h,v 1.3.8.2 2007-07-25 21:50:06 chu11 Exp $ 
    
    ipmi-raw.h - ipmi-raw command line argument parser.
    
@@ -26,7 +26,7 @@
 #include <freeipmi/freeipmi.h>
 #include <limits.h>	/* ARG_MAX */
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "pstdout.h"
 
 enum ipmi_raw_argp_option_keys

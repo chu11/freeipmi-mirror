@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4.4.5 2007-07-24 20:30:39 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4.4.6 2007-07-25 21:50:09 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -41,7 +41,7 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 

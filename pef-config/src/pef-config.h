@@ -24,7 +24,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 enum argp_option_keys
   { 

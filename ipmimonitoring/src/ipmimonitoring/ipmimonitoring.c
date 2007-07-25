@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.14 2007-07-25 18:39:23 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.15 2007-07-25 21:50:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,7 +62,7 @@
 
 #include "ipmi_monitoring.h"
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "pstdout.h"
 #include "hostrange.h"
 #include "error.h"

@@ -34,7 +34,7 @@
 
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 #include "freeipmi-portability.h"
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.1.2.4 2007-07-24 23:38:01 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.1.2.5 2007-07-25 21:50:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -49,7 +49,7 @@
 #include "ipmi-fru-multirecord-area.h"
 #include "ipmi-fru-util.h"
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "tool-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"

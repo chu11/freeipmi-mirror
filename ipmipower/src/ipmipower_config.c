@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.18 2007-07-25 21:23:32 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.19 2007-07-25 21:50:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -112,7 +112,7 @@ static struct argp_option cmdline_options[] =
      * argp usage help output.  I'll keep alot of the original text in #if
      * 0's around for the future (or just documentation).
      *
-     * b/c of the text shortening, we could use the argp-common.h
+     * b/c of the text shortening, we could use the cmdline-parse-common.h
      * macros.  But for now, we'll still use our own coded one.
      */
 #if 0
@@ -172,7 +172,7 @@ static struct argp_option cmdline_options[] =
      "Regularly query the remote BMC and return only after the machine has powered off.", 34},
     {"wait-until-on", IPMIPOWER_WAIT_UNTIL_ON_KEY, 0, 0,
      "Regularly query the remote BMC and return only after the machine has powered on.", 34},
-    /* don't use the argp-common headers, we need to support backwards compatible short options */
+    /* don't use the cmdline-parse-common.headers, we need to support backwards compatible short options */
     /* maintain "retry-timeout" for backwards compatability */
     {"retry-timeout", IPMIPOWER_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
      "Specify the packet retransmission timeout in milliseconds.", 35},

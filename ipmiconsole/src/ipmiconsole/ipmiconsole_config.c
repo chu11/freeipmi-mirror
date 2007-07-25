@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.15 2007-07-25 00:35:17 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.16 2007-07-25 21:50:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,7 +47,7 @@
 #include <ipmiconsole.h>
 
 #include "ipmiconsole_config.h"
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "conffile.h"
 #include "error.h"
 #include "secure.h"

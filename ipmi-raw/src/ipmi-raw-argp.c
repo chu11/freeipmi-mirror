@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.20.4.5 2007-07-24 20:30:38 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.20.4.6 2007-07-25 21:50:05 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -31,7 +31,7 @@
 #endif /* STDC_HEADERS */
 #include <argp.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
 

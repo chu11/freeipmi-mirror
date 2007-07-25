@@ -1,7 +1,7 @@
 sbin_PROGRAMS=ipmi-chassis
 ipmi_chassis_SOURCES=ipmi-chassis-argp.c ipmi-chassis.c 
  
-ipmi_chassis_LDADD = ../../common/src/libargpcommon.la \
+ipmi_chassis_LDADD = ../../common/src/libcmdlineparsecommon.la \
 		     ../../common/src/libtoolcommon.la \
 		     ../../common/src/libpstdout.la \
 		     ../../common/src/libhostrange.la \
@@ -20,7 +20,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
-../../common/src/libargpcommon.la: force-dependency-check
+../../common/src/libcmdlineparsecommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libtoolcommon.la: force-dependency-check

@@ -144,6 +144,10 @@
 	* Globally try to make error messages in all libs and tools more
 	useful.
 
+	* common/src/argp-common.h, common/src/argp-common.c, common/doc/:
+	Rename "argp" common to "cmdline-parse" common, since it is more
+	generic that just argp.  Adjust in rest of FreeIPMI appropriately.
+
 	* General code cleanup throughout.
 
 2007-07-18  Albert Chu <chu11@llnl.gov>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-argp.c,v 1.1.2.7 2007-07-24 20:30:38 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.1.2.8 2007-07-25 21:50:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,7 +40,7 @@
 #endif /* HAVE_UNISTD_H */
 
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
 

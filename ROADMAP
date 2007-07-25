@@ -8,6 +8,3 @@ libfreeipmi
 bmc-config/pef-config
 - re-work for faster checkout/commit
 
-cleanup
-- cleanup common/ argp code
-

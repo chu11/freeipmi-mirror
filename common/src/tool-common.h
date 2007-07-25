@@ -21,7 +21,7 @@
 #define _TOOL_COMMON_H
 
 #include "freeipmi/udm/ipmi-udm.h"
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 #define IPMI_DEVICE_OPEN_ERRMSGLEN 1024
 

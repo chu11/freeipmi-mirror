@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel.h,v 1.6.4.1 2007-07-11 17:22:49 chu11 Exp $ 
+   $Id: ipmi-sel.h,v 1.6.4.2 2007-07-25 21:50:06 chu11 Exp $ 
    
    ipmi-sel.h - System Event Logger utility.
    
@@ -25,7 +25,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 

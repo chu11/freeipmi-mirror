@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.18.4.5 2007-07-24 20:30:38 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.18.4.6 2007-07-25 21:50:06 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -36,7 +36,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 

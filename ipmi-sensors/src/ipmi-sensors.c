@@ -39,7 +39,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include <assert.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "ipmi-sensor-api.h"

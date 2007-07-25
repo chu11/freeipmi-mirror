@@ -1,5 +1,5 @@
 /*
-   argp-common.h: common work for argp for freeipmi tools.
+   cmdline-parse-common.h: common code command line parsing
    Copyright (C) 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
@@ -17,8 +17,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef _ARGP_COMMON_H
-#define _ARGP_COMMON_H
+#ifndef _CMDLINE_PARSE_COMMON_H
+#define _CMDLINE_PARSE_COMMON_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
