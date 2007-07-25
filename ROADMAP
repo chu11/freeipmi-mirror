@@ -8,8 +8,7 @@ libfreeipmi
 bmc-config/pef-config
 - re-work for faster checkout/commit
 
-manpage
-- commonize remaining options between all tools
-
-parsing
-- make cmdline parsing more common
+cleanup
+- ipmipower manpage interactive stuff
+- argp --help output in general
+- argp - order of help output in ipmipower
