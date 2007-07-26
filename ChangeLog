@@ -10,6 +10,8 @@
 
         * common/src/ipmi-sdr-cache.c (sdr_cache_load): Fix corner case bug.
 
+ 	* freeipmi.spec.in: Fix buildroot typo. 
+	
 2007-07-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/ipmi-chassis.8.pre.in: Fix default priv level typo.
