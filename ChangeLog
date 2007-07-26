@@ -1,5 +1,13 @@
 2007-07-26  Albert Chu <chu11@llnl.gov>
 
+        * freeipmi.spec.in: Fix URL for release.
+
+	* configure.ac: Update version for release.
+
+        * Tagged Release-0_4_1
+
+2007-07-26  Albert Chu <chu11@llnl.gov>
+
         * common/src/ipmi-sdr-cache.c (sdr_cache_load): Fix corner case bug.
 
 2007-07-18  Albert Chu <chu11@llnl.gov>
