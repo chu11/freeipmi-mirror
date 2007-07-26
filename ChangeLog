@@ -1,6 +1,8 @@
 2007-07-26  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-cache.c (sdr_cache_load): Fix corner case bug.
+
+	* freeipmi.spec.in: Fix buildroot typo. 
 	
 2007-07-18  Albert Chu <chu11@llnl.gov>
 
