@@ -2039,8 +2039,14 @@ sdr_cache_load (sdr_cache_ctx_t ctx,
       goto cleanup;
     }
 
+  /* This particular _fread_record() should not fail.  If it does, the
+   * cache is bad.  
+   */
   if (_fread_record (ctx, fp, &cache_record) < 0)
-    goto cleanup;
+    {
+      ctx->errnum = SDR_CACHE_CTX_ERR_CACHE_INVALID;
+      goto cleanup;
+    }
 
   if (sdr_cache_read_repository_info_timestamps (ctx,
                                                  cache_record, 
