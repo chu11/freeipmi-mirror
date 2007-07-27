@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.6 2007-07-25 21:58:09 chu11 Exp $
+\."$Id: bmc-watchdog.8.pre.in,v 1.1.2.7 2007-07-27 22:39:05 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -131,12 +131,10 @@ Specify an alternate logfile from the default of
 \fB\-n\fR, \fB\-\-no-logging\fR
 Turns off all logging done by 
 .B bmc-watchdog.  
-.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debug\fR
 Turns on debugging.  All data written and read from the BMC is dumped
 to stderr.
-\}
 .SH "SET OPTIONS"
 The following options can be used by the set command to set or clear
 various BMC watchdog configuration parameters.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.47.4.6 2007-07-25 17:15:50 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.47.4.7 2007-07-27 22:39:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -110,7 +110,6 @@ _cmd_advanced(void)
 #ifndef NDEBUG
   cbuf_printf(ttyout,
               "debug [on|off]                          - Toggle debug to stderr.\n"
-              "ipmidump [on|off]                       - Toggle IPMI dump output.\n"
               "rmcpdump [on|off]                       - Toggle RMCP dump output.\n"
 	      "log [on|off]                            - Toggle logging output.\n"
 	      "logfile [FILE]                          - Specify a new log file.  No input for default.\n");
@@ -695,8 +694,6 @@ _cmd_config(void)
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
               (conf->debug) ? "on" : "off");
-  cbuf_printf(ttyout, "Ipmidump:                     %s\n", 
-              (conf->ipmidump) ? "on" : "off");
   cbuf_printf(ttyout, "Rmcpdump:                     %s\n", 
               (conf->rmcpdump) ? "on" : "off");
   cbuf_printf(ttyout, "Logging:                      %s\n",
@@ -879,15 +876,13 @@ ipmipower_prompt_process_cmdline(void)
                 _cmd_set_flag(argv, &conf->consolidate_output, "consolidate-output");
               else if (strcmp(argv[0], "workaround-flags") == 0)
                 _cmd_workaround_flags(argv);
-#ifndef NDEBUG
               else if (strcmp(argv[0], "debug") == 0) 
                 {
                   _cmd_set_flag(argv, &conf->debug, "debugging");
                   err_cbuf(conf->debug, ttyerr);
                   err_cbuf_dump_file_stream(conf->debug, stderr);
                 }
-              else if (strcmp(argv[0], "ipmidump") == 0)
-                _cmd_set_flag(argv, &conf->ipmidump, "ipmi dump");
+#ifndef NDEBUG
               else if (strcmp(argv[0], "rmcpdump") == 0)
                 _cmd_set_flag(argv, &conf->rmcpdump, "rmcp dump");
               else if (strcmp(argv[0], "log") == 0)

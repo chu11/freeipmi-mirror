@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.4.16 2007-07-25 21:50:07 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.4.17 2007-07-27 22:39:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,8 +62,7 @@
 
 #define IPMICONSOLE_DEBUG_KEY       160
 #define IPMICONSOLE_DEBUGFILE_KEY   161
-#define IPMICONSOLE_DEBUGDUMP_KEY   162
-#define IPMICONSOLE_NORAW_KEY       163
+#define IPMICONSOLE_NORAW_KEY       162
 
 const char *argp_program_version = "ipmiconsole " VERSION "\n";
 
@@ -83,13 +82,11 @@ static struct argp_option cmdline_options[] =
      "Deactivate a SOL session if one is detected as being in use and exit.", 26},
     {"lock-memory", IPMICONSOLE_LOCK_MEMORY_KEY, 0, 0,
      "Lock sensitive information (such as usernames and passwords) in memory.", 27},
-#ifndef NDEBUG
     {"debug", IPMICONSOLE_DEBUG_KEY, 0, 0,
      "Turn on debugging.", 28},
+#ifndef NDEBUG
     {"debugfile", IPMICONSOLE_DEBUGFILE_KEY, 0, 0,
      "Output debugging to the debugfile rather than to standard output.", 29},
-    {"debugdump", IPMICONSOLE_DEBUGDUMP_KEY, 0, 0,
-     "Turn on packet dumps for debugging.", 30},
     {"noraw", IPMICONSOLE_NORAW_KEY, 0, 0,
      "Don't enter terminal raw mode.", 31},
 #endif
@@ -116,10 +113,9 @@ _config_default(void)
 
   memset(conf, '\0', sizeof(struct ipmiconsole_config));
 
-#ifndef NDEBUG
   conf->debug = 0;
+#ifndef NDEBUG
   conf->debugfile = 0;
-  conf->debugdump = 0;
   conf->noraw = 0;
 #endif /* NDEBUG */
   conf->config_file = IPMICONSOLE_CONFIG_FILE_DEFAULT;
@@ -263,15 +259,12 @@ cmdline_parse (int key,
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
       conf->workaround_flags_set_on_cmdline++;
       break;
-#ifndef NDEBUG
     case IPMICONSOLE_DEBUG_KEY:	/* --debug */
       conf->debug++;
       break;
+#ifndef NDEBUG
     case IPMICONSOLE_DEBUGFILE_KEY:	/* --debugfile */
       conf->debugfile++;
-      break;
-    case IPMICONSOLE_DEBUGDUMP_KEY:	/* --debugdump */
-      conf->debugdump++;
       break;
     case IPMICONSOLE_NORAW_KEY:	/* --noraw */
       conf->noraw++;

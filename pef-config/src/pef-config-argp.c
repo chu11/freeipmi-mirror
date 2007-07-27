@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4.4.6 2007-07-25 21:50:09 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4.4.7 2007-07-27 22:39:10 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -67,9 +67,7 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif /* NDEBUG */
     {"info",       INFO_KEY,       0, 0, 
      "Show general information about PEF configuration.", 25},
     {"checkout",   CHECKOUT_KEY,   0, 0,

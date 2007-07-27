@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75.4.9 2007-07-24 19:56:14 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.75.4.10 2007-07-27 22:39:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -575,9 +575,8 @@ struct ipmipower_config
   ipmipower_bool_t         consolidate_output;
   ipmipower_bool_t         eliminate;
   uint32_t                 workaround_flags;
-#ifndef NDEBUG
   ipmipower_bool_t         debug;
-  ipmipower_bool_t         ipmidump;
+#ifndef NDEBUG
   ipmipower_bool_t         rmcpdump;
   ipmipower_bool_t         log;
   char                     logfile[MAXPATHLEN+1];

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62.4.19 2007-07-25 21:50:08 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.4.20 2007-07-27 22:39:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -203,17 +203,15 @@ static struct argp_option cmdline_options[] =
      "Specify the ping percent value.", 42},
     {"ping-consec-count", IPMIPOWER_PING_CONSEC_COUNT, "COUNT", 0,
      "Specify the ping consecutive count.", 43},
-#ifndef NDEBUG
     {"debug", IPMIPOWER_DEBUG_KEY, 0, 0,
      "Turn on debugging.", 44},
-    {"ipmidump", IPMIPOWER_IPMIDUMP_KEY, 0, 0,
-     "Turn on IPMI packet dump output.", 45},
+#ifndef NDEBUG
     {"rmcpdump", IPMIPOWER_RMCPDUMP_KEY, 0, 0,
-     "Turn on RMCP packet dump output.", 46},
+     "Turn on RMCP packet dump output.", 45},
     {"log", IPMIPOWER_LOG_KEY, 0, 0,
-     "Turn on logging.", 47},
+     "Turn on logging.", 46},
     {"logfile", IPMIPOWER_LOGFILE_KEY, "FILE", 0,
-     "Specify an alternate logfile.", 48},
+     "Specify an alternate logfile.", 47},
 #endif
     { 0 }
   };
@@ -279,7 +277,6 @@ ipmipower_config_setup(void)
   conf->workaround_flags = 0;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
-  conf->ipmidump = IPMIPOWER_FALSE;
   conf->rmcpdump = IPMIPOWER_FALSE;
   conf->log = IPMIPOWER_FALSE;
   memset(conf->logfile, '\0', MAXPATHLEN+1);
@@ -537,13 +534,10 @@ cmdline_parse (int key,
       conf->workaround_flags = flags;
       conf->workaround_flags_set_on_cmdline = IPMIPOWER_TRUE;
       break;
-#ifndef NDEBUG
     case IPMIPOWER_DEBUG_KEY:          /* --debug */
       conf->debug = !conf->debug;
       break;
-    case IPMIPOWER_IPMIDUMP_KEY:       /* --ipmidump */
-      conf->ipmidump = !conf->ipmidump;
-      break;
+#ifndef NDEBUG
     case IPMIPOWER_RMCPDUMP_KEY:       /* --rmcpdump */
       conf->rmcpdump = !conf->rmcpdump;
       break;

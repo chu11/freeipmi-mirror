@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiping.8.in,v 1.11 2006-07-26 20:07:45 chu11 Exp $
+\."$Id: ipmiping.8.in,v 1.11.10.1 2007-07-27 22:39:09 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,11 +75,9 @@ Default is to use "1.5".
 .I "-s num"
 Specify an initial starting sequence number.  The default is to use a
 random initial sequence number.
-.if @WITH_DEBUG@ \{
 .TP
 .I "-d"
 Turn on debugging.
-\}
 .SH "LOCAL PING"
 Unlike 
 .B ping(8),

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.1.2.14 2007-07-25 21:58:15 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.1.2.15 2007-07-27 22:39:07 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -41,9 +41,7 @@ Displays Field Replaceable Unit (FRU) Information.
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-.if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
-\}
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \FB\-e\fR, \fB\-\-device-id\fR

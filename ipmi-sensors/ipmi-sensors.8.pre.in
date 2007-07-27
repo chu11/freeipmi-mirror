@@ -15,9 +15,7 @@ IPMI Sensors displays current readings of sensors chips through BMC
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-.if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
-\}
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.1.2.5 2007-07-25 21:50:04 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.1.2.6 2007-07-27 22:39:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -105,7 +105,6 @@ output_fru(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-#ifndef NDEBUG
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
                                frusize,
@@ -116,7 +115,6 @@ output_fru(ipmi_fru_state_data_t *state_data,
       rv = ret;
       goto cleanup;
     }
-#endif /* NDEBUG */
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
@@ -298,11 +296,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                  state_data->hostname,
                                  args->sdr.sdr_cache_dir,
                                  (args->sdr.quiet_cache_wanted) ? 0 : 1,
-#ifndef NDEBUG
                                  (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
-#else  /* NDEBUG */
-                                 0,
-#endif /* NDEBUG */
                                  &(state_data->sdr_record_list),
                                  &(state_data->sdr_record_count),
                                  errmsg,

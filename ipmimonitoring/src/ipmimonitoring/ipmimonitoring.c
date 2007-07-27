@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.4.15 2007-07-25 21:50:08 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.4.16 2007-07-27 22:39:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -84,7 +84,6 @@
 #define IPMIMONITORING_QUIET_READINGS_KEY       'q'
 
 #define IPMIMONITORING_DEBUG_KEY                160
-#define IPMIMONITORING_DEBUGDUMP_KEY            161
 
 static struct ipmi_monitoring_ipmi_config conf;
 
@@ -129,12 +128,8 @@ static struct argp_option cmdline_options[] =
      "Regenerate the SDR cache.", 27},
     {"quiet-readings", IPMIMONITORING_QUIET_READINGS_KEY, 0, 0,
      "Do not output sensor reading values, only Nominal, Warning, or Critical states.", 28},
-#ifndef NDEBUG
     {"debug", IPMIMONITORING_DEBUG_KEY, 0, 0,
      "Turn on debugging.", 29},
-    {"debugdump", IPMIMONITORING_DEBUGDUMP_KEY, 0, 0,
-     "Turn on packet dumps for debugging.", 30},
-#endif
     { 0 }
   };
 
@@ -439,14 +434,10 @@ cmdline_parse (int key,
       if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
       break;
-#ifndef NDEBUG
     case IPMIMONITORING_DEBUG_KEY:       /* --debug */
       flags |= IPMI_MONITORING_FLAGS_DEBUG;
-      break;
-    case IPMIMONITORING_DEBUGDUMP_KEY:       /* --debugdump */
       flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
       break;
-#endif /* NDEBUG */
     case '?':
     default:
       return ARGP_ERR_UNKNOWN;

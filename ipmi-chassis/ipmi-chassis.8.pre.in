@@ -15,9 +15,7 @@ IPMI Chassis \- Control an IPMI Chassis.
 #include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
 #include <@top_srcdir@/common/doc/manpage-common-privilege-level-admin.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-.if @WITH_DEBUG@ \{
 #include <@top_srcdir@/common/doc/manpage-common-debug.man>
-\}
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-c\fR, \fB\-\-get\-capabilities\fR

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.14.4.4 2007-07-14 01:29:45 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.14.4.5 2007-07-27 22:39:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -297,17 +297,18 @@ main(int argc, char **argv)
   _secure_initialization();
   ipmiconsole_config_setup(argc, argv);
 
-#ifndef NDEBUG
   if (conf->debug)
     {
+#ifndef NDEBUG
       if (conf->debugfile)
 	debug_flags |= IPMICONSOLE_DEBUG_FILE;
       else
 	debug_flags |= IPMICONSOLE_DEBUG_STDERR;
-      if (conf->debugdump)
-	debug_flags |= IPMICONSOLE_DEBUG_IPMI_PACKETS;
-    }
+#else
+      debug_flags |= IPMICONSOLE_DEBUG_STDERR;
 #endif /* NDEBUG */  
+      debug_flags |= IPMICONSOLE_DEBUG_IPMI_PACKETS;
+    }
 
   if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
     {

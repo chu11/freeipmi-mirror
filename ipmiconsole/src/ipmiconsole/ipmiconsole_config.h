@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.9.4.1 2007-07-11 17:22:49 chu11 Exp $
+ *  $Id: ipmiconsole_config.h,v 1.9.4.2 2007-07-27 22:39:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,10 +42,9 @@
 
 struct ipmiconsole_config
 {
-#ifndef NDEBUG
   int debug;
+#ifndef NDEBUG
   int debugfile;
-  int debugdump;
   int noraw;
 #endif /* NDEBUG */
   char *config_file;

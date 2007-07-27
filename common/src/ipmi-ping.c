@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.12 2006-03-11 00:27:23 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.12.12.1 2007-07-27 22:39:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -180,10 +180,8 @@ _output_usage(char *options)
     fprintf(stderr, "  -r   protocol version\n");
   if (strchr(options, 's'))
     fprintf(stderr, "  -s   starting sequence number\n");
-#ifndef NDEBUG
   if (strchr(options, 'd'))
     fprintf(stderr, "  -d   turn on debugging\n");
-#endif
   exit(1);
 }
 
@@ -258,11 +256,9 @@ _cmdline_parse(int argc,
               || _initial_sequence_number > max_sequence_number)
             ipmi_ping_err_exit("initial sequence number out of range");
           break;
-#ifndef NDEBUG
         case 'd':
           _debug++;
           break;
-#endif
         default:
           ipmi_ping_err_exit("Command line option error");
           break;
@@ -491,11 +487,7 @@ ipmi_ping_setup(int argc,
                 unsigned int max_sequence_number,
                 char *options)
 {
-#ifndef NDEBUG
   char *valid_options = "hVciItvrsd:";
-#else
-  char *valid_options = "hVciItvrs:";
-#endif
   char *ptr;
   char c;
   

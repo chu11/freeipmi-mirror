@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.64.2.5 2007-07-24 19:56:15 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.64.2.6 2007-07-27 22:39:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -174,8 +174,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   assert(PACKET_TYPE_VALID_PKT(pkt));
   assert (buffer != NULL);
 
-#ifndef NDEBUG
-  if (conf->ipmidump)
+  if (conf->debug)
     {
       fiid_field_t *tmpl_lan_msg_hdr;
       char hdrbuf[1024];
@@ -295,7 +294,6 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                              tmpl_lan_msg_hdr,
                              ipmipower_packet_cmd_template(ip, pkt));
     }
-#endif /* NDEBUG */
 }
 
 int

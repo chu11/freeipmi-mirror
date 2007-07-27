@@ -614,11 +614,9 @@ common_parse_opt (int key,
         }
       cmd_args->workaround_flags |= tmp;
       break;
-#ifndef NDEBUG
     case ARGP_DEBUG_KEY:
       cmd_args->flags |= IPMI_FLAGS_DEBUG_DUMP;
       break;
-#endif /* NDEBUG */
     default:
       return ARGP_ERR_UNKNOWN;
     }

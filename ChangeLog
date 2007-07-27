@@ -132,6 +132,9 @@
 	
 	Misc:
 
+	* Support most debugging options by default, not in a debug-only
+	build.
+
 	* Globally remove IPMI_MAX_AUTHENTICATION_CODE_LENGTH.  Use
 	IPMI_1_5_MAX_PASSWORD_LENGTH and IPMI_2_0_MAX_PASSWORD_LENGTH as
 	needed.

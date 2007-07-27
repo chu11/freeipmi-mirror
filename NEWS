@@ -51,6 +51,7 @@ o Made many command line options consistent across FreeIPMI.  Notable
   14) All -v (version) options have been changed to -V for consistency
       with all tools. Backwards compatability has been maintained when
       possible.
+o Support basic --debug option in most tools under the non-debug builds.
 o Similarly, renamed configuration file options or interactive prompt
   options for consistency with the command line.  Backwards
   compatability has been maintained when possible.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.1.2.2 2007-06-28 00:21:43 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.1.2.3 2007-07-27 22:39:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,7 +90,6 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-#ifndef NDEBUG
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
                                frusize,
@@ -101,7 +100,6 @@ ipmi_fru_output_chassis_info_area(ipmi_fru_state_data_t *state_data,
       rv = ret;
       goto cleanup;
     }
-#endif /* NDEBUG */
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
@@ -254,7 +252,6 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-#ifndef NDEBUG
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
                                frusize,
@@ -265,7 +262,6 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
       rv = ret;
       goto cleanup;
     }
-#endif /* NDEBUG */
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,
@@ -497,7 +493,6 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-#ifndef NDEBUG
   if ((ret = ipmi_fru_dump_hex(state_data,
                                frubuf,
                                frusize,
@@ -508,7 +503,6 @@ ipmi_fru_output_product_info_area(ipmi_fru_state_data_t *state_data,
       rv = ret;
       goto cleanup;
     }
-#endif /* NDEBUG */
 
   if ((ret = ipmi_fru_check_checksum(state_data,
                                      frubuf,

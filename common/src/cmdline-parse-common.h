@@ -273,13 +273,9 @@ enum argp_common_option_keys
     {"eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                \
      "Eliminate undetected nodes.", 23}
 
-#ifndef NDEBUG
-
 #define ARGP_COMMON_OPTIONS_DEBUG                                          \
     {"debug",     ARGP_DEBUG_KEY, 0, 0, 	                           \
      "Turn on debugging.", 24}                                             
-
-#endif
 
 struct common_cmd_args 
 {

@@ -435,11 +435,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                                  state_data->hostname,
                                  args->sdr.sdr_cache_dir,
                                  (args->sdr.quiet_cache_wanted) ? 0 : 1,
-#ifndef NDEBUG
                                  (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
-#else  /* NDEBUG */
-                                 0,
-#endif /* NDEBUG */
                                  &(state_data->sdr_record_list), 
                                  &(state_data->sdr_record_count),
                                  errmsg,

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.14.4.6 2007-07-25 21:50:07 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.14.4.7 2007-07-27 22:39:08 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -69,9 +69,7 @@ static struct argp_option options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif
     {"verbose",        VERBOSE_KEY,        0, 0, 
      "Increase verbosity in output.  May be specified multiple times.", 25}, 
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,

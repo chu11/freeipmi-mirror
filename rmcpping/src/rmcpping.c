@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.19 2007-06-05 21:34:37 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.19.2.1 2007-07-27 22:39:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -105,7 +105,6 @@ createpacket(char *buffer,
                                (uint8_t *)buffer, buflen)) < 0)
     ipmi_ping_err_exit("assemble_rmcp_pkt: %s", strerror(errno));
   
-#ifndef NDEBUG
   if (debug)
     {
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
@@ -116,7 +115,6 @@ createpacket(char *buffer,
                                 tmpl_cmd_asf_presence_ping) < 0)
         ipmi_ping_err_exit("ipmi_dump_rmcp_packet: %s", strerror(errno));
     }
-#endif
 
   fiid_obj_destroy(obj_rmcp_hdr);
   fiid_obj_destroy(obj_rmcp_cmd);
@@ -145,7 +143,6 @@ parsepacket(char *buffer,
   obj_rmcp_hdr = _fiid_obj_create(tmpl_rmcp_hdr);
   obj_rmcp_cmd = _fiid_obj_create(tmpl_cmd_asf_presence_pong);
 
-#ifndef NDEBUG
   if (debug)
     {
       if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
@@ -156,7 +153,6 @@ parsepacket(char *buffer,
                                 tmpl_cmd_asf_presence_pong) < 0)
         ipmi_ping_err_exit("ipmi_dump_rmcp_packet: %s", strerror(errno));
     }
-#endif
 
   if (unassemble_rmcp_pkt(buffer, buflen, obj_rmcp_hdr, obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
@@ -223,11 +219,7 @@ endresult(const char *progname,
 int 
 main(int argc, char **argv) 
 {
-#ifndef NDEBUG
   ipmi_ping_setup(argc, argv, 0, RMCP_ASF_MESSAGE_TAG_MAX, "hVc:i:I:t:vs:d");
-#else
-  ipmi_ping_setup(argc, argv, 0, RMCP_ASF_MESSAGE_TAG_MAX, "hVc:i:I:t:vs:");
-#endif
   ipmi_ping_loop(createpacket, parsepacket, latepacket, endresult);
   exit(1);                    /* NOT REACHED */
 }

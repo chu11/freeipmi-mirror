@@ -81,9 +81,7 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
   ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
   ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-#ifndef NDEBUG
   ARGP_COMMON_OPTIONS_DEBUG,
-#endif /* NDEBUG */
   {"checkout", 'o', 0, 0, 
    "Fetch configuration information from the BMC.", 25},
   {"commit", 'i', 0, 0, 

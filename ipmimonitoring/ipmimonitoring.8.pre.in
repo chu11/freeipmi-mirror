@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.8 2007-07-25 21:58:15 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.1.2.9 2007-07-27 22:39:09 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -104,14 +104,9 @@ Output help menu and exit.
 .TP
 \fB\-V\fR, \fB\-\-version\fR
 Output version and exit.
-.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debug\fR
 Turn on debugging.
-.TP
-\fB\-\-debugdump\fR
-Turn on packet dumps for debugging.
-\}
 .LP
 
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>

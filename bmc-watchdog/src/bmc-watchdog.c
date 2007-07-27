@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67.8.17 2007-07-25 21:23:31 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.67.8.18 2007-07-27 22:39:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -160,9 +160,7 @@ struct cmdline_info
   uint8_t arp_response_val;
   int reset_period;
   uint32_t reset_period_val; 
-#ifndef NDEBUG
- int debug;
-#endif
+  int debug;
 };
 
 /* program name */
@@ -579,13 +577,11 @@ _cmd(char *str,
           && cmd_rq != NULL
           && cmd_rs != NULL);
 
-#ifndef NDEBUG
   if (cinfo.debug)
     {
       if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
         _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
-#endif
 
   while (1)
     {
@@ -656,13 +652,13 @@ _cmd(char *str,
 	      errno = EBUSY;
 	      return -1;
 	    }
-#ifndef NDEBUG
+
 	  if (cinfo.debug)
 	    {
 	      fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
 	      _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
 	    }
-#endif
+
 	  _sleep(retry_wait_time);
 	  retry_count++;
 	}
@@ -670,13 +666,11 @@ _cmd(char *str,
         break;
     }
 
-#ifndef NDEBUG
   if (cinfo.debug)
     {
       if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
         _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
-#endif
 
   _FIID_OBJ_GET(cmd_rs, "comp_code", &comp_code, str);
 
@@ -1130,10 +1124,10 @@ _usage(void)
           "             --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
           "  -f STRING  --logfile=FILE                       Specify an alternate logfile\n"
           "  -n         --no-logging                         Turn off all syslogging\n");
-#ifndef NDEBUG
+
   fprintf(stderr,
 	  "             --debug                              Turn on debugging.\n");
-#endif
+
   fprintf(stderr, "\n");
 
   if (cinfo.set || cinfo.start || cinfo.daemon)
@@ -1278,9 +1272,7 @@ _cmdline_parse(int argc, char **argv)
     {"gratuitous-arp",        1, NULL, 'G'},
     {"arp-response",          1, NULL, 'A'},
     {"reset-period",          1, NULL, 'e'},
-#ifndef NDEBUG
     {"debug",                 0, NULL, BMC_WATCHDOG_DEBUG_KEY},
-#endif
     {0, 0, 0, 0}
   };
 #endif /* HAVE_GETOPT_LONG */
@@ -1477,11 +1469,9 @@ _cmdline_parse(int argc, char **argv)
               || cinfo.reset_period_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("reset period value out of range");
           break;
-#ifndef NDEBUG
         case BMC_WATCHDOG_DEBUG_KEY:
           cinfo.debug++;
           break;
-#endif
         default:
           _err_exit("command line option error");
           break;
@@ -1874,11 +1864,9 @@ _daemon_init()
   pid_t pid;
 
 
-#ifndef NDEBUG
   /* Run in foreground if debugging */
   if (!cinfo.debug)
     {
-#endif
       if ((pid = fork()) < 0) 
 	_err_exit("fork: %s", strerror(errno));
       if (pid != 0)
@@ -1901,10 +1889,8 @@ _daemon_init()
       
       for (i = 0; i < 64; i++)
 	close(i);
-#ifndef NDEBUG
     }
-#endif
-  
+
   _init_bmc_watchdog(LOG_DAEMON, 0);
 }
 

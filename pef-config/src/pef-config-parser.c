@@ -23,11 +23,9 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
   char *value = NULL;
   char *tok;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
-#ifndef NDEBUG 
   struct pef_config_arguments *args;
 
   args = state_data->prog_data->args;
-#endif /* NDEBUG */
 
   while (fgets (buf, 4096, fp)) 
     {
@@ -37,19 +35,15 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
       
       if (!first_word) 
         {
-#ifndef NDEBUG 
           if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "%d: empty line\n", line_num);
-#endif /* NDEBUG */
           continue;
         }
     
       if (first_word[0] == '#') 
         {
-#ifndef NDEBUG 
           if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "Comment on line %d\n", line_num);
-#endif /* NDEBUG */
           continue;
         }
       
@@ -74,10 +68,8 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
               goto cleanup;
             }
 
-#ifndef NDEBUG 
           if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
             fprintf (stderr, "Entering section `%s'\n", section_name);
-#endif /* NDEBUG */
 
           continue;
         } 
@@ -91,10 +83,9 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
                        first_word);
               goto cleanup;
             }
-#ifndef NDEBUG 
+
           if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "Leaving section `%s'\n", section_name);
-#endif /* NDEBUG */
 
           free (section_name);
           section_name = NULL;
@@ -145,11 +136,9 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
             }
         }
       
-#ifndef NDEBUG 
       if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
         fprintf (stderr, "Trying to set `%s:%s=%s'\n",
                  section_name, key_name, value);
-#endif /* NDEBUG */
       
       if (pef_config_section_set_value (state_data,
                                         section_name,
