@@ -1,4 +1,8 @@
-0.4.0
+0.4.2
+-----
+o ipmimonitoring: Fixed potential free() bug.
+
+0.4.1
 -----
 
 For Users
