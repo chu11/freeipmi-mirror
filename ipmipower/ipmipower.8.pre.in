@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.1.2.17 2007-07-25 21:58:15 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.1.2.18 2007-07-27 22:40:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -188,14 +188,10 @@ has powered off.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
-.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debug\fR
 Turn on debugging output.
-.TP
-\fB\-\-ipmidump\fR
-Turn on IPMI packet dump output. Warning, the dump output can get
-extremely long.
+.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-rmcpdump\fR
 Turn on RMCP packet dump output.  Warning, the dump output can get 

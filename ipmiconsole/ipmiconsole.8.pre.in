@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.1.2.9 2007-07-25 21:58:15 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.1.2.10 2007-07-27 22:40:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -86,16 +86,13 @@ memory.
 \fB\-C\fR, \fB\-\-config file\fR=\fIFILE\fR
 Specify an alternate configuration file.
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
-.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debug\fR
 Turn on debugging.
+.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debugfile\fR
 Output debugging to the debugfile rather than to standard output.
-.TP
-\fB\-\-debugdump\fR
-Turn on packet dumps for debugging.
 .TP
 \fB\-\-noraw\fR
 Don't enter terminal raw mode.
