@@ -2,6 +2,8 @@
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main,
 	_cmdline_parse): Fix potential free() bug.
+
+	* common/src/hostrange.c (pstdout_setup): Add assert.
 	
 2007-07-26  Albert Chu <chu11@llnl.gov>
 

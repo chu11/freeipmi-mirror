@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostrange.c,v 1.1 2007-06-02 19:48:14 chu11 Exp $
+ *  $Id: hostrange.c,v 1.2 2007-07-27 16:11:48 chu11 Exp $
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -139,6 +139,8 @@ pstdout_setup(char **hosts,
               int eliminate)
 {
   int hosts_count = 0;
+
+  assert(hosts);
 
   if (pstdout_init() < 0)
     {
