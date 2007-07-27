@@ -1,3 +1,8 @@
+2007-07-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main,
+	_cmdline_parse): Fix potential free() bug.
+	
 2007-07-26  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-cache.c (sdr_cache_load): Fix corner case bug.
