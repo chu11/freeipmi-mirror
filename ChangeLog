@@ -1,3 +1,7 @@
+2007-07-31  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Put version into source path.
+	
 2007-07-27  Albert Chu <chu11@llnl.gov>
 
 	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main,
