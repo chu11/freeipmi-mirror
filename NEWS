@@ -1,6 +1,6 @@
 0.4.2
 -----
-o ipmimonitoring: Fixed potential free() bug.
+o ipmimonitoring: Fixed free bug that can cause segfaults.
 
 0.4.1
 -----
