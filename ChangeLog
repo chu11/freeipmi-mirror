@@ -1,3 +1,7 @@
+2007-08-02  Albert Chu <chu11@llnl.gov>
+
+	* tagged pre-udm-2-0-merge
+	
 2007-08-02  Troy Telford <ttelford@lnxi.com>
 
 	* freeipmi.spec.in: Fixed SLES packaging issue.
