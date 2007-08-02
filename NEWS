@@ -1,6 +1,7 @@
 0.4.2
 -----
 o ipmimonitoring: Fixed free bug that can cause segfaults.
+o Fix SLES packaging issue.
 
 0.4.1
 -----
