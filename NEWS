@@ -18,6 +18,7 @@ o Removed CALLBACK and OEM privilege capabilities in most tools, since
 o Converted some tools (ipmimonitoring, ipmiconsole, ipmipower) to use
   argp instead of getopt for consistency between tools.
 o Updated most manpages with full and clearer information.
+o Support basic --debug option in most tools under the non-debug builds.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level
@@ -51,7 +52,6 @@ o Made many command line options consistent across FreeIPMI.  Notable
   14) All -v (version) options have been changed to -V for consistency
       with all tools. Backwards compatability has been maintained when
       possible.
-o Support basic --debug option in most tools under the non-debug builds.
 o Similarly, renamed configuration file options or interactive prompt
   options for consistency with the command line.  Backwards
   compatability has been maintained when possible.
