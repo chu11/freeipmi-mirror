@@ -75,8 +75,12 @@ mkdir -p $RPM_BUILD_ROOT
 DESTDIR="$RPM_BUILD_ROOT" make install
 # fix coherance problems with associated script filenames
 mkdir -p $RPM_BUILD_ROOT/%{_initrddir}/
+# if check needed for SLES systems
+if [[ "%{_sysconfdir}/init.d" != "%{_initrddir}" ]]
+then
 mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/freeipmi-bmc-watchdog $RPM_BUILD_ROOT/%{_initrddir}/freeipmi-bmc-watchdog
 mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/freeipmi-ipmidetectd $RPM_BUILD_ROOT/%{_initrddir}/freeipmi-ipmidetectd
+fi
 rm -f %{buildroot}%{_infodir}/dir
 # kludge to get around rpmlint complaining about 0 length semephore file
 echo freeipmi > %{buildroot}/var/lib/freeipmi/ipckey
@@ -246,6 +250,8 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Wed Aug 01 2007 Troy Telford <ttelford@lnxi.com> 0.4.0
+- Some package cleanup so it builds on SLES
 * Wed Jun 13 2007 Phil Knirsch <pknirsch@redhat.com> 0.4.beta0-1
 - Some package cleanup and split of configuration and initscript
 * Fri Feb 28 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1

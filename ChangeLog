@@ -1,10 +1,12 @@
-2007-07-26  Albert Chu <chu11@llnl.gov>
-
-        * freeipmi.spec.in: Fix URL for release.
+2007-08-02  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update version for release.
 
         * Tagged Release-0_4_2
+
+2007-08-02  Troy Telford <ttelford@lnxi.com>
+
+	* freeipmi.spec.in: Fixed SLES packaging issue.
 
 2007-07-31  Albert Chu <chu11@llnl.gov>
 
