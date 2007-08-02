@@ -1,3 +1,7 @@
+2007-08-02  Troy Telford <ttelford@lnxi.com>
+
+	* freeipmi.spec.in: Fixed SLES packaging issue.
+	
 2007-07-31  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Put version into source path.
