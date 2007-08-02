@@ -1,5 +1,9 @@
 2007-08-02  Albert Chu <chu11@llnl.gov>
 
+	* tagged post-udm-2-0-merge
+
+2007-08-02  Albert Chu <chu11@llnl.gov>
+
         Merge from udm_ipmi_2_0_branch.
 	
 	Re-org UDM and add IPMI 2.0 device support to UDM.
