@@ -1,9 +1,0 @@
-.TP
-\fB\-f\fR, \fB\-\-flush\-cache\fR
-Flush sensor data repository (SDR) cache.
-.TP
-\fB\-Q\fR, \fB\-\-\quiet\-cache\fR
-Do not output information about cache creation/deletion. 
-.TP
-\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Use DIRECTORY for sensor data repository (SDR) cache.

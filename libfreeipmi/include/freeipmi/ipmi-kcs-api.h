@@ -29,24 +29,23 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
-#define IPMI_KCS_SMS_IO_BASE_DEFAULT    0x0CA2
+#define IPMI_KCS_SMS_IO_BASE_DEFAULT          0x0CA2
 
-#define IPMI_KCS_CTX_ERR_SUCCESS         0
-#define IPMI_KCS_CTX_ERR_NULL            1
-#define IPMI_KCS_CTX_ERR_INVALID         2
-#define IPMI_KCS_CTX_ERR_PARAMETERS      3
-#define IPMI_KCS_CTX_ERR_PERMISSION      4
-#define IPMI_KCS_CTX_ERR_IO_PARAMETERS   5
-#define IPMI_KCS_CTX_ERR_IO_INIT         6
-#define IPMI_KCS_CTX_ERR_OVERFLOW        7
-#define IPMI_KCS_CTX_ERR_BUSY            8
-#define IPMI_KCS_CTX_ERR_OUTMEM          9
-#define IPMI_KCS_CTX_ERR_UNAVAILABLE     10
-#define IPMI_KCS_CTX_ERR_INTERNAL        11
-#define IPMI_KCS_CTX_ERR_ERRNUMRANGE     12
+#define IPMI_KCS_CTX_ERR_SUCCESS              0
+#define IPMI_KCS_CTX_ERR_NULL                 1
+#define IPMI_KCS_CTX_ERR_INVALID              2
+#define IPMI_KCS_CTX_ERR_PARAMETERS           3
+#define IPMI_KCS_CTX_ERR_PERMISSION           4
+#define IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED   5
+#define IPMI_KCS_CTX_ERR_OVERFLOW             6
+#define IPMI_KCS_CTX_ERR_BUSY                 7
+#define IPMI_KCS_CTX_ERR_OUT_OF_MEMORY        8
+#define IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND     9
+#define IPMI_KCS_CTX_ERR_INTERNAL            10
+#define IPMI_KCS_CTX_ERR_ERRNUMRANGE         11
 
-#define IPMI_KCS_FLAGS_DEFAULT     0x00000000
-#define IPMI_KCS_FLAGS_NONBLOCKING 0x00000001
+#define IPMI_KCS_FLAGS_DEFAULT       0x00000000
+#define IPMI_KCS_FLAGS_NONBLOCKING   0x00000001
 
 typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
 
@@ -56,12 +55,12 @@ int32_t ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx);
 char *ipmi_kcs_ctx_strerror(int32_t errnum);
 
 int8_t ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
-int8_t ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *reg_space);
+int8_t ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing);
 int8_t ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
 int8_t ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags);
 
 int8_t ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
-int8_t ipmi_kcs_ctx_set_register_space(ipmi_kcs_ctx_t ctx, uint8_t reg_space);
+int8_t ipmi_kcs_ctx_set_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t register_spacing);
 int8_t ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
 int8_t ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags);
 

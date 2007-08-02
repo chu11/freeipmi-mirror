@@ -1,0 +1,17 @@
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): There are a number of Intel IPMI 2.0 bugs which can be
+worked around by specifying the "intel20" workaround.  The
+workarounds include padding of usernames, automatic acceptance of a
+RAKP 4 response integrity check when using the integrity algorithm
+MD5-128, and password truncation if the authentication algorithm is
+HMAC-MD5-128.
+
+Supermicro H8QME with SIMSO daughter card: There are several
+Supermicro IPMI 2.0 bugs on early firmware revisions which can be
+worked around using the "supermicro20" workaround.  These compliance
+bugs are confirmed to be fixed on newer firmware.
+
+Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
+around by specifying the "sun20" workaround.  The workarounds include
+handling invalid lengthed hash keys and invalid cipher suite records.

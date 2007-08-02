@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_config.c,v 1.3 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_config.c,v 1.4 2007-08-02 20:50:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1752,7 +1752,7 @@ ipmi_monitoring_sensor_config(int *errnum)
       else
         {
           if (errnum)
-            *errnum = IPMI_MONITORING_ERR_INTERNAL;
+            *errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
         }
 
       if (conffile_errmsg(cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)

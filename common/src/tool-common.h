@@ -21,7 +21,7 @@
 #define _TOOL_COMMON_H
 
 #include "freeipmi/udm/ipmi-udm.h"
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 #define IPMI_DEVICE_OPEN_ERRMSGLEN 1024
 
@@ -32,7 +32,6 @@ void ipmi_disable_coredump(void);
 ipmi_device_t ipmi_device_open(const char *progname,
                                const char *hostname,
                                struct common_cmd_args *cmd_args,
-                               unsigned int debug_flags,
                                char *errmsg,
                                unsigned int errmsglen);
 

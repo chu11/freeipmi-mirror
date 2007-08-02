@@ -1,0 +1,3 @@
+.TP
+\fB\-h\fR, \fB\-\-hostname\fR=\fIIPMIHOST\fR
+Specify the remote host to communicate with.

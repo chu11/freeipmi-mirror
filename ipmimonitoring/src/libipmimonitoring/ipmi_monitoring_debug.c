@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.c,v 1.3 2007-04-27 16:20:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.c,v 1.4 2007-08-02 20:50:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,7 +38,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* !HAVE_UNISTD_H */
-#include <syslog.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -58,12 +57,8 @@ _debug(const char *fmt, va_list ap)
   assert(fmt);
 
   vsnprintf(errbuf, IPMI_MONITORING_DEBUG_ERROR_BUFLEN, fmt, ap);
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDOUT)
-    fprintf(stdout, "%s\n", errbuf);
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDERR)
+  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)
     fprintf(stderr, "%s\n", errbuf);
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_SYSLOG)
-    syslog(LOG_DEBUG, "%s", errbuf);
 }
 
 void 
@@ -94,123 +89,4 @@ __debug_msg_create(const char *fmt, ...)
   va_end(ap);
 
   return buffer;
-}
-
-void
-ipmi_monitoring_inband_dump(char *prefix, fiid_obj_t obj_cmd)
-{
-  int fd;
-
-  assert(fiid_obj_valid(obj_cmd));
-
-  if (!(_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS))
-    return;
-
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDOUT)
-    fd = STDOUT_FILENO;
-  else if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDERR)
-    fd = STDERR_FILENO;
-  else
-    return;
-
-  if (ipmi_obj_dump_perror(fd, prefix, NULL, NULL, obj_cmd) < 0)
-    IPMI_MONITORING_DEBUG(("ipmi_obj_dump: %s", strerror(errno)));
-}
-
-void
-ipmi_monitoring_outofband_dump(char *prefix, 
-                               char *hdr,
-                               fiid_obj_t obj_rmcp_hdr,
-                               fiid_obj_t obj_lan_session_hdr,
-                               fiid_obj_t obj_msg_hdr,
-                               fiid_obj_t obj_cmd,
-                               fiid_obj_t obj_msg_trlr)
-{
-  char *fmt =
-    "================================================\n"
-    "%s\n"
-    "================================================\n";
-  char *rmcp_hdr =
-    "RMCP Header:\n"
-    "------------";
-  char *lan_session_hdr =
-    "IPMI LAN Session Header:\n"
-    "-----------------------";
-  char *msg_hdr =
-    "IPMI Message Header:\n"
-    "--------------------";
-  char *cmd_hdr =
-    "IPMI Command Data:\n"
-    "------------------";
-  char *trlr_hdr =
-    "IPMI Trailer:\n"
-    "--------------";
-  int fd;
-
-  if (!(_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS))
-    return;
-
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDOUT)
-    fd = STDOUT_FILENO;
-  else if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG_STDERR)
-    fd = STDERR_FILENO;
-  else
-    return;
-  
-  if (hdr)
-    {
-      char hdrbuf[1024];
-      int len;
-
-      if ((len = snprintf(hdrbuf, 1024, fmt, hdr)) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("snprintf"));
-          return;
-        }
- 
-      if (len >= 1024)
-        {
-          IPMI_MONITORING_DEBUG(("snprintf truncation: len = %d", len));
-          return;
-        }
-
-      if (fd_write_n(fd, hdrbuf, len) < 0)
-        {
-          IPMI_MONITORING_DEBUG(("fd_write_n: %s", strerror(errno)));
-          return;
-        }
-    }
-
-  if (obj_rmcp_hdr)
-    {
-      if (ipmi_obj_dump_perror(fd, prefix, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
-        IPMI_MONITORING_DEBUG(("ipmi_obj_dump_perror: %s", strerror(errno)));
-    }
-
-  /* On ipmi requests, this probably won't output authentication
-   * codes, b/c that is generated in the assemble-packet phase.
-   */
-  if (obj_lan_session_hdr)
-    {
-      if (ipmi_obj_dump_perror(fd, prefix, lan_session_hdr, NULL, obj_lan_session_hdr) < 0)
-        IPMI_MONITORING_DEBUG(("ipmi_obj_dump_perror: %s", strerror(errno)));
-    }
-
-  if (obj_msg_hdr)
-    {
-      if (ipmi_obj_dump_perror(fd, prefix, msg_hdr, NULL, obj_msg_hdr) < 0)
-        IPMI_MONITORING_DEBUG(("ipmi_obj_dump_perror: %s", strerror(errno)));
-    }
-
-  if (obj_cmd)
-    {
-      if (ipmi_obj_dump_perror(fd, prefix, cmd_hdr, NULL, obj_cmd) < 0)
-        IPMI_MONITORING_DEBUG(("ipmi_obj_dump_perror: %s", strerror(errno)));
-    }
-
-  if (obj_msg_trlr)
-    {
-      if (ipmi_obj_dump_perror(fd, prefix, trlr_hdr, NULL, obj_msg_trlr) < 0)
-        IPMI_MONITORING_DEBUG(("ipmi_obj_dump_perror: %s", strerror(errno)));
-    }
 }

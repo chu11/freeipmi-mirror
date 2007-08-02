@@ -2,9 +2,9 @@ sbin_PROGRAMS=ipmipower
 ipmipower_SOURCES= \
 	argv.c \
 	error.c \
-	ipmipower_authentication.c \
+	ipmipower_authentication_type.c \
 	ipmipower_check.c \
-	ipmipower_cipher_suite.c \
+	ipmipower_cipher_suite_id.c \
 	ipmipower_config.c \
 	ipmipower_connection.c \
 	ipmipower.c \
@@ -13,7 +13,7 @@ ipmipower_SOURCES= \
 	ipmipower_packet.c \
 	ipmipower_ping.c \
 	ipmipower_powercmd.c \
-	ipmipower_privilege.c \
+	ipmipower_privilege_level.c \
 	ipmipower_prompt.c \
 	ipmipower_util.c \
 	ipmipower_workarounds.c \
@@ -21,6 +21,7 @@ ipmipower_SOURCES= \
 	wrappers.c
  
 ipmipower_LDADD = \
+	../../common/src/libcmdlineparsecommon.la \
 	../../common/src/libcbuf.la \
 	../../common/src/libllnlcommon.la \
 	../../common/src/libtoolcommon.la \
@@ -37,9 +38,9 @@ ipmipower_CPPFLAGS = \
 noinst_HEADERS= \
 	argv.h \
 	error.h \
-	ipmipower_authentication.h \
+	ipmipower_authentication_type.h \
 	ipmipower_check.h \
-	ipmipower_cipher_suite.h \
+	ipmipower_cipher_suite_id.h \
 	ipmipower_config.h \
 	ipmipower_connection.h \
 	ipmipower.h \
@@ -48,13 +49,16 @@ noinst_HEADERS= \
 	ipmipower_packet.h \
 	ipmipower_ping.h \
 	ipmipower_powercmd.h \
-	ipmipower_privilege.h \
+	ipmipower_privilege_level.h \
 	ipmipower_prompt.h \
 	ipmipower_util.h \
 	ipmipower_workarounds.h \
 	ipmipower_wrappers.h \
 	wrappers.h
  
+../../common/src/libcmdlineparsecommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 ../../common/src/libcbuf.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 

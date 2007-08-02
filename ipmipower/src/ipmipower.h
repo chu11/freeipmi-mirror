@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.75 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.76 2007-08-02 20:50:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,41 +64,41 @@
  * ipmipower limits 
  */
  
-#define IPMIPOWER_MIN_TTY_BUF              1024*4
-#define IPMIPOWER_MAX_TTY_BUF              1024*32
+#define IPMIPOWER_MIN_TTY_BUF                       1024*4
+#define IPMIPOWER_MAX_TTY_BUF                       1024*32
 
-#define IPMIPOWER_MIN_CONNECTION_BUF       1024*2
-#define IPMIPOWER_MAX_CONNECTION_BUF       1024*4
+#define IPMIPOWER_MIN_CONNECTION_BUF                1024*2
+#define IPMIPOWER_MAX_CONNECTION_BUF                1024*4
 
-#define IPMIPOWER_MINNODES                 1
-#define IPMIPOWER_MAXNODES                 1024
+#define IPMIPOWER_MINNODES                          1
+#define IPMIPOWER_MAXNODES                          1024
 
-#define IPMIPOWER_TIMEOUT_MIN              1000   /* 1 second */
-#define IPMIPOWER_TIMEOUT_MAX              120000 /* 120 seconds */
+#define IPMIPOWER_SESSION_TIMEOUT_MIN               1000   /* 1 second */
+#define IPMIPOWER_SESSION_TIMEOUT_MAX               120000 /* 120 seconds */
 
-#define IPMIPOWER_RETRY_TIMEOUT_MIN        50     /* .05 seconds */
-#define IPMIPOWER_RETRY_TIMEOUT_MAX        IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN        50     /* .05 seconds */
+#define IPMIPOWER_RETRANSMISSION_TIMEOUT_MAX        IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MIN   50     /* .05 seconds */
-#define IPMIPOWER_RETRY_WAIT_TIMEOUT_MAX   IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN   50     /* .05 seconds */
+#define IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MAX   IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_RETRY_BACKOFF_COUNT_MIN  1
-#define IPMIPOWER_RETRY_BACKOFF_COUNT_MAX  200
+#define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN  1
+#define IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX  200
 
-#define IPMIPOWER_PING_INTERVAL_MIN        250   /* .25 seconds */
-#define IPMIPOWER_PING_INTERVAL_MAX        IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_PING_INTERVAL_MIN                 250   /* .25 seconds */
+#define IPMIPOWER_PING_INTERVAL_MAX                 IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_PING_TIMEOUT_MIN         IPMIPOWER_TIMEOUT_MIN
-#define IPMIPOWER_PING_TIMEOUT_MAX         IPMIPOWER_TIMEOUT_MAX
+#define IPMIPOWER_PING_TIMEOUT_MIN                  IPMIPOWER_SESSION_TIMEOUT_MIN
+#define IPMIPOWER_PING_TIMEOUT_MAX                  IPMIPOWER_SESSION_TIMEOUT_MAX
 
-#define IPMIPOWER_PING_PACKET_COUNT_MIN    2
-#define IPMIPOWER_PING_PACKET_COUNT_MAX    20
+#define IPMIPOWER_PING_PACKET_COUNT_MIN             2
+#define IPMIPOWER_PING_PACKET_COUNT_MAX             20
 
-#define IPMIPOWER_PING_PERCENT_MIN         1
-#define IPMIPOWER_PING_PERCENT_MAX         100
+#define IPMIPOWER_PING_PERCENT_MIN                  1
+#define IPMIPOWER_PING_PERCENT_MAX                  100
 
-#define IPMIPOWER_PING_CONSEC_COUNT_MIN    2
-#define IPMIPOWER_PING_CONSEC_COUNT_MAX    20
+#define IPMIPOWER_PING_CONSEC_COUNT_MIN             2
+#define IPMIPOWER_PING_CONSEC_COUNT_MAX             20
 
 /* 
  * ipmi specifics for ipmipower
@@ -108,6 +108,7 @@
  */
 
 #define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
+#define IPMIPOWER_MAX_SEQUENCE_NUMBER    0xFFFFFFFF
 
 #define IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER       1
 #define IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER  0
@@ -189,7 +190,7 @@ typedef enum
   ((__c) > POWER_CMD_NONE && \
    (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
 
-#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE(__c) \
+#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL(__c) \
   ((__c) == POWER_CMD_POWER_OFF \
    || (__c) == POWER_CMD_POWER_ON \
    || (__c) == POWER_CMD_POWER_CYCLE \
@@ -310,23 +311,23 @@ typedef enum
   ((__a) >= AUTHENTICATION_TYPE_AUTO && \
    (__a) <= AUTHENTICATION_TYPE_MD5)
 
-/* Privilege Types */
+/* Privilege Level Types */
 typedef enum 
   {
-    PRIVILEGE_TYPE_INVALID   = 0x00,
-    PRIVILEGE_TYPE_AUTO      = 0x01,
-    PRIVILEGE_TYPE_USER      = 0x02,
-    PRIVILEGE_TYPE_OPERATOR  = 0x03,
-    PRIVILEGE_TYPE_ADMIN     = 0x04,
-  } privilege_type_t;
+    PRIVILEGE_LEVEL_INVALID   = 0x00,
+    PRIVILEGE_LEVEL_AUTO      = 0x01,
+    PRIVILEGE_LEVEL_USER      = 0x02,
+    PRIVILEGE_LEVEL_OPERATOR  = 0x03,
+    PRIVILEGE_LEVEL_ADMIN     = 0x04,
+  } privilege_level_t;
 
-#define PRIVILEGE_TYPE_VALID(__p) \
-  ((__p) >= PRIVILEGE_TYPE_USER && \
-   (__p) <= PRIVILEGE_TYPE_ADMIN)
+#define PRIVILEGE_LEVEL_VALID(__p) \
+  ((__p) >= PRIVILEGE_LEVEL_USER && \
+   (__p) <= PRIVILEGE_LEVEL_ADMIN)
 
-#define PRIVILEGE_TYPE_VALID_OR_AUTO(__p) \
-  ((__p) >= PRIVILEGE_TYPE_AUTO && \
-   (__p) <= PRIVILEGE_TYPE_ADMIN)
+#define PRIVILEGE_LEVEL_VALID_OR_AUTO(__p) \
+  ((__p) >= PRIVILEGE_LEVEL_AUTO && \
+   (__p) <= PRIVILEGE_LEVEL_ADMIN)
 
 /* Cipher_Suite Ids */
 typedef enum 
@@ -368,44 +369,45 @@ typedef enum
 /* Msg Types */
 typedef enum 
   { 
-    MSG_TYPE_SUCCESS                       =  0,
-    MSG_TYPE_ON                            =  1,
-    MSG_TYPE_OFF                           =  2,
-    MSG_TYPE_OK                            =  3,
-    MSG_TYPE_PERMISSION                    =  4,
-    MSG_TYPE_USERNAME                      =  5,
-    MSG_TYPE_PASSWORD                      =  6,
-    MSG_TYPE_PASSWORD_LENGTH               =  7,
-    MSG_TYPE_K_G                           =  8,
-    MSG_TYPE_PRIVILEGE                     =  9,
-    MSG_TYPE_OPERATION                     = 10,
-    MSG_TYPE_AUTHENTICATION_TYPE           = 11,
-    MSG_TYPE_1_5_AUTO                      = 12,
-    MSG_TYPE_GIVEN_PRIVILEGE               = 13,
-    MSG_TYPE_CIPHER_SUITE                  = 14,
-    MSG_TYPE_2_0_AUTO                      = 15,
-    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT = 16,
-    MSG_TYPE_TIMEDOUT                      = 17,
-    MSG_TYPE_NOTDISCOVERED                 = 18,
-    MSG_TYPE_BADCONNECTION                 = 19,
-    MSG_TYPE_UNKNOWNNODE                   = 20,
-    MSG_TYPE_RESOURCES                     = 21,
-    MSG_TYPE_VERSION_NOT_SUPPORTED         = 22,
-    MSG_TYPE_BMCBUSY                       = 23,
-    MSG_TYPE_BMCERROR                      = 24,
+    MSG_TYPE_SUCCESS                            =  0,
+    MSG_TYPE_ON                                 =  1,
+    MSG_TYPE_OFF                                =  2,
+    MSG_TYPE_OK                                 =  3,
+    MSG_TYPE_PERMISSION                         =  4,
+    MSG_TYPE_USERNAME_INVALID                   =  5,
+    MSG_TYPE_PASSWORD_INVALID                   =  6,
+    MSG_TYPE_PASSWORD_LENGTH_INVALID            =  7,
+    MSG_TYPE_K_G_INVALID                        =  8,
+    MSG_TYPE_NECESSARY_PRIVILEGE_LEVEL          =  9,
+    MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED = 10,
+    MSG_TYPE_OPERATION_INVALID                  = 11,
+    MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE    = 12,
+    MSG_TYPE_1_5_AUTO                           = 13,
+    MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE        = 14,
+    MSG_TYPE_2_0_AUTO                           = 15,
+    MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT      = 16,
+    MSG_TYPE_SESSION_TIMEOUT                    = 17,
+    MSG_TYPE_NOTDISCOVERED                      = 18,
+    MSG_TYPE_BADCONNECTION                      = 19,
+    MSG_TYPE_UNKNOWNNODE                        = 20,
+    MSG_TYPE_RESOURCES                          = 21,
+    MSG_TYPE_IPMI_1_5_UNAVAILABLE               = 22,
+    MSG_TYPE_IPMI_2_0_UNAVAILABLE               = 23,
+    MSG_TYPE_BMC_BUSY                           = 24,
+    MSG_TYPE_BMC_ERROR                          = 25,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \
   ((__m) >= MSG_TYPE_SUCCESS && \
-   (__m) <= MSG_TYPE_BMCERROR)
+   (__m) <= MSG_TYPE_BMC_ERROR)
 
-#define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMCERROR+1)
+#define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMC_ERROR+1)
 
 /* Workaround Flags */
 typedef enum 
   {
-    WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION = 0x01,
-    WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO      = 0x02,
+    WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO      = 0x01,
+    WORKAROUND_FLAG_FORCE_PERMSG_AUTHENTICATION = 0x02,
     WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE   = 0x04,
     WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER  = 0x08,
     WORKAROUND_FLAG_INTEL_2_0_SESSION           = 0x10,
@@ -424,7 +426,7 @@ struct ipmipower_powercmd {
    * Protocol State Machine Variables 
    */
   struct timeval time_begin;
-  unsigned int retry_count;
+  unsigned int retransmission_count;
   uint8_t close_timeout;
 
   /*
@@ -434,7 +436,7 @@ struct ipmipower_powercmd {
   unsigned int session_inbound_count;
   uint32_t highest_received_sequence_number;
   unsigned int previously_received_list;
-  uint8_t privilege;
+  uint8_t privilege_level;
 
   /* IPMI 1.5 specific */
   ipmipower_bool_t permsgauth_enabled;
@@ -443,7 +445,7 @@ struct ipmipower_powercmd {
   /* IPMI 2.0 specific */
   uint8_t cipher_suite_id;
   unsigned int cipher_suite_id_ranking_index;
-  uint8_t requested_maximum_privilege;
+  uint8_t requested_maximum_privilege_level;
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
   uint8_t confidentiality_algorithm;
@@ -563,7 +565,7 @@ struct ipmipower_config
   char                     configfile[MAXPATHLEN+1];
 
   authentication_type_t    authentication_type;
-  privilege_type_t         privilege;
+  privilege_level_t        privilege_level;
   ipmi_version_t           ipmi_version;
   cipher_suite_id_t        cipher_suite_id;
   ipmipower_bool_t         on_if_off;
@@ -573,18 +575,17 @@ struct ipmipower_config
   ipmipower_bool_t         consolidate_output;
   ipmipower_bool_t         eliminate;
   uint32_t                 workaround_flags;
-#ifndef NDEBUG
   ipmipower_bool_t         debug;
-  ipmipower_bool_t         ipmidump;
+#ifndef NDEBUG
   ipmipower_bool_t         rmcpdump;
   ipmipower_bool_t         log;
   char                     logfile[MAXPATHLEN+1];
   int                      logfile_fd;
 #endif /* NDEBUG */
-  int                      timeout_len;
-  int                      retry_timeout_len;
-  int                      retry_wait_timeout_len;
-  int                      retry_backoff_count; 
+  int                      session_timeout_len;
+  int                      retransmission_timeout_len;
+  int                      retransmission_wait_timeout_len;
+  int                      retransmission_backoff_count; 
   int                      ping_interval_len;
   int                      ping_timeout_len;
   int                      ping_packet_count;
@@ -597,7 +598,7 @@ struct ipmipower_config
   ipmipower_bool_t         password_set_on_cmdline;
   ipmipower_bool_t         k_g_set_on_cmdline;
   ipmipower_bool_t         authentication_type_set_on_cmdline;
-  ipmipower_bool_t         privilege_set_on_cmdline;
+  ipmipower_bool_t         privilege_level_set_on_cmdline;
   ipmipower_bool_t         ipmi_version_set_on_cmdline;
   ipmipower_bool_t         cipher_suite_id_set_on_cmdline;
   ipmipower_bool_t         on_if_off_set_on_cmdline;
@@ -606,10 +607,10 @@ struct ipmipower_config
   ipmipower_bool_t         workaround_flags_set_on_cmdline;
   ipmipower_bool_t         consolidate_output_set_on_cmdline;
   ipmipower_bool_t         eliminate_set_on_cmdline;
-  ipmipower_bool_t         timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retry_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retry_wait_timeout_len_set_on_cmdline;
-  ipmipower_bool_t         retry_backoff_count_set_on_cmdline;
+  ipmipower_bool_t         session_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retransmission_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retransmission_wait_timeout_len_set_on_cmdline;
+  ipmipower_bool_t         retransmission_backoff_count_set_on_cmdline;
   ipmipower_bool_t         ping_interval_len_set_on_cmdline;
   ipmipower_bool_t         ping_timeout_len_set_on_cmdline; 
   ipmipower_bool_t         ping_consec_count_set_on_cmdline;

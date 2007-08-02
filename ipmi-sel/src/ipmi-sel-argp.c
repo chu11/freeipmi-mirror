@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.18 2007-06-01 20:56:17 chu11 Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.19 2007-08-02 20:50:12 chu11 Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -36,7 +36,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-sel.h"
 #include "ipmi-sel-argp.h"
 
@@ -58,25 +58,26 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about SEL.", 21},
+     "Show general information about the SEL.", 25},
     {"delete",     DELETE_KEY,     "REC-LIST", 0, 
-     "Delete given SEL records entry.", 22},
+     "Delete SEL records by record ids.", 26},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
-     "Delete all SEL entries.", 23},
+     "Delete all SEL records.", 27},
     {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
-     "Delete records from START to END in SEL.", 24},
+     "Delete record ids from START to END in the SEL.", 28},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
-     "Hex-dump SEL entries optionally to FILE.", 25},
+     "Hex-dump SEL records optionally into a FILE.", 29},
     { 0 }
   };
 
@@ -386,4 +387,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->hex_dump_filename = NULL;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

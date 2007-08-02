@@ -39,7 +39,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include <assert.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "ipmi-sensor-api.h"
@@ -435,11 +435,7 @@ run_cmd_args (ipmi_sensors_state_data_t *state_data)
                                  state_data->hostname,
                                  args->sdr.sdr_cache_dir,
                                  (args->sdr.quiet_cache_wanted) ? 0 : 1,
-#ifndef NDEBUG
-                                 state_data->prog_data->debug_flags,
-#else  /* NDEBUG */
-                                 0,
-#endif /* NDEBUG */
+                                 (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP) ? 1 : 0,
                                  &(state_data->sdr_record_list), 
                                  &(state_data->sdr_record_count),
                                  errmsg,
@@ -482,7 +478,6 @@ _ipmi_sensors (pstdout_state_t pstate,
   if (!(dev = ipmi_device_open(prog_data->progname,
                                hostname,
                                &(prog_data->args->common),
-                               prog_data->debug_flags,
                                errmsg,
                                IPMI_DEVICE_OPEN_ERRMSGLEN)))
     {
@@ -540,16 +535,7 @@ main (int argc, char **argv)
   ipmi_sensors_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-#ifndef NDEBUG
-  if (prog_data.args->common.debug)
-    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
-  else
-    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#else  /* NDEBUG */
-  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#endif /* NDEBUG */
-
-  if ((hosts_count = pstdout_setup(&(prog_data.args->common.host),
+  if ((hosts_count = pstdout_setup(&(prog_data.args->common.hostname),
                                    prog_data.args->hostrange.buffer_hostrange_output,
                                    prog_data.args->hostrange.consolidate_hostrange_output,
                                    prog_data.args->hostrange.fanout,
@@ -563,7 +549,7 @@ main (int argc, char **argv)
   if (hosts_count > 1)
     prog_data.args->sdr.quiet_cache_wanted = 1;
 
-  if ((rv = pstdout_launch(prog_data.args->common.host,
+  if ((rv = pstdout_launch(prog_data.args->common.hostname,
                            _ipmi_sensors,
                            &prog_data)) < 0)
     {

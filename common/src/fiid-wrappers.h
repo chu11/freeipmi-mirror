@@ -136,7 +136,7 @@ do {                                            \
   int32_t __errnum = fiid_obj_errnum((___obj)); \
   if (__errnum == FIID_ERR_SUCCESS)             \
     errno = 0;                                  \
-  else if (__errnum == FIID_ERR_OUTMEM)         \
+  else if (__errnum == FIID_ERR_OUT_OF_MEMORY)  \
     errno = ENOMEM;                             \
   else if (__errnum == FIID_ERR_OVERFLOW)       \
     errno = ENOSPC;                             \
@@ -149,7 +149,7 @@ do {                                                  \
   int32_t __errnum = fiid_iterator_errnum((___iter)); \
   if (__errnum == FIID_ERR_SUCCESS)                   \
     errno = 0;                                        \
-  else if (__errnum == FIID_ERR_OUTMEM)               \
+  else if (__errnum == FIID_ERR_OUT_OF_MEMORY)        \
     errno = ENOMEM;                                   \
   else if (__errnum == FIID_ERR_OVERFLOW)             \
     errno = ENOSPC;                                   \

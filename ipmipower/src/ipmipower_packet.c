@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.64 2007-06-08 21:37:53 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.65 2007-08-02 20:50:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,7 +38,7 @@
 #include <stdint.h>
 
 #include "ipmipower_packet.h"
-#include "ipmipower_authentication.h"
+#include "ipmipower_authentication_type.h"
 #include "ipmipower_wrappers.h"
 
 extern struct ipmipower_config *conf;
@@ -174,8 +174,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   assert(PACKET_TYPE_VALID_PKT(pkt));
   assert (buffer != NULL);
 
-#ifndef NDEBUG
-  if (conf->ipmidump)
+  if (conf->debug)
     {
       fiid_field_t *tmpl_lan_msg_hdr;
       char hdrbuf[1024];
@@ -295,7 +294,6 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                              tmpl_lan_msg_hdr,
                              ipmipower_packet_cmd_template(ip, pkt));
     }
-#endif /* NDEBUG */
 }
 
 int
@@ -762,7 +760,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
     {
       if (fill_cmd_get_channel_authentication_capabilities_v20(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                               ip->privilege, 
+                                                               ip->privilege_level, 
                                                                IPMI_GET_IPMI_V20_EXTENDED_DATA,
                                                                ip->obj_authentication_capabilities_v20_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
@@ -773,7 +771,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     {
       if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                           ip->privilege, 
+                                                           ip->privilege_level, 
                                                            ip->obj_authentication_capabilities_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_get_channel_authentication_capabilities: %s", 
@@ -810,7 +808,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  ip->ic->hostname, ip->protocol_state);
       
       if (fill_cmd_activate_session(authentication_type, 
-				    ip->privilege, 
+				    ip->privilege_level, 
 				    challenge_string,
 				    challenge_string_len,
                                     IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER,
@@ -835,7 +833,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == OPEN_SESSION_REQ)
     {
       if (fill_rmcpplus_open_session (ip->initial_message_tag + ip->message_tag_count,
-                                      ip->requested_maximum_privilege,
+                                      ip->requested_maximum_privilege_level,
                                       ip->remote_console_session_id,
                                       ip->authentication_algorithm,
                                       ip->integrity_algorithm,
@@ -852,7 +850,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                         managed_system_session_id,
                                         ip->remote_console_random_number,
                                         IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                        ip->privilege,
+                                        ip->privilege_level,
                                         ip->name_only_lookup,
                                         username,
                                         username_len,
@@ -916,7 +914,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                                                                                          managed_system_random_number_len,
                                                                                                          ip->remote_console_session_id,
                                                                                                          name_only_lookup,
-                                                                                                         ip->privilege,
+                                                                                                         ip->privilege_level,
                                                                                                          username,
                                                                                                          username_len,
                                                                                                          key_exchange_authentication_code,
@@ -1109,13 +1107,13 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 		 ip->ic->hostname, ip->protocol_state, pkt);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
 	       || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
-	return MSG_TYPE_BMCBUSY;
+	return MSG_TYPE_BMC_BUSY;
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED; 
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
-	return MSG_TYPE_USERNAME; /* XXX - permission denied? */
+	return MSG_TYPE_USERNAME_INVALID; 
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
-	return MSG_TYPE_CIPHER_SUITE;
+	return MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE;
     }
   else
     {
@@ -1129,30 +1127,30 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
       else if (pkt == GET_SESSION_CHALLENGE_RES 
 	       && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME 
 		   || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
-	return MSG_TYPE_USERNAME; /* XXX - permission denied? */
+	return MSG_TYPE_USERNAME_INVALID; 
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED; 
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
 		   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
 		   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
-	return MSG_TYPE_BMCBUSY;
+	return MSG_TYPE_BMC_BUSY;
       else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES 
 	       && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
 		   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
 		   || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED; 
 #if 0
       /* Should not reach this point, should be handled by other code */
       else if (pkt == CHASSIS_CONTROL_RES
 	       && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
-	return MSG_TYPE_PRIVILEGE; /* XXX - permission denied? */
+	return MSG_TYPE_PRIVILEGE_LEVEL_INSUFFICIENT; 
 #endif
       else if (pkt == CHASSIS_CONTROL_RES 
 	       && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
-	return MSG_TYPE_OPERATION;
+	return MSG_TYPE_OPERATION_INVALID;
     }
  
-  return MSG_TYPE_BMCERROR;
+  return MSG_TYPE_BMC_ERROR;
 }

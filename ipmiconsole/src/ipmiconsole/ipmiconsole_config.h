@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.9 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole_config.h,v 1.10 2007-08-02 20:50:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,10 +42,9 @@
 
 struct ipmiconsole_config
 {
-#ifndef NDEBUG
   int debug;
+#ifndef NDEBUG
   int debugfile;
-  int debugdump;
   int noraw;
 #endif /* NDEBUG */
   char *config_file;
@@ -60,9 +59,7 @@ struct ipmiconsole_config
   int dont_steal;
   int deactivate;
   int lock_memory;
-  int intel_2_0_session;
-  int supermicro_2_0_session;
-  int sun_2_0_session;
+  unsigned int workaround_flags;
 
   int hostname_set_on_cmdline;
   int username_set_on_cmdline;
@@ -73,9 +70,7 @@ struct ipmiconsole_config
   int dont_steal_set_on_cmdline;
   int deactivate_set_on_cmdline;
   int lock_memory_set_on_cmdline;
-  int intel_2_0_session_set_on_cmdline;
-  int supermicro_2_0_session_set_on_cmdline;
-  int sun_2_0_session_set_on_cmdline;
+  int workaround_flags_set_on_cmdline;
 };
 
 void ipmiconsole_config_setup(int argc, char **argv);

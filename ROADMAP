@@ -1,14 +1,10 @@
 Release 0.5.0
 -------------
 
-libfreeipmi 
+libfreeipmi
 - split lib
-- re-work return codes/error codes
+- re-work UDM for advanced IPMI lan connection detection?
+- split off and install sdr parsing/caching lib?
 
 bmc-config/pef-config
 - re-work for faster checkout/commit
-
-re-work UDM for advanced IPMI lan connection detection
-
-ipmi 2.0 for all tools
-

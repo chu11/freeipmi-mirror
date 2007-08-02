@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.21 2007-07-31 15:48:23 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.22 2007-08-02 20:50:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,12 +55,19 @@
 #include <assert.h>
 #include <errno.h>
 
+#include <argp.h>
+
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
+
 #include "ipmi_monitoring.h"
+
+#include "cmdline-parse-common.h"
 #include "pstdout.h"
 #include "hostrange.h"
 #include "error.h"
 #include "secure.h"
+#include "tool-common.h"
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
@@ -70,11 +77,20 @@
 #define IPMIMONITORING_MAX_GROUPS     64
 #define IPMIMONITORING_BUFLEN         1024
 
+#define IPMIMONITORING_SENSORS_KEY              's'
+#define IPMIMONITORING_GROUPS_KEY               'g'
+#define IPMIMONITORING_CACHE_DIR_KEY            'c'
+#define IPMIMONITORING_REGENERATE_SDR_CACHE_KEY 'r'
+#define IPMIMONITORING_QUIET_READINGS_KEY       'q'
+
+#define IPMIMONITORING_DEBUG_KEY                160
+
 static struct ipmi_monitoring_ipmi_config conf;
 
 static char *hostname;
 static char *username;
 static char *password;
+static char *k_g;
 static int flags;
 static unsigned int record_ids[IPMIMONITORING_MAX_RECORD_IDS];
 static unsigned int record_ids_len;
@@ -88,21 +104,70 @@ static int consolidate_hostrange_output;
 static int fanout;
 static int eliminate;
 
+const char *argp_program_version = "ipmimonitoring " VERSION "\n";
+
+const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
+
+static struct argp_option cmdline_options[] =
+  {
+    ARGP_COMMON_OPTIONS_DRIVER,
+    ARGP_COMMON_OPTIONS_INBAND,
+    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED_NO_TIMEOUT,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_HOSTRANGED_OPTIONS,
+    {"sensors", IPMIMONITORING_SENSORS_KEY, "SENSOR_IDS", 0,
+     "Specify a list of sensors record ids to specifically monitor.", 24},
+    {"groups", IPMIMONITORING_GROUPS_KEY, "GROUPS", 0,
+     "Specify a list of groups to specifically monitor.", 25},
+    {"cache-dir", IPMIMONITORING_CACHE_DIR_KEY, "DIRECTORY", 0,
+     "Specify an alternate directory to read and write SDR caches..", 26},
+    {"regenerate-sdr-cache", IPMIMONITORING_REGENERATE_SDR_CACHE_KEY, 0, 0,
+     "Regenerate the SDR cache.", 27},
+    {"quiet-readings", IPMIMONITORING_QUIET_READINGS_KEY, 0, 0,
+     "Do not output sensor reading values, only Nominal, Warning, or Critical states.", 28},
+    {"debug", IPMIMONITORING_DEBUG_KEY, 0, 0,
+     "Turn on debugging.", 29},
+    { 0 }
+  };
+
+static error_t cmdline_parse (int key, char *arg, struct argp_state *state);
+
+static char cmdline_args_doc[] = "";
+
+static char cmdline_doc[] = "IPMIMonitoring - IPMI Sensor Monitoring Utility";
+
+static struct argp cmdline_argp = {cmdline_options,
+                                   cmdline_parse,
+                                   cmdline_args_doc,
+                                   cmdline_doc};
+
 static void
 _config_init(void)
 {
+  conf.driver_type = -1;
+  conf.disable_auto_probe = 0;
+  conf.driver_address = 0;
+  conf.register_spacing = 0;
+  conf.driver_device = NULL;
+
   conf.username = NULL;
   conf.password = NULL;
+  conf.k_g = NULL;
+  conf.k_g_len = 0;
   conf.privilege_level = -1;
   conf.authentication_type = -1;
+  conf.cipher_suite_id = -1;
   conf.session_timeout_len = -1;
   conf.retransmission_timeout_len = -1;
-  conf.retransmission_backoff_count = -1;
   conf.workaround_flags = 0;
 
   hostname = NULL;
   username = NULL;
   password = NULL;
+  k_g = NULL;
   flags = 0;
   memset(record_ids, '\0', sizeof(unsigned int) * IPMIMONITORING_MAX_RECORD_IDS);
   record_ids_len = 0;
@@ -117,264 +182,282 @@ _config_init(void)
   eliminate = 0;
 }
 
-static void
-_usage(void)
+static error_t
+cmdline_parse (int key,
+               char *arg,
+               struct argp_state *state)
 {
-  fprintf(stderr, "Usage: ipmimonitoring [OPTIONS]\n"
-          "-H --help                     Output Help\n"
-          "-V --version                  Output Version\n"
-          "-h --hostname str             Hostname(s)\n"
-          "-u --username name            Username\n"
-          "-p --password pw              Password\n"
-          "-P --password-prompt          Prompt for Password\n"
-          "-l --privilege-level str      Privilege Level (user, operator, admin)\n"
-          "-a --authentication-type str  Authentication Type (none, straight_password, md2, md5)\n"
-          "-s --sensors list             Specify list of sensors to monitor\n"
-          "-g --groups list              Specify list of groups to monitor\n"
-          "-c --cache-dir str            Specify alternate SDR cache directory\n"
-          "-r --regenerate-sdr-cache str Regenerate SDR cache\n"
-          "-q --quiet-readings           Output only sensor states, no values\n"
-          "-B --buffer-output            Buffer hostranged output\n"
-          "-C --consolidate-output       Consolidate hostranged output\n"
-          "-F --fanout num               Set multiple host fanout\n"
-          "-E --eliminate                Eliminate undetected nodes.\n");
-#ifndef NDEBUG
-  fprintf(stderr,
-          "-D --debug                    Turn on debugging\n"
-          "-G --debugdump                Turn on packet dumps\n");
-#endif /* NDEBUG */
-  exit(0);
-}
-
-static void
-_version(void)
-{
-  fprintf(stderr, "ipmimonitoring %s\n", VERSION);
-  exit(0);
-}
-
-static void
-_cmdline_parse(int argc, char **argv)
-{
-  char options[100];
   char *pw;
+  char *kg;
   char *ptr;
   char *tok;
   int c;
+  int tmp;
+  int rv;
 
-#if HAVE_GETOPT_LONG
-  struct option long_options[] =
+  switch (key)
     {
-      {"help",                 0, NULL, 'H'},
-      {"version",              0, NULL, 'V'},
-      {"hostname",             1, NULL, 'h'},
-      {"username",             1, NULL, 'u'},
-      {"password",             1, NULL, 'p'},
-      {"password-prompt",      1, NULL, 'P'},
-      {"privilege-level",      1, NULL, 'l'},
-      {"authentication-type",  1, NULL, 'a'},
-      {"sensors",              1, NULL, 's'},
-      {"groups",               1, NULL, 'g'},
-      {"cache-dir",            1, NULL, 'c'},
-      {"regenerate-sdr-cache", 0, NULL, 'r'},
-      {"quiet-readings",       0, NULL, 'q'},
-      {"buffer-output",        0, NULL, 'B'},
-      {"consolidate-output",   0, NULL, 'C'},
-      {"fanout",               1, NULL, 'F'},
-      {"eliminate",            0, NULL, 'E'},
-#ifndef NDEBUG
-      {"debug",                0, NULL, 'D'},
-      {"debugdump",            0, NULL, 'E'},
-#endif /* NDEBUG */
-      {0, 0, 0, 0}
-    };
-#endif /* HAVE_GETOPT_LONG */
-
-  assert(argv);
-
-  memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:s:g:c:rqBCF:E");
-#ifndef NDEBUG
-  strcat(options, "DG");
-#endif /* NDEBUG */
-
-  /* turn off output messages */
-  opterr = 0;
-
-#if HAVE_GETOPT_LONG
-  while ((c = getopt_long(argc, argv, options, long_options, NULL)) != -1)
-#else
-  while ((c = getopt(argc, argv, options)) != -1)
-#endif
-    {
-      switch (c)
+    case ARGP_DRIVER_TYPE_KEY:       /* --driver-type */
+      tmp = parse_driver_type(arg);
+      if (tmp == IPMI_DEVICE_LAN)
+        conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_1_5;
+      else if (tmp == IPMI_DEVICE_LAN_2_0)
+        conf.protocol_version = IPMI_MONITORING_PROTOCOL_VERSION_2_0;
+      else if (tmp == IPMI_DEVICE_KCS)
+        conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_KCS;
+      else if (tmp == IPMI_DEVICE_SSIF)
+        conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_SSIF;
+      else if (tmp == IPMI_DEVICE_OPENIPMI)
+        conf.driver_type = IPMI_MONITORING_DRIVER_TYPE_OPENIPMI;
+      else
+        err_exit("Command Line Error: invalid driver type");
+      break;
+    case ARGP_NO_PROBING_KEY:          /* --no-probing */
+      conf.disable_auto_probe++;
+      break;
+    case ARGP_DRIVER_ADDRESS_KEY:          /* --driver-address */
+      conf.driver_address = strtol(arg, &ptr, 0);
+      if (ptr != (arg + strlen(arg))
+          || conf.driver_address <= 0)
+        err_exit("Command Line Error: driver-address value invalid");
+      break;
+    case ARGP_DRIVER_DEVICE_KEY:       /* --driver-device */
+      conf.driver_device = arg;
+      break;
+    case ARGP_REGISTER_SPACING_KEY:    /* --register-spacing */
+      conf.register_spacing = strtol(arg, &ptr, 0);
+      if (ptr != (arg + strlen(arg))
+          || conf.register_spacing <= 0)
+        err_exit("Command Line Error: register-spacing value invalid");
+      break;
+    case ARGP_HOSTNAME_KEY:       /* --hostname */
+      if (strlen(arg) > MAXHOSTNAMELEN)
+        err_exit("Command Line Error: hostname too long");
+      /* achu: must strdup, b/c of potential editing by eliminate code */
+      if (!(hostname = strdup(optarg)))
+        err_exit("strdup: %s", strerror(errno));
+      break;
+    case ARGP_USERNAME_KEY:       /* --username */
+      if (strlen(arg) > IPMI_MAX_USER_NAME_LENGTH)
+        err_exit("Command Line Error: username too long");
+      strcpy(username, arg);
+      conf.username = username;
+      if (arg)
         {
-        case 'H':       /* --help */
-          _usage();
-          break;
-        case 'V':
-          _version();   /* --version */
-          break;
-        case 'h':       /* --hostname */
-          if (strlen(optarg) > MAXHOSTNAMELEN)
-            err_exit("Command Line Error: hostname too long");
-          /* achu: must strdup, b/c of potential editing by eliminate code */
-          if (!(hostname = strdup(optarg)))
-            err_exit("strdup: %s", strerror(errno));
-          break;
-        case 'u':       /* --username */
-          if (strlen(optarg) > IPMI_MAX_USER_NAME_LENGTH)
-            err_exit("Command Line Error: username too long");
-          strcpy(username, optarg);
-          conf.username = username;
-         if (optarg)
-           {
-              int n;
-              n = strlen(optarg);
-              secure_memset(optarg, '\0', n);
-            }
-          break;
-        case 'p':       /* --password */
-          if (strlen(optarg) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-            err_exit("Command Line Error: password too long");
-          strcpy(password, optarg);
-          conf.password = password;
-          if (optarg)
-            {
-              int n;
-              n = strlen(optarg);
-              secure_memset(optarg, '\0', n);
-            }
-          break;
-        case 'P':       /* --password-prompt */
-          if (!(pw = getpass("Password: ")))
-            err_exit("getpass: %s", strerror(errno));
-          if (strlen(pw) > IPMI_1_5_MAX_PASSWORD_LENGTH)
-            err_exit("password too long");
-          strcpy(password, pw);
-          conf.password = password;
-          break;
-        case 'l':       /* --privilege-level */
-          if (!strcasecmp(optarg, "user"))
-            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_USER;
-          else if (!strcasecmp(optarg, "operator"))
-            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_OPERATOR;
-          else if (!strcasecmp(optarg, "admin")
-                   || !strcasecmp(optarg, "administrator"))
-            conf.privilege_level = IPMI_MONITORING_PRIVILEGE_ADMIN;
-          else
-            err_exit("Command Line Error: Invalid privilege level");
-          break;
-        case 'a':       /* --authentication-type */
-          if (!strcasecmp(optarg, "none"))
-            conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_NONE;
-          else if (!strcasecmp(optarg, "straight_password_key"))
-            conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
-          else if (!strcasecmp(optarg, "md2"))
-            conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD2;
-          else if (!strcasecmp(optarg, "md5"))
-            conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
-          else
-            err_exit("Command Line Error: Invalid authentication type");
-          break;
-        case 's':
-          tok = strtok(optarg, " ,");
-          while (tok && record_ids_len < IPMIMONITORING_MAX_RECORD_IDS)
-            {
-              unsigned int n = strtoul(tok, &ptr, 10);
-              if (ptr != (tok + strlen(tok)))
-                err_exit("Command Line Error: Invalid sensor record id");
-              record_ids[record_ids_len] = n;
-              record_ids_len++;
-              tok = strtok(NULL, " ,");
-            }
-          break;
-        case 'g':
-          tok = strtok(optarg, " ,");
-          while (tok && groups_len < IPMIMONITORING_MAX_GROUPS)
-            {
-              unsigned int n;
-
-              if (!strcasecmp(tok, "temperature"))
-                n = IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE;
-              else if (!strcasecmp(tok, "voltage"))
-                n = IPMI_MONITORING_SENSOR_GROUP_VOLTAGE;
-              else if (!strcasecmp(tok, "current"))
-                n = IPMI_MONITORING_SENSOR_GROUP_CURRENT;
-              else if (!strcasecmp(tok, "fan"))
-                n = IPMI_MONITORING_SENSOR_GROUP_FAN;
-              else if (!strcasecmp(tok, "physical_security"))
-                n = IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
-              else if (!strcasecmp(tok, "platform_security_violation_attempt"))
-                n = IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
-              else if (!strcasecmp(tok, "processor"))
-                n = IPMI_MONITORING_SENSOR_GROUP_PROCESSOR;
-              else if (!strcasecmp(tok, "power_supply"))
-                n = IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY;
-              else if (!strcasecmp(tok, "power_unit"))
-                n = IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT;
-              else if (!strcasecmp(tok, "memory"))
-                n = IPMI_MONITORING_SENSOR_GROUP_MEMORY;
-              else if (!strcasecmp(tok, "drive_slot"))
-                n = IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
-              else if (!strcasecmp(tok, "system_firmware_progress"))
-                n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS;
-              else if (!strcasecmp(tok, "event_logging_disabled"))
-                n = IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED;
-              else if (!strcasecmp(tok, "system_event"))
-                n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT;
-              else if (!strcasecmp(tok, "critical_interrupt"))
-                n = IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT;
-              else if (!strcasecmp(tok, "module_board"))
-                n = IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD;
-              else if (!strcasecmp(tok, "slot_connector"))
-                n = IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
-              else if (!strcasecmp(tok, "watchdog2"))
-                n = IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
-              else
-                err_exit("Command Line Error: Invalid group name: %s", tok);
-              groups[groups_len] = n;
-              groups_len++;
-              tok = strtok(NULL, " ,");
-            }
-          break;
-        case 'c':
-          cache_dir = optarg;
-          break;
-        case 'r':
-          regenerate_sdr_cache++;
-          break;
-        case 'q':
-          quiet_readings++;
-          break;
-        case 'B':
-          buffer_hostrange_output++;
-          break;
-        case 'C':
-          consolidate_hostrange_output++;
-          break;
-        case 'F':
-          fanout = strtol(optarg, &ptr, 10);
-          if ((ptr != (optarg + strlen(optarg)))
-              || (fanout < PSTDOUT_FANOUT_MIN)
-              || (fanout > PSTDOUT_FANOUT_MAX))
-            err_exit("Command Line Error: Invalid fanout");
-          break;
-        case 'E':
-          eliminate++;
-          break;
-#ifndef NDEBUG
-        case 'D':       /* --debug */
-          flags |= IPMI_MONITORING_FLAGS_DEBUG_STDERR;
-          break;
-        case 'G':       /* --debugdump */
-          flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
-          break;
-#endif /* NDEBUG */
-        case '?':
-        default:
-          err_exit("unknown command line option '%c'", c);
+          int n;
+          n = strlen(arg);
+          secure_memset(arg, '\0', n);
         }
+      break;
+    case ARGP_PASSWORD_KEY:       /* --password */
+      if (strlen(arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+        err_exit("Command Line Error: password too long");
+      strcpy(password, arg);
+      conf.password = password;
+      if (arg)
+        {
+          int n;
+          n = strlen(arg);
+          secure_memset(arg, '\0', n);
+        }
+      break;
+    case ARGP_PASSWORD_PROMPT_KEY:       /* --password-prompt */
+      if (!(pw = getpass("Password: ")))
+        err_exit("getpass: %s", strerror(errno));
+      if (strlen(pw) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+        err_exit("password too long");
+      strcpy(password, pw);
+      conf.password = password;
+      break;
+    case ARGP_K_G_KEY:       /* --k-g */
+      if ((rv = parse_kg(k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
+        err_exit("Command Line Error: Invalid K_g");
+      if (rv > 0)
+        {
+          conf.k_g = k_g;
+          conf.k_g_len = IPMI_MAX_K_G_LENGTH;
+        }
+      if (arg)
+        {
+          int n;
+          n = strlen(arg);
+          secure_memset(arg, '\0', n);
+        }
+      break;
+    case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
+      if (!(kg = getpass("K_g: ")))
+        err_exit("getpass: %s", strerror(errno));
+      if ((rv = parse_kg(k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
+        err_exit("K_g invalid");
+      if (rv > 0)
+        {
+          conf.k_g = k_g;
+          conf.k_g_len = IPMI_MAX_K_G_LENGTH;
+        }
+      break;
+    case ARGP_PRIVILEGE_LEVEL_KEY:       /* --privilege-level */
+      tmp = parse_privilege_level(arg);
+      if (tmp == IPMI_PRIVILEGE_LEVEL_USER)
+        conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_USER;
+      else if (tmp == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+        conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR;
+      else if (tmp == IPMI_PRIVILEGE_LEVEL_ADMIN)
+        conf.privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN;
+      else
+        err_exit("Command Line Error: Invalid privilege level");
+      break;
+    case ARGP_AUTHENTICATION_TYPE_KEY:       /* --authentication-type */
+      tmp = parse_authentication_type(arg);
+      if (tmp == IPMI_AUTHENTICATION_TYPE_NONE)
+        conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_NONE;
+      else if (tmp == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
+        conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
+      else if (tmp == IPMI_AUTHENTICATION_TYPE_MD2)
+        conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD2;
+      else if (tmp == IPMI_AUTHENTICATION_TYPE_MD5)
+        conf.authentication_type = IPMI_MONITORING_AUTHENTICATION_TYPE_MD5;
+      else
+        err_exit("Command Line Error: Invalid authentication type");
+      break;
+    case ARGP_CIPHER_SUITE_ID_KEY:       /* --cipher-suite-id */
+      conf.cipher_suite_id = strtol(arg, &ptr, 10);
+      if (ptr != (arg + strlen(arg)))
+        err_exit("Command Line Error: cipher suite id invalid\n");
+      if (conf.cipher_suite_id < IPMI_CIPHER_SUITE_ID_MIN
+          || conf.cipher_suite_id > IPMI_CIPHER_SUITE_ID_MAX)
+        err_exit("Command Line Error: cipher suite id invalid\n");
+      if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (conf.cipher_suite_id))
+        err_exit("Command Line Error: cipher suite id unsupported\n");
+      break;
+    case IPMIMONITORING_SENSORS_KEY:
+      tok = strtok(arg, " ,");
+      while (tok && record_ids_len < IPMIMONITORING_MAX_RECORD_IDS)
+        {
+          unsigned int n = strtoul(tok, &ptr, 10);
+          if (ptr != (tok + strlen(tok)))
+            err_exit("Command Line Error: Invalid sensor record id");
+          record_ids[record_ids_len] = n;
+          record_ids_len++;
+          tok = strtok(NULL, " ,");
+        }
+      break;
+    case IPMIMONITORING_GROUPS_KEY:
+      tok = strtok(arg, " ,");
+      while (tok && groups_len < IPMIMONITORING_MAX_GROUPS)
+        {
+          unsigned int n;
+
+          if (!strcasecmp(tok, "temperature"))
+            n = IPMI_MONITORING_SENSOR_GROUP_TEMPERATURE;
+          else if (!strcasecmp(tok, "voltage"))
+            n = IPMI_MONITORING_SENSOR_GROUP_VOLTAGE;
+          else if (!strcasecmp(tok, "current"))
+            n = IPMI_MONITORING_SENSOR_GROUP_CURRENT;
+          else if (!strcasecmp(tok, "fan"))
+            n = IPMI_MONITORING_SENSOR_GROUP_FAN;
+          else if (!strcasecmp(tok, "physical_security"))
+            n = IPMI_MONITORING_SENSOR_GROUP_PHYSICAL_SECURITY;
+          else if (!strcasecmp(tok, "platform_security_violation_attempt"))
+            n = IPMI_MONITORING_SENSOR_GROUP_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
+          else if (!strcasecmp(tok, "processor"))
+            n = IPMI_MONITORING_SENSOR_GROUP_PROCESSOR;
+          else if (!strcasecmp(tok, "power_supply"))
+            n = IPMI_MONITORING_SENSOR_GROUP_POWER_SUPPLY;
+          else if (!strcasecmp(tok, "power_unit"))
+            n = IPMI_MONITORING_SENSOR_GROUP_POWER_UNIT;
+          else if (!strcasecmp(tok, "memory"))
+            n = IPMI_MONITORING_SENSOR_GROUP_MEMORY;
+          else if (!strcasecmp(tok, "drive_slot"))
+            n = IPMI_MONITORING_SENSOR_GROUP_DRIVE_SLOT;
+          else if (!strcasecmp(tok, "system_firmware_progress"))
+            n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_FIRMWARE_PROGRESS;
+          else if (!strcasecmp(tok, "event_logging_disabled"))
+            n = IPMI_MONITORING_SENSOR_GROUP_EVENT_LOGGING_DISABLED;
+          else if (!strcasecmp(tok, "system_event"))
+            n = IPMI_MONITORING_SENSOR_GROUP_SYSTEM_EVENT;
+          else if (!strcasecmp(tok, "critical_interrupt"))
+            n = IPMI_MONITORING_SENSOR_GROUP_CRITICAL_INTERRUPT;
+          else if (!strcasecmp(tok, "module_board"))
+            n = IPMI_MONITORING_SENSOR_GROUP_MODULE_BOARD;
+          else if (!strcasecmp(tok, "slot_connector"))
+            n = IPMI_MONITORING_SENSOR_GROUP_SLOT_CONNECTOR;
+          else if (!strcasecmp(tok, "watchdog2"))
+            n = IPMI_MONITORING_SENSOR_GROUP_WATCHDOG2;
+          else
+            err_exit("Command Line Error: Invalid group name: %s", tok);
+          groups[groups_len] = n;
+          groups_len++;
+          tok = strtok(NULL, " ,");
+        }
+      break;
+    case IPMIMONITORING_CACHE_DIR_KEY:
+      cache_dir = arg;
+      break;
+    case IPMIMONITORING_REGENERATE_SDR_CACHE_KEY:
+      regenerate_sdr_cache++;
+      break;
+    case IPMIMONITORING_QUIET_READINGS_KEY:
+      quiet_readings++;
+      break;
+    case ARGP_BUFFER_OUTPUT_KEY:
+      buffer_hostrange_output++;
+      break;
+    case ARGP_CONSOLIDATE_OUTPUT_KEY:
+      consolidate_hostrange_output++;
+      break;
+    case ARGP_FANOUT_KEY:
+      fanout = strtol(arg, &ptr, 10);
+      if ((ptr != (arg + strlen(arg)))
+          || (fanout < PSTDOUT_FANOUT_MIN)
+          || (fanout > PSTDOUT_FANOUT_MAX))
+        err_exit("Command Line Error: Invalid fanout");
+      break;
+    case ARGP_ELIMINATE_KEY:
+      eliminate++;
+      break;
+    case ARGP_WORKAROUND_FLAGS_KEY:
+      if ((tmp = parse_outofband_workaround_flags(arg)) < 0)
+        err_exit("Command Line Error: invalid workaround flags");
+      /* convert to ipmimonitoring flags */
+      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
+      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
+      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+      if ((tmp = parse_outofband_2_0_workaround_flags(arg)) < 0)
+        err_exit("Command Line Error: invalid workaround flags");
+      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+      break;
+    case IPMIMONITORING_DEBUG_KEY:       /* --debug */
+      flags |= IPMI_MONITORING_FLAGS_DEBUG;
+      flags |= IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS;
+      break;
+    case '?':
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+
+  return 0;
+}
+
+static void
+_post_cmdline_parse_verify(void)
+{
+  /* IPMI 1.5 password is shorter */
+  if ((conf.protocol_version < 0
+       || conf.protocol_version == IPMI_MONITORING_PROTOCOL_VERSION_1_5)
+      && password)
+    {
+      if (strlen(password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+        err_exit("Command Line Error: password too long");
     }
 }
           
@@ -403,7 +486,13 @@ _secure_initialization(void)
       exit(1);
     }
   
-  if (!(password = (char *)secure_malloc(IPMI_1_5_MAX_PASSWORD_LENGTH+1)))
+  if (!(password = (char *)secure_malloc(IPMI_2_0_MAX_PASSWORD_LENGTH+1)))
+    {
+      perror("malloc");
+      exit(1);
+    }
+
+  if (!(k_g = (char *)secure_malloc(IPMI_MAX_K_G_LENGTH)))
     {
       perror("malloc");
       exit(1);
@@ -415,7 +504,13 @@ _secure_initialization(void)
       exit(1);
     }
   
-  if (!(password = (char *)malloc(IPMI_1_5_MAX_PASSWORD_LENGTH+1)))
+  if (!(password = (char *)malloc(IPMI_2_0_MAX_PASSWORD_LENGTH+1)))
+    {
+      perror("malloc");
+      exit(1);
+    }
+
+  if (!(k_g = (char *)malloc(IPMI_MAX_K_G_LENGTH)))
     {
       perror("malloc");
       exit(1);
@@ -702,7 +797,7 @@ _ipmimonitoring(pstdout_state_t pstate,
       pstdout_printf(pstate,
                      "\n");
     }
-
+  
   exit_code = 0;
  cleanup:
   if (c)
@@ -722,7 +817,8 @@ main(int argc, char **argv)
 
   _config_init();
   _secure_initialization();
-  _cmdline_parse(argc, argv);
+  argp_parse(&cmdline_argp, argc, argv, ARGP_IN_ORDER, NULL, NULL);
+  _post_cmdline_parse_verify();
 
   if (ipmi_monitoring_init(flags, &errnum) < 0)
     {
@@ -774,9 +870,17 @@ main(int argc, char **argv)
   if (password)
     {
 #ifdef NDEBUG
-      secure_free(password, IPMI_1_5_MAX_PASSWORD_LENGTH+1);
+      secure_free(password, IPMI_2_0_MAX_PASSWORD_LENGTH+1);
 #else  /* !NDEBUG */
       free(password);
+#endif /* !NDEBUG */
+    }
+  if (k_g)
+    {
+#ifdef NDEBUG
+      secure_free(k_g, IPMI_MAX_K_G_LENGTH);
+#else  /* !NDEBUG */
+      free(k_g);
 #endif /* !NDEBUG */
     }
   if (hostname)

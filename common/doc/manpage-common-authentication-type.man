@@ -1,0 +1,5 @@
+.TP
+\fB\-a\fR, \fB\-\-authentication\-type\fR=\fIAUTHENTICATION-TYPE\fR
+Specify the IPMI 1.5 authentication type to use.  The currently
+available authentication types are NONE, STRAIGHT_PASSWORD_KEY, MD2,
+and MD5.  Defaults to MD5 if not specified.

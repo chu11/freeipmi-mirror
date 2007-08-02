@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.1 2007-06-27 21:35:34 chu11 Exp $
+ *  $Id: ipmi-fru.h,v 1.2 2007-08-02 20:50:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,7 +30,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
@@ -65,7 +65,6 @@ typedef struct ipmi_fru_prog_data
 {
   char *progname;
   struct ipmi_fru_arguments *args;
-  uint32_t debug_flags;
 } ipmi_fru_prog_data_t;
 
 typedef struct ipmi_fru_state_data

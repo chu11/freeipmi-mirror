@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[0.4.0.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.91 2007-07-02 16:05:06 chu11 Exp $])
+AC_INIT([freeipmi],[0.5.0.beta0],[freeipmi-devel@gnu.org])
+AC_REVISION([$Id: configure.ac,v 1.92 2007-08-02 20:50:05 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -44,10 +44,13 @@ AC_CONFIG_FILES([
 	ipmi-fru/ipmi-fru.8.pre
         ipmiping/Makefile ipmiping/src/Makefile
         rmcpping/Makefile rmcpping/src/Makefile
-        bmc-watchdog/bmc-watchdog.8 ipmipower/ipmipower.8 ipmipower/ipmipower.conf.5
-	ipmiconsole/ipmiconsole.8 ipmiconsole/ipmiconsole.conf.5
+        bmc-watchdog/bmc-watchdog.8.pre \
+        ipmipower/ipmipower.8.pre \
+        ipmipower/ipmipower.conf.5 \
+	ipmiconsole/ipmiconsole.8.pre \
+        ipmiconsole/ipmiconsole.conf.5 \
         ipmiconsole/libipmiconsole.3
-	ipmimonitoring/ipmimonitoring.8
+	ipmimonitoring/ipmimonitoring.8.pre
         ipmimonitoring/libipmimonitoring.3
         ipmidetect/ipmidetect.8
         ipmidetect/ipmidetect.conf.5
@@ -78,7 +81,7 @@ AC_SUBST([ISODATE])
 #
 # If any interfaces have been removed, set age = 0
 #
-LIBFREEIPMI_CURRENT=4
+LIBFREEIPMI_CURRENT=5
 LIBFREEIPMI_REVISION=0
 LIBFREEIPMI_AGE=0
 
@@ -117,7 +120,7 @@ AC_SUBST([LIBIPMICONSOLE_VERSION_INFO])
 #
 # If any interfaces have been removed, set age = 0
 #
-LIBIPMIMONITORING_CURRENT=0
+LIBIPMIMONITORING_CURRENT=1
 LIBIPMIMONITORING_REVISION=0
 LIBIPMIMONITORING_AGE=0
 LIBIPMIMONITORING_VERSION_INFO=$LIBIPMIMONITORING_CURRENT:$LIBIPMIMONITORING_REVISION:$LIBIPMIMONITORING_AGE

@@ -1,0 +1,168 @@
+\."#############################################################################
+\."$Id: ipmiconsole.8.pre.in,v 1.2 2007-08-02 20:50:13 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2006 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-221226
+\."  
+\."  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL librarie
+\."  and utilities.  For details, see http://www.llnl.gov/linux/.
+\."
+\."  Ipmiconsole is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."  
+\."  Ipmiconsole is distributed in the hope that it will be useful, but WITHOUT 
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+\."  for more details.
+\."  
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
+\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."############################################################################
+.TH ipmiconsole 8 "@ISODATE@" "ipmiconsole @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmiconsole \- IPMI console utility
+.SH "SYNOPSIS"
+.B ipmiconsole
+.I "[OPTIONS]"
+.SH "DESCRIPTION"
+.B ipmiconsole
+is a Serial-over-LAN (SOL) console utility.  It can be used to establish
+console sessions to remote machines using the IPMI 2.0 SOL protocol.
+
+.SH "IPMI 2.0 SOL"
+.B Ipmiconsole 
+communicates with a remote machine's Baseboard Management Controller
+(BMC) to establish a console session.  Before any SOL communication
+can take place, the remote machine's BMC must be configured properly.
+Of primary importance, the IP address, MAC address, subnet, usernames,
+passwords, privileges, SOL availability, SOL privilege, and SOL user
+access must be configured and enabled.  The FreeIPMI tool
+.B bmc-config(1) 
+may be used to do this configuration.  A BMC configuration tool may
+have also been distributed with the machine.
+
+Often (although not always), console redirection must be directed to
+an alternate COM port.  This is typically configured in the BIOS.
+
+.SH "OPTIONS"
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname.man>
+.TP
+\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+Specify the username to use when authenticating with the remote host.
+If not specified, a null (i.e. anonymous) username is assumed.  The
+user must a high enough privilege to establish a SOL session and have
+SOL session abilities.
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+.TP
+\fB\-l\fR, \fB\-\-privilege-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Specify the privilege level to be used.  The currently available
+privilege levels are USER, OPERATOR, and ADMIN.  Defaults to ADMIN if
+not specified.  The privilege must be atleast the minimum required by
+the remote host to establish a SOL session.
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+.TP
+\fB\-N\fR, \fB\-\-dont-steal\fR
+Do not steal an SOL session if one is already detected as being in
+use.  Under most circumstances, if SOL is detected as being in use,
+.B ipmiconsole
+will attempt to steal the SOL session away from the previous session.
+This default behavior exists for several reasons, most notably that
+earlier SOL sessions may have not been able to be deactivate properly.
+.TP
+\fB\-T\fR, \fB\-\-deactivate\fR
+Deactivate a SOL session if one is detected as being in use and exit.
+.TP
+\fB\-L\fR, \fB\-\-lock-memory\fR
+Lock sensitive information (such as usernames and passwords) in
+memory.
+.TP
+\fB\-C\fR, \fB\-\-config file\fR=\fIFILE\fR
+Specify an alternate configuration file.
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
+.TP
+\fB\-\-debug\fR
+Turn on debugging.
+.if @WITH_DEBUG@ \{
+.TP
+\fB\-\-debugfile\fR
+Output debugging to the debugfile rather than to standard output.
+.TP
+\fB\-\-noraw\fR
+Don't enter terminal raw mode.
+\}
+.LP
+
+.SH "ESCAPE CHARACTERS"
+The following escape sequences are supported.  The currently supported
+escape character is '&'.
+.TP
+.I &?
+Display a list of currently available escape sequences.
+.TP
+.I &.
+Terminate the connection.
+.TP
+.I &B
+Send a "serial-break" to the remote console.
+.TP
+.I &D
+Send a DEL character.
+.TP
+.I &&
+Send a single escape character.
+
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
+
+.SH "TROUBLESHOOTING"
+Most often, problems with ipmiconsole involve a misconfiguration of
+the remote machine's BMC.  The FreeIPMI tool
+.B bmc-config(1)
+may be used to do this configuration.  Double check to make sure the
+following are configured properly in the remote machine's BMC: IP
+address, MAC address, subnet mask, username(s), password(s), allowed
+authentication type(s), SOL availability, SOL privilege, and SOL
+access for the username you are using.
+
+.SH "KNOWN ISSUES"
+On certain operating systems, if you input your username and password
+on the command line, the username and password may be discovered by
+other users when using the
+.B ps(1) 
+command or looking in the /proc file system.  The most secure solution
+is to leave the username and password in the 
+.B Ipmiconsole
+configuration file.  Passwords and K_g keys can
+also be inputted via a prompt via the -P and -K options.
+
+.if @WITH_DEBUG@ \{
+
+This version of ipmiconsole was compiled with debugging.  When compiled
+with debugging,
+.B ipmiconsole 
+is insecure.  The following were intentionally
+left in
+.B ipmiconsole
+for debugging purposes:
+
+.IP o 2
+Sensitive command line arguments are not cleared from memory.
+.IP o
+Core dumps are enabled.
+
+Before placing ipmiconsole in a production system, it is recommended
+that the program be compiled with debugging turned off.
+\}
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.
+.SH "SEE ALSO"
+bmc-config(8), ipmiconsole.conf(5)

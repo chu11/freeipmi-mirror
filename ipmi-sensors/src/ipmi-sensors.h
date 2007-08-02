@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors.h,v 1.7 2007-06-01 20:56:17 chu11 Exp $ 
+   $Id: ipmi-sensors.h,v 1.8 2007-08-02 20:50:13 chu11 Exp $ 
    
    ipmi-sensors.h - IPMI Sensors utility.
    
@@ -26,7 +26,7 @@
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
@@ -61,7 +61,6 @@ typedef struct ipmi_sensors_prog_data
 {
   char *progname;
   struct ipmi_sensors_arguments *args;
-  uint32_t debug_flags;
 } ipmi_sensors_prog_data_t;
 
 typedef struct ipmi_sensors_state_data

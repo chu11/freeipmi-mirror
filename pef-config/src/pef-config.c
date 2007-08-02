@@ -32,7 +32,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include <assert.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "freeipmi-portability.h"
 #include "tool-common.h"
 #include "pef-config.h"
@@ -73,9 +73,8 @@ _pef_config (void *arg)
   prog_data = (pef_config_prog_data_t *) arg;
   
   if (!(dev = ipmi_device_open(prog_data->progname,
-                               prog_data->args->common.host,
+                               prog_data->args->common.hostname,
                                &(prog_data->args->common),
-                               prog_data->debug_flags,
                                errmsg,
                                IPMI_DEVICE_OPEN_ERRMSGLEN)))
     {
@@ -149,15 +148,6 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-#ifndef NDEBUG
-  if (prog_data.args->common.debug)
-    prog_data.debug_flags = IPMI_FLAGS_DEBUG_DUMP;
-  else
-    prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#else  /* NDEBUG */
-  prog_data.debug_flags = IPMI_FLAGS_DEFAULT;
-#endif /* NDEBUG */
-  
   exit_code = _pef_config (&prog_data);
   
   return exit_code;

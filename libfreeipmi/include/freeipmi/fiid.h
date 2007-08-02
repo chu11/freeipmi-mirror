@@ -50,8 +50,8 @@ extern "C" {
 #define FIID_ERR_DATA_NOT_BYTE_ALIGNED          15
 #define FIID_ERR_REQUIRED_FIELD_MISSING         16
 #define FIID_ERR_FIXED_LENGTH_FIELD_INVALID     17
-#define FIID_ERR_OUTMEM                         18
-#define FIID_ERR_INTERNAL                       19
+#define FIID_ERR_OUT_OF_MEMORY                  18
+#define FIID_ERR_INTERNAL_ERROR                 19
 #define FIID_ERR_ERRNUMRANGE                    20
 
 /*  

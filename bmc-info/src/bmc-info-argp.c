@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.11 2007-06-01 04:35:05 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.12 2007-08-02 20:50:06 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -31,7 +31,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
 
@@ -51,14 +51,15 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif
     { 0 }
   };
 
@@ -95,4 +96,6 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
   init_hostrange_cmd_args (&(cmd_args->hostrange));
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

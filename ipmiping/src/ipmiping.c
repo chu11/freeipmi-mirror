@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.34 2007-06-05 21:34:35 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.35 2007-08-02 20:50:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -142,7 +142,6 @@ createpacket(char *buffer,
 				   buflen)) < 0)
     ipmi_ping_err_exit("assemble_ipmi_lan_pkt: %s", strerror(errno));
 
-#ifndef NDEBUG
   if (debug)
     {
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
@@ -154,7 +153,6 @@ createpacket(char *buffer,
                                tmpl_cmd_get_channel_authentication_capabilities_ptr) < 0)
         ipmi_ping_err_exit("ipmi_dump_lan_packet: %s", strerror(errno));
     }
-#endif
 
   fiid_obj_destroy(obj_rmcp_hdr);
   fiid_obj_destroy(obj_lan_session_hdr);
@@ -205,7 +203,6 @@ parsepacket(char *buffer,
   obj_cmd = _fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_ptr);
   obj_lan_msg_trlr = _fiid_obj_create(tmpl_lan_msg_trlr);
 
-#ifndef NDEBUG
   if (debug)
     {
       if (ipmi_dump_lan_packet(STDERR_FILENO, 
@@ -217,16 +214,14 @@ parsepacket(char *buffer,
                                tmpl_cmd_get_channel_authentication_capabilities_ptr) < 0)
         ipmi_ping_err_exit("ipmi_dump_lan_packet: %s", strerror(errno));
     }
-#endif
 
   if ((ret = ipmi_lan_check_packet_checksum((uint8_t *)buffer, buflen)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_checksum: %s", strerror(errno));
 
   if (!ret)
     {
-#ifndef NDEBUG
-      fprintf(stderr, "%s(%d): checksum failed\n", __FUNCTION__, __LINE__);
-#endif /* NDEBUG */
+      if (debug)
+        fprintf(stderr, "%s(%d): checksum failed\n", __FUNCTION__, __LINE__);
       retval = 0;
       goto cleanup;
     }
@@ -245,9 +240,8 @@ parsepacket(char *buffer,
 
   if (!ret)
     {
-#ifndef NDEBUG
-      fprintf(stderr, "%s(%d): net_fn failed\n", __FUNCTION__, __LINE__);
-#endif /* NDEBUG */
+      if (debug)
+        fprintf(stderr, "%s(%d): net_fn failed\n", __FUNCTION__, __LINE__);
       retval = 0;
       goto cleanup;
     }
@@ -257,9 +251,8 @@ parsepacket(char *buffer,
 
   if (!ret)
     {
-#ifndef NDEBUG
-      fprintf(stderr, "%s(%d): cmd failed\n", __FUNCTION__, __LINE__);
-#endif /* NDEBUG */
+      if (debug)
+        fprintf(stderr, "%s(%d): cmd failed\n", __FUNCTION__, __LINE__);
       retval = 0;
       goto cleanup;
     }
@@ -269,9 +262,8 @@ parsepacket(char *buffer,
 
   if (!ret)
     {
-#ifndef NDEBUG
-      fprintf(stderr, "%s(%d): comp_code failed\n", __FUNCTION__, __LINE__);
-#endif /* NDEBUG */
+      if (debug)
+        fprintf(stderr, "%s(%d): comp_code failed\n", __FUNCTION__, __LINE__);
       retval = 0;
       goto cleanup;
     }
@@ -280,9 +272,8 @@ parsepacket(char *buffer,
 
   if (req_seq != sequence_number % (IPMI_RQ_SEQ_MAX + 1)) 
     {
-#ifndef NDEBUG
-      fprintf(stderr, "%s(%d): req_seq failed\n", __FUNCTION__, __LINE__);
-#endif /* NDEBUG */
+      if (debug)
+        fprintf(stderr, "%s(%d): req_seq failed\n", __FUNCTION__, __LINE__);
       retval = 0;
       goto cleanup;
     }
@@ -400,11 +391,7 @@ endresult(const char *progname,
 int 
 main(int argc, char **argv) 
 {
-#ifndef NDEBUG
   ipmi_ping_setup(argc, argv, 0, IPMI_RQ_SEQ_MAX, "hVc:i:I:t:vr:s:d");
-#else
-  ipmi_ping_setup(argc, argv, 0, IPMI_RQ_SEQ_MAX, "hVc:i:I:t:vr:s:");
-#endif
   ipmi_ping_loop(createpacket, parsepacket, latepacket, endresult);
   exit(1);                    /* NOT REACHED */
 }

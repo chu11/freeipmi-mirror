@@ -49,6 +49,7 @@ extern "C" {
 #include <freeipmi/ipmi-locate.h>
 #include <freeipmi/ipmi-kcs.h>
 #include <freeipmi/ipmi-kcs-api.h>
+#include <freeipmi/ipmi-openipmi-api.h>
 #include <freeipmi/ipmi-lan.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>

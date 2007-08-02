@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4 2007-06-02 17:17:39 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.5 2007-08-02 20:50:19 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -41,7 +41,7 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
 
@@ -61,29 +61,29 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
-#ifndef NDEBUG
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif /* NDEBUG */
     {"info",       INFO_KEY,       0, 0, 
-     "Show general information about PEF configuration.", 21},
+     "Show general information about PEF configuration.", 25},
     {"checkout",   CHECKOUT_KEY,   0, 0,
-     "Action is to GET the PEF configuration", 22},
+     "Fetch configuration information from the BMC.", 26},
     {"commit",     COMMIT_KEY,     0, 0,
-     "Action is to UPDATE the PEF configuration", 23},
+     "Update configuration information to the BMC from a config file.", 27},
     {"diff",       DIFF_KEY,       0, 0,
-     "Action is to SHOW THE DIFFERENCES with BMC", 24},
+     "Show differences between the BMC and a config file.", 28},
     {"listsections", LIST_SECTIONS_KEY, 0, 0,
-     "List available sections for checkout", 25},
+     "List available sections for checkout.", 29},
     {"verbose", VERBOSE_KEY, 0, 0,  
-     "Produce verbose output", 26},
+     "Print additional detailed information.", 30},
     {"filename", FILENAME_KEY, "FILENAME", 0,
-     "use FILENAME in checkout or commit", 27},
+     "Specify a PEF config file for PEF checkout/commit/diff.", 31},
     {"section", SECTIONS_KEY, "SECTION", 0,
-     "use SECTION in checkout", 28},
+     "Specify a SECTION for checkout.", 32},
     { 0 }
   };
 
@@ -187,6 +187,7 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
    */
   cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
 }
 
 int

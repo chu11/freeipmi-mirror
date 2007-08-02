@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-fiid.h,v 1.1 2007-06-27 21:35:33 chu11 Exp $
+ *  $Id: ipmi-fru-fiid.h,v 1.2 2007-08-02 20:50:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

@@ -1,5 +1,5 @@
 noinst_HEADERS = \
-	argp-common.h \
+	cmdline-parse-common.h \
 	bit-ops.h \
 	err-wrappers.h \
 	fiid-wrappers.h \
@@ -28,7 +28,7 @@ noinst_HEADERS = \
 	hostrange.h 
 
 noinst_LTLIBRARIES = \
-	libargpcommon.la \
+	libcmdlineparsecommon.la \
 	libbitops.la \
 	libfreeipmiportability.la \
 	libtoolcommon.la \
@@ -43,8 +43,8 @@ noinst_LTLIBRARIES = \
 	libpstdout.la \
 	libhostrange.la
 
-libargpcommon_la_SOURCES = argp-common.c
-libargpcommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
+libcmdlineparsecommon_la_SOURCES = cmdline-parse-common.c
+libcmdlineparsecommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
 
 libbitops_la_SOURCES = bit-ops.c
 libbitops_la_CPPFLAGS = -I$(srcdir)/../../libfreeipmi/include 

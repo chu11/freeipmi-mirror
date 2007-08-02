@@ -73,10 +73,10 @@ struct fiid_iterator
 static char * fiid_errmsg[] =
   {
     "success",
-    "fiid object is null",
-    "fiid object is invalid",
-    "fiid iterator is null",
-    "fiid iterator is invalid",
+    "fiid object null",
+    "fiid object invalid",
+    "fiid iterator null",
+    "fiid iterator invalid",
     "invalid parameter",
     "field not found",
     "template key invalid",
@@ -92,7 +92,7 @@ static char * fiid_errmsg[] =
     "fixed length field invalid",
     "out of memory",
     "internal error",
-    "error number out of range",
+    "errnum out of range",
   };
 
 static int32_t
@@ -641,7 +641,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
  
   if (!(dest_obj = xmalloc(sizeof(struct fiid_obj))))
     {
-      src_obj->errnum = FIID_ERR_OUTMEM;
+      src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   dest_obj->magic = src_obj->magic;
@@ -650,14 +650,14 @@ fiid_obj_dup (fiid_obj_t src_obj)
 
   if (!(dest_obj->data = xmalloc(src_obj->data_len)))
     {
-      src_obj->errnum = FIID_ERR_OUTMEM;
+      src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memcpy(dest_obj->data, src_obj->data, src_obj->data_len);
 
   if (!(dest_obj->field_data = xmalloc(dest_obj->field_data_len * sizeof(struct fiid_field_data))))
     {
-      src_obj->errnum = FIID_ERR_OUTMEM;
+      src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memcpy(dest_obj->field_data, 
@@ -808,7 +808,7 @@ fiid_obj_template(fiid_obj_t obj)
 
   if (!(tmpl = (fiid_field_t *)xmalloc(sizeof(fiid_field_t) * obj->field_data_len)))
     {
-      obj->errnum = FIID_ERR_OUTMEM;
+      obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       return (NULL);
     }
 
@@ -1228,7 +1228,7 @@ fiid_obj_set (fiid_obj_t obj,
       
       if (!(temp_data = xmalloc(obj->data_len)))
         {
-          obj->errnum = FIID_ERR_OUTMEM;
+          obj->errnum = FIID_ERR_OUT_OF_MEMORY;
           goto cleanup;
         }
       memcpy(temp_data, obj->data, obj->data_len);
@@ -1258,7 +1258,7 @@ fiid_obj_set (fiid_obj_t obj,
                             end_val_pos, 
                             &extracted_val) < 0)
             {
-              obj->errnum = FIID_ERR_INTERNAL;
+              obj->errnum = FIID_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
 
@@ -1268,7 +1268,7 @@ fiid_obj_set (fiid_obj_t obj,
                           extracted_val,
                           &merged_val) < 0)
             {
-              obj->errnum = FIID_ERR_INTERNAL;
+              obj->errnum = FIID_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
 
@@ -1288,7 +1288,7 @@ fiid_obj_set (fiid_obj_t obj,
                       val,
                       &merged_val) < 0)
         {
-          obj->errnum = FIID_ERR_INTERNAL;
+          obj->errnum = FIID_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
       obj->data[byte_pos] = merged_val;
@@ -1409,7 +1409,7 @@ fiid_obj_get (fiid_obj_t obj,
                             end_bit_in_byte_pos,
                             &extracted_val) < 0)
             {
-              obj->errnum = FIID_ERR_INTERNAL;
+              obj->errnum = FIID_ERR_INTERNAL_ERROR;
               return (-1);
             }
 	  
@@ -1419,7 +1419,7 @@ fiid_obj_get (fiid_obj_t obj,
                           extracted_val, 
                           &merged_val) < 0)
             {
-              obj->errnum = FIID_ERR_INTERNAL;
+              obj->errnum = FIID_ERR_INTERNAL_ERROR;
               return (-1);
             }
 	  
@@ -1438,7 +1438,7 @@ fiid_obj_get (fiid_obj_t obj,
                         end_bit_in_byte_pos,
                         &merged_val) < 0)
         {
-          obj->errnum = FIID_ERR_INTERNAL;
+          obj->errnum = FIID_ERR_INTERNAL_ERROR;
           return (-1);
         }
 
@@ -2102,7 +2102,7 @@ fiid_iterator_create(fiid_obj_t obj)
  
   if (!(iter = (fiid_iterator_t)xmalloc(sizeof(struct fiid_iterator))))
     {
-      obj->errnum = FIID_ERR_OUTMEM;
+      obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   iter->magic = FIID_ITERATOR_MAGIC;

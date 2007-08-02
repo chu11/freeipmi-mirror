@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.20 2007-06-02 17:17:39 chu11 Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.21 2007-08-02 20:50:12 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -31,7 +31,7 @@
 #endif /* STDC_HEADERS */
 #include <argp.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-raw.h"
 #include "ipmi-raw-argp.h"
 
@@ -53,16 +53,17 @@ static char args_doc[] = "[COMMAND-HEX-BYTES]";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif /* NDEBUG */
     {"file", CMD_FILE_KEY, "CMD-FILE", 0, 
-     "Read command requests from CMD-FILE.", 21}, 
+     "Specify a file to read command requests from.", 25}, 
     { 0 }
   };
 
@@ -142,6 +143,8 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
   cmd_args->cmd_length = 0;
 
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }
 
 

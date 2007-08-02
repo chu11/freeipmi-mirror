@@ -59,7 +59,7 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 #include "bmc-config-argp.h"
 
@@ -75,32 +75,29 @@ static char args_doc[] = "";
 
 /* The options we understand. */
 static struct argp_option options[] = {
+  ARGP_COMMON_OPTIONS_DRIVER,
   ARGP_COMMON_OPTIONS_INBAND,
   ARGP_COMMON_OPTIONS_OUTOFBAND,
-  ARGP_COMMON_OPTIONS_AUTHTYPE,
-  ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
-#ifndef NDEBUG
+  ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+  ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
+  ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
   ARGP_COMMON_OPTIONS_DEBUG,
-#endif /* NDEBUG */
   {"checkout", 'o', 0, 0, 
-   "Action is to GET the BMC configuration", 21},
+   "Fetch configuration information from the BMC.", 25},
   {"commit", 'i', 0, 0, 
-   "Action is to UPDATE the BMC configuration", 22},
+   "Update configuration information to the BMC from a config file or key pairs.", 26},
   {"diff", 'd', 0, 0, 
-   "Action is to SHOW THE DIFFERENCES with BMC", 23},
-
+   "Show differences between the BMC and a config file or key pairs.", 27},
   {"filename", 'f', "FILENAME", 0, 
-   "use FILENAME in checkout, commit or diff", 24},
+   "Specify a BMC config file for BMC checkout/commit/diff.", 28},
   {"key-pair", 'k', "KEY-PAIR", 0, 
-   "use KEY-PAIR in checkout, commit or diff", 25},
+   "Specify KEY=VALUE pairs for checkout/commit/diff.", 29},
   {"section", 'S', "SECTION", 0,
-   "use SECTION in checkout", 26},
+   "Specify a SECTION for checkout.", 30},
   {"listsections", 'L', 0, 0,
-   "List available sections for checkout", 27},
-
-  {"verbose",   'v', 0, 0,  "Produce verbose output", 28},
-  {"quiet",     'q', 0, 0,  "Do not produce any output", 29},
-  {"silent",    's', 0, OPTION_ALIAS },
+   "List available sections for checkout.", 31},
+  {"verbose",   'v', 0, 0,  
+   "Print additional detailed information.", 32},
   { 0, }
 };
 
@@ -159,10 +156,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case 'q': 
-    case 's':
-      args->silent = 1;
-      break;
     case 'v':
       args->verbose = 1;
       break;
@@ -251,7 +244,6 @@ void
 bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *args)
 {
   init_common_cmd_args (&(args->common));
-  args->silent = 0;
   args->verbose = 0;
   args->filename = NULL;
   args->keypairs = NULL;
@@ -264,6 +256,7 @@ bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *args)
   args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, args);
+  verify_common_cmd_args (&(args->common));
 }
 
 int

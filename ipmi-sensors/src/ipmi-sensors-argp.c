@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sensors-argp.c,v 1.14 2007-06-01 20:56:17 chu11 Exp $ 
+   $Id: ipmi-sensors-argp.c,v 1.15 2007-08-02 20:50:12 chu11 Exp $ 
    
    ipmi-sensors-argp.c - IPMI Sensors utility.
    
@@ -36,7 +36,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-argp.h"
@@ -60,27 +60,28 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif
     {"verbose",        VERBOSE_KEY,        0, 0, 
-     "Increase verbosity in output.  More -v adds more verbosity.", 21}, 
+     "Increase verbosity in output.  May be specified multiple times.", 25}, 
     {"quiet-readings", QUIET_READINGS_KEY,  0, 0,
-     "Do not output sensor readings or thresholds on simple output.", 22},
+     "Do not output sensor readings or thresholds on simple output.", 26},
     {"sdr-info",       SDR_INFO_KEY,       0, 0, 
-     "Show SDR Information.", 23}, 
+     "Show sendor data repository (SDR) information.", 27}, 
     {"list-groups",    LIST_GROUPS_KEY,    0, 0, 
-     "List sensor groups.", 24}, 
-    {"group",          GROUP_KEY,        "GROUP", 0, 
-     "Show sensors belongs to this GROUP.", 25}, 
+     "List sensor groups.", 28}, 
+    {"group",          GROUP_KEY,        "GROUP-NAME", 0, 
+     "Show sensors belonging to a specific group.", 29}, 
     {"sensors",        SENSORS_LIST_KEY, "SENSORS-LIST", 0, 
-     "Show listed sensors.", 26}, 
+     "Show sensors by record id.  Accepts space or comma separated lists", 30}, 
     { 0 }
   };
 
@@ -290,6 +291,9 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->sensors_list_length = 0;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }
 
 

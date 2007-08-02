@@ -1,5 +1,160 @@
 2007-08-02  Albert Chu <chu11@llnl.gov>
 
+        Merge from udm_ipmi_2_0_branch.
+	
+	Re-org UDM and add IPMI 2.0 device support to UDM.
+
+	* common/src/udm-err-wrappers.h
+	(__UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM): Rename to
+	UDM_BAD_COMPLETION_CODE_TO_UDM_ERRNUM.
+
+	* common/src/udm-fiid-wrappers.h (UDM_FIID_OBJ_SET,
+	UDM_FIID_OBJ_SET_CLEANUP, UDM_FIID_OBJ_GET_DATA_LEN,
+	UDM_FIID_OBJ_GET_DATA_LEN_CLEANUP): New macros.
+
+	* libfreeipmi/include/freeipmi/udm/freeipmi/udm/ipmi-kcs-api-udm.h,
+	freeipmi/udm/ipmi-lan-interface-udm.h,
+	freeipmi/udm/ipmi-openipmi-api-udm.h,
+	freeipmi/udm/ipmi-ssif-api-udm.h: Moved files to
+	libfreeipmi/src/udm.  No longer distribute as part of libfreeipmi.
+
+	* libfreeipmi/include/Makefile.am,
+	libfreeipmi/src/udm/Makefile.am, libfreeipmi/include/udm/udm.h:
+	Update with .h file move changes.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-messaging-support-cmds-udm.h,
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_cmd_get_channel_authentication_capabilities_v20): New
+	function.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h: Add new IPMI 2.0
+	UDM error codes.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband_2_0): New
+	function.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c: Split off lan
+	session code to new files.
+
+	* libfreeipmi/src/udm/ipmi-lan-session-util.h,
+	libfreeipmi/src/udm/ipmi-lan-session-util.c: New files.  Support
+	both IPMI 1.5 and IPMI 2.0 session code.  Add session id and
+	sequence number checking which was previously ignored.
+
+	* libfreeipmi/src/udm/ipmi-udm-device.h: Update w/ IPMI 2.0 needs
+	in device structure.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_udm_errmsg,
+	_ipmi_outofband_free, ipmi_cmd, ipmi_cmd_raw): Add IPMI 2.0
+	support.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_2_0_cmd,
+	ipmi_lan_2_0_cmd_raw): New functions.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (__guaranteed_memset): New function.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_device_destroy): Do
+	guaranteed memset on destroy.
+
+	* common/doc/argp-common-driver.man: New file.
+
+	* common/doc/argp-common-inband.man: Split out driver option.
+
+	* common/doc/argp-common-outofband.man,
+	common/doc/argp-common-outofband-hostranged.man: Add K_g options.
+
+	* common/doc/Makefile.am: Update appropriately for new files.
+
+	* common/src/argp-common.c, common/src/argp-common.h: Update for
+	IPMI 2.0 options.
+
+	* common/src/tool-common.c (ipmi_device_open): Add IPMI 2.0 support.
+
+	* bmc-config/, bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-sel/,
+	ipmi-sensors/, pef-config/: Update manpages and command line
+	option code.
+
+	* ipmimonitoring/src/libipmimonitoring: Re-architect to use UDM
+	and support IPMI 2.0.
+
+	* ipmimonitoring/src/ipmimonitoring.c: Re-work as needed.
+	
+	Add Workaround Support
+
+	* libfreeipmi/: Support workarounds for various vendor compliance issues.
+
+	* common/src/udm-fiid-wrappers.h: Add new wrappers as needed.
+
+	* common/doc/argp-common-workaround-flags.man,
+	argp-common-workaround-heading-text.man,
+	argp-common-workaround-inband-text.man,
+	argp-common-workaround-outofband-text.man,
+	argp-common-workaround-outofband-2-0-text.man: New files.
+
+	* common/src/argp-common.h, common/src/argp-common.c: Support
+	workaround flags.  
+
+	* common/src/argp-common.h, common/src/argp-common.c
+	(parse_outofband_workaround_flags,
+	parse_outofband_2_0_workaround_flags,
+	parse_inband_workaround_flags): New functions.
+
+	* bmc-config/, bmc-info/, ipmi-chassis/, ipmi-fru/, ipmi-sel/,
+	ipmi-sensors/, pef-config/: Update manpages and command line
+	option code.
+
+	* ipmipower/, ipmiconsole/: Use common workaround parses in
+	argp-common.
+
+	* ipmimonitoring/: Add workaround support.
+	
+	* doc/Makefile.am: Updated appropriately.
+
+	Unify code.  
+
+	* Adjust command line options between tools/programs to match more
+	consistently.
+
+	* Adjust error code macros and error messages between libraries to
+	match more consistently.
+
+	Argp
+
+	* Use argp instead of getopt in ipmipower, ipmiconsole, and
+	ipmimonitoring for consistency.
+
+	Usage/help/documentation
+
+	* Globally cleaned up usage output, help output, manpages, etc.
+	Attempt to use more "common" manpages out of common/doc.  Make
+	descriptions more consistent across tools.
+	
+	Misc:
+
+	* Support most debugging options by default, not in a debug-only
+	build.
+
+	* Globally remove IPMI_MAX_AUTHENTICATION_CODE_LENGTH.  Use
+	IPMI_1_5_MAX_PASSWORD_LENGTH and IPMI_2_0_MAX_PASSWORD_LENGTH as
+	needed.
+
+	* common/src/argp-common.h, common/src/argp-common.c: General
+	cleanup to allow for more common code use.
+
+	* bmc-watchdog/: Support OpenIPMI driver.
+
+	* Globally try to make error messages in all libs and tools more
+	useful.
+
+	* common/src/argp-common.h, common/src/argp-common.c, common/doc/:
+	Rename "argp" common to "cmdline-parse" common, since it is more
+	generic that just argp.  Adjust in rest of FreeIPMI appropriately.
+
+	* General code cleanup throughout.
+
+2007-08-02  Albert Chu <chu11@llnl.gov>
+
 	* tagged pre-udm-2-0-merge
 	
 2007-08-02  Troy Telford <ttelford@lnxi.com>
@@ -46,9 +201,9 @@
 	error code definition.
 	
 2007-07-12  Albert Chu <chu11@llnl.gov>
-
-	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main): Fix
-	free bug.
+	
+        * ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main): Fix
+        free bug.
 	
 2007-07-11  Albert Chu <chu11@llnl.gov>
 

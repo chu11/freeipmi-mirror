@@ -23,7 +23,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "pstdout.h"
 
 enum ipmi_chassis_keys
@@ -82,7 +82,6 @@ typedef struct ipmi_chassis_prog_data
 {
   char *progname;
   struct ipmi_chassis_arguments *args;
-  uint32_t debug_flags;
 } ipmi_chassis_prog_data_t;
 
 typedef struct ipmi_chassis_state_data

@@ -1,6 +1,11 @@
 SUBDIRS = src
 
-dist_man_MANS = bmc-watchdog.8
+MANS_CPP = bmc-watchdog.8
+
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	cpp -P -I. -x c $@.pre -o $@
+
+dist_man_MANS = $(MANS_CPP)
 
 CLEANFILES = *~
 DISTCLEANFILES = .deps/*.P

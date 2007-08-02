@@ -34,7 +34,7 @@
 
 #include "ipmi-chassis.h"
 #include "ipmi-chassis-argp.h"
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 #include "freeipmi-portability.h"
 
@@ -54,54 +54,55 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_ADMIN,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif /* NDEBUG */
     {"get-capabilities", 'c', NULL, 0, 
-     "Get the chassis capabilities.", 21},
+     "Get chassis capabilities.", 25},
     {"get-status", 's', NULL, 0, 
-     "Get the chassis status.", 22},
+     "Get chassis status.", 26},
     {"chassis-control", 'O', "CONTROL", 0, 
-     "Control the chassis. Allowed values are: power-down, power-up, power-cycle, hard-reset, diagnostic-interrupt, soft-shutdown.", 23},
-    {"chassis-identify", 'i', "IDENTIFY", 0,
-     "Chassis Identification. Allowed values are: turn-off to turn off identification, <interval> to turn on identification for 'interval' seconds, force to turn on indefinitely.", 24},
+     "Control the chassis.", 27},
+    {"chassis-identify", 'I', "IDENTIFY", 0,
+     "Set chassis Identification.", 28},
     {"get-system-restart-cause", 'R', NULL, 0, 
-     "Get system restart cause.", 25},
+     "Get system restart cause.", 29},
     {"get-power-on-hours-counter", 'H', NULL, 0,
-     "Get Power on Hours counter.", 26},
-    {"set-power-cycle-interval", 'S', "INTERVAL", 0, 
-     "Set Power cycle interval to INTERVAL.", 27},
+     "Get power on hours counter.", 30},
+    {"set-power-cycle-interval", 'S', "SECONDS", 0, 
+     "Set Power cycle interval in seconds.", 31},
     {"get-boot-flags", 'G', NULL, 0, 
-     "Get system boot-flags.", 28},
+     "Get system boot-flags.", 32},
     {"set-boot-flags", 'L', NULL, 0, 
-     "Set system boot flags. Allowed flags are: boot-type, lock-out-reset-button, blank-screen, boot-device, lock-keyboard, clear-cmos, console-redirection, force-progress-event-traps, firmware-bios-verbosity, user-password-bypass.", 29},
+     "Set system boot flags.", 33},
     {"boot-type", IPMI_CHASSIS_KEY_BOOT_TYPE, "BOOT_TYPE", OPTION_ARG_OPTIONAL, 
-     "Set BIOS boot type to BOOT_TYPE. Allowed values are: pc-compatible, EFI. Should be used with set-boot-flags.", 30},
+     "Set BIOS boot type to BOOT_TYPE.", 34},
     {"lock-out-reset-button", IPMI_CHASSIS_KEY_LOCK_OUT_RESET_BUTTON, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL, 
-     "Lock out reset button. Allowed values are: yes/no. Should be used with set-boot-flags.", 31},
+     "Modify lock out reset button support.", 35},
     {"blank-screen", IPMI_CHASSIS_KEY_SCREEN_BLANK, "BLANK_SCREEN", OPTION_ARG_OPTIONAL, 
-     "Blank screen. Allowed values are: yes/no. Should be used with set-boot-flags.", 32},
+     "Modify blank screen support.", 36},
     {"boot-device", IPMI_CHASSIS_KEY_BOOT_DEVICE_SELECTOR, "BOOT_DEVICE", OPTION_ARG_OPTIONAL, 
-     "Set device to boot from to BOOT_DEVICE. Allowed values are: pxe, disk, disk-safe, diag, cd-dvd, floppy, bios. Should be used with set-boot-flags.", 33},
+     "Set device to boot from to BOOT_DEVICE.", 37},
     {"lock-keyboard", IPMI_CHASSIS_KEY_LOCK_KEYBOARD, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL, 
-     "Lock the keyboard. Allowed values are: yes/no. Should be used with set-boot-flags.", 34},
-    {"clear-cmos", IPMI_CHASSIS_KEY_CLEAR_CMOS, "CLEAR_CMOS", OPTION_ARG_OPTIONAL, 
-     "Clear the CMOS.  Allowed values are: yes/no. Should be used with set-boot-flags.", 35},
-    {"console-redirection", IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION, "REDIRECT_TO_CONSOLE", OPTION_ARG_OPTIONAL, 
-     "redirect to console. Allowed values are: default, suppress, enable. Should be used with set-boot-flags.", 36},
-    {"user-password-bypass", IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS, "BYPASS_USER_PASSWORD", OPTION_ARG_OPTIONAL, 
-     "Bypass user password. Allowed values are: yes/no. Should be used with set-boot-flags.", 37},
+     "Modify lock keyboard support.", 38},
+    {"clear-cmos", IPMI_CHASSIS_KEY_CLEAR_CMOS, "CMOS_CLEAR", OPTION_ARG_OPTIONAL, 
+     "Modify clear CMOS support.", 39},
+    {"console-redirection", IPMI_CHASSIS_KEY_CONSOLE_REDIRECTION, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL, 
+     "Set console redirection type.", 40},
+    {"user-password-bypass", IPMI_CHASSIS_KEY_USER_PASSWORD_BYPASS, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL, 
+     "Modify user password bypass support.", 41},
     {"force-progress-event-traps", IPMI_CHASSIS_KEY_FORCE_PROGRESS_EVENT_TRAPS, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL, 
-     "Force progress event traps. Allowed values are: yes/no. Should be used with set-boot-flags.", 38},
+     "Modify force progress event traps support.", 42},
     {"firmware-bios-verbosity", IPMI_CHASSIS_KEY_FIRMWARE_BIOS_VERBOSITY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL, 
-     "Select firmware verbosity. Allowed values are: default, quiet, verbose. Should be used with set-boot-flags.", 39},
+     "Set firmware verbosity.", 43},
     {"set-power-restore-policy", 'X', "POLICY", 0, 
-     "Set power restore policy.  Allowed values are: list-supported-policies, always-on, restore, always-off.", 40},
+     "Set power restore policy.", 44},
     { 0 }
   };
 
@@ -510,6 +511,8 @@ ipmi_chassis_argp_parse (int argc,
    */
   cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }
 
 int 

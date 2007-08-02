@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_fiid_wrappers.c,v 1.2 2007-06-05 21:34:35 chu11 Exp $
+ *  $Id: ipmi_monitoring_fiid_wrappers.c,v 1.3 2007-08-02 20:50:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,7 +54,7 @@ Fiid_template_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl)
   if ((rv = fiid_template_len_bytes(tmpl)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_template_len_bytes: %s", strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -75,7 +75,7 @@ Fiid_template_block_len_bytes(ipmi_monitoring_ctx_t c, fiid_template_t tmpl, cha
   if ((rv = fiid_template_block_len_bytes(tmpl, field_start, field_end)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_template_len_bytes: field_start=%s; field_end=%s; %s", field_start, field_end, strerror(errno)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -113,7 +113,7 @@ Fiid_obj_clear(ipmi_monitoring_ctx_t c, fiid_obj_t obj)
   if ((rv = fiid_obj_clear(obj)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_clear: %s", fiid_strerror(fiid_obj_errnum(obj))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -144,14 +144,14 @@ Fiid_obj_get(ipmi_monitoring_ctx_t c, fiid_obj_t obj, char *field, uint64_t *val
   if ((rv = fiid_obj_get(obj, field, val)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; %s", field, fiid_strerror(fiid_obj_errnum(obj))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
   if (!rv)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get: field=%s; no data set", field));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
   
@@ -173,7 +173,7 @@ Fiid_obj_get_data(ipmi_monitoring_ctx_t c, fiid_obj_t obj, char *field, uint8_t 
   if ((rv = fiid_obj_get_data(obj, field, data, data_len)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_get_data: field=%s; %s", field, fiid_strerror(fiid_obj_errnum(obj))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -193,7 +193,7 @@ Fiid_obj_set(ipmi_monitoring_ctx_t c, fiid_obj_t obj, char *field, uint64_t val)
   if ((rv = fiid_obj_set(obj, field, val)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_set: field=%s; %s", field, fiid_strerror(fiid_obj_errnum(obj))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 
@@ -214,7 +214,7 @@ Fiid_obj_set_all(ipmi_monitoring_ctx_t c, fiid_obj_t obj, uint8_t *data, uint32_
   if ((rv = fiid_obj_set_all(obj, data, data_len)) < 0)
     {
       IPMI_MONITORING_DEBUG(("fiid_obj_set_all: %s", fiid_strerror(fiid_obj_errnum(obj))));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL;
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return -1;
     }
 

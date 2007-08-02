@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 
 #define CIPHER_SUITE_LEN 16
 
@@ -75,7 +75,6 @@ struct sectionstr
 struct bmc_config_arguments
 {
   struct common_cmd_args common;
-  unsigned char silent;
   unsigned char verbose;
 
   char *filename;
@@ -89,7 +88,6 @@ typedef struct bmc_config_prog_data
 {
   char *progname;
   struct bmc_config_arguments *args;
-  uint32_t debug_flags;
 } bmc_config_prog_data_t;
 
 typedef struct bmc_config_state_data

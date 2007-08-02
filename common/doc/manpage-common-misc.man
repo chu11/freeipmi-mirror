@@ -1,0 +1,9 @@
+.TP
+\fB\-?\fR, \fB\-\-help\fR
+Output a help list and exit.
+.TP
+\fB\-\-usage\fR
+Output a usage message and exit.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Output the program version and exit.

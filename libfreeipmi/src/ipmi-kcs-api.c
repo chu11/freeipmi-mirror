@@ -53,9 +53,9 @@
 #include "ipmi-common.h"
 #include "xmalloc.h"
 
-#define IPMI_KCS_SLEEP_USECS                0x01
+#define IPMI_KCS_SLEEP_USECS                  0x01
 
-#define IPMI_KCS_SMS_REGISTER_SPACE_DEFAULT 1
+#define IPMI_KCS_SMS_REGISTER_SPACING_DEFAULT 1
 /* KCS Interface Status Register Bits */
 /* Scheme BIT Calculator Example
   To BIN: 
@@ -112,10 +112,10 @@
 /* IPMI KCS SMS Interface Registers */
 #define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
 #define IPMI_KCS_REG_DATAOUT(sms_io_base)  (sms_io_base)
-#define IPMI_KCS_REG_CMD(sms_io_base, reg_space)     \
-       (sms_io_base + reg_space)
-#define IPMI_KCS_REG_STATUS(sms_io_base, reg_space)  \
-       (sms_io_base + reg_space)
+#define IPMI_KCS_REG_CMD(sms_io_base, register_spacing)     \
+       (sms_io_base + register_spacing)
+#define IPMI_KCS_REG_STATUS(sms_io_base, register_spacing)  \
+       (sms_io_base + register_spacing)
 
 /* IPMI KCS Control Codes */
 #define IPMI_KCS_CTRL_GET_STATUS       0x60 /* Request Interface Status / 
@@ -134,18 +134,17 @@
 static char * ipmi_kcs_ctx_errmsg[] =
   {
     "success",
-    "kcs context is null",
-    "kcs context is invalid",
+    "kcs context null",
+    "kcs context invalid",
     "invalid parameter",
     "permission denied",
-    "invalid io parameter",
     "io not initialized",
     "buffer too small to hold result",
     "BMC busy",
     "out of memory",
-    "device unavailable",
+    "device not found",
     "internal error",
-    "error number out of range",
+    "errnum out of range",
     NULL,
   };
 
@@ -153,7 +152,7 @@ struct ipmi_kcs_ctx {
   uint32_t magic;
   int32_t errnum;
   uint16_t driver_address;
-  uint8_t reg_space;
+  uint8_t register_spacing;
   uint32_t flags;
   uint32_t poll_interval;
 #ifdef __FreeBSD__
@@ -174,7 +173,7 @@ ipmi_kcs_ctx_create(void)
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->driver_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-  ctx->reg_space = IPMI_KCS_SMS_REGISTER_SPACE_DEFAULT;
+  ctx->register_spacing = IPMI_KCS_SMS_REGISTER_SPACING_DEFAULT;
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->flags = IPMI_KCS_FLAGS_DEFAULT;
   ctx->io_init = 0;
@@ -244,18 +243,18 @@ ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
 }
 
 int8_t 
-ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *reg_space)
+ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  if (!reg_space)
+  if (!register_spacing)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
       return (-1);
     }
   
-  *reg_space = ctx->reg_space;
+  *register_spacing = ctx->register_spacing;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -306,12 +305,12 @@ ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t driver_address)
 }
 
 int8_t 
-ipmi_kcs_ctx_set_register_space(ipmi_kcs_ctx_t ctx, uint8_t reg_space)
+ipmi_kcs_ctx_set_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t register_spacing)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  ctx->reg_space = reg_space;
+  ctx->register_spacing = register_spacing;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -396,7 +395,7 @@ ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  return _INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->reg_space));
+  return _INB (IPMI_KCS_REG_STATUS (ctx->driver_address, ctx->register_spacing));
 }
 
 /*
@@ -455,7 +454,7 @@ ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
 }
 
 /*
@@ -477,7 +476,7 @@ ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
 }
 
 #if 0
@@ -489,7 +488,7 @@ ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->driver_address, ctx->register_spacing));
 }
 #endif
 
@@ -521,7 +520,7 @@ ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
 static uint8_t
 ipmi_kcs_print_state (int fd, uint8_t state)
 {
-  /* we assume we have already ioperm'd the space */
+  /* we assume we have already ioperm'd the spacing */
   freeipmi_dprintf (fd, "Current KCS state: 0x%x : ", state);
   if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
     freeipmi_dprintf (fd, "IDLE_STATE ");
@@ -605,7 +604,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;
       return (-1); 
     }
 
@@ -702,7 +701,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;
       goto cleanup_unlock;
     }
 
@@ -779,14 +778,14 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
   
   if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   
   pkt_len = hdr_len + cmd_len;
   if (!(pkt = (uint8_t *)malloc (pkt_len)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memset (pkt, 0, pkt_len);
@@ -858,7 +857,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 
   if (!(obj_hdr = fiid_obj_create(tmpl_hdr_kcs)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
@@ -866,7 +865,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
   
   if (!(pkt = (uint8_t *)malloc(pkt_len)))
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_OUTMEM;
+      ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
   memset (pkt, 0, pkt_len);
@@ -918,7 +917,7 @@ ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
   
   if (!ctx->io_init)
     {
-      ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
+      ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;
       return (-1); 
     }
 

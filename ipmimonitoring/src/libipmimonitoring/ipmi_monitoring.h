@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6 2007-04-30 05:25:03 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.7 2007-08-02 20:50:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,31 +33,36 @@ extern "C" {
 
 enum ipmi_monitoring_error_codes 
   {
-    IPMI_MONITORING_ERR_SUCCESS                   = 0,
-    IPMI_MONITORING_ERR_CONTEXT_NULL              = 1,
-    IPMI_MONITORING_ERR_CONTEXT_INVALID           = 2,
-    IPMI_MONITORING_ERR_PARAMETERS                = 3,
-    IPMI_MONITORING_ERR_PERMISSION                = 4,
-    IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED     = 5,
-    IPMI_MONITORING_ERR_CONFIG_FILE_PARSE         = 6,
-    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE  = 7,
-    IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION      = 8,
-    IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM      = 9, 
-    IPMI_MONITORING_ERR_HOSTNAME_INVALID          = 10,
-    IPMI_MONITORING_ERR_SENSOR_NOT_FOUND          = 11,
-    IPMI_MONITORING_ERR_NO_SENSOR_READINGS        = 12,
-    IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END  = 13,
-    IPMI_MONITORING_ERR_SESSION_TIMEOUT           = 14,
-    IPMI_MONITORING_ERR_USERNAME                  = 15,
-    IPMI_MONITORING_ERR_PASSWORD                  = 16,
-    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL           = 17,
-    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE       = 18,
-    IPMI_MONITORING_ERR_BMC_BUSY                  = 19,
-    IPMI_MONITORING_ERR_IPMI                      = 20,
-    IPMI_MONITORING_ERR_OUT_OF_MEMORY             = 21,
-    IPMI_MONITORING_ERR_SYSTEM_ERROR              = 22,
-    IPMI_MONITORING_ERR_INTERNAL                  = 23,
-    IPMI_MONITORING_ERR_ERRNUMRANGE               = 24,
+    IPMI_MONITORING_ERR_SUCCESS                             = 0,
+    IPMI_MONITORING_ERR_CONTEXT_NULL                        = 1,
+    IPMI_MONITORING_ERR_CONTEXT_INVALID                     = 2,
+    IPMI_MONITORING_ERR_PARAMETERS                          = 3,
+    IPMI_MONITORING_ERR_PERMISSION                          = 4,
+    IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED               = 5,
+    IPMI_MONITORING_ERR_CONFIG_FILE_PARSE                   = 6,
+    IPMI_MONITORING_ERR_SENSOR_CONFIG_FILE_PARSE            = 7,
+    IPMI_MONITORING_ERR_SDR_CACHE_PERMISSION                = 8,
+    IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM                = 9, 
+    IPMI_MONITORING_ERR_HOSTNAME_INVALID                    = 10,
+    IPMI_MONITORING_ERR_SENSOR_NOT_FOUND                    = 11,
+    IPMI_MONITORING_ERR_NO_SENSOR_READINGS                  = 12,
+    IPMI_MONITORING_ERR_SENSOR_READINGS_LIST_END            = 13,
+    IPMI_MONITORING_ERR_SESSION_TIMEOUT                     = 14,
+    IPMI_MONITORING_ERR_USERNAME_INVALID                    = 15,
+    IPMI_MONITORING_ERR_PASSWORD_INVALID                    = 16,
+    IPMI_MONITORING_ERR_PASSWORD_VERIFICATION_TIMEOUT       = 17,
+    IPMI_MONITORING_ERR_K_G_INVALID                         = 18,
+    IPMI_MONITORING_ERR_PRIVILEGE_LEVEL_INSUFFICIENT        = 19,
+    IPMI_MONITORING_ERR_PRIVILEGEL_LEVEL_CANNOT_BE_OBTAINED = 20,
+    IPMI_MONITORING_ERR_AUTHENTICATION_TYPE_UNAVAILABLE     = 21,
+    IPMI_MONITORING_ERR_IPMI_2_0_UNAVAILABLE                = 22,
+    IPMI_MONITORING_ERR_CIPHER_SUITE_ID_UNAVAILABLE         = 23,
+    IPMI_MONITORING_ERR_BMC_BUSY                            = 24,
+    IPMI_MONITORING_ERR_OUT_OF_MEMORY                       = 25,
+    IPMI_MONITORING_ERR_IPMI_ERROR                          = 26,
+    IPMI_MONITORING_ERR_SYSTEM_ERROR                        = 27,
+    IPMI_MONITORING_ERR_INTERNAL_ERROR                      = 28,
+    IPMI_MONITORING_ERR_ERRNUMRANGE                         = 29,
   };
 
 enum ipmi_monitoring_sensor_group
@@ -141,11 +146,24 @@ enum ipmi_monitoring_sensor_bitmask_type
     IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN                             = 0x19,
   };
 
-enum ipmi_monitoring_privilege_type
+enum ipmi_monitoring_driver_type
   {
-    IPMI_MONITORING_PRIVILEGE_USER     = 0x00,
-    IPMI_MONITORING_PRIVILEGE_OPERATOR = 0x01,
-    IPMI_MONITORING_PRIVILEGE_ADMIN    = 0x02,
+    IPMI_MONITORING_DRIVER_TYPE_KCS      = 0x00,
+    IPMI_MONITORING_DRIVER_TYPE_SSIF     = 0x01,
+    IPMI_MONITORING_DRIVER_TYPE_OPENIPMI = 0x02,
+  };
+
+enum ipmi_monitoring_protocol_version
+  {
+    IPMI_MONITORING_PROTOCOL_VERSION_1_5 = 0x00,
+    IPMI_MONITORING_PROTOCOL_VERSION_2_0 = 0x01,
+  };
+
+enum ipmi_monitoring_privilege
+  {
+    IPMI_MONITORING_PRIVILEGE_LEVEL_USER     = 0x00,
+    IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR = 0x01,
+    IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN    = 0x02,
   };
 
 enum ipmi_monitoring_authentication_type
@@ -159,16 +177,20 @@ enum ipmi_monitoring_authentication_type
 enum ipmi_monitoring_flags
   {
     IPMI_MONITORING_FLAGS_NONE               = 0x00,
-    IPMI_MONITORING_FLAGS_DEBUG_STDOUT       = 0x01,
-    IPMI_MONITORING_FLAGS_DEBUG_STDERR       = 0x02,
-    IPMI_MONITORING_FLAGS_DEBUG_SYSLOG       = 0x04,
-    IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS = 0x08,
-    IPMI_MONITORING_FLAGS_LOCK_MEMORY        = 0x10,
+    IPMI_MONITORING_FLAGS_DEBUG              = 0x01,
+    IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS = 0x02,
+    IPMI_MONITORING_FLAGS_LOCK_MEMORY        = 0x04,
   };
 
 enum ipmi_monitoring_workaround_flags
   {
-    IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO = 0x00000001,
+    IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO      = 0x00000001,
+    IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION = 0x00000002,
+    IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE   = 0x00000004,
+    IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER  = 0x00000008,
+    IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION           = 0x00000010,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      = 0x00000020,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION             = 0x00000040,
   };
 
 enum ipmi_monitoring_sensor_reading_flags
@@ -437,7 +459,45 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
 /* 
  * ipmi_monitoring_ipmi_config
  *
+ * Configuration information for IPMI Inband monitoring
+ *
+ * driver_type
+ *
+ *   Use a specific in-band driver.
+ *
+ *   IPMI_MONITORING_DRIVER_TYPE_KCS
+ *   IPMI_MONITORING_DRIVER_TYPE_SSIF
+ *   IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
+ *
+ *    Pass < 0 for default of IPMI_MONITORING_DRIVER_TYPE_KCS.
+ * 
+ * disable_auto_probe
+ *
+ *   Flag informs the library if in-band driver information should be
+ *   probed or not.
+ *
+ * driver_address
+ *
+ *   Use this specified driver address instead of a probed one.
+ *
+ * register_spacing
+ *
+ *   Use this register space instead of the probed one.
+ *
+ * driver_device
+ *
+ *   Use this driver device for the IPMI driver.
+ *
  * Configuration information for IPMI Out-of-Band monitoring
+ *
+ * protocol_version
+ *
+ *   Indicate the IPMI protocol version to use
+ *
+ *   IPMI_MONITORING_PROTOCOL_VERSION_1_5
+ *   IPMI_MONITORING_PROTOCOL_VERSION_2_0
+ *
+ *   Pass < 0 for default of IPMI_MONITORING_VERSION_1_5.
  *
  * username
  *
@@ -447,7 +507,17 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  * password
  *
  *   BMC password. Pass NULL ptr for NULL password.  Maximum length of
- *   16 bytes.
+ *   16 bytes for IPMI 1.5, 20 bytes for IPMI 2.0
+ *
+ * k_g
+ *
+ *   BMC Key for 2-key authentication.  Pass NULL ptr to use password
+ *   as BMC key.
+ *
+ * k_g_len
+ *
+ *   Length of k_g.  Necessary b/c k_g may contain null values or in its
+ *   hex key.  Maximum length of 20 bytes.
  *
  * privilege_level
  *
@@ -455,11 +525,11 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *
  *   Supported privilege levels:
  *
- *   IPMI_MONITORING_PRIVILEGE_USER
- *   IPMI_MONITORING_PRIVILEGE_OPERATOR
- *   IPMI_MONITORING_PRIVILEGE_ADMIN
+ *   IPMI_MONITORING_PRIVILEGE_LEVEL_USER
+ *   IPMI_MONITORING_PRIVILEGE_LEVEL_OPERATOR
+ *   IPMI_MONITORING_PRIVILEGE_LEVEL_ADMIN
  *
- *   Pass < 0 for default of IPMI_MONITORING_PRIVILEGE_USER.
+ *   Pass < 0 for default of IPMI_MONITORING_PRIVILEGE_LEVEL_USER.
  *
  * authentication_type
  * 
@@ -472,6 +542,28 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  * 
  *   Pass < 0 for default of IPMI_MONITORING_AUTHENTICATION_TYPE_MD5.
  *
+ * cipher_suite_id
+ *
+ *   Cipher suite identifier to determine authentication, integrity,
+ *   and confidentiality algorithms to use.
+ *
+ *   Supported Cipher Suite IDs
+ *   (Key: A - Authentication Algorithm
+ *         I - Integrity Algorithm
+ *         C - Confidentiality Algorithm)
+ *
+ *   0 - A = None; I = None; C = None
+ *   1 - A = HMAC-SHA1; I = None; C = None
+ *   2 - A = HMAC-SHA1; I = HMAC-SHA1-96; C = None
+ *   3 - A = HMAC-SHA1; I = HMAC-SHA1-96; C = AES-CBC-128
+ *   6 - A = HMAC-MD5; I = None; C = None
+ *   7 - A = HMAC-MD5; I = HMAC-MD5-128; C = None
+ *   8 - A = HMAC-MD5; I = HMAC-MD5-128; C = AES-CBC-128
+ *   11 - A = HMAC-MD5; I = MD5-128; C = None
+ *   12 - A = HMAC-MD5; I = MD5-128; C = AES-CBC-128
+ *
+ *   Pass < 0 for default of 3.
+ *
  * session_timeout_len
  *
  *   Specifies the session timeout length in milliseconds.  Pass <= 0
@@ -482,10 +574,7 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  *   Specifies the packet retransmission timeout length in
  *   milliseconds.  Pass <= 0 to default to 500 (0.5 seconds).
  *
- * retransmission_backoff_count
- *
- *   Specifies the packet retransmission count until retransmission
- *   timeout lengths will be backed off.  Pass <= 0 to default to 2.
+ * Configuration information for both Inband and Outofband
  *
  * workaround_flags
  *
@@ -497,13 +586,23 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  */
 struct ipmi_monitoring_ipmi_config
 {
+  int driver_type;
+  int disable_auto_probe;
+  unsigned int driver_address;
+  unsigned int register_spacing;
+  char *driver_device;
+
+  int protocol_version;
   char *username;
   char *password;
+  char *k_g;
+  unsigned int k_g_len;
   int privilege_level;
   int authentication_type;
+  int cipher_suite_id;
   int session_timeout_len;
   int retransmission_timeout_len;
-  int retransmission_backoff_count;
+
   unsigned int workaround_flags;
 };
 

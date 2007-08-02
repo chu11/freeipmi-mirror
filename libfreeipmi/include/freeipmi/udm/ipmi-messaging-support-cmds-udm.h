@@ -34,6 +34,12 @@ int8_t ipmi_cmd_get_channel_authentication_capabilities (ipmi_device_t dev,
                                                          uint8_t maximum_privilege_level,
 							 fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_get_channel_authentication_capabilities_v20 (ipmi_device_t dev, 
+                                                             uint8_t channel_number,
+                                                             uint8_t maximum_privilege_level,
+                                                             uint8_t get_ipmi_v20_extended_data,
+                                                             fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_session_challenge (ipmi_device_t dev, 
                                        uint8_t authentication_type,
                                        uint8_t *user_name,

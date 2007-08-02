@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.17 2007-07-13 22:36:54 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.18 2007-08-02 20:50:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -297,17 +297,18 @@ main(int argc, char **argv)
   _secure_initialization();
   ipmiconsole_config_setup(argc, argv);
 
-#ifndef NDEBUG
   if (conf->debug)
     {
+#ifndef NDEBUG
       if (conf->debugfile)
 	debug_flags |= IPMICONSOLE_DEBUG_FILE;
       else
 	debug_flags |= IPMICONSOLE_DEBUG_STDERR;
-      if (conf->debugdump)
-	debug_flags |= IPMICONSOLE_DEBUG_IPMI_PACKETS;
-    }
+#else
+      debug_flags |= IPMICONSOLE_DEBUG_STDERR;
 #endif /* NDEBUG */  
+      debug_flags |= IPMICONSOLE_DEBUG_IPMI_PACKETS;
+    }
 
   if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
     {
@@ -345,14 +346,7 @@ main(int argc, char **argv)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_DEACTIVATE_ONLY;
   if (conf->lock_memory)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_LOCK_MEMORY;
-  if (conf->intel_2_0_session)
-    protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_INTEL_2_0;
-  else if (conf->supermicro_2_0_session)
-    protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
-  else if (conf->sun_2_0_session)
-    protocol_config.workaround_flags = IPMICONSOLE_WORKAROUND_SUN_2_0;
-  else
-    protocol_config.workaround_flags = 0;
+  protocol_config.workaround_flags = conf->workaround_flags;
 
   if (!(c = ipmiconsole_ctx_create(conf->hostname,
 				   &ipmi_config,
@@ -365,11 +359,11 @@ main(int argc, char **argv)
   if (ipmiconsole_engine_submit_block(c) < 0)
     {
       if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_UNAVAILABLE
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_USERNAME_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PASSWORD_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_K_G_INVALID
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_INVALID
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_INUSE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_NOT_RESPONDING

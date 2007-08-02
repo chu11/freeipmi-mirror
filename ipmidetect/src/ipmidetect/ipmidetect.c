@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.2 2007-06-27 20:22:00 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.3 2007-08-02 20:50:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -550,7 +550,7 @@ _output_data(void)
         err_exit("Cannot connect to server");
       else if (errnum == IPMIDETECT_ERR_CONNECT_TIMEOUT)
         err_exit("Timeout connecting to server");
-      else if (errnum == IPMIDETECT_ERR_HOSTNAME)
+      else if (errnum == IPMIDETECT_ERR_HOSTNAME_INVALID)
         err_exit("Invalid hostname");
       else
         err_exit("%s: ipmidetect_load_data(): %s", __FUNCTION__, msg);

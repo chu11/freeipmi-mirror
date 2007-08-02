@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.1 2007-06-27 21:35:33 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.2 2007-08-02 20:50:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,39 +30,44 @@ ipmi-fru \- manual page for ipmi-fru.  IPMI FRU @PACKAGE_VERSION@
 .SH DESCRIPTION
 Displays Field Replaceable Unit (FRU) Information.
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common-inband.man>
-#include <@top_srcdir@/common/doc/argp-common-outofband-hostranged.man>
-#include <@top_srcdir@/common/doc/argp-common-authtype.man>
-#include <@top_srcdir@/common/doc/argp-common-privlevel-user.man>
-.if @WITH_DEBUG@ \{
-#include <@top_srcdir@/common/doc/argp-common-debug.man>
-\}
-#include <@top_srcdir@/common/doc/argp-common-misc.man>
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-timeout.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/common/doc/manpage-common-debug.man>
+#include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \FB\-e\fR, \fB\-\-device-id\fR
-Specify a specific FRU device ID you wish to retrieve.
+Specify a specific FRU device ID.
 .TP
 \FB\-v\fR, \fB\-\-verbose\fR
-Verbose FRU output.
+Increase verbosity in output.
 .TP
 \FB\-vv\fR, \fB\-\-verbose\fR
 Very verbose FRU output.
 .TP
 \FB\-s\fR, \fB\-\-skip-checks\fR
-Ignore checksums in FRUs. Some FRUs have incorrect checksums, but the
+Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
 FRU data is correct.  Use this option to skip the checks checksum.
 Output may be unknown, pray for the best.
-.TP
-\fB\-f\fR, \fB\-\-flush\-cache\fR
-Flush sensor data repository (SDR) cache.
-.TP
-\fB\-Q\fR, \fB\-\-\quiet\-cache\fR
-Do not output information about cache creation/deletion.
-.TP
-\fB\-\-sdr\-cache\-directory\fR=\fIDIRECTORY\fR
-Use DIRECTORY for sensor data repository (SDR) cache.
-#include <@top_srcdir@/common/doc/argp-common-hostranged-options.man>
-#include <@top_srcdir@/common/doc/argp-common-hostranged-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-sdr-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

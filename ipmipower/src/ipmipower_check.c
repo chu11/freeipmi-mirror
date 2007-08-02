@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.62 2007-05-24 13:59:40 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.63 2007-08-02 20:50:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -242,7 +242,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 int 
 ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint32_t shift_num, wrap_val, max_sequence_number = 0xFFFFFFFF;
+  uint32_t shift_num, wrap_val;
   uint64_t seq_num = 0;
   int rv = 0;
 
@@ -331,9 +331,9 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
   /* Check if sequence number is greater than highest received and is
    * within range 
    */
-  if (ip->highest_received_sequence_number > (max_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
+  if (ip->highest_received_sequence_number > (IPMIPOWER_MAX_SEQUENCE_NUMBER - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
     {
-      wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (max_sequence_number - ip->highest_received_sequence_number) - 1;
+      wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) - 1;
 
       /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
       if (ip->ipmi_version == IPMI_VERSION_2_0)
@@ -341,15 +341,15 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
 
       if (seq_num > ip->highest_received_sequence_number || seq_num <= wrap_val)
         {
-          if (seq_num > ip->highest_received_sequence_number && seq_num <= max_sequence_number)
+          if (seq_num > ip->highest_received_sequence_number && seq_num <= IPMIPOWER_MAX_SEQUENCE_NUMBER)
             shift_num = seq_num - ip->highest_received_sequence_number;
           else
             {
               if (ip->ipmi_version == IPMI_VERSION_1_5)
-                shift_num = seq_num + (max_sequence_number - ip->highest_received_sequence_number) + 1;
+                shift_num = seq_num + (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number) + 1;
               else
                 /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
-                shift_num = seq_num + (max_sequence_number - ip->highest_received_sequence_number);
+                shift_num = seq_num + (IPMIPOWER_MAX_SEQUENCE_NUMBER - ip->highest_received_sequence_number);
             }
           
           ip->highest_received_sequence_number = seq_num;
@@ -376,7 +376,7 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
    */
   if (ip->highest_received_sequence_number < IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
     {
-      uint32_t wrap_val = max_sequence_number - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
+      uint32_t wrap_val = IPMIPOWER_MAX_SEQUENCE_NUMBER - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
       
       /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
       if (ip->ipmi_version == IPMI_VERSION_2_0)
@@ -384,13 +384,13 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
 
       if (seq_num < ip->highest_received_sequence_number || seq_num >= wrap_val)
         {
-          if (seq_num > ip->highest_received_sequence_number && seq_num <= max_sequence_number)
+          if (seq_num > ip->highest_received_sequence_number && seq_num <= IPMIPOWER_MAX_SEQUENCE_NUMBER)
             {
               if (ip->ipmi_version == IPMI_VERSION_1_5)
-                shift_num = ip->highest_received_sequence_number + (max_sequence_number - seq_num) + 1;
+                shift_num = ip->highest_received_sequence_number + (IPMIPOWER_MAX_SEQUENCE_NUMBER - seq_num) + 1;
               else
                 /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
-                shift_num = ip->highest_received_sequence_number + (max_sequence_number - seq_num);
+                shift_num = ip->highest_received_sequence_number + (IPMIPOWER_MAX_SEQUENCE_NUMBER - seq_num);
             }
           else
             shift_num = ip->highest_received_sequence_number - seq_num;
@@ -762,21 +762,21 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
    * So check that we get back what we sent.
    */
   if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
-    rv = (val == ip->requested_maximum_privilege) ? 1 : 0;
+    rv = (val == ip->requested_maximum_privilege_level) ? 1 : 0;
   else
     {
-      if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER
+      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_USER
 	  && (val == IPMI_PRIVILEGE_LEVEL_USER
 	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 	      || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
-      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
+      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
 	       && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
 		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
      rv = 1;
-      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
+      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
 	       && (val == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || val == IPMI_PRIVILEGE_LEVEL_OEM))
 	rv = 1;
@@ -789,7 +789,7 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
         "invalid privilege: %x, expected: %x",
         ip->ic->hostname, ip->protocol_state,
         (unsigned int)val,
-        (unsigned int)ip->requested_maximum_privilege);
+        (unsigned int)ip->requested_maximum_privilege_level);
   
   return (rv);
 }
@@ -955,7 +955,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
                                                                         managed_system_guid,
                                                                         managed_system_guid_len,
                                                                         ip->name_only_lookup,
-                                                                        ip->privilege,
+                                                                        ip->privilege_level,
                                                                         username,
                                                                         username_len,
                                                                         ip->obj_rakp_message_2_res)) < 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-argp.c,v 1.1 2007-06-27 21:35:33 chu11 Exp $
+ *  $Id: ipmi-fru-argp.c,v 1.2 2007-08-02 20:50:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,7 +40,7 @@
 #endif /* HAVE_UNISTD_H */
 
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-fru.h"
 #include "ipmi-fru-argp.h"
 
@@ -57,21 +57,22 @@ static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
+    ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND,
-    ARGP_COMMON_OPTIONS_AUTHTYPE,
-    ARGP_COMMON_OPTIONS_PRIVLEVEL_USER,
+    ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_USER,
+    ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
-#ifndef NDEBUG
     ARGP_COMMON_OPTIONS_DEBUG,
-#endif
     {"device-id", DEVICE_ID_KEY, "DEVICE_ID", 0,
-     "Specify FRU device ID.", 21},
+     "Specify a specific FRU device ID.", 25},
     {"verbose", VERBOSE_KEY, 0, 0,
-     "Increase verbosity in output.", 22},
+     "Increase verbosity in output.", 26},
     {"skip-checks", SKIP_CHECKS_KEY, 0, 0,
-     "Skip FRU version and checksum checks", 23},
+     "Skip FRU checksum checks", 27},
     { 0 }
   };
 
@@ -131,4 +132,7 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->skip_checks_wanted = 0;
 
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
+  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_hostrange_cmd_args (&(cmd_args->hostrange));
 }

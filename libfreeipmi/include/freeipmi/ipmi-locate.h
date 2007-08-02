@@ -70,14 +70,14 @@ typedef enum ipmi_interface_type ipmi_interface_type_t;
 
 struct ipmi_locate_info
 {
-  uint8_t ipmi_ver_major;
-  uint8_t ipmi_ver_minor;
+  uint8_t ipmi_version_major;
+  uint8_t ipmi_version_minor;
   ipmi_locate_driver_type_t locate_driver_type;
   ipmi_interface_type_t interface_type; /* KCS, SMIC, BT, SSIF */
   char driver_device[IPMI_LOCATE_PATH_MAX];
   uint8_t address_space_id;  /* Memory mapped, IO mapped, SMBus*/
   uint64_t driver_address;
-  uint8_t reg_space; /* Register spacing in bytes */
+  uint8_t register_spacing; /* Register spacing in bytes */
 };
 
 int ipmi_locate (ipmi_interface_type_t type, struct ipmi_locate_info *info);

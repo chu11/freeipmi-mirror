@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.30 2007-06-02 18:18:28 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.31 2007-08-02 20:50:12 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -41,8 +41,8 @@ void
 display_ipmi_locate_info (struct ipmi_locate_info *info)
 {
   printf ("IPMI Version: %d.%d\n", 
-	  info->ipmi_ver_major, 
-	  info->ipmi_ver_minor);
+	  info->ipmi_version_major, 
+	  info->ipmi_version_minor);
   
   switch (info->locate_driver_type)
     {
@@ -106,7 +106,7 @@ display_ipmi_locate_info (struct ipmi_locate_info *info)
       printf ("error: Error parsing base address\n");
     }
   
-  printf ("Register space: %d\n", info->reg_space);
+  printf ("Register spacing: %d\n", info->register_spacing);
   
   return;
 }

@@ -34,25 +34,24 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
-#define IPMI_DEFAULT_I2C_DEVICE        "/dev/i2c-0"
-#define IPMI_DEFAULT_SSIF_IPMB_ADDR    0x42
+#define IPMI_DEFAULT_I2C_DEVICE                "/dev/i2c-0"
+#define IPMI_DEFAULT_SSIF_IPMB_ADDR            0x42
 
-#define IPMI_SSIF_CTX_ERR_SUCCESS         0
-#define IPMI_SSIF_CTX_ERR_NULL            1
-#define IPMI_SSIF_CTX_ERR_INVALID         2
-#define IPMI_SSIF_CTX_ERR_PARAMETERS      3
-#define IPMI_SSIF_CTX_ERR_PERMISSION      4
-#define IPMI_SSIF_CTX_ERR_IO_PARAMETERS   5
-#define IPMI_SSIF_CTX_ERR_IO_INIT         6
-#define IPMI_SSIF_CTX_ERR_OVERFLOW        7
-#define IPMI_SSIF_CTX_ERR_BUSY            8
-#define IPMI_SSIF_CTX_ERR_OUTMEM          9
-#define IPMI_SSIF_CTX_ERR_DEVICE_NOTFOUND 10
-#define IPMI_SSIF_CTX_ERR_INTERNAL        11
-#define IPMI_SSIF_CTX_ERR_ERRNUMRANGE     12
+#define IPMI_SSIF_CTX_ERR_SUCCESS              0
+#define IPMI_SSIF_CTX_ERR_NULL                 1
+#define IPMI_SSIF_CTX_ERR_INVALID              2
+#define IPMI_SSIF_CTX_ERR_PARAMETERS           3
+#define IPMI_SSIF_CTX_ERR_PERMISSION           4
+#define IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED   5
+#define IPMI_SSIF_CTX_ERR_OVERFLOW             6
+#define IPMI_SSIF_CTX_ERR_BUSY                 7
+#define IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY        8
+#define IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND     9
+#define IPMI_SSIF_CTX_ERR_INTERNAL            10
+#define IPMI_SSIF_CTX_ERR_ERRNUMRANGE         11
 
-#define IPMI_SSIF_FLAGS_DEFAULT     0x00000000
-#define IPMI_SSIF_FLAGS_NONBLOCKING 0x00000001
+#define IPMI_SSIF_FLAGS_DEFAULT       0x00000000
+#define IPMI_SSIF_FLAGS_NONBLOCKING   0x00000001
 
 typedef struct ipmi_ssif_ctx *ipmi_ssif_ctx_t;
 

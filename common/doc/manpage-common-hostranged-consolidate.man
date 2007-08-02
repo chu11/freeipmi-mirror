@@ -1,0 +1,10 @@
+.TP
+\fB\-C\fR, \fB\-\-consolidate-output\fR
+Consolidate hostranged output.  The complete standard output from
+every node specified will be consolidated so that nodes with identical
+output are not output twice.  A header will list those nodes with the
+consolidated output.  When this option is specified, no output can be
+seen until the IPMI operations to all nodes has completed.  If the
+user breaks out of the program early, all currently consolidated
+output will be dumped.  See HOSTRANGED SUPPORT below for additional
+information.

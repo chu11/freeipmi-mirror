@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.108 2007-08-02 20:50:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,12 +47,12 @@
 #endif /* !TIME_WITH_SYS_TIME */
 
 #include "ipmipower.h"
-#include "ipmipower_authentication.h"
-#include "ipmipower_cipher_suite.h"
+#include "ipmipower_authentication_type.h"
+#include "ipmipower_cipher_suite_id.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
-#include "ipmipower_privilege.h"
+#include "ipmipower_privilege_level.h"
 #include "ipmipower_check.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
@@ -211,7 +211,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    * Protocol State Machine Variables
    */
   Gettimeofday(&(ip->time_begin), NULL);
-  ip->retry_count = 0;
+  ip->retransmission_count = 0;
   ip->close_timeout = 0;
 
   /*
@@ -229,18 +229,18 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    */
   ip->previously_received_list = 0xFF;
 
-  if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+  if (conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
     {
       /* Following are default minimum privileges according to the IPMI
        * specification 
        */
       if (cmd == POWER_CMD_POWER_STATUS)
-        ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
+        ip->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
       else
-        ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+        ip->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
     }
   else
-    ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
+    ip->privilege_level = ipmipower_ipmi_privilege_level(conf->privilege_level);
 
   /* IPMI 1.5 */
 
@@ -284,9 +284,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * of an actual privilege.
        */
       if (conf->workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
-	ip->requested_maximum_privilege = ip->privilege;
+	ip->requested_maximum_privilege_level = ip->privilege_level;
       else
-	ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
+	ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
       memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
       ip->sik_key_ptr = ip->sik_key;
       ip->sik_key_len = IPMI_MAX_SIK_KEY_LENGTH;
@@ -562,7 +562,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
           if (pkt != AUTHENTICATION_CAPABILITIES_V20_RES)
             ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
           
-          ip->retry_count = 0;  /* important to reset */
+          ip->retransmission_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
 	  goto cleanup;
 	}
@@ -615,7 +615,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
               if (pkt != OPEN_SESSION_RES)
                 ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
 
-	      ip->retry_count = 0;  /* important to reset */
+	      ip->retransmission_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
 	      goto cleanup;
 	    }
@@ -638,7 +638,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    {
 	      if (!ipmipower_check_rakp_2_key_exchange_authentication_code(ip, pkt))
 		{
-		  ipmipower_output(MSG_TYPE_PASSWORD, ip->ic->hostname); /* XXX - permission denied? */
+		  ipmipower_output(MSG_TYPE_PASSWORD_INVALID, ip->ic->hostname); 
 		  goto cleanup;
 		}
 	    }
@@ -646,7 +646,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    {
 	      if (!ipmipower_check_rakp_4_integrity_check_value(ip, pkt))
 		{
-		  ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname); /* XXX - permission denied? */
+		  ipmipower_output(MSG_TYPE_K_G_INVALID, ip->ic->hostname); 
 		  goto cleanup;
 		}
 	    }
@@ -731,7 +731,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	      if (pkt == CLOSE_SESSION_RES)
 		goto close_session_workaround;
 	      
-	      ip->retry_count = 0;  /* important to reset */
+	      ip->retransmission_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
 	      goto cleanup;
 	    }
@@ -745,7 +745,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * close the session anyways.
    */
  close_session_workaround:
-  ip->retry_count = 0;  /* important to reset */
+  ip->retransmission_count = 0;  /* important to reset */
   Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
   rv = 1;
 
@@ -765,14 +765,14 @@ static int
 _has_timed_out(ipmipower_powercmd_t ip) 
 {
   struct timeval cur_time, result;
-  unsigned int timeout_len;
+  unsigned int session_timeout_len;
     
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->time_begin), &result);
-  timeval_millisecond_calc(&result, &timeout_len);
+  timeval_millisecond_calc(&result, &session_timeout_len);
 
   /* Must use >=, otherwise we could potentially spin */
-  if (timeout_len >= conf->timeout_len) 
+  if (session_timeout_len >= conf->session_timeout_len) 
     {
       /* Don't bother outputting timeout if we have finished the power
          control operation */
@@ -782,7 +782,7 @@ _has_timed_out(ipmipower_powercmd_t ip)
           if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
             ipmipower_output(MSG_TYPE_PASSWORD_VERIFICATION_TIMEOUT, ip->ic->hostname);
           else
-            ipmipower_output(MSG_TYPE_TIMEDOUT, ip->ic->hostname);
+            ipmipower_output(MSG_TYPE_SESSION_TIMEOUT, ip->ic->hostname);
         }
       return 1;
     }
@@ -800,16 +800,16 @@ _retry_packets(ipmipower_powercmd_t ip)
   struct timeval cur_time, end_time, result;
   unsigned int time_since_last_ipmi_send;
   unsigned int time_left;
-  unsigned int retry_timeout_len;
+  unsigned int retransmission_timeout_len;
 
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
-      || conf->retry_timeout_len == 0             /* no retransmissions */
+      || conf->retransmission_timeout_len == 0             /* no retransmissions */
       || (((conf->wait_until_on == IPMIPOWER_TRUE
             && ip->cmd == POWER_CMD_POWER_ON)
            || (conf->wait_until_off == IPMIPOWER_TRUE
                && ip->cmd == POWER_CMD_POWER_OFF))
-	  && conf->retry_wait_timeout_len == 0))
+	  && conf->retransmission_wait_timeout_len == 0))
     return 0;
 
   /* Did we timeout on this packet? */
@@ -817,27 +817,27 @@ _retry_packets(ipmipower_powercmd_t ip)
        && ip->cmd == POWER_CMD_POWER_ON)
       || (conf->wait_until_off == IPMIPOWER_TRUE
           && ip->cmd == POWER_CMD_POWER_OFF))
-    retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_wait_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_wait_timeout_len;
+    retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
   else
-    retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
+    retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_timeout_len;
 
   Gettimeofday(&cur_time, NULL);
   timeval_sub(&cur_time, &(ip->ic->last_ipmi_send), &result);
   timeval_millisecond_calc(&result, &time_since_last_ipmi_send);
 
-  if (time_since_last_ipmi_send < retry_timeout_len)
+  if (time_since_last_ipmi_send < retransmission_timeout_len)
     return 0;
 
   /* Do we have enough time to retransmit? */
-  timeval_add_ms(&cur_time, conf->timeout_len, &end_time);
+  timeval_add_ms(&cur_time, conf->session_timeout_len, &end_time);
   timeval_sub(&end_time, &cur_time, &result);
   timeval_millisecond_calc(&result, &time_left);
-  if (time_left < retry_timeout_len)
+  if (time_left < retransmission_timeout_len)
     return 0;
 
-  ip->retry_count++;
+  ip->retransmission_count++;
   dbg("_retry_packets(%s:%d): Sending retry, retry count=%d",
-      ip->ic->hostname, ip->protocol_state, ip->retry_count);
+      ip->ic->hostname, ip->protocol_state, ip->retransmission_count);
 
   if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
@@ -1003,7 +1003,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
       || (strlen(conf->username)
 	  && !authentication_status_non_null_username))
     {
-      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
+      ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname);
       return -1;
     }
 
@@ -1022,7 +1022,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
       else if (authentication_type_none)
 	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
-      else if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+      else if (conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
 	{
 	  /* achu: It may not seem possible to get to this point
 	   * since the check for anonymous_login, null_username,
@@ -1031,10 +1031,10 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	   * could be enabled (shame on you evil vendor!!) or
 	   * authentication at this privilege level isn't allowed.
 	   */
-	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	  if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
-	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname);
 	      return -1;
 	    }
 	  else
@@ -1042,7 +1042,7 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	}
       else
 	{
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	/* XXX - permission denied? */
+	  ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
 	  return -1;
 	}
     }
@@ -1062,10 +1062,10 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
       else
 	{
-	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	  if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
 	    {
 	      /* Time to give up */
-	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);	/* XXX - permission denied? */
+	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname);	
 	      return -1;
 	    }
 	  else
@@ -1080,13 +1080,13 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
   if (authentication_type_try_higher_priv)
     {
       /* Try a higher privilege level */
-      if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER)
-	ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR)
-	ip->privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
+      if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_USER)
+	ip->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+      else if (ip->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+	ip->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
       else
 	err_exit("_check_authentication_privileges: invalid privilege state: %d", 
-		 ip->privilege);
+		 ip->privilege_level);
 
       return 1;
     }
@@ -1156,14 +1156,14 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
       || (strlen(conf->username)
 	  && !authentication_status_non_null_username))
     {
-      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
+      ipmipower_output(MSG_TYPE_USERNAME_INVALID, ip->ic->hostname); 
       return -1;
     }
 
   if ((conf->k_g_configured != IPMIPOWER_TRUE && authentication_status_k_g)
       || (conf->k_g_configured == IPMIPOWER_TRUE && !authentication_status_k_g))
     {
-      ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);	/* XXX - permission denied? */
+      ipmipower_output(MSG_TYPE_K_G_INVALID, ip->ic->hostname);	
       return -1;
     }
 
@@ -1203,7 +1203,7 @@ _check_ipmi_2_0_authentication_capabilities_error(ipmipower_powercmd_t ip)
             return 0;
           else
             {
-              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              ipmipower_output(MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname); 
               return -1;
             }
         }
@@ -1314,9 +1314,9 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
         {
           dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
               ip->ic->hostname, ip->protocol_state);
-          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           
-          ip->retry_count = 0;  /* important to reset */
+          ip->retransmission_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
           return -1;
         }
@@ -1392,7 +1392,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           if (conf->workaround_flags & WORKAROUND_FLAG_SUN_2_0_SESSION)
             break;
 
-          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           goto cleanup;
         }
 
@@ -1401,7 +1401,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           dbg("_calculate_cipher_suite_ids(%s:%d): "
               "invalid record format: %x",
               ip->ic->hostname, ip->protocol_state, (uint8_t)record_format);
-          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_BMC_ERROR, ip->ic->hostname);
           goto cleanup;
         }
 
@@ -1533,7 +1533,7 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
           dbg("_determine_cipher_suite_id_to_use(%s:%d): "
               " cipher suite not found: %x",
               ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
-          ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); /* XXX - permission denied? */
+          ipmipower_output(MSG_TYPE_CIPHER_SUITE_ID_UNAVAILABLE, ip->ic->hostname); 
           return -1;
         }
     }
@@ -1564,7 +1564,7 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
           dbg("_determine_cipher_suite_id_to_use(%s:%d): "
               " can't find usable cipher suite",
               ip->ic->hostname, ip->protocol_state);
-          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
           return -1;
         }
       
@@ -1638,8 +1638,8 @@ _check_open_session_error(ipmipower_powercmd_t ip)
   /* A rmcpplus status error takes precedence over a privilege error */
   if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
     {
-      if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
-	  && conf->privilege == PRIVILEGE_TYPE_AUTO)
+      if (ip->requested_maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL
+	  && conf->privilege_level == PRIVILEGE_LEVEL_AUTO)
 	{
 	  if (ip->cmd == POWER_CMD_POWER_STATUS)
 	    {
@@ -1660,21 +1660,12 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	    }
 	}
       else
-	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege) ? 1 : 0;
+	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege_level) ? 1 : 0;
       
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
-	  && conf->privilege != PRIVILEGE_TYPE_AUTO 
 	  && !priv_check)
 	{
-	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);	/* XXX - permission denied? */
-	  return -1;
-	}
-      
-      if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
-	  && conf->privilege == PRIVILEGE_TYPE_AUTO 
-	  && !priv_check)
-	{
-	  ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); /* XXX - permission denied? */
+	  ipmipower_output(MSG_TYPE_NECESSARY_PRIVILEGE_LEVEL, ip->ic->hostname);	
 	  return -1;
 	}
     }
@@ -1689,7 +1680,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
           /* Lets try the next Cipher Suite ID if there is one */
           if (ip->cipher_suite_id_ranking_index == (cipher_suite_id_ranking_count - 1))
             {
-              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname);
               return -1;
             }
           else
@@ -1714,7 +1705,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
               
               if (!cipher_suite_found)
                 {
-                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); /* XXX - permission denied? */
+                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
                   return -1;
                 }
               
@@ -1829,7 +1820,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            managed_system_random_number,
                                            managed_system_random_number_len,
                                            ip->name_only_lookup,
-                                           ip->privilege,
+                                           ip->privilege_level,
                                            username,
                                            username_len,
                                            &(ip->sik_key_ptr),
@@ -1932,7 +1923,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
               if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
                 {
-                  ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+                  ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
                   return -1;
                 }
 
@@ -1950,9 +1941,15 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
       else if (conf->ipmi_version == IPMI_VERSION_1_5)
 	{
+          /* achu: This else if statement block might not be
+           * accessible anymore, b/c if the user configured
+           * IPMI_VERSION_1_5, a get authentication capabilties for
+           * v20 shouldn't have been sent.  We'll leave this code here
+           * anyways.
+           */
           if (!ipmi_1_5)
             {
-              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              ipmipower_output(MSG_TYPE_IPMI_1_5_UNAVAILABLE, ip->ic->hostname); 
               return -1;
             }
           /* else we continue with the IPMI 1.5 protocol */
@@ -1973,7 +1970,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	  
 	  if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
 	    {
-	      ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+	      ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
 	      return -1;
 	    }
 	  
@@ -1983,7 +1980,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           if (!ipmi_2_0)
             {
-              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              ipmipower_output(MSG_TYPE_IPMI_2_0_UNAVAILABLE, ip->ic->hostname); 
               return -1;
             }
           /* else we continue with the IPMI 2.0 protocol */
@@ -2022,7 +2019,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
         {
-          ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+          ipmipower_output(MSG_TYPE_PASSWORD_LENGTH_INVALID, ip->ic->hostname);
           return -1;
         }
 
@@ -2301,23 +2298,23 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
  done:
   Gettimeofday(&cur_time, NULL);
-  timeval_add_ms(&(ip->time_begin), conf->timeout_len, &end_time);
+  timeval_add_ms(&(ip->time_begin), conf->session_timeout_len, &end_time);
   timeval_sub(&end_time, &cur_time, &result);
   timeval_millisecond_calc(&result, &timeout);
 
   /* shorter timeout b/c of retransmission timeout */
   if (conf->wait_until_off
-      && conf->retry_wait_timeout_len)
+      && conf->retransmission_wait_timeout_len)
     {
-      int retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_wait_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_wait_timeout_len;
-      if (timeout > retry_timeout_len)
-        timeout = retry_timeout_len;
+      int retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_wait_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_wait_timeout_len;
+      if (timeout > retransmission_timeout_len)
+        timeout = retransmission_timeout_len;
     }
-  else if (conf->retry_timeout_len) 
+  else if (conf->retransmission_timeout_len) 
     {
-      int retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
-      if (timeout > retry_timeout_len)
-        timeout = retry_timeout_len;
+      int retransmission_timeout_len = (conf->retransmission_backoff_count) ? (conf->retransmission_timeout_len * (1 + (ip->retransmission_count/conf->retransmission_backoff_count))) : conf->retransmission_timeout_len;
+      if (timeout > retransmission_timeout_len)
+        timeout = retransmission_timeout_len;
     }
 
   return (int)timeout;
@@ -2328,7 +2325,7 @@ ipmipower_powercmd_process_pending(int *timeout)
 {
   ListIterator itr;
   ipmipower_powercmd_t ip;
-  int min_timeout = conf->timeout_len;
+  int min_timeout = conf->session_timeout_len;
   int num_pending;
 
   assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.67 2006-12-15 17:26:44 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.68 2007-08-02 20:50:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,10 +63,12 @@
 #endif
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 /* Driver Types */
-#define DRIVER_TYPE_KCS  0
-#define DRIVER_TYPE_SSIF 1
+#define DRIVER_TYPE_KCS      0
+#define DRIVER_TYPE_SSIF     1
+#define DRIVER_TYPE_OPENIPMI 2
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
@@ -84,6 +86,12 @@
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
 
+#define BMC_WATCHDOG_NO_PROBING_KEY        128
+#define BMC_WATCHDOG_DRIVER_ADDRESS_KEY    129
+#define BMC_WATCHDOG_DRIVER_DEVICE_KEY     130
+#define BMC_WATCHDOG_REGISTER_SPACING_KEY  131
+#define BMC_WATCHDOG_DEBUG_KEY             132
+
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
      uint64_t __temp; \
@@ -92,7 +100,7 @@
          _bmclog("%s: fiid_obj_get: %s", (__func), fiid_strerror(fiid_obj_errnum((__obj)))); \
          if (fiid_obj_errnum((__obj)) == FIID_ERR_SUCCESS) \
            errno = 0; \
-         else if (fiid_obj_errnum((__obj)) == FIID_ERR_OUTMEM)         \
+         else if (fiid_obj_errnum((__obj)) == FIID_ERR_OUT_OF_MEMORY)  \
            errno = ENOMEM; \
          else if (fiid_obj_errnum((__obj)) == FIID_ERR_OVERFLOW)       \
            errno = ENOSPC; \
@@ -114,12 +122,13 @@ struct cmdline_info
   int daemon;
   int driver_type;
   int driver_type_val;
+  int no_probing;
   int driver_address;
   uint32_t driver_address_val;
-  int reg_space;
-  uint8_t reg_space_val;
   int driver_device;
   char *driver_device_val;
+  int register_spacing;
+  uint8_t register_spacing_val;
   char *logfile;
   int no_logging;
   int timer_use;
@@ -151,9 +160,7 @@ struct cmdline_info
   uint8_t arp_response_val;
   int reset_period;
   uint32_t reset_period_val; 
-#ifndef NDEBUG
- int debug;
-#endif
+  int debug;
 };
 
 /* program name */
@@ -161,6 +168,7 @@ char *err_progname = NULL;
 
 ipmi_kcs_ctx_t kcs_ctx = NULL;
 ipmi_ssif_ctx_t ssif_ctx = NULL;
+ipmi_openipmi_ctx_t openipmi_ctx = NULL;
 int driver_type_used = -1;
 
 int cmdline_parsed = 0;
@@ -276,14 +284,44 @@ _err_exit(char *fmt, ...)
 }
 
 static int
+_init_openipmi_ipmi(void)
+{
+  if (!(openipmi_ctx = ipmi_openipmi_ctx_create()))
+    {
+      _bmclog("ipmi_openipmi_ctx_create: %s", strerror(errno));
+      return -1;
+    }
+  
+  if (cinfo.driver_device)
+    {
+      if (ipmi_openipmi_ctx_set_driver_device(openipmi_ctx, cinfo.driver_device_val) < 0)
+        {
+          _bmclog("ipmi_openipmi_ctx_set_driver_device: %s", ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+          return -1;
+        }
+    }
+  
+  if (ipmi_openipmi_ctx_io_init(openipmi_ctx) < 0)
+    {
+      _bmclog("ipmi_openipmi_ctx_io_init: %s", ipmi_openipmi_ctx_strerror(ipmi_openipmi_ctx_errnum(openipmi_ctx)));
+      return -1;
+    }
+
+  return 0;
+}
+
+static int
 _init_kcs_ipmi(void)
 {
   struct ipmi_locate_info l;
 
-  if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
+  if (!cinfo.no_probing)
     {
-      _bmclog("ipmi_locate: %s", strerror(errno));
-      return -1;
+      if (ipmi_locate(IPMI_INTERFACE_KCS, &l) < 0)
+        {
+          _bmclog("ipmi_locate: %s", strerror(errno));
+          return -1;
+        }
     }
 
   if (!(kcs_ctx = ipmi_kcs_ctx_create()))
@@ -294,19 +332,25 @@ _init_kcs_ipmi(void)
 
   if (cinfo.driver_address)
     l.driver_address = cinfo.driver_address_val;
-  if (cinfo.reg_space)
-    l.reg_space = cinfo.reg_space_val;
+  if (cinfo.register_spacing)
+    l.register_spacing = cinfo.register_spacing_val;
   
-  if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
+  if (!cinfo.no_probing || cinfo.driver_address)
     {
-      _bmclog("ipmi_kcs_ctx_set_driver_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-      return -1;
+      if (ipmi_kcs_ctx_set_driver_address(kcs_ctx, l.driver_address) < 0)
+        {
+          _bmclog("ipmi_kcs_ctx_set_driver_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+          return -1;
+        }
     }
   
-  if (ipmi_kcs_ctx_set_register_space(kcs_ctx, l.reg_space) < 0)
+  if (!cinfo.no_probing || cinfo.register_spacing)
     {
-      _bmclog("ipmi_kcs_ctx_set_register_space: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
-      return -1;
+      if (ipmi_kcs_ctx_set_register_spacing(kcs_ctx, l.register_spacing) < 0)
+        {
+          _bmclog("ipmi_kcs_ctx_set_register_spacing: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+          return -1;
+        }
     }
   
   if (ipmi_kcs_ctx_set_flags(kcs_ctx, IPMI_KCS_FLAGS_NONBLOCKING) < 0)
@@ -329,12 +373,14 @@ _init_ssif_ipmi(void)
 {
   struct ipmi_locate_info l;
 
-  if (ipmi_locate(IPMI_INTERFACE_SSIF, &l) < 0)
+  if (!cinfo.no_probing)
     {
-      _bmclog("ipmi_locate: %s", strerror(errno));
-      return -1;
+      if (ipmi_locate(IPMI_INTERFACE_SSIF, &l) < 0)
+        {
+          _bmclog("ipmi_locate: %s", strerror(errno));
+          return -1;
+        }
     }
-
   if (!(ssif_ctx = ipmi_ssif_ctx_create()))
     {
       _bmclog("ipmi_ssif_ctx_create: %s", strerror(errno));
@@ -349,16 +395,22 @@ _init_ssif_ipmi(void)
       l.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
     }
   
-  if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
+  if (!cinfo.no_probing || cinfo.driver_address)
     {
-      _bmclog("ipmi_ssif_ctx_set_driver_address: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-      return -1;
+      if (ipmi_ssif_ctx_set_driver_address(ssif_ctx, l.driver_address) < 0)
+        {
+          _bmclog("ipmi_ssif_ctx_set_driver_address: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+          return -1;
+        }
     }
   
-  if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
+  if (!cinfo.no_probing || cinfo.driver_device)
     {
-      _bmclog("ipmi_ssif_ctx_set_i2c_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
-      return -1;
+      if (ipmi_ssif_ctx_set_driver_device(ssif_ctx, l.driver_device) < 0)
+        {
+          _bmclog("ipmi_ssif_ctx_set_driver_device: %s", ipmi_ssif_ctx_strerror(ipmi_ssif_ctx_errnum(ssif_ctx)));
+          return -1;
+        }
     }
   
   if (ipmi_ssif_ctx_set_flags(ssif_ctx, IPMI_SSIF_FLAGS_NONBLOCKING) < 0)
@@ -399,18 +451,29 @@ _init_ipmi(void)
 	    _err_exit("Error initializing SSIF IPMI driver");
 	  driver_type_used = DRIVER_TYPE_SSIF;
 	}
+      if (cinfo.driver_type_val == DRIVER_TYPE_OPENIPMI)
+	{
+	  if (_init_openipmi_ipmi() < 0)
+	    _err_exit("Error initializing OPENIPMI IPMI driver");
+	  driver_type_used = DRIVER_TYPE_OPENIPMI;
+	}
     }
   else
     {
-      if (_init_kcs_ipmi() < 0)
-	{
-	  if (_init_ssif_ipmi() < 0)
-	    _err_exit("Error initializing IPMI driver");
-	  else
-	    driver_type_used = DRIVER_TYPE_SSIF;
-	}
+      if (_init_openipmi_ipmi() < 0)
+        {
+          if (_init_kcs_ipmi() < 0)
+            {
+              if (_init_ssif_ipmi() < 0)
+                _err_exit("Error initializing IPMI driver");
+              else
+                driver_type_used = DRIVER_TYPE_SSIF;
+            }
+          else
+            driver_type_used = DRIVER_TYPE_KCS;
+        }
       else
-	driver_type_used = DRIVER_TYPE_KCS;
+        driver_type_used = DRIVER_TYPE_OPENIPMI;
     }
 
   return 0;
@@ -514,13 +577,11 @@ _cmd(char *str,
           && cmd_rq != NULL
           && cmd_rs != NULL);
 
-#ifndef NDEBUG
   if (cinfo.debug)
     {
       if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
         _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
-#endif
 
   while (1)
     {
@@ -540,10 +601,9 @@ _cmd(char *str,
 		    errno = EINVAL;
 		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
 		    errno = EPERM;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUTMEM)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUT_OF_MEMORY)
 		    errno = ENOMEM;
-		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_PARAMETERS
-			   || ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_INIT)
+		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED)
 		    errno = EIO;
 		  else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OVERFLOW)
 		    errno = ENOSPC;
@@ -569,10 +629,9 @@ _cmd(char *str,
 		    errno = EINVAL;
 		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_PERMISSION)
 		    errno = EPERM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUTMEM)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY)
 		    errno = ENOMEM;
-		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_PARAMETERS
-			   || ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_INIT)
+		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED)
 		    errno = EIO;
 		  else if (ipmi_ssif_ctx_errnum(ssif_ctx) == IPMI_SSIF_CTX_ERR_OVERFLOW)
 		    errno = ENOSPC;
@@ -593,13 +652,13 @@ _cmd(char *str,
 	      errno = EBUSY;
 	      return -1;
 	    }
-#ifndef NDEBUG
+
 	  if (cinfo.debug)
 	    {
 	      fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
 	      _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
 	    }
-#endif
+
 	  _sleep(retry_wait_time);
 	  retry_count++;
 	}
@@ -607,13 +666,11 @@ _cmd(char *str,
         break;
     }
 
-#ifndef NDEBUG
   if (cinfo.debug)
     {
       if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
         _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
-#endif
 
   _FIID_OBJ_GET(cmd_rs, "comp_code", &comp_code, str);
 
@@ -1044,13 +1101,13 @@ _usage(void)
               "Usage: bmc-watchdog <COMMAND> [OPTIONS]... [COMMAND_OPTIONS]...\n\n");
       fprintf(stderr,
               "COMMANDS:\n"
-              "  -s         --set                        Set BMC Watchdog Config\n"
-              "  -g         --get                        Get BMC Watchdog Config\n"
-              "  -r         --reset                      Reset BMC Watchdog Timer\n"
-              "  -t         --start                      Start BMC Watchdog Timer\n"
-              "  -y         --stop                       Stop BMC Watchdog Timer\n"
-              "  -c         --clear                      Clear BMC Watchdog Config\n"
-              "  -d         --daemon                     Run in Daemon Mode\n\n");
+              "  -s         --set                            Set BMC Watchdog Config.\n"
+              "  -g         --get                            Get BMC Watchdog Config.\n"
+              "  -r         --reset                          Reset BMC Watchdog Timer.\n"
+              "  -t         --start                          Start BMC Watchdog Timer.\n"
+              "  -y         --stop                           Stop BMC Watchdog Timer.\n"
+              "  -c         --clear                          Clear BMC Watchdog Config.\n"
+              "  -d         --daemon                         Run in Daemon Mode.\n\n");
     }
   else
     fprintf(stderr,
@@ -1058,18 +1115,19 @@ _usage(void)
 
   fprintf(stderr,
 	  "OPTIONS:\n"
-          "  -h         --help                       Output help menu\n"
-          "  -v         --version                    Output version\n"
-	  "  -I STRING  --driver-type=STRING         IPMI driver type (KCS, SSIF)\n"
-	  "  -o INT     --driver-address=INT         Base address for IPMI driver\n"
-          "  -R INT     --reg-space=INT              Base address register spacing in bytes\n"
-	  "  -E STRING  --driver-device=STRING       Driver device to use\n"
-          "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
-          "  -n         --no-logging                 Turn off all syslogging\n");
-#ifndef NDEBUG
+          "  -?         --help                               Output help menu.\n"
+          "  -V         --version                            Output version.\n"
+	  "  -D STRING  --driver-type=IPMIDRIVER             Specify IPMI driver type.\n"
+          "             --no-probing                         Do not probe driver for default settings.\n"
+	  "             --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
+	  "             --driver-device=DEVICE               Specify driver device path.\n"
+          "             --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
+          "  -f STRING  --logfile=FILE                       Specify an alternate logfile\n"
+          "  -n         --no-logging                         Turn off all syslogging\n");
+
   fprintf(stderr,
-	  "  -D         --debug                      Turn on debugging\n");
-#endif
+	  "             --debug                              Turn on debugging.\n");
+
   fprintf(stderr, "\n");
 
   if (cinfo.set || cinfo.start || cinfo.daemon)
@@ -1078,35 +1136,35 @@ _usage(void)
 
   if (cinfo.set || cinfo.daemon)
     fprintf(stderr,
-            "  -u INT     --timer-use=INT              Set timer use\n"
+            "  -u INT     --timer-use=INT              Set timer use.\n"
             "             %d = BIOS FRB2\n"
             "             %d = BIOS POST\n"
             "             %d = OS_LOAD\n"
             "             %d = SMS OS\n"
             "             %d = OEM\n"
-            "  -m INT     --stop-timer=INT             Set Stop Timer Flag\n"
+            "  -m INT     --stop-timer=INT             Set Stop Timer Flag.\n"
             "             %d = Stop Timer\n"
             "             %d = Don't Stop timer\n"
-            "  -l INT     --log=INT                    Set Log Flag\n"
+            "  -l INT     --log=INT                    Set Log Flag.\n"
             "             %d = Enable Log\n"
             "             %d = Disable Log\n"
-            "  -a INT     --timeout-action=INT         Set timeout action\n"
+            "  -a INT     --timeout-action=INT         Set timeout action.\n"
             "             %d = No action\n" 
             "             %d = Hard Reset\n"
             "             %d = Power Down\n"
             "             %d = Power Cycle\n"
-            "  -p INT     --pre-timeout-interrupt=INT  Set pre-timeout interrupt\n"
+            "  -p INT     --pre-timeout-interrupt=INT  Set pre-timeout interrupt.\n"
             "             %d = None\n" 
             "             %d = SMI\n" 
             "             %d = NMI\n" 
             "             %d = Messaging Interrupt\n"
-            "  -z SECS    --pre-timeout-interval=SECS  Set pre-timeout interval in seconds\n"
-            "  -F         --clear-bios-frb2            Clear BIOS FRB2 Timer Use Flag\n"
-            "  -P         --clear-bios-post            Clear BIOS POST Timer Use Flag\n"
-            "  -L         --clear-os-load              Clear OS Load Timer Use Flag\n"
-            "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag\n"
-            "  -O         --clear-oem                  Clear OEM Timer Use Flag\n"
-            "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds\n",
+            "  -z SECS    --pre-timeout-interval=SECS  Set pre-timeout interval in seconds.\n"
+            "  -F         --clear-bios-frb2            Clear BIOS FRB2 Timer Use Flag.\n"
+            "  -P         --clear-bios-post            Clear BIOS POST Timer Use Flag.\n"
+            "  -L         --clear-os-load              Clear OS Load Timer Use Flag.\n"
+            "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag.\n"
+            "  -O         --clear-oem                  Clear OEM Timer Use Flag.\n"
+            "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds.\n",
             IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2,
             IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST,
             IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD, 
@@ -1126,16 +1184,16 @@ _usage(void)
             IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
   if (cinfo.set)
     fprintf(stderr,
-            "  -w         --start-after-set            Start timer after set if timer is stopped\n"
-            "  -x         --reset-after-set            Reset timer after set if timer is running\n"
-            "  -j         --start-if-stopped           Don't set if timer is stopped, just start\n"
-            "  -k         --reset-if-running           Don't set if timer is running, just reset\n");
+            "  -w         --start-after-set            Start timer after set if timer is stopped.\n"
+            "  -x         --reset-after-set            Reset timer after set if timer is running.\n"
+            "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"
+            "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
   if (cinfo.start || cinfo.daemon)
     fprintf(stderr, 
-            "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs\n"
+            "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs.\n"
             "             %d = Suspend Gratuitous ARPs\n"
             "             %d = Do Not Suspend Gratuitous ARPs\n"
-            "  -A INT     --arp-response=INT           Suspend ARP Responses\n"
+            "  -A INT     --arp-response=INT           Suspend ARP Responses.\n"
             "             %d = Suspend ARP Responses\n"
             "             %d = Do Not Suspend ARP Responses\n",
             IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND,
@@ -1144,7 +1202,7 @@ _usage(void)
             IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND);
   if (cinfo.daemon)
     fprintf(stderr, 
-            "  -e SECS    --reset-period=SECS          Time interval before resetting timer\n");
+            "  -e SECS    --reset-period=SECS          Specify time interval before resetting timer.\n");
               
   if (cinfo.set || cinfo.start || cinfo.daemon)
     fprintf(stderr, "\n");
@@ -1173,11 +1231,12 @@ _cmdline_parse(int argc, char **argv)
   char options[100];
   char *ptr;
   int help_opt = 0;
-  
+  int tmp;
+
 #if HAVE_GETOPT_LONG
   struct option long_options[] = {
-    {"help",                  0, NULL, 'h'},
-    {"version",               0, NULL, 'v'},
+    {"help",                  0, NULL, '?'},
+    {"version",               0, NULL, 'V'},
     {"set",                   0, NULL, 's'},
     {"get",                   0, NULL, 'g'},
     {"reset",                 0, NULL, 'r'},
@@ -1185,10 +1244,13 @@ _cmdline_parse(int argc, char **argv)
     {"stop",                  0, NULL, 'y'},
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
-    {"driver-type",           1, NULL, 'I'},
-    {"driver-address",        1, NULL, 'o'},
-    {"reg-space",             1, NULL, 'R'},
-    {"driver-device",         1, NULL, 'E'},
+    {"driver-type",           1, NULL, 'D'},
+    {"no-probing",            0, NULL, BMC_WATCHDOG_NO_PROBING_KEY},
+    {"driver-address",        1, NULL, BMC_WATCHDOG_DRIVER_ADDRESS_KEY},
+    {"driver-device",         1, NULL, BMC_WATCHDOG_DRIVER_DEVICE_KEY},
+    /* "reg-space" maintained for backwards compatability */
+    {"reg-space",             1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
+    {"register-spacing",      1, NULL, BMC_WATCHDOG_REGISTER_SPACING_KEY},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
@@ -1210,17 +1272,12 @@ _cmdline_parse(int argc, char **argv)
     {"gratuitous-arp",        1, NULL, 'G'},
     {"arp-response",          1, NULL, 'A'},
     {"reset-period",          1, NULL, 'e'},
-#ifndef NDEBUG
-    {"debug",                 0, NULL, 'D'},
-#endif
+    {"debug",                 0, NULL, BMC_WATCHDOG_DEBUG_KEY},
     {0, 0, 0, 0}
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvI:o:R:E:f:nsgrtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
-#ifndef NDEBUG
-  strcat(options, "D");
-#endif
+  strcpy(options, "HVD:f:nsgRtycdu:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 
   /* turn off output messages printed by getopt_long */
   opterr = 0;
@@ -1233,10 +1290,16 @@ _cmdline_parse(int argc, char **argv)
     {
       switch(c) 
         {
+        case '?':
+          /* 'h' maintained for backwards compatability */
         case 'h':
+          /* 'H" for consistency with other tools */
+        case 'H':
           help_opt++;
           break;
+        /* 'v' maintained for backwards compatability */
         case 'v':
+        case 'V':
           _version();
           break;
         case 's':
@@ -1260,32 +1323,39 @@ _cmdline_parse(int argc, char **argv)
         case 'd':
           cinfo.daemon++;
           break;
-	case 'I':
+	case 'D':
 	  cinfo.driver_type++;
-	  if (!strcasecmp(optarg, "kcs"))
+          tmp = parse_inband_driver_type(optarg);
+          if (tmp == IPMI_DEVICE_KCS)
 	    cinfo.driver_type_val = DRIVER_TYPE_KCS;
-	  else if (!strcasecmp(optarg, "ssif"))
+          else if (tmp == IPMI_DEVICE_SSIF)
 	    cinfo.driver_type_val = DRIVER_TYPE_SSIF;
-	  else
+          else if (tmp == IPMI_DEVICE_OPENIPMI)
+	    cinfo.driver_type_val = DRIVER_TYPE_OPENIPMI;
+          else
 	    _err_exit("driver-type value invalid");
 	  break;
-        case 'o':
+        case BMC_WATCHDOG_NO_PROBING_KEY:
+          cinfo.no_probing++;
+          break;
+        case BMC_WATCHDOG_DRIVER_ADDRESS_KEY:
           cinfo.driver_address++;
           cinfo.driver_address_val = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
               || cinfo.driver_address_val <= 0)
             _err_exit("driver-address value invalid");
           break;
-        case 'R':
-          cinfo.reg_space++;
-          cinfo.reg_space_val = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg)))
-            _err_exit("reg-space value invalid");
-          break;
-	case 'E':
+	case BMC_WATCHDOG_DRIVER_DEVICE_KEY:
 	  cinfo.driver_device++;
 	  cinfo.driver_device_val = optarg;
 	  break;
+        case BMC_WATCHDOG_REGISTER_SPACING_KEY:
+          cinfo.register_spacing++;
+          cinfo.register_spacing_val = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg))
+              || cinfo.register_spacing_val <= 0)
+            _err_exit("register-spacing value invalid");
+          break;
         case 'f':
           cinfo.logfile = optarg;
           break;
@@ -1399,11 +1469,9 @@ _cmdline_parse(int argc, char **argv)
               || cinfo.reset_period_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("reset period value out of range");
           break;
-#ifndef NDEBUG
-        case 'D':
+        case BMC_WATCHDOG_DEBUG_KEY:
           cinfo.debug++;
           break;
-#endif
         default:
           _err_exit("command line option error");
           break;
@@ -1796,11 +1864,9 @@ _daemon_init()
   pid_t pid;
 
 
-#ifndef NDEBUG
   /* Run in foreground if debugging */
   if (!cinfo.debug)
     {
-#endif
       if ((pid = fork()) < 0) 
 	_err_exit("fork: %s", strerror(errno));
       if (pid != 0)
@@ -1823,10 +1889,8 @@ _daemon_init()
       
       for (i = 0; i < 64; i++)
 	close(i);
-#ifndef NDEBUG
     }
-#endif
-  
+
   _init_bmc_watchdog(LOG_DAEMON, 0);
 }
 

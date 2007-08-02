@@ -1,0 +1,151 @@
+\."#############################################################################
+\."$Id: ipmimonitoring.8.pre.in,v 1.2 2007-08-02 20:50:14 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2006 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-222073
+\."  
+\."  This file is part of Ipmimonitoring, an IPMI sensor monitoring
+\."  library.  For details, see http://www.llnl.gov/linux/.
+\."
+\."  Ipmimonitoring is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."  
+\."  Ipmimonitoring is distributed in the hope that it will be useful, but WITHOUT 
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+\."  for more details.
+\."  
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmimonitoring; if not, write to the Free Software Foundation, Inc.,
+\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."############################################################################
+.TH ipmimonitoring 8 "@ISODATE@" "ipmimonitoring @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmimonitoring \- IPMI monitoring tool
+.SH "SYNOPSIS"
+.B ipmimonitoring
+.I "[OPTIONS]"
+.SH "DESCRIPTION"
+.B ipmimonitoring
+is an IPMI sensor monitoring tool that utilizes the libipmimonitoring
+library to interpret sensor readings rather than just report them.
+The tool will output if sensors are in Nominal, Warning, or Critical
+states.  The state interpretations are determined by the configuration
+file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  The library and
+tool are primarily used for host monitoring activities.  For more
+general sensor reading use, it is recommended that users use
+.B ipmi-sensors(8).
+
+.B Ipmimonitoring
+will cache the sensor data repository of the machine for later retrieval.
+So the first time you run 
+.B ipmimonitoring
+may take longer to complete that later executions.  By default, the SDR data
+is cached in
+@IPMI_MONITORING_SDR_CACHE_DIR@.
+
+.SH "OPTIONS"
+.TP
+#include <@top_srcdir@/common/doc/manpage-common-driver.man>
+#include <@top_srcdir@/common/doc/manpage-common-inband.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-password.man>
+#include <@top_srcdir@/common/doc/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/common/doc/manpage-common-authentication-type.man>
+#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+#include <@top_srcdir@/common/doc/manpage-common-privilege-level-user.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+.TP
+\fB\-s\fR, \fB\-\-sensors list\fR
+Specify a list of sensors record ids to specifically monitor.  List of
+sensors can be separated by commas.
+.TP
+\fB\-g\fR, \fB\-\-groups list\fR
+Specify a list of groups to specifically monitor.  List of groups can
+be separated by commas.  The available groups are:
+TEMPERATURE, VOLTAGE, CURRENT, FAN, PHYSICAL_SECURITY,
+PLATFORM_SECURITY_VIOLATION_ATTEMPT, PROCESSOR, POWER_SUPPLY,
+POWER_UNIT, MEMORY, DRIVE_SLOT, SYSTEM_FIRMWARE_PROGRESS,
+EVENT_LOGGING_DISABLED, SYSTEM_EVENT, CRITICAL_INTERRUPT,
+MODULE_BOARD, SLOT_CONNECTOR, WATCHDOG2.
+.TP
+\fB\-c\fR, \fB\-\-cache-dir dir\fR
+Specify an alternate directory to read and write SDR caches.
+.TP
+\fB\-r\fR, \fB\-\-regenerate-sdr-cache\fR
+By default 
+.B ipmimonitoring,
+caches the sensor data repository (SDR) of a node for quicker
+monitoring on subsequent executions of 
+.B ipmimonitoring.
+This option informs
+.B ipmimonitoring 
+to regenerate the SDR cache.  This is often used if the firmware for a
+remote node has been changed.
+.TP
+\fB\-q\fR, \fB\-\-quiet-readings\fR
+Do not output sensor reading values, only Nominal, Warning, or
+Critical states.  This option is particularly useful if you want to
+use hostranged output across a cluster and want to consolidate the
+output.
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
+.TP
+\fB\-H\fR, \fB\-\-help\fR
+Output help menu and exit.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Output version and exit.
+.TP
+\fB\-\-debug\fR
+Turn on debugging.
+.LP
+
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
+
+.SH "KNOWN ISSUES"
+Interpretation rules have not been written for all sensors
+permutations and types.  If sensor interpretation rules are needed,
+please contact the author listed below.
+
+.if @WITH_DEBUG@ \{
+This version of ipmimonitoring was compiled with debugging.  When compiled
+with debugging,
+.B ipmimonitoring 
+is insecure.  The following were intentionally
+left in
+.B ipmimonitoring
+for debugging purposes:
+
+.IP o 2
+Command line arguments are not cleared from memory.
+.IP o
+Core dumps are enabled.
+
+Before placing ipmimonitoring in a production system, it is recommended
+that the program be compiled with debugging turned off.
+\}
+.SH FILES
+@IPMI_MONITORING_SDR_CACHE_DIR@
+
+@IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@
+
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.
+.SH "SEE ALSO"
+ipmi-sensors(8), libipmimonitoring(3)

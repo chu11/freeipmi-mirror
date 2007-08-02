@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.7 2007-07-11 00:16:04 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.8 2007-08-02 20:50:13 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,13 +74,13 @@ Specify the default password to use.
 .I k_g str
 Specify the BMC key (K_g) to use.  Prefix with '0x' to enter the key in hex.
 .TP
-.I privilege str
+.I privilege-level str
 Specify the default privilege type to use.  
 .B Ipmiconsole 
 currently supports the following privilege types: "user", "operator",
 and "admin".
 .TP
-.I cipher_suite_id str
+.I cipher-suite-id str
 Specify the default Cipher Suite ID to use: "auto", "0", "1", "2", "3", "6", "7", "8", "11", 12"
 .TP
 .I dont-steal enable|disable
@@ -89,14 +89,10 @@ Specify if in use SOL sessions should not be stolen by default.
 .I lock-memory enable|disable
 Specify if memory should be locked by default.
 .TP
-.I intel_2_0_session enable|disable
-Specify if workarounds for an Intel ipmi 2.0 session should be used.
-.TP
-.I supermicro_2_0_session enable|disable
-Specify if workarounds for a Supermicro ipmi 2.0 session should be used.
-.TP
-.I sun_2_0_session enable|disable
-Specify if workarounds for a Sun ipmi 2.0 session should be used.
+.I workaround-flags str
+Specify default workaround flags to use.  See
+.B ipmiconsole(8)
+for list of workarounds that can be specified.
 .LP
 .br
 .SH "FILES"

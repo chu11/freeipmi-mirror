@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_debug.h,v 1.2 2007-02-16 20:23:31 chu11 Exp $
+ *  $Id: ipmi_monitoring_debug.h,v 1.3 2007-08-02 20:50:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -59,15 +59,5 @@
 void ipmi_monitoring_debug(const char *fmt, ...);
 
 char * __debug_msg_create(const char *fmt, ...);
-
-void ipmi_monitoring_inband_dump(char *prefix, fiid_obj_t obj_cmd);
-
-void ipmi_monitoring_outofband_dump(char *prefix, 
-                                    char *hdr,
-                                    fiid_obj_t obj_rmcp_hdr,
-                                    fiid_obj_t obj_lan_session_hdr,
-                                    fiid_obj_t obj_msg_hdr,
-                                    fiid_obj_t obj_cmd,
-                                    fiid_obj_t obj_msg_trlr);
 
 #endif /* _IPMI_MONITORING_DEBUG_H */

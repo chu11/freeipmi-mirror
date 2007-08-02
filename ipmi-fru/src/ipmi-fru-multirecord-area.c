@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-multirecord-area.c,v 1.1 2007-06-27 21:35:34 chu11 Exp $
+ *  $Id: ipmi-fru-multirecord-area.c,v 1.2 2007-08-02 20:50:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1120,7 +1120,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           goto cleanup;
         }
 
-#ifndef NDEBUG
       if ((ret = ipmi_fru_dump_hex(state_data,
                                    frubuf,
                                    frusize,
@@ -1136,7 +1135,6 @@ ipmi_fru_output_multirecord_info_area(ipmi_fru_state_data_t *state_data,
           multirecord_offset += record_header_length;
           continue;
         }
-#endif /* NDEBUG */
 
       if ((ret = ipmi_fru_check_checksum(state_data,
                                          frubuf,

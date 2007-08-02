@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel.h,v 1.6 2007-06-01 20:56:17 chu11 Exp $ 
+   $Id: ipmi-sel.h,v 1.7 2007-08-02 20:50:12 chu11 Exp $ 
    
    ipmi-sel.h - System Event Logger utility.
    
@@ -25,7 +25,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "argp-common.h"
+#include "cmdline-parse-common.h"
 #include "ipmi-sdr-cache.h"
 #include "pstdout.h"
 
@@ -59,7 +59,6 @@ typedef struct ipmi_sel_prog_data
 {
   char *progname;
   struct ipmi_sel_arguments *args;
-  uint32_t debug_flags;
 } ipmi_sel_prog_data_t;
 
 typedef struct ipmi_sel_state_data
