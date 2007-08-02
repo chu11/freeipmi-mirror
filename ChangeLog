@@ -153,6 +153,31 @@
 
 	* General code cleanup throughout.
 
+2007-08-02  Albert Chu <chu11@llnl.gov>
+
+	* tagged pre-udm-2-0-merge
+	
+2007-08-02  Troy Telford <ttelford@lnxi.com>
+
+	* freeipmi.spec.in: Fixed SLES packaging issue.
+	
+2007-07-31  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Put version into source path.
+	
+2007-07-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmimonitoring/src/ipmimonitoring/ipmimonitoring.c (main,
+	_cmdline_parse): Fix potential free() bug.
+
+	* common/src/hostrange.c (pstdout_setup): Add assert.
+	
+2007-07-26  Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sdr-cache.c (sdr_cache_load): Fix corner case bug.
+
+	* freeipmi.spec.in: Fix buildroot typo. 
+	
 2007-07-18  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/ipmi-chassis.8.pre.in: Fix default priv level typo.
