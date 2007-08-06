@@ -1,3 +1,10 @@
+2007-08-06  Albert Chu <chu11@llnl.gov>
+
+	* ipmidetect/ipmidetect.conf.5.in, ipmidetect/ipmidetectd.8.in,
+	ipmidetect/ipmidetectd.conf.5.in, ac_ipmidetect_config_file.m4:
+	Fix inconsistency w/ "CONF_FILE" vs. "CONFIG_FILE_DEFAULT" leading
+	to invalid manpages.
+	
 2007-08-02  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update version for release.
