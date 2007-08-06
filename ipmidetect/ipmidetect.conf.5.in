@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmidetect.conf.5.in,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+\."$Id: ipmidetect.conf.5.in,v 1.2 2007-08-06 23:00:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,7 +34,7 @@ default values used in the
 .BR ipmidetect_load_data(3)
 API function. 
 
-The configuration file is stored at @IPMIDETECT_CONF_FILE@.
+The configuration file is stored at @IPMIDETECT_CONFIG_FILE_DEFAULT@.
 
 .SH CONFIGURATION OPTIONS
 The following are a list of configuration options that can be
@@ -59,6 +59,6 @@ Specify the port.
 
 Specify the timeout length in seconds.
 .SH FILES
-@IPMIDETECT_CONF_FILE@
+@IPMIDETECT_CONFIG_FILE_DEFAULT@
 .SH SEE ALSO
 libipmidetect(3), ipmidetect(8)

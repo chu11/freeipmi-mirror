@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmidetectd.conf.5.in,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+\."$Id: ipmidetectd.conf.5.in,v 1.2 2007-08-06 23:00:13 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,7 +33,7 @@ configuration file configures the
 .B ipmidetectd
 daemon.
 
-The default configuration file loaded is @IPMIDETECTD_CONF_FILE@. 
+The default configuration file loaded is @IPMIDETECTD_CONFIG_FILE_DEFAULT@. 
 
 The configuration options that can be specified in the configuration
 file are listed below.  Each configuration option must be listed on a
@@ -60,6 +60,6 @@ as input.  See
 .B ipmidetect(8)
 for information on hostranges.
 .SH "FILES"
-@IPMIDETECTD_CONF_FILE@
+@IPMIDETECTD_CONFIG_FILE_DEFAULT@
 .SH "SEE ALSO"
 ipmidetectd(8), ipmidetect(8)

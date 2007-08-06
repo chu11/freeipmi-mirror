@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmidetectd.8.in,v 1.4 2007-08-02 20:50:13 chu11 Exp $
+\."$Id: ipmidetectd.8.in,v 1.5 2007-08-06 23:00:13 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,7 +68,7 @@ Turn on debugging and run daemon in foreground
 \}
 
 .SH "FILES"
-@IPMIDETECTD_CONF_FILE@
+@IPMIDETECTD_CONFIG_FILE_DEFAULT@
 .SH "ORIGIN"
 Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
 .SH "SEE ALSO"
