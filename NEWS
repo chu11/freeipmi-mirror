@@ -1,3 +1,7 @@
+0.4.3
+-----
+o Fix manpage typos.
+
 0.4.2
 -----
 o ipmimonitoring: Fixed free bug that can cause segfaults.
