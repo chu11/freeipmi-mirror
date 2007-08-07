@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: secure.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: secure.c,v 1.1.12.1 2007-08-07 03:33:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,8 +46,8 @@ void *secure_memset(void *s, int c, size_t n)
 {
   volatile char *p;
 
-  assert(s);
-  assert(n);
+  if (!s || !n)
+    return NULL;
 
   p = s;
   while (n--)
