@@ -1,5 +1,6 @@
 0.4.3
 -----
+o Fix non-default install bug.
 o Fix manpage typos.
 
 0.4.2
