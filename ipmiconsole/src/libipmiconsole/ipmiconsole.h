@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.18 2007-08-02 20:50:13 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.19 2007-08-07 22:27:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -347,19 +347,15 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * Submit a context to the ipmiconsole engine.  May return prior to a
  * session is established or an error/timeout occurs.
  *
- * Returns 0 on success, -1 on error
- */
-int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
-
-/*
- * ipmiconsole_engine_submit_block
- *
- * Submit a context to the ipmiconsole engine.  Block until
- * session is established or an error/timeout occurs.
+ * blocking
+ * 
+ *   Pass non-zero to submit the context w/ blocking.  The function
+ *   will not return until the session is established or an
+ *   error/timeout occurs.
  *
  * Returns 0 on success, -1 on error
  */
-int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
+int ipmiconsole_engine_submit(ipmiconsole_ctx_t c, unsigned int blocking);
 
 /* 
  * ipmiconsole_engine_teardown
@@ -367,8 +363,6 @@ int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
  * Teardown the ipmiconsole engine and all contexts submitted to it.
  * Note that the teardown will block until it all active
  * ipmi sessions are closed or timeout.
- *
- * Returns 0 on success, -1 on error 
  */
 void ipmiconsole_engine_teardown(void);
 

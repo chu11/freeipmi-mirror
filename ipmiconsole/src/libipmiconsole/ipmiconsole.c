@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.16 2007-08-02 20:50:13 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.17 2007-08-07 22:27:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -193,62 +193,6 @@ _ipmiconsole_clean_enginecomm(ipmiconsole_ctx_t c)
   return -1;
 }
 
-int 
-ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
-{
-  int rv;
-
-  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
-    return -1;
-
-  if (!ipmiconsole_engine_is_setup())
-    {
-      c->errnum = IPMICONSOLE_ERR_NOT_SETUP;
-      return -1;
-    }
-
-  if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
-  if (c->session_submitted)
-    {
-      c->errnum = IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED;
-      if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
-        IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-      return -1;
-    }
-
-  if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
-  /* No special behavior under this case */
-  c->enginecomm_flags = 0;
-
-  if (_ipmiconsole_clean_enginecomm(c) < 0)
-    goto cleanup;
-
-  if (_ipmiconsole_init_ctx_session(c) < 0)
-    goto cleanup;
-
-  /* session_submitted flag set in here */
-  if (ipmiconsole_engine_submit_ctx(c) < 0)
-    goto cleanup;
-
-  return 0;
-
- cleanup:
-  _ipmiconsole_cleanup_ctx_session(c);
-  return -1;
-}
-
 static int
 _ipmiconsole_block(ipmiconsole_ctx_t c)
 {
@@ -317,7 +261,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
 }
 
 int 
-ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
+ipmiconsole_engine_submit(ipmiconsole_ctx_t c, unsigned int blocking)
 {
   int rv;
 
@@ -352,26 +296,44 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  /* Tell the engine to return info when the SOL session is established */
-  c->enginecomm_flags = IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED;
-  c->sol_session_established = 0;
-
-  /* To determine if an IPMI error occurred */
-  c->errnum = IPMICONSOLE_ERR_SUCCESS;
-
-  if (_ipmiconsole_clean_enginecomm(c) < 0)
-    goto cleanup;
-
-  if (_ipmiconsole_init_ctx_session(c) < 0)
-    goto cleanup;
-
-  /* session_submitted flag set in here */
-  if (ipmiconsole_engine_submit_ctx(c) < 0)
-    goto cleanup;
-
-  /* sol_session_established flag maybe set in here */
-  if (_ipmiconsole_block(c) < 0)
-    goto cleanup;
+  if (blocking)
+    {
+      /* Tell the engine to return info when the SOL session is established */
+      c->enginecomm_flags = IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED;
+      c->sol_session_established = 0;
+      
+      /* To determine if an IPMI error occurred */
+      c->errnum = IPMICONSOLE_ERR_SUCCESS;
+      
+      if (_ipmiconsole_clean_enginecomm(c) < 0)
+        goto cleanup;
+      
+      if (_ipmiconsole_init_ctx_session(c) < 0)
+        goto cleanup;
+      
+      /* session_submitted flag set in here */
+      if (ipmiconsole_engine_submit_ctx(c) < 0)
+        goto cleanup;
+      
+      /* sol_session_established flag maybe set in here */
+      if (_ipmiconsole_block(c) < 0)
+        goto cleanup;
+    }
+  else
+    {
+      /* No special behavior under this case */
+      c->enginecomm_flags = 0;
+      
+      if (_ipmiconsole_clean_enginecomm(c) < 0)
+        goto cleanup;
+      
+      if (_ipmiconsole_init_ctx_session(c) < 0)
+        goto cleanup;
+      
+      /* session_submitted flag set in here */
+      if (ipmiconsole_engine_submit_ctx(c) < 0)
+        goto cleanup;
+    }
 
   return 0;
 

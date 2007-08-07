@@ -1,5 +1,19 @@
 2007-08-07  Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit, ipmiconsole_engine_submit_block):
+	Collapse both functions into one function, with a flag for
+	blocking or non-blocking.
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Adjust for API
+	change appropriately.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h
+	(ipmiconsole_engine_teardown): Fix comments.
+	
+2007-08-07  Albert Chu <chu11@llnl.gov>
+
 	* bmc-config/src/bmc-config-value.h,
 	bmc-config/src/bmc-config-validate.c
 	(number_range_one_byte_non_zero): New function.
