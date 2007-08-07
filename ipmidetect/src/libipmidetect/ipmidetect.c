@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.3 2007-08-02 20:50:14 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.4 2007-08-07 02:21:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -323,9 +323,9 @@ _read_conffile(ipmidetect_t handle, struct ipmidetect_config *conf)
       goto cleanup;
     }
 
-  /* IPMIDETECT_CONF_FILE defined in config.h */
+  /* IPMIDETECT_CONFIG_FILE_DEFAULT defined in config.h */
   num = sizeof(options)/sizeof(struct conffile_option);
-  if (conffile_parse(cf, IPMIDETECT_CONF_FILE, options, num, NULL, 0, 0) < 0)
+  if (conffile_parse(cf, IPMIDETECT_CONFIG_FILE_DEFAULT, options, num, NULL, 0, 0) < 0)
     {
       /* Not an error if the configuration file does not exist */
       if (conffile_errnum(cf) != CONFFILE_ERR_EXIST) {
