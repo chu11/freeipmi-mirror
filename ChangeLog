@@ -1,5 +1,10 @@
 2007-08-06  Albert Chu <chu11@llnl.gov>
 
+	* ipmimonitoring/src/ipmimonitoring.c (cmdline_parse): Fix parsing
+	corner case.
+	
+2007-08-06  Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect.conf.5.in, ipmidetect/ipmidetectd.8.in,
 	ipmidetect/ipmidetectd.conf.5.in, ac_ipmidetect_config_file.m4,
 	ipmidetect/src/ipmidetect/ipmidetect.c: Fix inconsistency w/

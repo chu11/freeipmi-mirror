@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.22 2007-08-02 20:50:14 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.23 2007-08-07 03:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -234,7 +234,7 @@ cmdline_parse (int key,
       if (strlen(arg) > MAXHOSTNAMELEN)
         err_exit("Command Line Error: hostname too long");
       /* achu: must strdup, b/c of potential editing by eliminate code */
-      if (!(hostname = strdup(optarg)))
+      if (!(hostname = strdup(arg)))
         err_exit("strdup: %s", strerror(errno));
       break;
     case ARGP_USERNAME_KEY:       /* --username */
