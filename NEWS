@@ -2,6 +2,7 @@
 -----
 o Fix bad input assert corner cases.
 o Fix non-default install bug.
+o Fix range check in bmc-config SOL config that was inconsistent with IPMI spec.
 o Fix manpage typos.
 
 0.4.2
