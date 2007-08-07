@@ -1,23 +1,13 @@
 ##*****************************************************************************
-## $Id: ac_ipmipower_config_file.m4,v 1.1 2007-02-28 04:20:38 chu11 Exp $
+## $Id: ac_ipmipower_config_file.m4,v 1.2 2007-08-07 03:17:08 chu11 Exp $
 ##*****************************************************************************
 
 AC_DEFUN([AC_IPMIPOWER_CONFIG_FILE],
 [
-  IPMIPOWER_CONFIG_FILE_DEFAULT=/etc/ipmipower.conf
-
-  AC_MSG_CHECKING([for ipmipower config file default path])
-  AC_ARG_WITH([ipmipower-config-file],
-    AC_HELP_STRING([--with-ipmipower-config-file=PATH], 
-                   [Specify default ipmipower config file path]),
-    [ case "$withval" in
-        no)  ;;
-        yes) ;;
-        *)   IPMIPOWER_CONFIG_FILE_DEFAULT=$withval 
-      esac
-    ]
-  )
-  AC_MSG_RESULT($IPMIPOWER_CONFIG_FILE_DEFAULT)
+# Must expand nested unquoting
+  IPMIPOWER_CONFIG_FILE_DEFAULT_TMP1="`eval echo ${sysconfdir}/ipmipower.conf`"
+  IPMIPOWER_CONFIG_FILE_DEFAULT_TMP2="`echo $IPMIPOWER_CONFIG_FILE_DEFAULT_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
+  IPMIPOWER_CONFIG_FILE_DEFAULT="`eval echo $IPMIPOWER_CONFIG_FILE_DEFAULT_TMP2`"
 
   AC_DEFINE_UNQUOTED([IPMIPOWER_CONFIG_FILE_DEFAULT], 
                      ["$IPMIPOWER_CONFIG_FILE_DEFAULT"], 

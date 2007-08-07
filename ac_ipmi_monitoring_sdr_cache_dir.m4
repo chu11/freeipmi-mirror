@@ -1,10 +1,13 @@
 ##*****************************************************************************
-## $Id: ac_ipmi_monitoring_sdr_cache_dir.m4,v 1.3 2007-08-02 20:50:05 chu11 Exp $
+## $Id: ac_ipmi_monitoring_sdr_cache_dir.m4,v 1.4 2007-08-07 03:17:07 chu11 Exp $
 ##*****************************************************************************
 
 AC_DEFUN([AC_IPMI_MONITORING_SDR_CACHE_DIR],
 [
-  IPMI_MONITORING_SDR_CACHE_DIR=/var/cache/ipmimonitoringsdrcache
+# Must expand nested unquoting
+  IPMI_MONITORING_SDR_CACHE_DIR_TMP1="`eval echo ${localstatedir}/cache/ipmimonitoringsdrcache`"
+  IPMI_MONITORING_SDR_CACHE_DIR_TMP2="`echo $IPMI_MONITORING_SDR_CACHE_DIR_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
+  IPMI_MONITORING_SDR_CACHE_DIR="`eval echo $IPMI_MONITORING_SDR_CACHE_DIR_TMP2`"
 
   AC_MSG_CHECKING([for ipmi_monitoring sdr cache dir default path])
   AC_ARG_WITH([ipmi-monitoring-sdr-cache-dir],

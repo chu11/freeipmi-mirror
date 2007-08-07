@@ -1,23 +1,13 @@
 ##*****************************************************************************
-## $Id: ac_ipmidetectd_config_file.m4,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+## $Id: ac_ipmidetectd_config_file.m4,v 1.2 2007-08-07 03:17:08 chu11 Exp $
 ##*****************************************************************************
 
 AC_DEFUN([AC_IPMIDETECTD_CONFIG_FILE],
 [
-  IPMIDETECTD_CONFIG_FILE_DEFAULT=/etc/ipmidetectd.conf
-
-  AC_MSG_CHECKING([for ipmidetectd config file default path])
-  AC_ARG_WITH([ipmidetectd-config-file],
-    AC_HELP_STRING([--with-ipmidetectd-config-file=PATH], 
-                   [Specify default ipmidetectd config file path]),
-    [ case "$withval" in
-        no)  ;;
-        yes) ;;
-        *)   IPMIDETECTD_CONFIG_FILE_DEFAULT=$withval 
-      esac
-    ]
-  )
-  AC_MSG_RESULT($IPMIDETECTD_CONFIG_FILE_DEFAULT)
+# Must expand nested unquoting
+  IPMIDETECTD_CONFIG_FILE_DEFAULT_TMP1="`eval echo ${sysconfdir}/ipmidetectd.conf`"
+  IPMIDETECTD_CONFIG_FILE_DEFAULT_TMP2="`echo $IPMIDETECTD_CONFIG_FILE_DEFAULT_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
+  IPMIDETECTD_CONFIG_FILE_DEFAULT="`eval echo $IPMIDETECTD_CONFIG_FILE_DEFAULT_TMP2`"
 
   AC_DEFINE_UNQUOTED([IPMIDETECTD_CONFIG_FILE_DEFAULT], 
                      ["$IPMIDETECTD_CONFIG_FILE_DEFAULT"], 
