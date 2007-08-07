@@ -1,5 +1,12 @@
 2007-08-06  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/udm/ipmi-udm.c (__guaranteed_memset),
+	common/src/secure.c (secure_memset),
+	common/src/cmdline-parse-common.c (__secure_memset): Fix
+	secure/guaranteed memset corner case.
+	
+2007-08-06  Albert Chu <chu11@llnl.gov>
+
 	* ac_ipmi_monitoring_sdr_cache_dir.m4,
 	ac_ipmi_monitoring_sensor_config_file.m4,
 	ac_ipmidetect_config_file.m4, ac_ipmidetectd_config_file.m4,

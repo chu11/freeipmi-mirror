@@ -210,8 +210,8 @@ __secure_memset(void *s, int c, size_t n)
 {
   volatile char *p;
 
-  assert(s);
-  assert(n);
+  if (!s || !n)
+    return NULL;
 
   p = s;
   while (n--)
