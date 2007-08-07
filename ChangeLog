@@ -1,3 +1,13 @@
+2007-08-07  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config-value.h,
+	bmc-config/src/bmc-config-validate.c
+	(number_range_one_byte_non_zero): New function.
+
+	* bmc-config/src/bmc-sol-conf-section.c
+	(bmc_sol_conf_section_get): Adjust character_accumulate_interval
+	field to only support non-zero input.  Zero is a reserved number.
+	
 2007-08-06  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-udm.c (__guaranteed_memset),

@@ -995,12 +995,12 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
   if (bmc_config_section_add_keyvalue (state_data,
                                        sol_conf_section,
                                        "Character_Accumulate_Interval",
-                                       "Give a valid integer. Each unit is 5ms",
+                                       "Give a non-zero valid integer. Each unit is 5ms",
                                        0,
                                        character_accumulate_interval_checkout,
                                        character_accumulate_interval_commit,
                                        character_accumulate_interval_diff,
-                                       number_range_one_byte) < 0)
+                                       number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
