@@ -1,5 +1,22 @@
 2007-08-06  Albert Chu <chu11@llnl.gov>
 
+	* ac_ipmi_monitoring_sdr_cache_dir.m4,
+	ac_ipmi_monitoring_sensor_config_file.m4,
+	ac_ipmidetect_config_file.m4, ac_ipmidetectd_config_file.m4,
+	ac_ipmipower_config_file.m4: Replace hard-coded /etc and /var with
+	${sysconfdir} and ${localstatedir} respecively.  Remove option to
+	specify config files.  Location of config files is now controlled
+	through setting of --localstatedir and --sysconfidr.
+ 
+ 	* ipmimonitoring/Makefile.am: Install w/ correct ./configure
+	location.
+ 
+ 	* freeipmi.spec.in: Use %{_localstatedir} instead of /var.
+ 
+ 	* bmc-watchdog/Makefile.am: Fix distcheck.
+
+2007-08-06  Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect.conf.5.in, ipmidetect/ipmidetectd.8.in,
 	ipmidetect/ipmidetectd.conf.5.in, ac_ipmidetect_config_file.m4,
 	ipmidetect/src/ipmidetect/ipmidetect.c: Fix inconsistency w/

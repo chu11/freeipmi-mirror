@@ -1,23 +1,13 @@
 ##*****************************************************************************
-## $Id: ac_ipmi_monitoring_sensor_config_file.m4,v 1.2 2007-04-26 23:42:26 chu11 Exp $
+## $Id: ac_ipmi_monitoring_sensor_config_file.m4,v 1.2.10.1 2007-08-07 03:18:46 chu11 Exp $
 ##*****************************************************************************
 
 AC_DEFUN([AC_IPMI_MONITORING_SENSOR_CONFIG_FILE],
 [
-  IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT=/etc/ipmi_monitoring_sensors.conf
-
-  AC_MSG_CHECKING([for ipmi_monitoring_sensor config file default path])
-  AC_ARG_WITH([ipmi-monitoring-sensor-config-file],
-    AC_HELP_STRING([--with-ipmi-monitoring-sensor-config-file=PATH], 
-                   [Specify default ipmi_monitoring_sensor config file path]),
-    [ case "$withval" in
-        no)  ;;
-        yes) ;;
-        *)   IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT=$withval 
-      esac
-    ]
-  )
-  AC_MSG_RESULT($IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT)
+# Must expand nested unquoting
+  IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT_TMP1="`eval echo ${sysconfdir}/ipmi_monitoring_sensors.conf`"
+  IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT_TMP2="`echo $IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
+  IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT="`eval echo $IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT_TMP2`"
 
   AC_DEFINE_UNQUOTED([IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT], 
                      ["$IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT"], 
