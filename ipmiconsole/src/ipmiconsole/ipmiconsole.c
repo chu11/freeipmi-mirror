@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.19 2007-08-07 22:27:12 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.20 2007-08-08 17:46:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -476,10 +476,15 @@ main(int argc, char **argv)
       while (1)
         {
           if (ipmiconsole_ctx_destroy(c) < 0)
-            /* Wait a little bit then try again */
-            sleep(1);
-          else
-            break;
+            {
+              /* Wait a little bit then try again if the session isn't dead*/
+              if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CTX_IS_SUBMITTED)
+                {
+                  sleep(1);
+                  continue;
+                }
+            }
+          break;
         }
     }
   ipmiconsole_engine_teardown();

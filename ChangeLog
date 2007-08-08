@@ -3,6 +3,9 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
 	(ipmiconsole_engine_cleanup): Skip majority of code if engine was
 	never initialized.
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Cleanup use of
+	ipmiconsole_ctx_destroy() so use is easier to understand.
 	
 2007-08-07  Albert Chu <chu11@llnl.gov>
 
