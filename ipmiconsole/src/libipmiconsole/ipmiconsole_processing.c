@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.14 2007-08-02 20:50:13 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.15 2007-08-08 05:18:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1415,7 +1415,7 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
   if (s->retransmission_count > c->maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive retransmissions"));
-      c->errnum = IPMICONSOLE_ERR_BMC_ERROR;
+      c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS;
       return -1;
     }
 #if 0
@@ -1552,7 +1552,7 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
   if (s->retransmission_count > c->maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive sol retransmissions"));
-      c->errnum = IPMICONSOLE_ERR_BMC_ERROR;
+      c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS;
       return -1;
     }
 #if 0
@@ -2766,7 +2766,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 	{
 	  /* Attempt to close the session cleanly */
 	  IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive errors"));
-	  c->errnum = IPMICONSOLE_ERR_BMC_ERROR;
+	  c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS;
 	  s->close_session_flag++;
 	  if ((ret = _close_session(c)) < 0)
 	    goto close_session;
@@ -3236,7 +3236,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 	      if (s->deactivate_active_payloads_count > c->acceptable_packet_errors_count + 1)
 		{
 		  IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive payload deactivations"));
-		  c->errnum = IPMICONSOLE_ERR_BMC_ERROR;
+		  c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS;
 		  s->close_session_flag++;
 		  if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
 		    goto close_session;

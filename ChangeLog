@@ -11,6 +11,13 @@
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h
 	(ipmiconsole_ctx_fd, ipmiconsole_engine_teardown): Fix comments.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c: Creat new
+	IPMICONSOLE_ERR_EXCESSIVE_RETRANSMISSIONS error code.  Replace
+	several of the IPMICONSOLE_ERR_BMC_ERROR errnums with this new
+	code.
 	
 2007-08-07  Albert Chu <chu11@llnl.gov>
 
