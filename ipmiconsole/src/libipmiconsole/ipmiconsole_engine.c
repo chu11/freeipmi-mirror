@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.14 2007-08-02 20:50:13 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.15 2007-08-08 17:32:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1583,6 +1583,9 @@ ipmiconsole_engine_cleanup(void)
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
       return -1;
     }
+
+  if (!console_engine_is_setup)
+    goto unlock_is_setup_mutex;
 
   if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {

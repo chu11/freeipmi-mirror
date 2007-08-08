@@ -1,3 +1,9 @@
+2007-08-08  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(ipmiconsole_engine_cleanup): Skip majority of code if engine was
+	never initialized.
+	
 2007-08-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
