@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.19 2007-08-07 22:27:12 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.20 2007-08-08 02:37:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -421,6 +421,9 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * Returns a file descriptor for console reading and writing, -1 on
  * error.  The user is always responsible for closing this file
  * descriptor.
+ *
+ * If the user closes the file descriptor while the serial over lan
+ * session is established, the session will be torn down.
  */
 int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
 
