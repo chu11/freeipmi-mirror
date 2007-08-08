@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.18 2007-08-08 05:18:12 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.19 2007-08-08 18:45:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -94,12 +94,13 @@ static char *ipmiconsole_errmsgs[] =
     "SOL requires no encryption",                       /* 23 */
     "BMC Busy",			                        /* 24 */
     "BMC Error",		                        /* 25 */
-    "session timeout",		                        /* 26 */
-    "excess retransmissions",                           /* 27 */
-    "out of memory",		                        /* 28 */
-    "internal system error",	                        /* 29 */
-    "internal error",		                        /* 30 */
-    "errnum out of range",	                        /* 31 */
+    "BMC Settings Invalid",                             /* 26 */
+    "session timeout",		                        /* 27 */
+    "excess retransmissions",                           /* 28 */
+    "out of memory",		                        /* 29 */
+    "internal system error",	                        /* 30 */
+    "internal error",		                        /* 31 */
+    "errnum out of range",	                        /* 32 */
     NULL
   };
 

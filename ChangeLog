@@ -7,6 +7,13 @@
 	* ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Cleanup use of
 	ipmiconsole_ctx_destroy() so use is easier to understand.
 	
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c: Create
+	new IPMICONSOLE_ERR_BMC_SETTINGS_INVALID error code.  Replace
+	several of the IPMICONSOLE_ERR_BMC_ERROR errnums with this new
+	code.
+
 2007-08-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
