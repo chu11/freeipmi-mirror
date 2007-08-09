@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.18 2007-08-09 17:35:33 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.19 2007-08-09 18:21:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -185,7 +185,7 @@ cmdline_parse (int key,
         err_exit("Command Line Error: Invalid K_g");
       if (rv > 0)
         {
-          conf->k_g_len = 0;
+          conf->k_g_len = rv;
           conf->k_g_set_on_cmdline++;
         }
       if (arg)

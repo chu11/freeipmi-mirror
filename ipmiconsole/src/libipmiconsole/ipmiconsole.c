@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.19 2007-08-08 18:45:14 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.20 2007-08-09 18:21:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -263,7 +263,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
 }
 
 int 
-ipmiconsole_engine_submit(ipmiconsole_ctx_t c, unsigned int blocking)
+ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 {
   int rv;
 
@@ -298,7 +298,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, unsigned int blocking)
       return -1;
     }
 
-  if (blocking)
+  if (c->engine_flags & IPMICONSOLE_ENGINE_SUBMIT_BLOCKING)
     {
       /* Tell the engine to return info when the SOL session is established */
       c->enginecomm_flags = IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED;
@@ -372,6 +372,7 @@ ipmiconsole_ctx_create(char *hostname,
 	      && ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_ADMIN))
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
 	  && !IPMI_CIPHER_SUITE_ID_SUPPORTED(ipmi_config->cipher_suite_id))
+      || (protocol_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
       || (protocol_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK)
       || (protocol_config->security_flags & ~IPMICONSOLE_SECURITY_MASK)
       || (protocol_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK))
@@ -415,7 +416,7 @@ ipmiconsole_ctx_create(char *hostname,
   if (ipmi_config->k_g && ipmi_config->k_g_len) 
     {
       memcpy(c->k_g, ipmi_config->k_g, ipmi_config->k_g_len);
-      c->k_g_configured = 1;
+      c->k_g_len = ipmi_config->k_g_len;
     }
 
   if (ipmi_config->privilege_level >= 0)
@@ -500,6 +501,8 @@ ipmiconsole_ctx_create(char *hostname,
  
   if (ipmiconsole_ctx_debug_setup(c, protocol_config->debug_flags) < 0)
     goto cleanup;
+
+  c->engine_flags = protocol_config->engine_flags;
 
   c->security_flags = protocol_config->security_flags;
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.24 2007-08-09 17:35:33 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.25 2007-08-09 18:21:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,6 +74,20 @@ extern "C" {
 #define IPMICONSOLE_PRIVILEGE_USER                0
 #define IPMICONSOLE_PRIVILEGE_OPERATOR            1
 #define IPMICONSOLE_PRIVILEGE_ADMIN               2 
+
+/* 
+ * ENGINE Flags
+ *
+ * SUBMIT_BLOCKING
+ *
+ * By default, when you submit a context to the ipmi console engine
+ * via ipmiconsole_engine_submit(), the submission will be
+ * non-blocking.  By setting this flag, it informs the engine to
+ * submit with blocking.  ipmiconsole_engine_submit() will not return
+ * until an SOL session has been established or an error/timeout
+ * occurs.
+ */
+#define IPMICONSOLE_ENGINE_SUBMIT_BLOCKING 0x00000001
 
 /* 
  * Debug Flags
@@ -290,6 +304,11 @@ struct ipmiconsole_ipmi_config
  *   packets (in particular 'ping' packets to keep an IPMI session
  *   alive) to be accepted by the remote BMC, but not SOL packets.
  *
+ * engine_flags
+ *
+ *  Bitwise OR of flags indicating how the ipmiconsole engine should
+ *  behave for a particular context.  Pass 0 for default bheavior.
+ *
  * debug_flags
  *
  *   Bitwise OR of flags indicating how debug output should (or should
@@ -318,6 +337,7 @@ struct ipmiconsole_protocol_config
   int retransmission_keepalive_timeout_len;
   int acceptable_packet_errors_count;
   int maximum_retransmission_count;
+  unsigned int engine_flags;
   unsigned int debug_flags;
   unsigned int security_flags; 
   unsigned int workaround_flags;
@@ -346,23 +366,25 @@ int ipmiconsole_engine_init(unsigned int thread_count,
 /* 
  * ipmiconsole_engine_submit
  *
- * Submit a context to the ipmiconsole engine.  May return prior to a
- * session is established or an error/timeout occurs.
+ * Submit a context to the ipmiconsole engine.  By default is
+ * non-blocking, returns prior to a session is established or an
+ * error/timeout occurs.  User may use the context file descriptor
+ * (retrieved via ipmiconsole_ctx_fd) or the context status (retrieved
+ * via ipmiconsole_ctx_status) to determine status of the SOL session.
  *
- * blocking
- * 
- *   Pass non-zero to submit the context w/ blocking.  The function
- *   will not return until the session is established or an
- *   error/timeout occurs.
+ * See engine flags above for information on blocking behavior.
  *
  * Returns 0 on success, -1 on error
  */
-int ipmiconsole_engine_submit(ipmiconsole_ctx_t c, unsigned int blocking);
+int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
 
 /* 
  * ipmiconsole_engine_teardown
  *
- * Teardown the ipmiconsole engine and all contexts submitted to it.
+ * Teardown the ipmiconsole engine and all IPMI sessions for all
+ * contexts submitted to it.  This function will not destroy the
+ * actual contexts submitted.
+ *
  * Note that the teardown will block until it all active
  * ipmi sessions are closed or timeout.
  */
@@ -445,6 +467,10 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
  * is still submitted to the engine and connected to a session.  The
  * user should close the ctx file descriptor in order for the session
  * to clean itself up.
+ *
+ * Note that if the engine is torn via ipmiconsole_engine_teardown()
+ * before any contexts are destroyed, the session will automatically
+ * not be submitted to the engine.
  *
  * Returns 0 on success, -1 on error
  */

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.16 2007-08-08 18:45:15 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.17 2007-08-09 18:21:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1767,8 +1767,8 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if ((!c->k_g_configured && authentication_status_k_g)
-      || (c->k_g_configured && !authentication_status_k_g))
+  if ((!c->k_g_len && authentication_status_k_g)
+      || (c->k_g_len && !authentication_status_k_g))
     {
       c->errnum = IPMICONSOLE_ERR_K_G_INVALID;
       return -1;
@@ -1846,7 +1846,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
   
-  if (c->k_g_configured)
+  if (c->k_g_len)
     k_g = (uint8_t *)c->k_g;
   else
     k_g = NULL;
@@ -1871,7 +1871,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
                                            password,
                                            password_len,
                                            k_g,
-                                           (k_g) ? IPMI_MAX_K_G_LENGTH : 0,
+                                           (k_g) ? c->k_g_len : 0,
                                            s->remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
