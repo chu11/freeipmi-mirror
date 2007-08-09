@@ -1,6 +1,6 @@
 2007-08-09  Albert Chu <chu11@llnl.gov>
 
-	* ipmiconsole/src/ipmiconsole.h: Fix additional comments.
+	* ipmiconsole/src/ipmiconsole.h: Add additional comments.
 
 	* common/src/tool-common.c (parse_kg): Check for proper inputted
 	hex digits.  Alter function to return k_g key length.
