@@ -1,3 +1,8 @@
+2007-08-09  Albert Chu <chu11@llnl.gov>
+
+        * ipmipower/src/ipmipower_config.c (_cb_k_g): Fix configuration
+        logic error.
+
 2007-08-07  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-value.h,

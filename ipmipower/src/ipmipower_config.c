@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.62 2007-06-02 18:18:29 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.62.6.1 2007-08-09 16:26:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -724,7 +724,6 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
   if (rv > 0)
     conf->k_g_configured = IPMIPOWER_TRUE;
 
-  strcpy(conf->k_g, data->string);
   return 0;
 }
 
