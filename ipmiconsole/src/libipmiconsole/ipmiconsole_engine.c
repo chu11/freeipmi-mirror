@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.15 2007-08-08 17:32:06 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.16 2007-08-09 23:20:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -85,6 +85,7 @@ static int console_engine_thread_count = 0;
 static pthread_mutex_t console_engine_thread_count_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static int console_engine_teardown = 0;
+static int console_engine_teardown_immediate = 0;
 static pthread_mutex_t console_engine_teardown_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static List console_engine_ctxs[IPMICONSOLE_THREAD_COUNT_MAX];
@@ -676,6 +677,7 @@ ipmiconsole_engine_setup(void)
 
   console_engine_is_setup++;
   console_engine_teardown = 0;
+  console_engine_teardown_immediate = 0;
 
   if ((rv = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
     {
@@ -1176,6 +1178,13 @@ _ipmiconsole_engine(void *arg)
           teardown_flag = 1;
         }
       
+      if (console_engine_teardown_immediate)
+        {
+          if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
+            IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+          break;
+        }
+
       if (console_engine_teardown)
         teardown_flag = 1;
       
@@ -1574,7 +1583,7 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
 }
 
 int
-ipmiconsole_engine_cleanup(void)
+ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
 {
   int thread_count, rv, i, retval = -1;
 
@@ -1614,6 +1623,8 @@ ipmiconsole_engine_cleanup(void)
     }
 
   console_engine_teardown++;
+  if (!cleanup_sol_sessions)
+    console_engine_teardown_immediate++;
 
   if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
     {
@@ -1680,6 +1691,7 @@ ipmiconsole_engine_cleanup(void)
     }
 
   console_engine_teardown = 0;
+  console_engine_teardown_immediate = 0;
 
   if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
     {

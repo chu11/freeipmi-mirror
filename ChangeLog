@@ -20,6 +20,13 @@
         (ipmiconsole_engine_submit): Move blocking support from parameter
 	to flag in protocol_config of the context.
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_teardown),
+	ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(ipmiconsole_engine_cleanup): Add option to not cleanup SOL
+	sessions on engine teardown.
+
 	* ipmiconsole/src/ipmiconsole/ipmiconsole.c: Adjust for API
 	change.
 

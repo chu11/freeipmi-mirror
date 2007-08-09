@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.20 2007-08-09 18:21:29 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.21 2007-08-09 23:20:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -146,7 +146,7 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
 
  cleanup:
   ipmiconsole_debug_cleanup();
-  ipmiconsole_engine_cleanup();
+  ipmiconsole_engine_cleanup(0);
   return -1;
 }
 
@@ -345,10 +345,10 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 }
 
 void
-ipmiconsole_engine_teardown(void)
+ipmiconsole_engine_teardown(int cleanup_sol_sessions)
 {
   ipmiconsole_debug_cleanup();
-  ipmiconsole_engine_cleanup();
+  ipmiconsole_engine_cleanup(cleanup_sol_sessions);
 }
 
 ipmiconsole_ctx_t 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_engine.h,v 1.2 2007-08-09 23:20:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -45,6 +45,6 @@ int ipmiconsole_engine_thread_create(void);
 
 int ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c);
 
-int ipmiconsole_engine_cleanup(void);
+int ipmiconsole_engine_cleanup(int cleanup_sol_sessions);
 
 #endif /* _IPMICONSOLE_ENGINE_H */

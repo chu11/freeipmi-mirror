@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.23 2007-08-09 18:21:29 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.24 2007-08-09 23:20:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -488,7 +488,7 @@ main(int argc, char **argv)
           break;
         }
     }
-  ipmiconsole_engine_teardown();
+  ipmiconsole_engine_teardown(0);
 
 #ifndef NDEBUG
   if (!conf->noraw)
