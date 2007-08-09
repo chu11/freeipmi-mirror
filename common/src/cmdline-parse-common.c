@@ -399,19 +399,19 @@ common_parse_opt (int key,
       {
         int rv;
 
-        if (cmd_args->k_g_configured)
+        if (cmd_args->k_g_len)
           {
-            memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
-            cmd_args->k_g_configured = 0;
+            memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+            cmd_args->k_g_len = 0;
           }
 
-        if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
+        if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
             fprintf (stderr, "k_g invalid\n");
             argp_usage (state);
           }
         if (rv > 0)
-          cmd_args->k_g_configured++;
+          cmd_args->k_g_len = rv;
         if (arg)
           {
             int n;
@@ -424,21 +424,21 @@ common_parse_opt (int key,
       {
         int rv;
         
-        if (cmd_args->k_g_configured)
+        if (cmd_args->k_g_len)
           {
-            memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
-            cmd_args->k_g_configured = 0;
+            memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+            cmd_args->k_g_len = 0;
           }
         
         arg = getpass ("K_g: ");
         
-        if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
+        if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
             fprintf (stderr, "k_g invalid\n");
             argp_usage (state);
           }
         if (rv > 0)
-          cmd_args->k_g_configured++;
+          cmd_args->k_g_len = rv;
       }
       break;
     /* ARGP_RETRY_TIMEOUT_KEY for backwards compatability */
@@ -711,8 +711,8 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->hostname = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;
-  memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH);
-  cmd_args->k_g_configured = 0;
+  memset(cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+  cmd_args->k_g_len = 0;
   cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
   cmd_args->cipher_suite_id = 3;
   cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;

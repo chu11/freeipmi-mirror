@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.23 2007-08-08 18:45:15 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.24 2007-08-09 17:35:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -182,12 +182,12 @@ typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
  * k_g
  *
  *   BMC Key for 2-key authentication.  Pass NULL ptr to use password
- *   as BMC key.  
+ *   as BMC key.  The k_g key need not be an ascii string.
  *
  * k_g_len
  *
- *   Length of k_g.  Necessary b/c k_g may contain null values or in its
- *   hex key.  Maximum length of 20 bytes.
+ *   Length of k_g.  Necessary b/c k_g may contain null values in its
+ *   key.  Maximum length of 20 bytes.
  *
  * privilege_level
  *

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.48 2007-08-02 20:50:17 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.49 2007-08-09 17:35:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -361,21 +361,18 @@ _cmd_k_g(char **argv)
       memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH);
 
       if (argv[1])
-        rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, argv[1]);
+        rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, argv[1]);
       
       if (rv < 0)
         cbuf_printf(ttyout, "k_g invalid\n");
       else
         {
-          if (rv == 0)
-            conf->k_g_configured = IPMIPOWER_FALSE;
-          else 
-            conf->k_g_configured = IPMIPOWER_TRUE;
+          conf->k_g_len = rv;
 #ifdef NDEBUG
           cbuf_printf(ttyout, "k_g changed\n");
 #else  /* !NDEBUG */
           cbuf_printf(ttyout, "k_g: %s\n", 
-                      (conf->k_g_configured == IPMIPOWER_TRUE) ? 
+                      (conf->k_g_len) ? 
                       format_kg(buf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
 #endif /* !NDEBUG */
         }
@@ -585,7 +582,7 @@ _cmd_logfile(char **argv)
 static void 
 _cmd_config(void) 
 {
-  char buf[IPMI_MAX_K_G_LENGTH*2+1];
+  char buf[IPMI_MAX_K_G_LENGTH*2+3];
 
   if (conf->hosts != NULL) 
     {
@@ -666,8 +663,8 @@ _cmd_config(void)
   cbuf_printf(ttyout, "Password:                     %s\n", 
               (strlen(conf->password)) ? conf->password : "NULL");
   cbuf_printf(ttyout, "K_g:                          %s\n", 
-              (conf->k_g_configured == IPMIPOWER_TRUE) ? 
-              format_kg(buf, IPMI_MAX_K_G_LENGTH*2+1, conf->k_g) : "NULL");
+              (conf->k_g_len) ? 
+              format_kg(buf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
 #else  /* !NDEBUG */
   cbuf_printf(ttyout, "Password:                     *****\n");
   cbuf_printf(ttyout, "K_g:                          *****\n");

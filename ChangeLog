@@ -1,3 +1,20 @@
+2007-08-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/ipmiconsole.h: Fix additional comments.
+
+	* common/src/tool-common.c (parse_kg): Check for proper inputted
+	hex digits.  Alter function to return k_g key length.
+
+	* ipmipower/, bmc-config/, ipmiconsole/, common/src: Adjust tools
+	for use of new parse_kg function and do not assume k_g key of
+	length 20.
+	
+	* ipmipower/src/ipmipower_config.c (_cb_k_g): Fix configuration
+	logic error.
+
+        * ipmipower/src/ipmipower_prompt.c (_cmd_config): Fix config
+        output display error.
+	
 2007-08-08  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c

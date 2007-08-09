@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #include <stdarg.h>
+#include <ctype.h>
 #endif
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -75,8 +76,8 @@ ipmi_device_open(const char *progname,
                                        hostname,
                                        cmd_args->username,
                                        cmd_args->password,
-                                       (cmd_args->k_g_configured) ? cmd_args->k_g : NULL,
-                                       (cmd_args->k_g_configured) ? IPMI_MAX_K_G_LENGTH : 0,
+                                       (cmd_args->k_g_len) ? cmd_args->k_g : NULL,
+                                       (cmd_args->k_g_len) ? cmd_args->k_g_len : 0,
                                        cmd_args->privilege_level,
                                        cmd_args->cipher_suite_id,
                                        cmd_args->session_timeout,
@@ -237,15 +238,16 @@ parse_kg(unsigned char *outbuf, int outsz, const char *instr)
   char *p, *q;
   int i, j;
   char buf[3] = {0, 0, 0};
+  int rv = 0;
 
   assert(outbuf != NULL);
   assert(instr != NULL);
-  assert(outsz == IPMI_MAX_K_G_LENGTH);
+  assert(outsz > IPMI_MAX_K_G_LENGTH);
 
   if (strlen(instr) == 0)
     return 0;
 
-  if (strncmp(instr, "0x", 2) == 0) 
+  if (strncasecmp(instr, "0x", 2) == 0) 
     {
       if (strlen(instr) > IPMI_MAX_K_G_LENGTH*2+2)
         return -1;
@@ -255,11 +257,14 @@ parse_kg(unsigned char *outbuf, int outsz, const char *instr)
         {
           if (p[i+1] == '\0')
             return -1;
+          if (!isxdigit(p[i]) || !isxdigit(p[i+1]))
+            return -1;
           buf[0] = p[i]; buf[1] = p[i+1]; buf[2] = 0;
           errno = 0;
           outbuf[j] = strtoul(buf, &q, 16);
           if (errno || (q != buf + 2))
             return -1;
+          rv++;
         }
     }
   else
@@ -268,9 +273,10 @@ parse_kg(unsigned char *outbuf, int outsz, const char *instr)
         return -1;
       memset(outbuf, 0, IPMI_MAX_K_G_LENGTH);
       memcpy(outbuf, instr, strlen(instr));
+      rv = strlen(instr);
     }
 
-  return 1;
+  return rv;
 }
 
 char *

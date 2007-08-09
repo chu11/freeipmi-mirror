@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.63 2007-08-02 20:50:16 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.64 2007-08-09 17:35:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -260,8 +260,8 @@ ipmipower_config_setup(void)
   conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
-  memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH);
-  conf->k_g_configured = IPMIPOWER_FALSE;
+  memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
+  conf->k_g_len = 0;
   conf->powercmd = POWER_CMD_NONE;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
@@ -438,11 +438,11 @@ cmdline_parse (int key,
       conf->password_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_K_G_KEY:       /* --k-g */
-      if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
+      if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
         err_exit("Command Line Error: Invalid K_g");
       if (rv > 0)
         {
-          conf->k_g_configured = IPMIPOWER_TRUE;
+          conf->k_g_len = rv;
           conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
         }
       if (arg)
@@ -455,11 +455,11 @@ cmdline_parse (int key,
     case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
       if (!(kg = getpass("K_g: ")))
         err_exit("getpass: %s", strerror(errno));
-      if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
+      if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, kg)) < 0)
         err_exit("Command Line Error: Invalid K_g");
       if (rv > 0)
         {
-          conf->k_g_configured = IPMIPOWER_TRUE;
+          conf->k_g_len = rv;
           conf->k_g_set_on_cmdline = IPMIPOWER_TRUE;
         }
       break;
@@ -785,12 +785,11 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
   if (conf->k_g_set_on_cmdline == IPMIPOWER_TRUE)
     return 0;
 
-  if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH, data->string)) < 0)
+  if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
     err_exit("Config File Error: K_g invalid");
   if (rv > 0)
-    conf->k_g_configured = IPMIPOWER_TRUE;
+    conf->k_g_len = rv;
 
-  strcpy(conf->k_g, data->string);
   return 0;
 }
 
@@ -809,8 +808,6 @@ _cb_workaround_flags(conffile_t cf, struct conffile_data *data,
   conf->workaround_flags = flags;
   return 0;
 }
-
-
 
 void 
 ipmipower_config_conffile_parse(char *configfile) 
@@ -963,7 +960,7 @@ ipmipower_config_check_values(void)
 
   if (conf->ipmi_version != IPMI_VERSION_AUTO
       && conf->ipmi_version != IPMI_VERSION_2_0
-      && conf->k_g_configured == IPMIPOWER_TRUE)
+      && conf->k_g_len)
     err_exit("Error: k_g is only used for IPMI 2.0");
 
   if (conf->ipmi_version == IPMI_VERSION_1_5
