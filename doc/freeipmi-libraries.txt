@@ -6,7 +6,7 @@ Albert Chu
 chu11@llnl.gov
 
 The following is a short summary of the libraries and APIs available for
-use in FreeIPMI.
+use in FreeIPMI.  
 
 Libfreeipmi
 -----------
@@ -20,8 +20,10 @@ upon.  There are various sub-sections and APIs in this library:
    describe packets through a string-name to bit-field mapping.  The
    API allows users to read/write fields in an object using the string
    to bit-field mapping.  In some cases (such as when IPMI over LAN
-   packets are needed), multiple fiid objects must be constructed
-   together to form a single packet.
+   packets are needed), multiple fiid objects must be
+   assembled/disassembled together to/from a single packet.  This is
+   done via a number of 'assemble' or 'disassemble' functions within
+   libfreeipmi.
 
    fill - A large number of "fill" functions are available to make it
    easier for the user to fill fiid objects with appropriate IPMI
