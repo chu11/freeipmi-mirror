@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.25 2007-08-09 18:21:29 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.26 2007-08-09 21:33:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -381,9 +381,10 @@ int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
 /* 
  * ipmiconsole_engine_teardown
  *
- * Teardown the ipmiconsole engine and all IPMI sessions for all
- * contexts submitted to it.  This function will not destroy the
- * actual contexts submitted.
+ * Teardown the ipmiconsole engine and all the IPMI SOL sessions it is
+ * managing.  This function will not destroy the actual contexts
+ * submitted, only the SOL sessions being managed by the engine for 
+ * a context.
  *
  * Note that the teardown will block until it all active
  * ipmi sessions are closed or timeout.
@@ -434,8 +435,9 @@ char *ipmiconsole_ctx_strerror(int errnum);
  * ipmiconsole_ctx_status
  *
  * Returns the current context status.  Primarily used to determine if
- * a context submission (submitted non-blocking) has been established
- * or not.  Returns -1 on error.
+ * a context submission (submitted non-blocking via
+ * ipmiconsole_engine_subit()) has been established or not.  Returns
+ * -1 on error.
  */
 int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
 
@@ -468,9 +470,10 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
  * user should close the ctx file descriptor in order for the session
  * to clean itself up.
  *
- * Note that if the engine is torn via ipmiconsole_engine_teardown()
- * before any contexts are destroyed, the session will automatically
- * not be submitted to the engine.
+ * Note that if the engine is torn down via
+ * ipmiconsole_engine_teardown() before a context is destroyed, it
+ * will be safe to call ipmiconsole_ctx_destroy() without concern for
+ * the function returning an IPMICONSOLE_ERR_CTX_IS_SUBMITTED error.
  *
  * Returns 0 on success, -1 on error
  */
