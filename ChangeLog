@@ -3,6 +3,9 @@
         * ipmipower/src/ipmipower_config.c (_cb_k_g): Fix configuration
         logic error.
 
+	* ipmipower/src/ipmipower_prompt.c (_cmd_config): Fix config
+	output display error.
+
 2007-08-07  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-value.h,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.47 2007-06-02 18:18:29 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.47.6.1 2007-08-09 17:34:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -586,7 +586,7 @@ _cmd_logfile(char **argv)
 static void 
 _cmd_config(void) 
 {
-  char buf[IPMI_MAX_K_G_LENGTH*2+1];
+  char buf[IPMI_MAX_K_G_LENGTH*2+3];
 
   if (conf->hosts != NULL) 
     {
@@ -668,7 +668,7 @@ _cmd_config(void)
               (strlen(conf->password)) ? conf->password : "NULL");
   cbuf_printf(ttyout, "K_g:                          %s\n", 
               (conf->k_g_configured == IPMIPOWER_TRUE) ? 
-              format_kg(buf, IPMI_MAX_K_G_LENGTH*2+1, conf->k_g) : "NULL");
+              format_kg(buf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
 #else  /* !NDEBUG */
   cbuf_printf(ttyout, "Password:                     *****\n");
   cbuf_printf(ttyout, "K_g:                          *****\n");
