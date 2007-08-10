@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.17 2007-08-09 18:21:29 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.18 2007-08-10 00:12:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1970,7 +1970,7 @@ _check_sol_activated(ipmiconsole_ctx_t c)
   if (s->sol_instance_capacity > IPMI_INSTANCES_ACTIVATED_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid instance capacity: %d", s->sol_instance_capacity));
-      c->errnum = IPMICONSOLE_ERR_BMC_SETTINGS_INVALID;
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID;
       return -1;
     }
   
@@ -2171,7 +2171,7 @@ _check_try_new_port(ipmiconsole_ctx_t c)
       if (s->console_port != console_port)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("multiple new console ports attempted"));
-          c->errnum = IPMICONSOLE_ERR_BMC_SETTINGS_INVALID;
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID;
           return -1;
         }
       return 1;
@@ -3046,7 +3046,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       if (!ret)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("payload sizes invalid: max_inbound_payload_size=%d max_outbound_payload_size=%d", s->max_inbound_payload_size, s->max_outbound_payload_size));
-          c->errnum = IPMICONSOLE_ERR_BMC_SETTINGS_INVALID;
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID;
 	  s->close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             goto close_session;

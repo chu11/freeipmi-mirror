@@ -30,6 +30,9 @@
 	* ipmiconsole/src/ipmiconsole/ipmiconsole.c: Adjust for API
 	change.
 
+	* ipmiconsole/src/libipmiconsole/: Rename BMC_SETTINGS_INVALID to
+	INTERNAL_BMC_SETTINGS_INVALID.
+
 	* doc/freeipmi-libraries.txt: Update.
 	
 2007-08-08  Albert Chu <chu11@llnl.gov>
