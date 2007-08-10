@@ -61,6 +61,8 @@ o Similarly, fixed inconsistencies with dashes vs. underscores in
   possible.
 o Similarly, updated manpages for consistency across tools.
 o Removed the quiet and silent options from bmc-config.
+o Various bug fixes.
+o Various bug fixes and enhancements.
 
 For Developers
 --------------
@@ -79,6 +81,7 @@ o Fix various library variable names and macros for consistency.  For
      more useful information.  For example, IPMI_ERR_PRIVILEGE is now
      IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED (and the error message
      has been updated as well).
+o Various bug fixes and enhancements.
      
 0.4.2
 -----
