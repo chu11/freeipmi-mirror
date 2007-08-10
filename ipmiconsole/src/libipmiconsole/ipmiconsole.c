@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.22 2007-08-10 00:12:45 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.23 2007-08-10 16:39:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -88,19 +88,18 @@ static char *ipmiconsole_errmsgs[] =
     "privilege level cannot be obtained for this user", /* 17 */
     "SOL unavailable",		                        /* 18 */
     "SOL in use",		                        /* 19 */
-    "SOL not responding",	                        /* 20 */
-    "SOL session stolen",                               /* 21 */
-    "SOL requires encryption",                          /* 22 */
-    "SOL requires no encryption",                       /* 23 */
-    "BMC Busy",			                        /* 24 */
-    "BMC Error",		                        /* 25 */
-    "internal BMC settings invalid",                    /* 26 */
-    "session timeout",		                        /* 27 */
-    "excess retransmissions",                           /* 28 */
-    "out of memory",		                        /* 29 */
-    "internal system error",	                        /* 30 */
-    "internal error",		                        /* 31 */
-    "errnum out of range",	                        /* 32 */
+    "SOL session stolen",                               /* 20 */
+    "SOL requires encryption",                          /* 21 */
+    "SOL requires no encryption",                       /* 22 */
+    "BMC Busy",			                        /* 23 */
+    "BMC Error",		                        /* 24 */
+    "internal BMC settings invalid",                    /* 25 */
+    "session timeout",		                        /* 26 */
+    "excess retransmissions",                           /* 27 */
+    "out of memory",		                        /* 28 */
+    "internal system error",	                        /* 29 */
+    "internal error",		                        /* 30 */
+    "errnum out of range",	                        /* 31 */
     NULL
   };
 

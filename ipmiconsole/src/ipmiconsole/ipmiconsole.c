@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.24 2007-08-09 23:20:02 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.25 2007-08-10 16:39:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -361,16 +361,20 @@ main(int argc, char **argv)
     {
       if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_HOSTNAME_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_USERNAME_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PASSWORD_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_K_G_INVALID
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_INUSE
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_NOT_RESPONDING
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_BUSY
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_ERROR
-          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SESSION_TIMEOUT)
+          || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
+          || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS)
         printf("[error received]: %s\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
       else
         fprintf(stderr, "ipmiconsole_submit: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));

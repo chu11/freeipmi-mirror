@@ -6,6 +6,13 @@
 	* common/src/cmdline-parse-common.c, ipmipower/, ipmiconsole/,
 	ipmimonitoring/: Use check_kg_len function appropriately for k_g
 	len checks.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c: Remove
+	SOL_NOT_RESPONDING error code and error message.
+
+	* ipmiconsole/src/ipmiconsole.c (main): Support more error codes
+	under clean output conditions.
 	
 2007-08-09  Albert Chu <chu11@llnl.gov>
 
