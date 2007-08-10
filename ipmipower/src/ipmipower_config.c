@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.64 2007-08-09 17:35:33 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.65 2007-08-10 16:22:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -438,8 +438,10 @@ cmdline_parse (int key,
       conf->password_set_on_cmdline = IPMIPOWER_TRUE;
       break;
     case ARGP_K_G_KEY:       /* --k-g */
+      if ((rv = check_kg_len(arg)) < 0)
+        err_exit("Command Line Error: k_g too long");
       if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
-        err_exit("Command Line Error: Invalid K_g");
+        err_exit("Command Line Error: k_g input formatted incorrectly");
       if (rv > 0)
         {
           conf->k_g_len = rv;
@@ -455,8 +457,10 @@ cmdline_parse (int key,
     case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
       if (!(kg = getpass("K_g: ")))
         err_exit("getpass: %s", strerror(errno));
+      if ((rv = check_kg_len(kg)) < 0)
+        err_exit("Command Line Error: k_g too long");
       if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, kg)) < 0)
-        err_exit("Command Line Error: Invalid K_g");
+        err_exit("Command Line Error: k_g input formatted incorrectly");
       if (rv > 0)
         {
           conf->k_g_len = rv;
@@ -785,8 +789,12 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
   if (conf->k_g_set_on_cmdline == IPMIPOWER_TRUE)
     return 0;
 
+  if ((rv = check_kg_len(data->string)) < 0)
+    err_exit("Command Line Error: k_g too long");
+
   if ((rv = parse_kg(conf->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
-    err_exit("Config File Error: K_g invalid");
+    err_exit("Config File Error: k_g input formatted incorrectly");
+
   if (rv > 0)
     conf->k_g_len = rv;
 

@@ -405,9 +405,15 @@ common_parse_opt (int key,
             cmd_args->k_g_len = 0;
           }
 
+        if ((rv = check_kg_len(arg)) < 0)
+          {
+            fprintf (stderr, "k_g too long\n");
+            argp_usage (state);
+          }
+
         if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
-            fprintf (stderr, "k_g invalid\n");
+            fprintf (stderr, "k_g input formatted incorrectly\n");
             argp_usage (state);
           }
         if (rv > 0)
@@ -432,9 +438,15 @@ common_parse_opt (int key,
         
         arg = getpass ("K_g: ");
         
+        if ((rv = check_kg_len(arg)) < 0)
+          {
+            fprintf (stderr, "k_g too long\n");
+            argp_usage (state);
+          }
+
         if ((rv = parse_kg(cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
-            fprintf (stderr, "k_g invalid\n");
+            fprintf (stderr, "k_g input formatted incorrectly\n");
             argp_usage (state);
           }
         if (rv > 0)

@@ -1,3 +1,12 @@
+2007-08-10  Albert Chu <chu11@llnl.gov>
+
+	* common/src/tool-common.h, common/src/tool-common.c
+	(check_kg_len): New function.
+
+	* common/src/cmdline-parse-common.c, ipmipower/, ipmiconsole/,
+	ipmimonitoring/: Use check_kg_len function appropriately for k_g
+	len checks.
+	
 2007-08-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/ipmiconsole.h: Add additional comments.

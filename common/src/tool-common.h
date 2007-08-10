@@ -35,6 +35,9 @@ ipmi_device_t ipmi_device_open(const char *progname,
                                char *errmsg,
                                unsigned int errmsglen);
 
+/* Check if kg len is decent */
+int check_kg_len(const char *instr);
+
 /* Turn an input string into a 20-byte binary k_g key */
 int parse_kg(unsigned char *outbuf, int outsz, const char *instr);
 

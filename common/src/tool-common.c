@@ -230,6 +230,29 @@ ipmi_device_open(const char *progname,
   return NULL;
 }              
 
+/* Check if kg len is decent */
+int
+check_kg_len(const char *instr)
+{
+  assert(instr != NULL);
+  
+  if (strlen(instr) == 0)
+    return 0;
+
+  if (strncasecmp(instr, "0x", 2) == 0) 
+    {
+      if (strlen(instr) > IPMI_MAX_K_G_LENGTH*2+2)
+        return -1;
+    }
+  else
+    {
+      if (strlen(instr) > IPMI_MAX_K_G_LENGTH)
+        return -1;
+    }
+
+  return 0;
+}
+
 /* a k_g key is interpreted as ascii text unless it is prefixed with
    "0x", in which case is it interpreted as hexadecimal */
 int

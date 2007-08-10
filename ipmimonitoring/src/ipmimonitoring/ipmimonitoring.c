@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.23 2007-08-07 03:09:55 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.24 2007-08-10 16:22:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -270,8 +270,10 @@ cmdline_parse (int key,
       conf.password = password;
       break;
     case ARGP_K_G_KEY:       /* --k-g */
+      if ((rv = check_kg_len(arg)) < 0)
+        err_exit("Command Line Error: k_g too long");
       if ((rv = parse_kg(k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
-        err_exit("Command Line Error: Invalid K_g");
+        err_exit("Command Line Error: k_g input formatted incorrectly");
       if (rv > 0)
         {
           conf.k_g = k_g;
@@ -287,8 +289,10 @@ cmdline_parse (int key,
     case ARGP_K_G_PROMPT_KEY:       /* --k-g-prompt */
       if (!(kg = getpass("K_g: ")))
         err_exit("getpass: %s", strerror(errno));
+      if ((rv = check_kg_len(kg)) < 0)
+        err_exit("Command Line Error: k_g too long");
       if ((rv = parse_kg(k_g, IPMI_MAX_K_G_LENGTH, kg)) < 0)
-        err_exit("K_g invalid");
+        err_exit("Command Line Error: k_g input formatted incorrectly");
       if (rv > 0)
         {
           conf.k_g = k_g;
