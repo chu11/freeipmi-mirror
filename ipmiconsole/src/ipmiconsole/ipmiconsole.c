@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.25 2007-08-10 16:39:23 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.26 2007-08-10 17:07:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -374,7 +374,8 @@ main(int argc, char **argv)
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_BUSY
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_BMC_ERROR
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
-          || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS)
+          || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
+          || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
         printf("[error received]: %s\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
       else
         fprintf(stderr, "ipmiconsole_submit: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));

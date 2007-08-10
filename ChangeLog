@@ -11,6 +11,13 @@
 	ipmiconsole/src/libipmiconsole/ipmiconsole.c: Remove
 	SOL_NOT_RESPONDING error code and error message.
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c: Rename
+	IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS to
+	IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT.  Add new error code
+	IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED.
+	
 	* ipmiconsole/src/ipmiconsole.c (main): Support more error codes
 	under clean output conditions.
 	

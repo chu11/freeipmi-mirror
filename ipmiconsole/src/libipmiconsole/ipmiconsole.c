@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.23 2007-08-10 16:39:23 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.24 2007-08-10 17:07:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -95,11 +95,12 @@ static char *ipmiconsole_errmsgs[] =
     "BMC Error",		                        /* 24 */
     "internal BMC settings invalid",                    /* 25 */
     "session timeout",		                        /* 26 */
-    "excess retransmissions",                           /* 27 */
-    "out of memory",		                        /* 28 */
-    "internal system error",	                        /* 29 */
-    "internal error",		                        /* 30 */
-    "errnum out of range",	                        /* 31 */
+    "excess retransmissions sent",                      /* 27 */
+    "excess errors received",                           /* 28 */
+    "out of memory",		                        /* 29 */
+    "internal system error",	                        /* 30 */
+    "internal error",		                        /* 31 */
+    "errnum out of range",	                        /* 32 */
     NULL
   };
 
