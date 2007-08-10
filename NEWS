@@ -13,8 +13,7 @@ o Ported many features from other tools into ipmimonitoring.
 o Added openipmi driver to bmc-watchdog.
 o Refined many error messages to provide more accurate descriptions of
   errors.
-o Removed CALLBACK and OEM privilege capabilities in most tools, since
-  there's no point to them.
+o Removed CALLBACK and OEM privilege capabilities in most tools.
 o Converted some tools (ipmimonitoring, ipmiconsole, ipmipower) to use
   argp instead of getopt for consistency between tools.
 o Updated most manpages with full and clearer information.
@@ -25,7 +24,7 @@ o Made many command line options consistent across FreeIPMI.  Notable
      Backwards compatability has been maintained when possible.
   2) All --auth-type options are now --authentication-type
      Backwards compatability has been maintained when possible.
-  3) All --reg-space or --register-space options are now --register-spacing
+  3) All --reg-space or --register-space options are now --register-spacing.
      Backwards compatability has been maintained when possible.
   4) In ipmipower, --hostnames (plural) is now --hostname (not-plural).  
      Internally --hostnames is maintained for backwards compatability.
@@ -34,8 +33,8 @@ o Made many command line options consistent across FreeIPMI.  Notable
   5) The -T option and -I option in ipmipower have been flipped for consistency.
   6) The -c option in ipmiconsole is now the -I option.  The -c option is
      internally maintained for backwards comptability.
-  7) Compliance workaround options in ipmiconsole now follow the convention
-     in ipmipower using the -W option.
+  7) Compliance workaround options in ipmiconsole now follow the -W
+     option convention.
   8) The "plain" authentication type argument is now the
      "straight_password_key" authentication type argument.  "plain" is
      internally maintained for backwards compatability.
