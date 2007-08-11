@@ -26,15 +26,6 @@ bmc-config:
 Missing Serial Config
 Chassis Config?
 
-management:
------------
-move ftp server?
-move webpage?
-
-doc:
-----
-lib general overview doc
-
 pef-config
 --------
 * conf.5 manpage
@@ -54,10 +45,6 @@ should do everything in chunks when it is possible, do individually if there wer
 common stuff for parsing in bmc-config and pef-config
 fix poor use of atoi/strtoul
 
-ipmiconsole
------------
-blocking equivalents for ipmiconsole_ctx_destroy() or ipmiconsole_engine_teardown()
-
 general
 -------
 event handling
@@ -75,18 +62,13 @@ re-architecture
 ---------------
 libfreeipmi re-arch for better error codes
 libfreeipmi udm - re-arch for inband/outofband/lanplus
-rename variables for better consistency?
-audit errno/kcs/ssif/openipmi errors -> udm errnos
-fix consistency of error codes in all "apis".
 split udm into another lib
-debugging enabled by default?
 udm strerror - w/ buffer for command specific errors
-udm error messages for common bad completion codes
-udm - workaround flags support
-udm - ipmi 2.0
-- needs to be re-architected
-- lan_open_session (and subsequently lan_2_0_open_session) need to *not* call ipmi_lan_cmd and such.  These
-  functions should work independently of UDM.
-- this is why there is a mess with the local_dev's and such.
-ipmimonitoring - use UDM + support ipmi 2.0
-- now possible since UDM returns legit error codes
+
+RELEASE TODOS
+-------------
+Email freeipmi-users && freeipmi-devel
+Update savannah announcements
+Update freshmeat.net
+Update fsf directory info.
+Update freeipmi webpage

@@ -13,9 +13,8 @@ o Added openipmi driver to bmc-watchdog.
 o Refined many error messages to provide more accurate descriptions of
   errors.
 o Removed CALLBACK and OEM privilege capabilities in most tools.
-o Converted some tools (ipmimonitoring, ipmiconsole, ipmipower) to use
-  argp instead of getopt for consistency between tools.
-o Updated most manpages with full and clearer information.
+o Converted some tools to use argp instead of getopt for consistency
+  between tools.
 o Support basic --debug option in most tools under the non-debug builds.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
@@ -59,8 +58,7 @@ o Similarly, fixed inconsistencies with dashes vs. underscores in
   possible.
 o Similarly, updated manpages for consistency across tools.
 o Removed the quiet and silent options from bmc-config.
-o Various bug fixes.
-o Various bug fixes and enhancements.
+o Various minor bug fixes and enhancements.
 
 For Developers
 --------------
