@@ -7,6 +7,7 @@ o Added previously missing IPMI 2.0 (-D LAN_2_0) support into most
   ipmi-sel, ipmi-raw, ipmimonitoring).
 o Ported IPMI compliance workarounds in ipmipower, ipmiconsole, and
   ipmimonitoring into most other FreeIPMI tools.
+o Added more strict IPMI over LAN implementation into most tools.
 o Ported many features from other tools into ipmimonitoring. 
 o Added openipmi driver to bmc-watchdog.
 o Refined many error messages to provide more accurate descriptions of
