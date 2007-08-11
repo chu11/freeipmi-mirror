@@ -5,6 +5,8 @@
 
 	* ipmimonitoring/src/ipmimonitoring.c (_cmdline_parse): Fix
 	--debugdump option.
+
+	* configure.ac: Update version for test release.
 	
 2007-08-09  Albert Chu <chu11@llnl.gov>
 
