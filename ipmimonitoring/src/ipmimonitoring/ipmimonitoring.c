@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.24 2007-08-10 16:22:17 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.25 2007-08-11 00:00:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -420,24 +420,24 @@ cmdline_parse (int key,
       eliminate++;
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:
-      if ((tmp = parse_outofband_workaround_flags(arg)) < 0)
+      if ((tmp = parse_workaround_flags(arg)) < 0)
         err_exit("Command Line Error: invalid workaround flags");
       /* convert to ipmimonitoring flags */
-      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
+      if (tmp & IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+      if (tmp & IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+      if (tmp & IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-      if (tmp & IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+      if (tmp & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-      if ((tmp = parse_outofband_2_0_workaround_flags(arg)) < 0)
-        err_exit("Command Line Error: invalid workaround flags");
-      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+      if (tmp & IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
+      if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+      if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+      if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION;
       break;
     case IPMIMONITORING_DEBUG_KEY:       /* --debug */

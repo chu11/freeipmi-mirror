@@ -34,9 +34,7 @@ Specify a file to read command requests from.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
 .B ~# ipmi-raw 0 6 01
 .PP 

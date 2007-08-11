@@ -1,5 +1,15 @@
 2007-08-10  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/udm: Re-do UDM workarounds to be generic, not
+	specific to lan, lan 2.0, or inband.
+
+	* common/: Adjust for workaround flags change.
+
+	* libfreeipmi/, ipmipower/, ipmiconsole/, ipmimonitoring/,
+	common/: Support ASUS P5m2 workaround.
+	
+2007-08-10  Albert Chu <chu11@llnl.gov>
+
 	* common/src/tool-common.h, common/src/tool-common.c
 	(check_kg_len): New function.
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.7 2007-08-02 20:50:14 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.8 2007-08-11 00:00:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -188,9 +188,10 @@ enum ipmi_monitoring_workaround_flags
     IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION = 0x00000002,
     IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE   = 0x00000004,
     IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER  = 0x00000008,
-    IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION           = 0x00000010,
-    IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      = 0x00000020,
-    IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION             = 0x00000040,
+    IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES       = 0x00000010,
+    IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION           = 0x00010000,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      = 0x00020000,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION             = 0x00040000,
   };
 
 enum ipmi_monitoring_sensor_reading_flags

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.2 2007-08-02 20:50:15 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.3 2007-08-11 00:00:26 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -451,9 +451,7 @@ Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
 
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

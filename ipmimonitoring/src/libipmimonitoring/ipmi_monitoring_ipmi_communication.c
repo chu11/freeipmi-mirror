@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.5 2007-08-02 20:50:14 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.6 2007-08-11 00:00:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -283,13 +283,15 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
   if (config && config->workaround_flags)
     {
       if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
-        workaround_flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
       else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
-        workaround_flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
       else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
-        workaround_flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
       else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
-        workaround_flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
     }
   
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)
@@ -428,12 +430,14 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
   workaround_flags = 0;
   if (config && config->workaround_flags)
     {
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-        workaround_flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
+      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
       else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
-        workaround_flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
       else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION)
-        workaround_flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
     }
   
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)

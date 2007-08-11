@@ -48,9 +48,7 @@ List available sections for checkout.
 \fB\-v\fR, \fB\-\-verbose\fR
 Print additional detailed information.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
 .B # bmc-config --checkout 
 .PP

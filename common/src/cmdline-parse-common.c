@@ -139,7 +139,7 @@ parse_privilege_level(char *str)
 }
 
 int
-parse_outofband_workaround_flags(char *str)
+parse_workaround_flags(char *str)
 {
   char buf[WORKAROUND_FLAG_BUFLEN+1];
   char *tok;
@@ -154,54 +154,25 @@ parse_outofband_workaround_flags(char *str)
   tok = strtok(buf, ",");
   while (tok)
     {
-      if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR))
-        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-      else if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR))
-        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-      else if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR))
-        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-      else if (!strcasecmp(tok, IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR))
-        flags |= IPMI_OUTOFBAND_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+      if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
       tok = strtok(NULL, ",");
     }
   return flags;
-}
-
-int
-parse_outofband_2_0_workaround_flags(char *str)
-{
-  char buf[WORKAROUND_FLAG_BUFLEN+1];
-  char *tok;
-  int flags = 0;
-  
-  if (!str)
-    return -1;
-
-  memset(buf, '\0', WORKAROUND_FLAG_BUFLEN+1);
-  strncpy(buf, str, WORKAROUND_FLAG_BUFLEN);
-
-  tok = strtok(buf, ",");
-  while (tok)
-    {
-      if (!strcasecmp(tok, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR))
-        flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-      else if (!strcasecmp(tok, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR))
-        flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-      else if (!strcasecmp(tok, IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR))
-        flags |= IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION;
-      tok = strtok(NULL, ",");
-    }
-  return flags;
-}
-
-int
-parse_inband_workaround_flags(char *str)
-{
-  if (!str)
-    return -1;
-
-  /* no inband workarounds to parse yet */
-  return 0;
 }
 
 /* From David Wheeler's Secure Programming Guide */
@@ -597,31 +568,9 @@ common_parse_opt (int key,
       cmd_args->privilege_level = tmp;
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:
-      if ((tmp = parse_outofband_workaround_flags(arg)) < 0)
+      if ((tmp = parse_workaround_flags(arg)) < 0)
         {
           fprintf(stderr, "invalid workaround flags specified\n");
-          argp_usage (state);
-        }
-      cmd_args->workaround_flags |= tmp;
-      if ((tmp = parse_outofband_2_0_workaround_flags(arg)) < 0)
-        {
-          fprintf(stderr, "invalid workaround flags specified\n");
-          argp_usage (state);
-        }
-      if (tmp && cmd_args->workaround_flags)
-        {
-          fprintf (stderr, "specified conflicting workaround options\n");
-          argp_usage (state);
-        }
-      cmd_args->workaround_flags |= tmp;
-      if ((tmp = parse_inband_workaround_flags(arg)) < 0)
-        {
-          fprintf(stderr, "invalid workaround flags specified\n");
-          argp_usage (state);
-        }
-      if (tmp && cmd_args->workaround_flags)
-        {
-          fprintf (stderr, "specified conflicting workaround options\n");
           argp_usage (state);
         }
       cmd_args->workaround_flags |= tmp;

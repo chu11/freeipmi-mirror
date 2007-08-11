@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.2 2007-08-02 20:50:11 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.3 2007-08-11 00:00:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,9 +65,7 @@ Output may be unknown, pray for the best.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-inband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

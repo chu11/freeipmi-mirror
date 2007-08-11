@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.20 2007-08-10 16:22:17 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.21 2007-08-11 00:00:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -252,14 +252,16 @@ cmdline_parse (int key,
       conf->lock_memory_set_on_cmdline++;
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:
-      if ((tmp = parse_outofband_2_0_workaround_flags(arg)) < 0)
+      if ((tmp = parse_workaround_flags(arg)) < 0)
         err_exit("Command Line Error: invalid workaround flags\n");
       /* convert to ipmiconsole flags */
-      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+      if (tmp & IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES;
+      if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
-      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+      if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
-      if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+      if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
       conf->workaround_flags_set_on_cmdline++;
       break;
@@ -449,14 +451,16 @@ _cb_workaround_flags(conffile_t cf,
   if (conf->workaround_flags_set_on_cmdline)
     return 0;
 
-  if ((tmp = parse_outofband_2_0_workaround_flags(data->string)) < 0)
+  if ((tmp = parse_workaround_flags(data->string)) < 0)
     err_exit("Config File Error: invalid workaround flags\n");
   /* convert to ipmiconsole flags */
-  if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+  if (tmp & IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES;
+  if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
-  else if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+  else if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
-  else if (tmp & IPMI_OUTOFBAND_2_0_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+  else if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
   return 0;
 }

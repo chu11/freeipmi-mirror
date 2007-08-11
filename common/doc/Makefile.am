@@ -14,9 +14,8 @@ EXTRA_DIST = \
 	manpage-common-privilege-level-admin.man \
 	manpage-common-workaround-flags.man \
 	manpage-common-workaround-heading-text.man \
-	manpage-common-workaround-inband-text.man \
-	manpage-common-workaround-outofband-2-0-text.man \
-	manpage-common-workaround-outofband-text.man \
+	manpage-common-workaround-text.man \
+	manpage-common-workaround-outofband-2-0-only-text.man \
 	manpage-common-debug.man \
 	manpage-common-misc.man \
 	manpage-common-hostranged-buffer.man \

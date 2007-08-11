@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.2 2007-08-02 20:50:13 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.3 2007-08-11 00:00:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -119,7 +119,7 @@ Send a DEL character.
 Send a single escape character.
 
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-only-text.man>
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmiconsole involve a misconfiguration of
