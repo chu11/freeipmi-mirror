@@ -344,11 +344,7 @@ int parse_authentication_type(char *str);
 
 int parse_privilege_level(char *str);
 
-int parse_outofband_workaround_flags(char *str);
-
-int parse_outofband_2_0_workaround_flags(char *str);
-
-int parse_inband_workaround_flags(char *str);
+int parse_workaround_flags(char *str);
 
 error_t common_parse_opt (int key, 
 			  char *arg, 

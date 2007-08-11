@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.5 2007-08-11 00:00:26 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.6 2007-08-11 03:36:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -120,6 +120,13 @@ ipmipower_workarounds_string(uint32_t workaround_flags)
       strcat(workarounds_buffer, IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR);
       not_first++;
     }
+  if (workaround_flags & WORKAROUND_FLAG_USERNAME_CAPABILITIES)
+    {
+      if (not_first)
+        strcat(workarounds_buffer, ",");
+      strcat(workarounds_buffer, IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES_STR);
+      not_first++;
+    }
   if (workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
     {
       if (not_first)
@@ -151,11 +158,12 @@ ipmipower_workarounds_list(void)
   memset(workarounds_buffer, '\0', IPMIPOWER_WORKAROUNDS_BUFLEN);
   snprintf(workarounds_buffer,
            IPMIPOWER_WORKAROUNDS_BUFLEN,
-           "%s,%s,%s,%s,%s,%s,%s",
+           "%s,%s,%s,%s,%s,%s,%s,%s",
            IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO_STR,
            IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
            IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
            IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+           IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES_STR,
            IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
            IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
            IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);
