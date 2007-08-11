@@ -5,10 +5,8 @@ For Users
 o Added previously missing IPMI 2.0 (-D LAN_2_0) support into most
   other FreeIPMI tools (ipmi-chassis, ipmi-fru, ipmi-sensors,
   ipmi-sel, ipmi-raw, ipmimonitoring).
-o Ported IPMI compliance workarounds (-W, --workaround-flags option)
-  into most other FreeIPMI tools (ipmi-chassis, ipmi-fru,
-  ipmi-sensors, ipmi-sel, ipmi-raw, ipmimonitoring, ipmiconsole,
-  bmc-config, pef-config).
+o Ported IPMI compliance workarounds in ipmipower, ipmiconsole, and
+  ipmimonitoring into most other FreeIPMI tools.
 o Ported many features from other tools into ipmimonitoring. 
 o Added openipmi driver to bmc-watchdog.
 o Refined many error messages to provide more accurate descriptions of
