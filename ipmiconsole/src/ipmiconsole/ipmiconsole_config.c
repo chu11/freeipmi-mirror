@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16 2007-06-02 18:18:29 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.6.1 2007-08-11 10:32:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -94,6 +94,7 @@ _usage(void)
           "-N --dont-steal               Do not steal in use SOL sessions by default\n"
           "-T --deactivate               Deactivate a SOL session only\n"
           "-L --lock-memory              Lock memory\n"
+          "-A --username-capabilities    Workaround Username Capabilities bugs\n"
           "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
           "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n"
           "-U --sun-2-0-session          Workaround Sun IPMI bugs\n");
@@ -141,6 +142,7 @@ _cmdline_parse(int argc, char **argv)
       {"dont-steal",               0, NULL, 'N'},
       {"deactivate",               0, NULL, 'T'},
       {"lock-memory",              0, NULL, 'L'},
+      {"username-capabilities",    0, NULL, 'A'},
       {"intel-2-0-session",        0, NULL, 'I'},
       {"supermicro-2-0-session",   0, NULL, 'S'},
       {"sun-2-0-session",          0, NULL, 'U'},
@@ -158,7 +160,7 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLISU");
+  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLAISU");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -280,6 +282,10 @@ _cmdline_parse(int argc, char **argv)
         case 'L':       /* --lock-memory */
           conf->lock_memory++;
           conf->lock_memory_set_on_cmdline++;
+          break;
+        case 'A':       /* --username-capabilities */
+          conf->username_capabilities++;
+          conf->username_capabilities_set_on_cmdline++;
           break;
         case 'I':       /* --intel-2-0-session */
           conf->intel_2_0_session++;
@@ -473,6 +479,7 @@ _config_file_parse(void)
     cipher_suite_id_flag,
     dont_steal_flag,
     lock_memory_flag,
+    username_capabilities_flag,
     intel_2_0_session_flag,
     supermicro_2_0_session_flag,
     sun_2_0_session_flag;
@@ -572,6 +579,17 @@ _config_file_parse(void)
         &lock_memory_flag, 
         &(conf->lock_memory),
         conf->lock_memory_set_on_cmdline
+      },
+      {
+        "username_capabilities", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        _cb_bool,
+        1, 
+        0, 
+        &username_capabilities_flag, 
+        &(conf->username_capabilities),
+        conf->username_capabilities_set_on_cmdline
       },
       {
         "intel_2_0_session", 

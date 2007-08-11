@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.16.6.1 2007-07-17 15:57:33 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.16.6.2 2007-08-11 10:32:03 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,6 +128,10 @@ Inform
 to lock memory to prevent
 sensitive information (such as usernames and passwords) to be
 swappable.
+.TP
+.I "-A, --username-capabilities"
+Modifies the IPMI session protocol to ignore username capabilities
+flags.  First discovered on Asus P5M2 motherboards.
 .TP
 .I "-I, --intel-2-0-session"
 Modifies the IPMI 2.0 session protocol for non-compliant Intel

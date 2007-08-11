@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.6.1 2007-08-11 10:32:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -991,20 +991,31 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	       "authentication_status.per_message_authentication",
 	       &authentication_status_per_message_authentication);
 
-  /* Does the remote BMC's authentication configuration support
-   * our username/password combination 
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on an ASUS P5M2 motherboard.
+   *
+   * The ASUS motherboard reports incorrect settings of anonymous
+   * vs. null vs non-null username capabilities.  The workaround is to
+   * skip these checks.
    */
-  if ((!strlen(conf->username) && !strlen(conf->password)
-       && !authentication_status_anonymous_login
-       && !authentication_type_none)
-      || (!strlen(conf->username) 
-	  && !authentication_status_anonymous_login
-	  && !authentication_status_null_username)
-      || (strlen(conf->username)
-	  && !authentication_status_non_null_username))
+  if (!(conf->workaround_flags & WORKAROUND_FLAG_USERNAME_CAPABILITIES))
     {
-      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
-      return -1;
+      /* Does the remote BMC's authentication configuration support
+       * our username/password combination 
+       */
+      if ((!strlen(conf->username) && !strlen(conf->password)
+           && !authentication_status_anonymous_login
+           && !authentication_type_none)
+          || (!strlen(conf->username) 
+              && !authentication_status_anonymous_login
+              && !authentication_status_null_username)
+          || (strlen(conf->username)
+              && !authentication_status_non_null_username))
+        {
+          ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname); /* XXX - permission denied? */
+          return -1;
+        }
     }
 
   if (conf->authentication_type == AUTHENTICATION_TYPE_AUTO)

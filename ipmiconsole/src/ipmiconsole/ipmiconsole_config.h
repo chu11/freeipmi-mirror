@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.9 2007-06-01 04:35:07 chu11 Exp $
+ *  $Id: ipmiconsole_config.h,v 1.9.6.1 2007-08-11 10:32:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -60,6 +60,7 @@ struct ipmiconsole_config
   int dont_steal;
   int deactivate;
   int lock_memory;
+  int username_capabilities;
   int intel_2_0_session;
   int supermicro_2_0_session;
   int sun_2_0_session;
@@ -73,6 +74,7 @@ struct ipmiconsole_config
   int dont_steal_set_on_cmdline;
   int deactivate_set_on_cmdline;
   int lock_memory_set_on_cmdline;
+  int username_capabilities_set_on_cmdline;
   int intel_2_0_session_set_on_cmdline;
   int supermicro_2_0_session_set_on_cmdline;
   int sun_2_0_session_set_on_cmdline;

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.71 2007-05-24 13:37:48 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.71.6.1 2007-08-11 10:32:05 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -589,6 +589,10 @@ Authentication is disabled, but actually require it for the protocol.
 In order to work around this issue, the "forcepermsg" workaround must
 be specified.  The option will force Per Message Authentication to be
 used no matter what is advertised by the remote BMC.
+
+Asus P5M2: The motherboard does not properly report username
+capabilities, leading to invalid username errors.  In order to work
+around this issue, the "usercap" workaround must be specified.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be

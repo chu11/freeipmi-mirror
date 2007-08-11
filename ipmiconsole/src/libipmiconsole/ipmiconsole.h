@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.16.2.1 2007-07-13 22:37:38 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.16.2.2 2007-08-11 10:32:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,6 +117,11 @@ extern "C" {
 /* 
  * Workaround Flags
  *
+ * USERNAME_CAPABILITIES
+ *
+ * Discoverd on an ASUS P5M2 motherboard, the motherboard does not
+ * properly report username capabilities, leading to invalid username
+ * errors.  This workaround flag will work around the problem.
  * INTEL_2_0
  *
  * All currently known IPMI 2.0 implementations on Intel motherboards
@@ -144,10 +149,12 @@ extern "C" {
  *
  * Work around several IPMI 2.0 compliance problems, mostly involving
  * invalid lengthed hash keys and unsupported payload types.
+ *
  */
-#define IPMICONSOLE_WORKAROUND_INTEL_2_0      0x00000001
-#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0 0x00000002
-#define IPMICONSOLE_WORKAROUND_SUN_2_0        0x00000004
+#define IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES 0x00000010
+#define IPMICONSOLE_WORKAROUND_INTEL_2_0             0x00000001
+#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0        0x00000002
+#define IPMICONSOLE_WORKAROUND_SUN_2_0               0x00000004
 
 /*
  * Context Status

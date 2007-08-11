@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.10.1 2007-07-09 15:50:08 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.10.2 2007-08-11 10:32:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -714,24 +714,35 @@ _check_authentication_capabilities(ipmi_monitoring_ctx_t c)
     return -1;
   authentication_status_non_null_username = val;
 
-  /* Does the remote BMC's authentication configuration support
-   * our username/password combination
+  /* IPMI Workaround
+   *
+   * Discovered on an ASUS P5M2 motherboard.
+   *
+   * The ASUS motherboard reports incorrect settings of anonymous
+   * vs. null vs non-null username capabilities.  The workaround is to
+   * skip these checks.
    */
-  if ((!strlen(c->comm.username) && !strlen(c->comm.password)
-       && !authentication_status_anonymous_login
-       && !authentication_type_none)
-      || (!strlen(c->comm.username)
-          && !authentication_status_anonymous_login
-          && !authentication_status_null_username)
-      || (strlen(c->comm.username)
-          && !authentication_status_non_null_username))
+  if (!(c->comm.workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES))
     {
+      /* Does the remote BMC's authentication configuration support
+       * our username/password combination
+       */
+      if ((!strlen(c->comm.username) && !strlen(c->comm.password)
+           && !authentication_status_anonymous_login
+           && !authentication_type_none)
+          || (!strlen(c->comm.username)
+              && !authentication_status_anonymous_login
+              && !authentication_status_null_username)
+          || (strlen(c->comm.username)
+              && !authentication_status_non_null_username))
+        {
 #ifndef NDEBUG
-      c->errnum = IPMI_MONITORING_ERR_USERNAME;
+          c->errnum = IPMI_MONITORING_ERR_USERNAME;
 #else  /* !NDEBUG */
-      c->errnum = IPMI_MONITORING_ERR_PERMISSION;
+          c->errnum = IPMI_MONITORING_ERR_PERMISSION;
 #endif /* !NDEBUG */
-      return -1;
+          return -1;
+        }
     }
 
   if ((c->comm.authentication_type == IPMI_AUTHENTICATION_TYPE_NONE

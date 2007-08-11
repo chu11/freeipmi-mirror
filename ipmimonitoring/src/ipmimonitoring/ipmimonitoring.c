@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.17.6.2 2007-07-27 16:10:03 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.17.6.3 2007-08-11 10:32:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -134,6 +134,7 @@ _usage(void)
           "-c --cache-dir str            Specify alternate SDR cache directory\n"
           "-r --regenerate-sdr-cache str Regenerate SDR cache\n"
           "-q --quiet-readings           Output only sensor states, no values\n"
+          "-A --username-capabilities    Workaround Username Capabilities bugs\n"
           "-B --buffer-output            Buffer hostranged output\n"
           "-C --consolidate-output       Consolidate hostranged output\n"
           "-F --fanout num               Set multiple host fanout\n"
@@ -165,26 +166,27 @@ _cmdline_parse(int argc, char **argv)
 #if HAVE_GETOPT_LONG
   struct option long_options[] =
     {
-      {"help",                 0, NULL, 'H'},
-      {"version",              0, NULL, 'V'},
-      {"hostname",             1, NULL, 'h'},
-      {"username",             1, NULL, 'u'},
-      {"password",             1, NULL, 'p'},
-      {"password-prompt",      1, NULL, 'P'},
-      {"privilege-level",      1, NULL, 'l'},
-      {"authentication-type",  1, NULL, 'a'},
-      {"sensors",              1, NULL, 's'},
-      {"groups",               1, NULL, 'g'},
-      {"cache-dir",            1, NULL, 'c'},
-      {"regenerate-sdr-cache", 0, NULL, 'r'},
-      {"quiet-readings",       0, NULL, 'q'},
-      {"buffer-output",        0, NULL, 'B'},
-      {"consolidate-output",   0, NULL, 'C'},
-      {"fanout",               1, NULL, 'F'},
-      {"eliminate",            0, NULL, 'E'},
+      {"help",                  0, NULL, 'H'},
+      {"version",               0, NULL, 'V'},
+      {"hostname",              1, NULL, 'h'},
+      {"username",              1, NULL, 'u'},
+      {"password",              1, NULL, 'p'},
+      {"password-prompt",       1, NULL, 'P'},
+      {"privilege-level",       1, NULL, 'l'},
+      {"authentication-type",   1, NULL, 'a'},
+      {"sensors",               1, NULL, 's'},
+      {"groups",                1, NULL, 'g'},
+      {"cache-dir",             1, NULL, 'c'},
+      {"regenerate-sdr-cache",  0, NULL, 'r'},
+      {"quiet-readings",        0, NULL, 'q'},
+      {"username-capabilities", 0, NULL, 'A'},
+      {"buffer-output",         0, NULL, 'B'},
+      {"consolidate-output",    0, NULL, 'C'},
+      {"fanout",                1, NULL, 'F'},
+      {"eliminate",             0, NULL, 'E'},
 #ifndef NDEBUG
-      {"debug",                0, NULL, 'D'},
-      {"debugdump",            0, NULL, 'E'},
+      {"debug",                 0, NULL, 'D'},
+      {"debugdump",             0, NULL, 'G'},
 #endif /* NDEBUG */
       {0, 0, 0, 0}
     };
@@ -193,7 +195,7 @@ _cmdline_parse(int argc, char **argv)
   assert(argv);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pl:a:s:g:c:rqBCF:E");
+  strcat(options, "HVh:u:p:Pl:a:s:g:c:rqABCF:E");
 #ifndef NDEBUG
   strcat(options, "DG");
 #endif /* NDEBUG */
@@ -346,6 +348,9 @@ _cmdline_parse(int argc, char **argv)
           break;
         case 'q':
           quiet_readings++;
+          break;
+        case 'A':
+          conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
           break;
         case 'B':
           buffer_hostrange_output++;

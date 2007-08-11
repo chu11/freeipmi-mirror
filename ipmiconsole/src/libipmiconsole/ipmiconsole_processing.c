@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.13 2007-06-01 04:35:08 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.13.6.1 2007-08-11 10:32:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1755,18 +1755,29 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
     return -1;
   authentication_status_k_g = val;
   
-  if ((!strlen((char *)c->username) && !strlen((char *)c->password)
-       && !authentication_status_anonymous_login)
-      || (!strlen((char *)c->username)
-          && !authentication_status_anonymous_login
-          && !authentication_status_null_username)
-      || (strlen((char *)c->username)
-          && !authentication_status_non_null_username))
+  /* IPMI Workaround
+   *
+   * Discovered on an ASUS P5M2 motherboard.
+   *
+   * The ASUS motherboard reports incorrect settings of anonymous
+   * vs. null vs non-null username capabilities.  The workaround is to
+   * skip these checks.
+   */
+  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES))
     {
-      c->errnum = IPMICONSOLE_ERR_USERNAME_INVALID;
-      return -1;
+      if ((!strlen((char *)c->username) && !strlen((char *)c->password)
+           && !authentication_status_anonymous_login)
+          || (!strlen((char *)c->username)
+              && !authentication_status_anonymous_login
+              && !authentication_status_null_username)
+          || (strlen((char *)c->username)
+              && !authentication_status_non_null_username))
+        {
+          c->errnum = IPMICONSOLE_ERR_USERNAME_INVALID;
+          return -1;
+        }
     }
-
+  
   if ((!c->k_g_configured && authentication_status_k_g)
       || (c->k_g_configured && !authentication_status_k_g))
     {

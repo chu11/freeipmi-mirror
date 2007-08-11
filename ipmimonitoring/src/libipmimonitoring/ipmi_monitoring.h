@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.6 2007-04-30 05:25:03 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.6.10.1 2007-08-11 10:32:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -168,7 +168,8 @@ enum ipmi_monitoring_flags
 
 enum ipmi_monitoring_workaround_flags
   {
-    IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO = 0x00000001,
+    IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO       = 0x00000001,
+    IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES = 0x00000002
   };
 
 enum ipmi_monitoring_sensor_reading_flags
