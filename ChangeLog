@@ -9,6 +9,9 @@
 
 	* ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.h: Fix
 	comments.
+
+	* common/src/tool-common.c (parse_kg): Support odd-lengthed hex
+	codes.
 	
 2007-08-11  Albert Chu <chu11@llnl.gov>
 

@@ -278,14 +278,20 @@ parse_kg(unsigned char *outbuf, int outsz, const char *instr)
       memset(outbuf, 0, IPMI_MAX_K_G_LENGTH);
       for (i = j = 0; i < strlen(p); i+=2, j++)
         {
-          if (p[i+1] == '\0')
+          if (!isxdigit(p[i])
+              || (p[i+1] && !isxdigit(p[i+1])))
             return -1;
-          if (!isxdigit(p[i]) || !isxdigit(p[i+1]))
-            return -1;
-          buf[0] = p[i]; buf[1] = p[i+1]; buf[2] = 0;
+          buf[0] = p[i]; 
+          if (p[i+1])
+            buf[1] = p[i+1]; 
+          else
+            buf[1] = 0;
+          buf[2] = '\0';
           errno = 0;
           outbuf[j] = strtoul(buf, &q, 16);
-          if (errno || (q != buf + 2))
+          if (errno 
+              || ((p[i+1] && (q != buf + 2))
+                  || (!p[i+1] && (q != buf + 1))))
             return -1;
           rv++;
         }
