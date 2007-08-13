@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.9 2007-08-13 22:06:39 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.10 2007-08-13 22:07:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -182,6 +182,9 @@ enum ipmi_monitoring_flags
     IPMI_MONITORING_FLAGS_LOCK_MEMORY        = 0x04,
   };
 
+/* Note: Non-logical bitmask order is set for consistency of masks
+ * with libfreeipmi bitmasks.
+ */
 enum ipmi_monitoring_workaround_flags
   {
     IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO      = 0x00000001,
