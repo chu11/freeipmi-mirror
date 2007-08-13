@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.33 2007-08-13 18:20:54 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.34 2007-08-13 20:14:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -256,7 +256,7 @@ struct ipmiconsole_ipmi_config
 {
   char *username;
   char *password;
-  char *k_g;
+  unsigned char *k_g;
   unsigned int k_g_len;
   int privilege_level;
   int cipher_suite_id;
