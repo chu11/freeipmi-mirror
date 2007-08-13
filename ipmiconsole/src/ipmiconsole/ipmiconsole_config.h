@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.h,v 1.9.6.1 2007-08-11 10:32:04 chu11 Exp $
+ *  $Id: ipmiconsole_config.h,v 1.9.6.2 2007-08-13 20:22:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,6 +64,7 @@ struct ipmiconsole_config
   int intel_2_0_session;
   int supermicro_2_0_session;
   int sun_2_0_session;
+  int asus_2_0_session;
 
   int hostname_set_on_cmdline;
   int username_set_on_cmdline;
@@ -78,6 +79,7 @@ struct ipmiconsole_config
   int intel_2_0_session_set_on_cmdline;
   int supermicro_2_0_session_set_on_cmdline;
   int sun_2_0_session_set_on_cmdline;
+  int asus_2_0_session_set_on_cmdline;
 };
 
 void ipmiconsole_config_setup(int argc, char **argv);

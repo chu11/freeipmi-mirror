@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.13.6.1 2007-08-11 10:32:04 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.13.6.2 2007-08-13 20:22:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2129,14 +2129,31 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
                                                    "operation_status")) < 0)
     return -1;
 
-  if (s->max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
-      && s->max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len
-      && s->max_outbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
-      && s->max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
+  /* IPMI Workaround
+   *
+   * Discovered on an ASUS P5M2 motherboard.
+   *
+   * The ASUS motherboard reports incorrect payload sizes.  Skip the
+   * check and assume a reasonable size.
+   *
+   */
+  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_ASUS_2_0))
     {
-      s->max_sol_character_send_size = s->max_outbound_payload_size - sol_hdr_len;
-      return 1;
+      if (s->max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
+          && s->max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len
+          && s->max_outbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
+          && s->max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
+        {
+          s->max_sol_character_send_size = s->max_outbound_payload_size - sol_hdr_len;
+          return 1;
+        }
     }
+  else
+    {
+      /* Lets try 32, seems like a decent power of two number */
+      s->max_sol_character_send_size = 32;
+    }
+
   return 0;
 }
 

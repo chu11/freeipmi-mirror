@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.in,v 1.16.6.2 2007-08-11 10:32:03 chu11 Exp $
+\."$Id: ipmiconsole.8.in,v 1.16.6.3 2007-08-13 20:22:44 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -145,6 +145,10 @@ machines.  For more information, see WORKAROUNDS below.
 Modifies the IPMI 2.0 session protocol for non-compliant Sun
 machines.  For more information, see WORKAROUNDS below.
 .TP
+.I "-U, --asus-2-0-session"
+Modifies the IPMI 2.0 session protocol for non-compliant Asus
+machines.  For more information, see WORKAROUNDS below.
+.TP
 .I "-H, --help"
 Output help menu and exit.
 .TP
@@ -200,6 +204,10 @@ discovered on.  Newer versions of a vendors firmware may fix the
 problems indicated below.  Similar machines from vendors may or may
 not exhibit the same problems.
 
+Asus P5M2: The motherboard does not properly report username
+capabilities, leading to invalid username errors.  This can be worked
+around using the -A (--username-capabilities) option.
+
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
 worked around using the the -I (--intel-2-0-session) option.  The
@@ -216,6 +224,9 @@ Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
 around by specifying the -U (--sun-2-0) workaround.  The workarounds
 include handling invalid lengthed hash keys and unsupported payload
 types.
+
+Asus P5M2: An Asus IPMI 2.0 SOL payload size bug can be worked around
+using the -X (--asus-2-0-session) option.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmiconsole involve a misconfiguration of

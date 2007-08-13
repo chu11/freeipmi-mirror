@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.16.2.2 2007-08-11 10:32:03 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.16.2.3 2007-08-13 20:22:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -354,6 +354,8 @@ main(int argc, char **argv)
     protocol_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
   if (conf->sun_2_0_session)
     protocol_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
+  if (conf->asus_2_0_session)
+    protocol_config.workaround_flags |= IPMICONSOLE_WORKAROUND_ASUS_2_0;
 
   if (!(c = ipmiconsole_ctx_create(conf->hostname,
 				   &ipmi_config,

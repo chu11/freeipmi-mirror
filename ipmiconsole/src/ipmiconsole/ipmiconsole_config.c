@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.6.1 2007-08-11 10:32:04 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.6.2 2007-08-13 20:22:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,7 +97,8 @@ _usage(void)
           "-A --username-capabilities    Workaround Username Capabilities bugs\n"
           "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
           "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n"
-          "-U --sun-2-0-session          Workaround Sun IPMI bugs\n");
+          "-U --sun-2-0-session          Workaround Sun IPMI bugs\n"
+          "-X --asus-2-0-session         Workaround Asus IPMI bugs\n");
 #ifndef NDEBUG
   fprintf(stderr,
           "-D --debug                    Turn on debugging\n"
@@ -146,6 +147,7 @@ _cmdline_parse(int argc, char **argv)
       {"intel-2-0-session",        0, NULL, 'I'},
       {"supermicro-2-0-session",   0, NULL, 'S'},
       {"sun-2-0-session",          0, NULL, 'U'},
+      {"asus-2-0-session",         0, NULL, 'X'},
 #ifndef NDEBUG
       {"debug",               0, NULL, 'D'},
       {"debugfile",           0, NULL, 'E'},
@@ -160,7 +162,7 @@ _cmdline_parse(int argc, char **argv)
   assert(conf);
 
   memset(options, '\0', sizeof(options));
-  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLAISU");
+  strcat(options, "HVh:u:p:Pk:Kl:c:C:NTLAISUX");
 #ifndef NDEBUG
   strcat(options, "DEFG");
 #endif /* NDEBUG */
@@ -298,6 +300,10 @@ _cmdline_parse(int argc, char **argv)
         case 'U':       /* --sun-2-0-session */
           conf->sun_2_0_session++;
           conf->sun_2_0_session_set_on_cmdline++;
+          break;
+        case 'X':       /* --asus-2-0-session */
+          conf->asus_2_0_session++;
+          conf->asus_2_0_session_set_on_cmdline++;
           break;
 #ifndef NDEBUG
         case 'D':	/* --debug */
@@ -482,7 +488,8 @@ _config_file_parse(void)
     username_capabilities_flag,
     intel_2_0_session_flag,
     supermicro_2_0_session_flag,
-    sun_2_0_session_flag;
+    sun_2_0_session_flag,
+    asus_2_0_session_flag;
   
   /* Notes:
    *
@@ -623,6 +630,17 @@ _config_file_parse(void)
         &sun_2_0_session_flag, 
         &(conf->sun_2_0_session),
         conf->sun_2_0_session_set_on_cmdline
+      },
+      {
+        "asus_2_0_session", 
+        CONFFILE_OPTION_BOOL, 
+        -1, 
+        _cb_bool,
+        1, 
+        0, 
+        &asus_2_0_session_flag, 
+        &(conf->asus_2_0_session),
+        conf->asus_2_0_session_set_on_cmdline
       },
     };
   conffile_t cf = NULL;

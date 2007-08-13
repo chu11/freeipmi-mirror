@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.13.2.1 2007-08-11 10:32:04 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.13.2.2 2007-08-13 20:22:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -208,7 +208,8 @@ typedef enum
         (IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES \
          | IPMICONSOLE_WORKAROUND_INTEL_2_0 \
 	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0 \
-         | IPMICONSOLE_WORKAROUND_SUN_2_0)
+         | IPMICONSOLE_WORKAROUND_SUN_2_0 \
+         | IPMICONSOLE_WORKAROUND_ASUS_2_0)
 
 #define IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED   0x1
 
