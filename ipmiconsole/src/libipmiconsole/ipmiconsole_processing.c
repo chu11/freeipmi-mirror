@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.21 2007-08-13 18:14:28 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.22 2007-08-13 18:20:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2137,7 +2137,7 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
    * check and assume a reasonable size.
    *
    */
-  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_ASUS_2_0_SESSION))
+  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_ASUS_2_0))
     {
       if (s->max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
           && s->max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len

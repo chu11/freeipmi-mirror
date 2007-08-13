@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.32 2007-08-13 18:14:28 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.33 2007-08-13 18:20:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -167,6 +167,10 @@ extern "C" {
  *
  * Work around several IPMI 2.0 compliance problems, mostly involving
  * invalid lengthed hash keys and unsupported payload types.
+ *
+ * ASUS_2_0
+ *
+ * Work around Asus IPMI 2.0 SOL payload size bug.
  *
  * Note: Non-logical bitmask order is set for consistency of masks
  * with libfreeipmi bitmasks.
