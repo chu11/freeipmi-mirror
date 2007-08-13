@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.22 2007-08-13 18:20:54 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.23 2007-08-13 20:27:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2152,7 +2152,9 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
     {
       /* Lets try 32, seems like a decent power of two number */
       s->max_sol_character_send_size = 32;
+      return 1;
     }
+
   return 0;
 }
 
