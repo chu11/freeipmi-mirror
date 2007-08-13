@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.21 2007-08-11 00:00:25 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.22 2007-08-13 20:16:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -263,6 +263,8 @@ cmdline_parse (int key,
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
       if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
+      if (tmp & IPMI_WORKAROUND_FLAGS_ASUS_2_0_SESSION)
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_ASUS_2_0;
       conf->workaround_flags_set_on_cmdline++;
       break;
     case IPMICONSOLE_DEBUG_KEY:	/* --debug */
