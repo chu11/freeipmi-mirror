@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.3 2007-08-11 00:00:25 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.4 2007-08-13 20:42:10 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,8 +128,13 @@ the remote machine's BMC.  The FreeIPMI tool
 may be used to do this configuration.  Double check to make sure the
 following are configured properly in the remote machine's BMC: IP
 address, MAC address, subnet mask, username(s), password(s), allowed
-authentication type(s), SOL availability, SOL privilege, and SOL
-access for the username you are using.
+authentication type(s), SOL availability, SOL privilege, SOL
+access for the username you are using, and available cipher suite
+ids.  You may need to select non-default parameters for privilege
+level, cipher suite id, etc. if the BMC configuration does not support
+the
+.B ipmiconsole
+defaults.
 
 .SH "KNOWN ISSUES"
 On certain operating systems, if you input your username and password

@@ -3,6 +3,8 @@
 	* common/doc/: Fix potential pre-processor bugs.
 
 	* ipmiconsole/, common/: Add ASUS IPMI 2.0 workarounds.
+
+	* ipmiconsole/ipmiconsole.8.in: Add some troubleshooting notes.
 	
 2007-08-11  Albert Chu <chu11@llnl.gov>
 
