@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.6.2 2007-08-13 20:22:44 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.6.3 2007-08-13 20:26:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,7 +79,7 @@ _config_default(void)
 static void
 _usage(void)
 {
-  fprintf(stderr, "Usage: cerebrod [OPTIONS]\n"
+  fprintf(stderr, "Usage: ipmiconsole [OPTIONS]\n"
           "-H --help                     Output Help\n"
           "-V --version                  Output Version\n"
 	  "-h --hostname str             Hostname\n"

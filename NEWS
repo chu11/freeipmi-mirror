@@ -8,6 +8,7 @@ o Fix ipmipower config file logic bug.
 o Fix ipmipower config output logic bug.
 o Fix manpage typos.
 o Fix potential pre-processor compile bug.
+o Fix usage help in ipmiconsole.
 
 0.4.2
 -----

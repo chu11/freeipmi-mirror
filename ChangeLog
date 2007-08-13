@@ -2,6 +2,11 @@
 
 	* common/doc/argp-common-hostranged-options.man: Fix potential
 	pre-processor bug.
+
+	* ipmiconsole/: Add Asus IPMI 2.0 workarounds.
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.c (_usage): Fix
+	usage help.
 	
 2007-08-10  Albert Chu <chu11@llnl.gov>
 
