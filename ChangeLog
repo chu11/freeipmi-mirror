@@ -8,6 +8,8 @@
 	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.c (_usage): Fix
 	usage help.
 	
+	* configure.ac: Update version and library versions for test release.
+
 2007-08-10  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/, ipmiconsole/, ipmimonitoring/: Support ASUS P5m2
