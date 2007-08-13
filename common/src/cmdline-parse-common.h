@@ -322,6 +322,7 @@ struct hostrange_cmd_args
 #define IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR           "intel20"
 #define IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR      "supermicro20"
 #define IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR             "sun20"
+#define IPMI_WORKAROUND_FLAGS_ASUS_2_0_SESSION_STR            "asus20"
 
 #define IPMI_AUTHENTICATION_TYPE_NONE_STR                               "none"
 #define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR              "straight_password_key"

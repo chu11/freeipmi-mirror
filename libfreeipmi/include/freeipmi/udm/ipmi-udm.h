@@ -94,6 +94,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION           0x00010000
 #define IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION      0x00020000
 #define IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION             0x00040000
+#define IPMI_WORKAROUND_FLAGS_ASUS_2_0_SESSION            0x00080000
 
 #define IPMI_WORKAROUND_FLAGS_DEFAULT                     0x00000000
 

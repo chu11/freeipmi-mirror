@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.31 2007-08-11 00:00:25 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.32 2007-08-13 18:14:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -175,6 +175,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0             0x00010000
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0        0x00020000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0               0x00040000
+#define IPMICONSOLE_WORKAROUND_ASUS_2_0              0x00080000
 
 /*
  * Context Status

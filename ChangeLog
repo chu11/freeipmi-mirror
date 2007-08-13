@@ -1,6 +1,8 @@
 2007-08-13  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/: Fix potential pre-processor bugs.
+
+	* ipmiconsole/, common/: Add ASUS IPMI 2.0 workarounds.
 	
 2007-08-11  Albert Chu <chu11@llnl.gov>
 
