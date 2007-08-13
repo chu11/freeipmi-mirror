@@ -1,3 +1,8 @@
+2007-08-13  Albert Chu <chu11@llnl.gov>
+
+	* common/doc/argp-common-hostranged-options.man: Fix potential
+	pre-processor bug.
+	
 2007-08-10  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/, ipmiconsole/, ipmimonitoring/: Support ASUS P5m2
@@ -6,7 +11,7 @@
 	* ipmimonitoring/src/ipmimonitoring.c (_cmdline_parse): Fix
 	--debugdump option.
 
-	* configure.ac: Update version for test release.
+	* configure.ac: Update version and library versions for test release.
 	
 2007-08-09  Albert Chu <chu11@llnl.gov>
 

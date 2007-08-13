@@ -7,6 +7,7 @@ o Fix range check in bmc-config SOL config that was inconsistent with IPMI spec.
 o Fix ipmipower config file logic bug.
 o Fix ipmipower config output logic bug.
 o Fix manpage typos.
+o Fix potential pre-processor compile bug.
 
 0.4.2
 -----

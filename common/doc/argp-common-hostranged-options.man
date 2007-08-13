@@ -1,10 +1,10 @@
 .TP
 \fB\-B\fR, \fB\-\-buffer-output\fR
-Buffer hostranged output.  Each node's standard output will output
-after the node has completed its IPMI operation.  When specifying this
+Buffer hostranged output.  For each node, buffer standard output until
+the node has completed its IPMI operation.  When specifying this
 option, data may appear to output slower to the user since the the
 entire IPMI operation must complete before any data can be output.
-See HOSTRANGED OUTPUT below for additional information.
+See HOSTRANGED SUPPORT below for additional information.
 .TP
 \fB\-C\fR, \fB\-\-consolidate-output\fR
 Consolidate hostranged output.  The complete standard output from
