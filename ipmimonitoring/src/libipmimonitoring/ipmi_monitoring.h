@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.8 2007-08-11 00:00:26 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.9 2007-08-13 22:06:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -513,7 +513,7 @@ enum ipmi_monitoring_sensor_bitmask_watchdog2
  * k_g
  *
  *   BMC Key for 2-key authentication.  Pass NULL ptr to use password
- *   as BMC key.
+ *   as BMC key.  The k_g key need not be an ascii string.
  *
  * k_g_len
  *
@@ -596,7 +596,7 @@ struct ipmi_monitoring_ipmi_config
   int protocol_version;
   char *username;
   char *password;
-  char *k_g;
+  unsigned char *k_g;
   unsigned int k_g_len;
   int privilege_level;
   int authentication_type;
