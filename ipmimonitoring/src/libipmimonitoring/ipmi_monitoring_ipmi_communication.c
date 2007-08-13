@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.6 2007-08-11 00:00:26 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.7 2007-08-13 22:10:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -211,7 +211,8 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
   unsigned int workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO
                                         | IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION
                                         | IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE
-                                        | IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER);
+                                        | IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER
+                                        | IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES);
 
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
@@ -284,13 +285,13 @@ _ipmi_1_5_init(ipmi_monitoring_ctx_t c,
     {
       if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_ACCEPT_SESSION_ID_ZERO;
-      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION;
-      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
-      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
     }
   
@@ -361,9 +362,11 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
   unsigned int retransmission_timeout_len;
   unsigned int workaround_flags;
   unsigned int flags;
-  unsigned workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION
+  unsigned workaround_flags_mask = (IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION
                                     | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION);
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_ASUS_2_0_SESSION);
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->comm.dev);
@@ -432,12 +435,14 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
     {
       if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
-      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
-      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
-      else if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION)
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
+      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_ASUS_2_0_SESSION)
+        workaround_flags |= IPMI_WORKAROUND_FLAGS_ASUS_2_0_SESSION;
     }
   
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)

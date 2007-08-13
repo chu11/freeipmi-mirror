@@ -2,7 +2,8 @@
 
 	* common/doc/: Fix potential pre-processor bugs.
 
-	* ipmiconsole/, common/: Add ASUS IPMI 2.0 workarounds.
+	* ipmiconsole/, libfreeipmi/, ipmimonitoring, common/: Add ASUS
+	IPMI 2.0 workarounds.
 
 	* ipmiconsole/ipmiconsole.8.in: Add some troubleshooting notes.
 
