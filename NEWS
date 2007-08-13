@@ -65,6 +65,8 @@ For Developers
 o Added IPMI 2.0 into UDM 
 o Added workarounds into UDM for IPMI 1.5 and IPMI 2.0 known
   compliance issues from vendors.
+o Added IPMI 2.0 into libipmimonitoring API.
+o Added scalability fixes into ipmiconsole API.
 o Fix various library variable names and macros for consistency.  For
   example:
   1) ipmi_ver_minor and ipmi_ver_major in struct ipmi_locate_info have
