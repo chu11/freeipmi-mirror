@@ -3,6 +3,9 @@
         * bmc-config/src/bmc-config-sections.c
         (bmc_config_section_set_value): Add error messages.
 	
+	* bmc-config/src/: Re-add pef commit/diff support for legacy
+	config files.  Do not checkout pef config by default.
+
 2007-08-13  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/argp-common-hostranged-options.man: Fix potential

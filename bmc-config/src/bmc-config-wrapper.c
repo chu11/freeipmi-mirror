@@ -1186,6 +1186,122 @@ set_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
 }
 
 bmc_err_t
+set_pef_control (bmc_config_state_data_t *state_data,
+                 uint8_t pef,
+                 uint8_t pef_event_messages,
+                 uint8_t pef_startup_delay,
+                 uint8_t pef_alert_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_control (state_data->dev,
+                                                             pef,
+                                                             pef_event_messages,
+                                                             pef_startup_delay,
+                                                             pef_alert_startup_delay,
+                                                             obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
+set_pef_action_global_control (bmc_config_state_data_t *state_data,
+                               uint8_t alert_action,
+                               uint8_t power_down_action,
+                               uint8_t reset_action,
+                               uint8_t power_cycle_action,
+                               uint8_t oem_action,
+                               uint8_t diagnostic_interrupt)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (state_data->dev,
+                                                                           alert_action,
+                                                                           power_down_action,
+                                                                           reset_action,
+                                                                           power_cycle_action,
+                                                                           oem_action,
+                                                                           diagnostic_interrupt,
+                                                                           obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
+set_pef_startup_delay (bmc_config_state_data_t *state_data,
+                       uint8_t pef_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (state_data->dev,
+                                                                   pef_startup_delay,
+                                                                   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
+set_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
+                             uint8_t pef_alert_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (state_data->dev,
+                                                                         pef_alert_startup_delay,
+                                                                         obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
 set_sol_sol_enable(bmc_config_state_data_t *state_data,
 		   uint8_t sol_enable)
 {
@@ -3261,6 +3377,174 @@ get_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
     goto cleanup;
   *power_restore_policy = val;
   
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
+get_pef_control (bmc_config_state_data_t *state_data,
+                 uint8_t *pef,
+                 uint8_t *pef_event_messages,
+                 uint8_t *pef_startup_delay,
+                 uint8_t *pef_alert_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val = 0;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_control_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_control (state_data->dev,
+                                                             IPMI_GET_PEF_PARAMETER,
+                                                             SET_SELECTOR,
+                                                             BLOCK_SELECTOR,
+                                                             obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "pef", &val) < 0)
+    goto cleanup;
+  *pef = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "pef_event_messages", &val) < 0)
+    goto cleanup;
+  *pef_event_messages = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
+    goto cleanup;
+  *pef_startup_delay = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
+    goto cleanup;
+  *pef_alert_startup_delay = val;
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
+get_pef_action_global_control (bmc_config_state_data_t *state_data,
+                               uint8_t *alert_action,
+                               uint8_t *power_down_action,
+                               uint8_t *reset_action,
+                               uint8_t *power_cycle_action,
+                               uint8_t *oem_action,
+                               uint8_t *diagnostic_interrupt)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val = 0;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (state_data->dev,
+                                                                           IPMI_GET_PEF_PARAMETER,
+                                                                           SET_SELECTOR,
+                                                                           BLOCK_SELECTOR,
+                                                                           obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "alert_action", &val) < 0)
+    goto cleanup;
+  *alert_action = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "power_down_action", &val) < 0)
+    goto cleanup;
+  *power_down_action = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "reset_action", &val) < 0)
+    goto cleanup;
+  *reset_action = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "power_cycle_action", &val) < 0)
+    goto cleanup;
+  *power_cycle_action = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "oem_action", &val) < 0)
+    goto cleanup;
+  *oem_action = val;
+
+  if (fiid_obj_get (obj_cmd_rs, "diagnostic_interrupt", &val) < 0)
+    goto cleanup;
+  *diagnostic_interrupt = val;
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
+get_pef_startup_delay (bmc_config_state_data_t *state_data,
+                       uint8_t *pef_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val = 0;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (state_data->dev,
+                                                                   IPMI_GET_PEF_PARAMETER,
+                                                                   SET_SELECTOR,
+                                                                   BLOCK_SELECTOR,
+                                                                   obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
+    goto cleanup;
+  *pef_startup_delay = val;
+
+  rv = BMC_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+bmc_err_t
+get_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
+                             uint8_t *pef_alert_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val = 0;
+  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (state_data->dev,
+                                                                         IPMI_GET_PEF_PARAMETER,
+                                                                         SET_SELECTOR,
+                                                                         BLOCK_SELECTOR,
+                                                                         obj_cmd_rs) < 0)
+    {
+      rv = BMC_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
+    goto cleanup;
+  *pef_alert_startup_delay = val;
+
   rv = BMC_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)

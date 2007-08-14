@@ -21,6 +21,7 @@ bmc_config_SOURCES = \
 	bmc-lan-conf-misc-section.c \
 	bmc-rmcpplus-conf-privilege-section.c \
 	bmc-serial-conf-section.c \
+	bmc-pef-conf-section.c \
 	bmc-sol-conf-section.c \
 	bmc-misc-section.c \
 	bmc-config-validate.c
