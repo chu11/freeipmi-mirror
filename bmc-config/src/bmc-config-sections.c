@@ -312,10 +312,16 @@ bmc_config_section_set_value (bmc_config_state_data_t *state_data,
   struct keyvalue *kv;
 
   if (!(sect = bmc_config_section_find_section (state_data, section_name)))
-    return -1;
+    {
+      fprintf (stderr, "Unknown section `%s'\n", section_name);
+      return -1;
+    }
 
   if (!(kv = bmc_config_section_find_keyvalue (state_data, section_name, key_name)))
-    return -1;
+    {
+      fprintf (stderr, "Unknown key `%s' in section `%s'\n", key_name, section_name);
+      return -1;
+    }
 
   if (kv->validate)
     {
