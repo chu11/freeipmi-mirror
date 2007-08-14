@@ -9,6 +9,7 @@ o Fix ipmipower config output logic bug.
 o Fix potential pre-processor compile bug.
 o Fix manpage typos.
 o Fix error output messages in bmc-config.
+o Fix legacy config option issues.
 o Fix usage help in ipmiconsole.
 
 0.4.2
