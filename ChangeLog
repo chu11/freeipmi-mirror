@@ -1,3 +1,7 @@
+2007-08-14  Anand Babu  <ab@zresearch.com>
+
+	* bmc-autoconfig.8.in: updated and moved from bmc-autoconfig.8.
+
 2007-08-13  Albert Chu <chu11@llnl.gov>
 
 	* common/doc/: Fix potential pre-processor bugs.
