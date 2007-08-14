@@ -44,8 +44,8 @@ should do everything in chunks when it is possible, do individually if there wer
 ---
 common stuff for parsing in bmc-config and pef-config
 fix poor use of atoi/strtoul
-common pef junk
-remote bmc-autoconfig?
+common pef config junk in bmc-config & pef-config
+remove bmc-autoconfig?
 
 general
 -------

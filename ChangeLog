@@ -2,6 +2,9 @@
 
 	* bmc-config/src/bmc-config-sections.c
 	(bmc_config_section_set_value): Add error messages.
+
+	* bmc-config/src/: Re-add pef commit/diff support for legacy
+	config files.  Do not checkout pef config by default.
 	
 2007-08-14  Anand Babu  <ab@zresearch.com>
 
