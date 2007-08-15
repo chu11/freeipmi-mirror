@@ -16,6 +16,8 @@ o Removed CALLBACK and OEM privilege capabilities in most tools.
 o Converted some tools to use argp instead of getopt for consistency
   between tools.
 o Support basic --debug option in most tools under the non-debug builds.
+o Updated manpages with more information, examples, and trouble
+  shooting tips.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level
