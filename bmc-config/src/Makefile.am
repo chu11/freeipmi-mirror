@@ -51,6 +51,7 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-rmcpplus-conf-privilege-section.h \
 		 bmc-serial-channel-section.h \
 		 bmc-serial-conf-section.h \
+		 bmc-pef-conf-section.h \
 		 bmc-sol-conf-section.h \
 		 bmc-misc-section.h \
 		 bmc-config-map.h \
