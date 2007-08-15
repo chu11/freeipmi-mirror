@@ -81,6 +81,20 @@ o Fix various library variable names and macros for consistency.  For
      has been updated as well).
 o Various bug fixes and enhancements.
      
+0.4.3
+-----
+o Add ASUS P5M2 workarounds in ipmipower, ipmiconsole, and ipmimonitoring.
+o Fix bad input assert corner cases.
+o Fix non-default install bug.
+o Fix range check in bmc-config SOL config that was inconsistent with IPMI spec.
+o Fix ipmipower config file logic bug.
+o Fix ipmipower config output logic bug.
+o Fix potential pre-processor compile bug.
+o Fix manpage typos.
+o Fix error output messages in bmc-config.
+o Fix legacy config option issues.
+o Fix usage help in ipmiconsole.
+
 0.4.2
 -----
 o ipmimonitoring: Fixed free bug that can cause segfaults.
