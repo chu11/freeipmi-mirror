@@ -433,7 +433,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
 
   snprintf(buf, 64, "Alert_String_%d", num);
 
-  if (!(sect = pef_config_section_create (state_data, buf)))
+  if (!(sect = pef_config_section_create (state_data, buf, 0)))
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,

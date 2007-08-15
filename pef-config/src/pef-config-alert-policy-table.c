@@ -1045,7 +1045,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
 
   snprintf(buf, 64, "Alert_Policy_%d", num);
 
-  if (!(sect = pef_config_section_create (state_data, buf)))
+  if (!(sect = pef_config_section_create (state_data, buf, 0)))
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,

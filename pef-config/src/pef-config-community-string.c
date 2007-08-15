@@ -98,7 +98,9 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 {
   struct section *sect = NULL;
 
-  if (!(sect = pef_config_section_create (state_data, "Community_String")))
+  if (!(sect = pef_config_section_create (state_data,
+                                          "Community_String",
+                                          0)))
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,

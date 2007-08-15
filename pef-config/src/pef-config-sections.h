@@ -11,6 +11,7 @@
 struct section {
   struct section *next;
   char *section_name;
+  unsigned int flags;
   struct keyvalue *keyvalues;
 };
 
@@ -54,7 +55,8 @@ void pef_config_sections_list_destroy (pef_config_state_data_t *state_data,
                                        struct section *sections);
 
 struct section * pef_config_section_create (pef_config_state_data_t *state_data, 
-                                            char *section_name);
+                                            char *section_name,
+                                            unsigned int flags);
 
 void pef_config_section_destroy (pef_config_state_data_t *state_data, 
                                  struct section *section);

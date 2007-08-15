@@ -1655,7 +1655,9 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
   snprintf(buf, 64, "User%d", userid);
 
-  if (!(user_section = bmc_config_section_create(state_data, buf)))
+  if (!(user_section = bmc_config_section_create(state_data, 
+                                                 buf,
+                                                 0)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

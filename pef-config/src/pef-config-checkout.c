@@ -28,6 +28,9 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret = PEF_ERR_SUCCESS;
 
+  if (sect->flags & PEF_DO_NOT_CHECKOUT)
+    return ret;
+
   fprintf (fp, "Section %s\n", sect->section_name);
 
   args = state_data->prog_data->args;

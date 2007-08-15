@@ -33,6 +33,7 @@
 struct section {
   struct section *next;
   char *section_name;
+  unsigned int flags;
   struct keyvalue *keyvalues;
 };
 
@@ -76,7 +77,8 @@ void bmc_config_sections_list_destroy (bmc_config_state_data_t *state_data,
                                        struct section *sections);
 
 struct section * bmc_config_section_create (bmc_config_state_data_t *state_data, 
-                                            char *section_name);
+                                            char *section_name,
+					    unsigned int flags);
 
 void bmc_config_section_destroy (bmc_config_state_data_t *state_data, 
                                  struct section *section);

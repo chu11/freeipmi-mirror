@@ -1014,7 +1014,9 @@ bmc_serial_channel_section_get (bmc_config_state_data_t *state_data)
 {
   struct section * serial_channel_section = NULL;
 
-  if (!(serial_channel_section = bmc_config_section_create (state_data, "Serial_Channel")))
+  if (!(serial_channel_section = bmc_config_section_create (state_data, 
+                                                            "Serial_Channel",
+                                                            0)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

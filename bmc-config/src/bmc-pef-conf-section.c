@@ -1231,7 +1231,9 @@ bmc_pef_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *pef_section;
 
-  if (!(pef_section = bmc_config_section_create (state_data, "PEF_Conf")))
+  if (!(pef_section = bmc_config_section_create (state_data, 
+                                                 "PEF_Conf",
+                                                 BMC_DO_NOT_CHECKOUT)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

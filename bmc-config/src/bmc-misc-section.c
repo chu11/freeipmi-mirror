@@ -77,7 +77,9 @@ bmc_misc_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *misc_section = NULL;
 
-  if (!(misc_section = bmc_config_section_create (state_data, "Misc")))
+  if (!(misc_section = bmc_config_section_create (state_data, 
+                                                  "Misc",
+                                                  0)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

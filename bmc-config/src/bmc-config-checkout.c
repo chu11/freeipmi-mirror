@@ -122,6 +122,9 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t ret = BMC_ERR_SUCCESS;
 
+  if (sect->flags & BMC_DO_NOT_CHECKOUT)
+    return ret;
+
   fprintf (fp, "Section %s\n", sect->section_name);
 
   args = state_data->prog_data->args;

@@ -1037,7 +1037,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
 
   snprintf(buf, 64, "Lan_Alert_Destination_%d", num);
 
-  if (!(sect = pef_config_section_create (state_data, buf)))
+  if (!(sect = pef_config_section_create (state_data, buf, 0)))
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,

@@ -151,7 +151,8 @@ bmc_config_sections_list_destroy(bmc_config_state_data_t *state_data,
 
 struct section * 
 bmc_config_section_create (bmc_config_state_data_t *state_data,
-                           char *section_name)
+                           char *section_name,
+                           unsigned int flags)
 {
   struct section *section = NULL;
 
@@ -169,6 +170,8 @@ bmc_config_section_create (bmc_config_state_data_t *state_data,
       perror("strdup");
       goto cleanup;
     }
+
+  section->flags = flags;
 
   return section;
  cleanup:
@@ -449,7 +452,8 @@ bmc_config_sections_list (bmc_config_state_data_t *state_data)
 
   while (sect)
     {
-      printf("%s\n", sect->section_name); 
+      if (!(sect->flags & BMC_DO_NOT_CHECKOUT))
+	printf("%s\n", sect->section_name); 
       sect = sect->next;
     }
 

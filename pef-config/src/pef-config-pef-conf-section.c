@@ -1242,7 +1242,9 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
 {
   struct section *pef_section;
 
-  if (!(pef_section = pef_config_section_create (state_data, "PEF_Conf")))
+  if (!(pef_section = pef_config_section_create (state_data, 
+                                                 "PEF_Conf",
+                                                 0)))
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
