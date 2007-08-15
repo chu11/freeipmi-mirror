@@ -1,3 +1,10 @@
+2007-08-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/: Re-do enginecomm code to be
+	specific to submission blocking.  Re-work logic to close file
+	descriptors after blocking is completed to save two file
+	descriptors per context.
+	
 2007-08-14  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/: Support no checkout for sections.  Do not checkout

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.18 2007-08-13 18:14:28 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.19 2007-08-15 20:56:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -215,11 +215,9 @@ typedef enum
          | IPMICONSOLE_WORKAROUND_SUN_2_0 \
          | IPMICONSOLE_WORKAROUND_ASUS_2_0)
 
-#define IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED   0x1
-
-#define IPMICONSOLE_ENGINECOMM_SOL_SESSION_ESTABLISHED 0x1
-#define IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR       0x2
-#define IPMICONSOLE_ENGINECOMM_SOL_SESSION_DEACTIVATED 0x3
+#define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED 0x1
+#define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR       0x2
+#define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED 0x3
 
 struct ipmiconsole_ctx_session {
 
@@ -394,9 +392,9 @@ struct ipmiconsole_ctx {
 
   unsigned int status;
 
-  /* Pipe for non-fd communication: from Engine to API */
-  int enginecomm[2];
-  uint32_t enginecomm_flags;
+  /* Pipe for engine submission blocking */
+  int blocking_submit_requested;
+  int blocking_notification[2];
   int sol_session_established;
 
   /* Debug Data */

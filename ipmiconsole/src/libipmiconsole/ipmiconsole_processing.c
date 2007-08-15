@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.23 2007-08-13 20:27:45 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.24 2007-08-15 20:56:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3113,12 +3113,12 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         }
       
       /* Wake up code waiting for SOL to be established */
-      if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED)
+      if (c->blocking_submit_requested)
         {
           uint8_t val;
           
-          val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_ESTABLISHED;
-          if (write(c->enginecomm[1], &val, 1) < 0)
+          val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
+          if (write(c->blocking_notification[1], &val, 1) < 0)
             {
               IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
               c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;

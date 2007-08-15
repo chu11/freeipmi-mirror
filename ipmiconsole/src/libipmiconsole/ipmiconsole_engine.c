@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.16 2007-08-09 23:20:03 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.17 2007-08-15 20:56:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -250,18 +250,18 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
-  if (c->enginecomm_flags & IPMICONSOLE_ENGINECOMM_FLAGS_SOL_ESTABLISHED
+  if (c->blocking_submit_requested
       && !c->sol_session_established)
     {
       uint8_t val;
 
       if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
           && s->deactivate_only_succeeded_flag)
-        val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_DEACTIVATED;
+        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
       else
-        val = IPMICONSOLE_ENGINECOMM_SOL_SESSION_ERROR;
+        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
 
-      if (write(c->enginecomm[1], &val, 1) < 0)
+      if (write(c->blocking_notification[1], &val, 1) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
           c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
