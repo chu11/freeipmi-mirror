@@ -2,7 +2,8 @@
 .SH NAME
 ipmi-sel \- manual page for ipmi-sel.  IPMI System Event Logger version @PACKAGE_VERSION@
 .SH DESCRIPTION
-IPMI System Event Logger is used to view and delete SEL entries.
+.B Ipmi-sel
+is used to view and delete System Event Log (SEL) entries.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
@@ -45,11 +46,28 @@ Hex-dump SEL entries optionally into a FILE.
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP
-Show all SEL records.
+Show all SEL records on the local machine.
+.PP
+.B # ipmi-sel -h ahost -u myusername -p mypassword
+.PP
+Show all SEL records of a remote machine using IPMI over LAN.
+.PP
+.B # ipmi-sel -h mycluster[0-127] -u myusername -p mypassword
+.PP
+Show all SEL records across a cluster using IPMI over LAN.
 .PP
 .B # ipmi-sel --delete=44,82
 .PP
-Delete records 44 and 82.
+Delete SEL records 44 and 82 on the local machine.
+.PP
+.B # ipmi-sel --delete-all
+.PP
+Delete all SEL entries on the local machine.
+.PP
+.B # ipmi-sel --delete-range 12-42
+.PP
+Delete SEL entries in the range 12 to 42 on the local machine.
+.PP
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

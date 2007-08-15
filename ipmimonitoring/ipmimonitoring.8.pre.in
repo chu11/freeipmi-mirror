@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.3 2007-08-11 00:00:26 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.4 2007-08-15 22:53:40 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -114,6 +114,27 @@ Turn on debugging.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 
+.SH "EXAMPLES"
+.B # ipmimonitoring
+.PP
+Show all sensors on the local machine.
+.PP
+.B # ipmimonitoring --sensors="82 11 7 102"
+.PP
+Show sensors #82, #11, #7 and #102 on the local machine.
+.PP
+.B # ipmimonitoring --groups=TEMPERATURE
+.PP
+Show all sensors in TEMPERATURE group on the local machine.
+.PP
+.B # ipmimonitoring -h ahost -u myusername -p mypassword
+.PP
+Show all sensors on a remote machine using IPMI over LAN.
+.PP
+.B # ipmimonitoring -h mycluster[0-127] -u myusername -p mypassword
+.PP
+Show all sensors across a cluster using IPMI over LAN.
+.PP
 .SH "KNOWN ISSUES"
 Interpretation rules have not been written for all sensors
 permutations and types.  If sensor interpretation rules are needed,

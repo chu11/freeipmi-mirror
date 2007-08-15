@@ -5,7 +5,8 @@ ipmi-raw \- manual page for ipmi-raw.  IPMI Raw version @PACKAGE_VERSION@
 .B ipmi-raw
 [\fIOPTION\fR...] <lun> <netfn> [\fICOMMAND-HEX-BYTES\fR]
 .SH DESCRIPTION
-IPMI Raw \- executes IPMI commands by hex values.
+.B Ipmi-raw
+is used to execute IPMI commands by hex values.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
@@ -36,19 +37,27 @@ Specify a file to read command requests from.
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
-.B ~# ipmi-raw 0 6 01
+.B # ipmi-raw 0 6 01
 .PP 
-Execute command 0x01 with LUN 0x0 and NETFN 0x06
+Execute command 0x01 with LUN 0x0 and NETFN 0x06 on the local machine.
 .PP
-.B ~# ipmi-raw
+.B # ipmi-raw -h ahost -u myusername -p mypassword 0 6 01
+.PP 
+Execute command 0x01 with LUN 0x0 and NETFN 0x06 on a remote machine using IPMI over LAN.
+.PP
+.B # ipmi-raw -h mycluster[0-127] -u myusername -p mypassword 0 6 01
+.PP
+Execute command 0x01 with LUN 0x0 and NETFN 0x06 on a remote machine using IPMI over LAN.
+.PP
+.B # ipmi-raw
 .PP 
 Read LUN, NETFN, command and request data from standard input.
 .PP
-.B ~# ipmi-raw -f command-file
+.B # ipmi-raw -f command-file
 .PP 
 Read LUN/FN, command and request data from given file instead of standard input.
 .PP
-.B ~# ipmi-raw < command-file
+.B # ipmi-raw < command-file
 .PP 
 Read LUN, NETFN, command and request data from file as standard input.
 .PP

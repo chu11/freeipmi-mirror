@@ -25,6 +25,19 @@ Displays BMC Information.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+.SH "EXAMPLES"
+.B # bmc-info
+.PP
+Get BMC information of the local machine.
+.PP
+.B # bmc-info -h ahost -u myusername -p mypassword
+.PP
+Get BMC information of a remote machine using IPMI over LAN.
+.PP
+.B # bmc-info -h mycluster[0-127] -u myusername -p mypassword
+.PP
+Get BMC information across a cluster using IPMI over LAN.
+.PP
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

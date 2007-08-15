@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.4 2007-08-13 20:42:10 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.5 2007-08-15 22:53:40 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -136,6 +136,11 @@ the
 .B ipmiconsole
 defaults.
 
+.SH "EXAMPLES"
+.B # ipmiconsole -h ahost -u myusername -p mypassword
+.PP
+Establish a console sesssion with a remote host.
+.PP
 .SH "KNOWN ISSUES"
 On certain operating systems, if you input your username and password
 on the command line, the username and password may be discovered by

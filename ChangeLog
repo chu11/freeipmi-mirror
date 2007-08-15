@@ -4,6 +4,8 @@
 	specific to submission blocking.  Re-work logic to close file
 	descriptors after blocking is completed to save two file
 	descriptors per context.
+
+	* Various manpage updates.
 	
 2007-08-14  Albert Chu <chu11@llnl.gov>
 

@@ -2,7 +2,8 @@
 .SH NAME
 pef-config \- manual page for pef-config.  PEF Config version @PACKAGE_VERSION@
 .SH DESCRIPTION
-PEF configuration utility.
+.B Pef-config
+is a Platform Event Filtering (PEF) configuration utility.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
@@ -60,6 +61,23 @@ Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
 Session_Audit, Version_Change, FRU_State, and Any
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+.SH "EXAMPLES"
+.B # pef-config --checkout
+.PP
+Output all BMC configuration information to the console.
+.PP
+.B # pef-config --checkout --filename=pef-data1.conf
+.PP
+Store all BMC configuration information in pef-data1.conf.
+.PP
+.B # pef-config --diff -f pef-data2.conf
+.PP
+Show all difference between the current BMC configuration and the pef-data2.conf file.
+.PP
+.B # pef-config --commit -f pef-data1.conf
+.PP
+Commit all configuration values from pef-data1.conf file to the BMC.
+.PP
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

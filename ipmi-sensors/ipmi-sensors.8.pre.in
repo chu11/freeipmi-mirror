@@ -2,7 +2,8 @@
 .SH NAME
 ipmi-sensors \- manual page for ipmi-sensors.  IPMI Sensors version @PACKAGE_VERSION@
 .SH DESCRIPTION
-IPMI Sensors displays current readings of sensors chips through BMC
+.B Ipmi-sensors
+displays current readings of sensors chips.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
@@ -53,19 +54,28 @@ Show sensors by record id.  Accepts space or comma separated lists.
 .SH "EXAMPLES"
 .B # ipmi-sensors 
 .PP
-Show all sensors and readings.
+Show all sensors and readings on the local machine.
+.PP
+.B # ipmi-sensors --verbose
+.PP
+Show verbose sensors and readings on the local machine.
 .PP
 .B # ipmi-sensors --sensors="82 11 7 102"
 .PP
-Show sensors #82, #11, #7 and #102 only.
+Show sensors #82, #11, #7 and #102 on the local machine.
 .PP
 .B # ipmi-sensors --group=Fan
 .PP
-Show all sensors in Fan group.
+Show all sensors in Fan group on the local machine.
 .PP
-.B # ipmi-sensors --group=Fan --sensors="82 11 7 102"
+.B # ipmi-sensors -h ahost -u myusername -p mypassword
 .PP
-Show all sensors in Fan group and sensors #82, #11, #7, #102.
+Show all sensors on a remote machine using IPMI over LAN.
+.PP
+.B # ipmi-sensors -h mycluster[0-127] -u myusername -p mypassword
+.PP
+Show all sensors across a cluster using IPMI over LAN.
+.PP
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

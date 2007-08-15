@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.3 2007-08-11 00:00:25 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.4 2007-08-15 22:53:39 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -28,7 +28,8 @@
 .SH NAME
 ipmi-fru \- manual page for ipmi-fru.  IPMI FRU @PACKAGE_VERSION@
 .SH DESCRIPTION
-Displays Field Replaceable Unit (FRU) Information.
+.B Ipmi-fru
+displays Field Replaceable Unit (FRU) Information.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
@@ -66,21 +67,26 @@ Output may be unknown, pray for the best.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
+.SH "EXAMPLES"
+.B # ipmi-fru 
+.PP
+Get FRU information of the local machine.
+.PP
+.B # ipmi-fru --verbose
+.PP
+Get verbose FRU information of the local machine.
+.PP
+.B # ipmi-fru -h ahost -u myusername -p mypassword
+.PP
+Get FRU information of a remote machine using IPMI over LAN.
+.PP
+.B # ipmi-fru -h mycluster[0-127] -u myusername -p mypassword
+.PP
+Get FRU information across a cluster using IPMI over LAN.
+.PP
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT
 Copyright \(co 2003,04,05 FreeIPMI Core Team.  
 This program is free software; you may redistribute it under the terms of
 the GNU General Public License.  This program has absolutely no warranty.
-.SH "SEE ALSO"
-The full documentation for
-.B ipmi-fru
-is maintained as a Texinfo manual.  If the
-.B info
-and
-.B ipmi-fru
-programs are properly installed at your site, the command
-.IP
-.B info ipmi-fru
-.PP
-should give you access to the complete manual.
