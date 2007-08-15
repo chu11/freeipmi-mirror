@@ -46,6 +46,7 @@ common stuff for parsing in bmc-config and pef-config
 fix poor use of atoi/strtoul
 common pef config junk in bmc-config & pef-config
 remove bmc-autoconfig?
+- or needs to be fixed/updated before 0.5.0 release
 
 general
 -------
