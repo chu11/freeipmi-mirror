@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.20 2007-08-16 20:58:24 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.21 2007-08-16 21:04:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -153,27 +153,15 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   
   secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
-  /* Under typical circumstances, we close only the ipmiconsole_fd.
-   * So that an error will be detected by the user via a EOF on a
-   * read() or EPIPE on a write() when reading/writing on their file
-   * descriptor.  The user is then required to close that fd.
-   * 
-   * However, we close it in this function if something failed during
-   * the setup or if the user can't close it b/c they were never given
-   * an opportunity to close it.
+  /* Close only the ipmiconsole_fd so that an error will be detected
+   * by the user via a EOF on a read() or EPIPE on a write() when
+   * reading/writing on their file descriptor.  The user is then
+   * required to close that fd.
+   *
+   * On error situations (i.e. ipmiconsole_engine_submit() doesn't
+   * return to the user w/ success), it is the responsibility of other
+   * code to call _ipmiconsole_cleanup_ctx_managed_session_data().
    */
-#if 0
-  /* We have to cleanup, so continue on even if locking fails */
-
-  if ((rv = pthread_mutex_lock(&(c->user_fd_retrieved_mutex))))
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-
-  if (!c->user_fd_retrieved && s->user_fd)
-    close(s->user_fd);
-
-  if ((rv = pthread_mutex_unlock(&(c->user_fd_retrieved_mutex))))
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-#endif
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
@@ -188,10 +176,10 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
     cbuf_destroy(s->ipmi_to_bmc, secure_malloc_flag);
   if (s->asynccomm[0])
     close(s->asynccomm[0]);
-#if 0
-  if (s->asynccomm[1])
-    close(s->asynccomm[1]);
-#endif
+  /* Similarly to the user_fd above, it is the responsibility of other
+   * code to close asynccomm[1], which is replicated in the context w/
+   * asynccomm_fd.
+   */
   if (s->obj_rmcp_hdr_rq)
     Fiid_obj_destroy(c, s->obj_rmcp_hdr_rq);
   if (s->obj_rmcp_hdr_rs)
