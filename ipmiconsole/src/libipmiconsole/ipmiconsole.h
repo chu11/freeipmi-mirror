@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.36 2007-08-15 22:53:40 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.37 2007-08-16 03:59:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,16 +77,9 @@ extern "C" {
 /* 
  * ENGINE Flags
  *
- * SUBMIT_BLOCKING
+ * None currenly supported, reserved for future use.
  *
- * By default, when you submit a context to the ipmi console engine
- * via ipmiconsole_engine_submit(), the submission will be
- * non-blocking.  By setting this flag, it informs the engine to
- * submit with blocking.  ipmiconsole_engine_submit() will not return
- * until an SOL session has been established or an error/timeout
- * occurs.
  */
-#define IPMICONSOLE_ENGINE_SUBMIT_BLOCKING 0x00000001
 
 /* 
  * Debug Flags
@@ -380,31 +373,44 @@ int ipmiconsole_engine_init(unsigned int thread_count,
 /* 
  * ipmiconsole_engine_submit
  *
- * Submit a context to the ipmiconsole engine.  By default is
- * non-blocking, returns prior to a session is established or an
- * error/timeout occurs.  User may use the context file descriptor
- * (retrieved via ipmiconsole_ctx_fd) or the context status (retrieved
- * via ipmiconsole_ctx_status) to determine status of the SOL session.
+ * Submit a context to the ipmiconsole engine.  
  *
- * See engine flags above for information on blocking behavior.
+ * If the context is submitted non-blocking, returns prior to a
+ * session is established or an error/timeout occurs.  A return value
+ * of 0 vs. -1 indicates only if the context was submitted properly
+ * and not an IPMI related error.  The user may use the context file
+ * descriptor (retrieved via ipmiconsole_ctx_fd()) or the context
+ * status (retrieved via ipmiconsole_ctx_status()) to determine the
+ * status of the context.  ipmiconsole_ctx_errnum() can be
+ * used to subsequently determine an error that may later occur.
+ *
+ * If the context is submitted with blocking,
+ * ipmiconsole_engine_submit() will block until a SOL session is
+ * established or an error/timeout occurs.  A return value of 0
+ * indicates the SOL session was established and a -1 indicates an
+ * error occurred.  ipmiconsole_ctx_errnum() can be used to determine
+ * the type of error that occured.
+ *
+ * blocking
+ *
+ *   If set to non zero, submits a context with blocking.  Otherwise
+ *   the context is submitted non-blocking.
  *
  * Returns 0 on success, -1 on error
  */
-int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
+int ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking);
 
 /* 
  * ipmiconsole_engine_teardown
  *
- * Teardown the ipmiconsole engine and optionally cleanup all SOL
- * sessions being managed.  This function will not destroy the actual
- * contexts submitted, only the SOL sessions being managed by the
- * engine for an individaul context.
+ * Teardown the ipmiconsole engine.  This function will not destroy
+ * the actual contexts submitted.
  *
  * cleanup_sol_sessions
  *
- *   Flag will indicate if SOL sessions should also be torn down cleanly.
- *   If set, ipmiconsole_engine_teardown() will block until all active
- *   ipmi sessions have closed or timed out.
+ *   If set to non zero, SOL sessions will be torn down cleanly.
+ *   ipmiconsole_engine_teardown() will block until all active ipmi
+ *   sessions have closed or timed out.
  */
 void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
 
@@ -468,6 +474,10 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  *
  * If the user closes the file descriptor while the serial over lan
  * session is established, the session will be torn down.
+ *
+ * If the user receives a EOF on a read(), the SOL session has been 
+ * closed by the engine, typically due to an error.  The error
+ * can be determined via ipmiconsole_ctx_errnum().
  */
 int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
 
@@ -486,12 +496,8 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
  * Destroy a context.  Note that this will always fail if the context
  * is still submitted to the engine and connected to a session.  The
  * user should close the ctx file descriptor in order for the session
- * to clean itself up.
- *
- * Note that if the engine is torn down via
- * ipmiconsole_engine_teardown() before a context is destroyed, it
- * will be safe to call ipmiconsole_ctx_destroy() without concern for
- * the function returning an IPMICONSOLE_ERR_CTX_IS_SUBMITTED error.
+ * to clean itself up or be torn down through
+ * ipmiconsole_engine_teardown().
  *
  * Returns 0 on success, -1 on error
  */

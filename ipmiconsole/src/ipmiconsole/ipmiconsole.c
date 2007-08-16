@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.26 2007-08-10 17:07:53 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.27 2007-08-16 03:59:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -338,7 +338,7 @@ main(int argc, char **argv)
   protocol_config.retransmission_keepalive_timeout_len = -1; 
   protocol_config.acceptable_packet_errors_count = -1; 
   protocol_config.maximum_retransmission_count = -1; 
-  protocol_config.engine_flags = IPMICONSOLE_ENGINE_SUBMIT_BLOCKING;
+  protocol_config.engine_flags = 0;
   protocol_config.debug_flags = debug_flags;
   protocol_config.security_flags = 0;
   if (conf->dont_steal)
@@ -357,7 +357,7 @@ main(int argc, char **argv)
       goto cleanup;
     }
 
-  if (ipmiconsole_engine_submit(c) < 0)
+  if (ipmiconsole_engine_submit(c, 1) < 0)
     {
       if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE

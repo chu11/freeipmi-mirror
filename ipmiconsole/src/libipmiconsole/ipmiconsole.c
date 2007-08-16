@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.26 2007-08-16 00:05:23 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.27 2007-08-16 03:59:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -253,7 +253,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
 }
 
 int 
-ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
+ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
 {
   int rv;
 
@@ -288,7 +288,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if (c->engine_flags & IPMICONSOLE_ENGINE_SUBMIT_BLOCKING)
+  if (blocking)
     {
       c->blocking_submit_requested = 1;
       c->sol_session_established = 0;
@@ -370,7 +370,10 @@ ipmiconsole_ctx_create(char *hostname,
 	      && ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_ADMIN))
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
 	  && !IPMI_CIPHER_SUITE_ID_SUPPORTED(ipmi_config->cipher_suite_id))
+#if 0
+      /* reserved for the future  */
       || (protocol_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
+#endif
       || (protocol_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK)
       || (protocol_config->security_flags & ~IPMICONSOLE_SECURITY_MASK)
       || (protocol_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK))

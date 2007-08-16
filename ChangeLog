@@ -10,6 +10,12 @@
 	* common/doc/manpage-common-troubleshooting.man: New file.
 
 	* Update various manpages with troubleshooting information.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit): Add back blocking flag parameter.
+
+	* ipmiconsole/: Adjust remaining code appropriately.
 	
 2007-08-14  Albert Chu <chu11@llnl.gov>
 
