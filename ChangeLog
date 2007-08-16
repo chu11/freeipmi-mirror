@@ -5,6 +5,9 @@
 	* ipmimonitoring/ipmimonitoring.8.pre.in: Add ipmimonitoring
 	specific troubleshooting.
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_defs.h: Remove
+	unneeded defs.
+
 2007-08-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Re-do enginecomm code to be
