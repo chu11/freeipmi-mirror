@@ -16,6 +16,9 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
 	(ipmiconsole_engine_submit): Fix corner case.
 
+	* ipmiconsole/src/libipmiconsole/: Move management of user_fd and
+	asynccomm fd's to API level instead of engine level.
+
 2007-08-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Re-do enginecomm code to be

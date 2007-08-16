@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.28 2007-08-16 20:18:23 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.29 2007-08-16 20:32:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -342,6 +342,8 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
 
  cleanup:
   _ipmiconsole_cleanup_ctx_session(c);
+  _ipmiconsole_cleanup_ctx_managed_session_data(c);
+  _ipmiconsole_init_ctx_managed_session_data(c);
   return -1;
 }
 
@@ -518,19 +520,14 @@ ipmiconsole_ctx_create(char *hostname,
 
   c->sol_session_established = 0;
 
+  _ipmiconsole_init_ctx_managed_session_data(c);
+
   if ((rv = pthread_mutex_init(&c->session_submitted_mutex, NULL)) != 0)
     {
       errno = rv;
       goto cleanup;
     }
   c->session_submitted = 0;
-
-  if ((rv = pthread_mutex_init(&c->user_fd_retrieved_mutex, NULL)) != 0)
-    {
-      errno = rv;
-      goto cleanup;
-    }
-  c->user_fd_retrieved = 0;
 
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c;
@@ -615,22 +612,8 @@ ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
   if (_is_submitted(c) < 0)
     return -1;
 
-  if (pthread_mutex_lock(&(c->user_fd_retrieved_mutex)) != 0)
-    {
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-  
-  c->user_fd_retrieved = 1;
-  
-  if (pthread_mutex_unlock(&(c->user_fd_retrieved_mutex)) != 0)
-    {
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
-  return c->session.user_fd;
+  return c->user_fd;
 }
 
 int 
@@ -645,7 +628,7 @@ ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c)
     return -1;
 
   val = IPMICONSOLE_PIPE_GENERATE_BREAK_CODE;
-  if (write(c->session.asynccomm[1], &val, 1) < 0)
+  if (write(c->asynccomm_fd, &val, 1) < 0)
     {
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       return -1;
@@ -684,8 +667,10 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
-
+ 
   ipmiconsole_ctx_debug_cleanup(c);
+
+  _ipmiconsole_cleanup_ctx_managed_session_data(c);
 
   pthread_mutex_destroy(&(c->session_submitted_mutex));
 

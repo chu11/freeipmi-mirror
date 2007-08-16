@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.18 2007-08-16 17:02:45 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.19 2007-08-16 20:32:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,6 +117,27 @@ struct _ipmiconsole_poll_data {
 #define IPMICONSOLE_PIPE_BUFLEN 1024
 
 void
+_ipmiconsole_init_ctx_managed_session_data(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  /* init to -1 b/c -1 isn't a legit fd */
+  c->user_fd = -1;
+  c->asynccomm_fd = -1;
+}
+
+void
+_ipmiconsole_cleanup_ctx_managed_session_data(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  close(c->user_fd);
+  close(c->asynccomm_fd);
+}
+
+void
 _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 {
   struct ipmiconsole_ctx_session *s;
@@ -154,7 +175,7 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
    * the setup or if the user can't close it b/c they were never given
    * an opportunity to close it.
    */
-
+#if 0
   /* We have to cleanup, so continue on even if locking fails */
 
   if ((rv = pthread_mutex_lock(&(c->user_fd_retrieved_mutex))))
@@ -165,7 +186,7 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   if ((rv = pthread_mutex_unlock(&(c->user_fd_retrieved_mutex))))
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-
+#endif
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
@@ -180,8 +201,10 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
     cbuf_destroy(s->ipmi_to_bmc, secure_malloc_flag);
   if (s->asynccomm[0])
     close(s->asynccomm[0]);
+#if 0
   if (s->asynccomm[1])
     close(s->asynccomm[1]);
+#endif
   if (s->obj_rmcp_hdr_rq)
     Fiid_obj_destroy(c, s->obj_rmcp_hdr_rq);
   if (s->obj_rmcp_hdr_rs)
@@ -461,6 +484,7 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
     }
   s->user_fd = sv[0];
   s->ipmiconsole_fd = sv[1];
+  c->user_fd = s->user_fd;
 
   secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
@@ -537,6 +561,7 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
+  c->asynccomm_fd = s->asynccomm[1];
 
   /* Data based on Configuration Parameters */
 
@@ -632,6 +657,8 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
 
  cleanup:
   _ipmiconsole_cleanup_ctx_session(c);
+  _ipmiconsole_cleanup_ctx_managed_session_data(c);
+  _ipmiconsole_init_ctx_managed_session_data(c);
   return -1;
 }
 
