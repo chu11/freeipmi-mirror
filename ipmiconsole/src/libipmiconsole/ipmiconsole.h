@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.37 2007-08-16 03:59:42 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.38 2007-08-16 20:14:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -417,7 +417,11 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
 /* 
  * ipmiconsole_ctx_create
  *
- * Create a ipmiconsole context.
+ * Create a ipmiconsole context.  The context can then be submitted
+ * into the ipmiconsole engine to establish an SOL session.  The
+ * context cannot be submitted to the ipmiconsole engine more than
+ * once.  After it has been submitted to the ipmiconsole, it cannot be
+ * reused.
  *
  * hostname
  *
