@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.24 2007-08-15 20:56:39 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.25 2007-08-16 20:58:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -82,7 +82,6 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_REQUEST(p));
 
   s = &(c->session);
@@ -185,7 +184,6 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   assert(!cbuf_is_empty(c->session.console_remote_console_to_bmc));
 
@@ -313,7 +311,6 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   
   s = &(c->session);
@@ -387,7 +384,6 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   
   s = &(c->session);
@@ -477,7 +473,6 @@ _receive_packet_data_reset(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
 
   s = &(c->session);
   
@@ -505,7 +500,6 @@ _receive_ping_packet_data_reset(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
 
   s = &(c->session);
   
@@ -533,7 +527,6 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(p);
 
   s = &(c->session);
@@ -1259,7 +1252,6 @@ _close_session(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.close_session_flag);
 
   s = &(c->session);
@@ -1333,7 +1325,6 @@ _check_close_session(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
 
   s = &(c->session);
 
@@ -1357,7 +1348,6 @@ _session_timeout(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
 
   s = &(c->session);
   timeval_add_ms(&(s->last_ipmi_packet_received), c->session_timeout_len, &timeout);
@@ -1387,7 +1377,6 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state != IPMICONSOLE_PROTOCOL_STATE_START);
   assert(c->session.protocol_state != IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
@@ -1532,7 +1521,6 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
   
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
   s = &(c->session);
@@ -1591,7 +1579,6 @@ _keepalive_is_necessary(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
   s = &(c->session);
@@ -1625,7 +1612,6 @@ _keepalive_timeout(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
   s = &(c->session);
@@ -1677,7 +1663,6 @@ _check_for_ipmi_2_0_support(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
 
   s = &(c->session);
@@ -1722,7 +1707,6 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
 
   s = &(c->session);
@@ -1807,7 +1791,6 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT);
   assert(c->session.sik_key_ptr == c->session.sik_key);
   assert(c->session.sik_key_len == IPMI_MAX_SIK_KEY_LENGTH);
@@ -1920,7 +1903,6 @@ _check_sol_supported(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT);
   
   s = &(c->session);
@@ -1954,7 +1936,6 @@ _check_sol_activated(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT);
   assert(!c->session.deactivate_payload_instances_and_try_again_flag);
   
@@ -2029,7 +2010,6 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT);
   
   s = &(c->session);
@@ -2091,7 +2071,6 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT);
   assert(!c->session.max_inbound_payload_size);
   assert(!c->session.max_outbound_payload_size);
@@ -2172,7 +2151,6 @@ _check_try_new_port(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT);
 
   s = &(c->session);
@@ -2229,7 +2207,6 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
   s = &(c->session);
@@ -2509,7 +2486,6 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(timeout);
 
   s = &(c->session);
@@ -2635,7 +2611,6 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(timeout);
 
   s = &(c->session);
@@ -3384,7 +3359,6 @@ ipmiconsole_process_ctxs(List console_engine_ctxs, unsigned int *timeout)
 
       assert(c);
       assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-      assert(c->session_submitted);
 
       if ((_process_ctx(c, &ctx_timeout)) < 0)
         {

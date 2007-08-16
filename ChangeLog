@@ -19,6 +19,9 @@
 	* ipmiconsole/src/libipmiconsole/: Move management of user_fd and
 	asynccomm fd's to API level instead of engine level.
 
+	* ipmiconsole/src/libipmiconsole/: Re-work session_submitted logic
+	and meaning to fix race conditions.
+
 2007-08-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Re-do enginecomm code to be

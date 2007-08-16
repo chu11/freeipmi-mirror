@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.19 2007-08-16 20:32:47 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.20 2007-08-16 20:58:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -144,27 +144,14 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   int secure_malloc_flag;
   int rv;
 
+  printf("entering\n");
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   
   s = &(c->session);
   
   secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
-
-  /* 
-   * Set session_submitted to 0 before doing anything else, since that
-   * is the indicator to the API that many functions can continue.
-   */
-
-  /* We have to cleanup, so continue on even if locking fails */
-
-  if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-
-  c->session_submitted = 0;
-
-  if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
   /* Under typical circumstances, we close only the ipmiconsole_fd.
    * So that an error will be detected by the user via a EOF on a
@@ -793,7 +780,6 @@ _teardown_initiate(void *x, void *arg)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
 
   s = &(c->session);
 
@@ -817,7 +803,6 @@ _poll_setup(void *x, void *arg)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
 
   s = &(c->session);
   poll_data = (struct _ipmiconsole_poll_data *)arg;
@@ -1519,7 +1504,7 @@ int
 ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
 {
   void *ptr;
-  int i, rv;
+  int i, rv, ret = -1;
   unsigned int min_submitted = UINT_MAX;
   int index = 0;
 
@@ -1577,7 +1562,6 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       goto cleanup_ctxs;
     }
-  console_engine_ctxs_count[index]++;
 
   if (ptr != (void *)c)
     {
@@ -1585,6 +1569,10 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       goto cleanup_ctxs;
     }
+
+  console_engine_ctxs_count[index]++;
+
+  ret = 0;
 
   /* achu:
    *
@@ -1611,7 +1599,7 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  return 0;
+  return ret;
 }
 
 int

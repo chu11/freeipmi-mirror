@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.2 2007-08-02 20:50:13 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.3 2007-08-16 20:58:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,7 +57,6 @@ ipmiconsole_packet_template(ipmiconsole_ctx_t c,
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_VALID(p));
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
@@ -123,7 +122,6 @@ ipmiconsole_packet_object(ipmiconsole_ctx_t c,
   struct ipmiconsole_ctx_session *s;
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_VALID(p));
 
   s = &(c->session);
@@ -199,7 +197,6 @@ _packet_dump_hdr(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_VALID(p));
   assert(hdr);
   assert(hdrlen);
@@ -290,7 +287,6 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_VALID(p));
   assert(buf);
   assert(buflen);
@@ -410,7 +406,6 @@ _packet_dump_unknown_hdr(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(buf);
   assert(buflen);
   assert(hdr);
@@ -483,7 +478,6 @@ ipmiconsole_packet_dump_unknown(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(buf);
   assert(buflen);
 
@@ -568,7 +562,6 @@ _ipmi_1_5_packet_assemble(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_REQUEST(p));
   assert(buf);
   assert(buflen);
@@ -653,7 +646,6 @@ _ipmi_2_0_packet_assemble(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_REQUEST(p));
   assert(buf);
   assert(buflen);
@@ -766,7 +758,6 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_REQUEST(p));
   assert(p != IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ);
   assert(buf);
@@ -1235,7 +1226,6 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   assert(character_data_len <= c->session.max_sol_character_send_size);
 
@@ -1352,7 +1342,6 @@ ipmiconsole_packet_unassemble(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(p);
   assert(buf);
   assert(buflen);
@@ -1547,7 +1536,6 @@ ipmiconsole_calculate_errnum(ipmiconsole_ctx_t c,
   
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
 
   if (!(obj_cmd = ipmiconsole_packet_object(c, p)))

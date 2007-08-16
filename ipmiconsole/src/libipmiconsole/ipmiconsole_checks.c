@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.8 2007-08-02 20:50:13 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.9 2007-08-16 20:58:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -60,7 +60,6 @@ ipmiconsole_check_checksum(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
@@ -101,7 +100,6 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
@@ -152,7 +150,6 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
@@ -279,7 +276,6 @@ ipmiconsole_check_session_id(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
          || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
@@ -337,7 +333,6 @@ ipmiconsole_check_network_function(ipmiconsole_ctx_t c, ipmiconsole_packet_type_
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
@@ -374,7 +369,6 @@ ipmiconsole_check_command(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
@@ -427,7 +421,6 @@ ipmiconsole_check_requester_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pac
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
@@ -464,7 +457,6 @@ ipmiconsole_check_completion_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t
   
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
@@ -500,7 +492,6 @@ ipmiconsole_check_payload_type(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
 	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
@@ -550,7 +541,6 @@ ipmiconsole_check_message_tag(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
 	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
@@ -583,7 +573,6 @@ ipmiconsole_check_rmcpplus_status_code(ipmiconsole_ctx_t c, ipmiconsole_packet_t
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
 	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
@@ -615,7 +604,6 @@ ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconso
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE);
 
   s = &(c->session);
@@ -679,7 +667,6 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2);
 
   s = &(c->session);
@@ -874,7 +861,6 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
 
   s = &(c->session);
@@ -945,7 +931,6 @@ ipmiconsole_check_payload_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
@@ -976,7 +961,6 @@ ipmiconsole_check_integrity_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->session_submitted);
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(p));
   assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS 
 	 || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS
