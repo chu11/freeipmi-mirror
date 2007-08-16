@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.25 2007-08-16 20:58:24 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.26 2007-08-16 21:55:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3087,14 +3087,32 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           goto calculate_timeout;
         }
       
+      if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+        {
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            goto close_session;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          goto calculate_timeout;
+        }
+
       /* Wake up code waiting for SOL to be established */
       if (c->blocking_submit_requested)
         {
           uint8_t val;
           
+          c->sol_session_established++;
+
           val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
           if (write(c->blocking_notification[1], &val, 1) < 0)
             {
+              if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+                IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
               IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
               c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
               /* Attempt to close the session cleanly */
@@ -3104,6 +3122,19 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
               s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
               goto calculate_timeout;
             }
+        }
+
+      if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+        {
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            goto close_session;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          goto calculate_timeout;
         }
 
       s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;

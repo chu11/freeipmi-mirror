@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.23 2007-08-16 21:38:20 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.24 2007-08-16 21:55:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -146,8 +146,6 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   int secure_malloc_flag;
   int rv;
 
-  printf("entering\n");
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   
@@ -254,6 +252,11 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
     Fiid_obj_destroy(c, s->obj_close_session_rq);
   if (s->obj_close_session_rs)
     Fiid_obj_destroy(c, s->obj_close_session_rs);
+  
+  /* We have to cleanup, so continue on even if locking fails */
+
+  if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
 
   if (c->blocking_submit_requested
       && !c->sol_session_established)
@@ -272,6 +275,9 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
           c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
         }
     }
+
+  if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
   memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
 }

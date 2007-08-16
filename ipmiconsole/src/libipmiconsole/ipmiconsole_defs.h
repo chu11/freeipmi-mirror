@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.23 2007-08-16 21:37:25 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.24 2007-08-16 21:55:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -391,7 +391,8 @@ struct ipmiconsole_ctx {
 
   unsigned int status;
 
-  /* Pipe for engine submission blocking */
+  /* Info, pipe, and mutex for engine submission blocking */
+  pthread_mutex_t blocking_mutex;
   int blocking_submit_requested;
   int blocking_notification[2];
   int sol_session_established;

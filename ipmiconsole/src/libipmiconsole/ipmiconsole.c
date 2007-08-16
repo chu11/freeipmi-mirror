@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.31 2007-08-16 21:37:25 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.32 2007-08-16 21:55:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -152,15 +152,32 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
 static int
 _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
 {
+  int rv;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->blocking_submit_requested);
   
+  if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      return -1;
+    }
+
   if (pipe(c->blocking_notification) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("pipe: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
+    }
+  c->blocking_submit_requested++;
+  c->sol_session_established = 0;
+
+  if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      return -1;
     }
 
   return 0;
@@ -172,12 +189,31 @@ _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
 static int
 _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
 {
+  int rv;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->blocking_submit_requested);
 
+  if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      return -1;
+    }
+
   close(c->blocking_notification[0]);
   close(c->blocking_notification[1]);
+  c->blocking_submit_requested = 0;
+  c->sol_session_established = 0;
+
+  if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      return -1;
+    }
+
   return 0;
 }
 
@@ -228,19 +264,16 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
         }
 
       if (val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED)
-        c->sol_session_established++;
-      else 
+        goto success;
+      else if (val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR)
+        goto cleanup;
+      else if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+               && val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED)
+        goto success;
+      else
         {
-          if (val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR)
-            goto cleanup;
-          else if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
-                   && val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED)
-            goto success;
-          else
-            {
-              IPMICONSOLE_CTX_DEBUG(c, ("blocking_notification returned invalid data: %d", val));
-              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-            }
+          IPMICONSOLE_CTX_DEBUG(c, ("blocking_notification returned invalid data: %d", val));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
     }
@@ -272,9 +305,6 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
 
   if (blocking)
     {
-      c->blocking_submit_requested = 1;
-      c->sol_session_established = 0;
-      
       /* To determine if an IPMI error occurred */
       c->errnum = IPMICONSOLE_ERR_SUCCESS;
       
@@ -284,14 +314,12 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
       if (_ipmiconsole_init_ctx_session(c) < 0)
         {
           _ipmiconsole_blocking_notification_cleanup(c);
-          c->blocking_submit_requested = 0;
           goto cleanup;
         }
       
       if (ipmiconsole_engine_submit_ctx(c) < 0)
         {
           _ipmiconsole_blocking_notification_cleanup(c);
-          c->blocking_submit_requested = 0;
           goto cleanup;
         }
       
@@ -299,18 +327,13 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
       if (_ipmiconsole_block(c) < 0)
         {
           _ipmiconsole_blocking_notification_cleanup(c);
-          c->blocking_submit_requested = 0;
           goto cleanup;
         }
 
       _ipmiconsole_blocking_notification_cleanup(c);
-      c->blocking_submit_requested = 0;
     }
   else
     {
-      c->blocking_submit_requested = 0;
-      c->sol_session_established = 0;
-      
       if (_ipmiconsole_init_ctx_session(c) < 0)
         goto cleanup;
       
