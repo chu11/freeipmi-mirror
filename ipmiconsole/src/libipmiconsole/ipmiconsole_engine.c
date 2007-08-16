@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.21 2007-08-16 21:04:04 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.22 2007-08-16 21:37:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,8 +132,9 @@ _ipmiconsole_cleanup_ctx_managed_session_data(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  close(c->user_fd);
+  
+  if (!c->user_fd_retrieved)
+    close(c->user_fd);
   close(c->asynccomm_fd);
 }
 

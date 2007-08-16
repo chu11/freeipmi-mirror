@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.22 2007-08-16 20:58:24 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.23 2007-08-16 21:37:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -401,6 +401,7 @@ struct ipmiconsole_ctx {
 
   /* Copy from session context - managed exclusively by API level, not engine */
   int user_fd;
+  int user_fd_retrieved;        /* flag indicates if user ever retrieved the fd */
   int asynccomm_fd;
 
   /* session_submitted - flag indicates context submitted to engine
@@ -408,7 +409,6 @@ struct ipmiconsole_ctx {
    * either blocking or non-blocking submissions.
    */
   unsigned int session_submitted;
-
 
   struct ipmiconsole_ctx_session session; 
 };

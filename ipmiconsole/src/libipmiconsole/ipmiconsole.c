@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.30 2007-08-16 20:58:24 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.31 2007-08-16 21:37:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -562,6 +562,7 @@ ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
       return -1;
     }
 
+  c->user_fd_retrieved++;
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c->user_fd;
 }
