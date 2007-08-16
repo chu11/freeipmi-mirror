@@ -8,6 +8,9 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_defs.h: Remove
 	unneeded defs.
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
+	(_ipmiconsole_cleanup_ctx_session): Fix race condition.
+
 2007-08-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Re-do enginecomm code to be

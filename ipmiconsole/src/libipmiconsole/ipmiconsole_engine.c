@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.17 2007-08-15 20:56:39 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.18 2007-08-16 17:02:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -130,14 +130,29 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   
   secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
+  /* 
+   * Set session_submitted to 0 before doing anything else, since that
+   * is the indicator to the API that many functions can continue.
+   */
+
+  /* We have to cleanup, so continue on even if locking fails */
+
+  if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
+  c->session_submitted = 0;
+
+  if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+
   /* Under typical circumstances, we close only the ipmiconsole_fd.
    * So that an error will be detected by the user via a EOF on a
    * read() or EPIPE on a write() when reading/writing on their file
    * descriptor.  The user is then required to close that fd.
    * 
    * However, we close it in this function if something failed during
-   * the setup or if the user can't close it b/c it has never been
-   * read (the user_fd_retrieved flag covers both these circumstances).
+   * the setup or if the user can't close it b/c they were never given
+   * an opportunity to close it.
    */
 
   /* We have to cleanup, so continue on even if locking fails */
@@ -239,16 +254,6 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
     Fiid_obj_destroy(c, s->obj_close_session_rq);
   if (s->obj_close_session_rs)
     Fiid_obj_destroy(c, s->obj_close_session_rs);
-
-  /* We have to cleanup, so continue on even if locking fails */
-
-  if ((rv = pthread_mutex_lock(&(c->session_submitted_mutex))))
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-
-  c->session_submitted = 0;
-
-  if ((rv = pthread_mutex_unlock(&(c->session_submitted_mutex))))
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
   if (c->blocking_submit_requested
       && !c->sol_session_established)
