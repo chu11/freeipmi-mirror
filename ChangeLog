@@ -6,6 +6,10 @@
 	descriptors per context.
 
 	* Various manpage updates.
+
+	* common/doc/manpage-common-troubleshooting.man: New file.
+
+	* Update various manpages with troubleshooting information.
 	
 2007-08-14  Albert Chu <chu11@llnl.gov>
 

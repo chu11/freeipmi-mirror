@@ -59,6 +59,7 @@ Boot_Error, OS_Boot, OS_Critical_Stop, Slot_Connector,
 ACPI_Power_State, Watchdog2, Platform_Alert, Entity_Presence,
 Monitor_Asic, Lan, Management_Subsystem_Health, Battery,
 Session_Audit, Version_Change, FRU_State, and Any
+#include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 .SH "EXAMPLES"
