@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.32 2007-08-16 21:55:26 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.33 2007-08-16 22:00:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -604,7 +604,7 @@ ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  /* XXX need to check if this is still ok b/c of cleanup issue */
+  /* XXX NEED TO DO need to check if this is still ok b/c of cleanup issue */
 
   val = IPMICONSOLE_PIPE_GENERATE_BREAK_CODE;
   if (write(c->asynccomm_fd, &val, 1) < 0)
@@ -623,7 +623,7 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
   if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
     return -1;
   
-  /* XXX - need to fix */
+  /* XXX NEED TO DO need to fix */
 #if 0
   if (c->session_submitted)
     {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.24 2007-08-16 21:55:26 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.25 2007-08-16 22:00:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1486,7 +1486,6 @@ ipmiconsole_engine_thread_create(void)
   retval = 0;
  cleanup:
   /* XXX destroy thread on error? */
-
   if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
