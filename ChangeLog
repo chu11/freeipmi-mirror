@@ -1,3 +1,7 @@
+2007-08-16  Albert Chu <chu11@llnl.gov>
+	
+	* common/doc/manpage-common-troubleshooting.man: Tweak.
+
 2007-08-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Re-do enginecomm code to be

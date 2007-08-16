@@ -9,25 +9,27 @@ cipher suite privilege(s) and K_g key are configured properly.
 
 The following are common issues for given error messages:
 
-"username invalid" - The username entered is not available on the
-remote machine.  Please try a different username.  It may also be
-possible the remote BMC's username configuration is incorrect.
+"username invalid" - The username entered (or a NULL username if none
+was entered) is not available on the remote machine.  Please try a
+different username.  It may also be possible the remote BMC's username
+configuration is incorrect.
 
-"password invalid" - The password entered is not correct.  Please try
-a different password.  It may also be possible the password for the
-user is not correctly configured on the remote BMC.
+"password invalid" - The password entered (or a NULL password if none
+was entered) is not correct.  Please try a different password.  It may
+also be possible the password for the user is not correctly configured
+on the remote BMC.
 
 "password verification timeout" - The password entered is likely not
 correct.  Please try a different password.  It may also be possible
 the password for the user is not correctly configured on the remote
 BMC.
 
-"k_g invalid" - The K_g key entered is not correct.  Please try a
-different K_g key.  It may also be possible the K_g key is not
-correctly configured on the remote BMC.
+"k_g invalid" - The K_g key entered (or a NULL K_g key if none was
+entered) is not correct.  Please try a different K_g key.  It may also
+be possible the K_g key is not correctly configured on the remote BMC.
 
 "privilege level insufficient" - An IPMI command requires a higher
-user privilege than then one authenticated with.  Please try to
+user privilege than the one authenticated with.  Please try to
 authenticate with a higher privilege.  This may require authenticating
 to a different user which has a higher maximum privilege.
 
@@ -60,5 +62,5 @@ retransmission timeout.  Some remote BMCs are considerably slower than
 others.
 
 Please see WORKAROUNDS below to also if there are any vendor specific
-bugs that may be related to your hardware.
+bugs that have been discovered and worked around.
 
