@@ -11,6 +11,11 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_engine.c
 	(_ipmiconsole_cleanup_ctx_session): Fix race condition.
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Fix comments.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit): Fix corner case.
+
 2007-08-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Re-do enginecomm code to be

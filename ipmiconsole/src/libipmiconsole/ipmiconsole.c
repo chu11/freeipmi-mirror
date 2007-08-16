@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.27 2007-08-16 03:59:42 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.28 2007-08-16 20:18:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -302,6 +302,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
       if (_ipmiconsole_init_ctx_session(c) < 0)
         {
           _ipmiconsole_blocking_notification_cleanup(c);
+          c->blocking_submit_requested = 0;
           goto cleanup;
         }
       
@@ -309,6 +310,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
       if (ipmiconsole_engine_submit_ctx(c) < 0)
         {
           _ipmiconsole_blocking_notification_cleanup(c);
+          c->blocking_submit_requested = 0;
           goto cleanup;
         }
       
@@ -316,6 +318,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
       if (_ipmiconsole_block(c) < 0)
         {
           _ipmiconsole_blocking_notification_cleanup(c);
+          c->blocking_submit_requested = 0;
           goto cleanup;
         }
 
