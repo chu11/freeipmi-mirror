@@ -1,6 +1,9 @@
 2007-08-16  Albert Chu <chu11@llnl.gov>
 	
-	* common/doc/manpage-common-troubleshooting.man: Tweak.
+	* common/doc/manpage-common-troubleshooting.man: Clean up text.
+
+	* ipmimonitoring/ipmimonitoring.8.pre.in: Add ipmimonitoring
+	specific troubleshooting.
 
 2007-08-15  Albert Chu <chu11@llnl.gov>
 

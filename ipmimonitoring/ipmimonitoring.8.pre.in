@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.5 2007-08-16 00:05:23 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.6 2007-08-16 15:58:06 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -112,6 +112,23 @@ Turn on debugging.
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/common/doc/manpage-common-hostranged-text-options.man>
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
+
+.SH "IPMIMONITORING TROUBLESHOOTING"
+
+The following are common issues for given error messages specifically
+for
+.B ipmimonitoring.
+
+"sensor config file parse error" - A parse error was found in the 
+.B libipmimonitoring(3)
+sensor configuration file.  Please see
+.B libipmimonitoring(3).
+
+"sdr cache permission error" - The default SDR cache directory cannot
+be accessed.  Please specify an alternate directory with the 
+.I --cache-dir
+option.
+
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
 
