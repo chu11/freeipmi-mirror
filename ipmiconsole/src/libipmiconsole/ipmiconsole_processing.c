@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.26 2007-08-16 21:55:26 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.27 2007-08-16 22:56:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2068,12 +2068,12 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
   struct ipmiconsole_ctx_session *s;
   int32_t sol_hdr_len;
   uint64_t val;
+  uint16_t max_inbound_payload_size;
+  uint16_t max_outbound_payload_size;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT);
-  assert(!c->session.max_inbound_payload_size);
-  assert(!c->session.max_outbound_payload_size);
   
   s = &(c->session);
 
@@ -2093,14 +2093,14 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
                    "inbound_payload_size",
                    &val) < 0)
     return -1;
-  s->max_inbound_payload_size = val;
+  max_inbound_payload_size = val;
 
   if (Fiid_obj_get(c,
                    s->obj_activate_payload_rs,
                    "outbound_payload_size",
                    &val) < 0)
     return -1;
-  s->max_outbound_payload_size = val;
+  max_outbound_payload_size = val;
 
   if ((sol_hdr_len = Fiid_template_block_len_bytes(c,
                                                    tmpl_sol_payload_data,
@@ -2118,12 +2118,12 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
    */
   if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_ASUS_2_0))
     {
-      if (s->max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
-          && s->max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len
-          && s->max_outbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
-          && s->max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
+      if (max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
+          && max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len
+          && max_outbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
+          && max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
         {
-          s->max_sol_character_send_size = s->max_outbound_payload_size - sol_hdr_len;
+          s->max_sol_character_send_size = max_outbound_payload_size - sol_hdr_len;
           return 1;
         }
     }
@@ -2133,7 +2133,8 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
       s->max_sol_character_send_size = 32;
       return 1;
     }
-
+  
+  IPMICONSOLE_CTX_DEBUG(c, ("payload sizes invalid: max_inbound_payload_size=%d max_outbound_payload_size=%d", max_inbound_payload_size, max_outbound_payload_size));
   return 0;
 }
 
@@ -3049,7 +3050,6 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       
       if (!ret)
         {
-          IPMICONSOLE_CTX_DEBUG(c, ("payload sizes invalid: max_inbound_payload_size=%d max_outbound_payload_size=%d", s->max_inbound_payload_size, s->max_outbound_payload_size));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID;
 	  s->close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)

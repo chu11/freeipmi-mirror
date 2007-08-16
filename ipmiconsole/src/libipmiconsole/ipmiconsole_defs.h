@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.25 2007-08-16 22:00:16 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.26 2007-08-16 22:56:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -339,8 +339,6 @@ struct ipmiconsole_ctx_session {
   uint32_t sol_instances_activated_count;
   uint32_t sol_instances_deactivated_count;
 
-  uint16_t max_inbound_payload_size; /* determined during session setup */
-  uint16_t max_outbound_payload_size; /* determine during session setup */
   uint8_t max_sol_character_send_size; /* determine during session setup */
 
   /* SOL Session Maintenance */

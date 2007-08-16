@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.25 2007-08-16 22:00:16 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.26 2007-08-16 22:56:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -411,11 +411,7 @@ _ipmiconsole_init_ctx_session_data(ipmiconsole_ctx_t c)
   /* this is used just to index the number of instances deactivated */
   s->sol_instances_deactivated_count = 0;
 
-  /* Inbound and Outbound maximum payload sizes are calculated
-   * during the session setup.
-   */
-  s->max_inbound_payload_size = 0;
-  s->max_outbound_payload_size = 0;
+  /* Calculated during the session setup. */
   s->max_sol_character_send_size = 0;
   
   /* SOL Session Maintenance */
