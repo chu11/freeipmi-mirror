@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.33 2007-08-16 22:00:16 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.34 2007-08-16 23:27:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -305,7 +305,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
 
   if (blocking)
     {
-      /* To determine if an IPMI error occurred */
+      /* Set to success, so we know if an IPMI error occurred */
       c->errnum = IPMICONSOLE_ERR_SUCCESS;
       
       if (_ipmiconsole_blocking_notification_setup(c) < 0)
