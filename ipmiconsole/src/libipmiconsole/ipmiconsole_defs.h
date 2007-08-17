@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.29 2007-08-17 16:32:07 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.30 2007-08-17 17:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -194,7 +194,7 @@ typedef enum
 #define IPMICONSOLE_PIPE_GENERATE_BREAK_CODE  0x01
 
 #define IPMICONSOLE_ENGINE_MASK \
-        (IPMICONSOLE_ENGINE_SUBMIT_BLOCKING) 
+        (IPMICONSOLE_ENGINE_CLOSE_FD) 
 
 #define IPMICONSOLE_DEBUG_MASK \
         (IPMICONSOLE_DEBUG_STDOUT \
@@ -399,6 +399,10 @@ struct ipmiconsole_ctx {
 
   /* Copy from session context - managed exclusively by API level, not engine 
    *
+   * Note the user_fd_retrieved flag does not need to be locked.  Once
+   * the context has been submitted to the engine, the user_fd is
+   * completely managed by the API.
+   * 
    * The need to manage asynccomm at the API level is b/c users could
    * access it via ipmiconsole_ctx_generate_break().  If one end of
    * the asynccomm is closed by the engine(), it becomes difficult to

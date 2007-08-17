@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.38 2007-08-17 16:32:07 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.39 2007-08-17 17:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -401,10 +401,7 @@ ipmiconsole_ctx_create(char *hostname,
 	      && ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_ADMIN))
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
 	  && !IPMI_CIPHER_SUITE_ID_SUPPORTED(ipmi_config->cipher_suite_id))
-#if 0
-      /* reserved for the future  */
       || (protocol_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
-#endif
       || (protocol_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK)
       || (protocol_config->security_flags & ~IPMICONSOLE_SECURITY_MASK)
       || (protocol_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK))

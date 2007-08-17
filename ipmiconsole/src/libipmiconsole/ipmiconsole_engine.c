@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.30 2007-08-17 16:32:07 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.31 2007-08-17 17:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -134,8 +134,12 @@ _ipmiconsole_cleanup_ctx_managed_session_data(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   
-  if (!c->user_fd_retrieved)
-    close(c->user_fd);
+  /* Closing handled elsewhere */
+  if (!(c->engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD))
+    {
+      if (!c->user_fd_retrieved)
+        close(c->user_fd);
+    }
   c->user_fd_retrieved = 0;
   close(c->asynccomm[0]);
   close(c->asynccomm[1]);
@@ -181,17 +185,26 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
-  /* Close only the ipmiconsole_fd so that an error will be detected
-   * by the user via a EOF on a read() or EPIPE on a write() when
-   * reading/writing on their file descriptor.  The user is then
-   * required to close that fd.
+  /* Under default circumstances, close only the ipmiconsole_fd so
+   * that an error will be detected by the user via a EOF on a read()
+   * or EPIPE on a write() when reading/writing on their file
+   * descriptor.  The user is then required to close that fd.
    *
    * On error situations (i.e. ipmiconsole_engine_submit() doesn't
    * return to the user w/ success), it is the responsibility of other
    * code to call _ipmiconsole_cleanup_ctx_managed_session_data().
+   *
+   * The exception to this is when the user specifies the
+   * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Under that case, all bets are
+   * off.
    */
   if (s->ipmiconsole_fd)
     close(s->ipmiconsole_fd);
+  if (c->engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
+    {
+      if (s->user_fd)
+        close(s->user_fd);
+    }
   if (s->console_remote_console_to_bmc)
     cbuf_destroy(s->console_remote_console_to_bmc, secure_malloc_flag);
   if (s->console_bmc_to_remote_console)

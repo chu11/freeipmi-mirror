@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.40 2007-08-17 16:32:07 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.41 2007-08-17 17:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,13 +97,28 @@ extern "C" {
 #define IPMICONSOLE_PRIVILEGE_ADMIN               2 
 
 /* 
- * ENGINE Flags
+ * Engine Flags
  *
  * Utilized with struct ipmiconsole_protocol_config below.
  * 
- * None currenly supported, reserved for future use.
+ * CLOSE_FD
+ *
+ * By default, the ipmiconsole engine will not close the file
+ * descriptor returned by ipmiconsole_ctx_fd().  The user will be
+ * responsible for closing this file descriptor if it is retrieved
+ * from ipmiconsole_ctx_fd().  This flag will inform the engine to
+ * close the file descriptor whenever the context is removed from the
+ * engine.  
+ *
+ * This will change the behavior of how the user will wish to program
+ * with the file descriptor.  For example, calls to read() and write()
+ * would presumably return with EBADF errors instead of EOF and EPIPE
+ * respectively.  Calls to select() would presumably return with EBADF
+ * too.  Calls to poll() should presumably not change, although the
+ * user should now expect potential POLLNVAL returned events.
  *
  */
+#define IPMICONSOLE_ENGINE_CLOSE_FD             0x00000001
        
 /* 
  * Security Flags
@@ -520,6 +535,8 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * The user of this file descriptor will get an EOF on a read() or an
  * EPIPE on a write() to the closing of the other end of this
  * descriptor pair.
+ *
+ * For alternate file descriptor behavior, see ENGINE flags above.
  */
 int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
 
