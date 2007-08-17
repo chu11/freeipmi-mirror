@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.28 2007-08-17 02:50:53 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.29 2007-08-17 03:32:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -651,11 +651,12 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
 }
 
 int
-ipmiconsole_engine_setup(void)
+ipmiconsole_engine_setup(unsigned int thread_count)
 {
   int i, rv;
 
   assert(!console_engine_thread_count);
+  assert(thread_count && thread_count <= IPMICONSOLE_THREAD_COUNT_MAX);
 
   if ((rv = pthread_mutex_lock(&console_engine_is_setup_mutex)))
     {
@@ -667,7 +668,10 @@ ipmiconsole_engine_setup(void)
   memset(console_engine_ctxs_count, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(unsigned int));
   memset(console_engine_ctxs_mutex, '\0', IPMICONSOLE_THREAD_COUNT_MAX * sizeof(pthread_mutex_t));
   for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
-    memset(console_engine_ctxs_notifier[i], '\0', sizeof(int) * 2);
+    {
+      console_engine_ctxs_notifier[i][0] = -1;
+      console_engine_ctxs_notifier[i][1] = -1;
+    }
 
   if (ipmi_rmcpplus_init() < 0)
     {
@@ -688,6 +692,11 @@ ipmiconsole_engine_setup(void)
           IPMICONSOLE_DEBUG(("pthread_mutex_init: %s", strerror(rv)));
           goto cleanup;
         }
+    }
+
+  /* Don't create fds for all ctxs_notifier to limit fd creation */
+  for (i = 0; i < thread_count; i++)
+    {
       if (pipe(console_engine_ctxs_notifier[i]) < 0)
         {
           IPMICONSOLE_DEBUG(("pipe: %s", strerror(errno)));

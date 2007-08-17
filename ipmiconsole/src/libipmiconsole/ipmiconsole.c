@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.36 2007-08-17 02:50:53 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.37 2007-08-17 03:32:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,7 +124,7 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
   if (ipmiconsole_engine_is_setup())
     return 0;
 
-  if (ipmiconsole_engine_setup() < 0)
+  if (ipmiconsole_engine_setup(thread_count) < 0)
     goto cleanup;
 
   for (i = 0; i < thread_count; i++)

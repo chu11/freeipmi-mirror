@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.h,v 1.3 2007-08-16 20:32:47 chu11 Exp $
+ *  $Id: ipmiconsole_engine.h,v 1.4 2007-08-17 03:32:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,7 +39,7 @@ int _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c);
 
 int _ipmiconsole_init_ctx_session_data(ipmiconsole_ctx_t c);
 
-int ipmiconsole_engine_setup(void);
+int ipmiconsole_engine_setup(unsigned int thread_count);
 
 int ipmiconsole_engine_is_setup(void);
 
