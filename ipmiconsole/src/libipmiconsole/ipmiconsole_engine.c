@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.33 2007-08-17 18:25:50 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.34 2007-08-17 23:09:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -105,6 +105,7 @@ static pthread_mutex_t console_engine_ctxs_mutex[IPMICONSOLE_THREAD_COUNT_MAX];
  * faster.
  */
 static int console_engine_ctxs_notifier[IPMICONSOLE_THREAD_COUNT_MAX][2];
+static int console_engine_ctxs_notifier_num = 0;
 
 struct _ipmiconsole_poll_data {
   struct pollfd *pfds;
@@ -795,7 +796,8 @@ ipmiconsole_engine_setup(unsigned int thread_count)
     }
 
   /* Don't create fds for all ctxs_notifier to limit fd creation */
-  for (i = 0; i < thread_count; i++)
+  console_engine_ctxs_notifier_num = thread_count;
+  for (i = 0; i < console_engine_ctxs_notifier_num; i++)
     {
       int closeonexec;
 
@@ -1786,7 +1788,7 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
     }
 
   /* "Interrupt" the engine and tell it to get moving along */
-  for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
+  for (i = 0; i < console_engine_ctxs_notifier; i++)
     {
       if (write(console_engine_ctxs_notifier[i][1], "1", 1) < 0)
         IPMICONSOLE_DEBUG(("write: %s", strerror(errno)));
