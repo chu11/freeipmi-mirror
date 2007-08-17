@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.35 2007-08-17 01:38:17 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.36 2007-08-17 02:50:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -533,13 +533,6 @@ ipmiconsole_ctx_create(char *hostname,
 
   c->session_submitted = 0;
 
-  if ((rv = pthread_mutex_init(&c->cleanup_mutex, NULL)) != 0)
-    {
-      errno = rv;
-      goto cleanup;
-    }
-  c->cleanup = 0;
-
   if ((rv = pthread_mutex_init(&c->exitted_mutex, NULL)) != 0)
     {
       errno = rv;
@@ -625,35 +618,8 @@ ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if ((rv = pthread_mutex_lock(&(c->cleanup_mutex))) != 0)
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
-  if (c->cleanup)
-    {
-      /* XXX NEED TO DO - different err code?? */
-      /* The session has begun cleaning up.  If an errnum has been set
-       * give the user whatever errnum is currently sitting there.
-       */
-      if ((rv = pthread_mutex_unlock(&(c->cleanup_mutex))) != 0)
-        IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-      if (c->errnum == IPMICONSOLE_ERR_SUCCESS)
-        c->errnum = IPMICONSOLE_ERR_CTX_IS_SUBMITTED;
-      return -1;
-    }
-
-  if ((rv = pthread_mutex_unlock(&(c->cleanup_mutex))) != 0)
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
   val = IPMICONSOLE_PIPE_GENERATE_BREAK_CODE;
-  if (write(c->asynccomm_fd, &val, 1) < 0)
+  if (write(c->asynccomm[1], &val, 1) < 0)
     {
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       return -1;
@@ -702,7 +668,6 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
   
   _ipmiconsole_cleanup_ctx_managed_session_data(c);
   
-  pthread_mutex_destroy(&(c->cleanup_mutex));
   pthread_mutex_destroy(&(c->exitted_mutex));
       
   c->errnum = IPMICONSOLE_ERR_CONTEXT_INVALID;

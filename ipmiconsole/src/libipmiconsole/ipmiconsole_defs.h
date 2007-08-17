@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.27 2007-08-17 01:38:17 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.28 2007-08-17 02:50:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -236,7 +236,6 @@ struct ipmiconsole_ctx_session {
   struct timeval last_ipmi_packet_received;
 
   /* Pipe for non-fd communication: from API to engine */
-  /* Note for future: Protect w/ mutex is you add opportunities to do async comm */
   int asynccomm[2];
 
   /* Data based on Configuration Parameters */
@@ -397,10 +396,18 @@ struct ipmiconsole_ctx {
   /* Debug Data */
   int debug_fd;
 
-  /* Copy from session context - managed exclusively by API level, not engine */
+  /* Copy from session context - managed exclusively by API level, not engine 
+   *
+   * The need to manage asynccomm at the API level is b/c users could
+   * access it via ipmiconsole_ctx_generate_break().  If one end of
+   * the asynccomm is closed by the engine(), it becomes difficult to
+   * know if we can actually generate a break.  Other methods
+   * attempted before utilized mutexes, etc.  Just moving it to the
+   * API level is easier.
+   */
   int user_fd;
   int user_fd_retrieved;        /* flag indicates if user ever retrieved the fd */
-  int asynccomm_fd;
+  int asynccomm[2];
 
   /* session_submitted - flag indicates context submitted to engine
    * successfully.  Does not indicate any state of success/failure for
@@ -410,13 +417,6 @@ struct ipmiconsole_ctx {
    * moving on.
    */
   unsigned int session_submitted;
-
-  /* cleanup - flag and mutex used when the context has started
-   * cleaning up in the engine, so some API functions should not be
-   * allowed to continue.
-   */
-  pthread_mutex_t cleanup_mutex;
-  unsigned int cleanup;
 
   /* exitted - flag and mutex used when the context has started
    * cleaning up in the engine, so some API functions should not be

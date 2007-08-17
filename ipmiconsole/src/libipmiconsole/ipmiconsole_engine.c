@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.27 2007-08-17 01:38:17 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.28 2007-08-17 02:50:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,7 +124,8 @@ _ipmiconsole_init_ctx_managed_session_data(ipmiconsole_ctx_t c)
 
   /* init to -1 b/c -1 isn't a legit fd */
   c->user_fd = -1;
-  c->asynccomm_fd = -1;
+  c->asynccomm[0] = -1;
+  c->asynccomm[1] = -1;
 }
 
 void
@@ -136,7 +137,8 @@ _ipmiconsole_cleanup_ctx_managed_session_data(ipmiconsole_ctx_t c)
   if (!c->user_fd_retrieved)
     close(c->user_fd);
   c->user_fd_retrieved = 0;
-  close(c->asynccomm_fd);
+  close(c->asynccomm[0]);
+  close(c->asynccomm[1]);
 }
 
 void
@@ -179,11 +181,6 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
-  /* We have to cleanup, so continue on even if locking fails */
-
-  if ((rv = pthread_mutex_lock(&(c->cleanup_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
-
   /* Close only the ipmiconsole_fd so that an error will be detected
    * by the user via a EOF on a read() or EPIPE on a write() when
    * reading/writing on their file descriptor.  The user is then
@@ -205,11 +202,9 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
     cbuf_destroy(s->ipmi_from_bmc, secure_malloc_flag);
   if (s->ipmi_to_bmc)
     cbuf_destroy(s->ipmi_to_bmc, secure_malloc_flag);
-  if (s->asynccomm[0])
-    close(s->asynccomm[0]);
   /* Similarly to the user_fd above, it is the responsibility of other
-   * code to close asynccomm[1], which is replicated in the context w/
-   * asynccomm_fd.
+   * code to close asynccomm[0] and asynccomm[1], which is replicated
+   * in the context.
    */
   if (s->obj_rmcp_hdr_rq)
     Fiid_obj_destroy(c, s->obj_rmcp_hdr_rq);
@@ -285,11 +280,6 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
     Fiid_obj_destroy(c, s->obj_close_session_rs);
   
   memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
-
-  c->cleanup++;
-
-  if ((rv = pthread_mutex_unlock(&(c->cleanup_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
   if ((rv = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
@@ -558,7 +548,8 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
-  c->asynccomm_fd = s->asynccomm[1];
+  c->asynccomm[0] = s->asynccomm[0];
+  c->asynccomm[1] = s->asynccomm[1];
 
   /* Data based on Configuration Parameters */
 
