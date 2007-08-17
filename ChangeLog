@@ -1,7 +1,7 @@
 2007-08-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/: Fix documentation/comments.  Continued library
-	fixes.
+	fixes.  Support IPMICONSOLE_ENGINE_CLOSE_FD flag.
 	
 2007-08-16  Albert Chu <chu11@llnl.gov>
 	
