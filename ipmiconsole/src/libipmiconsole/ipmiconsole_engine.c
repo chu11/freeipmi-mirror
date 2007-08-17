@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.32 2007-08-17 17:16:33 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.33 2007-08-17 18:25:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,6 +39,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -465,6 +468,7 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   struct sockaddr_in srcaddr;
   int sv[2];
   int secure_malloc_flag;
+  int closeonexec;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -487,6 +491,36 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
     }
   s->user_fd = sv[0];
   s->ipmiconsole_fd = sv[1];
+
+  if ((closeonexec = fcntl(s->user_fd, F_GETFD, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  closeonexec |= FD_CLOEXEC;
+  if (fcntl(s->user_fd, F_SETFD, closeonexec) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  if ((closeonexec = fcntl(s->ipmiconsole_fd, F_GETFD, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  closeonexec |= FD_CLOEXEC;
+  if (fcntl(s->ipmiconsole_fd, F_SETFD, closeonexec) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  /* Copy for API level */
   c->user_fd = s->user_fd;
 
   secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
@@ -514,6 +548,20 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
         c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
       else
         c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  if ((closeonexec = fcntl(s->ipmi_fd, F_GETFD, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  closeonexec |= FD_CLOEXEC;
+  if (fcntl(s->ipmi_fd, F_SETFD, closeonexec) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
 
@@ -570,6 +618,36 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
         c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
+
+  if ((closeonexec = fcntl(s->asynccomm[0], F_GETFD, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  closeonexec |= FD_CLOEXEC;
+  if (fcntl(s->asynccomm[0], F_SETFD, closeonexec) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  if ((closeonexec = fcntl(s->asynccomm[1], F_GETFD, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  closeonexec |= FD_CLOEXEC;
+  if (fcntl(s->asynccomm[1], F_SETFD, closeonexec) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  /* Copy for API level */
   c->asynccomm[0] = s->asynccomm[0];
   c->asynccomm[1] = s->asynccomm[1];
 
@@ -719,9 +797,33 @@ ipmiconsole_engine_setup(unsigned int thread_count)
   /* Don't create fds for all ctxs_notifier to limit fd creation */
   for (i = 0; i < thread_count; i++)
     {
+      int closeonexec;
+
       if (pipe(console_engine_ctxs_notifier[i]) < 0)
         {
           IPMICONSOLE_DEBUG(("pipe: %s", strerror(errno)));
+          goto cleanup;
+        }
+      if ((closeonexec = fcntl(console_engine_ctxs_notifier[i][0], F_GETFD, 0)) < 0)
+        {
+          IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+          goto cleanup;
+        }
+      closeonexec |= FD_CLOEXEC;
+      if (fcntl(console_engine_ctxs_notifier[i][0], F_SETFD, closeonexec) < 0)
+        {
+          IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+          goto cleanup;
+        }
+      if ((closeonexec = fcntl(console_engine_ctxs_notifier[i][1], F_GETFD, 0)) < 0)
+        {
+          IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+          goto cleanup;
+        }
+      closeonexec |= FD_CLOEXEC;
+      if (fcntl(console_engine_ctxs_notifier[i][1], F_SETFD, closeonexec) < 0)
+        {
+          IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
           goto cleanup;
         }
     }
