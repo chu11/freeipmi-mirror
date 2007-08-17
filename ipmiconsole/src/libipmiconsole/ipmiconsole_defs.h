@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.26 2007-08-16 22:56:58 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.27 2007-08-17 01:38:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -404,9 +404,26 @@ struct ipmiconsole_ctx {
 
   /* session_submitted - flag indicates context submitted to engine
    * successfully.  Does not indicate any state of success/failure for
-   * either blocking or non-blocking submissions.
+   * either blocking or non-blocking submissions.  Primary used as a
+   * flag so other functions such as ipmiconsole_ctx_fd() and
+   * ipmiconsole_generate_breate() know that they are capable of
+   * moving on.
    */
   unsigned int session_submitted;
+
+  /* cleanup - flag and mutex used when the context has started
+   * cleaning up in the engine, so some API functions should not be
+   * allowed to continue.
+   */
+  pthread_mutex_t cleanup_mutex;
+  unsigned int cleanup;
+
+  /* exitted - flag and mutex used when the context has started
+   * cleaning up in the engine, so some API functions should not be
+   * allowed to continue.
+   */
+  pthread_mutex_t exitted_mutex;
+  unsigned int exitted;
 
   struct ipmiconsole_ctx_session session; 
 };

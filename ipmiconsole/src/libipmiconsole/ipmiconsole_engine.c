@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.26 2007-08-16 22:56:58 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.27 2007-08-17 01:38:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -153,6 +153,37 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   
   secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
+  /* We have to cleanup, so continue on even if locking fails */
+
+  if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
+  if (c->blocking_submit_requested
+      && !c->sol_session_established)
+    {
+      uint8_t val;
+
+      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+          && s->deactivate_only_succeeded_flag)
+        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
+      else
+        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
+
+      if (write(c->blocking_notification[1], &val, 1) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
+          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        }
+    }
+
+  if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+
+  /* We have to cleanup, so continue on even if locking fails */
+
+  if ((rv = pthread_mutex_lock(&(c->cleanup_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
   /* Close only the ipmiconsole_fd so that an error will be detected
    * by the user via a EOF on a read() or EPIPE on a write() when
    * reading/writing on their file descriptor.  The user is then
@@ -253,33 +284,20 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   if (s->obj_close_session_rs)
     Fiid_obj_destroy(c, s->obj_close_session_rs);
   
-  /* We have to cleanup, so continue on even if locking fails */
+  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
 
-  if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+  c->cleanup++;
 
-  if (c->blocking_submit_requested
-      && !c->sol_session_established)
-    {
-      uint8_t val;
-
-      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
-          && s->deactivate_only_succeeded_flag)
-        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
-      else
-        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
-
-      if (write(c->blocking_notification[1], &val, 1) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-        }
-    }
-
-  if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+  if ((rv = pthread_mutex_unlock(&(c->cleanup_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 
-  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
+  if ((rv = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+
+  c->exitted++;
+
+  if ((rv = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
 }
 
 int

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.27 2007-08-16 22:56:58 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.28 2007-08-17 01:38:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3140,7 +3140,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
 
       /* Indicates current status to user, does not require locking
-       * b/c there is no race 
+       * b/c there is no race.  User gets whatever value they get.
        */
       c->status = IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED;
 
@@ -3399,7 +3399,9 @@ ipmiconsole_process_ctxs(List console_engine_ctxs, unsigned int *timeout)
               goto cleanup;
             }
 
-          /* Indicates current status to user, does not require locking */
+          /* Indicates current status to user, does not require locking
+           * b/c there is no race.  User gets whatever value they get.
+           */
           if (c->errnum != IPMICONSOLE_ERR_SUCCESS)
             c->status = IPMICONSOLE_CONTEXT_STATUS_ERROR;
 
