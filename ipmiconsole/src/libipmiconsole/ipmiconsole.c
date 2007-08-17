@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.40 2007-08-17 17:16:33 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.41 2007-08-17 21:06:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,6 +36,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>
@@ -151,46 +154,6 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
 }
 
 static int
-_ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
-{
-  int perr;
-
-  assert(c);
-  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  
-  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
-  if (pipe(c->blocking_notification) < 0)
-    {
-      IPMICONSOLE_CTX_DEBUG(c, ("pipe: %s", strerror(errno)));
-      if (errno == EMFILE)
-        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
-      else
-        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-      goto cleanup;
-    }
-  c->blocking_submit_requested++;
-  c->sol_session_established = 0;
-
-  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
-
-  return 0;
-
- cleanup:
-  return -1;
-}
-
-static int
 _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
 {
   int perr;
@@ -208,6 +171,8 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
 
   close(c->blocking_notification[0]);
   close(c->blocking_notification[1]);
+  c->blocking_notification[0] = -1;
+  c->blocking_notification[1] = -1;
   c->blocking_submit_requested = 0;
   c->sol_session_established = 0;
 
@@ -219,6 +184,78 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
     }
 
   return 0;
+}
+
+static int
+_ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
+{
+  int perr;
+  int closeonexec;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  
+  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+
+  if (pipe(c->blocking_notification) < 0)
+    {
+      if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+        IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+      IPMICONSOLE_CTX_DEBUG(c, ("pipe: %s", strerror(errno)));
+      if (errno == EMFILE)
+        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+      else
+        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  c->blocking_submit_requested++;
+  c->sol_session_established = 0;
+
+  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+
+  if ((closeonexec = fcntl(c->blocking_notification[0], F_GETFD, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  closeonexec |= FD_CLOEXEC;
+  if (fcntl(c->blocking_notification[0], F_SETFD, closeonexec) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  if ((closeonexec = fcntl(c->blocking_notification[1], F_GETFD, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+  closeonexec |= FD_CLOEXEC;
+  if (fcntl(c->blocking_notification[1], F_SETFD, closeonexec) < 0)
+    {
+      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  return 0;
+
+ cleanup:
+  _ipmiconsole_blocking_notification_cleanup(c);
+  return -1;
 }
 
 static int
@@ -554,6 +591,8 @@ ipmiconsole_ctx_create(char *hostname,
       goto cleanup;
     }
   c->blocking_submit_requested = 0;
+  c->blocking_notification[0] = -1;
+  c->blocking_notification[1] = -1;
 
   c->sol_session_established = 0;
 
