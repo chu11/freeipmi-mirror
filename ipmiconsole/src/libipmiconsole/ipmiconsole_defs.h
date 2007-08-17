@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.28 2007-08-17 02:50:53 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.29 2007-08-17 16:32:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -385,6 +385,7 @@ struct ipmiconsole_ctx {
   uint32_t security_flags;
   uint32_t workaround_flags;
 
+  pthread_mutex_t status_mutex;
   unsigned int status;
 
   /* Info, pipe, and mutex for engine submission blocking */
@@ -415,12 +416,15 @@ struct ipmiconsole_ctx {
    * flag so other functions such as ipmiconsole_ctx_fd() and
    * ipmiconsole_generate_breate() know that they are capable of
    * moving on.
+   *
+   * Note, does not require a mutex.  Only a flag used in API-land.
+   * Engine threads will never touch this.
    */
   unsigned int session_submitted;
 
-  /* exitted - flag and mutex used when the context has started
-   * cleaning up in the engine, so some API functions should not be
-   * allowed to continue.
+  /* exitted - flag and mutex used when the context has been dropped
+   * from the engine and all context related session stuff has been
+   * cleaned up.
    */
   pthread_mutex_t exitted_mutex;
   unsigned int exitted;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.2 2007-08-17 16:32:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -158,47 +158,47 @@ static void
 _debug(const char *fmt, va_list ap)
 {
   char errbuf[IPMICONSOLE_DEBUG_ERROR_BUFLEN];
-  int len, rv;
+  int len, perr;
 
   assert(fmt);
 
   len = vsnprintf(errbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
   if (console_debug_flags & IPMICONSOLE_DEBUG_STDOUT)
     {
-      if ((rv = pthread_mutex_lock(&console_stdout_debug_mutex)))
+      if ((perr = pthread_mutex_lock(&console_stdout_debug_mutex)))
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
-          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           goto try_stderr;
         }
 
       fprintf(stdout, "%s\r\n", errbuf);
       fflush(stdout);
 
-      if ((rv = pthread_mutex_unlock(&console_stdout_debug_mutex)))
+      if ((perr = pthread_mutex_unlock(&console_stdout_debug_mutex)))
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));      
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));      
           goto try_stderr;
         }
     }
  try_stderr:
   if (console_debug_flags & IPMICONSOLE_DEBUG_STDERR)
     {
-      if ((rv = pthread_mutex_lock(&console_stderr_debug_mutex)))
+      if ((perr = pthread_mutex_lock(&console_stderr_debug_mutex)))
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
-          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           goto try_syslog;
         }
 
       fprintf(stderr, "%s\r\n", errbuf);
       fflush(stderr);
 
-      if ((rv = pthread_mutex_unlock(&console_stderr_debug_mutex)))
+      if ((perr = pthread_mutex_unlock(&console_stderr_debug_mutex)))
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));      
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));      
           goto try_syslog;
         }
     }
@@ -212,10 +212,10 @@ _debug(const char *fmt, va_list ap)
 
       tlen = snprintf(tbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN+2, "%s\n", errbuf);
 
-      if ((rv = pthread_mutex_lock(&console_file_debug_mutex)))
+      if ((perr = pthread_mutex_lock(&console_file_debug_mutex)))
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));      
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));      
           goto out;
         }
 
@@ -226,10 +226,10 @@ _debug(const char *fmt, va_list ap)
           /* fall-through to try and unlock */
 	}
 
-      if ((rv = pthread_mutex_unlock(&console_file_debug_mutex)))
+      if ((perr = pthread_mutex_unlock(&console_file_debug_mutex)))
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));      
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));      
           goto out;
         }
     }
@@ -254,47 +254,47 @@ static void
 _ctx_debug(ipmiconsole_ctx_t c, const char *fmt, va_list ap)
 {
   char errbuf[IPMICONSOLE_DEBUG_ERROR_BUFLEN];
-  int len, rv;
+  int len, perr;
 
   assert(fmt);
 
   len = vsnprintf(errbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
   if (c->debug_flags & IPMICONSOLE_DEBUG_STDOUT)
     {
-      if ((rv = pthread_mutex_lock(&console_stdout_debug_mutex)))
+      if ((perr = pthread_mutex_lock(&console_stdout_debug_mutex)))
         {
           c->debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
-          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_lock: %s", strerror(perr)));
           goto try_stderr;
         }
 
       fprintf(stdout, "%s\r\n", errbuf);
       fflush(stdout);
 
-      if ((rv = pthread_mutex_unlock(&console_stdout_debug_mutex)))
+      if ((perr = pthread_mutex_unlock(&console_stdout_debug_mutex)))
         {
           c->debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
-          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_unlock: %s", strerror(rv)));      
+          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_unlock: %s", strerror(perr)));      
           goto try_stderr;
         }
     }
  try_stderr:
   if (c->debug_flags & IPMICONSOLE_DEBUG_STDERR)
     {
-      if ((rv = pthread_mutex_lock(&console_stderr_debug_mutex)))
+      if ((perr = pthread_mutex_lock(&console_stderr_debug_mutex)))
         {
           c->debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
-          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_lock: %s", strerror(perr)));
           goto try_syslog;
         }
 
       fprintf(stderr, "%s\r\n", errbuf);
       fflush(stderr);
 
-      if ((rv = pthread_mutex_unlock(&console_stderr_debug_mutex)))
+      if ((perr = pthread_mutex_unlock(&console_stderr_debug_mutex)))
         {
           c->debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
-          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_unlock: %s", strerror(rv)));      
+          IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_unlock: %s", strerror(perr)));      
           goto try_syslog;
         }
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.29 2007-08-17 03:32:01 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.30 2007-08-17 16:32:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -146,7 +146,7 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 {
   struct ipmiconsole_ctx_session *s;
   int secure_malloc_flag;
-  int rv;
+  int perr;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -157,8 +157,8 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   /* We have to cleanup, so continue on even if locking fails */
 
-  if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
   if (c->blocking_submit_requested
       && !c->sol_session_established)
@@ -178,8 +178,8 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
         }
     }
 
-  if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
   /* Close only the ipmiconsole_fd so that an error will be detected
    * by the user via a EOF on a read() or EPIPE on a write() when
@@ -281,13 +281,13 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   
   memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
 
-  if ((rv = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
   c->exitted++;
 
-  if ((rv = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 }
 
 int
@@ -653,14 +653,14 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
 int
 ipmiconsole_engine_setup(unsigned int thread_count)
 {
-  int i, rv;
+  int i, perr;
 
   assert(!console_engine_thread_count);
   assert(thread_count && thread_count <= IPMICONSOLE_THREAD_COUNT_MAX);
 
-  if ((rv = pthread_mutex_lock(&console_engine_is_setup_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_is_setup_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       return -1;
     }
 
@@ -687,9 +687,9 @@ ipmiconsole_engine_setup(unsigned int thread_count)
           goto cleanup;
         }
       console_engine_ctxs_count[i] = 0;
-      if ((rv = pthread_mutex_init(&console_engine_ctxs_mutex[i], NULL)) != 0)
+      if ((perr = pthread_mutex_init(&console_engine_ctxs_mutex[i], NULL)) != 0)
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_init: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_init: %s", strerror(perr)));
           goto cleanup;
         }
     }
@@ -708,9 +708,9 @@ ipmiconsole_engine_setup(unsigned int thread_count)
   console_engine_teardown = 0;
   console_engine_teardown_immediate = 0;
 
-  if ((rv = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       goto cleanup;
     }
 
@@ -728,8 +728,8 @@ ipmiconsole_engine_setup(unsigned int thread_count)
       close(console_engine_ctxs_notifier[i][0]);
       close(console_engine_ctxs_notifier[i][1]);
     }
-  if ((rv = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
   
   return -1;
 }
@@ -737,19 +737,19 @@ ipmiconsole_engine_setup(unsigned int thread_count)
 int 
 ipmiconsole_engine_is_setup(void)
 {
-  int is_setup, rv;
+  int is_setup, perr;
 
-  if ((rv = pthread_mutex_lock(&console_engine_is_setup_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_is_setup_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       return -1;
     }
 
   is_setup = console_engine_is_setup;
 
-  if ((rv = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       return -1;
     }
 
@@ -759,19 +759,19 @@ ipmiconsole_engine_is_setup(void)
 int 
 ipmiconsole_engine_thread_count(void)
 {
-  int thread_count, rv;
+  int thread_count, perr;
 
-  if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       return -1;
     }
 
   thread_count = console_engine_thread_count;
 
-  if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       return -1;
     }
 
@@ -1176,7 +1176,7 @@ _console_write(ipmiconsole_ctx_t c)
 static void *
 _ipmiconsole_engine(void *arg)
 {
-  int rv, ctxs_count = 0;
+  int perr, ctxs_count = 0;
   unsigned int index;
   unsigned int teardown_flag = 0;
   unsigned int teardown_initiated = 0;
@@ -1198,27 +1198,27 @@ _ipmiconsole_engine(void *arg)
       int spin_wait_flag = 0;
       char buf[IPMICONSOLE_PIPE_BUFLEN];
       
-      if ((rv = pthread_mutex_lock(&console_engine_teardown_mutex)))
+      if ((perr = pthread_mutex_lock(&console_engine_teardown_mutex)))
         {
           /* This is one of the only truly "fatal" conditions */
-          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           teardown_flag = 1;
         }
       
       if (console_engine_teardown_immediate)
         {
-          if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
-            IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+          if ((perr = pthread_mutex_unlock(&console_engine_teardown_mutex)))
+            IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           break;
         }
 
       if (console_engine_teardown)
         teardown_flag = 1;
       
-      if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
+      if ((perr = pthread_mutex_unlock(&console_engine_teardown_mutex)))
         {
           /* This is one of the only truly "fatal" conditions */
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           teardown_flag = 1;
         }
 
@@ -1230,10 +1230,10 @@ _ipmiconsole_engine(void *arg)
        * are retrieved. 
        */
 
-      if ((rv = pthread_mutex_lock(&console_engine_ctxs_mutex[index])))
+      if ((perr = pthread_mutex_lock(&console_engine_ctxs_mutex[index])))
         {
           /* This is one of the only truly "fatal" conditions */
-          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           teardown_flag = 1;
         }
 
@@ -1292,8 +1292,8 @@ _ipmiconsole_engine(void *arg)
           goto continue_loop;
         }
       
-      if ((rv = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
-        IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      if ((perr = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
+        IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       unlock_console_engine_ctxs_mutex_flag++;
 
       /* Setup notifier pipe as last remaining poll data */
@@ -1400,10 +1400,10 @@ _ipmiconsole_engine(void *arg)
     continue_loop:
       if (!unlock_console_engine_ctxs_mutex_flag)
         {
-          if ((rv = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
+          if ((perr = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
             {
               /* This is one of the only truly "fatal" conditions */
-              IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+              IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
               teardown_flag = 1;
             }
         }
@@ -1431,13 +1431,13 @@ _ipmiconsole_engine(void *arg)
     }
 
   /* No way to return error, so just continue on even if there is a failure */
-  if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
   console_engine_thread_count--;
 
-  if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
   return NULL;
 }
@@ -1448,33 +1448,33 @@ ipmiconsole_engine_thread_create(void)
   pthread_t thread;
   pthread_attr_t attr;
   unsigned int *index = NULL;
-  int rv, retval = -1;
+  int perr, rv = -1;
 
   assert(console_engine_is_setup);
   
-  if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       return -1;
     }
 
   assert(console_engine_thread_count < IPMICONSOLE_THREAD_COUNT_MAX);
 
-  if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       goto cleanup;
     }
 
-  if ((rv = pthread_attr_init(&attr)))
+  if ((perr = pthread_attr_init(&attr)))
     {
-      IPMICONSOLE_DEBUG(("pthread_attr_init: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_attr_init: %s", strerror(perr)));
       goto cleanup;
     }
 
-  if ((rv = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)))
+  if ((perr = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)))
     {
-      IPMICONSOLE_DEBUG(("pthread_attr_setdetachstate: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_attr_setdetachstate: %s", strerror(perr)));
       goto cleanup;
     }
 
@@ -1485,35 +1485,35 @@ ipmiconsole_engine_thread_create(void)
     }
   *index = console_engine_thread_count;
 
-  if ((rv = pthread_create(&thread, &attr, _ipmiconsole_engine, index)))
+  if ((perr = pthread_create(&thread, &attr, _ipmiconsole_engine, index)))
     {
-      IPMICONSOLE_DEBUG(("pthread_create: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_create: %s", strerror(perr)));
       goto cleanup;
     }
 
   /* Who cares if this fails */
-  if ((rv = pthread_attr_destroy(&attr)))
-    IPMICONSOLE_DEBUG(("pthread_attr_destroy: %s", strerror(rv)));
+  if ((perr = pthread_attr_destroy(&attr)))
+    IPMICONSOLE_DEBUG(("pthread_attr_destroy: %s", strerror(perr)));
 
   console_engine_thread_count++;
 
-  retval = 0;
+  rv = 0;
  cleanup:
   /* XXX destroy thread on error? */
-  if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       return -1;
     }
 
-  return retval;
+  return rv;
 }
 
 int 
 ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
 {
   void *ptr;
-  int i, rv, ret = -1;
+  int i, perr, ret = -1;
   unsigned int min_submitted = UINT_MAX;
   int index = 0;
 
@@ -1528,17 +1528,17 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
    * have to "block" here.
    */
 
-  if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       return -1;
     }
 
   for (i = 0; i < console_engine_thread_count; i++)
     {
-      if ((rv = pthread_mutex_lock(&console_engine_ctxs_mutex[i])))
+      if ((perr = pthread_mutex_lock(&console_engine_ctxs_mutex[i])))
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
           goto cleanup_thread_count;
         }
@@ -1549,17 +1549,17 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
           index = i;
         }
 
-      if ((rv = pthread_mutex_unlock(&console_engine_ctxs_mutex[i])))
+      if ((perr = pthread_mutex_unlock(&console_engine_ctxs_mutex[i])))
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
           goto cleanup_thread_count;
         }
     }
 
-  if ((rv = pthread_mutex_lock(&console_engine_ctxs_mutex[index])))
+  if ((perr = pthread_mutex_lock(&console_engine_ctxs_mutex[index])))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       goto cleanup_thread_count;
     }
@@ -1594,17 +1594,17 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
     IPMICONSOLE_DEBUG(("write: %s", strerror(errno)));
 
  cleanup_ctxs:
-  if ((rv = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
+  if ((perr = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       goto cleanup_thread_count;
     }
   
  cleanup_thread_count:
-  if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       return -1;
     }
 
@@ -1614,28 +1614,28 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
 int
 ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
 {
-  int thread_count, rv, i, retval = -1;
+  int thread_count, perr, i, rv = -1;
 
-  if ((rv = pthread_mutex_lock(&console_engine_is_setup_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_is_setup_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       return -1;
     }
 
   if (!console_engine_is_setup)
     goto unlock_is_setup_mutex;
 
-  if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       goto unlock_is_setup_mutex;
     }
 
   thread_count = console_engine_thread_count;
 
-  if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       goto unlock_is_setup_mutex;
     }
  
@@ -1645,9 +1645,9 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
       goto engine_cleanup;
     }
 
-  if ((rv = pthread_mutex_lock(&console_engine_teardown_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_teardown_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       goto engine_cleanup;
     }
 
@@ -1655,9 +1655,9 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
   if (!cleanup_sol_sessions)
     console_engine_teardown_immediate++;
 
-  if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_teardown_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       goto engine_cleanup;
     }
 
@@ -1668,17 +1668,17 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
         IPMICONSOLE_DEBUG(("write: %s", strerror(errno)));
     }
 
-  if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       goto engine_cleanup;
     }
 
   while (console_engine_thread_count)
     {
-      if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+      if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           goto engine_cleanup;
         }
 
@@ -1686,16 +1686,16 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
       /* XXX: Is this portable? */
       usleep(IPMICONSOLE_SPIN_WAIT_TIME);
 
-      if ((rv = pthread_mutex_lock(&console_engine_thread_count_mutex)))
+      if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           goto engine_cleanup;
         }
     }
 
-  if ((rv = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       goto engine_cleanup;
     }
 
@@ -1713,25 +1713,25 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
   
   console_engine_is_setup = 0;
 
-  if ((rv = pthread_mutex_lock(&console_engine_teardown_mutex)))
+  if ((perr = pthread_mutex_lock(&console_engine_teardown_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       goto unlock_is_setup_mutex;
     }
 
   console_engine_teardown = 0;
   console_engine_teardown_immediate = 0;
 
-  if ((rv = pthread_mutex_unlock(&console_engine_teardown_mutex)))
+  if ((perr = pthread_mutex_unlock(&console_engine_teardown_mutex)))
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       goto unlock_is_setup_mutex;
     }
 
-  retval = 0;
+  rv = 0;
  unlock_is_setup_mutex:
-  if ((rv = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+  if ((perr = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
-  return retval;
+  return rv;
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.39 2007-08-17 15:56:27 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.40 2007-08-17 16:32:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,6 +34,9 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
 
+/* 
+ * IPMI Console Error Codes
+ */
 #define IPMICONSOLE_ERR_SUCCESS                               0
 #define IPMICONSOLE_ERR_CONTEXT_NULL                          1
 #define IPMICONSOLE_ERR_CONTEXT_INVALID                       2
@@ -68,22 +71,10 @@ extern "C" {
 #define IPMICONSOLE_ERR_ERRNUMRANGE                          31
 
 /* 
- * IPMI Privilege Constants
- */
-#define IPMICONSOLE_PRIVILEGE_USER                0
-#define IPMICONSOLE_PRIVILEGE_OPERATOR            1
-#define IPMICONSOLE_PRIVILEGE_ADMIN               2 
-
-/* 
- * ENGINE Flags
- *
- * None currenly supported, reserved for future use.
- *
- */
-
-/* 
  * Debug Flags
  *
+ * Utilized with ipmiconsole_engine_init() below.
+ * 
  * STDOUT       - Output debugging to stdout
  * STDERR       - Output debugging to stderr
  * SYSLOG       - Output debugging to the Syslog
@@ -95,10 +86,30 @@ extern "C" {
 #define IPMICONSOLE_DEBUG_SYSLOG           0x00000004
 #define IPMICONSOLE_DEBUG_FILE             0x00000008
 #define IPMICONSOLE_DEBUG_IPMI_PACKETS     0x00000010
+
+/* 
+ * IPMI Privilege Constants
+ *
+ * Utilized with struct ipmiconsole_ipmi_config below.
+ */
+#define IPMICONSOLE_PRIVILEGE_USER                0
+#define IPMICONSOLE_PRIVILEGE_OPERATOR            1
+#define IPMICONSOLE_PRIVILEGE_ADMIN               2 
+
+/* 
+ * ENGINE Flags
+ *
+ * Utilized with struct ipmiconsole_protocol_config below.
+ * 
+ * None currenly supported, reserved for future use.
+ *
+ */
        
 /* 
  * Security Flags
  *
+ * Utilized with struct ipmiconsole_protocol_config below.
+ * 
  * ERROR_ON_SOL_INUSE
  *
  * Under most circumstances, if SOL is detected as being in use,
@@ -126,6 +137,8 @@ extern "C" {
 /* 
  * Workaround Flags
  *
+ * Utilized with struct ipmiconsole_protocol_config below.
+ * 
  * USERNAME_CAPABILITIES
  *
  * Discoverd on an ASUS P5M2 motherboard, the motherboard does not
@@ -175,10 +188,30 @@ extern "C" {
 
 /*
  * Context Status
+ *
+ * Returned by ipmiconsole_ctx_status() below.
+ * 
+ * NONE
+ *
+ * The context has not been submitted to the engine.
+ *
+ * SUBMITTED
+ *
+ * The context has been submitted to the engine.
+ *
+ * ERROR
+ *
+ * The context has received an error.
+ *
+ * SOL_ESTABLISHED
+ *
+ * The context has established a SOL session.
+ *
  */
 #define IPMICONSOLE_CONTEXT_STATUS_NONE            0
-#define IPMICONSOLE_CONTEXT_STATUS_ERROR           1
-#define IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED 2
+#define IPMICONSOLE_CONTEXT_STATUS_SUBMITTED       1
+#define IPMICONSOLE_CONTEXT_STATUS_ERROR           2
+#define IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED 3
 
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 
@@ -477,11 +510,16 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * been retrieved.
  *
  * If the user closes the file descriptor while the serial over lan
- * session is established, the session will be torn down.
+ * session is established, the session will be torn down in the
+ * engine.
  *
- * If the user receives a EOF on a read(), the SOL session has been 
- * closed by the engine, typically due to an error.  The error
- * can be determined via ipmiconsole_ctx_errnum().
+ * If an error occurs on the engine side (for example a session
+ * timeout) the other end of the file descriptor pair will be closed.
+ * The SOL session has been closed by the engine, typically due to an
+ * error.  The error can be determined via ipmiconsole_ctx_errnum().
+ * The user of this file descriptor will get an EOF on a read() or an
+ * EPIPE on a write() to the closing of the other end of this
+ * descriptor pair.
  */
 int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
 

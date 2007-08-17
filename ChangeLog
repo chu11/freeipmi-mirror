@@ -1,3 +1,8 @@
+2007-08-17  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/: Fix documentation/comments.  Continued library
+	fixes.
+	
 2007-08-16  Albert Chu <chu11@llnl.gov>
 	
 	* common/doc/manpage-common-troubleshooting.man: Clean up text.
@@ -6,7 +11,7 @@
 	specific troubleshooting.
 
 	* ipmiconsole/src/libipmiconsole/: Significant code cleanup, race
-	condition fixes, logic fixes, bug fixes.
+	condition fixes, scalability fixes, logic fixes, bug fixes.
 
 2007-08-15  Albert Chu <chu11@llnl.gov>
 

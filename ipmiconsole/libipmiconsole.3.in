@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: libipmiconsole.3.in,v 1.1 2006-12-08 01:19:16 chu11 Exp $
+\."$Id: libipmiconsole.3.in,v 1.2 2007-08-17 16:32:07 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,9 +31,9 @@ libipmiconsole \- IPMI SOL library
 .sp
 .BI "int ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags);"
 .sp
-.BI "int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);"
+.BI "int ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking);"
 .sp
-.BI "void ipmiconsole_engine_teardown(void);"
+.BI "void ipmiconsole_engine_teardown(int cleanup_sol_sessions);"
 .sp
 .BI "ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname, struct ipmiconsole_ipmi_config *ipmi_config, struct ipmiconsole_protocol_config *protocol_config);"
 .sp

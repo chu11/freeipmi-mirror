@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.28 2007-08-17 01:38:17 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.29 2007-08-17 16:32:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2608,7 +2608,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 {
   struct ipmiconsole_ctx_session *s;
   ipmiconsole_packet_type_t p;
-  int ret, rv = -1;
+  int perr, ret, rv = -1;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -3087,9 +3087,9 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           goto calculate_timeout;
         }
       
-      if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+      if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
           /* Attempt to close the session cleanly */
@@ -3110,8 +3110,8 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
           if (write(c->blocking_notification[1], &val, 1) < 0)
             {
-              if ((rv = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
-                IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(rv)));
+              if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+                IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
               IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
               c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
@@ -3124,9 +3124,9 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
             }
         }
 
-      if ((rv = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
         {
-          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(rv)));
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
           /* Attempt to close the session cleanly */
@@ -3137,12 +3137,35 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           goto calculate_timeout;
         }
 
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
+      if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+        {
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
-      /* Indicates current status to user, does not require locking
-       * b/c there is no race.  User gets whatever value they get.
-       */
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            goto close_session;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          goto calculate_timeout;
+        }
+
       c->status = IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED;
+
+      if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+        {
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            goto close_session;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          goto calculate_timeout;
+        } 
+
+      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
 
       /* It's possible the user entered some data before the SOL
        * session was established.  We send that data now.  Otherwise
@@ -3368,7 +3391,7 @@ ipmiconsole_process_ctxs(List console_engine_ctxs, unsigned int *timeout)
   ipmiconsole_ctx_t c;
   int ctxs_count = 0;
   unsigned int min_timeout = UINT_MAX;
-  int rv = -1;
+  int perr, rv = -1;
 
   assert(console_engine_ctxs);
   assert(timeout);
@@ -3393,22 +3416,32 @@ ipmiconsole_process_ctxs(List console_engine_ctxs, unsigned int *timeout)
 
       if ((_process_ctx(c, &ctx_timeout)) < 0)
         {
+          /* On delete, function to cleanup ctx session will be done.
+           * Error will be seen by the user via a EOF on a read() or
+           * EPIPE on a write().
+           */
           if (!list_delete(itr))
             {
               IPMICONSOLE_DEBUG(("list_delete: %s", strerror(errno)));
               goto cleanup;
             }
 
-          /* Indicates current status to user, does not require locking
-           * b/c there is no race.  User gets whatever value they get.
-           */
+          if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+            {
+              IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+              goto cleanup;
+            }
+          
+          /* Indicates current status to user. */
           if (c->errnum != IPMICONSOLE_ERR_SUCCESS)
             c->status = IPMICONSOLE_CONTEXT_STATUS_ERROR;
+          
+          if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+            {
+              IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+              goto cleanup;
+            } 
 
-          /* On delete, function to cleanup ctx session will be done.
-           * Error will be seen by the user via a EOF on a read() or
-           * EPIPE on a write().
-           */
           continue;
         }
 
