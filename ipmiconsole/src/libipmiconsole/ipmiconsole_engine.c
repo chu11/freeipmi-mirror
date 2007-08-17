@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.34 2007-08-17 23:09:08 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.35 2007-08-17 23:43:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1788,7 +1788,7 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
     }
 
   /* "Interrupt" the engine and tell it to get moving along */
-  for (i = 0; i < console_engine_ctxs_notifier; i++)
+  for (i = 0; i < console_engine_ctxs_notifier_num; i++)
     {
       if (write(console_engine_ctxs_notifier[i][1], "1", 1) < 0)
         IPMICONSOLE_DEBUG(("write: %s", strerror(errno)));
