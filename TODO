@@ -34,6 +34,7 @@ pef-config
 bmc-config/pef-config
 -------------------
 bmc/pef-config - parsing bad, re-design, output error info
+installed template
 ---
 load entire file into mem in list/array of sections
 - each section has list of key=value pairs
