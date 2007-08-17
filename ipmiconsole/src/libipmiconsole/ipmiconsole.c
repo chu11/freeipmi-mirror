@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.41 2007-08-17 21:06:44 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.42 2007-08-17 23:36:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -370,7 +370,10 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
       if (_ipmiconsole_block(c) < 0)
         {
           _ipmiconsole_blocking_notification_cleanup(c);
-          goto cleanup;
+          /* don't go to cleanup, b/c the session will automatically
+           * call _ipmiconsole_cleanup_ctx_session.
+           */
+          goto cleanup_ctx_managed_session_data_only;
         }
 
       _ipmiconsole_blocking_notification_cleanup(c);
@@ -409,6 +412,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
 
  cleanup:
   _ipmiconsole_cleanup_ctx_session(c);
+ cleanup_ctx_managed_session_data_only:
   _ipmiconsole_cleanup_ctx_managed_session_data(c);
   _ipmiconsole_init_ctx_managed_session_data(c);
   return -1;
