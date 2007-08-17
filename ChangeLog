@@ -1,7 +1,8 @@
 2007-08-17  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/: Fix documentation/comments.  Continued library
-	fixes.  Support IPMICONSOLE_ENGINE_CLOSE_FD flag.
+	fixes.  Support IPMICONSOLE_ENGINE_CLOSE_FD flag.  Support new
+	IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES error code.
 	
 2007-08-16  Albert Chu <chu11@llnl.gov>
 	

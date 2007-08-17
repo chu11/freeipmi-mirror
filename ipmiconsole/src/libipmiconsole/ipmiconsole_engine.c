@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.31 2007-08-17 17:11:19 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.32 2007-08-17 17:16:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -479,7 +479,10 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) < 0)
     {
       IPMICONSOLE_DEBUG(("socketpair: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      if (errno == EMFILE)
+        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+      else
+        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
   s->user_fd = sv[0];
@@ -507,7 +510,10 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   if ((s->ipmi_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
       IPMICONSOLE_DEBUG(("socket: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      if (errno == EMFILE)
+        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+      else
+        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
 
@@ -558,7 +564,10 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   if (pipe(s->asynccomm) < 0)
     {
       IPMICONSOLE_DEBUG(("pipe: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      if (errno == EMFILE)
+        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+      else
+        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
   c->asynccomm[0] = s->asynccomm[0];

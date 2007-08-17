@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.41 2007-08-17 17:11:19 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.42 2007-08-17 17:16:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -66,9 +66,10 @@ extern "C" {
 #define IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT          26
 #define IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED               27
 #define IPMICONSOLE_ERR_OUT_OF_MEMORY                        28
-#define IPMICONSOLE_ERR_SYSTEM_ERROR                         29
-#define IPMICONSOLE_ERR_INTERNAL_ERROR                       30
-#define IPMICONSOLE_ERR_ERRNUMRANGE                          31
+#define IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES                  29
+#define IPMICONSOLE_ERR_SYSTEM_ERROR                         30
+#define IPMICONSOLE_ERR_INTERNAL_ERROR                       31
+#define IPMICONSOLE_ERR_ERRNUMRANGE                          32
 
 /* 
  * Debug Flags

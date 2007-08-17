@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.39 2007-08-17 17:11:19 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.40 2007-08-17 17:16:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,9 +97,10 @@ static char *ipmiconsole_errmsgs[] =
     "excess retransmissions sent",                      /* 26 */
     "excess errors received",                           /* 27 */
     "out of memory",		                        /* 28 */
-    "internal system error",	                        /* 29 */
-    "internal error",		                        /* 30 */
-    "errnum out of range",	                        /* 31 */
+    "too many open files",                              /* 29 */
+    "internal system error",	                        /* 30 */
+    "internal error",		                        /* 31 */
+    "errnum out of range",	                        /* 32 */
     NULL
   };
 
@@ -167,7 +168,10 @@ _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
   if (pipe(c->blocking_notification) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("pipe: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      if (errno == EMFILE)
+        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+      else
+        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
   c->blocking_submit_requested++;
