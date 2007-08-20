@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.48 2007-08-20 23:22:43 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.49 2007-08-20 23:26:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -56,7 +56,7 @@ extern "C" {
 #define IPMICONSOLE_ERR_SOL_UNAVAILABLE                      16
 #define IPMICONSOLE_ERR_SOL_INUSE                            17
 #define IPMICONSOLE_ERR_SOL_STOLEN                           18
-#define IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION              10
+#define IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION              19
 #define IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION           20
 #define IPMICONSOLE_ERR_BMC_BUSY                             21
 #define IPMICONSOLE_ERR_BMC_ERROR                            22
