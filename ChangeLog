@@ -10,6 +10,17 @@
 	ipmiconsole/src/libipmiconsole/ipmiconsole.c
 	(ipmiconsole_engine_submit): Split back into
 	ipmiconsole_engine_submit and ipmiconsole_engine_submit_block.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit, ipmiconsole_engine_submit_block):
+	Collapse IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED into
+	IPMICONSOLE_ERR_CTX_IS_SUBMITTED.
+
+	* ipmiconsole/: Change
+	IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID to
+	IPMICONSOLE_ERR_BMC_IMPLEMENTATION.  Adjust some error code return
+	values accordingly.
 	
 2007-08-17  Albert Chu <chu11@llnl.gov>
 

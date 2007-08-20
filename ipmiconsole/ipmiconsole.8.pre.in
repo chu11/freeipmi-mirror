@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.6 2007-08-16 00:05:23 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.7 2007-08-20 23:22:43 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -152,10 +152,10 @@ does not use encryption.  Please try to use cipher suite id 0, 1, 2,
 6, 7, or 11.  It may also be possible the encryption requirements are
 not configured correctly on the remote BMC.
 
-"internal BMC settings invalid" - The internal SOL settings on the
-remote BMC are invalid.  Please see the WORKAROUNDS section below for
-possible workarounds.  A workaround may be needed to get around this
-problem, please contact the authors.
+"BMC Implementation" - The BMC on the remote machine has a severe
+problem in its implementation.  Please see the WORKAROUNDS section
+below for possible workarounds.  A workaround may be needed to get
+around this problem, please contact the authors.
 
 "excess retransmissions sent" - An excessive number of retransmissions
 of SOL packets has occurred and 

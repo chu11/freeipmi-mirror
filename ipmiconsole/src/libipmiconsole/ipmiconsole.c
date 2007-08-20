@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.44 2007-08-20 22:47:09 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.45 2007-08-20 23:22:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -76,34 +76,33 @@ static char *ipmiconsole_errmsgs[] =
     "context invalid",		                        /* 2 */
     "engine already setup",	                        /* 3 */
     "engine not setup",		                        /* 4 */
-    "ctx already submitted",	                        /* 5 */
-    "ctx not submitted",	                        /* 6 */
-    "ctx is still submitted",	                        /* 7 */
-    "invalid parameters",	                        /* 8 */
-    "ipmi 2.0 unavailable",	                        /* 9 */
-    "cipher suite id unavailable",                      /* 10 */
-    "hostname invalid",		                        /* 11 */
-    "username invalid",		                        /* 12 */
-    "password invalid",		                        /* 13 */
-    "k_g invalid",		                        /* 14 */
-    "privilege level insufficient",                     /* 15 */
-    "privilege level cannot be obtained for this user", /* 16 */
-    "SOL unavailable",		                        /* 17 */
-    "SOL in use",		                        /* 18 */
-    "SOL session stolen",                               /* 19 */
-    "SOL requires encryption",                          /* 20 */
-    "SOL requires no encryption",                       /* 21 */
-    "BMC Busy",			                        /* 22 */
-    "BMC Error",		                        /* 23 */
-    "internal BMC settings invalid",                    /* 24 */
-    "session timeout",		                        /* 25 */
-    "excess retransmissions sent",                      /* 26 */
-    "excess errors received",                           /* 27 */
-    "out of memory",		                        /* 28 */
-    "too many open files",                              /* 29 */
-    "internal system error",	                        /* 30 */
-    "internal error",		                        /* 31 */
-    "errnum out of range",	                        /* 32 */
+    "ctx not submitted",	                        /* 5 */
+    "ctx is submitted",	                                /* 6 */
+    "invalid parameters",	                        /* 7 */
+    "ipmi 2.0 unavailable",	                        /* 8 */
+    "cipher suite id unavailable",                      /* 9 */
+    "hostname invalid",		                        /* 10 */
+    "username invalid",		                        /* 11 */
+    "password invalid",		                        /* 12 */
+    "k_g invalid",		                        /* 13 */
+    "privilege level insufficient",                     /* 14 */
+    "privilege level cannot be obtained for this user", /* 15 */
+    "SOL unavailable",		                        /* 16 */
+    "SOL in use",		                        /* 17 */
+    "SOL session stolen",                               /* 18 */
+    "SOL requires encryption",                          /* 19 */
+    "SOL requires no encryption",                       /* 20 */
+    "BMC Busy",			                        /* 21 */
+    "BMC Error",		                        /* 22 */
+    "BMC Implementation",                               /* 23 */
+    "session timeout",		                        /* 24 */
+    "excess retransmissions sent",                      /* 25 */
+    "excess errors received",                           /* 26 */
+    "out of memory",		                        /* 27 */
+    "too many open files",                              /* 28 */
+    "internal system error",	                        /* 20 */
+    "internal error",		                        /* 30 */
+    "errnum out of range",	                        /* 31 */
     NULL
   };
 
@@ -169,7 +168,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 
   if (c->session_submitted)
     {
-      c->errnum = IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED;
+      c->errnum = IPMICONSOLE_ERR_CTX_IS_SUBMITTED;
       return -1;
     }
 
@@ -400,7 +399,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
 
   if (c->session_submitted)
     {
-      c->errnum = IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED;
+      c->errnum = IPMICONSOLE_ERR_CTX_IS_SUBMITTED;
       return -1;
     }
 

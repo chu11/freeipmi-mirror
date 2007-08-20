@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.31 2007-08-20 20:05:54 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.32 2007-08-20 23:22:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1965,7 +1965,7 @@ _check_sol_activated(ipmiconsole_ctx_t c)
   if (s->sol_instance_capacity > IPMI_INSTANCES_ACTIVATED_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid instance capacity: %d", s->sol_instance_capacity));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID;
+      c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
       return -1;
     }
   
@@ -2182,7 +2182,7 @@ _check_try_new_port(ipmiconsole_ctx_t c)
       if (s->console_port != console_port)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("multiple new console ports attempted"));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID;
+          c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
           return -1;
         }
       return 1;
@@ -3053,7 +3053,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       
       if (!ret)
         {
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID;
+          c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
 	  s->close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             goto close_session;
@@ -3296,8 +3296,22 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 	      /* +1 b/c one deactivate_active_payloads_count is acceptable and expected */
 	      if (s->deactivate_active_payloads_count > c->acceptable_packet_errors_count + 1)
 		{
+                  /* achu:
+                   *
+                   * I've been going back and forth on what this error
+                   * code should actually be.  It is conceivable that
+                   * this occurs b/c two different libipmiconsole()
+                   * threads are attempting to get the same SOL
+                   * session going, and they are "blocking" each
+                   * other.
+                   *
+                   * For now, we will assume that the above Supermicro 
+                   * issue or something similar is the real problem and it
+                   * is a flaw due to the implementation of the BMC.
+                   * 
+                   */
 		  IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive payload deactivations"));
-		  c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT;
+		  c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
 		  s->close_session_flag++;
 		  if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
 		    goto close_session;
