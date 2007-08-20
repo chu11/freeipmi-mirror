@@ -21,6 +21,10 @@
 	IPMICONSOLE_ERR_INTERNAL_BMC_SETTINGS_INVALID to
 	IPMICONSOLE_ERR_BMC_IMPLEMENTATION.  Adjust some error code return
 	values accordingly.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c: Re-order error
+	codes.
 	
 2007-08-17  Albert Chu <chu11@llnl.gov>
 

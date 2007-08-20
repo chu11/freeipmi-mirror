@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.49 2007-08-20 23:26:25 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.50 2007-08-20 23:31:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -45,9 +45,9 @@ extern "C" {
 #define IPMICONSOLE_ERR_CTX_NOT_SUBMITTED                     5
 #define IPMICONSOLE_ERR_CTX_IS_SUBMITTED                      6
 #define IPMICONSOLE_ERR_PARAMETERS                            7
-#define IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE                  8
-#define IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE           9
-#define IPMICONSOLE_ERR_HOSTNAME_INVALID                     10 
+#define IPMICONSOLE_ERR_HOSTNAME_INVALID                      8 
+#define IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE                  9
+#define IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE          10
 #define IPMICONSOLE_ERR_USERNAME_INVALID                     11
 #define IPMICONSOLE_ERR_PASSWORD_INVALID                     12
 #define IPMICONSOLE_ERR_K_G_INVALID                          13

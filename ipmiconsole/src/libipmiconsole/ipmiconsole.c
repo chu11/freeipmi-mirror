@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.45 2007-08-20 23:22:43 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.46 2007-08-20 23:31:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,9 +79,9 @@ static char *ipmiconsole_errmsgs[] =
     "ctx not submitted",	                        /* 5 */
     "ctx is submitted",	                                /* 6 */
     "invalid parameters",	                        /* 7 */
-    "ipmi 2.0 unavailable",	                        /* 8 */
-    "cipher suite id unavailable",                      /* 9 */
-    "hostname invalid",		                        /* 10 */
+    "hostname invalid",		                        /* 8 */
+    "ipmi 2.0 unavailable",	                        /* 9 */
+    "cipher suite id unavailable",                      /* 10 */
     "username invalid",		                        /* 11 */
     "password invalid",		                        /* 12 */
     "k_g invalid",		                        /* 13 */
