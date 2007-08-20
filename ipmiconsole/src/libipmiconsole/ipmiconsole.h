@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.42 2007-08-17 17:16:33 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.43 2007-08-20 17:14:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -111,12 +111,11 @@ extern "C" {
  * close the file descriptor whenever the context is removed from the
  * engine.  
  *
- * This will change the behavior of how the user will wish to program
- * with the file descriptor.  For example, calls to read() and write()
- * would presumably return with EBADF errors instead of EOF and EPIPE
- * respectively.  Calls to select() would presumably return with EBADF
- * too.  Calls to poll() should presumably not change, although the
- * user should now expect potential POLLNVAL returned events.
+ * This will change the behavior of how the user will program with the
+ * file descriptor.  For example, calls to read() and write() would
+ * likely return with EBADF errors instead of EOF or EPIPE
+ * respectively.  Calls to select() may return with EBADF errors and
+ * calls to poll() could result in POLLNVAL returned events.
  *
  */
 #define IPMICONSOLE_ENGINE_CLOSE_FD             0x00000001
