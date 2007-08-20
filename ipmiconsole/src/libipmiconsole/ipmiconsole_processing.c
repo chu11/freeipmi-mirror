@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.29 2007-08-17 16:32:07 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.30 2007-08-20 20:04:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -49,6 +49,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 #include <limits.h>
 #include <assert.h>
 #include <errno.h>
@@ -3142,6 +3145,24 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            goto close_session;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          goto calculate_timeout;
+        }
+
+      /* Make user_fd writeable */
+      if (setsockopt(s->user_fd,
+                     SOL_SOCKET,
+                     SO_SNDBUF,
+                     &(s->user_fd_sndbuf_orig),
+                     sizeof(s->user_fd_sndbuf_orig)) < 0)
+        {
+          IPMICONSOLE_DEBUG(("setsockopt: %s", strerror(errno)));
+          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+          
           /* Attempt to close the session cleanly */
           s->close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)

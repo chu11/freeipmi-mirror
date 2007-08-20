@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.43 2007-08-20 17:14:55 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.44 2007-08-20 20:04:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -111,11 +111,12 @@ extern "C" {
  * close the file descriptor whenever the context is removed from the
  * engine.  
  *
- * This will change the behavior of how the user will program with the
- * file descriptor.  For example, calls to read() and write() would
- * likely return with EBADF errors instead of EOF or EPIPE
- * respectively.  Calls to select() may return with EBADF errors and
- * calls to poll() could result in POLLNVAL returned events.
+ * This will change the behavior of how the user should program with
+ * the file descriptor.  For example, calls to read() and write()
+ * would likely return with EBADF errors instead of EOF or EPIPE
+ * errors respectively.  Calls to select() may return with EBADF
+ * errors and calls to poll() could result in POLLNVAL returned
+ * events.
  *
  */
 #define IPMICONSOLE_ENGINE_CLOSE_FD             0x00000001
@@ -529,12 +530,11 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * engine.
  *
  * If an error occurs on the engine side (for example a session
- * timeout) the other end of the file descriptor pair will be closed.
- * The SOL session has been closed by the engine, typically due to an
- * error.  The error can be determined via ipmiconsole_ctx_errnum().
- * The user of this file descriptor will get an EOF on a read() or an
- * EPIPE on a write() to the closing of the other end of this
- * descriptor pair.
+ * timeout) the other end of the file descriptor pair (from which this
+ * fd is a part of) will be closed.  The error can be determined via
+ * ipmiconsole_ctx_errnum().  The user of this file descriptor will
+ * typically see this area via an EOF on a read() or an EPIPE on a
+ * write().
  *
  * For alternate file descriptor behavior, see ENGINE flags above.
  */

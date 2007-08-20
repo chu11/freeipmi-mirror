@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.31 2007-08-17 18:30:08 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.32 2007-08-20 20:04:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -223,6 +223,7 @@ struct ipmiconsole_ctx_session {
 
   /* File Descriptor User Interface */
   int user_fd;                  /* never touched by this library */
+  int user_fd_sndbuf_orig;
   int ipmiconsole_fd;
   cbuf_t console_remote_console_to_bmc;
   cbuf_t console_bmc_to_remote_console;

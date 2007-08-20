@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.35 2007-08-17 23:43:25 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.36 2007-08-20 20:04:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -188,6 +188,14 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
 
   if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+
+  /* Make user_fd writeable */
+  if (setsockopt(s->user_fd,
+                 SOL_SOCKET,
+                 SO_SNDBUF,
+                 &(s->user_fd_sndbuf_orig),
+                 sizeof(s->user_fd_sndbuf_orig)) < 0)
+    IPMICONSOLE_DEBUG(("setsockopt: %s", strerror(errno)));
 
   /* Under default circumstances, close only the ipmiconsole_fd so
    * that an error will be detected by the user via a EOF on a read()
@@ -470,6 +478,8 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   int sv[2];
   int secure_malloc_flag;
   int closeonexec;
+  int val;
+  int len;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -492,6 +502,30 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
     }
   s->user_fd = sv[0];
   s->ipmiconsole_fd = sv[1];
+
+  len = sizeof(s->user_fd_sndbuf_orig);
+  if (getsockopt(s->user_fd,
+                 SOL_SOCKET,
+                 SO_SNDBUF,
+                 &(s->user_fd_sndbuf_orig),
+                 &len) < 0)
+    {
+      IPMICONSOLE_DEBUG(("getsockopt: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
+
+  val = 0;
+  if (setsockopt(s->user_fd,
+                 SOL_SOCKET,
+                 SO_SNDBUF,
+                 &val,
+                 sizeof(val)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("setsockopt: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      goto cleanup;
+    }
 
   if ((closeonexec = fcntl(s->user_fd, F_GETFD, 0)) < 0)
     {
