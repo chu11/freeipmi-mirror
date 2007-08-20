@@ -5,6 +5,11 @@
 	(ipmiconsole_engine_submit, ipmiconsole_ctx_create): Rename
 	IPMICONSOLE_CONTEXT_STATUS_NONE to
 	IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit): Split back into
+	ipmiconsole_engine_submit and ipmiconsole_engine_submit_block.
 	
 2007-08-17  Albert Chu <chu11@llnl.gov>
 

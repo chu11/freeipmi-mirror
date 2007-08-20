@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.46 2007-08-20 22:18:12 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.47 2007-08-20 22:47:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -423,32 +423,39 @@ int ipmiconsole_engine_init(unsigned int thread_count,
 /* 
  * ipmiconsole_engine_submit
  *
- * Submit a context to the ipmiconsole engine.  
+ * Submit a context to the ipmiconsole engine.  This function can
+ * return prior to a SOL session being established.  A return value of
+ * 0 indicates the context was submitted properly.  A return value of -1 
+ * indicates an error occurred during the submission.  The error need not
+ * reflect an IPMI related issue.
  *
- * If the context is submitted non-blocking, returns prior to a
- * session is established or an error/timeout occurs.  A return value
- * of 0 vs. -1 indicates only if the context was submitted properly
- * and not an IPMI related error.  The user may use the context file
- * descriptor (retrieved via ipmiconsole_ctx_fd()) or the context
- * status (retrieved via ipmiconsole_ctx_status()) to determine the
- * status of the context.  ipmiconsole_ctx_errnum() can be
- * used to subsequently determine an error that may later occur.
+ * In order to determine if an SOL session has been established, the 
+ * user may:
  *
- * If the context is submitted with blocking,
- * ipmiconsole_engine_submit() will block until a SOL session is
- * established or an error/timeout occurs.  A return value of 0
- * indicates the SOL session was established and a -1 indicates an
- * error occurred.  ipmiconsole_ctx_errnum() can be used to determine
- * the type of error that occured.
+ * A) poll on the context file descriptor, retrieved via
+ * ipmiconsole_ctx_fd().
+ * 
+ * B) poll on the context status, retrieved via ipmiconsole_ctx_status().
  *
- * blocking
- *
- *   If set to non zero, submits a context with blocking.  Otherwise
- *   the context is submitted non-blocking.
+ * ipmiconsole_ctx_errnum() can be used to determine the specific IPMI
+ * related error that occurred.
  *
  * Returns 0 on success, -1 on error
  */
-int ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking);
+int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
+
+/* 
+ * ipmiconsole_engine_submit_block
+ *
+ * Submit a context to the ipmiconsole engine and block until a SOL
+ * session is established or an error/timeout occurs.  A return value
+ * of 0 indicates the SOL session was established and a -1 indicates
+ * an error occurred.  ipmiconsole_ctx_errnum() can be used to
+ * determine the type of error that occured.
+ *
+ * Returns 0 on success, -1 on error
+ */
+int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
 
 /* 
  * ipmiconsole_engine_teardown

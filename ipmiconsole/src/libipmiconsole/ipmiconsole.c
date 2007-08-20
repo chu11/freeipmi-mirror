@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.43 2007-08-20 22:04:26 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.44 2007-08-20 22:47:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -153,6 +153,62 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
   return -1;
 }
 
+int 
+ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
+{
+  int perr;
+
+  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+    return -1;
+
+  if (!ipmiconsole_engine_is_setup())
+    {
+      c->errnum = IPMICONSOLE_ERR_NOT_SETUP;
+      return -1;
+    }
+
+  if (c->session_submitted)
+    {
+      c->errnum = IPMICONSOLE_ERR_CTX_ALREADY_SUBMITTED;
+      return -1;
+    }
+
+  if (_ipmiconsole_init_ctx_session(c) < 0)
+    goto cleanup;
+  
+  if (ipmiconsole_engine_submit_ctx(c) < 0)
+    goto cleanup;
+
+  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+  
+  /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
+   * already be set 
+   */
+  if (c->status == IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED)
+    c->status = IPMICONSOLE_CONTEXT_STATUS_SUBMITTED;
+  
+  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
+
+  c->session_submitted++;
+  return 0;
+
+ cleanup:
+  _ipmiconsole_cleanup_ctx_session(c);
+  _ipmiconsole_cleanup_ctx_managed_session_data(c);
+  _ipmiconsole_init_ctx_managed_session_data(c);
+  return -1;
+}
+
 static int
 _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
 {
@@ -160,27 +216,29 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->blocking_submit_requested);
 
-  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+  if (c->blocking_submit_requested)
     {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
-    }
+      if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+        {
+          IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          return -1;
+        }
 
-  close(c->blocking_notification[0]);
-  close(c->blocking_notification[1]);
-  c->blocking_notification[0] = -1;
-  c->blocking_notification[1] = -1;
-  c->blocking_submit_requested = 0;
-  c->sol_session_established = 0;
-
-  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
+      close(c->blocking_notification[0]);
+      close(c->blocking_notification[1]);
+      c->blocking_notification[0] = -1;
+      c->blocking_notification[1] = -1;
+      c->blocking_submit_requested = 0;
+      c->sol_session_established = 0;
+      
+      if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+        {
+          IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          return -1;
+        }
     }
 
   return 0;
@@ -327,7 +385,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
 }
 
 int 
-ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
+ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
 {
   int perr;
 
@@ -346,47 +404,27 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
       return -1;
     }
 
-  if (blocking)
-    {
-      /* Set to success, so we know if an IPMI error occurred */
-      c->errnum = IPMICONSOLE_ERR_SUCCESS;
-      
-      if (_ipmiconsole_blocking_notification_setup(c) < 0)
-        goto cleanup;
-      
-      if (_ipmiconsole_init_ctx_session(c) < 0)
-        {
-          _ipmiconsole_blocking_notification_cleanup(c);
-          goto cleanup;
-        }
-      
-      if (ipmiconsole_engine_submit_ctx(c) < 0)
-        {
-          _ipmiconsole_blocking_notification_cleanup(c);
-          goto cleanup;
-        }
-      
-      /* sol_session_established flag maybe set in here */
-      if (_ipmiconsole_block(c) < 0)
-        {
-          _ipmiconsole_blocking_notification_cleanup(c);
-          /* don't go to cleanup, b/c the session will automatically
-           * call _ipmiconsole_cleanup_ctx_session.
-           */
-          goto cleanup_ctx_managed_session_data_only;
-        }
+  /* Set to success, so we know if an IPMI error occurred */
+  c->errnum = IPMICONSOLE_ERR_SUCCESS;
+ 
+  if (_ipmiconsole_init_ctx_session(c) < 0)
+    goto cleanup;
 
-      _ipmiconsole_blocking_notification_cleanup(c);
-    }
-  else
-    {
-      if (_ipmiconsole_init_ctx_session(c) < 0)
-        goto cleanup;
-      
-      if (ipmiconsole_engine_submit_ctx(c) < 0)
-        goto cleanup;
-    }
+  if (_ipmiconsole_blocking_notification_setup(c) < 0)
+    goto cleanup;
 
+  if (ipmiconsole_engine_submit_ctx(c) < 0)
+    goto cleanup;
+      
+  /* sol_session_established flag maybe set in here */
+  if (_ipmiconsole_block(c) < 0)
+    {
+      /* don't go to cleanup, b/c the engine will call
+       * _ipmiconsole_cleanup_ctx_session().
+       */
+      goto cleanup_ctx_managed_session_data_only;
+    }
+  
   if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
@@ -413,6 +451,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
  cleanup:
   _ipmiconsole_cleanup_ctx_session(c);
  cleanup_ctx_managed_session_data_only:
+  _ipmiconsole_blocking_notification_cleanup(c);
   _ipmiconsole_cleanup_ctx_managed_session_data(c);
   _ipmiconsole_init_ctx_managed_session_data(c);
   return -1;

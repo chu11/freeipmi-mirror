@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.29 2007-08-20 22:15:52 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.30 2007-08-20 22:47:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -358,7 +358,7 @@ main(int argc, char **argv)
       goto cleanup;
     }
 
-  if (ipmiconsole_engine_submit(c, 1) < 0)
+  if (ipmiconsole_engine_submit_block(c) < 0)
     {
       if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE
