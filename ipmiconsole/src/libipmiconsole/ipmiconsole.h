@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.45 2007-08-20 22:04:27 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.46 2007-08-20 22:18:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -555,9 +555,10 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
  *
  * Destroy a context.  Note that this will always fail if the context
  * is still submitted to the engine and connected to a session.  The
- * user should close the ctx file descriptor in order for the session
- * to clean itself up or be torn down through
- * ipmiconsole_engine_teardown().
+ * user should close the ctx file descriptor (retrieved via
+ * ipmiconsole_ctx_fd()) in order for the session to disconnect.  The
+ * session can also be disconnected by tearing down the entire engine
+ * with ipmiconsole_engine_teardown().
  *
  * Returns 0 on success, -1 on error
  */
