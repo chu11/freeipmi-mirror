@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.44 2007-08-20 20:04:07 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.45 2007-08-20 22:04:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -207,13 +207,14 @@ extern "C" {
  *
  * Returned by ipmiconsole_ctx_status() below.
  * 
- * NONE
+ * NOT_SUBMITTED
  *
  * The context has not been submitted to the engine.
  *
  * SUBMITTED
  *
- * The context has been submitted to the engine.
+ * The context has been submitted to the engine.  SOL has not been
+ * established and an error has not yet occurred.
  *
  * ERROR
  *
@@ -224,10 +225,10 @@ extern "C" {
  * The context has established a SOL session.
  *
  */
-#define IPMICONSOLE_CONTEXT_STATUS_NONE            0
-#define IPMICONSOLE_CONTEXT_STATUS_SUBMITTED       1
-#define IPMICONSOLE_CONTEXT_STATUS_ERROR           2
-#define IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED 3
+#define IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED      0
+#define IPMICONSOLE_CONTEXT_STATUS_SUBMITTED          1
+#define IPMICONSOLE_CONTEXT_STATUS_ERROR              2
+#define IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED    3
 
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 

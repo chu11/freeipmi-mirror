@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.27 2007-08-16 03:59:42 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.28 2007-08-20 22:04:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -290,6 +290,7 @@ main(int argc, char **argv)
   struct ipmiconsole_protocol_config protocol_config;
   int debug_flags = 0;
   int fd = -1;
+  int counter = 0;
 
   err_init(argv[0]);
   err_set_flags(ERROR_STDOUT);
@@ -357,7 +358,7 @@ main(int argc, char **argv)
       goto cleanup;
     }
 
-  if (ipmiconsole_engine_submit(c, 1) < 0)
+  if (ipmiconsole_engine_submit(c, 0) < 0)
     {
       if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
           || ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE
@@ -410,20 +411,51 @@ main(int argc, char **argv)
       struct timeval tv;
       ssize_t n;
       fd_set rds;
+      fd_set wds;
 
       FD_ZERO(&rds);
       FD_SET(fd, &rds);
       FD_SET(STDIN_FILENO, &rds);
+      FD_ZERO(&wds);
+      FD_SET(fd, &wds);
+      
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+
+      if (select(fd + 1, &rds, &wds, NULL, &tv) < 0)
+        {
+          perror("select");
+          goto cleanup;
+        }
+
+      if (counter <= 10)
+        {
+          printf("\r\n[A: %d %d]\r\n", FD_ISSET(fd, &rds), FD_ISSET(fd, &wds));
+          counter++;
+        }
+
+      FD_ZERO(&rds);
+      FD_SET(fd, &rds);
+      FD_SET(STDIN_FILENO, &rds);
+      FD_ZERO(&wds);
+      FD_SET(fd, &wds);
       
       tv.tv_sec = 0;
       tv.tv_usec = 250000;
 
-      if (select(fd + 1, &rds, NULL, NULL, &tv) < 0)
+      if (select(fd + 1, &rds, &wds, NULL, &tv) < 0)
         {
           perror("select");
           goto cleanup;
         }
       
+      if (counter <= 10)
+        {
+          printf("\r\n[B: %d %d]\r\n", FD_ISSET(fd, &rds), FD_ISSET(fd, &wds));
+          counter++;
+        }
+
+
       if (FD_ISSET(STDIN_FILENO, &rds))
 	{
           if ((n = read(STDIN_FILENO, buf, IPMICONSOLE_BUFLEN)) < 0)

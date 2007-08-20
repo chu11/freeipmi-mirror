@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.42 2007-08-17 23:36:18 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.43 2007-08-20 22:04:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -397,7 +397,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c, int blocking)
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
    * already be set 
    */
-  if (c->status == IPMICONSOLE_CONTEXT_STATUS_NONE)
+  if (c->status == IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED)
     c->status = IPMICONSOLE_CONTEXT_STATUS_SUBMITTED;
   
   if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
@@ -587,7 +587,7 @@ ipmiconsole_ctx_create(char *hostname,
       errno = perr;
       goto cleanup;
     }
-  c->status = IPMICONSOLE_CONTEXT_STATUS_NONE;
+  c->status = IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED;
 
   if ((perr = pthread_mutex_init(&c->blocking_mutex, NULL)) != 0)
     {
