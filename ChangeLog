@@ -1,3 +1,7 @@
+2007-08-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/fiid.h: Add more comments.
+	
 2007-08-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,

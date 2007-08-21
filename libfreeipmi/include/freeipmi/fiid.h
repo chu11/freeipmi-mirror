@@ -62,6 +62,26 @@ extern "C" {
 
 /* 
  * FIID Field Flags
+ *
+ * REQUIRED
+ *
+ * The field in the template is required.  If not set, a packet cannot
+ * be created.
+ *
+ * OPTIONAL
+ *
+ * The field in the template is not required.  If not set, a packet
+ * can still be created.
+ *
+ * LENGTH_FIXED
+ *
+ * The number of bits that must be set in the field is fixed.  It
+ * cannot be any other length.
+ *
+ * LENGTH_VARIABLE
+ *
+ * The number of bits that must be set in the field is variable.
+ *
  */
 
 #define FIID_FIELD_REQUIRED         0x00000001
