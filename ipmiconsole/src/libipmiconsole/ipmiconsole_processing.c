@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.33 2007-08-21 00:26:03 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.34 2007-08-21 22:17:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3465,7 +3465,7 @@ ipmiconsole_process_ctxs(List console_engine_ctxs, unsigned int *timeout)
   ipmiconsole_ctx_t c;
   int ctxs_count = 0;
   unsigned int min_timeout = UINT_MAX;
-  int perr, rv = -1;
+  int rv = -1;
 
   assert(console_engine_ctxs);
   assert(timeout);
@@ -3499,22 +3499,6 @@ ipmiconsole_process_ctxs(List console_engine_ctxs, unsigned int *timeout)
               IPMICONSOLE_DEBUG(("list_delete: %s", strerror(errno)));
               goto cleanup;
             }
-
-          if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
-            {
-              IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-              goto cleanup;
-            }
-          
-          /* Indicates current status to user. */
-          if (c->errnum != IPMICONSOLE_ERR_SUCCESS)
-            c->status = IPMICONSOLE_CONTEXT_STATUS_ERROR;
-          
-          if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
-            {
-              IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-              goto cleanup;
-            } 
 
           continue;
         }

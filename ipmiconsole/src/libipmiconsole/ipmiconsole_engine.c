@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.38 2007-08-21 17:27:41 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.39 2007-08-21 22:17:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -107,6 +107,7 @@ static pthread_mutex_t console_engine_ctxs_mutex[IPMICONSOLE_THREAD_COUNT_MAX];
 static int console_engine_ctxs_notifier[IPMICONSOLE_THREAD_COUNT_MAX][2];
 static int console_engine_ctxs_notifier_num = 0;
 
+/* See comments below in _poll_setup(). */
 static int dummy_fd = -1;
 
 struct _ipmiconsole_poll_data {
@@ -121,6 +122,33 @@ struct _ipmiconsole_poll_data {
 #define IPMICONSOLE_SPIN_WAIT_TIME 250000
 
 #define IPMICONSOLE_PIPE_BUFLEN 1024
+
+void
+_ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  /* Notes: don't call
+   * _ipmiconsole_cleanup_ctx_managed_session_data(), that is only
+   * managed from API land.
+   */
+
+  pthread_mutex_destroy(&(c->status_mutex));
+
+  pthread_mutex_destroy(&(c->blocking_mutex));
+
+  ipmiconsole_ctx_debug_cleanup(c);
+
+  pthread_mutex_destroy(&(c->exitted_mutex));
+
+  c->errnum = IPMICONSOLE_ERR_CONTEXT_INVALID;
+  c->magic = ~IPMICONSOLE_CTX_MAGIC;
+  if (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
+    secure_free(c, sizeof(struct ipmiconsole_ctx));
+  else
+    free(c);
+}
 
 void
 _ipmiconsole_init_ctx_managed_session_data(ipmiconsole_ctx_t c)
@@ -165,7 +193,17 @@ _ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
   
   secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
-  /* We have to cleanup, so continue on even if locking fails */
+  /* We have to cleanup, so in general continue on even if locking fails */
+
+  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+          
+  /* Indicates current status to user. */
+  if (c->errnum != IPMICONSOLE_ERR_SUCCESS)
+    c->status = IPMICONSOLE_CONTEXT_STATUS_ERROR;
+          
+  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
   if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));

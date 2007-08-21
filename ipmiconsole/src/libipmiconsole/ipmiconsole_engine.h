@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.h,v 1.4 2007-08-17 03:32:01 chu11 Exp $
+ *  $Id: ipmiconsole_engine.h,v 1.5 2007-08-21 22:17:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -28,6 +28,8 @@
 #define _IPMICONSOLE_ENGINE_H
 
 #include "ipmiconsole.h"
+
+void _ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c);
 
 void _ipmiconsole_init_ctx_managed_session_data(ipmiconsole_ctx_t c);
 
