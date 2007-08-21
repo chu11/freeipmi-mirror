@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.46 2007-08-20 23:31:56 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.47 2007-08-21 17:27:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -428,7 +428,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      goto cleanup;
+      goto cleanup_ctx_managed_session_data_only;
     }
   
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
@@ -441,7 +441,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      goto cleanup;
+      goto cleanup_ctx_managed_session_data_only;
     }
 
   c->session_submitted++;

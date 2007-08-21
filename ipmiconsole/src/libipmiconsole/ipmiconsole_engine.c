@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.37 2007-08-20 20:05:54 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.38 2007-08-21 17:27:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,6 +106,8 @@ static pthread_mutex_t console_engine_ctxs_mutex[IPMICONSOLE_THREAD_COUNT_MAX];
  */
 static int console_engine_ctxs_notifier[IPMICONSOLE_THREAD_COUNT_MAX][2];
 static int console_engine_ctxs_notifier_num = 0;
+
+static int dummy_fd = -1;
 
 struct _ipmiconsole_poll_data {
   struct pollfd *pfds;
@@ -834,6 +836,12 @@ ipmiconsole_engine_setup(unsigned int thread_count)
   console_engine_teardown = 0;
   console_engine_teardown_immediate = 0;
 
+  if ((dummy_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("socket: %s", strerror(errno)));
+      goto cleanup;
+    }
+
   if ((perr = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
@@ -854,8 +862,12 @@ ipmiconsole_engine_setup(unsigned int thread_count)
       close(console_engine_ctxs_notifier[i][0]);
       close(console_engine_ctxs_notifier[i][1]);
     }
+  close(dummy_fd);
+  dummy_fd = -1;
+
   if ((perr = pthread_mutex_unlock(&console_engine_is_setup_mutex)))
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+
   
   return -1;
 }
@@ -950,18 +962,17 @@ _poll_setup(void *x, void *arg)
   if (!cbuf_is_empty(s->ipmi_to_bmc))
     poll_data->pfds[poll_data->pfds_index*3].events |= POLLOUT;
 
-  poll_data->pfds[poll_data->pfds_index*3 + 1].fd = s->asynccomm[0];
-  poll_data->pfds[poll_data->pfds_index*3 + 1].events = 0;
-  poll_data->pfds[poll_data->pfds_index*3 + 1].revents = 0;
-  poll_data->pfds[poll_data->pfds_index*3 + 1].events |= POLLIN;
- 
   /* If the session is being torn down, don't bother settings flags on
-   * this fd.  However, to avoid spinning due to an invalid fd or a
-   * closed fd (i.e. get a POLLINVAL or POLLHUP), re-use
-   * s->asynccomm[0] as a dummy fd.
+   * these fds.  However, to avoid spinning due to an invalid fd or a
+   * closed fd (i.e. get a POLLINVAL or POLLHUP), use the dummy_fd.
    */
   if (!s->close_session_flag)
     {
+      poll_data->pfds[poll_data->pfds_index*3 + 1].fd = s->asynccomm[0];
+      poll_data->pfds[poll_data->pfds_index*3 + 1].events = 0;
+      poll_data->pfds[poll_data->pfds_index*3 + 1].revents = 0;
+      poll_data->pfds[poll_data->pfds_index*3 + 1].events |= POLLIN;
+ 
       poll_data->pfds[poll_data->pfds_index*3 + 2].fd = s->ipmiconsole_fd;
       poll_data->pfds[poll_data->pfds_index*3 + 2].events = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 2].revents = 0;
@@ -971,7 +982,11 @@ _poll_setup(void *x, void *arg)
     }
   else
     {
-      poll_data->pfds[poll_data->pfds_index*3 + 2].fd = s->asynccomm[0];
+      poll_data->pfds[poll_data->pfds_index*3 + 1].fd = dummy_fd;
+      poll_data->pfds[poll_data->pfds_index*3 + 1].events = 0;
+      poll_data->pfds[poll_data->pfds_index*3 + 1].revents = 0;
+
+      poll_data->pfds[poll_data->pfds_index*3 + 2].fd = dummy_fd;
       poll_data->pfds[poll_data->pfds_index*3 + 2].events = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 2].revents = 0;
     }
@@ -1254,6 +1269,13 @@ _console_write(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(!c->session.close_session_flag);	
 
+  /* 
+   * XXX: Shouldn't assume user will read data fast enough?  I could
+   * overrun buffers?
+   *
+   * Deal with it later.
+   */
+
   s = &(c->session);
 
   if ((n = cbuf_read(s->console_bmc_to_remote_console, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
@@ -1454,15 +1476,35 @@ _ipmiconsole_engine(void *arg)
 	      poll_data.pfds_ctxs[i]->session.close_session_flag++;
               continue;
             }
-	  if (poll_data.pfds[i*3+1].revents & POLLERR)
-	    {
-	      IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLERR"));
-	      poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-	      poll_data.pfds_ctxs[i]->session.close_session_flag++;
-	      continue;
-	    }
 	  if (!poll_data.pfds_ctxs[i]->session.close_session_flag)
 	    {
+              if (poll_data.pfds[i*3+1].revents & POLLNVAL)
+                {
+                  /* This indicates the user closed the asynccomm file descriptors
+                   * which is ok.
+                   */
+		  IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLNVAL"));
+		  poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_SUCCESS;
+		  poll_data.pfds_ctxs[i]->session.close_session_flag++;
+		  continue;
+                }
+	      if (poll_data.pfds[i*3+2].revents & POLLHUP)
+		{
+                  /* This indicates the user closed the other end of
+                   * the socketpair so it's ok.
+                   */
+		  IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLHUP"));
+		  poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_SUCCESS;
+		  poll_data.pfds_ctxs[i]->session.close_session_flag++;
+		  continue;
+		}
+              if (poll_data.pfds[i*3+1].revents & POLLERR)
+                {
+                  IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLERR"));
+                  poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+                  poll_data.pfds_ctxs[i]->session.close_session_flag++;
+                  continue;
+                }
 	      if (poll_data.pfds[i*3+2].revents & POLLERR)
 		{
 		  IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLERR"));
@@ -1837,6 +1879,9 @@ ipmiconsole_engine_cleanup(int cleanup_sol_sessions)
       close(console_engine_ctxs_notifier[i][1]);
     }
   
+  close(dummy_fd);
+  dummy_fd = -1;
+
   console_engine_is_setup = 0;
 
   if ((perr = pthread_mutex_lock(&console_engine_teardown_mutex)))

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.51 2007-08-21 00:26:03 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.52 2007-08-21 17:27:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -419,8 +419,10 @@ struct ipmiconsole_protocol_config
 /* 
  * ipmiconsole_engine_init
  *
- * Initialize the ipmiconsole engine.  This function must be called
- * before ipmi console contexts can be submitted into the engine.
+ * Initialize the ipmiconsole engine.  Engine threads will be created
+ * which will manage SOL sessions for the user.  This function must be
+ * called before ipmi console contexts can be submitted into the
+ * engine.
  *
  * thread_count
  * 
@@ -439,22 +441,28 @@ int ipmiconsole_engine_init(unsigned int thread_count,
 /* 
  * ipmiconsole_engine_submit
  *
- * Submit a context to the ipmiconsole engine.  This function can
- * return prior to a SOL session being established.  A return value of
- * 0 indicates the context was submitted properly.  A return value of -1 
- * indicates an error occurred during the submission.  The error need not
- * reflect an IPMI related issue.
+ * Submit a context to the ipmiconsole engine non-blocking.  This
+ * function can return prior to a SOL session being established.  A
+ * return value of 0 indicates the context was submitted properly.  A
+ * return value of -1 indicates an error occurred during the
+ * submission.  The error need not reflect an IPMI related issue.
  *
- * In order to determine if an SOL session has been established, the 
- * user may:
+ * After a context has been submitted, the user may determine if a SOL
+ * session has been established several ways:
  *
- * A) poll on the context file descriptor, retrieved via
- * ipmiconsole_ctx_fd().
- * 
- * B) poll on the context status, retrieved via ipmiconsole_ctx_status().
+ * A) poll on the context status, retrieved via
+ * ipmiconsole_ctx_status().  On an error, ipmiconsole_ctx_errnum()
+ * can be used to determine the specific IPMI related error that
+ * occurred.
  *
- * ipmiconsole_ctx_errnum() can be used to determine the specific IPMI
- * related error that occurred.
+ * B) poll on the context file descriptor, retrieved via
+ * ipmiconsole_ctx_fd().  A SOL establishment error will result in an
+ * EOF being returned on the file descriptor (Assuming the CLOSE_FD
+ * Engine flag has not been set).  A proper SOL establishment can be
+ * determined via a readable character on the file descriptor.  The
+ * use of the OUTPUT_ON_SOL_ESTABLISHED Engine flag above can aid in
+ * this.  On an error, ipmiconsole_ctx_errnum() can be used to
+ * determine the specific IPMI related error that occurred.
  *
  * Returns 0 on success, -1 on error
  */
@@ -466,8 +474,8 @@ int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
  * Submit a context to the ipmiconsole engine and block until a SOL
  * session is established or an error/timeout occurs.  A return value
  * of 0 indicates the SOL session was established and a -1 indicates
- * an error occurred.  ipmiconsole_ctx_errnum() can be used to
- * determine the type of error that occured.
+ * an error occurred.  On an error, ipmiconsole_ctx_errnum() can be
+ * used to determine the type of error that occured.
  *
  * Returns 0 on success, -1 on error
  */
@@ -557,10 +565,9 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * timeout) the other end of the file descriptor pair (from which this
  * fd is a part of) will be closed.  The error can be determined via
  * ipmiconsole_ctx_errnum().  The user of this file descriptor will
- * typically see this area via an EOF on a read() or an EPIPE on a
- * write().
- *
- * For alternate file descriptor behavior, see ENGINE flags above.
+ * typically see this affect via an EOF on a read() or an EPIPE on a
+ * write().  For alternate file descriptor behavior, see ENGINE flags
+ * above.
  */
 int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
 
