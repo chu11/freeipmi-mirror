@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.30 2007-08-20 22:47:09 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.31 2007-08-21 23:44:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -290,7 +290,6 @@ main(int argc, char **argv)
   struct ipmiconsole_protocol_config protocol_config;
   int debug_flags = 0;
   int fd = -1;
-  int counter = 0;
 
   err_init(argv[0]);
   err_set_flags(ERROR_STDOUT);
