@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.48 2007-08-21 22:17:57 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.49 2007-08-21 23:45:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -172,7 +172,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if (_ipmiconsole_init_ctx_session(c) < 0)
+  if (_ipmiconsole_ctx_session_setup(c) < 0)
     goto cleanup;
   
   if (ipmiconsole_engine_submit_ctx(c) < 0)
@@ -202,9 +202,9 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
   return 0;
 
  cleanup:
-  _ipmiconsole_cleanup_ctx_session(c);
-  _ipmiconsole_cleanup_ctx_managed_session_data(c);
-  _ipmiconsole_init_ctx_managed_session_data(c);
+  _ipmiconsole_ctx_session_cleanup(c);
+  _ipmiconsole_ctx_managed_data_cleanup(c);
+  _ipmiconsole_ctx_managed_data_init(c);
   return -1;
 }
 
@@ -406,7 +406,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   /* Set to success, so we know if an IPMI error occurred */
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
  
-  if (_ipmiconsole_init_ctx_session(c) < 0)
+  if (_ipmiconsole_ctx_session_setup(c) < 0)
     goto cleanup;
 
   if (_ipmiconsole_blocking_notification_setup(c) < 0)
@@ -448,11 +448,11 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   return 0;
 
  cleanup:
-  _ipmiconsole_cleanup_ctx_session(c);
+  _ipmiconsole_ctx_session_cleanup(c);
  cleanup_ctx_managed_session_data_only:
   _ipmiconsole_blocking_notification_cleanup(c);
-  _ipmiconsole_cleanup_ctx_managed_session_data(c);
-  _ipmiconsole_init_ctx_managed_session_data(c);
+  _ipmiconsole_ctx_managed_data_cleanup(c);
+  _ipmiconsole_ctx_managed_data_init(c);
   return -1;
 }
 
@@ -510,11 +510,7 @@ ipmiconsole_ctx_create(char *hostname,
         }
     }
 
-  memset(c, '\0', sizeof(struct ipmiconsole_ctx));
-
-  c->magic = IPMICONSOLE_CTX_MAGIC;
-
-  c->errnum = IPMICONSOLE_ERR_SUCCESS;
+  _ipmiconsole_ctx_init(c);
 
   strcpy(c->hostname, hostname);
 
@@ -639,7 +635,7 @@ ipmiconsole_ctx_create(char *hostname,
   c->sol_session_established = 0;
 
   /* only initializes value, no need to destroy/cleanup anything in here */
-  _ipmiconsole_init_ctx_managed_session_data(c);
+  _ipmiconsole_ctx_managed_data_init(c);
 
   c->session_submitted = 0;
 
@@ -655,7 +651,7 @@ ipmiconsole_ctx_create(char *hostname,
 
  cleanup:
 
-  /* Note: Don't call _ipmiconsole_ctx_destroy(), all of the context
+  /* Note: Don't call _ipmiconsole_ctx_cleanup(), all of the context
    * variables may not be setup correctly.
    */
   pthread_mutex_destroy(&(c->status_mutex));
@@ -666,7 +662,7 @@ ipmiconsole_ctx_create(char *hostname,
 
   pthread_mutex_destroy(&(c->exitted_mutex));
 
-/* Note: use protocol_config->security_flags not c->security_flags */ 
+  /* Note: use protocol_config->security_flags not c->security_flags */ 
   if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
@@ -780,7 +776,7 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
   
   if (c->session_submitted)
     {
-      _ipmiconsole_cleanup_ctx_managed_session_data(c);
+      _ipmiconsole_ctx_managed_data_cleanup(c);
 
       if ((perr = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
         {
@@ -805,6 +801,6 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
         }
     }
   
-  _ipmiconsole_ctx_destroy(c);
+  _ipmiconsole_ctx_cleanup(c);
   return 0;
 }

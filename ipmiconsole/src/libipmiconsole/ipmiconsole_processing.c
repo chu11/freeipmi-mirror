@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.34 2007-08-21 22:17:57 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.35 2007-08-21 23:45:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3433,7 +3433,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 
           s->try_new_port_flag = 0;
 
-          if (_ipmiconsole_init_ctx_session_data(c) < 0)
+          if (_ipmiconsole_ctx_session_data_setup(c) < 0)
 	    /* Session is closed, just exit on error */
 	    goto close_session;
           

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.39 2007-08-21 22:17:57 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.40 2007-08-21 23:45:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -66,6 +66,7 @@
 
 #include "cbuf.h"
 #include "list.h"
+#include "secure.h"
 #include "timeval.h"
 #include "ipmiconsole_engine.h"
 #include "ipmiconsole_debug.h"
@@ -124,13 +125,24 @@ struct _ipmiconsole_poll_data {
 #define IPMICONSOLE_PIPE_BUFLEN 1024
 
 void
-_ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_init(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  /* magic may not be set yet, no assert */
+
+  memset(c, '\0', sizeof(struct ipmiconsole_ctx));
+  c->magic = IPMICONSOLE_CTX_MAGIC;
+  c->errnum = IPMICONSOLE_ERR_SUCCESS;
+}
+
+void
+_ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
   /* Notes: don't call
-   * _ipmiconsole_cleanup_ctx_managed_session_data(), that is only
+   * _ipmiconsole_ctx_managed_data_cleanup(), that is only
    * managed from API land.
    */
 
@@ -151,7 +163,7 @@ _ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
 }
 
 void
-_ipmiconsole_init_ctx_managed_session_data(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_managed_data_init(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -163,7 +175,7 @@ _ipmiconsole_init_ctx_managed_session_data(ipmiconsole_ctx_t c)
 }
 
 void
-_ipmiconsole_cleanup_ctx_managed_session_data(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_managed_data_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -180,175 +192,25 @@ _ipmiconsole_cleanup_ctx_managed_session_data(ipmiconsole_ctx_t c)
 }
 
 void
-_ipmiconsole_cleanup_ctx_session(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c)
 {
   struct ipmiconsole_ctx_session *s;
-  int secure_malloc_flag;
-  int perr;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  
+
   s = &(c->session);
-  
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
-  /* We have to cleanup, so in general continue on even if locking fails */
-
-  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-          
-  /* Indicates current status to user. */
-  if (c->errnum != IPMICONSOLE_ERR_SUCCESS)
-    c->status = IPMICONSOLE_CONTEXT_STATUS_ERROR;
-          
-  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-
-  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-
-  if (c->blocking_submit_requested
-      && !c->sol_session_established)
-    {
-      uint8_t val;
-
-      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
-          && s->deactivate_only_succeeded_flag)
-        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
-      else
-        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
-
-      if (write(c->blocking_notification[1], &val, 1) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-        }
-    }
-
-  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-
-  /* Under default circumstances, close only the ipmiconsole_fd so
-   * that an error will be detected by the user via a EOF on a read()
-   * or EPIPE on a write() when reading/writing on their file
-   * descriptor.  The user is then required to close that fd.
-   *
-   * On error situations (i.e. ipmiconsole_engine_submit() doesn't
-   * return to the user w/ success), it is the responsibility of other
-   * code to call _ipmiconsole_cleanup_ctx_managed_session_data().
-   *
-   * The exception to this is when the user specifies the
-   * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Under that case, all bets are
-   * off.
-   */
-  if (s->ipmiconsole_fd)
-    close(s->ipmiconsole_fd);
-  if (c->engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
-    {
-      if (s->user_fd)
-        close(s->user_fd);
-    }
-  if (s->console_remote_console_to_bmc)
-    cbuf_destroy(s->console_remote_console_to_bmc, secure_malloc_flag);
-  if (s->console_bmc_to_remote_console)
-    cbuf_destroy(s->console_bmc_to_remote_console, secure_malloc_flag);
-  if (s->ipmi_fd)
-    close(s->ipmi_fd);
-  if (s->ipmi_from_bmc)
-    cbuf_destroy(s->ipmi_from_bmc, secure_malloc_flag);
-  if (s->ipmi_to_bmc)
-    cbuf_destroy(s->ipmi_to_bmc, secure_malloc_flag);
-  /* Similarly to the user_fd above, it is the responsibility of other
-   * code to close asynccomm[0] and asynccomm[1], which is replicated
-   * in the context.
-   */
-  if (s->obj_rmcp_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_rmcp_hdr_rq);
-  if (s->obj_rmcp_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_rmcp_hdr_rs);
-  if (s->obj_lan_session_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_lan_session_hdr_rq);
-  if (s->obj_lan_session_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_lan_session_hdr_rs);
-  if (s->obj_lan_msg_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_lan_msg_hdr_rq);
-  if (s->obj_lan_msg_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_lan_msg_hdr_rs);
-  if (s->obj_lan_msg_trlr_rs)
-    Fiid_obj_destroy(c, s->obj_lan_msg_trlr_rs);
-  if (s->obj_rmcpplus_session_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_hdr_rq);
-  if (s->obj_rmcpplus_session_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_hdr_rs);
-  if (s->obj_rmcpplus_payload_rs)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_payload_rs);
-  if (s->obj_rmcpplus_session_trlr_rq)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_trlr_rq);
-  if (s->obj_rmcpplus_session_trlr_rs)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_trlr_rs);
-  if (s->obj_authentication_capabilities_v20_rq)
-    Fiid_obj_destroy(c, s->obj_authentication_capabilities_v20_rq);
-  if (s->obj_authentication_capabilities_v20_rs)
-    Fiid_obj_destroy(c, s->obj_authentication_capabilities_v20_rs);
-  if (s->obj_open_session_request)
-    Fiid_obj_destroy(c, s->obj_open_session_request);
-  if (s->obj_open_session_response)
-    Fiid_obj_destroy(c, s->obj_open_session_response);
-  if (s->obj_rakp_message_1)
-    Fiid_obj_destroy(c, s->obj_rakp_message_1);
-  if (s->obj_rakp_message_2)
-    Fiid_obj_destroy(c, s->obj_rakp_message_2);
-  if (s->obj_rakp_message_3)
-    Fiid_obj_destroy(c, s->obj_rakp_message_3);
-  if (s->obj_rakp_message_4)
-    Fiid_obj_destroy(c, s->obj_rakp_message_4);
-  if (s->obj_set_session_privilege_level_rq)
-    Fiid_obj_destroy(c, s->obj_set_session_privilege_level_rq);
-  if (s->obj_set_session_privilege_level_rs)
-    Fiid_obj_destroy(c, s->obj_set_session_privilege_level_rs);
-  if (s->obj_get_channel_payload_support_rq)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_support_rq);
-  if (s->obj_get_channel_payload_support_rs)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_support_rs);
-  if (s->obj_get_payload_activation_status_rq)
-    Fiid_obj_destroy(c, s->obj_get_payload_activation_status_rq);
-  if (s->obj_get_payload_activation_status_rs)
-    Fiid_obj_destroy(c, s->obj_get_payload_activation_status_rs);
-  if (s->obj_activate_payload_rq)
-    Fiid_obj_destroy(c, s->obj_activate_payload_rq);
-  if (s->obj_activate_payload_rs)
-    Fiid_obj_destroy(c, s->obj_activate_payload_rs);
-  if (s->obj_sol_payload_data_rq)
-    Fiid_obj_destroy(c, s->obj_sol_payload_data_rq);
-  if (s->obj_sol_payload_data_rs)
-    Fiid_obj_destroy(c, s->obj_sol_payload_data_rs);
-  if (s->obj_get_channel_payload_version_rq)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_version_rq);
-  if (s->obj_get_channel_payload_version_rs)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_version_rs);
-  if (s->obj_deactivate_payload_rq)
-    Fiid_obj_destroy(c, s->obj_deactivate_payload_rq);
-  if (s->obj_deactivate_payload_rs)
-    Fiid_obj_destroy(c, s->obj_deactivate_payload_rs);
-  if (s->obj_close_session_rq)
-    Fiid_obj_destroy(c, s->obj_close_session_rq);
-  if (s->obj_close_session_rs)
-    Fiid_obj_destroy(c, s->obj_close_session_rs);
-  
   memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
-
-  if ((perr = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-
-  c->exitted++;
-
-  if ((perr = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+  s->user_fd = -1;
+  s->ipmiconsole_fd = -1;
+  s->ipmi_fd = -1;
+  s->asynccomm[0] = -1;
+  s->asynccomm[1] = -1;
 }
 
 int
-_ipmiconsole_init_ctx_session_data(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_session_data_setup(ipmiconsole_ctx_t c)
 {
   struct ipmiconsole_ctx_session *s;
 #ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
@@ -503,7 +365,7 @@ _ipmiconsole_init_ctx_session_data(ipmiconsole_ctx_t c)
 }
 
 int 
-_ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 {
   struct ipmiconsole_ctx_session *s;
   struct sockaddr_in srcaddr;
@@ -517,8 +379,8 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
 
   s = &(c->session);
 
-  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
-  
+  _ipmiconsole_ctx_session_init(c);
+
   /* File Descriptor User Interface */
 
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) < 0)
@@ -779,16 +641,184 @@ _ipmiconsole_init_ctx_session(ipmiconsole_ctx_t c)
   if (!(s->obj_close_session_rs = Fiid_obj_create(c, tmpl_cmd_close_session_rs)))
     goto cleanup;
 
-  if (_ipmiconsole_init_ctx_session_data(c) < 0)
+  if (_ipmiconsole_ctx_session_data_setup(c) < 0)
     goto cleanup;
 
   return 0;
 
  cleanup:
-  _ipmiconsole_cleanup_ctx_session(c);
-  _ipmiconsole_cleanup_ctx_managed_session_data(c);
-  _ipmiconsole_init_ctx_managed_session_data(c);
+  _ipmiconsole_ctx_session_cleanup(c);
+  _ipmiconsole_ctx_managed_data_cleanup(c);
+  _ipmiconsole_ctx_managed_data_init(c);
   return -1;
+}
+
+void
+_ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
+{
+  struct ipmiconsole_ctx_session *s;
+  int secure_malloc_flag;
+  int perr;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  
+  s = &(c->session);
+  
+  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+
+  /* We have to cleanup, so in general continue on even if locking fails */
+
+  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+          
+  /* Indicates current status to user. */
+  if (c->errnum != IPMICONSOLE_ERR_SUCCESS)
+    c->status = IPMICONSOLE_CONTEXT_STATUS_ERROR;
+          
+  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+
+  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+
+  if (c->blocking_submit_requested
+      && !c->sol_session_established)
+    {
+      uint8_t val;
+
+      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+          && s->deactivate_only_succeeded_flag)
+        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
+      else
+        val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
+
+      if (write(c->blocking_notification[1], &val, 1) < 0)
+        {
+          IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
+          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        }
+    }
+
+  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+
+  /* Under default circumstances, close only the ipmiconsole_fd so
+   * that an error will be detected by the user via a EOF on a read()
+   * or EPIPE on a write() when reading/writing on their file
+   * descriptor.  The user is then required to close that fd.
+   *
+   * On error situations (i.e. ipmiconsole_engine_submit() doesn't
+   * return to the user w/ success), it is the responsibility of other
+   * code to call _ipmiconsole_ctx_managed_data_cleanup().
+   *
+   * The exception to this is when the user specifies the
+   * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Under that case, all bets are
+   * off.
+   */
+  if (s->ipmiconsole_fd >= 0)
+    close(s->ipmiconsole_fd);
+  if (c->engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
+    {
+      if (s->user_fd >= 0)
+        close(s->user_fd);
+    }
+  if (s->console_remote_console_to_bmc)
+    cbuf_destroy(s->console_remote_console_to_bmc, secure_malloc_flag);
+  if (s->console_bmc_to_remote_console)
+    cbuf_destroy(s->console_bmc_to_remote_console, secure_malloc_flag);
+  if (s->ipmi_fd >= 0)
+    close(s->ipmi_fd);
+  if (s->ipmi_from_bmc)
+    cbuf_destroy(s->ipmi_from_bmc, secure_malloc_flag);
+  if (s->ipmi_to_bmc)
+    cbuf_destroy(s->ipmi_to_bmc, secure_malloc_flag);
+  /* Similarly to the user_fd above, it is the responsibility of other
+   * code to close asynccomm[0] and asynccomm[1], which is replicated
+   * in the context.
+   */
+  if (s->obj_rmcp_hdr_rq)
+    Fiid_obj_destroy(c, s->obj_rmcp_hdr_rq);
+  if (s->obj_rmcp_hdr_rs)
+    Fiid_obj_destroy(c, s->obj_rmcp_hdr_rs);
+  if (s->obj_lan_session_hdr_rq)
+    Fiid_obj_destroy(c, s->obj_lan_session_hdr_rq);
+  if (s->obj_lan_session_hdr_rs)
+    Fiid_obj_destroy(c, s->obj_lan_session_hdr_rs);
+  if (s->obj_lan_msg_hdr_rq)
+    Fiid_obj_destroy(c, s->obj_lan_msg_hdr_rq);
+  if (s->obj_lan_msg_hdr_rs)
+    Fiid_obj_destroy(c, s->obj_lan_msg_hdr_rs);
+  if (s->obj_lan_msg_trlr_rs)
+    Fiid_obj_destroy(c, s->obj_lan_msg_trlr_rs);
+  if (s->obj_rmcpplus_session_hdr_rq)
+    Fiid_obj_destroy(c, s->obj_rmcpplus_session_hdr_rq);
+  if (s->obj_rmcpplus_session_hdr_rs)
+    Fiid_obj_destroy(c, s->obj_rmcpplus_session_hdr_rs);
+  if (s->obj_rmcpplus_payload_rs)
+    Fiid_obj_destroy(c, s->obj_rmcpplus_payload_rs);
+  if (s->obj_rmcpplus_session_trlr_rq)
+    Fiid_obj_destroy(c, s->obj_rmcpplus_session_trlr_rq);
+  if (s->obj_rmcpplus_session_trlr_rs)
+    Fiid_obj_destroy(c, s->obj_rmcpplus_session_trlr_rs);
+  if (s->obj_authentication_capabilities_v20_rq)
+    Fiid_obj_destroy(c, s->obj_authentication_capabilities_v20_rq);
+  if (s->obj_authentication_capabilities_v20_rs)
+    Fiid_obj_destroy(c, s->obj_authentication_capabilities_v20_rs);
+  if (s->obj_open_session_request)
+    Fiid_obj_destroy(c, s->obj_open_session_request);
+  if (s->obj_open_session_response)
+    Fiid_obj_destroy(c, s->obj_open_session_response);
+  if (s->obj_rakp_message_1)
+    Fiid_obj_destroy(c, s->obj_rakp_message_1);
+  if (s->obj_rakp_message_2)
+    Fiid_obj_destroy(c, s->obj_rakp_message_2);
+  if (s->obj_rakp_message_3)
+    Fiid_obj_destroy(c, s->obj_rakp_message_3);
+  if (s->obj_rakp_message_4)
+    Fiid_obj_destroy(c, s->obj_rakp_message_4);
+  if (s->obj_set_session_privilege_level_rq)
+    Fiid_obj_destroy(c, s->obj_set_session_privilege_level_rq);
+  if (s->obj_set_session_privilege_level_rs)
+    Fiid_obj_destroy(c, s->obj_set_session_privilege_level_rs);
+  if (s->obj_get_channel_payload_support_rq)
+    Fiid_obj_destroy(c, s->obj_get_channel_payload_support_rq);
+  if (s->obj_get_channel_payload_support_rs)
+    Fiid_obj_destroy(c, s->obj_get_channel_payload_support_rs);
+  if (s->obj_get_payload_activation_status_rq)
+    Fiid_obj_destroy(c, s->obj_get_payload_activation_status_rq);
+  if (s->obj_get_payload_activation_status_rs)
+    Fiid_obj_destroy(c, s->obj_get_payload_activation_status_rs);
+  if (s->obj_activate_payload_rq)
+    Fiid_obj_destroy(c, s->obj_activate_payload_rq);
+  if (s->obj_activate_payload_rs)
+    Fiid_obj_destroy(c, s->obj_activate_payload_rs);
+  if (s->obj_sol_payload_data_rq)
+    Fiid_obj_destroy(c, s->obj_sol_payload_data_rq);
+  if (s->obj_sol_payload_data_rs)
+    Fiid_obj_destroy(c, s->obj_sol_payload_data_rs);
+  if (s->obj_get_channel_payload_version_rq)
+    Fiid_obj_destroy(c, s->obj_get_channel_payload_version_rq);
+  if (s->obj_get_channel_payload_version_rs)
+    Fiid_obj_destroy(c, s->obj_get_channel_payload_version_rs);
+  if (s->obj_deactivate_payload_rq)
+    Fiid_obj_destroy(c, s->obj_deactivate_payload_rq);
+  if (s->obj_deactivate_payload_rs)
+    Fiid_obj_destroy(c, s->obj_deactivate_payload_rs);
+  if (s->obj_close_session_rq)
+    Fiid_obj_destroy(c, s->obj_close_session_rq);
+  if (s->obj_close_session_rs)
+    Fiid_obj_destroy(c, s->obj_close_session_rs);
+  
+  _ipmiconsole_ctx_session_init(c);
+
+  if ((perr = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+
+  c->exitted++;
+
+  if ((perr = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 }
 
 int
@@ -822,7 +852,7 @@ ipmiconsole_engine_setup(unsigned int thread_count)
 
   for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
     {
-      if (!(console_engine_ctxs[i] = list_create((ListDelF)_ipmiconsole_cleanup_ctx_session)))
+      if (!(console_engine_ctxs[i] = list_create((ListDelF)_ipmiconsole_ctx_session_cleanup)))
         {
           IPMICONSOLE_DEBUG(("list_create: %s", strerror(errno)));
           goto cleanup;
