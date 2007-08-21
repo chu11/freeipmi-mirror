@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.50 2007-08-20 23:31:56 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.51 2007-08-21 00:26:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,7 +73,8 @@ extern "C" {
 /* 
  * Debug Flags
  *
- * Utilized with ipmiconsole_engine_init() below.
+ * Utilized with ipmiconsole_engine_init() or with struct
+ * ipmiconsole_protocol_config below.
  * 
  * STDOUT       - Output debugging to stdout
  * STDERR       - Output debugging to stderr
@@ -117,8 +118,24 @@ extern "C" {
  * errors and calls to poll() could result in POLLNVAL returned
  * events.
  *
+ * OUTPUT_ON_SOL_ESTABLISHED
+ *
+ * When submitting a context to the engine non-blocking, another way
+ * to determine if the SOL session has been established is if data has
+ * output the remote console and is available for you to read.  Under
+ * most circumstances, this isn't a controllable situation.
+ *
+ * This flag will inform the engine to output a single NUL character
+ * ('\0') to the console once a SOL session has been established.  If
+ * the CLOSE_FD flag isn't used above, this would allow the user to
+ * expect an EOF vs. 1 byte of data on a read() to determine if the
+ * SOL session has failed or succeeded.  The user may choose to output
+ * the NUL anyways (it should do no harm) or simply throw out the
+ * first byte ever read from remote console.
+ *
  */
-#define IPMICONSOLE_ENGINE_CLOSE_FD             0x00000001
+#define IPMICONSOLE_ENGINE_CLOSE_FD                  0x00000001
+#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
        
 /* 
  * Security Flags

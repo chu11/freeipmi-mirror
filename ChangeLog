@@ -25,6 +25,9 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
 	ipmiconsole/src/libipmiconsole/ipmiconsole.c: Re-order error
 	codes.
+
+	* ipmiconsole/src/libipmiconsole/: Support new engine flag
+	IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED.
 	
 2007-08-17  Albert Chu <chu11@llnl.gov>
 

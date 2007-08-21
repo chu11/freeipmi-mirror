@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.32 2007-08-20 23:22:43 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.33 2007-08-21 00:26:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2605,6 +2605,9 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
 
 /* 
  * Return -1 if context has an error or has timed out
+ *
+ * XXX: Argh!  This function has now grown to be nearly 1000 lines
+ * long.  Come back and clean this up.
  */
 static int
 _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
@@ -2994,7 +2997,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
        *
        * There are several possible races here.
        *
-       * 1) It's possible we get a SOL packet before we can a activate
+       * 1) It's possible we get a SOL packet before we get a activate
        * payload response.  For example, the packets are received out
        * of order, or perhaps the activate payload response is lost on
        * the network.
@@ -3089,7 +3092,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 	  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           goto calculate_timeout;
         }
-      
+     
       if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
@@ -3169,6 +3172,60 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         } 
 
       s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
+
+      if (c->engine_flags & IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED)
+        {
+          int n;
+          int dropped;
+          int secure_malloc_flag;
+
+          secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+
+          n = cbuf_write(s->console_bmc_to_remote_console,
+                         "\0",
+                         1,
+                         &dropped,
+                         secure_malloc_flag);
+
+          if (n < 0)
+            {
+              IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
+              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+              /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              goto calculate_timeout;
+            }
+
+          if (n != 1)
+            {
+              IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d", n));
+              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+              /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              goto calculate_timeout;
+            }
+
+          if (dropped)
+            {
+              IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
+              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+              /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                goto close_session;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              goto calculate_timeout;
+            }
+        }
 
       /* It's possible the user entered some data before the SOL
        * session was established.  We send that data now.  Otherwise

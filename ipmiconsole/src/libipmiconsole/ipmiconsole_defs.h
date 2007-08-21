@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.33 2007-08-20 20:05:53 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.34 2007-08-21 00:26:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -194,7 +194,8 @@ typedef enum
 #define IPMICONSOLE_PIPE_GENERATE_BREAK_CODE  0x01
 
 #define IPMICONSOLE_ENGINE_MASK \
-        (IPMICONSOLE_ENGINE_CLOSE_FD)
+        (IPMICONSOLE_ENGINE_CLOSE_FD \
+         | IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED)
 
 #define IPMICONSOLE_DEBUG_MASK \
         (IPMICONSOLE_DEBUG_STDOUT \
