@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.34 2007-08-21 00:26:03 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.35 2007-08-21 17:31:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -406,10 +406,15 @@ struct ipmiconsole_ctx {
    * 
    * The need to manage asynccomm at the API level is b/c users could
    * access it via ipmiconsole_ctx_generate_break().  If one end of
-   * the asynccomm is closed by the engine(), it becomes difficult to
-   * know if we can actually generate a break.  Other methods
-   * attempted before utilized mutexes, etc.  Just moving it to the
-   * API level is easier.
+   * the asynccomm is closed by the engine, it becomes difficult to
+   * know if we can actually generate a break.  
+   * 
+   * We could manage this situation through some mutexes, but that would
+   * slow down closing/generate-break code.  We could capture EPIPE in the
+   * API and return a "IS_CLOSING" error to the user, but that would require
+   * the user to set SIGPIPE to SIG_IGN.  Moving it to all be managed in 
+   * the API level is best.  We just have to check for POLLNVAL in the 
+   * engine poll().
    */
   int user_fd;
   int user_fd_retrieved;        /* flag indicates if user ever retrieved the fd */
