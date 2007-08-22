@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.53 2007-08-22 18:05:47 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.54 2007-08-22 18:09:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -581,8 +581,8 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
 /* 
  * ipmiconsole_ctx_destroy
  *
- * Destroy a context.  Will close all relevant file descriptors
- * including those retrieved via ipmiconsole_ctx_fd().
+ * Destroy a context.  Will close file descriptor retrieved from
+ * ipmiconsole_ctx_fd().
  */
 void ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c);
 
