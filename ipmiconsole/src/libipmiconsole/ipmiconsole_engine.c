@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.43 2007-08-22 18:05:47 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.44 2007-08-22 18:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -164,6 +164,7 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 
   c->errnum = IPMICONSOLE_ERR_CONTEXT_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
+  c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
   if (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
