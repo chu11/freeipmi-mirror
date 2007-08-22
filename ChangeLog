@@ -1,3 +1,9 @@
+2007-08-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/: Begin changing semantics of
+	ipmiconsole_ctx_destroy() and handling of file descriptors.  Now
+	ipmiconsole_ctx_destroy() will kill user managed file descriptors.
+	
 2007-08-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/fiid.h: Add more comments.

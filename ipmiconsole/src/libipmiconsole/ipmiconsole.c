@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.50 2007-08-22 00:22:26 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.51 2007-08-22 18:05:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,6 +106,31 @@ static char *ipmiconsole_errmsgs[] =
     NULL
   };
 
+static void
+_ipmiconsole_ctx_api_managed_session_data_init(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
+
+  /* init to -1 b/c -1 isn't a legit fd */
+  c->user_fd = -1;
+  c->asynccomm[0] = -1;
+  c->asynccomm[1] = -1;
+}
+
+static void
+_ipmiconsole_ctx_api_managed_session_data_cleanup(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
+
+  close(c->user_fd);
+  close(c->asynccomm[0]);
+  close(c->asynccomm[1]);
+}
+
 int 
 ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
 {
@@ -157,7 +182,9 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 {
   int perr;
 
-  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+  if (!c 
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return -1;
 
   if (!ipmiconsole_engine_is_setup())
@@ -215,6 +242,7 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
 
   if (c->blocking_submit_requested)
     {
@@ -251,6 +279,7 @@ _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
   
   if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
     {
@@ -323,6 +352,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
   
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
   assert(c->blocking_submit_requested);
 
   FD_ZERO(&rds);
@@ -388,7 +418,9 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
 {
   int perr;
 
-  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+  if (!c 
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return -1;
 
   if (!ipmiconsole_engine_is_setup())
@@ -639,12 +671,12 @@ ipmiconsole_ctx_create(char *hostname,
 
   c->session_submitted = 0;
 
-  if ((perr = pthread_mutex_init(&c->exitted_mutex, NULL)) != 0)
+  if ((perr = pthread_mutex_init(&c->user_has_destroyed_mutex, NULL)) != 0)
     {
       errno = perr;
       goto cleanup;
     }
-  c->exitted = 0;
+  c->user_has_destroyed = 0;
 
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c;
@@ -660,7 +692,7 @@ ipmiconsole_ctx_create(char *hostname,
 
   ipmiconsole_ctx_debug_cleanup(c);
 
-  pthread_mutex_destroy(&(c->exitted_mutex));
+  pthread_mutex_destroy(&(c->user_has_destroyed_mutex));
 
   /* Note: use protocol_config->security_flags not c->security_flags */ 
   if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
@@ -675,7 +707,8 @@ ipmiconsole_ctx_errnum(ipmiconsole_ctx_t c)
 {
   if (!c)
     return IPMICONSOLE_ERR_CONTEXT_NULL;
-  else if (c->magic != IPMICONSOLE_CTX_MAGIC)
+  else if (c->magic != IPMICONSOLE_CTX_MAGIC
+           || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return IPMICONSOLE_ERR_CONTEXT_INVALID;
   else
     return c->errnum;
@@ -696,7 +729,9 @@ ipmiconsole_ctx_status(ipmiconsole_ctx_t c)
   int status;
   int perr;
 
-  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+  if (!c 
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return -1;
 
   /* Do not check if the context is submitted, b/c it may not be.
@@ -727,7 +762,9 @@ ipmiconsole_ctx_status(ipmiconsole_ctx_t c)
 int 
 ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
 {
-  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+  if (!c 
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return -1;
   
   if (!c->session_submitted)
@@ -736,7 +773,6 @@ ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  c->user_fd_retrieved++;
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c->user_fd;
 }
@@ -746,7 +782,9 @@ ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c)
 {
   uint8_t val;
 
-  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
+  if (!c 
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return -1;
 
   if (!c->session_submitted)
@@ -766,41 +804,45 @@ ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c)
   return 0;
 }
 
-int
+void
 ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
 {
   int perr;
 
-  if (!c || c->magic != IPMICONSOLE_CTX_MAGIC)
-    return -1;
+  if (!c 
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
+    return;
   
   if (c->session_submitted)
     {
       _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
+      _ipmiconsole_ctx_api_managed_session_data_init(c);
 
-      if ((perr = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
+      if ((perr = pthread_mutex_lock(&(c->user_has_destroyed_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-          return -1;
         }
 
-      if (!c->exitted)
-        {
-          if ((perr = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
-            IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-          c->errnum = IPMICONSOLE_ERR_CTX_IS_SUBMITTED;
-          return -1;
-        }
+      if (!c->user_has_destroyed)
+        c->user_has_destroyed++;
 
-      if ((perr = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
+      /* must change magic in this mutex, to avoid racing
+       * to destroy the context.
+       */
+      c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
+
+      if ((perr = pthread_mutex_unlock(&(c->user_has_destroyed_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-          return -1;
         }
+
+      return;
     }
-  
+
+  /* else session never submitted, so we have to cleanup */
+  c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
   _ipmiconsole_ctx_cleanup(c);
-  return 0;
 }

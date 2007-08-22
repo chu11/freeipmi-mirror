@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.52 2007-08-21 17:27:41 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.53 2007-08-22 18:05:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -105,16 +105,16 @@ extern "C" {
  * CLOSE_FD
  *
  * By default, the ipmiconsole engine will not close the file
- * descriptor returned by ipmiconsole_ctx_fd().  The user will be
- * responsible for closing this file descriptor if it is retrieved
- * from ipmiconsole_ctx_fd().  This flag will inform the engine to
- * close the file descriptor whenever the context is removed from the
- * engine.  
+ * descriptor (returned by ipmiconsole_ctx_fd()) when an error occurs
+ * within the ipmiconsole engine (such as a session timeout).  A user
+ * will subsequently see an EOF on a read() or an EPIPE on a write()
+ * to know an error occurred.
  *
- * This will change the behavior of how the user should program with
- * the file descriptor.  For example, calls to read() and write()
- * would likely return with EBADF errors instead of EOF or EPIPE
- * errors respectively.  Calls to select() may return with EBADF
+ * This flag will inform the engine to close the file descriptor on
+ * error.  This will change the behavior of how the user should
+ * program with the file descriptor.  For example, calls to read() and
+ * write() would likely return with EBADF errors instead of EOF or
+ * EPIPE errors respectively.  Calls to select() may return with EBADF
  * errors and calls to poll() could result in POLLNVAL returned
  * events.
  *
@@ -553,9 +553,7 @@ int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * ipmiconsole_ctx_fd
  *
  * Returns a file descriptor for console reading and writing after it
- * has been submitted to the engine.  Returns -1 on error.  The user
- * is always responsible for closing this file descriptor if it has
- * been retrieved.
+ * has been submitted to the engine.  Returns -1 on error.  
  *
  * If the user closes the file descriptor while the serial over lan
  * session is established, the session will be torn down in the
@@ -583,16 +581,10 @@ int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
 /* 
  * ipmiconsole_ctx_destroy
  *
- * Destroy a context.  Note that this will always fail if the context
- * is still submitted to the engine and connected to a session.  The
- * user should close the ctx file descriptor (retrieved via
- * ipmiconsole_ctx_fd()) in order for the session to disconnect.  The
- * session can also be disconnected by tearing down the entire engine
- * with ipmiconsole_engine_teardown().
- *
- * Returns 0 on success, -1 on error
+ * Destroy a context.  Will close all relevant file descriptors
+ * including those retrieved via ipmiconsole_ctx_fd().
  */
-int ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c);
+void ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c);
 
 #ifdef __cplusplus
 }

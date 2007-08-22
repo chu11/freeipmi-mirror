@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.42 2007-08-22 00:22:26 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.43 2007-08-22 18:05:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,9 +132,17 @@ _ipmiconsole_ctx_init(ipmiconsole_ctx_t c)
 
   memset(c, '\0', sizeof(struct ipmiconsole_ctx));
   c->magic = IPMICONSOLE_CTX_MAGIC;
+  c->api_magic = IPMICONSOLE_CTX_API_MAGIC;
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
 }
 
+/* 
+ * ctx_cleanup is ultimately handled by the engine, which is why this
+ * function is in here and not in ipmiconsole.c.  It is accessible by
+ * ipmiconsole.c b/c of the corner situation where the
+ * ipmiconsole_ctx_destroy() was called but the context was never
+ * submitted to the engine.
+ */
 void
 _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 {
@@ -152,7 +160,7 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 
   ipmiconsole_ctx_debug_cleanup(c);
 
-  pthread_mutex_destroy(&(c->exitted_mutex));
+  pthread_mutex_destroy(&(c->user_has_destroyed_mutex));
 
   c->errnum = IPMICONSOLE_ERR_CONTEXT_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
@@ -160,35 +168,6 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
     free(c);
-}
-
-void
-_ipmiconsole_ctx_api_managed_session_data_init(ipmiconsole_ctx_t c)
-{
-  assert(c);
-  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  /* init to -1 b/c -1 isn't a legit fd */
-  c->user_fd = -1;
-  c->asynccomm[0] = -1;
-  c->asynccomm[1] = -1;
-}
-
-void
-_ipmiconsole_ctx_api_managed_session_data_cleanup(ipmiconsole_ctx_t c)
-{
-  assert(c);
-  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  
-  /* Closing handled elsewhere */
-  if (!(c->engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD))
-    {
-      if (!c->user_fd_retrieved)
-        close(c->user_fd);
-    }
-  c->user_fd_retrieved = 0;
-  close(c->asynccomm[0]);
-  close(c->asynccomm[1]);
 }
 
 void
@@ -648,8 +627,9 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 
  cleanup:
   _ipmiconsole_ctx_session_cleanup(c);
-  _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
-  _ipmiconsole_ctx_api_managed_session_data_init(c);
+  /* Previously called here, but this is supposed to be handled in API land */
+  /* _ipmiconsole_ctx_api_managed_session_data_cleanup(c); */
+  /* _ipmiconsole_ctx_api_managed_session_data_init(c); */
   return -1;
 }
 
@@ -706,23 +686,22 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
   /* Under default circumstances, close only the ipmiconsole_fd so
    * that an error will be detected by the user via a EOF on a read()
    * or EPIPE on a write() when reading/writing on their file
-   * descriptor.  The user is then required to close that fd.
+   * descriptor.
    *
    * On error situations (i.e. ipmiconsole_engine_submit() doesn't
    * return to the user w/ success), it is the responsibility of other
    * code to call _ipmiconsole_ctx_api_managed_session_data_cleanup().
    *
    * The exception to this is when the user specifies the
-   * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Under that case, all bets are
-   * off.
+   * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Then we close it here
    */
-  if (s->ipmiconsole_fd >= 0)
-    close(s->ipmiconsole_fd);
   if (c->engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
     {
       if (s->user_fd >= 0)
         close(s->user_fd);
     }
+  if (s->ipmiconsole_fd >= 0)
+    close(s->ipmiconsole_fd);
   if (s->console_remote_console_to_bmc)
     cbuf_destroy(s->console_remote_console_to_bmc, secure_malloc_flag);
   if (s->console_bmc_to_remote_console)
@@ -812,13 +791,22 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
   
   _ipmiconsole_ctx_session_init(c);
 
-  if ((perr = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
+  /* Be careful, if the user already requested to destroy the context,
+   * we can destroy it here.  But if we destroy it, there is no mutex
+   * to unlock.
+   */
+  if ((perr = pthread_mutex_lock(&(c->user_has_destroyed_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
-  c->exitted++;
+  if (c->user_has_destroyed)
+    _ipmiconsole_ctx_cleanup(c);
+  else
+    {
+      /* XXX: need to stick the context somewhere to be destroyed later */
 
-  if ((perr = pthread_mutex_unlock(&(c->exitted_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+      if ((perr = pthread_mutex_unlock(&(c->user_has_destroyed_mutex))) != 0)
+        IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+    }
 }
 
 int

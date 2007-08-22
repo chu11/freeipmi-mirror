@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.31 2007-08-21 23:44:15 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.32 2007-08-22 18:05:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -477,22 +477,7 @@ main(int argc, char **argv)
       printf("\r\n[closing the connection]\r\n");
       close(fd);
     }
-  if (c)
-    {
-      while (1)
-        {
-          if (ipmiconsole_ctx_destroy(c) < 0)
-            {
-              /* Wait a little bit then try again if the session isn't dead */
-              if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_CTX_IS_SUBMITTED)
-                {
-                  sleep(1);
-                  continue;
-                }
-            }
-          break;
-        }
-    }
+  ipmiconsole_ctx_destroy(c);
   ipmiconsole_engine_teardown(0);
 
 #ifndef NDEBUG

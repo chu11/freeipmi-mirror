@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.36 2007-08-22 00:20:43 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.37 2007-08-22 18:05:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -171,10 +171,10 @@ typedef enum
  */
 #define IPMI_INSTANCES_ACTIVATED_LENGTH                       16
 
-#define IPMI_MAX_SIK_KEY_LENGTH                          64
-#define IPMI_MAX_INTEGRITY_KEY_LENGTH                    64
-#define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH              64
-#define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
+#define IPMI_MAX_SIK_KEY_LENGTH                               64
+#define IPMI_MAX_INTEGRITY_KEY_LENGTH                         64
+#define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH                   64
+#define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH      64
  
 #define IPMI_SESSION_SEQUENCE_NUMBER_WINDOW                   16
 #define IPMI_SESSION_MAX_SEQUENCE_NUMBER                      0xFFFFFFFF
@@ -185,6 +185,7 @@ typedef enum
 #define IPMI_SOL_SESSION_INITIAL_PACKET_SEQUENCE_NUMBER            1
 
 #define IPMICONSOLE_CTX_MAGIC                 0x74AB8831
+#define IPMICONSOLE_CTX_API_MAGIC             0x83FB9202
 
 #define IPMICONSOLE_PACKET_BUFLEN             16384
 
@@ -362,7 +363,12 @@ struct ipmiconsole_ctx_session {
 };
 
 struct ipmiconsole_ctx {
+  /* Two magics - first indicates the context is still valid.  Second
+   * is pretty much a flag that indicates the context has been
+   * "destroyed" in API land, and should no longer be used by the API.
+   */
   uint32_t magic;
+  uint32_t api_magic;
   int errnum;
 
   /* Configuration Parameters */
@@ -400,10 +406,6 @@ struct ipmiconsole_ctx {
 
   /* Copy from session context - managed exclusively by API level, not engine 
    *
-   * Note the user_fd_retrieved flag does not need to be locked.  Once
-   * the context has been submitted to the engine, the user_fd is
-   * completely managed by the API.
-   * 
    * The need to manage asynccomm at the API level is b/c users could
    * access it via ipmiconsole_ctx_generate_break().  If one end of
    * the asynccomm is closed by the engine, it becomes difficult to
@@ -417,7 +419,6 @@ struct ipmiconsole_ctx {
    * engine poll().
    */
   int user_fd;
-  int user_fd_retrieved;        /* flag indicates if user ever retrieved the fd */
   int asynccomm[2];
 
   /* session_submitted - flag indicates context submitted to engine
@@ -432,12 +433,12 @@ struct ipmiconsole_ctx {
    */
   unsigned int session_submitted;
 
-  /* exitted - flag and mutex used when the context has been dropped
-   * from the engine and all context related session stuff has been
-   * cleaned up.
+  /* user_has_destroyed - flag and mutex used when the user has destroyed
+   * the context and it is now the responsibility of the
+   * engine/garbage-collector to cleanup.
    */
-  pthread_mutex_t exitted_mutex;
-  unsigned int exitted;
+  pthread_mutex_t user_has_destroyed_mutex;
+  unsigned int user_has_destroyed;
 
   struct ipmiconsole_ctx_session session; 
 };

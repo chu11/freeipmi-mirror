@@ -69,6 +69,11 @@ libfreeipmi udm - re-arch for inband/outofband/lanplus
 split udm into another lib
 udm strerror - w/ buffer for command specific errors
 
+ipmiconsole
+-----------
+retry under a different port
+- has never been tried/tested
+
 doc
 ---
 trouble-shooting guide to error codes
