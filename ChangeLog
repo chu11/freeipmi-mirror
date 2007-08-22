@@ -5,6 +5,8 @@
 	* ipmiconsole/src/libipmiconsole/: Add comments.  Fix various
 	issues including file descriptor POLLNVAL corner case and
 	potential SIGPIPE corner case.  General code cleanup.
+
+	* tag pre_ipmiconsole_ctx_destroy_semantic_change
 	
 2007-08-20  Albert Chu <chu11@llnl.gov>
 
