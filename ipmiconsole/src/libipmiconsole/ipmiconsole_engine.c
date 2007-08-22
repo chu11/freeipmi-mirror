@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.40 2007-08-21 23:45:13 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.41 2007-08-22 00:20:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -210,7 +210,7 @@ _ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c)
 }
 
 int
-_ipmiconsole_ctx_session_data_setup(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c)
 {
   struct ipmiconsole_ctx_session *s;
 #ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
@@ -641,7 +641,7 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
   if (!(s->obj_close_session_rs = Fiid_obj_create(c, tmpl_cmd_close_session_rs)))
     goto cleanup;
 
-  if (_ipmiconsole_ctx_session_data_setup(c) < 0)
+  if (_ipmiconsole_ctx_session_maintenance_information_setup(c) < 0)
     goto cleanup;
 
   return 0;

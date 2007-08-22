@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.h,v 1.6 2007-08-21 23:45:13 chu11 Exp $
+ *  $Id: ipmiconsole_engine.h,v 1.7 2007-08-22 00:20:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,9 +37,9 @@ void _ipmiconsole_ctx_managed_data_init(ipmiconsole_ctx_t c);
 
 void _ipmiconsole_ctx_managed_data_cleanup(ipmiconsole_ctx_t c);
 
-void _ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c);
+int _ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c);
 
-int _ipmiconsole_ctx_session_data_setup(ipmiconsole_ctx_t c);
+void _ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c);
 
 int _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c);
 

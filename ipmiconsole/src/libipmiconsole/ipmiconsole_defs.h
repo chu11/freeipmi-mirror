@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.35 2007-08-21 17:31:37 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.36 2007-08-22 00:20:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -288,10 +288,10 @@ struct ipmiconsole_ctx_session {
   fiid_obj_t obj_close_session_rs;
 
   /* 
-   * Session Data
+   * IPMI Session Maintenance Information
    *
-   * These will need to be re-initialized if the session is being reattempted under
-   * a different port.
+   * Everything below will need to be re-initialized if the session is
+   * being reattempted under a different port.
    */
   struct sockaddr_in addr;
 
