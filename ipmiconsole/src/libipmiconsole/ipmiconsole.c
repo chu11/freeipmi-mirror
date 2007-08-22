@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.49 2007-08-21 23:45:13 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.50 2007-08-22 00:22:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -203,8 +203,8 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 
  cleanup:
   _ipmiconsole_ctx_session_cleanup(c);
-  _ipmiconsole_ctx_managed_data_cleanup(c);
-  _ipmiconsole_ctx_managed_data_init(c);
+  _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
+  _ipmiconsole_ctx_api_managed_session_data_init(c);
   return -1;
 }
 
@@ -451,8 +451,8 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   _ipmiconsole_ctx_session_cleanup(c);
  cleanup_ctx_managed_session_data_only:
   _ipmiconsole_blocking_notification_cleanup(c);
-  _ipmiconsole_ctx_managed_data_cleanup(c);
-  _ipmiconsole_ctx_managed_data_init(c);
+  _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
+  _ipmiconsole_ctx_api_managed_session_data_init(c);
   return -1;
 }
 
@@ -635,7 +635,7 @@ ipmiconsole_ctx_create(char *hostname,
   c->sol_session_established = 0;
 
   /* only initializes value, no need to destroy/cleanup anything in here */
-  _ipmiconsole_ctx_managed_data_init(c);
+  _ipmiconsole_ctx_api_managed_session_data_init(c);
 
   c->session_submitted = 0;
 
@@ -776,7 +776,7 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
   
   if (c->session_submitted)
     {
-      _ipmiconsole_ctx_managed_data_cleanup(c);
+      _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
 
       if ((perr = pthread_mutex_lock(&(c->exitted_mutex))) != 0)
         {

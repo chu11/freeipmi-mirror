@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.41 2007-08-22 00:20:43 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.42 2007-08-22 00:22:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -142,7 +142,7 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
   /* Notes: don't call
-   * _ipmiconsole_ctx_managed_data_cleanup(), that is only
+   * _ipmiconsole_ctx_api_managed_session_data_cleanup(), that is only
    * managed from API land.
    */
 
@@ -163,7 +163,7 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 }
 
 void
-_ipmiconsole_ctx_managed_data_init(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_api_managed_session_data_init(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -175,7 +175,7 @@ _ipmiconsole_ctx_managed_data_init(ipmiconsole_ctx_t c)
 }
 
 void
-_ipmiconsole_ctx_managed_data_cleanup(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_api_managed_session_data_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -648,8 +648,8 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 
  cleanup:
   _ipmiconsole_ctx_session_cleanup(c);
-  _ipmiconsole_ctx_managed_data_cleanup(c);
-  _ipmiconsole_ctx_managed_data_init(c);
+  _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
+  _ipmiconsole_ctx_api_managed_session_data_init(c);
   return -1;
 }
 
@@ -710,7 +710,7 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
    *
    * On error situations (i.e. ipmiconsole_engine_submit() doesn't
    * return to the user w/ success), it is the responsibility of other
-   * code to call _ipmiconsole_ctx_managed_data_cleanup().
+   * code to call _ipmiconsole_ctx_api_managed_session_data_cleanup().
    *
    * The exception to this is when the user specifies the
    * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Under that case, all bets are
