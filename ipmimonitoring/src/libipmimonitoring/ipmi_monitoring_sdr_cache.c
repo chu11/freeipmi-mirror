@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sdr_cache.c,v 1.5 2007-08-02 20:50:15 chu11 Exp $
+ *  $Id: ipmi_monitoring_sdr_cache.c,v 1.6 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -250,7 +250,7 @@ _ipmi_monitoring_sdr_cache_reservation_id(ipmi_monitoring_ctx_t c,
 static int
 _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
                                       uint16_t record_id,
-                                      char *record_buf,
+                                      uint8_t *record_buf,
                                       unsigned int record_buf_len,
                                       uint16_t *reservation_id,
                                       uint16_t *next_record_id)
@@ -288,7 +288,7 @@ _ipmi_monitoring_sdr_cache_get_record(ipmi_monitoring_ctx_t c,
   reservation_id_retry_count = 0;
   while (!record_length)
     {
-      char record_header_buf[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
+      uint8_t record_header_buf[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
       int sdr_record_header_len;
 
       if (fill_cmd_get_sdr(*reservation_id,
@@ -507,7 +507,7 @@ _ipmi_monitoring_sdr_cache_retrieve(ipmi_monitoring_ctx_t c,
   next_record_id = IPMI_SDR_RECORD_ID_FIRST;
   while (next_record_id != IPMI_SDR_RECORD_ID_LAST)
     {
-      char record_buf[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
+      uint8_t record_buf[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
       int record_len;
       
       record_id = next_record_id;

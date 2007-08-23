@@ -20,7 +20,7 @@ community_string_checkout (pef_config_state_data_t *state_data,
                            const struct section *sect,
                            struct keyvalue *kv)
 {
-  uint8_t community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
+  char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   pef_err_t ret;
 
   if ((ret = get_bmc_community_string (state_data,
@@ -49,7 +49,7 @@ community_string_commit (pef_config_state_data_t *state_data,
     return PEF_ERR_FATAL_ERROR;
 
   return set_bmc_community_string (state_data,
-                                   (uint8_t *)kv->value);
+                                   kv->value);
 }
 
 static pef_diff_t
@@ -57,7 +57,7 @@ community_string_diff (pef_config_state_data_t *state_data,
                        const struct section *sect,
                        const struct keyvalue *kv)
 {
-  uint8_t community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
+  char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   pef_err_t rc;
   pef_diff_t ret;
 

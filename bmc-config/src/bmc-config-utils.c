@@ -18,7 +18,7 @@
 #include "bmc-config-utils.h"
 
 bmc_err_t 
-get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
+get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {
   if (state_data->lan_channel_number_initialized)
     {
@@ -36,7 +36,7 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
 }
 
 bmc_err_t 
-get_serial_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
+get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {
   if (state_data->serial_channel_number_initialized)
     {
@@ -54,13 +54,13 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_
 }
 
 bmc_err_t 
-get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num)
+get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_num)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t rc;
   uint64_t val;
-  int8_t num;
+  uint8_t channel_number;
 
   if (state_data->sol_channel_number_initialized)
     {
@@ -71,14 +71,14 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
     goto cleanup;
 
-  if ((rc = get_lan_channel_number (state_data, &num)) != BMC_ERR_SUCCESS)
+  if ((rc = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
     {
       rv = rc;
       goto cleanup;
     }
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (state_data->dev,
-                                                                     num,
+                                                                     channel_number,
 								     IPMI_GET_SOL_PARAMETER,
 								     SET_SELECTOR,
 								     BLOCK_SELECTOR,
@@ -108,13 +108,13 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, int8_t *channel_num
 }
 
 bmc_err_t 
-get_number_of_lan_destinations (bmc_config_state_data_t *state_data, int8_t *number_of_lan_destinations)
+get_number_of_lan_destinations (bmc_config_state_data_t *state_data, uint8_t *number_of_lan_destinations)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   bmc_err_t rv = BMC_ERR_FATAL_ERROR;
   bmc_err_t rc;
   uint64_t val;
-  int8_t num;
+  uint8_t channel_number;
 
   if (state_data->number_of_lan_destinations_initialized)
     {
@@ -125,14 +125,14 @@ get_number_of_lan_destinations (bmc_config_state_data_t *state_data, int8_t *num
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
     goto cleanup;
 
-  if ((rc = get_lan_channel_number (state_data, &num)) != BMC_ERR_SUCCESS)
+  if ((rc = get_lan_channel_number (state_data, &channel_number)) != BMC_ERR_SUCCESS)
     {
       rv = rc;
       goto cleanup;
     }
 
   if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev,
-                                                                        num,
+                                                                        channel_number,
                                                                         IPMI_GET_LAN_PARAMETER,
                                                                         SET_SELECTOR,
                                                                         BLOCK_SELECTOR,

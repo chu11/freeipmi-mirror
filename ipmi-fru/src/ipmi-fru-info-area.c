@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-info-area.c,v 1.2 2007-08-02 20:50:11 chu11 Exp $
+ *  $Id: ipmi-fru-info-area.c,v 1.3 2007-08-23 23:24:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -225,7 +225,7 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
   uint32_t mfg_date_time = 0;
   time_t mfg_date_time_tmp = 0;
   struct tm mfg_date_time_tm;
-  uint8_t mfg_date_time_buf[FRU_BUF_LEN+1];
+  char mfg_date_time_buf[FRU_BUF_LEN+1];
   uint32_t board_offset = 0;
   uint32_t board_max_offset = 0;
   unsigned int len_parsed;
@@ -315,7 +315,6 @@ ipmi_fru_output_board_info_area(ipmi_fru_state_data_t *state_data,
       
       memset(mfg_date_time_buf, '\0', FRU_BUF_LEN+1);
       strftime(mfg_date_time_buf, FRU_BUF_LEN, "%D - %T", &mfg_date_time_tm);
-      
       
       pstdout_printf(state_data->pstate,
                      "  FRU Board Info Area Manufacturing Date/Time: %s\n",

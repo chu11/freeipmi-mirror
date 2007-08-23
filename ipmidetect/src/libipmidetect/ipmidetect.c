@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.4 2007-08-07 02:21:52 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.5 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -419,7 +419,8 @@ _low_timeout_connect(ipmidetect_t handle,
         {
           if (FD_ISSET(fd, &rset) || FD_ISSET(fd, &wset))
             {
-              int len, error;
+              int error;
+              socklen_t len;
 
               len = sizeof(int);
 

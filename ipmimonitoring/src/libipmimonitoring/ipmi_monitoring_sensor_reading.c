@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.c,v 1.3 2007-08-02 20:50:15 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.c,v 1.4 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -371,7 +371,7 @@ _get_sensor_reading(ipmi_monitoring_ctx_t c,
   if ((len = Fiid_obj_get_data(c,
                                obj_sdr_record,
                                "id_string",
-                               sensor_name,
+                               (uint8_t *)sensor_name,
                                sensor_name_len)) < 0)
     return -1;
 
@@ -898,7 +898,7 @@ _get_sensor_group(ipmi_monitoring_ctx_t c,
 static int
 _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
                             unsigned int sensor_reading_flags,
-                            char *sdr_record,
+                            uint8_t *sdr_record,
                             unsigned int sdr_record_len,
                             unsigned int *sensor_groups,
                             unsigned int sensor_groups_len,
@@ -1021,7 +1021,7 @@ _full_record_sensor_reading(ipmi_monitoring_ctx_t c,
 static int
 _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
                                unsigned int sensor_reading_flags,
-                               char *sdr_record,
+                               uint8_t *sdr_record,
                                unsigned int sdr_record_len,
                                unsigned int *sensor_groups,
                                unsigned int sensor_groups_len,
@@ -1133,7 +1133,7 @@ _compact_record_sensor_reading(ipmi_monitoring_ctx_t c,
 
 static int
 _get_sdr_record_id_and_type(ipmi_monitoring_ctx_t c, 
-                            char *sdr_record,
+                            uint8_t *sdr_record,
                             unsigned int sdr_record_len,
                             uint16_t *record_id,
                             uint8_t *record_type)
@@ -1194,7 +1194,7 @@ _get_sdr_record_id_and_type(ipmi_monitoring_ctx_t c,
 int 
 ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c, 
                                    unsigned int sensor_reading_flags,
-                                   char *sdr_record,
+                                   uint8_t *sdr_record,
                                    unsigned int sdr_record_len,
                                    unsigned int *sensor_groups,
                                    unsigned int sensor_groups_len)

@@ -1032,7 +1032,7 @@ struct section *
 pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, int num)
 {
   struct section *sect = NULL;
-  int8_t lan_channel_number;
+  uint8_t lan_channel_number;
   char *strp = NULL;
   pef_err_t ret;
   char buf[64];
@@ -1097,7 +1097,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
    */
   ret = get_lan_channel_number (state_data, &lan_channel_number);
   if (ret == PEF_ERR_SUCCESS)
-    asprintf(&strp, "Give a valid number (LAN = %d)", lan_channel_number);
+    asprintf(&strp, "Give a valid number (LAN = %u)", lan_channel_number);
   if (!strp)
     strp = "Give a valid number\n";
 

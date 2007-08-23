@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.26 2007-08-23 17:34:57 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.27 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,7 +90,7 @@ static struct ipmi_monitoring_ipmi_config conf;
 static char *hostname;
 static char *username;
 static char *password;
-static char *k_g;
+static uint8_t *k_g;
 static int flags;
 static unsigned int record_ids[IPMIMONITORING_MAX_RECORD_IDS];
 static unsigned int record_ids_len;
@@ -191,7 +191,6 @@ cmdline_parse (int key,
   char *kg;
   char *ptr;
   char *tok;
-  int c;
   int tmp;
   int rv;
 
@@ -496,7 +495,7 @@ _secure_initialization(void)
       exit(1);
     }
 
-  if (!(k_g = (char *)secure_malloc(IPMI_MAX_K_G_LENGTH)))
+  if (!(k_g = (unsigned char *)secure_malloc(IPMI_MAX_K_G_LENGTH)))
     {
       perror("malloc");
       exit(1);
@@ -514,7 +513,7 @@ _secure_initialization(void)
       exit(1);
     }
 
-  if (!(k_g = (char *)malloc(IPMI_MAX_K_G_LENGTH)))
+  if (!(k_g = (unsigned char *)malloc(IPMI_MAX_K_G_LENGTH)))
     {
       perror("malloc");
       exit(1);

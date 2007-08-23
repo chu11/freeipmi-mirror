@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.12 2007-08-02 20:50:14 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.13 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -303,7 +303,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
       
       for (i = 0; i < record_count; i++, ipmi_sdr_cache_next(c->sc))
         {
-          char sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
+          uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len;
           
           memset(sdr_record, '\0', IPMI_MONITORING_MAX_SDR_RECORD_LENGTH);
@@ -329,7 +329,7 @@ ipmi_monitoring_sensor_readings_by_record_id(ipmi_monitoring_ctx_t c,
     {
       for (i = 0; i < record_ids_len; i++)
         {
-          char sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
+          uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
           int sdr_record_len;
 
           if (ipmi_sdr_cache_search_record_id(c->sc, record_ids[i]) < 0)
@@ -437,7 +437,7 @@ ipmi_monitoring_sensor_readings_by_sensor_group(ipmi_monitoring_ctx_t c,
       
   for (i = 0; i < record_count; i++, ipmi_sdr_cache_next(c->sc))
     {
-      char sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
+      uint8_t sdr_record[IPMI_MONITORING_MAX_SDR_RECORD_LENGTH];
       int sdr_record_len;
       
       memset(sdr_record, '\0', IPMI_MONITORING_MAX_SDR_RECORD_LENGTH);

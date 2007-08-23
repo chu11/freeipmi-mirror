@@ -61,11 +61,11 @@ pef_err_t set_pef_alert_string (pef_config_state_data_t *state_data,
                                 uint8_t *alert_string);
      
 pef_err_t get_bmc_community_string (pef_config_state_data_t *state_data,
-                                    uint8_t *community_string,
+                                    char *community_string,
                                     uint32_t community_string_len);
 
 pef_err_t set_bmc_community_string (pef_config_state_data_t *state_data,
-                                    uint8_t *community_string);
+                                    char *community_string);
 
 pef_err_t get_bmc_destination_type(pef_config_state_data_t *state_data,
                                    uint8_t destination_selector,

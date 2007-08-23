@@ -289,7 +289,7 @@ struct common_cmd_args
   char *hostname;
   char *username;
   char *password;
-  char k_g[IPMI_MAX_K_G_LENGTH+1];
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   int k_g_len;
   int authentication_type;
   int cipher_suite_id;

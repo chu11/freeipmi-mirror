@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.68 2007-08-02 20:50:06 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.69 2007-08-23 23:24:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,6 +64,8 @@
 
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/ipmi-udm.h>
+
+#include "cmdline-parse-common.h"
 
 /* Driver Types */
 #define DRIVER_TYPE_KCS      0

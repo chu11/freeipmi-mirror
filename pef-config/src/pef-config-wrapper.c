@@ -472,7 +472,7 @@ set_pef_alert_string (pef_config_state_data_t *state_data,
     goto cleanup;
   
   if (alert_string)
-    alert_string_len = strlen(alert_string);
+    alert_string_len = strlen((char *)alert_string);
 
   /* We need to write a nul char, so count it as part of the buflen */
   alert_string_buf_len = alert_string_len + 1;
@@ -524,13 +524,13 @@ set_pef_alert_string (pef_config_state_data_t *state_data,
 
 pef_err_t
 get_bmc_community_string (pef_config_state_data_t *state_data,
-                          uint8_t *community_string,
+                          char *community_string,
                           uint32_t community_string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret;
-  int8_t channel_number;
+  uint8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
     goto cleanup;
@@ -554,7 +554,7 @@ get_bmc_community_string (pef_config_state_data_t *state_data,
 
   if (fiid_obj_get_data (obj_cmd_rs,
                          "community_string",
-                         community_string,
+                         (uint8_t *)community_string,
                          community_string_len) < 0)
     goto cleanup;
 
@@ -567,12 +567,12 @@ get_bmc_community_string (pef_config_state_data_t *state_data,
 
 pef_err_t
 set_bmc_community_string (pef_config_state_data_t *state_data,
-                          uint8_t *community_string)
+                          char *community_string)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret;
-  int8_t channel_number;
+  uint8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -612,7 +612,7 @@ get_bmc_destination_type(pef_config_state_data_t *state_data,
   uint64_t val;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret;
-  int8_t channel_number;
+  uint8_t channel_number;
 
   assert(state_data);
   assert(destination_selector);
@@ -671,7 +671,7 @@ set_bmc_destination_type(pef_config_state_data_t *state_data,
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret;
-  int8_t channel_number;
+  uint8_t channel_number;
 
   assert(state_data);
   assert(destination_selector);
@@ -720,7 +720,7 @@ get_bmc_destination_addresses(pef_config_state_data_t *state_data,
   uint8_t alert_mac_address_bytes[6];
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret;
-  int8_t channel_number;
+  uint8_t channel_number;
 
   assert(state_data);
   assert(destination_selector);
@@ -806,7 +806,7 @@ set_bmc_destination_addresses(pef_config_state_data_t *state_data,
   uint64_t alert_mac_address_val = 0;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret;
-  int8_t channel_number;
+  uint8_t channel_number;
 
   assert(state_data);
   assert(destination_selector);

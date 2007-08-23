@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.c,v 1.6 2007-08-02 20:50:15 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.c,v 1.7 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -119,7 +119,7 @@ struct ipmi_sdr_cache_ctx {
   /* Cache Reading Vars */
   off_t file_size;
   off_t records_start_offset;
-  char *sdr_cache;
+  uint8_t *sdr_cache;
   off_t current_offset;
 };
 
@@ -384,7 +384,7 @@ ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
 
 int 
 ipmi_sdr_cache_record_write(ipmi_sdr_cache_ctx_t c,
-			    char *buf,
+			    uint8_t *buf,
 			    unsigned int buflen)
 {
   ssize_t n;
@@ -839,7 +839,7 @@ ipmi_sdr_cache_search_record_id(ipmi_sdr_cache_ctx_t c, uint16_t record_id)
 
 int 
 ipmi_sdr_cache_record_read(ipmi_sdr_cache_ctx_t c,
-                           char *buf,
+                           uint8_t *buf,
                            unsigned int buflen)
 {
   unsigned int record_length;

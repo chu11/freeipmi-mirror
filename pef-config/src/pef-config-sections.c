@@ -46,7 +46,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
-  int8_t number_of_lan_alert_destinations,
+  uint8_t number_of_lan_alert_destinations,
     number_of_alert_strings,
     number_of_alert_policy_entries,
     number_of_event_filters;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_sdr_cache.h,v 1.2 2007-08-02 20:50:15 chu11 Exp $
+ *  $Id: ipmi_sdr_cache.h,v 1.3 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -81,7 +81,7 @@ int ipmi_sdr_cache_create(ipmi_sdr_cache_ctx_t c,
 			  int create_flags,
 			  int validation_flags);
 int ipmi_sdr_cache_record_write(ipmi_sdr_cache_ctx_t c, 
-				char *buf,
+				uint8_t *buf,
 				unsigned int buflen);
 int ipmi_sdr_cache_complete(ipmi_sdr_cache_ctx_t c);
 
@@ -96,7 +96,7 @@ int ipmi_sdr_cache_seek(ipmi_sdr_cache_ctx_t c, unsigned int index);
 int ipmi_sdr_cache_search_record_id(ipmi_sdr_cache_ctx_t c, uint16_t record_id);
 
 int ipmi_sdr_cache_record_read(ipmi_sdr_cache_ctx_t c, 
-			       char *buf,
+			       uint8_t *buf,
 			       unsigned int buflen);
 
 int ipmi_sdr_cache_close(ipmi_sdr_cache_ctx_t c);

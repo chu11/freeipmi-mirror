@@ -332,7 +332,7 @@ password20_checkout (bmc_config_state_data_t *state_data,
 
   if ((ret = check_bmc_user_password20 (state_data,
                                         userid,
-                                        "foobar")) == BMC_DIFF_FATAL_ERROR)
+                                        (uint8_t *)"foobar")) == BMC_DIFF_FATAL_ERROR)
     return BMC_ERR_FATAL_ERROR;
 
   if (ret == BMC_DIFF_NON_FATAL_ERROR)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_sensor_reading.h,v 1.1 2007-01-30 21:52:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_sensor_reading.h,v 1.2 2007-08-23 23:24:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,7 +31,7 @@
 
 int ipmi_monitoring_get_sensor_reading(ipmi_monitoring_ctx_t c, 
                                        unsigned int sensor_reading_flags,
-                                       char *sdr_record,
+                                       uint8_t *sdr_record,
                                        unsigned int sdr_record_len,
                                        unsigned int *sensor_groups,
                                        unsigned int sensor_groups_len);

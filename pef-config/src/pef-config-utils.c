@@ -23,7 +23,7 @@
 #include "pef-config-utils.h"
 
 pef_err_t
-get_lan_channel_number (struct pef_config_state_data *state_data, int8_t *channel_number)
+get_lan_channel_number (struct pef_config_state_data *state_data, uint8_t *channel_number)
 {
   assert(state_data);
   assert(channel_number);
@@ -44,13 +44,13 @@ get_lan_channel_number (struct pef_config_state_data *state_data, int8_t *channe
 }
 
 pef_err_t
-get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, int8_t *number_of_lan_alert_destinations)
+get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, uint8_t *number_of_lan_alert_destinations)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t rc;
   uint64_t val;
-  int8_t channel_number;
+  uint8_t channel_number;
   
   assert(state_data);
   assert(number_of_lan_alert_destinations);
@@ -100,7 +100,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
 }
 
 pef_err_t
-get_number_of_alert_strings (struct pef_config_state_data *state_data, int8_t *number_of_alert_strings)
+get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *number_of_alert_strings)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -147,7 +147,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, int8_t *n
 }
 
 pef_err_t
-get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, int8_t *number_of_alert_policy_entries)
+get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, uint8_t *number_of_alert_policy_entries)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -194,7 +194,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, in
 }
 
 pef_err_t
-get_number_of_event_filters (struct pef_config_state_data *state_data, int8_t *number_of_event_filters)
+get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *number_of_event_filters)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
