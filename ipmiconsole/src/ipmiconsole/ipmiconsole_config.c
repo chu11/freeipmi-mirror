@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.23 2007-08-23 16:46:45 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.24 2007-08-23 17:34:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -257,8 +257,8 @@ cmdline_parse (int key,
       if ((tmp = parse_workaround_flags(arg)) < 0)
         err_exit("Command Line Error: invalid workaround flags\n");
       /* convert to ipmiconsole flags */
-      if (tmp & IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES;
+      if (tmp & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
       if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
       if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
@@ -458,8 +458,8 @@ _cb_workaround_flags(conffile_t cf,
   if ((tmp = parse_workaround_flags(data->string)) < 0)
     err_exit("Config File Error: invalid workaround flags\n");
   /* convert to ipmiconsole flags */
-  if (tmp & IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
-    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES;
+  if (tmp & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
   if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
   else if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)

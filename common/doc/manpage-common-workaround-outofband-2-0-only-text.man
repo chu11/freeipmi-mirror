@@ -1,7 +1,8 @@
 
 Asus P5M2: The motherboard does not properly report username
-capabilities, leading to invalid username errors.  In order to work
-around this issue, the "usercap" workaround must be specified.
+capabilities and or K_g status, leading to invalid username or K_g
+errors.  In order to work around this issue, the "authcap" workaround
+must be specified.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.25 2007-08-11 00:00:26 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.26 2007-08-23 17:34:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -431,8 +431,8 @@ cmdline_parse (int key,
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE;
       if (tmp & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER;
-      if (tmp & IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
-        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES;
+      if (tmp & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+        conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
       if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
         conf.workaround_flags |= IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
       if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)

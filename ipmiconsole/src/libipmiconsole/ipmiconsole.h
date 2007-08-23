@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.55 2007-08-23 00:23:54 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.56 2007-08-23 17:34:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -171,11 +171,12 @@ extern "C" {
  *
  * Utilized with struct ipmiconsole_protocol_config below.
  * 
- * USERNAME_CAPABILITIES
+ * AUTHENTICATION_CAPABILITIES
  *
  * Discoverd on an ASUS P5M2 motherboard, the motherboard does not
- * properly report username capabilities, leading to invalid username
- * errors.  This workaround flag will work around the problem.
+ * properly report username capabilities or K_g status, leading to
+ * invalid username or K_g errors.  This workaround flag will work
+ * around the problem.
  *
  * INTEL_2_0
  *
@@ -212,11 +213,11 @@ extern "C" {
  * Note: Non-logical bitmask order is set for consistency of masks
  * with libfreeipmi bitmasks.
  */
-#define IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES 0x00000010
-#define IPMICONSOLE_WORKAROUND_INTEL_2_0             0x00010000
-#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0        0x00020000
-#define IPMICONSOLE_WORKAROUND_SUN_2_0               0x00040000
-#define IPMICONSOLE_WORKAROUND_ASUS_2_0              0x00080000
+#define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
+#define IPMICONSOLE_WORKAROUND_INTEL_2_0                   0x00010000
+#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0              0x00020000
+#define IPMICONSOLE_WORKAROUND_SUN_2_0                     0x00040000
+#define IPMICONSOLE_WORKAROUND_ASUS_2_0                    0x00080000
 
 /*
  * Context Status

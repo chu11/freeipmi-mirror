@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.6 2007-08-11 03:36:17 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.7 2007-08-23 17:34:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -70,8 +70,8 @@ ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
     flags |= WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE;
   if (tmp_flags & IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER)
     flags |= WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER;
-  if (tmp_flags & IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
-    flags |= WORKAROUND_FLAG_USERNAME_CAPABILITIES;
+  if (tmp_flags & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
+    flags |= WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES;
   if (tmp_flags & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
     flags |= WORKAROUND_FLAG_INTEL_2_0_SESSION;
   if (tmp_flags & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
@@ -120,11 +120,11 @@ ipmipower_workarounds_string(uint32_t workaround_flags)
       strcat(workarounds_buffer, IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR);
       not_first++;
     }
-  if (workaround_flags & WORKAROUND_FLAG_USERNAME_CAPABILITIES)
+  if (workaround_flags & WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES_STR);
+      strcat(workarounds_buffer, IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR);
       not_first++;
     }
   if (workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
@@ -163,7 +163,7 @@ ipmipower_workarounds_list(void)
            IPMI_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION_STR,
            IPMI_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE_STR,
            IPMI_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
-           IPMI_WORKAROUND_FLAGS_USERNAME_CAPABILITIES_STR,
+           IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES_STR,
            IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR,
            IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR,
            IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION_STR);

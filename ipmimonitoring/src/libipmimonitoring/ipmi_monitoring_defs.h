@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.6 2007-08-11 00:00:26 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.7 2007-08-23 17:34:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -99,7 +99,7 @@
    | IPMI_MONITORING_WORKAROUND_FLAGS_FORCE_PERMSG_AUTHENTICATION \
    | IPMI_MONITORING_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE \
    | IPMI_MONITORING_WORKAROUND_FLAGS_BIG_ENDIAN_SEQUENCE_NUMBER \
-   | IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES \
+   | IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES \
    | IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION \
    | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION \
    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION)

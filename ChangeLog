@@ -8,6 +8,9 @@
 
 	* ipmiconsole/src/libipmiconsole/: General code cleanup.
 
+	* Globally change "usercap" workaround to "authcap" to work around
+	all authentication capabilities checks.
+
 2007-08-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_garbage_collector.h,
