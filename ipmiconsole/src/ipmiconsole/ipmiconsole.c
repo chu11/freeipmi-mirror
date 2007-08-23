@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.32 2007-08-22 18:05:47 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.33 2007-08-23 16:46:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -378,7 +378,7 @@ main(int argc, char **argv)
           || ipmiconsole_ctx_errnum(c) ==  IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
         printf("[error received]: %s\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
       else
-        fprintf(stderr, "ipmiconsole_submit: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+        fprintf(stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
       goto cleanup;
     }
 

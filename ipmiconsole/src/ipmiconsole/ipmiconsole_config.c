@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.22 2007-08-13 20:16:21 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.23 2007-08-23 16:46:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -72,6 +72,8 @@ static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_OUTOFBAND_NO_TIMEOUT,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
+    {"cipher-suite-id", 'c', "CIPHER-SUITE-ID", OPTION_HIDDEN,                         
+     "Specify the IPMI 2.0 cipher suite ID to use.", 14},
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     {"config-file", IPMICONSOLE_CONFIG_FILE_KEY, "FILE", 0,

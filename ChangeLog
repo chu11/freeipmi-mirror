@@ -1,3 +1,11 @@
+2007-08-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole_config.c: Add back 'c'
+	option for backwards compatability.
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Fix debug
+	output typo.
+	
 2007-08-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_garbage_collector.h,
