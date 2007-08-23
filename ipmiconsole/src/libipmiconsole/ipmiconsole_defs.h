@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.37 2007-08-22 18:05:47 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.38 2007-08-23 00:23:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -433,12 +433,13 @@ struct ipmiconsole_ctx {
    */
   unsigned int session_submitted;
 
-  /* user_has_destroyed - flag and mutex used when the user has destroyed
+  /* user_has_destroyed - flags and mutex used when the user has destroyed
    * the context and it is now the responsibility of the
    * engine/garbage-collector to cleanup.
    */
-  pthread_mutex_t user_has_destroyed_mutex;
+  pthread_mutex_t destroyed_mutex;
   unsigned int user_has_destroyed;
+  unsigned int moved_to_destroyed;
 
   struct ipmiconsole_ctx_session session; 
 };

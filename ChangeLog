@@ -1,8 +1,14 @@
 2007-08-22  Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_garbage_collector.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_garbage_collector.c:
+	New files.
+	
 	* ipmiconsole/src/libipmiconsole/: Begin changing semantics of
 	ipmiconsole_ctx_destroy() and handling of file descriptors.  Now
 	ipmiconsole_ctx_destroy() will kill user managed file descriptors.
+	Support garbage collector thread and move context destruction from
+	API land to engine land.  Minor bug fixes and code cleanup.
 	
 2007-08-21  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.54 2007-08-22 18:09:45 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.55 2007-08-23 00:23:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -484,14 +484,14 @@ int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
 /* 
  * ipmiconsole_engine_teardown
  *
- * Teardown the ipmiconsole engine.  This function will not destroy
- * the actual contexts submitted.
+ * Teardown the ipmiconsole engine.  This function will destroy
+ * all threads and contexts managed by the engine.
  *
  * cleanup_sol_sessions
  *
  *   If set to non zero, SOL sessions will be torn down cleanly.
  *   ipmiconsole_engine_teardown() will block until all active ipmi
- *   sessions have closed or timed out.
+ *   sessions have been closed cleanly or timed out.
  */
 void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
 

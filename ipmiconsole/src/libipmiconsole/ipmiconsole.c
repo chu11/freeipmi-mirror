@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.51 2007-08-22 18:05:47 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.52 2007-08-23 00:23:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -671,12 +671,13 @@ ipmiconsole_ctx_create(char *hostname,
 
   c->session_submitted = 0;
 
-  if ((perr = pthread_mutex_init(&c->user_has_destroyed_mutex, NULL)) != 0)
+  if ((perr = pthread_mutex_init(&c->destroyed_mutex, NULL)) != 0)
     {
       errno = perr;
       goto cleanup;
     }
   c->user_has_destroyed = 0;
+  c->moved_to_destroyed = 0;
 
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c;
@@ -692,7 +693,7 @@ ipmiconsole_ctx_create(char *hostname,
 
   ipmiconsole_ctx_debug_cleanup(c);
 
-  pthread_mutex_destroy(&(c->user_has_destroyed_mutex));
+  pthread_mutex_destroy(&(c->destroyed_mutex));
 
   /* Note: use protocol_config->security_flags not c->security_flags */ 
   if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
@@ -807,8 +808,6 @@ ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c)
 void
 ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
 {
-  int perr;
-
   if (!c 
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
@@ -816,10 +815,12 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
   
   if (c->session_submitted)
     {
+      int perr;
+
       _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
       _ipmiconsole_ctx_api_managed_session_data_init(c);
 
-      if ((perr = pthread_mutex_lock(&(c->user_has_destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_lock(&(c->destroyed_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -833,7 +834,7 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
        */
       c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
 
-      if ((perr = pthread_mutex_unlock(&(c->user_has_destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock(&(c->destroyed_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;

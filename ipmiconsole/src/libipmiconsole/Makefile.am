@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.7 2007-03-16 12:05:50 ab Exp $
+## $Id: Makefile.am,v 1.8 2007-08-23 00:23:54 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -15,6 +15,7 @@ noinst_HEADERS = cbuf.h \
 		 ipmiconsole_debug.h \
 		 ipmiconsole_engine.h \
 		 ipmiconsole_fiid_wrappers.h \
+		 ipmiconsole_garbage_collector.h \
 		 ipmiconsole_packet.h \
 		 ipmiconsole_processing.h
 		 
@@ -28,6 +29,7 @@ libipmiconsole_la_SOURCES = cbuf.c \
 			    ipmiconsole_debug.c \
 			    ipmiconsole_engine.c \
 			    ipmiconsole_fiid_wrappers.c \
+			    ipmiconsole_garbage_collector.c \
 			    ipmiconsole_packet.c \
 			    ipmiconsole_processing.c
 
