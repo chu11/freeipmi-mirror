@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.16.6.3 2007-08-13 20:26:15 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.16.6.4 2007-08-23 23:24:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,25 +80,25 @@ static void
 _usage(void)
 {
   fprintf(stderr, "Usage: ipmiconsole [OPTIONS]\n"
-          "-H --help                     Output Help\n"
-          "-V --version                  Output Version\n"
-	  "-h --hostname str             Hostname\n"
-          "-u --username name            Username\n"
-          "-p --password pw              Password\n"
-          "-P --password-prompt          Prompt for Password\n"
-          "-k --k-g str                  K_g Key\n"
-          "-K --k-g-prompt               Prompt for K_g Key\n"
-	  "-l --privilege str            Privilege\n"
-	  "-c --cipher-suite-id num      Cipher Suite Privilege\n"
-          "-C --config                   Select alternate config file\n"
-          "-N --dont-steal               Do not steal in use SOL sessions by default\n"
-          "-T --deactivate               Deactivate a SOL session only\n"
-          "-L --lock-memory              Lock memory\n"
-          "-A --username-capabilities    Workaround Username Capabilities bugs\n"
-          "-I --intel-2-0-session        Workaround Intel IPMI bugs\n"
-          "-S --supermicro-2-0-session   Workaround Supermicro IPMI bugs\n"
-          "-U --sun-2-0-session          Workaround Sun IPMI bugs\n"
-          "-X --asus-2-0-session         Workaround Asus IPMI bugs\n");
+          "-H --help                         Output Help\n"
+          "-V --version                      Output Version\n"
+	  "-h --hostname str                 Hostname\n"
+          "-u --username name                Username\n"
+          "-p --password pw                  Password\n"
+          "-P --password-prompt              Prompt for Password\n"
+          "-k --k-g str                      K_g Key\n"
+          "-K --k-g-prompt                   Prompt for K_g Key\n"
+	  "-l --privilege str                Privilege\n"
+	  "-c --cipher-suite-id num          Cipher Suite Privilege\n"
+          "-C --config                       Select alternate config file\n"
+          "-N --dont-steal                   Do not steal in use SOL sessions by default\n"
+          "-T --deactivate                   Deactivate a SOL session only\n"
+          "-L --lock-memory                  Lock memory\n"
+          "-A --authentication-capabilities  Workaround Authentication Capabilities bugs\n"
+          "-I --intel-2-0-session            Workaround Intel IPMI bugs\n"
+          "-S --supermicro-2-0-session       Workaround Supermicro IPMI bugs\n"
+          "-U --sun-2-0-session              Workaround Sun IPMI bugs\n"
+          "-X --asus-2-0-session             Workaround Asus IPMI bugs\n");
 #ifndef NDEBUG
   fprintf(stderr,
           "-D --debug                    Turn on debugging\n"
@@ -143,7 +143,7 @@ _cmdline_parse(int argc, char **argv)
       {"dont-steal",               0, NULL, 'N'},
       {"deactivate",               0, NULL, 'T'},
       {"lock-memory",              0, NULL, 'L'},
-      {"username-capabilities",    0, NULL, 'A'},
+      {"authentication-capabilities",    0, NULL, 'A'},
       {"intel-2-0-session",        0, NULL, 'I'},
       {"supermicro-2-0-session",   0, NULL, 'S'},
       {"sun-2-0-session",          0, NULL, 'U'},
@@ -285,9 +285,9 @@ _cmdline_parse(int argc, char **argv)
           conf->lock_memory++;
           conf->lock_memory_set_on_cmdline++;
           break;
-        case 'A':       /* --username-capabilities */
-          conf->username_capabilities++;
-          conf->username_capabilities_set_on_cmdline++;
+        case 'A':       /* --authentication-capabilities */
+          conf->authentication_capabilities++;
+          conf->authentication_capabilities_set_on_cmdline++;
           break;
         case 'I':       /* --intel-2-0-session */
           conf->intel_2_0_session++;
@@ -485,7 +485,7 @@ _config_file_parse(void)
     cipher_suite_id_flag,
     dont_steal_flag,
     lock_memory_flag,
-    username_capabilities_flag,
+    authentication_capabilities_flag,
     intel_2_0_session_flag,
     supermicro_2_0_session_flag,
     sun_2_0_session_flag,
@@ -588,15 +588,15 @@ _config_file_parse(void)
         conf->lock_memory_set_on_cmdline
       },
       {
-        "username_capabilities", 
+        "authentication_capabilities", 
         CONFFILE_OPTION_BOOL, 
         -1, 
         _cb_bool,
         1, 
         0, 
-        &username_capabilities_flag, 
-        &(conf->username_capabilities),
-        conf->username_capabilities_set_on_cmdline
+        &authentication_capabilities_flag, 
+        &(conf->authentication_capabilities),
+        conf->authentication_capabilities_set_on_cmdline
       },
       {
         "intel_2_0_session", 

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.6.6.3 2007-08-13 20:22:44 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.6.6.4 2007-08-23 23:24:33 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -89,8 +89,8 @@ Specify if in use SOL sessions should not be stolen by default.
 .I lock-memory enable|disable
 Specify if memory should be locked by default.
 .TP
-.I username_capabilities enable|disable
-Specify if workarounds for username capabilities should be used.
+.I authentication_capabilities enable|disable
+Specify if workarounds for username capabilities and K_g status should be used.
 .TP
 .I intel_2_0_session enable|disable
 Specify if workarounds for an Intel ipmi 2.0 session should be used.

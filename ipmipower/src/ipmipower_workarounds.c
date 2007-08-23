@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.3.6.1 2007-08-11 10:32:05 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.3.6.2 2007-08-23 23:24:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -51,7 +51,7 @@ static char workarounds_buffer[IPMIPOWER_WORKAROUNDS_BUFLEN];
 #define WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO_STR      "idzero"
 #define WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE_STR   "unexpectedauth"
 #define WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR  "endianseq"
-#define WORKAROUND_FLAG_USERNAME_CAPABILITIES_STR       "usercap"
+#define WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES_STR "authcap"
 #define WORKAROUND_FLAG_INTEL_2_0_SESSION_STR           "intel20"
 #define WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR      "supermicro20"
 #define WORKAROUND_FLAG_SUN_2_0_SESSION_STR             "sun20"
@@ -78,8 +78,8 @@ ipmipower_workarounds_parse(char *str, uint32_t *workaround_flags)
         flags |= WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE;
       else if (!strcasecmp(tok, WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR))
         flags |= WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER;
-      else if (!strcasecmp(tok, WORKAROUND_FLAG_USERNAME_CAPABILITIES_STR))
-        flags |= WORKAROUND_FLAG_USERNAME_CAPABILITIES;
+      else if (!strcasecmp(tok, WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES_STR))
+        flags |= WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES;
       else if (!strcasecmp(tok, WORKAROUND_FLAG_INTEL_2_0_SESSION_STR))
         flags |= WORKAROUND_FLAG_INTEL_2_0_SESSION;
       else if (!strcasecmp(tok, WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR))
@@ -136,11 +136,11 @@ ipmipower_workarounds_string(uint32_t workaround_flags)
       strcat(workarounds_buffer, WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR);
       not_first++;
     }
-  if (workaround_flags & WORKAROUND_FLAG_USERNAME_CAPABILITIES)
+  if (workaround_flags & WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES)
     {
       if (not_first)
         strcat(workarounds_buffer, ",");
-      strcat(workarounds_buffer, WORKAROUND_FLAG_USERNAME_CAPABILITIES_STR);
+      strcat(workarounds_buffer, WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES_STR);
       not_first++;
     }
   if (workaround_flags & WORKAROUND_FLAG_INTEL_2_0_SESSION)
@@ -179,7 +179,7 @@ ipmipower_workarounds_list(void)
            WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO_STR,
            WORKAROUND_FLAG_CHECK_UNEXPECTED_AUTHCODE_STR,
            WORKAROUND_FLAG_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
-           WORKAROUND_FLAG_USERNAME_CAPABILITIES_STR,
+           WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES_STR,
            WORKAROUND_FLAG_INTEL_2_0_SESSION_STR,
            WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION_STR,
            WORKAROUND_FLAG_SUN_2_0_SESSION_STR);

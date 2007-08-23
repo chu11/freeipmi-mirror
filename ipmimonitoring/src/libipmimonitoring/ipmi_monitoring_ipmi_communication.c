@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.10.2 2007-08-11 10:32:05 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.3.10.3 2007-08-23 23:24:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -722,7 +722,7 @@ _check_authentication_capabilities(ipmi_monitoring_ctx_t c)
    * vs. null vs non-null username capabilities.  The workaround is to
    * skip these checks.
    */
-  if (!(c->comm.workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES))
+  if (!(c->comm.workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES))
     {
       /* Does the remote BMC's authentication configuration support
        * our username/password combination

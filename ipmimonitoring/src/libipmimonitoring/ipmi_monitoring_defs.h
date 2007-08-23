@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_defs.h,v 1.4.10.1 2007-08-11 10:32:04 chu11 Exp $
+ *  $Id: ipmi_monitoring_defs.h,v 1.4.10.2 2007-08-23 23:24:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,7 +97,7 @@
 
 #define IPMI_MONITORING_WORKAROUND_FLAGS_MASK \
   (IPMI_MONITORING_WORKAROUND_FLAGS_SESSION_ID_ZERO \
-   | IPMI_MONITORING_WORKAROUND_FLAGS_USERNAME_CAPABILITIES)
+   | IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
 
 #define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK \
   (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE \

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.16.2.3 2007-08-13 20:22:45 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.16.2.4 2007-08-23 23:24:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,11 +117,13 @@ extern "C" {
 /* 
  * Workaround Flags
  *
- * USERNAME_CAPABILITIES
+ * AUTHENTICATION_CAPABILITIES
  *
  * Discoverd on an ASUS P5M2 motherboard, the motherboard does not
- * properly report username capabilities, leading to invalid username
- * errors.  This workaround flag will work around the problem.
+ * properly report username capabilities or K_g status, leading to
+ * invalid username or K_g errors.  This workaround flag will work
+ * around the problem.
+ *
  * INTEL_2_0
  *
  * All currently known IPMI 2.0 implementations on Intel motherboards
@@ -154,11 +156,11 @@ extern "C" {
  *
  * Work around Asus IPMI 2.0 SOL payload size bug.
  */
-#define IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES 0x00000010
-#define IPMICONSOLE_WORKAROUND_INTEL_2_0             0x00000001
-#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0        0x00000002
-#define IPMICONSOLE_WORKAROUND_SUN_2_0               0x00000004
-#define IPMICONSOLE_WORKAROUND_ASUS_2_0              0x00000008
+#define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
+#define IPMICONSOLE_WORKAROUND_INTEL_2_0                   0x00000001
+#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0              0x00000002
+#define IPMICONSOLE_WORKAROUND_SUN_2_0                     0x00000004
+#define IPMICONSOLE_WORKAROUND_ASUS_2_0                    0x00000008
 
 
 /*

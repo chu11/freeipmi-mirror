@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.16.2.3 2007-08-13 20:22:44 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.16.2.4 2007-08-23 23:24:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -346,8 +346,8 @@ main(int argc, char **argv)
   if (conf->lock_memory)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_LOCK_MEMORY;
   protocol_config.workaround_flags = 0;
-  if (conf->username_capabilities)
-    protocol_config.workaround_flags |= IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES;
+  if (conf->authentication_capabilities)
+    protocol_config.workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
   if (conf->intel_2_0_session)
     protocol_config.workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
   if (conf->supermicro_2_0_session)

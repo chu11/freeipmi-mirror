@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.13.6.3 2007-08-13 20:27:41 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.13.6.4 2007-08-23 23:24:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1760,10 +1760,12 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
    * Discovered on an ASUS P5M2 motherboard.
    *
    * The ASUS motherboard reports incorrect settings of anonymous
-   * vs. null vs non-null username capabilities.  The workaround is to
-   * skip these checks.
+   * vs. null vs non-null username capabilities.  The motherboard also
+   * reports K_g status incorrectly too.  The workaround is to skip
+   * all these checks.
+   *
    */
-  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES))
+  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES))
     {
       if ((!strlen((char *)c->username) && !strlen((char *)c->password)
            && !authentication_status_anonymous_login)
@@ -1776,13 +1778,13 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
           c->errnum = IPMICONSOLE_ERR_USERNAME_INVALID;
           return -1;
         }
-    }
   
-  if ((!c->k_g_configured && authentication_status_k_g)
-      || (c->k_g_configured && !authentication_status_k_g))
-    {
-      c->errnum = IPMICONSOLE_ERR_K_G_INVALID;
-      return -1;
+      if ((!c->k_g_configured && authentication_status_k_g)
+          || (c->k_g_configured && !authentication_status_k_g))
+        {
+          c->errnum = IPMICONSOLE_ERR_K_G_INVALID;
+          return -1;
+        }
     }
 
   return 0;

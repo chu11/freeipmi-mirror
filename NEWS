@@ -1,3 +1,9 @@
+0.4.4
+-----
+o Alter userncame-capabilities workaround to authentication-capabilities workaronds
+to cover more situations.
+o Fix manpage typos.
+
 0.4.3
 -----
 o Add ASUS P5M2 workarounds in ipmipower, ipmiconsole, and ipmimonitoring.
