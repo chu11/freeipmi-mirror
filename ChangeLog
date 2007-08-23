@@ -6,8 +6,6 @@
 	* ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Fix debug
 	output typo.
 
-	* tag pre_restructure_libipmiconsole_code
-	
 2007-08-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_garbage_collector.h,
