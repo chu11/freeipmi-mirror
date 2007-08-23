@@ -54,6 +54,12 @@ remote console access.  The goal of this library is to abstract away
 all of the underlying IPMI/SOL details away from the user into a
 relatively simple file descriptor interface.
 
+Initial attempts were made to create a TCP socket like interface,
+however there were limitations on mapping IPMI like connections to a
+TCP like interface.  For example, TCP non-blocking connection
+semantics could not be met reliably and portably.  IPMI error
+conditions could not be mapped into TCP error conditions as well.
+
 Libipmimonitoring
 -----------------
 

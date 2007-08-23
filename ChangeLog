@@ -10,6 +10,8 @@
 	Support garbage collector thread and move context destruction from
 	API land to engine land.  Minor bug fixes and code cleanup.
 	
+	* tag post_ipmiconsole_ctx_destroy_semantic_change
+
 2007-08-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/fiid.h: Add more comments.
