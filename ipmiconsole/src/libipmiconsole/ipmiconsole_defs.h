@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.38 2007-08-23 00:23:55 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.39 2007-08-23 17:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -221,6 +221,30 @@ typedef enum
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR       0x2
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED 0x3
 
+/* Protocol/User Config Data */
+struct ipmiconsole_ctx_config {
+  /* Configuration Parameters */
+  char hostname[MAXHOSTNAMELEN+1];
+  uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1];
+  uint8_t password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
+  uint8_t k_g[IPMI_MAX_K_G_LENGTH];
+  unsigned int k_g_len;
+  uint8_t privilege_level;
+  uint8_t cipher_suite_id;
+
+  unsigned int session_timeout_len;
+  unsigned int retransmission_timeout_len;
+  unsigned int retransmission_backoff_count;
+  unsigned int keepalive_timeout_len;
+  unsigned int retransmission_keepalive_timeout_len;
+  unsigned int acceptable_packet_errors_count;
+  unsigned int maximum_retransmission_count;
+  uint32_t engine_flags;
+  uint32_t debug_flags;
+  uint32_t security_flags;
+  uint32_t workaround_flags;
+};
+
 struct ipmiconsole_ctx_session {
 
   /* File Descriptor User Interface */
@@ -371,26 +395,7 @@ struct ipmiconsole_ctx {
   uint32_t api_magic;
   int errnum;
 
-  /* Configuration Parameters */
-  char hostname[MAXHOSTNAMELEN+1];
-  uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint8_t password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
-  uint8_t k_g[IPMI_MAX_K_G_LENGTH];
-  unsigned int k_g_len;
-  uint8_t privilege_level;
-  uint8_t cipher_suite_id;
-
-  unsigned int session_timeout_len;
-  unsigned int retransmission_timeout_len;
-  unsigned int retransmission_backoff_count;
-  unsigned int keepalive_timeout_len;
-  unsigned int retransmission_keepalive_timeout_len;
-  unsigned int acceptable_packet_errors_count;
-  unsigned int maximum_retransmission_count;
-  uint32_t engine_flags;
-  uint32_t debug_flags;
-  uint32_t security_flags;
-  uint32_t workaround_flags;
+  struct ipmiconsole_ctx_config config;
 
   pthread_mutex_t status_mutex;
   unsigned int status;

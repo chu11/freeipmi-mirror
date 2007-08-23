@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.3 2007-08-16 20:58:24 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.4 2007-08-23 17:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -293,11 +293,11 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
 
   s = &(c->session);
 
-  if (c->debug_flags & IPMICONSOLE_DEBUG_STDOUT)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDOUT)
     fd = STDOUT_FILENO;
-  else if (c->debug_flags & IPMICONSOLE_DEBUG_STDERR)
+  else if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDERR)
     fd = STDERR_FILENO;
-  else if (c->debug_flags & IPMICONSOLE_DEBUG_FILE)
+  else if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     fd = c->debug_fd;
   else
     return 0;
@@ -317,7 +317,7 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
       || p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS)
     {
       if (ipmi_dump_lan_packet(fd,
-			       c->hostname,
+			       c->config.hostname,
 			       hdr,
 			       buf,
 			       buflen,
@@ -342,7 +342,7 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
           || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
 	{
 	  if (ipmi_dump_rmcpplus_packet(fd,
-					c->hostname,
+					c->config.hostname,
 					hdr,
 					IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
 					IPMI_INTEGRITY_ALGORITHM_NONE,
@@ -364,7 +364,7 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
       else
 	{
 	  if (ipmi_dump_rmcpplus_packet(fd,
-					c->hostname,
+					c->config.hostname,
 					hdr,
 					s->authentication_algorithm,
 					s->integrity_algorithm,
@@ -483,11 +483,11 @@ ipmiconsole_packet_dump_unknown(ipmiconsole_ctx_t c,
 
   s = &(c->session);
 
-  if (c->debug_flags & IPMICONSOLE_DEBUG_STDOUT)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDOUT)
     fd = STDOUT_FILENO;
-  else if (c->debug_flags & IPMICONSOLE_DEBUG_STDERR)
+  else if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDERR)
     fd = STDERR_FILENO;
-  else if (c->debug_flags & IPMICONSOLE_DEBUG_FILE)
+  else if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     fd = c->debug_fd;
   else
     return 0;
@@ -505,7 +505,7 @@ ipmiconsole_packet_dump_unknown(ipmiconsole_ctx_t c,
   if (rv)
     {
       if (ipmi_dump_lan_packet(fd,
-			       c->hostname,
+			       c->config.hostname,
 			       hdr,
 			       buf,
 			       buflen,
@@ -520,7 +520,7 @@ ipmiconsole_packet_dump_unknown(ipmiconsole_ctx_t c,
   else
     {
       if (ipmi_dump_rmcpplus_packet(fd,
-				    c->hostname,
+				    c->config.hostname,
 				    hdr,
 				    s->authentication_algorithm,
 				    s->integrity_algorithm,
@@ -770,19 +770,19 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
    *
    * Intel IPMI 2.0 implementations pad their usernames.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
       && p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen((char *)c->username))
-        strcpy((char *)username_buf, (char *)c->username);
+      if (strlen((char *)c->config.username))
+        strcpy((char *)username_buf, (char *)c->config.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      if (strlen((char *)c->username))
-        username = c->username;
+      if (strlen((char *)c->config.username))
+        username = c->config.username;
       else
         username = NULL;
       username_len = (username) ? strlen((char *)username) : 0;
@@ -793,8 +793,8 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
     password = NULL;
   else
     {
-      if (strlen((char *)c->password))
-	password = c->password;
+      if (strlen((char *)c->config.password))
+	password = c->config.password;
       else
 	password = NULL;
     }
@@ -807,7 +807,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
    * when the passwords are > 16 bytes long.  The BMCs probably assume
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
       && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -929,7 +929,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ)
     {
       if (fill_cmd_get_channel_authentication_capabilities_v20(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-							       c->privilege_level,
+							       c->config.privilege_level,
 							       IPMI_GET_IPMI_V20_EXTENDED_DATA,
 							       s->obj_authentication_capabilities_v20_rq) < 0)
 	{
@@ -947,8 +947,8 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
        *
        * Intel IPMI 2.0 implementations don't support the highest level privilege.
        */
-      if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
-        privilege_level = c->privilege_level;
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+        privilege_level = c->config.privilege_level;
       else
         privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
 
@@ -974,7 +974,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
        *
        * Intel IPMI 2.0 implementations use this flag incorrectly.
        */
-      if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = s->name_only_lookup;
@@ -983,7 +983,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 					managed_system_session_id,
 					s->remote_console_random_number,
 					IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-					c->privilege_level,
+					c->config.privilege_level,
                                         name_only_lookup,
 					username,
 					username_len,
@@ -1022,7 +1022,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 													 managed_system_random_number_len,
 													 s->remote_console_session_id,
 													 s->name_only_lookup,
-													 c->privilege_level,
+													 c->config.privilege_level,
 													 username,
                                                                                                          username_len,
 													 key_exchange_authentication_code,
@@ -1048,7 +1048,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
     }
   else if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ)
     {
-      if (fill_cmd_set_session_privilege_level(c->privilege_level,
+      if (fill_cmd_set_session_privilege_level(c->config.privilege_level,
 					       s->obj_set_session_privilege_level_rq) < 0)
 	{
  	  IPMICONSOLE_CTX_DEBUG(c, ("fill_cmd_set_session_privilege_level: p = %d; %s", p, strerror(errno)));
@@ -1243,8 +1243,8 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
 
   s = &(c->session);
 
-  if (strlen((char *)c->password))
-    password = c->password;
+  if (strlen((char *)c->config.password))
+    password = c->config.password;
   else
     password = NULL;
 

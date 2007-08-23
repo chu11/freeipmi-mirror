@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.46 2007-08-23 00:45:53 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.47 2007-08-23 17:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -177,7 +177,7 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
   c->errnum = IPMICONSOLE_ERR_CONTEXT_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
-  if (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
+  if (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
     free(c);
@@ -223,7 +223,7 @@ _ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c)
 
 #ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   memset(&hent, '\0', sizeof(struct hostent));
-  if (gethostbyname_r(c->hostname,
+  if (gethostbyname_r(c->config.hostname,
                       &hent,
                       buf,
                       GETHOSTBYNAME_AUX_BUFLEN,
@@ -400,7 +400,7 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
   /* Copy for API level */
   c->user_fd = s->user_fd;
 
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if (!(s->console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
@@ -506,7 +506,7 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 
   /* Data based on Configuration Parameters */
 
-  if (ipmi_cipher_suite_id_to_algorithms(c->cipher_suite_id,
+  if (ipmi_cipher_suite_id_to_algorithms(c->config.cipher_suite_id,
                                          &(s->authentication_algorithm),
                                          &(s->integrity_algorithm),
                                          &(s->confidentiality_algorithm)) < 0)
@@ -616,7 +616,7 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
   
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* We have to cleanup, so in general continue on even if locking fails */
 
@@ -638,7 +638,7 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
     {
       uint8_t val;
 
-      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+      if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
           && s->deactivate_only_succeeded_flag)
         val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
       else
@@ -666,7 +666,7 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
    * The exception to this is when the user specifies the
    * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Then we close it here
    */
-  if (c->engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
+  if (c->config.engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
     {
       if (s->user_fd >= 0)
         close(s->user_fd);
@@ -1133,7 +1133,7 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
 
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if ((len = ipmi_lan_recvfrom(s->ipmi_fd, 
                                buffer, 
@@ -1325,7 +1325,7 @@ _console_read(ipmiconsole_ctx_t c)
 
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if ((len = read(s->ipmiconsole_fd,
                   buffer,

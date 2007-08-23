@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.10 2007-08-17 16:32:07 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.11 2007-08-23 17:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -111,8 +111,8 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
 
   s = &(c->session);
 
-  if (strlen((char *)c->password))
-    password = c->password;
+  if (strlen((char *)c->config.password))
+    password = c->config.password;
   else
     password = NULL;
 
@@ -616,22 +616,22 @@ ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconso
    *
    * Intel IPMI 2.0 implementations don't support the highest level privilege.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
-    rv = (privilege == c->privilege_level) ? 1 : 0;
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+    rv = (privilege == c->config.privilege_level) ? 1 : 0;
   else
     {
-      if (c->privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+      if (c->config.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
           && (privilege == IPMI_PRIVILEGE_LEVEL_USER
               || privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
               || privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
 	      || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
-      else if (c->privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+      else if (c->config.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
                && (privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
                    || privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
-      else if (c->privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
+      else if (c->config.privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN
                && (privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
 		   || privilege == IPMI_PRIVILEGE_LEVEL_OEM))
         rv = 1;
@@ -672,18 +672,18 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    *
    * Intel IPMI 2.0 implementations pad their usernames.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen((char *)c->username))
-        strcpy((char *)username_buf, (char *)c->username);
+      if (strlen((char *)c->config.username))
+        strcpy((char *)username_buf, (char *)c->config.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      if (strlen((char *)c->username))
-        username = c->username;
+      if (strlen((char *)c->config.username))
+        username = c->config.username;
       else
         username = NULL;
       username_len = (username) ? strlen((char *)username) : 0;
@@ -694,7 +694,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * Supermicro IPMI 2.0 implementations may have invalid payload lengths
    * on the RAKP response packet.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0)
     {
       uint8_t keybuf[IPMICONSOLE_PACKET_BUFLEN];
       int32_t keybuf_len;
@@ -736,8 +736,8 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 	}
     }
 
-  if (strlen((char *)c->password))
-    password = c->password;
+  if (strlen((char *)c->config.password))
+    password = c->config.password;
   else
     password = NULL;
   password_len = (password) ? strlen((char *)password) : 0;
@@ -748,7 +748,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * when the passwords are > 16 bytes long.  The BMCs probably assume
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
       && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -760,7 +760,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * The key exchange authentication code is the wrong length.  We
    * need to shorten it.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0
       && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
@@ -833,7 +833,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
                                                                         managed_system_guid,
                                                                         managed_system_guid_len,
                                                                         s->name_only_lookup,
-                                                                        c->privilege_level,
+                                                                        c->config.privilege_level,
                                                                         username,
                                                                         username_len,
                                                                         s->obj_rakp_message_2)) < 0)
@@ -868,7 +868,7 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
    * value based on the integrity algorithm rather than the
    * authentication algorithm.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
     {
       if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;

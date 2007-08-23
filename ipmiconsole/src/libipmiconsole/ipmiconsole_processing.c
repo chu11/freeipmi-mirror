@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.36 2007-08-22 00:20:43 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.37 2007-08-23 17:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -89,7 +89,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 
   s = &(c->session);
 
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
@@ -127,7 +127,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   if ((pkt_len = ipmiconsole_ipmi_packet_assemble(c, p, pkt, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     return -1;
 
-  if (c->debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
     {
       if (ipmiconsole_packet_dump(c, p, pkt, pkt_len) < 0)
         return -1;
@@ -192,7 +192,7 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
 
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -256,7 +256,7 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
                                                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
     goto cleanup;
   
-  if (c->debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
     {
       if (ipmiconsole_packet_dump(c, IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ, pkt, pkt_len) < 0)
         goto cleanup;
@@ -318,7 +318,7 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
   
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -342,7 +342,7 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
                                                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
     return -1;
   
-  if (c->debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
     {
       if (ipmiconsole_packet_dump(c, IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ, pkt, pkt_len) < 0)
         return -1;
@@ -391,7 +391,7 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
   
   s = &(c->session);
   
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -426,7 +426,7 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
                                                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
     return -1;
   
-  if (c->debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
     {
       if (ipmiconsole_packet_dump(c, IPMICONSOLE_PACKET_TYPE_SOL_PAYLOAD_DATA_RQ, pkt, pkt_len) < 0)
         return -1;
@@ -563,7 +563,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       /* Assume it's an error if the packet is unparseable, but don't
        * exit 
        */
-      if (c->debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
+      if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
         ipmiconsole_packet_dump_unknown(c, pkt, pkt_len);
       s->errors_count++;
       rv = 0;
@@ -572,7 +572,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   
   assert(IPMICONSOLE_PACKET_TYPE_RESPONSE(*p));
 
-  if (c->debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
     /* It's debugging, who cares if the call succeeds or fails */
     ipmiconsole_packet_dump(c, *p, pkt, pkt_len);
 
@@ -1353,7 +1353,7 @@ _session_timeout(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
   s = &(c->session);
-  timeval_add_ms(&(s->last_ipmi_packet_received), c->session_timeout_len, &timeout);
+  timeval_add_ms(&(s->last_ipmi_packet_received), c->config.session_timeout_len, &timeout);
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
@@ -1385,11 +1385,11 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
 
   s = &(c->session);
 
-  if (c->retransmission_backoff_count)
-    retransmission_timeout_multiplier = (s->retransmission_count / c->retransmission_backoff_count) + 1;
+  if (c->config.retransmission_backoff_count)
+    retransmission_timeout_multiplier = (s->retransmission_count / c->config.retransmission_backoff_count) + 1;
   else
     retransmission_timeout_multiplier = 1;
-  retransmission_timeout_len = c->retransmission_timeout_len * retransmission_timeout_multiplier;
+  retransmission_timeout_len = c->config.retransmission_timeout_len * retransmission_timeout_multiplier;
       
   timeval_add_ms(&(s->last_ipmi_packet_sent), retransmission_timeout_len, &timeout);
 
@@ -1404,14 +1404,14 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
     return 0;
   
   s->retransmission_count++;
-  if (s->retransmission_count > c->maximum_retransmission_count)
+  if (s->retransmission_count > c->config.maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive retransmissions"));
       c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT;
       return -1;
     }
 #if 0
-  IPMICONSOLE_CTX_DEBUG(c, ("retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", s->retransmission_count, c->maximum_retransmission_count, s->protocol_state));
+  IPMICONSOLE_CTX_DEBUG(c, ("retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", s->retransmission_count, c->config.maximum_retransmission_count, s->protocol_state));
 #endif
   
   /* Note: 
@@ -1528,7 +1528,7 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
 
   s = &(c->session);
   
-  timeval_add_ms(&(s->last_sol_input_packet_sent), c->retransmission_timeout_len, &timeout);
+  timeval_add_ms(&(s->last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
@@ -1540,14 +1540,14 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
     return 0;
 
   s->retransmission_count++;
-  if (s->retransmission_count > c->maximum_retransmission_count)
+  if (s->retransmission_count > c->config.maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive sol retransmissions"));
       c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT;
       return -1;
     }
 #if 0
-  IPMICONSOLE_CTX_DEBUG(c, ("sol retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", s->retransmission_count, c->maximum_retransmission_count, s->protocol_state));
+  IPMICONSOLE_CTX_DEBUG(c, ("sol retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", s->retransmission_count, c->config.maximum_retransmission_count, s->protocol_state));
 #endif
 
   if (!s->sol_input_waiting_for_break_ack)
@@ -1586,7 +1586,7 @@ _keepalive_is_necessary(ipmiconsole_ctx_t c)
 
   s = &(c->session);
 
-  timeval_add_ms(&(s->last_ipmi_packet_received), c->keepalive_timeout_len, &timeout);
+  timeval_add_ms(&(s->last_ipmi_packet_received), c->config.keepalive_timeout_len, &timeout);
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
@@ -1638,7 +1638,7 @@ _keepalive_timeout(ipmiconsole_ctx_t c)
 	  return -1;
 	}
 
-      timeval_add_ms(&(s->last_keepalive_packet_sent), c->retransmission_keepalive_timeout_len, &timeout);
+      timeval_add_ms(&(s->last_keepalive_packet_sent), c->config.retransmission_keepalive_timeout_len, &timeout);
       if (timeval_gt(&current, &timeout))
 	{
 	  /* Note that the protocol_state stays in SOL_SESSION */
@@ -1750,14 +1750,14 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
    * vs. null vs non-null username capabilities.  The workaround is to
    * skip these checks.
    */
-  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES))
+  if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_USERNAME_CAPABILITIES))
     {
-      if ((!strlen((char *)c->username) && !strlen((char *)c->password)
+      if ((!strlen((char *)c->config.username) && !strlen((char *)c->config.password)
            && !authentication_status_anonymous_login)
-          || (!strlen((char *)c->username)
+          || (!strlen((char *)c->config.username)
               && !authentication_status_anonymous_login
               && !authentication_status_null_username)
-          || (strlen((char *)c->username)
+          || (strlen((char *)c->config.username)
               && !authentication_status_non_null_username))
         {
           c->errnum = IPMICONSOLE_ERR_USERNAME_INVALID;
@@ -1765,8 +1765,8 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
         }
     }
 
-  if ((!c->k_g_len && authentication_status_k_g)
-      || (c->k_g_len && !authentication_status_k_g))
+  if ((!c->config.k_g_len && authentication_status_k_g)
+      || (c->config.k_g_len && !authentication_status_k_g))
     {
       c->errnum = IPMICONSOLE_ERR_K_G_INVALID;
       return -1;
@@ -1808,25 +1808,25 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
    *
    * Intel IPMI 2.0 implementations pad their usernames.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen((char *)c->username))
-        strcpy((char *)username_buf, (char *)c->username);
+      if (strlen((char *)c->config.username))
+        strcpy((char *)username_buf, (char *)c->config.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      if (strlen((char *)c->username))
-        username = c->username;
+      if (strlen((char *)c->config.username))
+        username = c->config.username;
       else
         username = NULL;
       username_len = (username) ? strlen((char *)username) : 0;
     }
 
-  if (strlen((char *)c->password))
-    password = c->password;
+  if (strlen((char *)c->config.password))
+    password = c->config.password;
   else
     password = NULL;
   
@@ -1838,13 +1838,13 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
    * when the passwords are > 16 bytes long.  The BMCs probably assume
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
-  if (c->workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
       && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
   
-  if (c->k_g_len)
-    k_g = (uint8_t *)c->k_g;
+  if (c->config.k_g_len)
+    k_g = (uint8_t *)c->config.k_g;
   else
     k_g = NULL;
   
@@ -1868,13 +1868,13 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
                                            password,
                                            password_len,
                                            k_g,
-                                           (k_g) ? c->k_g_len : 0,
+                                           (k_g) ? c->config.k_g_len : 0,
                                            s->remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
                                            IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH,
                                            s->name_only_lookup,
-                                           c->privilege_level,
+                                           c->config.privilege_level,
                                            username,
                                            username_len,
                                            &(s->sik_key_ptr),
@@ -1989,7 +1989,7 @@ _check_sol_activated(ipmiconsole_ctx_t c)
         }
     }
   
-  if (c->security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE
+  if (c->config.security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE
       && s->sol_instances_activated_count)
     {
       c->errnum = IPMICONSOLE_ERR_SOL_INUSE;
@@ -2027,7 +2027,7 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
   if (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
       || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED)
     {
-      if (c->security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE)
+      if (c->config.security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE)
 	{
 	  c->errnum = IPMICONSOLE_ERR_SOL_INUSE;
 	  return -1;
@@ -2119,7 +2119,7 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
    * check and assume a reasonable size.
    *
    */
-  if (!(c->workaround_flags & IPMICONSOLE_WORKAROUND_ASUS_2_0))
+  if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_ASUS_2_0))
     {
       if (max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
           && max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len
@@ -2215,7 +2215,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 
   s = &(c->session);
 
-  secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * The packet is either an ACK to a packet we sent, or
@@ -2517,19 +2517,19 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
           return -1;
         }
       
-      timeval_add_ms(&s->last_ipmi_packet_received, c->session_timeout_len, &session_timeout);
+      timeval_add_ms(&s->last_ipmi_packet_received, c->config.session_timeout_len, &session_timeout);
       timeval_sub(&session_timeout, &current, &session_timeout_val);
       timeval_millisecond_calc(&session_timeout_val, &session_timeout_ms);
       *timeout = session_timeout_ms;
 
       if (s->sol_input_waiting_for_ack)
 	{
-	  if (c->retransmission_backoff_count)
-	    sol_retransmission_timeout_multiplier = (s->retransmission_count / c->retransmission_backoff_count) + 1;
+	  if (c->config.retransmission_backoff_count)
+	    sol_retransmission_timeout_multiplier = (s->retransmission_count / c->config.retransmission_backoff_count) + 1;
 	  else
 	    sol_retransmission_timeout_multiplier = 1;
 	    
-	  sol_retransmission_timeout_len = c->retransmission_timeout_len * sol_retransmission_timeout_multiplier;
+	  sol_retransmission_timeout_len = c->config.retransmission_timeout_len * sol_retransmission_timeout_multiplier;
 
 	  timeval_add_ms(&s->last_sol_input_packet_sent, sol_retransmission_timeout_len, &sol_retransmission_timeout);
 	  timeval_sub(&sol_retransmission_timeout, &current, &sol_retransmission_timeout_val);
@@ -2544,7 +2544,7 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
       if (rv)
 	{
 	  /* Time within we should retransmit the current keepalive packet */
-	  timeval_add_ms(&s->last_keepalive_packet_sent, c->retransmission_keepalive_timeout_len, &keepalive_timeout);
+	  timeval_add_ms(&s->last_keepalive_packet_sent, c->config.retransmission_keepalive_timeout_len, &keepalive_timeout);
 	  timeval_sub(&keepalive_timeout, &current, &keepalive_timeout_val);
 	  timeval_millisecond_calc(&keepalive_timeout_val, &keepalive_timeout_ms);
 	  if (keepalive_timeout_ms < *timeout)
@@ -2553,7 +2553,7 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
       else
 	{
 	  /* When a keepalive packet will be necessary again */
-	  timeval_add_ms(&s->last_ipmi_packet_received, c->keepalive_timeout_len, &keepalive_timeout);
+	  timeval_add_ms(&s->last_ipmi_packet_received, c->config.keepalive_timeout_len, &keepalive_timeout);
 	  timeval_sub(&keepalive_timeout, &current, &keepalive_timeout_val);
 	  timeval_millisecond_calc(&keepalive_timeout_val, &keepalive_timeout_ms);
 	  if (keepalive_timeout_ms < *timeout)
@@ -2579,16 +2579,16 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
           return -1;
         }
       
-      timeval_add_ms(&s->last_ipmi_packet_received, c->session_timeout_len, &session_timeout);
+      timeval_add_ms(&s->last_ipmi_packet_received, c->config.session_timeout_len, &session_timeout);
       timeval_sub(&session_timeout, &current, &session_timeout_val);
       timeval_millisecond_calc(&session_timeout_val, &session_timeout_ms);
 
-      if (c->retransmission_backoff_count)
-	retransmission_timeout_multiplier = (s->retransmission_count / c->retransmission_backoff_count) + 1;
+      if (c->config.retransmission_backoff_count)
+	retransmission_timeout_multiplier = (s->retransmission_count / c->config.retransmission_backoff_count) + 1;
       else
 	retransmission_timeout_multiplier = 1;
 	
-      retransmission_timeout_len = c->retransmission_timeout_len * retransmission_timeout_multiplier;
+      retransmission_timeout_len = c->config.retransmission_timeout_len * retransmission_timeout_multiplier;
 
       timeval_add_ms(&s->last_ipmi_packet_sent, retransmission_timeout_len, &retransmission_timeout);
       timeval_sub(&retransmission_timeout, &current, &retransmission_timeout_val);
@@ -2772,7 +2772,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
        * sequence numbers, so by the time the kernel is booted, the
        * session sequence numbers are way out of whack.
        */
-      if (s->errors_count > c->acceptable_packet_errors_count
+      if (s->errors_count > c->config.acceptable_packet_errors_count
 	  && !s->close_session_flag)
 	{
 	  /* Attempt to close the session cleanly */
@@ -2866,7 +2866,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
        * The Get Channel Payload Support isn't supported in Sun's.  Skip this 
        * part of the state machine and pray for the best I guess.
        */
-      if (c->workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0)
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0)
         {
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
             {
@@ -2937,7 +2937,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           goto calculate_timeout;
         }
 
-      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
+      if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
         {
           if (ret)
             {
@@ -3173,13 +3173,13 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 
       s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
 
-      if (c->engine_flags & IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED)
+      if (c->config.engine_flags & IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED)
         {
           int n;
           int dropped;
           int secure_malloc_flag;
 
-          secure_malloc_flag = (c->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+          secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
           n = cbuf_write(s->console_bmc_to_remote_console,
                          "\0",
@@ -3315,7 +3315,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       assert(s->close_session_flag
 	     || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS);
 
-      if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
+      if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
         s->deactivate_only_succeeded_flag++;
 
       if (s->close_session_flag)
@@ -3351,7 +3351,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 	       */ 
 	      
 	      /* +1 b/c one deactivate_active_payloads_count is acceptable and expected */
-	      if (s->deactivate_active_payloads_count > c->acceptable_packet_errors_count + 1)
+	      if (s->deactivate_active_payloads_count > c->config.acceptable_packet_errors_count + 1)
 		{
                   /* achu:
                    *

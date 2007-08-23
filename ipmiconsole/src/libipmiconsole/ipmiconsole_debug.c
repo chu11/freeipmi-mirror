@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.2 2007-08-17 16:32:07 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.3 2007-08-23 17:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -115,9 +115,9 @@ ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c, uint32_t debug_flags)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(!(debug_flags & ~IPMICONSOLE_DEBUG_MASK));
 
-  c->debug_flags = debug_flags;
+  c->config.debug_flags = debug_flags;
 
-  if (c->debug_flags & IPMICONSOLE_DEBUG_FILE)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     {
       char filename[MAXPATHLEN];
       snprintf(filename, 
@@ -125,14 +125,14 @@ ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c, uint32_t debug_flags)
 	       "%s/%s.%s", 
 	       IPMICONSOLE_DEBUG_DIRECTORY,
 	       IPMICONSOLE_DEBUG_FILENAME,
-	       c->hostname);
+	       c->config.hostname);
   
       if ((c->debug_fd = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0600)) < 0)
 	{
-	  c->debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
+	  c->config.debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
 	  IPMICONSOLE_CTX_DEBUG(c, ("open: %s", strerror(errno)));
 	  c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-	  c->debug_flags = 0;
+	  c->config.debug_flags = 0;
 	  return -1;
 	}
     }
@@ -146,12 +146,12 @@ ipmiconsole_ctx_debug_cleanup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   
-  if (c->debug_flags & IPMICONSOLE_DEBUG_FILE && c->debug_fd)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE && c->debug_fd)
     {
       close(c->debug_fd);
       c->debug_fd = -1;
     }
-  c->debug_flags = 0;
+  c->config.debug_flags = 0;
 }
 
 static void
@@ -259,11 +259,11 @@ _ctx_debug(ipmiconsole_ctx_t c, const char *fmt, va_list ap)
   assert(fmt);
 
   len = vsnprintf(errbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
-  if (c->debug_flags & IPMICONSOLE_DEBUG_STDOUT)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDOUT)
     {
       if ((perr = pthread_mutex_lock(&console_stdout_debug_mutex)))
         {
-          c->debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
+          c->config.debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
           IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_lock: %s", strerror(perr)));
           goto try_stderr;
         }
@@ -273,17 +273,17 @@ _ctx_debug(ipmiconsole_ctx_t c, const char *fmt, va_list ap)
 
       if ((perr = pthread_mutex_unlock(&console_stdout_debug_mutex)))
         {
-          c->debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
+          c->config.debug_flags &= ~IPMICONSOLE_DEBUG_STDOUT;
           IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_unlock: %s", strerror(perr)));      
           goto try_stderr;
         }
     }
  try_stderr:
-  if (c->debug_flags & IPMICONSOLE_DEBUG_STDERR)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDERR)
     {
       if ((perr = pthread_mutex_lock(&console_stderr_debug_mutex)))
         {
-          c->debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
+          c->config.debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
           IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_lock: %s", strerror(perr)));
           goto try_syslog;
         }
@@ -293,15 +293,15 @@ _ctx_debug(ipmiconsole_ctx_t c, const char *fmt, va_list ap)
 
       if ((perr = pthread_mutex_unlock(&console_stderr_debug_mutex)))
         {
-          c->debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
+          c->config.debug_flags &= ~IPMICONSOLE_DEBUG_STDERR;
           IPMICONSOLE_CTX_DEBUG(c, ("pthread_mutex_unlock: %s", strerror(perr)));      
           goto try_syslog;
         }
     }
  try_syslog:
-  if (c->debug_flags & IPMICONSOLE_DEBUG_SYSLOG)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_SYSLOG)
     syslog(LOG_DEBUG, "%s", errbuf);
-  if (c->debug_flags & IPMICONSOLE_DEBUG_FILE)
+  if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     {
       char tbuf[IPMICONSOLE_DEBUG_ERROR_BUFLEN+2];
       int tlen;
@@ -313,7 +313,7 @@ _ctx_debug(ipmiconsole_ctx_t c, const char *fmt, va_list ap)
        */
       if ((fd_write_n(c->debug_fd, tbuf, tlen)) < 0)
 	{
-	  c->debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
+	  c->config.debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
 	  IPMICONSOLE_CTX_DEBUG(c, ("fd_write_n: %s", strerror(errno)));
 	}
     }

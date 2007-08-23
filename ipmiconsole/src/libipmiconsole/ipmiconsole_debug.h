@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: ipmiconsole_debug.h,v 1.2 2007-08-23 17:02:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -72,7 +72,7 @@
                      __FILE__, \
                      __FUNCTION__, \
                      __LINE__, \
-                     (__c)->hostname, \
+                     (__c)->config.hostname, \
 		     (__c)->session.protocol_state); \
     if (__len < IPMICONSOLE_DEBUG_ERROR_BUFLEN) \
       { \
