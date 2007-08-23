@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.52 2007-08-23 00:23:54 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.53 2007-08-23 00:45:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,6 +65,7 @@
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"
 #include "ipmiconsole_fiid_wrappers.h"
+#include "ipmiconsole_util.h"
 
 /* 
  * ipmi console errmsgs
@@ -275,7 +276,6 @@ static int
 _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
 {
   int perr;
-  int closeonexec;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -309,31 +309,14 @@ _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  if ((closeonexec = fcntl(c->blocking_notification[0], F_GETFD, 0)) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->blocking_notification[0]) < 0)
     {
-      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
     }
-  closeonexec |= FD_CLOEXEC;
-  if (fcntl(c->blocking_notification[0], F_SETFD, closeonexec) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->blocking_notification[1]) < 0)
     {
-      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-      goto cleanup;
-    }
-
-  if ((closeonexec = fcntl(c->blocking_notification[1], F_GETFD, 0)) < 0)
-    {
-      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-      goto cleanup;
-    }
-  closeonexec |= FD_CLOEXEC;
-  if (fcntl(c->blocking_notification[1], F_SETFD, closeonexec) < 0)
-    {
-      IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
     }
 

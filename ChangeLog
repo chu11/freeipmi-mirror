@@ -12,6 +12,13 @@
 	
 	* tag post_ipmiconsole_ctx_destroy_semantic_change
 
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_util.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole_util.c:
+	New files.
+	
+	* ipmiconsole/src/libipmiconsole/: General code cleanup using new
+	ipmiconsole_set_closeonexec util function.
+	
 2007-08-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/fiid.h: Add more comments.
