@@ -11,6 +11,8 @@
 	* Globally change "usercap" workaround to "authcap" to work around
 	all authentication capabilities checks.
 
+	* Fix RHEL5 compiler warnings.
+
 2007-08-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_garbage_collector.h,
