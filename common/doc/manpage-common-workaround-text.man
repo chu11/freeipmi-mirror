@@ -28,7 +28,7 @@ Supermicro H8QME with SIMSO daughter card: The remote BMC will
 advertise that Per Message Authentication is disabled, but actually
 require it for the protocol. Automatically handled.
 
-Asus P5M2: The motherboard does not properly report username
+Asus P5M2/P5MT-R: The motherboard does not properly report username
 capabilities and or K_g status, leading to invalid username or K_g
 errors.  In order to work around this issue, the "authcap" workaround
 must be specified.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.38 2007-08-23 17:34:57 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.39 2007-08-24 16:30:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1747,10 +1747,12 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
    * Discovered on an ASUS P5M2 motherboard.
    *
    * The ASUS motherboard reports incorrect settings of anonymous
-   * vs. null vs non-null username capabilities.  The motherboard also
-   * reports K_g status incorrectly too.  The workaround is to skip
-   * all these checks.
+   * vs. null vs non-null username capabilities.  The workaround is to
+   * skip all these checks.
    *
+   * Discovered on an ASUS P5MT-R motherboard
+   *
+   * K_g status is reported incorrectly too.  Again, skip the checks.
    */
   if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES))
     {
