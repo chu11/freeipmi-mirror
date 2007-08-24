@@ -29,7 +29,6 @@
 
 	* ipmiconsole/src/libipmiconsole/: Adjust remaining code
 	appropriately for above changes.
-
 	
 2007-08-23  Albert Chu <chu11@llnl.gov>
 
