@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.27 2007-08-02 20:50:15 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.28 2007-08-24 22:35:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -304,6 +304,16 @@ _poll_loop(int non_interactive)
       else
         timeout = powercmd_timeout; 
       
+      /* XXX: This poll() loop could be done far more elegantly
+       * without all this crazy indexing.  The best way would be
+       * through some callback mechanism that would do the callback
+       * based on POLLIN, POLLOUT, POLLERR, etc.
+       *
+       * However, given the relative complexity of this code, I don't
+       * think the callback architecture is worth the effort.  Come
+       * back to this later if its worthwhile.
+       */
+
       /* Has the number of hosts changed? */
       if (nfds != (conf->hosts_count*2) + 3)
 	{
@@ -350,7 +360,7 @@ _poll_loop(int non_interactive)
       else
         pfds[nfds-1].events = 0;
       pfds[nfds-1].revents = 0;
-      
+
       Poll(pfds, nfds, timeout);
       
       for (i = 0; i < conf->hosts_count; i++) 
