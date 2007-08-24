@@ -1,6 +1,9 @@
 2007-08-24  Albert Chu <chu11@llnl.gov>
 
         * Document motherboard P5MT-R Asus 'authcap' workarounds.
+
+        * ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
+        (_process_ctxs): Fix new console port corner case.
 	
 2007-08-23  Albert Chu <chu11@llnl.gov>
 	

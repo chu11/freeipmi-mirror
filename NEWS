@@ -2,6 +2,7 @@
 -----
 o Alter userncame-capabilities workaround to authentication-capabilities workaronds
 to cover more situations.
+o Fix libipmiconsole new console port corner case.
 o Fix manpage typos.
 
 0.4.3

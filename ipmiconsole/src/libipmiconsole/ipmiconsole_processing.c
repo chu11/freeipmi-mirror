@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.13.6.5 2007-08-24 16:32:48 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.13.6.6 2007-08-24 17:02:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3233,7 +3233,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       if (c->security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
         s->deactivate_only_succeeded_flag++;
 
-      if (s->close_session_flag)
+      if (s->close_session_flag || s->try_new_port_flag)
         {
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
             goto close_session;
