@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.14 2007-08-24 17:38:31 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.15 2007-08-24 22:37:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -181,9 +181,9 @@ int
 ipmi_monitoring_ctx_errnum(ipmi_monitoring_ctx_t c)
 {
   if (!c)
-    return IPMI_MONITORING_ERR_CONTEXT_NULL;
+    return IPMI_MONITORING_ERR_CTX_NULL;
   else if (c->magic != IPMI_MONITORING_MAGIC)
-    return IPMI_MONITORING_ERR_CONTEXT_INVALID;
+    return IPMI_MONITORING_ERR_CTX_INVALID;
   else
     return c->errnum;
 }
