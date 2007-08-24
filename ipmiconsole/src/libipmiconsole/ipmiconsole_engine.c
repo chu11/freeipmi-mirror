@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.48 2007-08-24 17:38:31 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.49 2007-08-24 21:37:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,6 +54,7 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#include <signal.h>
 #include <assert.h>
 #include <errno.h>
 #include <freeipmi/freeipmi.h>
@@ -1461,7 +1462,11 @@ _ipmiconsole_engine(void *arg)
   assert(index < IPMICONSOLE_THREAD_COUNT_MAX);
 
   free(arg);
-
+  
+  /* No need to exit on failure, probability is low we'll SIGPIPE anyways */
+  if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
+    IPMICONSOLE_DEBUG(("signal: %s", strerror(errno)));
+  
   while (!teardown_flag || ctxs_count)
     {
       struct _ipmiconsole_poll_data poll_data;

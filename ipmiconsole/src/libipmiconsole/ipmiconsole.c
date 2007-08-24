@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.55 2007-08-24 17:38:31 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.56 2007-08-24 21:37:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -127,6 +127,10 @@ _ipmiconsole_ctx_api_managed_session_data_cleanup(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
+  /* Note: Close asynccomm[0] first, so an EBADFD error occurs in the
+   * engine.  Closing asynccomm[1] first could result in a EPIPE
+   * instead.
+   */
   close(c->user_fd);
   close(c->asynccomm[0]);
   close(c->asynccomm[1]);
