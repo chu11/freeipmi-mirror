@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.107.6.2 2007-08-23 23:24:35 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.107.6.3 2007-08-24 16:32:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1161,9 +1161,12 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
    * Discovered on an ASUS P5M2 motherboard.
    *
    * The ASUS motherboard reports incorrect settings of anonymous
-   * vs. null vs non-null username capabilities.  The motherboard also
-   * reports K_g status incorrectly too. The workaround is to
+   * vs. null vs non-null username capabilities.  The workaround is to
    * skip these checks.
+   *
+   * Discovered on an ASUS P5MT-R motherboard
+   *
+   * K_g status is reported incorrectly too.  Again, skip the checks.
    */
   if (!(conf->workaround_flags & WORKAROUND_FLAG_AUTHENTICATION_CAPABILITIES))
     {
