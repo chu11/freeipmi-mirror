@@ -4,6 +4,32 @@
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_processing.c
 	(_process_ctxs): Fix new console port corner case.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmimonitoring/src/libipmimonitoring/ipmi_monitoring.h: For
+	consistency with remaining code, rename "context" to "ctx" as
+	needed.
+
+	* ipmiconsole/src/libipmiconsole/,
+	ipmimonitoring/src/libipmimonitoring/: Adjust remaining text
+	appropriately for name change.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Change
+	IPMICONSOLE_CTX_STATUS_ERROR to IPMICONSOLE_CTX_STATUS_SOL_ERROR
+	and create new IPMICONSOLE_CTX_STATUS_ERROR to indicate status
+	retrieval error.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h: Change context
+	status from defines to an enumeration.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.h,
+	ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_ctx_status): Adjust API to return a context
+	enumeration instead of an integer.
+
+	* ipmiconsole/src/libipmiconsole/: Adjust remaining code
+	appropriately for above changes.
+
 	
 2007-08-23  Albert Chu <chu11@llnl.gov>
 

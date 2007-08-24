@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.40 2007-08-24 16:36:36 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.41 2007-08-24 17:38:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3160,7 +3160,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
           goto calculate_timeout;
         }
 
-      c->status = IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED;
+      c->status = IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED;
 
       if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
         {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.54 2007-08-23 17:02:30 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.55 2007-08-24 17:38:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,8 +73,8 @@
 static char *ipmiconsole_errmsgs[] =
   {
     "success",			                        /* 0 */
-    "context null",		                        /* 1 */
-    "context invalid",		                        /* 2 */
+    "ctx null",		                                /* 1 */
+    "ctt invalid",		                        /* 2 */
     "engine already setup",	                        /* 3 */
     "engine not setup",		                        /* 4 */
     "ctx not submitted",	                        /* 5 */
@@ -216,8 +216,8 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
    * already be set 
    */
-  if (c->status == IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED)
-    c->status = IPMICONSOLE_CONTEXT_STATUS_SUBMITTED;
+  if (c->status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
+    c->status = IPMICONSOLE_CTX_STATUS_SUBMITTED;
   
   if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
     {
@@ -449,8 +449,8 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
    * already be set 
    */
-  if (c->status == IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED)
-    c->status = IPMICONSOLE_CONTEXT_STATUS_SUBMITTED;
+  if (c->status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
+    c->status = IPMICONSOLE_CTX_STATUS_SUBMITTED;
   
   if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
     {
@@ -636,7 +636,7 @@ ipmiconsole_ctx_create(char *hostname,
       errno = perr;
       goto cleanup;
     }
-  c->status = IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED;
+  c->status = IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED;
 
   if ((perr = pthread_mutex_init(&c->blocking_mutex, NULL)) != 0)
     {
@@ -690,10 +690,10 @@ int
 ipmiconsole_ctx_errnum(ipmiconsole_ctx_t c)
 {
   if (!c)
-    return IPMICONSOLE_ERR_CONTEXT_NULL;
+    return IPMICONSOLE_ERR_CTX_NULL;
   else if (c->magic != IPMICONSOLE_CTX_MAGIC
            || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return IPMICONSOLE_ERR_CONTEXT_INVALID;
+    return IPMICONSOLE_ERR_CTX_INVALID;
   else
     return c->errnum;
 }
@@ -707,7 +707,7 @@ ipmiconsole_ctx_strerror(int errnum)
     return ipmiconsole_errmsgs[IPMICONSOLE_ERR_ERRNUMRANGE];
 }
 
-int 
+ipmiconsole_ctx_status_t
 ipmiconsole_ctx_status(ipmiconsole_ctx_t c)
 {
   int status;
@@ -716,19 +716,19 @@ ipmiconsole_ctx_status(ipmiconsole_ctx_t c)
   if (!c 
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
-    return -1;
+    return IPMICONSOLE_CTX_STATUS_ERROR;
 
   /* Do not check if the context is submitted, b/c it may not be.
    *
    * Also, do not set errnum == success for this function, it could be
-   * returning IPMICONSOLE_CONTEXT_STATUS_ERROR.
+   * returning IPMICONSOLE_CTX_STATUS_ERROR.
    */
 
   if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
+      return IPMICONSOLE_CTX_STATUS_ERROR;
     }
   
   status = c->status;
@@ -737,7 +737,7 @@ ipmiconsole_ctx_status(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      return -1;
+      return IPMICONSOLE_CTX_STATUS_ERROR;
     }
 
   return status;

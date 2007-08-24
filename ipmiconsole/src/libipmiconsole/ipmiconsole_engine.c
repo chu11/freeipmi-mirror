@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.47 2007-08-23 17:02:30 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.48 2007-08-24 17:38:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -174,7 +174,7 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 
   pthread_mutex_destroy(&(c->destroyed_mutex));
 
-  c->errnum = IPMICONSOLE_ERR_CONTEXT_INVALID;
+  c->errnum = IPMICONSOLE_ERR_CTX_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
   if (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
@@ -624,9 +624,10 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           
   /* Indicates current status to user. */
-  if (c->errnum != IPMICONSOLE_ERR_SUCCESS)
-    c->status = IPMICONSOLE_CONTEXT_STATUS_ERROR;
-          
+  if (c->errnum != IPMICONSOLE_ERR_SUCCESS
+      && !c->sol_session_established)
+    c->status = IPMICONSOLE_CTX_STATUS_SOL_ERROR;
+  
   if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
@@ -846,6 +847,14 @@ _ipmiconsole_garbage_collector_create(void)
   return rv;
 }
 
+/* Notes: One of the reason we do not create the threads in this
+ * function, is that it would make it more difficult to properly
+ * "cleanup" on an error.  We wouldn't know how many threads were
+ * created, flags for setup completion may not be set yet, etc.
+ *
+ * Therefore ipmiconsole_engine_thread_create() is done outside of
+ * this function and is done elsewhere.
+ */
 int
 ipmiconsole_engine_setup(unsigned int thread_count)
 {
@@ -1726,6 +1735,10 @@ _ipmiconsole_engine(void *arg)
   return NULL;
 }
 
+/* Notes: On an error, it is the responsibility of the caller to call
+ * ipmiconsole_engine_cleanup() to destroy all previously created
+ * threads. 
+ */
 int
 ipmiconsole_engine_thread_create(void)
 {
@@ -1788,7 +1801,7 @@ ipmiconsole_engine_thread_create(void)
 
   rv = 0;
  cleanup:
-  /* XXX destroy thread on error? */
+
   if ((perr = pthread_mutex_unlock(&console_engine_thread_count_mutex)))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));

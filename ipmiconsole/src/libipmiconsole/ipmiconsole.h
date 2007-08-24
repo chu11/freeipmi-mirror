@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.56 2007-08-23 17:34:57 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.57 2007-08-24 17:38:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,8 +38,8 @@ extern "C" {
  * IPMI Console Error Codes
  */
 #define IPMICONSOLE_ERR_SUCCESS                               0
-#define IPMICONSOLE_ERR_CONTEXT_NULL                          1
-#define IPMICONSOLE_ERR_CONTEXT_INVALID                       2
+#define IPMICONSOLE_ERR_CTX_NULL                              1
+#define IPMICONSOLE_ERR_CTX_INVALID                           2
 #define IPMICONSOLE_ERR_ALREADY_SETUP                         3
 #define IPMICONSOLE_ERR_NOT_SETUP                             4
 #define IPMICONSOLE_ERR_CTX_NOT_SUBMITTED                     5
@@ -223,6 +223,10 @@ extern "C" {
  * Context Status
  *
  * Returned by ipmiconsole_ctx_status() below.
+ *
+ * ERROR
+ *
+ * An error has occurred retrieving the status.
  * 
  * NOT_SUBMITTED
  *
@@ -233,19 +237,24 @@ extern "C" {
  * The context has been submitted to the engine.  SOL has not been
  * established and an error has not yet occurred.
  *
- * ERROR
+ * SOL_ERROR
  *
- * The context has received an error.
+ * The context has received an error during SOL establishment.
  *
  * SOL_ESTABLISHED
  *
  * The context has established a SOL session.
  *
  */
-#define IPMICONSOLE_CONTEXT_STATUS_NOT_SUBMITTED      0
-#define IPMICONSOLE_CONTEXT_STATUS_SUBMITTED          1
-#define IPMICONSOLE_CONTEXT_STATUS_ERROR              2
-#define IPMICONSOLE_CONTEXT_STATUS_SOL_ESTABLISHED    3
+enum ipmiconsole_ctx_status
+  {
+    IPMICONSOLE_CTX_STATUS_ERROR = -1,
+    IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED = 0,
+    IPMICONSOLE_CTX_STATUS_SUBMITTED = 1,
+    IPMICONSOLE_CTX_STATUS_SOL_ERROR = 2,
+    IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED = 3,
+  };
+typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
 
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 
@@ -545,10 +554,10 @@ char *ipmiconsole_ctx_strerror(int errnum);
  *
  * Returns the current context status.  Primarily used to determine if
  * a context submission (submitted non-blocking via
- * ipmiconsole_engine_subit()) has been established or not.  Returns
- * -1 on error.
+ * ipmiconsole_engine_submit()) has been established or not.  Returns
+ * IPMICONSOLE_CTX_STATUS_ERROR (-1) on error.  
  */
-int ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
+ipmiconsole_ctx_status_t ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
 
 /* 
  * ipmiconsole_ctx_fd

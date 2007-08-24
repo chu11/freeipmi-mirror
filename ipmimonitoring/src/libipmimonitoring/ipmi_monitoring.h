@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.h,v 1.12 2007-08-23 17:34:57 chu11 Exp $
+ *  $Id: ipmi_monitoring.h,v 1.13 2007-08-24 17:38:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,8 +34,8 @@ extern "C" {
 enum ipmi_monitoring_error_codes 
   {
     IPMI_MONITORING_ERR_SUCCESS                             = 0,
-    IPMI_MONITORING_ERR_CONTEXT_NULL                        = 1,
-    IPMI_MONITORING_ERR_CONTEXT_INVALID                     = 2,
+    IPMI_MONITORING_ERR_CTX_NULL                            = 1,
+    IPMI_MONITORING_ERR_CTX_INVALID                         = 2,
     IPMI_MONITORING_ERR_PARAMETERS                          = 3,
     IPMI_MONITORING_ERR_PERMISSION                          = 4,
     IPMI_MONITORING_ERR_LIBRARY_UNINITIALIZED               = 5,

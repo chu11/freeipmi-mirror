@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring.c,v 1.13 2007-08-23 23:24:55 chu11 Exp $
+ *  $Id: ipmi_monitoring.c,v 1.14 2007-08-24 17:38:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,8 +54,8 @@
 static char *ipmi_monitoring_errmsgs[] =
   {
     "success",
-    "context null",
-    "context invalid",
+    "ctx null",
+    "ctx invalid",
     "invalid parmaeters",
     "permission denied",
     "library uninitialized",
