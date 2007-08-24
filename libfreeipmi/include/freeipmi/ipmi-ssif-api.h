@@ -47,7 +47,7 @@ extern "C" {
 #define IPMI_SSIF_CTX_ERR_BUSY                 7
 #define IPMI_SSIF_CTX_ERR_OUT_OF_MEMORY        8
 #define IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND     9
-#define IPMI_SSIF_CTX_ERR_INTERNAL            10
+#define IPMI_SSIF_CTX_ERR_INTERNAL_ERROR      10
 #define IPMI_SSIF_CTX_ERR_ERRNUMRANGE         11
 
 #define IPMI_SSIF_FLAGS_DEFAULT       0x00000000

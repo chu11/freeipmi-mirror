@@ -188,6 +188,8 @@ do {                                                              \
     dev->errnum = IPMI_ERR_LIBRARY_ERROR;                         \
   else if (__errnum == IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND)         \
     dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                      \
+  else if (__errnum == IPMI_KCS_CTX_ERR_SYSTEM_ERROR)             \
+    dev->errnum = IPMI_ERR_SYSTEM_ERROR;                          \
   else                                                            \
     dev->errnum = IPMI_ERR_INTERNAL_ERROR;                        \
 } while (0)
@@ -266,6 +268,8 @@ do {                                                                        \
     dev->errnum = IPMI_ERR_DEVICE_NOT_FOUND;                                \
   else if (__errnum == IPMI_OPENIPMI_CTX_ERR_PARAMETERS)                    \
     dev->errnum = IPMI_ERR_LIBRARY_ERROR;                                   \
+  else if (__errnum == IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR)                  \
+    dev->errnum = IPMI_ERR_SYSTEM_ERROR;                                    \
   else                                                                      \
     dev->errnum = IPMI_ERR_INTERNAL_ERROR;                                  \
 } while (0)

@@ -60,6 +60,8 @@ o Similarly, fixed inconsistencies with dashes vs. underscores in
   possible.
 o Similarly, updated manpages for consistency across tools.
 o Removed the quiet and silent options from bmc-config.
+o OpenIPMI and KCS Inband drivers will timeout after a certain period
+  of time, so tools will no longer hang if the BMC is non-functional.
 o Various minor bug fixes and enhancements.
 
 For Developers

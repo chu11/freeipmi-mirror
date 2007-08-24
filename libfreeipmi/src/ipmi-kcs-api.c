@@ -55,6 +55,16 @@
 
 #define IPMI_KCS_SLEEP_USECS                  0x01
 
+/* The point is to limit the poll attempts so the code eventually
+ * returns to the user if they input bad hex addresses, BMC is dead,
+ * etc.  It's not the best mechanism in the world, but it's better
+ * than the current implementation.
+ *
+ * 100,000 seems like a good number.
+ */
+
+#define IPMI_KCS_POLL_ATTEMPTS            100000
+
 #define IPMI_KCS_SMS_REGISTER_SPACING_DEFAULT 1
 /* KCS Interface Status Register Bits */
 /* Scheme BIT Calculator Example
@@ -143,6 +153,7 @@ static char * ipmi_kcs_ctx_errmsg[] =
     "BMC busy",
     "out of memory",
     "device not found",
+    "internal system error",
     "internal error",
     "errnum out of range",
     NULL,
@@ -357,7 +368,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else
-	ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+	ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 #else  /* !USE_IOPERM */
@@ -370,7 +381,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       else if (errno == ENOENT)
         ctx->errnum = IPMI_KCS_CTX_ERR_UNAVAILABLE;
       else
-        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 #endif /* !USE_IOPERM */
@@ -380,7 +391,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else
-        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 #endif/* !__FreeBSD__ */
@@ -402,13 +413,23 @@ ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
  * Wait for IBF (In-Bound Flag) to clear, signalling BMC has
  * read the command. 
  */
-static void
+static int
 ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
 {
+  unsigned int poll_attempts = 0;
+
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  while (ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
-    usleep (ctx->poll_interval);
+  while ((ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
+         && poll_attempts <= IPMI_KCS_POLL_ATTEMPTS)
+    {
+      usleep (ctx->poll_interval);
+      poll_attempts++;
+    }
+
+  if (poll_attempts <= IPMI_KCS_POLL_ATTEMPTS)
+    return 0;
+  return -1;
 }
 
 /* 
@@ -416,13 +437,23 @@ ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
  * or no command is pending.
  */
 
-static void
+static int
 ipmi_kcs_wait_for_obf_set (ipmi_kcs_ctx_t ctx)
 {
+  unsigned int poll_attempts = 0;
+
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  while (!(ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
-    usleep (ctx->poll_interval);
+  while ((!(ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
+         && (poll_attempts <= IPMI_KCS_POLL_ATTEMPTS))
+    {
+      usleep (ctx->poll_interval);
+      poll_attempts++;
+    }
+
+  if (poll_attempts <= IPMI_KCS_POLL_ATTEMPTS)
+    return 0;
+  return -1;
 }
 
 /*
@@ -619,15 +650,23 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
           if (errno == EINTR || errno == EAGAIN)
             ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
           else
-            ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+            ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
           goto cleanup;
         }
     }
   
-  ipmi_kcs_wait_for_ibf_clear (ctx);
+  if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup_unlock;
+    }
   ipmi_kcs_clear_obf (ctx);
   ipmi_kcs_start_write (ctx);
-  ipmi_kcs_wait_for_ibf_clear (ctx);
+  if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup_unlock;
+    }
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
@@ -640,7 +679,11 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   for (; buf_len > 1; buf_len--)
     {
       ipmi_kcs_write_byte (ctx, *p);
-      ipmi_kcs_wait_for_ibf_clear (ctx);
+  if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup_unlock;
+    }
       if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
         {
           ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
@@ -651,7 +694,11 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       count++;
     }
   ipmi_kcs_end_write (ctx);
-  ipmi_kcs_wait_for_ibf_clear (ctx);
+  if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup_unlock;
+    }
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
@@ -705,7 +752,11 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       goto cleanup_unlock;
     }
 
-  ipmi_kcs_wait_for_ibf_clear (ctx);
+  if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup_unlock;
+    }
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ)) 
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
@@ -714,7 +765,11 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   while (ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
     {
       char c;
-      ipmi_kcs_wait_for_obf_set (ctx);
+      if (ipmi_kcs_wait_for_obf_set (ctx) < 0)
+        {
+          ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+          goto cleanup_unlock;
+        }
       c = ipmi_kcs_read_byte (ctx);
       if (count < buf_len)
 	{
@@ -722,12 +777,20 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
 	  count++;
 	}
       ipmi_kcs_read_next (ctx);
-      ipmi_kcs_wait_for_ibf_clear (ctx);
+  if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
+    {
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+      goto cleanup_unlock;
+    }
     }
   if (ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_IDLE))
     {
       /* Clean up */
-      ipmi_kcs_wait_for_obf_set (ctx);
+      if (ipmi_kcs_wait_for_obf_set (ctx) < 0)
+        {
+          ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+          goto cleanup_unlock;
+        }
       ipmi_kcs_read_byte (ctx); /* toss it, ACK */
     }
   else
@@ -766,13 +829,13 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 
   if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
   
   if ((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
   
@@ -794,7 +857,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 			 net_fn,
 			 obj_hdr) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
   
@@ -803,13 +866,13 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
 			     pkt,
 			     pkt_len) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
   
   if (ipmi_kcs_write (ctx, pkt, pkt_len) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -839,19 +902,19 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 
   if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_kcs)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       return -1;
     }
   
   if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
   if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -874,7 +937,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 				 pkt,
 				 pkt_len)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
   
@@ -883,7 +946,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 			       obj_hdr,
 			       obj_cmd_rs) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 

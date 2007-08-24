@@ -36,6 +36,16 @@
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif  /* !TIME_WITH_SYS_TIME */
 #include <sys/select.h>
 #include <sys/ioctl.h>
 #include <assert.h>
@@ -56,6 +66,8 @@
 #include "xmalloc.h"
 
 #define IPMI_OPENIPMI_BUFLEN    1024
+
+#define IPMI_OPENIPMI_TIMEOUT     60
 
 #if HAVE_LINUX_IPMI_H
 #include <linux/ipmi.h>
@@ -127,6 +139,7 @@ static char * ipmi_openipmi_ctx_errmsg[] =
     "device not found", 
     "io not initialized",
     "out of memory",
+    "internal system error"
     "internal error",
     "errnum out of range",
     NULL,
@@ -303,7 +316,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       else if (errno == ENOENT)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;
       else
-        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
   
@@ -312,7 +325,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
       else
-        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -355,7 +368,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
   memset(rq_buf_temp, '\0', IPMI_OPENIPMI_BUFLEN);
   if ((len = fiid_obj_get_all(obj_cmd_rq, rq_buf_temp, IPMI_OPENIPMI_BUFLEN)) <= 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -382,7 +395,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
 
   if (ioctl(ctx->device_fd, IPMICTL_SEND_COMMAND, &rq_packet) < 0) 
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -398,6 +411,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   struct ipmi_system_interface_addr rs_addr;
   struct ipmi_recv rs_packet;
   fd_set read_fds;
+  struct timeval tv;
   int n;
 
   rs_packet.addr = (unsigned char *)&rs_addr;
@@ -408,32 +422,36 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   FD_ZERO(&read_fds);
   FD_SET(ctx->device_fd, &read_fds);
 
+  tv.tv_sec = IPMI_OPENIPMI_TIMEOUT;
+  tv.tv_usec = 0;
+
   if ((n = select(ctx->device_fd + 1, 
                   &read_fds,
                   NULL,
                   NULL,
-                  NULL)) < 0)
+                  &tv)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
   if (!n)
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+      /* Could be due to a different error, but we assume a timeout */
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
   if (ioctl(ctx->device_fd, IPMICTL_RECEIVE_MSG_TRUNC, &rs_packet) < 0) 
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
   /* achu: atleast the completion code should be returned */
   if (!rs_packet.msg.data_len)
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
@@ -444,7 +462,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
 
   if (fiid_obj_set_all(obj_cmd_rs, rs_buf, rs_packet.msg.data_len + 1) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
       return (-1);
     }
 

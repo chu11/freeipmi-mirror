@@ -31,6 +31,12 @@
 	appropriately for above changes.
 
 	* Various ipmiconsole code cleanup.
+
+	* libfreeipmi/: Support timeout mechanisms for KCS and OpenIPMI
+	drivers so tools don't hang.
+	
+	* common/src/udm-err-wrappers.h: Add udm errors for kcs and
+	openipmi system errors.
 	
 2007-08-23  Albert Chu <chu11@llnl.gov>
 

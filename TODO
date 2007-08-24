@@ -74,6 +74,10 @@ ipmiconsole
 retry under a different port
 - has never been tried/tested
 
+inband
+------
+real timeout mechanism like out of band
+
 doc
 ---
 trouble-shooting guide to error codes
