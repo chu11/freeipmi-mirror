@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.43 2007-08-24 22:22:22 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.44 2007-08-24 22:30:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2608,6 +2608,55 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
   return 0;
 }
 
+/* Returns 1 to continue the state machine (normally a packet was
+ * sent), 0 if nothing was done, -1 to close the session (non-cleanly)
+ */
+static int
+_send_sol_character_data_or_break(ipmiconsole_ctx_t c)
+{
+  struct ipmiconsole_ctx_session *s;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  s = &(c->session);
+
+  /* _send_sol_packet_with_character_data() will not send more
+   * than s->console_remote_console_to_bmc_bytes_before_break
+   */
+  if (!cbuf_is_empty(s->console_remote_console_to_bmc)
+      && (!s->break_requested
+          || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
+    {
+      if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
+        {
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            return -1;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          return 1;
+        }
+      return 1;
+    }
+  
+  if (s->break_requested)
+    {
+      if (_send_sol_packet_generate_break(c, 0) < 0)
+        {
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            return -1;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          return 1;
+        }
+      return 1;
+    }
+
+  return 0;
+}
+
 /* Return 0 to continue the state machine (normally a packet was
  * sent), -1 to close the session (non-cleanly)
  */
@@ -3160,44 +3209,16 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
    * ipmiconsole_process_ctxs() is called.
    */
 
-  /* XXX: TODO: This is identical to other code in _process_ctxs() */
-
-  /* _send_sol_packet_with_character_data() will not send more
-   * than s->console_remote_console_to_bmc_bytes_before_break
+  /* The return value of _send_sol_character_data_or_break() doesn't
+   * matter, we continue the state machine either way because ...
    */
-  if (!cbuf_is_empty(s->console_remote_console_to_bmc)
-      && (!s->break_requested
-          || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
-    {
-      if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
-        {
-          /* Attempt to close the session cleanly */
-          s->close_session_flag++;
-          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-            return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-          return 0;
-        }
-      return 0;
-    }
+  if (_send_sol_character_data_or_break(c) < 0)
+    return -1;
 
-  if (s->break_requested)
-    {
-      if (_send_sol_packet_generate_break(c, 0) < 0)
-        {
-          /* Attempt to close the session cleanly */
-          s->close_session_flag++;
-          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-            return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-          return 0;
-        }
-      return 0;
-    }
-
-  /* packet not sent, but state machine continues.  Just tell it to
-   * setup the appropriate timeout to wait for SOL or send a
-   * keeaplive.
+  /* Doesn't matter if packet was sent or not.  If a packet was sent,
+   * continue the state machine.  If not, the state machine still
+   * needs to setup the appropriate timeout to wait for SOL or a send
+   * a keepalive packet.
    */
   return 0;
 }
@@ -3233,38 +3254,10 @@ _process_protocol_state_sol_session_send(ipmiconsole_ctx_t c)
     }
   else
     {
-      /* _send_sol_packet_with_character_data() will not send more
-       * than s->console_remote_console_to_bmc_bytes_before_break
-       */
-      if (!cbuf_is_empty(s->console_remote_console_to_bmc)
-          && (!s->break_requested
-              || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
-        {
-          if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
-            {
-              /* Attempt to close the session cleanly */
-              s->close_session_flag++;
-              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-                return -1;
-              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-              return 1;
-            }
-          return 1;
-        }
-      
-      if (s->break_requested)
-        {
-          if (_send_sol_packet_generate_break(c, 0) < 0)
-            {
-              /* Attempt to close the session cleanly */
-              s->close_session_flag++;
-              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-                return -1;
-              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-              return 1;
-            }
-          return 1;
-        }
+      if ((ret = _send_sol_character_data_or_break(c)) < 0)
+        return -1;
+      if (ret)
+        return 1;
     }
   
   /* Will handle keepalive retransmits too */
