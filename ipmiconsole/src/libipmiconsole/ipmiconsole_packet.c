@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.4 2007-08-23 17:02:30 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.5 2007-08-24 22:22:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1084,10 +1084,6 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
       uint8_t authentication_activation;
       uint8_t encryption_activation;
 
-      /* XXX: I *think* for this packet type, the term
-       * "authentication" refers to per packet authentication, thus
-       * actually referring to the session integrity algorithm.
-       */
       if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
 	authentication_activation = IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION;
       else
@@ -1276,7 +1272,7 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
         ack = IPMI_SOL_NACK;
     }
   else
-    /* XXX: Hopefully this is right. */
+    /* XXX: Hopefully this is right. Specification is unclear */
     ack = 0;
 
   /* Fill/Determine Object */

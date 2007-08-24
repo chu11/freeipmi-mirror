@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.1 2007-08-23 00:23:55 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.2 2007-08-24 22:22:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,8 +74,6 @@ ipmiconsole_garbage_collector(void *arg)
       int n;
       fd_set rds;
 
-      /* XXX put in teardown junk */
-      
       FD_ZERO(&rds);
       FD_SET(garbage_collector_notifier[0], &rds);
 

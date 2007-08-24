@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.49 2007-08-24 21:37:45 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.50 2007-08-24 22:22:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1829,12 +1829,6 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(!(c->session_submitted));
   assert(console_engine_is_setup);
-
-  /* XXX
-   *
-   * Consider adding a queue of pending submissions so users will not
-   * have to "block" here.
-   */
 
   if ((perr = pthread_mutex_lock(&console_engine_thread_count_mutex)))
     {

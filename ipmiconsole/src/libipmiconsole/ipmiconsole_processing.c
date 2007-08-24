@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.42 2007-08-24 21:37:45 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.43 2007-08-24 22:22:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -667,12 +667,11 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 	  goto cleanup;
 	}
 
-      /* XXX: I don't think there is a guarantee the
-       * other data (i.e. authentication keys, session id's, etc.)
-       * will be valid in the responses if the status code 
-       * contains an error.  So unlike the IPMI 1.5 pre-session
-       * or IPMI 2.0 session checks, we check the status
-       * code prior to checking remaining data
+      /* I don't think there is a guarantee the other data
+       * (i.e. authentication keys, session id's, etc.)  will be valid
+       * in the responses if the status code contains an error.  So
+       * unlike the IPMI 1.5 pre-session or IPMI 2.0 session checks,
+       * we check the status code prior to checking remaining data
        */
 
       if ((ret = ipmiconsole_check_rmcpplus_status_code(c, *p)) < 0)
@@ -1126,7 +1125,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
           if (s->try_new_port_flag)
             {
-              /* XXX: Come back later when you learn more */
+              /* XXX: Come back later when you learn more about this
+               * particular behavior.  The specification is unclear.
+               */
               /* If we're trying a different port, this call may or may
                * not succeed.  If the completion code is invalid, it's ok.
                */
@@ -2607,7 +2608,9 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_start(ipmiconsole_ctx_t c)
 {
@@ -2625,7 +2628,9 @@ _process_protocol_state_start(ipmiconsole_ctx_t c)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_get_authentication_capabilities_v20_sent(ipmiconsole_ctx_t c)
 {
@@ -2656,7 +2661,9 @@ _process_protocol_state_get_authentication_capabilities_v20_sent(ipmiconsole_ctx
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_open_session_request_sent(ipmiconsole_ctx_t c)
 {
@@ -2674,7 +2681,9 @@ _process_protocol_state_open_session_request_sent(ipmiconsole_ctx_t c)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_rakp_message_1_sent(ipmiconsole_ctx_t c)
 {
@@ -2696,7 +2705,9 @@ _process_protocol_state_rakp_message_1_sent(ipmiconsole_ctx_t c)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_rakp_message_3_sent(ipmiconsole_ctx_t c)
 {
@@ -2726,7 +2737,9 @@ _process_protocol_state_rakp_message_3_sent(ipmiconsole_ctx_t c)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_set_session_privilege_level_sent(ipmiconsole_ctx_t c)
 {
@@ -2770,7 +2783,9 @@ _process_protocol_state_set_session_privilege_level_sent(ipmiconsole_ctx_t c)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_get_channel_payload_support_sent(ipmiconsole_ctx_t c)
 {
@@ -2814,7 +2829,9 @@ _process_protocol_state_get_channel_payload_support_sent(ipmiconsole_ctx_t c)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_get_payload_activation_status_sent(ipmiconsole_ctx_t c)
 {
@@ -2888,7 +2905,9 @@ _process_protocol_state_get_payload_activation_status_sent(ipmiconsole_ctx_t c)
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 {
@@ -2982,8 +3001,9 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 
   if (ret)
     {
-      /* XXX: Supposed to deactivate?  I don't know.  Come back later when you
-       * figure out proper behavior?
+      /* XXX: Supposed to deactivate?  I don't know, specification is
+       * unclear.  Come back later when you figure out proper
+       * behavior?
        */
 
       IPMICONSOLE_CTX_DEBUG(c, ("trying new port: %X", s->console_port));
@@ -3138,9 +3158,9 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
    * session was established.  We send that data now.  Otherwise
    * we'd have to wait until the next poll() has passed to
    * ipmiconsole_process_ctxs() is called.
-   *
-   * TODO: This is identical to code above.  Clean this up later.
    */
+
+  /* XXX: TODO: This is identical to other code in _process_ctxs() */
 
   /* _send_sol_packet_with_character_data() will not send more
    * than s->console_remote_console_to_bmc_bytes_before_break
@@ -3175,12 +3195,100 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       return 0;
     }
 
+  /* packet not sent, but state machine continues.  Just tell it to
+   * setup the appropriate timeout to wait for SOL or send a
+   * keeaplive.
+   */
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Returns 1 to continue the state machine (normally a packet was
+ * sent), 0 if nothing was done, -1 to close the session (non-cleanly)
+ */
 static int
-_process_protocol_state_sol_session(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
+_process_protocol_state_sol_session_send(ipmiconsole_ctx_t c)
+{
+  struct ipmiconsole_ctx_session *s;
+  int ret;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  s = &(c->session);
+
+  if (s->sol_input_waiting_for_ack)
+    {
+      if ((ret = _sol_retransmission_timeout(c)) < 0)
+        {
+          /* Attempt to close the session cleanly */
+          s->close_session_flag++;
+          if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            return -1;
+          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          return 1;
+        }
+      
+      if (ret)
+        return 1;
+    }
+  else
+    {
+      /* _send_sol_packet_with_character_data() will not send more
+       * than s->console_remote_console_to_bmc_bytes_before_break
+       */
+      if (!cbuf_is_empty(s->console_remote_console_to_bmc)
+          && (!s->break_requested
+              || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
+        {
+          if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
+            {
+              /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                return -1;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              return 1;
+            }
+          return 1;
+        }
+      
+      if (s->break_requested)
+        {
+          if (_send_sol_packet_generate_break(c, 0) < 0)
+            {
+              /* Attempt to close the session cleanly */
+              s->close_session_flag++;
+              if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+                return -1;
+              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+              return 1;
+            }
+          return 1;
+        }
+    }
+  
+  /* Will handle keepalive retransmits too */
+  if ((ret = _keepalive_timeout(c)) < 0)
+    {
+      /* Attempt to close the session cleanly */
+      s->close_session_flag++;
+      if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+        return -1;
+      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      return 1;
+    }
+  
+  if (ret)
+    return 1;
+
+  return 0;
+}
+
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
+static int
+_process_protocol_state_sol_session_receive(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
   struct ipmiconsole_ctx_session *s;
 
@@ -3229,10 +3337,16 @@ _process_protocol_state_sol_session(ipmiconsole_ctx_t c, ipmiconsole_packet_type
       return 0;
     }
 
+  /* packet not sent, but state machine continues.  Just tell it to
+   * setup the appropriate timeout to wait for SOL or send a
+   * keeaplive.
+   */
   return 0;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
 {
@@ -3337,7 +3451,9 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
   return -1;
 }
 
-/* Return 0 to continue the state machine, -1 to close the session (non-cleanly) */
+/* Return 0 to continue the state machine (normally a packet was
+ * sent), -1 to close the session (non-cleanly)
+ */
 static int
 _process_protocol_state_close_session_sent(ipmiconsole_ctx_t c)
 {
@@ -3379,16 +3495,16 @@ _process_protocol_state_close_session_sent(ipmiconsole_ctx_t c)
       return 0;
     }
 
-  return 0;
+  /* Shouldn't be possible to reach this point */
+  IPMICONSOLE_CTX_DEBUG(c, ("close session logic bug"));
+  c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+  return -1;
 }
 
 /* 
  * This is the primary state machine for IPMI/SOL
  *
  * Return -1 if context has an error or has timed out
- *
- * XXX: Argh!  This function has now grown to be nearly 1000 lines
- * long.  Come back and clean this up.
  */
 static int
 _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
@@ -3434,70 +3550,16 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       goto close_session;
     }
 
+  /* Handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related sends, below
+   * we handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related receives.
+   */
   if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
     {
-      if (s->sol_input_waiting_for_ack)
-        {
-          if ((ret = _sol_retransmission_timeout(c)) < 0)
-            {
-              /* Attempt to close the session cleanly */
-              s->close_session_flag++;
-	      if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-		goto close_session;
-	      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-	      goto calculate_timeout;
-            }
-
-          if (ret)
-            goto calculate_timeout;
-        }
-      else
-        {
-          /* _send_sol_packet_with_character_data() will not send more
-           * than s->console_remote_console_to_bmc_bytes_before_break
-           */
-          if (!cbuf_is_empty(s->console_remote_console_to_bmc)
-              && (!s->break_requested
-                  || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
-            {
-              if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
-                {
-		  /* Attempt to close the session cleanly */
-		  s->close_session_flag++;
-		  if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-		    goto close_session;
-		  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-		  goto calculate_timeout;
-                }
-              goto calculate_timeout;
-            }
-          
-          if (s->break_requested)
-            {
-              if (_send_sol_packet_generate_break(c, 0) < 0)
-                {
-		  /* Attempt to close the session cleanly */
-		  s->close_session_flag++;
-		  if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-		    goto close_session;
-		  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-		  goto calculate_timeout;
-                }
-              goto calculate_timeout;
-            }
-        }
-
-      /* Will handle keepalive retransmits too */
-      if ((ret = _keepalive_timeout(c)) < 0)
-        {
-	  /* Attempt to close the session cleanly */
-	  s->close_session_flag++;
-	  if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-	    goto close_session;
-	  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-	  goto calculate_timeout;
-        }
-      
+      /* Return values for this _process_X() function are different than
+       * others, see comments above.
+       */
+      if ((ret = _process_protocol_state_sol_session_send(c)) < 0)
+        goto close_session;
       if (ret)
         goto calculate_timeout;
     }
@@ -3567,6 +3629,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       goto calculate_timeout;
     }
 
+  /* Below here, the state machine handles packet receives */
  state_machine:
   if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
@@ -3636,7 +3699,10 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
     }
   else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
     {
-      if (_process_protocol_state_sol_session(c, p) < 0)
+      /* Handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related receives.  Above 
+       * we handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related sends.
+       */
+      if (_process_protocol_state_sol_session_receive(c, p) < 0)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
