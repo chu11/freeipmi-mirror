@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.40 2007-08-23 17:34:57 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.41 2007-08-25 00:53:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -258,8 +258,6 @@ struct ipmiconsole_ctx_session {
   int16_t console_port;
   cbuf_t ipmi_from_bmc;
   cbuf_t ipmi_to_bmc;
-  struct timeval last_ipmi_packet_sent;
-  struct timeval last_ipmi_packet_received;
 
   /* Pipe for non-fd communication: from API to engine */
   int asynccomm[2];
@@ -319,6 +317,10 @@ struct ipmiconsole_ctx_session {
    * being reattempted under a different port.
    */
   struct sockaddr_in addr;
+
+  /* Session timeout maintenance */
+  struct timeval last_ipmi_packet_sent;
+  struct timeval last_ipmi_packet_received;
 
   /*
    * Protocol State Machine Variables

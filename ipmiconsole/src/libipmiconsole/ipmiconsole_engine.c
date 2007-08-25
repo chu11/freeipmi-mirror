@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.51 2007-08-24 22:35:54 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.52 2007-08-25 00:53:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -221,6 +221,18 @@ _ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c)
   memset(&(s->addr), '\0', sizeof(struct sockaddr_in));
   s->addr.sin_family = AF_INET;
   s->addr.sin_port = htons(s->console_port);
+
+  timeval_clear(&(s->last_ipmi_packet_sent));
+  /* Note:
+   * Initial last_ipmi_packet_received to current time, so session
+   * timeout can be calculated in the beginning if necessary.
+   */
+  if (gettimeofday(&(s->last_ipmi_packet_received), NULL) < 0)
+    {
+      IPMICONSOLE_DEBUG(("gettimeofday: %s", strerror(errno)));
+      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      return -1;
+    }  
 
 #ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   memset(&hent, '\0', sizeof(struct hostent));
@@ -465,18 +477,6 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
-
-  timeval_clear(&(s->last_ipmi_packet_sent));
-  /* Note:
-   * Initial last_ipmi_packet_received to current time, so session
-   * timeout can be calculated in the beginning if necessary.
-   */
-  if (gettimeofday(&(s->last_ipmi_packet_received), NULL) < 0)
-    {
-      IPMICONSOLE_DEBUG(("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-      goto cleanup;
-    }  
 
   /* Pipe for non-fd communication */
   if (pipe(s->asynccomm) < 0)
