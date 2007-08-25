@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.44 2007-08-24 22:30:40 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.45 2007-08-25 01:30:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,7 +77,6 @@
 static int
 _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
   struct timeval *t;
@@ -86,8 +85,6 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(IPMICONSOLE_PACKET_TYPE_REQUEST(p));
-
-  s = &(c->session);
 
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
@@ -99,16 +96,16 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
       || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ
       || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ)
     {
-      s->requester_sequence_number++;
-      if (s->requester_sequence_number > IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX)
-        s->requester_sequence_number = 0;
+      c->session.requester_sequence_number++;
+      if (c->session.requester_sequence_number > IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX)
+        c->session.requester_sequence_number = 0;
     }
   
   /* Note: Message Tags are 1 byte, so wraparounds are automatic */
   if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3)
-    s->message_tag++;
+    c->session.message_tag++;
   
   if (p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
@@ -119,9 +116,9 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
       || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ)
     {
       /* Sequence Numbers of 0 are considered special by IPMI 2.0 */
-      s->session_sequence_number++;
-      if (!(s->session_sequence_number))
-	s->session_sequence_number++;
+      c->session.session_sequence_number++;
+      if (!(c->session.session_sequence_number))
+	c->session.session_sequence_number++;
     }
 
   if ((pkt_len = ipmiconsole_ipmi_packet_assemble(c, p, pkt, IPMICONSOLE_PACKET_BUFLEN)) < 0)
@@ -133,7 +130,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
         return -1;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -155,9 +152,9 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
     }
   
   if (p != IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_VERSION_RQ)
-    t = &(s->last_ipmi_packet_sent);
+    t = &(c->session.last_ipmi_packet_sent);
   else
-    t = &(s->last_keepalive_packet_sent);
+    t = &(c->session.last_keepalive_packet_sent);
   
   if (gettimeofday(t, NULL) < 0)
     {
@@ -179,7 +176,6 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
                                      uint8_t accepted_character_count,
                                      int is_retransmission)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
   int rv = -1;
@@ -188,10 +184,8 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  assert(!cbuf_is_empty(c->session.console_remote_console_to_bmc));
+  assert(!cbuf_is_empty(c->connection.console_remote_console_to_bmc));
 
-  s = &(c->session);
-  
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
   /* 
@@ -201,57 +195,57 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
    */
 
   /* Sequence Numbers of 0 are considered special by IPMI 2.0 */
-  s->session_sequence_number++;
-  if (!(s->session_sequence_number))
-    s->session_sequence_number++;
+  c->session.session_sequence_number++;
+  if (!(c->session.session_sequence_number))
+    c->session.session_sequence_number++;
 
   if (!is_retransmission)
     {
       int max_character_send_size;
 
-      s->sol_input_packet_sequence_number++;
-      if (s->sol_input_packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX)
+      c->session.sol_input_packet_sequence_number++;
+      if (c->session.sol_input_packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX)
         /* Sequence number 0 is special, so start at 1 */
-        s->sol_input_packet_sequence_number = 1;
+        c->session.sol_input_packet_sequence_number = 1;
 
       /*  
        * If a serial break has occurred, we want to generate the break
        * after all input before the break has been dealt with and none
        * after the break have been sent.
        */
-      if (!s->console_remote_console_to_bmc_bytes_before_break)
-        max_character_send_size = s->max_sol_character_send_size;
+      if (!c->session.console_remote_console_to_bmc_bytes_before_break)
+        max_character_send_size = c->session.max_sol_character_send_size;
       else
-        max_character_send_size = s->console_remote_console_to_bmc_bytes_before_break;
+        max_character_send_size = c->session.console_remote_console_to_bmc_bytes_before_break;
 
-      /* Notes: Since s->console_remote_console_to_bmc is a circular buffer, it may
-       * not be apparent why 's->sol_input_character_data' and
-       * 's->sol_input_character_data_len' is necessary.
+      /* Notes: Since c->session.console_remote_console_to_bmc is a circular buffer, it may
+       * not be apparent why 'c->session.sol_input_character_data' and
+       * 'c->session.sol_input_character_data_len' is necessary.
        *
        * The reason it is needed is because the user may have typed
        * additional info, thus increasing the amount of data in
-       * 's->console_remote_console_to_bmc'.  We need to assure that if there is
+       * 'c->session.console_remote_console_to_bmc'.  We need to assure that if there is
        * an SOL retransmission, the character data it is sending is
        * perfectly identical.
        */
-      if ((n = cbuf_peek(s->console_remote_console_to_bmc, 
-                         s->sol_input_character_data,
+      if ((n = cbuf_peek(c->connection.console_remote_console_to_bmc, 
+                         c->session.sol_input_character_data,
                          max_character_send_size)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
-      s->sol_input_character_data_len = n;
+      c->session.sol_input_character_data_len = n;
     }
 
   if ((pkt_len = ipmiconsole_sol_packet_assemble(c, 
-                                                  s->sol_input_packet_sequence_number,
+                                                  c->session.sol_input_packet_sequence_number,
                                                   packet_ack_nack_sequence_number,
                                                   accepted_character_count,
                                                   0,
-                                                  s->sol_input_character_data,
-                                                  s->sol_input_character_data_len,
+                                                  c->session.sol_input_character_data,
+                                                  c->session.sol_input_character_data_len,
                                                   pkt, 
                                                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
     goto cleanup;
@@ -262,7 +256,7 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
         goto cleanup;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -283,14 +277,14 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
       goto cleanup;
     }
   
-  if (gettimeofday(&(s->last_sol_input_packet_sent), NULL) < 0)
+  if (gettimeofday(&(c->session.last_sol_input_packet_sent), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
     
-  s->sol_input_waiting_for_ack++;
+  c->session.sol_input_waiting_for_ack++;
   rv = 0;
 cleanup:
   /* Clear out data */
@@ -307,7 +301,6 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
                           uint8_t packet_ack_nack_sequence_number,
                           uint8_t accepted_character_count)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
   int secure_malloc_flag;
@@ -315,8 +308,6 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  
-  s = &(c->session);
   
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
@@ -327,9 +318,9 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
    */
 
   /* Sequence Numbers of 0 are considered special by IPMI 2.0 */
-  s->session_sequence_number++;
-  if (!(s->session_sequence_number))
-    s->session_sequence_number++;
+  c->session.session_sequence_number++;
+  if (!(c->session.session_sequence_number))
+    c->session.session_sequence_number++;
 
   if ((pkt_len = ipmiconsole_sol_packet_assemble(c, 
                                                   0,
@@ -348,7 +339,7 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
         return -1;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -380,7 +371,6 @@ static int
 _send_sol_packet_generate_break(ipmiconsole_ctx_t c, 
                                 int is_retransmission)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int n, pkt_len, dropped = 0;
   int secure_malloc_flag;
@@ -388,8 +378,6 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-  
-  s = &(c->session);
   
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
@@ -400,28 +388,28 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
    */
 
   /* Sequence Numbers of 0 are considered special by IPMI 2.0 */
-  s->session_sequence_number++;
-  if (!(s->session_sequence_number))
-    s->session_sequence_number++;
+  c->session.session_sequence_number++;
+  if (!(c->session.session_sequence_number))
+    c->session.session_sequence_number++;
 
   if (!is_retransmission)
     {
-      s->sol_input_packet_sequence_number++;
-      if (s->sol_input_packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX)
+      c->session.sol_input_packet_sequence_number++;
+      if (c->session.sol_input_packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX)
         /* Sequence number 0 is special, so start at 1 */
-        s->sol_input_packet_sequence_number = 1;
+        c->session.sol_input_packet_sequence_number = 1;
 
       /* achu: For the time being we will not send data along with a break */
-      s->sol_input_character_data_len = 0;
+      c->session.sol_input_character_data_len = 0;
     }
   
   if ((pkt_len = ipmiconsole_sol_packet_assemble(c, 
-                                                  s->sol_input_packet_sequence_number,
+                                                  c->session.sol_input_packet_sequence_number,
 						  0,
 						  0,
                                                   IPMI_SOL_GENERATE_BREAK,
-                                                  s->sol_input_character_data,
-                                                  s->sol_input_character_data_len,
+                                                  c->session.sol_input_character_data,
+                                                  c->session.sol_input_character_data_len,
                                                   pkt, 
                                                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
     return -1;
@@ -432,7 +420,7 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
         return -1;
     }
   
-  if ((n = cbuf_write(s->ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -453,15 +441,15 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
       return -1;
     }
   
-  if (gettimeofday(&(s->last_sol_input_packet_sent), NULL) < 0)
+  if (gettimeofday(&(c->session.last_sol_input_packet_sent), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       return -1;
     }
 
-  s->sol_input_waiting_for_ack++;
-  s->sol_input_waiting_for_break_ack++;
+  c->session.sol_input_waiting_for_ack++;
+  c->session.sol_input_waiting_for_break_ack++;
   return 0;
 }
 
@@ -472,17 +460,13 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
 static int
 _receive_packet_data_reset(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-  
-  s->retransmission_count = 0;
-  s->errors_count = 0;
-  s->session_sequence_number_errors_count = 0;
-  if (gettimeofday(&(s->last_ipmi_packet_received), NULL) < 0)
+  c->session.retransmission_count = 0;
+  c->session.errors_count = 0;
+  c->session.session_sequence_number_errors_count = 0;
+  if (gettimeofday(&(c->session.last_ipmi_packet_received), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
@@ -499,14 +483,10 @@ _receive_packet_data_reset(ipmiconsole_ctx_t c)
 static int
 _receive_ping_packet_data_reset(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-  
-  if (gettimeofday(&(s->last_ipmi_packet_received), NULL) < 0)
+  if (gettimeofday(&(c->session.last_ipmi_packet_received), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
@@ -524,7 +504,6 @@ _receive_ping_packet_data_reset(ipmiconsole_ctx_t c)
 static int
 _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t pkt[IPMICONSOLE_PACKET_BUFLEN];
   int ret, pkt_len, dropped, rv = -1;
 
@@ -532,9 +511,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(p);
 
-  s = &(c->session);
-
-  if ((pkt_len = cbuf_peek(s->ipmi_from_bmc, pkt, IPMICONSOLE_PACKET_BUFLEN)) < 0)
+  if ((pkt_len = cbuf_peek(c->connection.ipmi_from_bmc, pkt, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_peek: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -544,7 +521,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   if (!pkt_len)
     return 0;
 
-  if ((dropped = cbuf_drop(s->ipmi_from_bmc, pkt_len)) < 0)
+  if ((dropped = cbuf_drop(c->connection.ipmi_from_bmc, pkt_len)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_drop: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -565,7 +542,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
        */
       if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)
         ipmiconsole_packet_dump_unknown(c, pkt, pkt_len);
-      s->errors_count++;
+      c->session.errors_count++;
       rv = 0;
       goto cleanup;
     }
@@ -588,7 +565,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -598,7 +575,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -608,7 +585,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -618,7 +595,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -652,7 +629,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -662,7 +639,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -689,7 +666,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -745,7 +722,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -755,7 +732,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -765,7 +742,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -775,7 +752,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -785,7 +762,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -795,7 +772,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -805,7 +782,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -815,7 +792,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -825,7 +802,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -835,7 +812,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -858,7 +835,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 	      uint64_t val;
 
 	      if (Fiid_obj_get(c,
-			       s->obj_activate_payload_rs,
+			       c->connection.obj_activate_payload_rs,
 			       "comp_code",
 			       &val) < 0)
 		goto cleanup;
@@ -887,7 +864,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -897,7 +874,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -907,7 +884,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -917,7 +894,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -927,8 +904,8 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       
       if (!ret)
 	{
-	  s->errors_count++;
-	  s->session_sequence_number_errors_count++;
+	  c->session.errors_count++;
+	  c->session.session_sequence_number_errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -938,7 +915,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -976,7 +953,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       /* This is one check we do care about */
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -990,7 +967,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       /* This is one check we do care about */
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1013,9 +990,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_payload_type(c, *p)) < 0)
         goto cleanup;
 
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1023,9 +1000,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_payload_pad(c, *p)) < 0)
         goto cleanup;
 
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1033,9 +1010,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_integrity_pad(c, *p)) < 0)
         goto cleanup;
 
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1043,9 +1020,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_checksum(c, *p)) < 0)
         goto cleanup;
 
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1053,9 +1030,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_authentication_code(c, *p, pkt, pkt_len)) < 0)
         goto cleanup;
 
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1063,9 +1040,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_outbound_sequence_number(c, *p)) < 0)
         goto cleanup;
       
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1076,7 +1053,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       /* This is one check we always care about */
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1084,9 +1061,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_network_function(c, *p)) < 0)
         goto cleanup;
 
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1097,7 +1074,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       /* This is one check we always care about */
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1105,9 +1082,9 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       if ((ret = ipmiconsole_check_requester_sequence_number(c, *p)) < 0)
         goto cleanup;
 
-      if (!s->close_session_flag && !ret)
+      if (!c->session.close_session_flag && !ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1123,7 +1100,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 	  uint8_t comp_code;
 	  uint64_t val;
 
-          if (s->try_new_port_flag)
+          if (c->session.try_new_port_flag)
             {
               /* XXX: Come back later when you learn more about this
                * particular behavior.  The specification is unclear.
@@ -1142,7 +1119,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 	   */
 	  
 	  if (Fiid_obj_get(c,
-			   s->obj_deactivate_payload_rs,
+			   c->connection.obj_deactivate_payload_rs,
 			   "comp_code",
 			   &val) < 0)
 	    goto cleanup;
@@ -1190,7 +1167,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       /* This is one check we do care about */
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1204,7 +1181,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
       /* This is one check we do care about */
       if (!ret)
 	{
-	  s->errors_count++;
+	  c->session.errors_count++;
 	  rv = 0;
 	  goto cleanup;
 	}
@@ -1239,8 +1216,8 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
  cleanup:
   secure_memset(pkt, '\0', IPMICONSOLE_PACKET_BUFLEN);
-  Fiid_obj_clear(c, s->obj_lan_session_hdr_rs);
-  Fiid_obj_clear(c, s->obj_rmcpplus_session_trlr_rs);
+  Fiid_obj_clear(c, c->connection.obj_lan_session_hdr_rs);
+  Fiid_obj_clear(c, c->connection.obj_rmcpplus_session_trlr_rs);
   return rv;
 }
 
@@ -1252,21 +1229,17 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 static int
 _close_session(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.close_session_flag);
 
-  s = &(c->session);
-
   /* 
    * Close the session differently depending on the state of the session
    */
-  if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_START
-      || s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT
-      || s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT
-      || s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_START
+      || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT
+      || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT
+      || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
     {
       /* Session has not started yet, so we can inform the state
        * machine to just quit
@@ -1274,7 +1247,7 @@ _close_session(ipmiconsole_ctx_t c)
       return -1;
     }
   /*
-   * else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+   * else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
    *
    * The session may or may not be up yet, depending on if the RAKP Message 4
    * response has arrived.  
@@ -1282,17 +1255,17 @@ _close_session(ipmiconsole_ctx_t c)
    * Code logic in _ipmi_retransmission_timeout() and _process_ctx()
    * will handle this situation.
    */
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT
-	   || s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT
-           || s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT
+	   || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT
+           || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT)
     {
       /* Session is up, but the SOL payload is not activated, so close the session */
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 1;
     }
-  /* else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT)
+  /* else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT)
    *
    * The SOL payload activation may or may not be up yet,
    * depending on if the Activate Payload response has arrived.
@@ -1300,16 +1273,16 @@ _close_session(ipmiconsole_ctx_t c)
    * Code logic in _ipmi_retransmission_timeout() and _process_ctx()
    * will handle this situation.
    */
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
     {
       /* The SOL session is setup, so deactivate the payload first */
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
 	return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 1;
     }
-  /* else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT
-   *          || s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT)
+  /* else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT
+   *          || c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT)
    *
    * We're happily on our way to closing, so let the state machine finish up 
    */
@@ -1325,14 +1298,10 @@ _close_session(ipmiconsole_ctx_t c)
 static int
 _check_close_session(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
-  if (!s->close_session_flag)
+  if (!c->session.close_session_flag)
     return 0;
 
   return _close_session(c);
@@ -1346,15 +1315,13 @@ _check_close_session(ipmiconsole_ctx_t c)
 static int
 _session_timeout(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   struct timeval current;
   struct timeval timeout;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-  timeval_add_ms(&(s->last_ipmi_packet_received), c->config.session_timeout_len, &timeout);
+  timeval_add_ms(&(c->session.last_ipmi_packet_received), c->config.session_timeout_len, &timeout);
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
@@ -1373,7 +1340,6 @@ _session_timeout(ipmiconsole_ctx_t c)
 static int
 _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   struct timeval current;
   struct timeval timeout;
   unsigned int retransmission_timeout_len;
@@ -1384,15 +1350,13 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
   assert(c->session.protocol_state != IPMICONSOLE_PROTOCOL_STATE_START);
   assert(c->session.protocol_state != IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
-  s = &(c->session);
-
   if (c->config.retransmission_backoff_count)
-    retransmission_timeout_multiplier = (s->retransmission_count / c->config.retransmission_backoff_count) + 1;
+    retransmission_timeout_multiplier = (c->session.retransmission_count / c->config.retransmission_backoff_count) + 1;
   else
     retransmission_timeout_multiplier = 1;
   retransmission_timeout_len = c->config.retransmission_timeout_len * retransmission_timeout_multiplier;
       
-  timeval_add_ms(&(s->last_ipmi_packet_sent), retransmission_timeout_len, &timeout);
+  timeval_add_ms(&(c->session.last_ipmi_packet_sent), retransmission_timeout_len, &timeout);
 
   if (gettimeofday(&current, NULL) < 0)
     {
@@ -1404,15 +1368,15 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
   if (!timeval_gt(&current, &timeout))
     return 0;
   
-  s->retransmission_count++;
-  if (s->retransmission_count > c->config.maximum_retransmission_count)
+  c->session.retransmission_count++;
+  if (c->session.retransmission_count > c->config.maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive retransmissions"));
       c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT;
       return -1;
     }
 #if 0
-  IPMICONSOLE_CTX_DEBUG(c, ("retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", s->retransmission_count, c->config.maximum_retransmission_count, s->protocol_state));
+  IPMICONSOLE_CTX_DEBUG(c, ("retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", c->session.retransmission_count, c->config.maximum_retransmission_count, c->session.protocol_state));
 #endif
   
   /* Note: 
@@ -1421,24 +1385,24 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
    * states do not have to be changed.  These are retransmissions,
    * so the protocol state can stay the same.
    */
-  if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
     {
-      if (s->close_session_flag)
+      if (c->session.close_session_flag)
         {
           /* We assume the RAKP 4 response message was lost.  So the 
            * IPMI session was never established.  We just return -1 so the 
@@ -1450,24 +1414,24 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT)
     {
-      if (s->close_session_flag)
+      if (c->session.close_session_flag)
         {
           /* We assume the Activate Payload response message was
            * lost.  So the IPMI session was established but the
@@ -1476,21 +1440,21 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
            */
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
           return 0;
         }          
       
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT)
     {
-      if (s->close_session_flag)
+      if (c->session.close_session_flag)
         {
           /* If we timeout on a close session packet and truly
            * wish to close the session, don't bother
@@ -1499,12 +1463,12 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
            * case, any retransmitted close session responses will
            * fail b/c the session is already done.
            */
-          s->close_timeout_flag++;
+          c->session.close_timeout_flag++;
         }
     }
   else
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("invalid protocol_state: %d", s->protocol_state));
+      IPMICONSOLE_CTX_DEBUG(c, ("invalid protocol_state: %d", c->session.protocol_state));
       return -1;
     }
 
@@ -1519,7 +1483,6 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
 static int
 _sol_retransmission_timeout(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   struct timeval current;
   struct timeval timeout;
   
@@ -1527,9 +1490,7 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
-  s = &(c->session);
-  
-  timeval_add_ms(&(s->last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
+  timeval_add_ms(&(c->session.last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
@@ -1540,18 +1501,18 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
   if (!timeval_gt(&current, &timeout))
     return 0;
 
-  s->retransmission_count++;
-  if (s->retransmission_count > c->config.maximum_retransmission_count)
+  c->session.retransmission_count++;
+  if (c->session.retransmission_count > c->config.maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive sol retransmissions"));
       c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT;
       return -1;
     }
 #if 0
-  IPMICONSOLE_CTX_DEBUG(c, ("sol retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", s->retransmission_count, c->config.maximum_retransmission_count, s->protocol_state));
+  IPMICONSOLE_CTX_DEBUG(c, ("sol retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", c->session.retransmission_count, c->config.maximum_retransmission_count, c->session.protocol_state));
 #endif
 
-  if (!s->sol_input_waiting_for_break_ack)
+  if (!c->session.sol_input_waiting_for_break_ack)
     {
       /* Notes: If the previous sol transmission included an ACK,
        * it will be lost here.  The BMC is responsible for retransmitting
@@ -1577,7 +1538,6 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
 static int
 _keepalive_is_necessary(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   struct timeval current;
   struct timeval timeout;
 
@@ -1585,9 +1545,7 @@ _keepalive_is_necessary(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
-  s = &(c->session);
-
-  timeval_add_ms(&(s->last_ipmi_packet_received), c->config.keepalive_timeout_len, &timeout);
+  timeval_add_ms(&(c->session.last_ipmi_packet_received), c->config.keepalive_timeout_len, &timeout);
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
@@ -1609,7 +1567,6 @@ _keepalive_is_necessary(ipmiconsole_ctx_t c)
 static int
 _keepalive_timeout(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   struct timeval current;
   struct timeval timeout;
   int rv;
@@ -1617,8 +1574,6 @@ _keepalive_timeout(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-
-  s = &(c->session);
 
   /* 
    * Timeout logic will send a keepalive packet if:
@@ -1639,7 +1594,7 @@ _keepalive_timeout(ipmiconsole_ctx_t c)
 	  return -1;
 	}
 
-      timeval_add_ms(&(s->last_keepalive_packet_sent), c->config.retransmission_keepalive_timeout_len, &timeout);
+      timeval_add_ms(&(c->session.last_keepalive_packet_sent), c->config.retransmission_keepalive_timeout_len, &timeout);
       if (timeval_gt(&current, &timeout))
 	{
 	  /* Note that the protocol_state stays in SOL_SESSION */
@@ -1660,7 +1615,6 @@ _keepalive_timeout(ipmiconsole_ctx_t c)
 static int
 _check_for_ipmi_2_0_support(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t ipmi_v20_extended_capabilities_available;
   uint8_t channel_supports_ipmi_v20_connections;
   uint64_t val;
@@ -1669,17 +1623,15 @@ _check_for_ipmi_2_0_support(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
 
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-                   s->obj_authentication_capabilities_v20_rs,
+                   c->connection.obj_authentication_capabilities_v20_rs,
                    "authentication_type.ipmi_v2.0_extended_capabilities_available",
                    &val) < 0)
     return -1;
   ipmi_v20_extended_capabilities_available = val;
   
   if (Fiid_obj_get(c,
-                   s->obj_authentication_capabilities_v20_rs,
+                   c->connection.obj_authentication_capabilities_v20_rs,
                    "channel_supports_ipmi_v2.0_connections",
                    &val) < 0)
     return -1;
@@ -1702,7 +1654,6 @@ _check_for_ipmi_2_0_support(ipmiconsole_ctx_t c)
 static int
 _check_for_authentication_support(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t authentication_status_anonymous_login;
   uint8_t authentication_status_null_username;
   uint8_t authentication_status_non_null_username;
@@ -1713,31 +1664,29 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT);
 
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-                   s->obj_authentication_capabilities_v20_rs,
+                   c->connection.obj_authentication_capabilities_v20_rs,
                    "authentication_status.anonymous_login",
                    &val) < 0)
     return -1;
   authentication_status_anonymous_login = val;
   
   if (Fiid_obj_get(c,
-                   s->obj_authentication_capabilities_v20_rs,
+                   c->connection.obj_authentication_capabilities_v20_rs,
                    "authentication_status.null_username",
                    &val) < 0)
     return -1;
   authentication_status_null_username = val;
 
   if (Fiid_obj_get(c,
-                   s->obj_authentication_capabilities_v20_rs,
+                   c->connection.obj_authentication_capabilities_v20_rs,
                    "authentication_status.non_null_username",
                    &val) < 0)
     return -1;
   authentication_status_non_null_username = val;
 
   if (Fiid_obj_get(c,
-                   s->obj_authentication_capabilities_v20_rs,
+                   c->connection.obj_authentication_capabilities_v20_rs,
                    "authentication_status.k_g",
                    &val) < 0)
     return -1;
@@ -1787,7 +1736,6 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
 static int
 _calculate_cipher_keys(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
   int32_t managed_system_random_number_len;
   uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
@@ -1807,8 +1755,6 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
   assert(c->session.confidentiality_key_ptr == c->session.confidentiality_key);
   assert(c->session.confidentiality_key_len == IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
 
-  s = &(c->session);
- 
   /* IPMI Workaround
    *
    * Intel IPMI 2.0 implementations pad their usernames.
@@ -1844,7 +1790,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
-      && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
   
@@ -1854,7 +1800,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
     k_g = NULL;
   
   if ((managed_system_random_number_len = Fiid_obj_get_data(c,
-                                                            s->obj_rakp_message_2,
+                                                            c->connection.obj_rakp_message_2,
                                                             "managed_system_random_number",
                                                             managed_system_random_number,
                                                             IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
@@ -1867,27 +1813,27 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if (ipmi_calculate_rmcpplus_session_keys(s->authentication_algorithm,
-                                           s->integrity_algorithm,
-                                           s->confidentiality_algorithm,
+  if (ipmi_calculate_rmcpplus_session_keys(c->connection.authentication_algorithm,
+                                           c->connection.integrity_algorithm,
+                                           c->connection.confidentiality_algorithm,
                                            password,
                                            password_len,
                                            k_g,
                                            (k_g) ? c->config.k_g_len : 0,
-                                           s->remote_console_random_number,
+                                           c->session.remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
                                            IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH,
-                                           s->name_only_lookup,
+                                           c->session.name_only_lookup,
                                            c->config.privilege_level,
                                            username,
                                            username_len,
-                                           &(s->sik_key_ptr),
-                                           &(s->sik_key_len),
-                                           &(s->integrity_key_ptr),
-                                           &(s->integrity_key_len),
-                                           &(s->confidentiality_key_ptr),
-                                           &(s->confidentiality_key_len)) < 0)
+                                           &(c->session.sik_key_ptr),
+                                           &(c->session.sik_key_len),
+                                           &(c->session.integrity_key_ptr),
+                                           &(c->session.integrity_key_len),
+                                           &(c->session.confidentiality_key_ptr),
+                                           &(c->session.confidentiality_key_len)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_calculate_rmcpplus_session_keys: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -1905,7 +1851,6 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
 static int
 _check_sol_supported(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t standard_payload_type_1_supported;
   uint64_t val;
 
@@ -1913,15 +1858,13 @@ _check_sol_supported(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT);
   
-  s = &(c->session);
-
   /* 
    * Note: Payload Type #1 is the SOL Payload Type.  See IPMI 2.0 Spec
    * Section 13.27.3 and Table 13-16.
    */
 
   if (Fiid_obj_get(c,
-                   s->obj_get_channel_payload_support_rs,
+                   c->connection.obj_get_channel_payload_support_rs,
                    "standard_payload_type_1_supported",
                    &val) < 0)
     return -1;
@@ -1938,7 +1881,6 @@ _check_sol_supported(ipmiconsole_ctx_t c)
 static int
 _check_sol_activated(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint64_t val;
   int i;
 
@@ -1947,34 +1889,32 @@ _check_sol_activated(ipmiconsole_ctx_t c)
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT);
   assert(!c->session.deactivate_payload_instances_and_try_again_flag);
   
-  s = &(c->session);
-
   /* May not be 0, see notes in _process_ctx() */
-  if (s->sol_instance_capacity
-      || s->sol_instances_activated_count
-      || s->sol_instances_deactivated_count)
+  if (c->session.sol_instance_capacity
+      || c->session.sol_instances_activated_count
+      || c->session.sol_instances_deactivated_count)
     {
-      s->sol_instance_capacity = 0;
-      memset(s->sol_instances_activated, '\0', IPMI_INSTANCES_ACTIVATED_LENGTH);
-      s->sol_instances_activated_count = 0;
-      s->sol_instances_deactivated_count = 0;
+      c->session.sol_instance_capacity = 0;
+      memset(c->session.sol_instances_activated, '\0', IPMI_INSTANCES_ACTIVATED_LENGTH);
+      c->session.sol_instances_activated_count = 0;
+      c->session.sol_instances_deactivated_count = 0;
     }
 
   if (Fiid_obj_get(c,
-                   s->obj_get_payload_activation_status_rs,
+                   c->connection.obj_get_payload_activation_status_rs,
                    "instance_capacity",
                    &val) < 0)
     return -1;
-  s->sol_instance_capacity = val;
+  c->session.sol_instance_capacity = val;
 
-  if (s->sol_instance_capacity > IPMI_INSTANCES_ACTIVATED_LENGTH)
+  if (c->session.sol_instance_capacity > IPMI_INSTANCES_ACTIVATED_LENGTH)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("invalid instance capacity: %d", s->sol_instance_capacity));
+      IPMICONSOLE_CTX_DEBUG(c, ("invalid instance capacity: %d", c->session.sol_instance_capacity));
       c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
       return -1;
     }
   
-  for (i = 0; i < s->sol_instance_capacity; i++)
+  for (i = 0; i < c->session.sol_instance_capacity; i++)
     {
       char fieldstr[64];
 
@@ -1982,26 +1922,26 @@ _check_sol_activated(ipmiconsole_ctx_t c)
       snprintf(fieldstr, 64, "instance_%d", i+1);
       
       if (Fiid_obj_get(c,
-                       s->obj_get_payload_activation_status_rs,
+                       c->connection.obj_get_payload_activation_status_rs,
                        fieldstr,
                        &val) < 0)
         return -1;
 
       if (val)
         {
-          s->sol_instances_activated[s->sol_instances_activated_count] = i+1;
-          s->sol_instances_activated_count++;
+          c->session.sol_instances_activated[c->session.sol_instances_activated_count] = i+1;
+          c->session.sol_instances_activated_count++;
         }
     }
   
   if (c->config.security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE
-      && s->sol_instances_activated_count)
+      && c->session.sol_instances_activated_count)
     {
       c->errnum = IPMICONSOLE_ERR_SOL_INUSE;
       return -1;
     }
 
-  return (s->sol_instances_activated_count ? 1 : 0);
+  return (c->session.sol_instances_activated_count ? 1 : 0);
 }
 
 /*
@@ -2012,7 +1952,6 @@ _check_sol_activated(ipmiconsole_ctx_t c)
 static int
 _check_sol_activated2(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint64_t val;
   uint8_t comp_code;
 
@@ -2020,10 +1959,8 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT);
   
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-                   s->obj_activate_payload_rs,
+                   c->connection.obj_activate_payload_rs,
                    "comp_code",
                    &val) < 0)
     return -1;
@@ -2073,7 +2010,6 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
 static int
 _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int32_t sol_hdr_len;
   uint64_t val;
   uint16_t max_inbound_payload_size;
@@ -2083,8 +2019,6 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT);
   
-  s = &(c->session);
-
   /* In the IPMI 2.0 Spec, Section 15.9, Table 15-2, you can see that
    * the accepted character count is 1 byte.  Therefore, the maximum
    * number of serial characters that should be sent in one packet is
@@ -2097,14 +2031,14 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
    */
 
   if (Fiid_obj_get(c,
-                   s->obj_activate_payload_rs,
+                   c->connection.obj_activate_payload_rs,
                    "inbound_payload_size",
                    &val) < 0)
     return -1;
   max_inbound_payload_size = val;
 
   if (Fiid_obj_get(c,
-                   s->obj_activate_payload_rs,
+                   c->connection.obj_activate_payload_rs,
                    "outbound_payload_size",
                    &val) < 0)
     return -1;
@@ -2131,14 +2065,14 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
           && max_outbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
           && max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
         {
-          s->max_sol_character_send_size = max_outbound_payload_size - sol_hdr_len;
+          c->session.max_sol_character_send_size = max_outbound_payload_size - sol_hdr_len;
           return 1;
         }
     }
   else
     {
       /* Lets try 32, seems like a decent power of two number */
-      s->max_sol_character_send_size = 32;
+      c->session.max_sol_character_send_size = 32;
       return 1;
     }
   
@@ -2154,7 +2088,6 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
 static int
 _check_try_new_port(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int16_t console_port;
   uint64_t val;
 
@@ -2162,10 +2095,8 @@ _check_try_new_port(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT);
 
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-                   s->obj_activate_payload_rs,
+                   c->connection.obj_activate_payload_rs,
                    "payload_udp_port_number",
                    &val) < 0)
     return -1;
@@ -2174,17 +2105,17 @@ _check_try_new_port(ipmiconsole_ctx_t c)
   /* Note: The state machine currently gives the new console port
    * only 1 try.  No cycling through a bunch of port options.
    */
-  if (s->console_port == RMCP_PRIMARY_RMCP_PORT)
+  if (c->session.console_port == RMCP_PRIMARY_RMCP_PORT)
     {
-      if (s->console_port != console_port)
+      if (c->session.console_port != console_port)
         {
-          s->console_port = console_port;
+          c->session.console_port = console_port;
           return 1;
         }
     }
   else
     {
-      if (s->console_port != console_port)
+      if (c->session.console_port != console_port)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("multiple new console ports attempted"));
           c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
@@ -2202,7 +2133,6 @@ _check_try_new_port(ipmiconsole_ctx_t c)
 static int
 _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t packet_sequence_number;
   uint8_t packet_ack_nack_sequence_number;
   uint8_t accepted_character_count;
@@ -2217,8 +2147,6 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
-
-  s = &(c->session);
 
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
@@ -2239,49 +2167,49 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
    */
 
   if (Fiid_obj_get(c,
-                   s->obj_sol_payload_data_rs,
+                   c->connection.obj_sol_payload_data_rs,
                    "packet_sequence_number",
                    &val) < 0)
     goto cleanup;
   packet_sequence_number = val;
   
   if (Fiid_obj_get(c,
-                   s->obj_sol_payload_data_rs,
+                   c->connection.obj_sol_payload_data_rs,
                    "packet_ack_nack_sequence_number",
                    &val) < 0)
     goto cleanup;
   packet_ack_nack_sequence_number = val;
   
   if (Fiid_obj_get(c,
-                   s->obj_sol_payload_data_rs,
+                   c->connection.obj_sol_payload_data_rs,
                    "accepted_character_count",
                    &val) < 0)
     goto cleanup;
   accepted_character_count = val;
 
   if (Fiid_obj_get(c,
-                   s->obj_sol_payload_data_rs,
+                   c->connection.obj_sol_payload_data_rs,
                    "break_condition",
                    &val) < 0)
     goto cleanup;
   break_condition = val;
 
   if (Fiid_obj_get(c,
-                   s->obj_sol_payload_data_rs,
+                   c->connection.obj_sol_payload_data_rs,
                    "transmit_overrun",
                    &val) < 0)
     goto cleanup;
   transmit_overrun = val;
 
   if (Fiid_obj_get(c,
-                   s->obj_sol_payload_data_rs,
+                   c->connection.obj_sol_payload_data_rs,
                    "sol_deactivating",
                    &val) < 0)
     goto cleanup;
   sol_deactivating = val;
 
   if (Fiid_obj_get(c,
-                   s->obj_sol_payload_data_rs,
+                   c->connection.obj_sol_payload_data_rs,
                    "nack",
                    &val) < 0)
     goto cleanup;
@@ -2299,45 +2227,45 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 
   /* Packet contains ACK */
   if (packet_ack_nack_sequence_number
-      && s->sol_input_waiting_for_ack
-      && s->sol_input_packet_sequence_number == packet_ack_nack_sequence_number)
+      && c->session.sol_input_waiting_for_ack
+      && c->session.sol_input_packet_sequence_number == packet_ack_nack_sequence_number)
     {
-      if (!s->sol_input_waiting_for_break_ack)
+      if (!c->session.sol_input_waiting_for_break_ack)
         {
           /* It's ok if it's a NACK, but we'll log for debugging anyways */
           if (nack == IPMI_SOL_NACK
-              || accepted_character_count != s->sol_input_character_data_len)
+              || accepted_character_count != c->session.sol_input_character_data_len)
             {
-              IPMICONSOLE_CTX_DEBUG(c, ("SOL packet NACKED: accepted_character_count: accepted_character_count = %d,  s->sol_input_character_data_len = %d\n", accepted_character_count, s->sol_input_character_data_len));
+              IPMICONSOLE_CTX_DEBUG(c, ("SOL packet NACKED: accepted_character_count: accepted_character_count = %d,  c->session.sol_input_character_data_len = %d\n", accepted_character_count, c->session.sol_input_character_data_len));
             }
 
-          if (accepted_character_count > s->sol_input_character_data_len)
+          if (accepted_character_count > c->session.sol_input_character_data_len)
             {
               /* Ummm, We'll assume its wrong and just lessen the
                * accepted character count??? 
                */
-              IPMICONSOLE_CTX_DEBUG(c, ("Unexpected accepted_character_count: accepted_character_count = %d,  s->sol_input_character_data_len = %d\n", accepted_character_count, s->sol_input_character_data_len));
-              accepted_character_count = s->sol_input_character_data_len;
+              IPMICONSOLE_CTX_DEBUG(c, ("Unexpected accepted_character_count: accepted_character_count = %d,  c->session.sol_input_character_data_len = %d\n", accepted_character_count, c->session.sol_input_character_data_len));
+              accepted_character_count = c->session.sol_input_character_data_len;
             }
          
-          if ((n = cbuf_drop(s->console_remote_console_to_bmc, accepted_character_count)) < 0)
+          if ((n = cbuf_drop(c->connection.console_remote_console_to_bmc, accepted_character_count)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG(c, ("cbuf_drop: %s", strerror(errno)));
               c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
               goto cleanup;
             }
           
-          if (s->console_remote_console_to_bmc_bytes_before_break)
+          if (c->session.console_remote_console_to_bmc_bytes_before_break)
             {
-              if (accepted_character_count > s->console_remote_console_to_bmc_bytes_before_break)
+              if (accepted_character_count > c->session.console_remote_console_to_bmc_bytes_before_break)
                 {
-                  IPMICONSOLE_CTX_DEBUG(c, ("Unexpected accepted_character_count: accepted_character_count = %d,  s->console_remote_console_to_bmc_bytes_before_break = %d\n", accepted_character_count, s->console_remote_console_to_bmc_bytes_before_break));
-                  accepted_character_count = s->console_remote_console_to_bmc_bytes_before_break;
+                  IPMICONSOLE_CTX_DEBUG(c, ("Unexpected accepted_character_count: accepted_character_count = %d,  c->session.console_remote_console_to_bmc_bytes_before_break = %d\n", accepted_character_count, c->session.console_remote_console_to_bmc_bytes_before_break));
+                  accepted_character_count = c->session.console_remote_console_to_bmc_bytes_before_break;
                 }
-              s->console_remote_console_to_bmc_bytes_before_break -= accepted_character_count;
+              c->session.console_remote_console_to_bmc_bytes_before_break -= accepted_character_count;
             }
-          s->sol_input_waiting_for_ack = 0;
-          s->sol_input_character_data_len = 0;
+          c->session.sol_input_waiting_for_ack = 0;
+          c->session.sol_input_character_data_len = 0;
         }
       else
         {
@@ -2359,16 +2287,16 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
           if (break_condition != IPMI_SOL_BREAK_CONDITION_DETECTED)
             IPMICONSOLE_CTX_DEBUG(c, ("SOL packet w/o break condition detected"));
 #endif
-	  s->break_requested = 0;
-          s->sol_input_waiting_for_ack = 0;
-          s->sol_input_waiting_for_break_ack = 0;
-          s->sol_input_character_data_len = 0;
+	  c->session.break_requested = 0;
+          c->session.sol_input_waiting_for_ack = 0;
+          c->session.sol_input_waiting_for_break_ack = 0;
+          c->session.sol_input_character_data_len = 0;
         }
     }
   else if (packet_ack_nack_sequence_number
-	   && !s->sol_input_waiting_for_ack)
+	   && !c->session.sol_input_waiting_for_ack)
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("Unexpected ACK: packet_ack_nack_sequence_number = %d, s->sol_input_packet_sequence_number = %d", packet_ack_nack_sequence_number, s->sol_input_packet_sequence_number));
+      IPMICONSOLE_CTX_DEBUG(c, ("Unexpected ACK: packet_ack_nack_sequence_number = %d, c->session.sol_input_packet_sequence_number = %d", packet_ack_nack_sequence_number, c->session.sol_input_packet_sequence_number));
     }      
 
   if (packet_sequence_number)
@@ -2382,14 +2310,14 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
       memset(character_data, '\0', IPMICONSOLE_MAX_CHARACTER_DATA + 1);
       
       if ((character_data_len = Fiid_obj_get_data(c,
-                                                  s->obj_sol_payload_data_rs,
+                                                  c->connection.obj_sol_payload_data_rs,
                                                   "character_data",
                                                   (uint8_t *)character_data,
                                                   IPMICONSOLE_MAX_CHARACTER_DATA)) < 0)
 	goto cleanup;
 
       /* XXX: Should do > or >= check?? */
-      if (s->last_sol_output_packet_sequence_number == packet_sequence_number)
+      if (c->session.last_sol_output_packet_sequence_number == packet_sequence_number)
         {
           /* Retransmission from the BMC */
 
@@ -2397,10 +2325,10 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
            * retransmission.  We will give the user only the new information,
            * but we must ACK all of the data.
            */
-          if (character_data_len >= s->last_sol_output_accepted_character_count)
+          if (character_data_len >= c->session.last_sol_output_accepted_character_count)
             {
-              character_data_len_to_write = character_data_len - s->last_sol_output_accepted_character_count;
-              character_data_index = s->last_sol_output_accepted_character_count;
+              character_data_len_to_write = character_data_len - c->session.last_sol_output_accepted_character_count;
+              character_data_index = c->session.last_sol_output_accepted_character_count;
             }
         }
       else
@@ -2408,7 +2336,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 
       if (character_data_len_to_write)
         {
-          n = cbuf_write(s->console_bmc_to_remote_console,
+          n = cbuf_write(c->connection.console_bmc_to_remote_console,
 			 character_data + character_data_index,
 			 character_data_len_to_write,
 			 &dropped,
@@ -2439,11 +2367,11 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
             }
        }
 
-      s->last_sol_output_packet_sequence_number = packet_sequence_number;
-      s->last_sol_output_accepted_character_count = character_data_len;
+      c->session.last_sol_output_packet_sequence_number = packet_sequence_number;
+      c->session.last_sol_output_accepted_character_count = character_data_len;
       
       /* Acknowledge this data.  Send some user data if we got some.*/
-      if (!s->sol_input_waiting_for_ack && !cbuf_is_empty(s->console_remote_console_to_bmc))
+      if (!c->session.sol_input_waiting_for_ack && !cbuf_is_empty(c->connection.console_remote_console_to_bmc))
         {
           if (_send_sol_packet_with_character_data(c, 
                                                    packet_sequence_number,
@@ -2461,15 +2389,15 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
     }
   else
     {
-      if (!cbuf_is_empty(s->console_remote_console_to_bmc)
-          && !s->sol_input_waiting_for_ack
-          && (!s->break_requested
-              || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
+      if (!cbuf_is_empty(c->connection.console_remote_console_to_bmc)
+          && !c->session.sol_input_waiting_for_ack
+          && (!c->session.break_requested
+              || (c->session.break_requested && c->session.console_remote_console_to_bmc_bytes_before_break)))
         {
           if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
             goto cleanup;
         }
-      else if (s->break_requested)
+      else if (c->session.break_requested)
         {
           if (_send_sol_packet_generate_break(c, 0) < 0)
             goto cleanup;
@@ -2479,7 +2407,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
   rv = 0;
  cleanup:
   /* Clear out data */
-  fiid_obj_clear(s->obj_sol_payload_data_rs);
+  fiid_obj_clear(c->connection.obj_sol_payload_data_rs);
   return rv;
 }
           
@@ -2491,15 +2419,11 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 static int
 _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(timeout);
 
-  s = &(c->session);
-
-  if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
     {
       struct timeval current;
       struct timeval session_timeout;
@@ -2522,21 +2446,21 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
           return -1;
         }
       
-      timeval_add_ms(&s->last_ipmi_packet_received, c->config.session_timeout_len, &session_timeout);
+      timeval_add_ms(&c->session.last_ipmi_packet_received, c->config.session_timeout_len, &session_timeout);
       timeval_sub(&session_timeout, &current, &session_timeout_val);
       timeval_millisecond_calc(&session_timeout_val, &session_timeout_ms);
       *timeout = session_timeout_ms;
 
-      if (s->sol_input_waiting_for_ack)
+      if (c->session.sol_input_waiting_for_ack)
 	{
 	  if (c->config.retransmission_backoff_count)
-	    sol_retransmission_timeout_multiplier = (s->retransmission_count / c->config.retransmission_backoff_count) + 1;
+	    sol_retransmission_timeout_multiplier = (c->session.retransmission_count / c->config.retransmission_backoff_count) + 1;
 	  else
 	    sol_retransmission_timeout_multiplier = 1;
 	    
 	  sol_retransmission_timeout_len = c->config.retransmission_timeout_len * sol_retransmission_timeout_multiplier;
 
-	  timeval_add_ms(&s->last_sol_input_packet_sent, sol_retransmission_timeout_len, &sol_retransmission_timeout);
+	  timeval_add_ms(&c->session.last_sol_input_packet_sent, sol_retransmission_timeout_len, &sol_retransmission_timeout);
 	  timeval_sub(&sol_retransmission_timeout, &current, &sol_retransmission_timeout_val);
 	  timeval_millisecond_calc(&sol_retransmission_timeout_val, &sol_retransmission_timeout_ms);
 	  if (sol_retransmission_timeout_ms < *timeout)
@@ -2549,7 +2473,7 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
       if (rv)
 	{
 	  /* Time within we should retransmit the current keepalive packet */
-	  timeval_add_ms(&s->last_keepalive_packet_sent, c->config.retransmission_keepalive_timeout_len, &keepalive_timeout);
+	  timeval_add_ms(&c->session.last_keepalive_packet_sent, c->config.retransmission_keepalive_timeout_len, &keepalive_timeout);
 	  timeval_sub(&keepalive_timeout, &current, &keepalive_timeout_val);
 	  timeval_millisecond_calc(&keepalive_timeout_val, &keepalive_timeout_ms);
 	  if (keepalive_timeout_ms < *timeout)
@@ -2558,7 +2482,7 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
       else
 	{
 	  /* When a keepalive packet will be necessary again */
-	  timeval_add_ms(&s->last_ipmi_packet_received, c->config.keepalive_timeout_len, &keepalive_timeout);
+	  timeval_add_ms(&c->session.last_ipmi_packet_received, c->config.keepalive_timeout_len, &keepalive_timeout);
 	  timeval_sub(&keepalive_timeout, &current, &keepalive_timeout_val);
 	  timeval_millisecond_calc(&keepalive_timeout_val, &keepalive_timeout_ms);
 	  if (keepalive_timeout_ms < *timeout)
@@ -2584,18 +2508,18 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
           return -1;
         }
       
-      timeval_add_ms(&s->last_ipmi_packet_received, c->config.session_timeout_len, &session_timeout);
+      timeval_add_ms(&c->session.last_ipmi_packet_received, c->config.session_timeout_len, &session_timeout);
       timeval_sub(&session_timeout, &current, &session_timeout_val);
       timeval_millisecond_calc(&session_timeout_val, &session_timeout_ms);
 
       if (c->config.retransmission_backoff_count)
-	retransmission_timeout_multiplier = (s->retransmission_count / c->config.retransmission_backoff_count) + 1;
+	retransmission_timeout_multiplier = (c->session.retransmission_count / c->config.retransmission_backoff_count) + 1;
       else
 	retransmission_timeout_multiplier = 1;
 	
       retransmission_timeout_len = c->config.retransmission_timeout_len * retransmission_timeout_multiplier;
 
-      timeval_add_ms(&s->last_ipmi_packet_sent, retransmission_timeout_len, &retransmission_timeout);
+      timeval_add_ms(&c->session.last_ipmi_packet_sent, retransmission_timeout_len, &retransmission_timeout);
       timeval_sub(&retransmission_timeout, &current, &retransmission_timeout_val);
       timeval_millisecond_calc(&retransmission_timeout_val, &retransmission_timeout_ms);
 
@@ -2614,41 +2538,37 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
 static int
 _send_sol_character_data_or_break(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
   /* _send_sol_packet_with_character_data() will not send more
-   * than s->console_remote_console_to_bmc_bytes_before_break
+   * than c->session.console_remote_console_to_bmc_bytes_before_break
    */
-  if (!cbuf_is_empty(s->console_remote_console_to_bmc)
-      && (!s->break_requested
-          || (s->break_requested && s->console_remote_console_to_bmc_bytes_before_break)))
+  if (!cbuf_is_empty(c->connection.console_remote_console_to_bmc)
+      && (!c->session.break_requested
+          || (c->session.break_requested && c->session.console_remote_console_to_bmc_bytes_before_break)))
     {
       if (_send_sol_packet_with_character_data(c, 0, 0, 0) < 0)
         {
           /* Attempt to close the session cleanly */
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 1;
         }
       return 1;
     }
   
-  if (s->break_requested)
+  if (c->session.break_requested)
     {
       if (_send_sol_packet_generate_break(c, 0) < 0)
         {
           /* Attempt to close the session cleanly */
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 1;
         }
       return 1;
@@ -2663,17 +2583,13 @@ _send_sol_character_data_or_break(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_start(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
 
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
     /* The session isn't setup, no need to attempt to close it cleanly */
     return -1;
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT;
   return 0;
 }
 
@@ -2683,13 +2599,10 @@ _process_protocol_state_start(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_get_authentication_capabilities_v20_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int ret;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
 
   if ((ret = _check_for_ipmi_2_0_support(c)) < 0)
     /* The session isn't setup, no need to attempt to close it cleanly */
@@ -2706,7 +2619,7 @@ _process_protocol_state_get_authentication_capabilities_v20_sent(ipmiconsole_ctx
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_REQUEST) < 0)
     /* The session isn't setup, no need to attempt to close it cleanly */
     return -1;
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT;
   return 0;
 }
 
@@ -2716,17 +2629,13 @@ _process_protocol_state_get_authentication_capabilities_v20_sent(ipmiconsole_ctx
 static int
 _process_protocol_state_open_session_request_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
 
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1) < 0)
     /* The session isn't setup, no need to attempt to close it cleanly */
     return -1;
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
   return 0;
 }
 
@@ -2736,12 +2645,8 @@ _process_protocol_state_open_session_request_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_rakp_message_1_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
 
   if (_calculate_cipher_keys(c) < 0)
     /* The session isn't setup, no need to attempt to close it cleanly */
@@ -2750,7 +2655,7 @@ _process_protocol_state_rakp_message_1_sent(ipmiconsole_ctx_t c)
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_3) < 0)
     /* The session isn't setup, no need to attempt to close it cleanly */
     return -1;
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
   return 0;
 }
 
@@ -2760,14 +2665,10 @@ _process_protocol_state_rakp_message_1_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_rakp_message_3_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
-  if (s->close_session_flag)
+  if (c->session.close_session_flag)
     {
       /* The session could be up, depending on timeouts, etc. but
          since we aren't sure, we don't attempt to close it cleanly */
@@ -2776,13 +2677,13 @@ _process_protocol_state_rakp_message_3_sent(ipmiconsole_ctx_t c)
 
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT;
   return 0;
 }
 
@@ -2792,12 +2693,8 @@ _process_protocol_state_rakp_message_3_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_set_session_privilege_level_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
 
   /* IPMI Workaround
    *
@@ -2810,25 +2707,25 @@ _process_protocol_state_set_session_privilege_level_sent(ipmiconsole_ctx_t c)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
         {
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
           return 0;
         }
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
       return 0;
     }
 
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT;
   return 0;
 }
 
@@ -2838,20 +2735,17 @@ _process_protocol_state_set_session_privilege_level_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_get_channel_payload_support_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int ret;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
   if ((ret = _check_sol_supported(c)) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
 
@@ -2859,22 +2753,22 @@ _process_protocol_state_get_channel_payload_support_sent(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("SOL unavailable"));
       c->errnum = IPMICONSOLE_ERR_SOL_UNAVAILABLE;
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
 
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
   return 0;
 }
 
@@ -2884,20 +2778,17 @@ _process_protocol_state_get_channel_payload_support_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_get_payload_activation_status_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int ret;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
   if ((ret = _check_sol_activated(c)) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
 
@@ -2907,50 +2798,50 @@ _process_protocol_state_get_payload_activation_status_sent(ipmiconsole_ctx_t c)
         {
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             {
-              s->close_session_flag++;
+              c->session.close_session_flag++;
               if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
                 return -1;
-              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
               return 0;
             }
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
       else
         {
-          s->close_session_flag++;
-          s->deactivate_only_succeeded_flag++;
+          c->session.close_session_flag++;
+          c->session.deactivate_only_succeeded_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
           return 0;
         }
     }
 
   if (ret)
     {
-      s->deactivate_payload_instances_and_try_again_flag++;
+      c->session.deactivate_payload_instances_and_try_again_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         {
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
           return 0;
         }
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
   if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT;
   return 0;
 }
 
@@ -2960,13 +2851,10 @@ _process_protocol_state_get_payload_activation_status_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int perr, ret;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
 
   /* Note:
    *
@@ -2988,20 +2876,20 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
    * This will be checked and handled appropriately.
    */
 
-  if (s->close_session_flag)
+  if (c->session.close_session_flag)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
   if ((ret = _check_sol_activated2(c)) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
 
@@ -3010,41 +2898,41 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       IPMICONSOLE_CTX_DEBUG(c, ("activate payload race"));
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
         {
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
           return 0;
         }
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT;
       return 0;
     }
 
   if ((ret = _check_payload_sizes_legitimate(c)) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
   if (!ret)
     {
       c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
   if ((ret = _check_try_new_port(c)) < 0)
     {
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
@@ -3055,17 +2943,17 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
        * behavior?
        */
 
-      IPMICONSOLE_CTX_DEBUG(c, ("trying new port: %X", s->console_port));
-      s->try_new_port_flag++;
+      IPMICONSOLE_CTX_DEBUG(c, ("trying new port: %X", c->session.console_port));
+      c->session.try_new_port_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         {
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
@@ -3075,10 +2963,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
       /* Attempt to close the session cleanly */
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
@@ -3098,10 +2986,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
           IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
           c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
           /* Attempt to close the session cleanly */
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
     }
@@ -3112,10 +3000,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
       /* Attempt to close the session cleanly */
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
@@ -3125,10 +3013,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
       /* Attempt to close the session cleanly */
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
@@ -3140,14 +3028,14 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
       /* Attempt to close the session cleanly */
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION;
 
   if (c->config.engine_flags & IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED)
     {
@@ -3157,7 +3045,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 
       secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
-      n = cbuf_write(s->console_bmc_to_remote_console,
+      n = cbuf_write(c->connection.console_bmc_to_remote_console,
                      "\0",
                      1,
                      &dropped,
@@ -3169,10 +3057,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
           /* Attempt to close the session cleanly */
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
 
@@ -3182,10 +3070,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
           /* Attempt to close the session cleanly */
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
 
@@ -3195,10 +3083,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
 
           /* Attempt to close the session cleanly */
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
     }
@@ -3229,23 +3117,20 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_sol_session_send(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int ret;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
-  if (s->sol_input_waiting_for_ack)
+  if (c->session.sol_input_waiting_for_ack)
     {
       if ((ret = _sol_retransmission_timeout(c)) < 0)
         {
           /* Attempt to close the session cleanly */
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 1;
         }
       
@@ -3264,10 +3149,10 @@ _process_protocol_state_sol_session_send(ipmiconsole_ctx_t c)
   if ((ret = _keepalive_timeout(c)) < 0)
     {
       /* Attempt to close the session cleanly */
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 1;
     }
   
@@ -3283,12 +3168,8 @@ _process_protocol_state_sol_session_send(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_sol_session_receive(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
 
   /* Note: Under this protocol state, we can receive one of two
    * packet types.  The packet will either be a SOL packet or a
@@ -3296,11 +3177,11 @@ _process_protocol_state_sol_session_receive(ipmiconsole_ctx_t c, ipmiconsole_pac
    * The payload type will determine what type of packet it is.
    */
 
-  if (s->close_session_flag)
+  if (c->session.close_session_flag)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
@@ -3308,10 +3189,10 @@ _process_protocol_state_sol_session_receive(ipmiconsole_ctx_t c, ipmiconsole_pac
     {
       if (_sol_bmc_to_remote_console_packet(c) < 0)
         {
-          s->close_session_flag++;
+          c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             return -1;
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
     }
@@ -3323,10 +3204,10 @@ _process_protocol_state_sol_session_receive(ipmiconsole_ctx_t c, ipmiconsole_pac
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid packet received: p = %d", p));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
       return 0;
     }
 
@@ -3343,30 +3224,26 @@ _process_protocol_state_sol_session_receive(ipmiconsole_ctx_t c, ipmiconsole_pac
 static int
 _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
   if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
-    s->deactivate_only_succeeded_flag++;
+    c->session.deactivate_only_succeeded_flag++;
 
-  if (s->close_session_flag || s->try_new_port_flag)
+  if (c->session.close_session_flag || c->session.try_new_port_flag)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
       return 0;
     }
-  else if (s->deactivate_payload_instances_and_try_again_flag)
+  else if (c->session.deactivate_payload_instances_and_try_again_flag)
     {
-      s->sol_instances_deactivated_count++;
-      if (s->sol_instances_activated_count == s->sol_instances_deactivated_count)
+      c->session.sol_instances_deactivated_count++;
+      if (c->session.sol_instances_activated_count == c->session.sol_instances_deactivated_count)
         {
-          s->deactivate_payload_instances_and_try_again_flag = 0;
-          s->deactivate_active_payloads_count++;
+          c->session.deactivate_payload_instances_and_try_again_flag = 0;
+          c->session.deactivate_active_payloads_count++;
 
           /* IPMI Workaround
            *
@@ -3387,7 +3264,7 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
 
 
           /* +1 b/c one deactivate_active_payloads_count is acceptable and expected */
-          if (s->deactivate_active_payloads_count > c->config.acceptable_packet_errors_count + 1)
+          if (c->session.deactivate_active_payloads_count > c->config.acceptable_packet_errors_count + 1)
             {
               /* achu:
                *
@@ -3405,35 +3282,35 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
                */
               IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive payload deactivations"));
               c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
-              s->close_session_flag++;
+              c->session.close_session_flag++;
               if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
                 return -1;
-              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
               return 0;
             }
 
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RQ) < 0)
             {
-              s->close_session_flag++;
+              c->session.close_session_flag++;
               if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
                 return -1;
-              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
               return 0;
             }
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT;
           return 0;
         }
       else
         {
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             {
-              s->close_session_flag++;
+              c->session.close_session_flag++;
               if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
                 return -1;
-              s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
               return 0;
             }
-          s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
           return 0;
         }
     }
@@ -3450,41 +3327,37 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_close_session_sent(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
-  if (s->close_session_flag)
+  if (c->session.close_session_flag)
     {
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_END;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_END;
       return -1;
     }
 
-  if (s->close_timeout_flag)
+  if (c->session.close_timeout_flag)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session via close session packet timeout"));
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_END;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_END;
       return -1;
     }
 
-  if (s->try_new_port_flag)
+  if (c->session.try_new_port_flag)
     {
       /* Yippee, we get to start over! */
-      assert(s->console_port != RMCP_PRIMARY_RMCP_PORT);
+      assert(c->session.console_port != RMCP_PRIMARY_RMCP_PORT);
 
-      s->try_new_port_flag = 0;
+      c->session.try_new_port_flag = 0;
 
-      if (_ipmiconsole_ctx_session_maintenance_information_setup(c) < 0)
+      if (_ipmiconsole_ctx_session_init(c) < 0)
         /* Session is closed, just exit on error */
         return -1;
 
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ) < 0)
         /* Session is closed, just exit on error */
         return -1;
-      s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT;
       return 0;
     }
 
@@ -3502,15 +3375,12 @@ _process_protocol_state_close_session_sent(ipmiconsole_ctx_t c)
 static int
 _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 {
-  struct ipmiconsole_ctx_session *s;
   ipmiconsole_packet_type_t p;
   int ret, rv = -1;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(timeout);
-
-  s = &(c->session);
 
   *timeout = 0;
 
@@ -3526,7 +3396,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
    * possible, there are no packets to read, there are no retransmissions
    * that may be necessary, etc.
    */
-  if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_START)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_START)
     {
       if (_process_protocol_state_start(c) < 0)
         goto close_session;
@@ -3546,7 +3416,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
   /* Handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related sends, below
    * we handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related receives.
    */
-  if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
     {
       /* Return values for this _process_X() function are different than
        * others, see comments above.
@@ -3561,7 +3431,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       if ((ret = _ipmi_retransmission_timeout(c)) < 0)
         {
           /* Attempt to close the session cleanly */
-	  s->close_session_flag++;
+	  c->session.close_session_flag++;
 	  if ((ret = _close_session(c)) < 0)
 	    goto close_session;
 	  if (ret)
@@ -3573,14 +3443,14 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
       if (ret)
 	goto calculate_timeout;
 
-      if (s->close_timeout_flag)
+      if (c->session.close_timeout_flag)
 	goto state_machine;
   }
 
   if ((ret = _receive_packet(c, &p)) < 0)
     {
       /* Attempt to close the session cleanly */
-      s->close_session_flag++;
+      c->session.close_session_flag++;
       if ((ret = _close_session(c)) < 0)
 	goto close_session;
       if (ret)
@@ -3605,13 +3475,13 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
        * sequence numbers, so by the time the kernel is booted, the
        * session sequence numbers are way out of whack.
        */
-      if (s->errors_count > c->config.acceptable_packet_errors_count
-	  && !s->close_session_flag)
+      if (c->session.errors_count > c->config.acceptable_packet_errors_count
+	  && !c->session.close_session_flag)
 	{
 	  /* Attempt to close the session cleanly */
 	  IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive errors"));
 	  c->errnum = IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED;
-	  s->close_session_flag++;
+	  c->session.close_session_flag++;
 	  if ((ret = _close_session(c)) < 0)
 	    goto close_session;
 	  if (ret)
@@ -3624,7 +3494,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 
   /* Below here, the state machine handles packet receives */
  state_machine:
-  if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
+  if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
       assert(p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RS);
 
@@ -3632,7 +3502,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
     {
       assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE);
 
@@ -3640,7 +3510,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
     {
       assert(p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2);
 
@@ -3648,16 +3518,16 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
     {
-      assert(s->close_session_flag
+      assert(c->session.close_session_flag
 	     || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
 
       if (_process_protocol_state_rakp_message_3_sent(c) < 0)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
     {
       assert(p == IPMICONSOLE_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS);
 
@@ -3665,7 +3535,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_CHANNEL_PAYLOAD_SUPPORT_SENT)
     {
       assert(p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RS);
 
@@ -3673,7 +3543,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT)
     {
       assert(p == IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RS);
 
@@ -3681,16 +3551,16 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_ACTIVATE_PAYLOAD_SENT)
     {
-      assert(s->close_session_flag
+      assert(c->session.close_session_flag
 	     || p == IPMICONSOLE_PACKET_TYPE_ACTIVATE_PAYLOAD_RS);
 
       if (_process_protocol_state_activate_payload_sent(c) < 0)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION)
     {
       /* Handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related receives.  Above 
        * we handle IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION related sends.
@@ -3699,19 +3569,19 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT)
     {
-      assert(s->close_session_flag
+      assert(c->session.close_session_flag
 	     || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS);
 
       if (_process_protocol_state_deactivate_payload_sent(c) < 0)
         goto close_session;
       /* fallthrough to calculate_timeout */
     }
-  else if (s->protocol_state == IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT)
+  else if (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT)
     {
-      assert(s->close_session_flag
-	     || s->close_timeout_flag
+      assert(c->session.close_session_flag
+	     || c->session.close_timeout_flag
 	     || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
       if (_process_protocol_state_close_session_sent(c) < 0)
@@ -3720,7 +3590,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
     }
   else
     {
-      IPMICONSOLE_CTX_DEBUG(c, ("invalid protocol_state: %d", s->protocol_state));
+      IPMICONSOLE_CTX_DEBUG(c, ("invalid protocol_state: %d", c->session.protocol_state));
       goto close_session;
     }
     

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.52 2007-08-25 00:53:25 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.53 2007-08-25 01:30:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -184,28 +184,9 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
     free(c);
 }
 
-void
+int
 _ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
-
-  assert(c);
-  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  s = &(c->session);
-
-  memset(s, '\0', sizeof(struct ipmiconsole_ctx_session));
-  s->user_fd = -1;
-  s->ipmiconsole_fd = -1;
-  s->ipmi_fd = -1;
-  s->asynccomm[0] = -1;
-  s->asynccomm[1] = -1;
-}
-
-int
-_ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c)
-{
-  struct ipmiconsole_ctx_session *s;
 #ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   struct hostent hent;
   int h_errnop;
@@ -216,18 +197,21 @@ _ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
+  /* Note: May be modified later based on results from Activate
+   * Payload packet received
+   */
+  c->session.console_port = RMCP_PRIMARY_RMCP_PORT;
 
-  memset(&(s->addr), '\0', sizeof(struct sockaddr_in));
-  s->addr.sin_family = AF_INET;
-  s->addr.sin_port = htons(s->console_port);
+  memset(&(c->session.addr), '\0', sizeof(struct sockaddr_in));
+  c->session.addr.sin_family = AF_INET;
+  c->session.addr.sin_port = htons(c->session.console_port);
 
-  timeval_clear(&(s->last_ipmi_packet_sent));
+  timeval_clear(&(c->session.last_ipmi_packet_sent));
   /* Note:
    * Initial last_ipmi_packet_received to current time, so session
    * timeout can be calculated in the beginning if necessary.
    */
-  if (gettimeofday(&(s->last_ipmi_packet_received), NULL) < 0)
+  if (gettimeofday(&(c->session.last_ipmi_packet_received), NULL) < 0)
     {
       IPMICONSOLE_DEBUG(("gettimeofday: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
@@ -264,54 +248,54 @@ _ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c)
 #error Additional threadsafe gethostbyname support needed
 #endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
-  s->addr.sin_addr = *((struct in_addr *)hptr->h_addr);
+  c->session.addr.sin_addr = *((struct in_addr *)hptr->h_addr);
 
-  s->protocol_state = IPMICONSOLE_PROTOCOL_STATE_START;
-  s->close_session_flag = 0;
-  s->try_new_port_flag = 0;
-  s->deactivate_payload_instances_and_try_again_flag = 0;
-  s->close_timeout_flag = 0;
-  s->deactivate_only_succeeded_flag = 0;
+  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_START;
+  c->session.close_session_flag = 0;
+  c->session.try_new_port_flag = 0;
+  c->session.deactivate_payload_instances_and_try_again_flag = 0;
+  c->session.close_timeout_flag = 0;
+  c->session.deactivate_only_succeeded_flag = 0;
 
-  s->retransmission_count = 0;
-  s->errors_count = 0;
-  s->session_sequence_number_errors_count = 0;
-  s->deactivate_active_payloads_count = 0;
-  s->highest_received_sequence_number = 0; /* so first packet received will be > 0 */
-  s->previously_received_list = IPMI_SESSION_SEQUENCE_NUMBER_PREVIOUSLY_RECEIVED_LIST_INIT;
+  c->session.retransmission_count = 0;
+  c->session.errors_count = 0;
+  c->session.session_sequence_number_errors_count = 0;
+  c->session.deactivate_active_payloads_count = 0;
+  c->session.highest_received_sequence_number = 0; /* so first packet received will be > 0 */
+  c->session.previously_received_list = IPMI_SESSION_SEQUENCE_NUMBER_PREVIOUSLY_RECEIVED_LIST_INIT;
 
-  if (ipmi_get_random(&(s->message_tag),
-                      sizeof(s->message_tag)) < 0)
+  if (ipmi_get_random(&(c->session.message_tag),
+                      sizeof(c->session.message_tag)) < 0)
     {
       IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
-  if (ipmi_get_random(&(s->requester_sequence_number),
-                      sizeof(s->requester_sequence_number)) < 0)
+  if (ipmi_get_random(&(c->session.requester_sequence_number),
+                      sizeof(c->session.requester_sequence_number)) < 0)
     {
       IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
-  s->requester_sequence_number %= (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
+  c->session.requester_sequence_number %= (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
-  s->session_sequence_number = 0; /* 0, so initial increment puts it at 1 */
-  s->name_only_lookup = IPMI_NAME_ONLY_LOOKUP;
+  c->session.session_sequence_number = 0; /* 0, so initial increment puts it at 1 */
+  c->session.name_only_lookup = IPMI_NAME_ONLY_LOOKUP;
 
   /* In IPMI 2.0, session_ids of 0 are special */
   do
     {
-      if (ipmi_get_random((uint8_t *)&(s->remote_console_session_id),
-                          sizeof(s->remote_console_session_id)) < 0)
+      if (ipmi_get_random((uint8_t *)&(c->session.remote_console_session_id),
+                          sizeof(c->session.remote_console_session_id)) < 0)
         {
           IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
           return -1;
         }
-    } while (!s->remote_console_session_id);
+    } while (!c->session.remote_console_session_id);
 
-  if (ipmi_get_random(s->remote_console_random_number,
+  if (ipmi_get_random(c->session.remote_console_random_number,
                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
     {
       IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
@@ -322,57 +306,70 @@ _ipmiconsole_ctx_session_maintenance_information_setup(ipmiconsole_ctx_t c)
   /* Keys and ptrs will be calculated during session setup.  We just
    * memet/clear here.
    */
-  memset(s->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
-  s->sik_key_ptr = s->sik_key;
-  s->sik_key_len = IPMI_MAX_SIK_KEY_LENGTH;
-  memset(s->integrity_key, '\0', IPMI_MAX_INTEGRITY_KEY_LENGTH);
-  s->integrity_key_ptr = s->integrity_key;
-  s->integrity_key_len = IPMI_MAX_INTEGRITY_KEY_LENGTH;
-  memset(s->confidentiality_key, '\0', IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
-  s->confidentiality_key_ptr = s->confidentiality_key;
-  s->confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
+  memset(c->session.sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
+  c->session.sik_key_ptr = c->session.sik_key;
+  c->session.sik_key_len = IPMI_MAX_SIK_KEY_LENGTH;
+  memset(c->session.integrity_key, '\0', IPMI_MAX_INTEGRITY_KEY_LENGTH);
+  c->session.integrity_key_ptr = c->session.integrity_key;
+  c->session.integrity_key_len = IPMI_MAX_INTEGRITY_KEY_LENGTH;
+  memset(c->session.confidentiality_key, '\0', IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
+  c->session.confidentiality_key_ptr = c->session.confidentiality_key;
+  c->session.confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
 
-  s->sol_payload_instance = IPMI_PAYLOAD_INSTANCE_DEFAULT;
+  c->session.sol_payload_instance = IPMI_PAYLOAD_INSTANCE_DEFAULT;
   
   /* Following 3 will be calculated during session setup.  We only
    * memset/clear it here
    */
-  s->sol_instance_capacity = 0;
-  memset(s->sol_instances_activated, '\0', IPMI_INSTANCES_ACTIVATED_LENGTH);
-  s->sol_instances_activated_count = 0;
+  c->session.sol_instance_capacity = 0;
+  memset(c->session.sol_instances_activated, '\0', IPMI_INSTANCES_ACTIVATED_LENGTH);
+  c->session.sol_instances_activated_count = 0;
   /* this is used just to index the number of instances deactivated */
-  s->sol_instances_deactivated_count = 0;
+  c->session.sol_instances_deactivated_count = 0;
 
   /* Calculated during the session setup. */
-  s->max_sol_character_send_size = 0;
+  c->session.max_sol_character_send_size = 0;
   
   /* SOL Session Maintenance */
 
-  timeval_clear(&(s->last_keepalive_packet_sent));
+  timeval_clear(&(c->session.last_keepalive_packet_sent));
 
   /* Serial Break Maintenance */
-  s->break_requested = 0;
-  s->console_remote_console_to_bmc_bytes_before_break = 0;
+  c->session.break_requested = 0;
+  c->session.console_remote_console_to_bmc_bytes_before_break = 0;
 
   /* SOL Input (remote console to BMC) */
-  s->sol_input_waiting_for_ack = 0;
-  s->sol_input_waiting_for_break_ack = 0;
-  timeval_clear(&(s->last_sol_input_packet_sent));
-  s->sol_input_packet_sequence_number = 0; /* 0, so initial increment puts it at 1 */
-  memset(s->sol_input_character_data, '\0', IPMICONSOLE_MAX_CHARACTER_DATA+1);
-  s->sol_input_character_data_len = 0;
+  c->session.sol_input_waiting_for_ack = 0;
+  c->session.sol_input_waiting_for_break_ack = 0;
+  timeval_clear(&(c->session.last_sol_input_packet_sent));
+  c->session.sol_input_packet_sequence_number = 0; /* 0, so initial increment puts it at 1 */
+  memset(c->session.sol_input_character_data, '\0', IPMICONSOLE_MAX_CHARACTER_DATA+1);
+  c->session.sol_input_character_data_len = 0;
 
   /* SOL Output (BMC to remote console) */
-  s->last_sol_output_packet_sequence_number = 0;
-  s->last_sol_output_accepted_character_count = 0;
+  c->session.last_sol_output_packet_sequence_number = 0;
+  c->session.last_sol_output_accepted_character_count = 0;
 
   return 0;
 }
 
-int 
-_ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
+void
+_ipmiconsole_ctx_connection_init(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  memset(&(c->connection), '\0', sizeof(struct ipmiconsole_ctx_connection));
+  c->connection.user_fd = -1;
+  c->connection.ipmiconsole_fd = -1;
+  c->connection.ipmi_fd = -1;
+  c->connection.asynccomm[0] = -1;
+  c->connection.asynccomm[1] = -1;
+}
+
+int 
+_ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
+{
   struct sockaddr_in srcaddr;
   int sv[2];
   int secure_malloc_flag;
@@ -381,9 +378,7 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(!(c->session_submitted));
 
-  s = &(c->session);
-
-  _ipmiconsole_ctx_session_init(c);
+  _ipmiconsole_ctx_connection_init(c);
 
   /* File Descriptor User Interface */
 
@@ -396,33 +391,33 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
         c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
-  s->user_fd = sv[0];
-  s->ipmiconsole_fd = sv[1];
+  c->connection.user_fd = sv[0];
+  c->connection.ipmiconsole_fd = sv[1];
 
-  if (ipmiconsole_set_closeonexec(c, s->user_fd) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->connection.user_fd) < 0)
     {
       IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
     }
-  if (ipmiconsole_set_closeonexec(c, s->ipmiconsole_fd) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->connection.ipmiconsole_fd) < 0)
     {
       IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
     }
 
   /* Copy for API level */
-  c->user_fd = s->user_fd;
+  c->user_fd = c->connection.user_fd;
 
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
-  if (!(s->console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
-  if (!(s->console_bmc_to_remote_console = cbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.console_bmc_to_remote_console = cbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
@@ -431,7 +426,7 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 
   /* Connection Data */
 
-  if ((s->ipmi_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+  if ((c->connection.ipmi_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
       IPMICONSOLE_DEBUG(("socket: %s", strerror(errno)));
       if (errno == EMFILE)
@@ -441,7 +436,7 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  if (ipmiconsole_set_closeonexec(c, s->ipmi_fd) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->connection.ipmi_fd) < 0)
     {
       IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
@@ -452,26 +447,21 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
   srcaddr.sin_port = htons(0);
   srcaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-  if (bind(s->ipmi_fd, (struct sockaddr *)&srcaddr, sizeof(struct sockaddr_in)) < 0)
+  if (bind(c->connection.ipmi_fd, (struct sockaddr *)&srcaddr, sizeof(struct sockaddr_in)) < 0)
     {
       IPMICONSOLE_DEBUG(("bind: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
-  
-  /* Note: May be modified later based on results from Activate
-   * Payload packet received
-   */
-  s->console_port = RMCP_PRIMARY_RMCP_PORT;
 
-  if (!(s->ipmi_from_bmc = cbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.ipmi_from_bmc = cbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
-  if (!(s->ipmi_to_bmc = cbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX, secure_malloc_flag)))
+  if (!(c->connection.ipmi_to_bmc = cbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
@@ -479,7 +469,7 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
     }
 
   /* Pipe for non-fd communication */
-  if (pipe(s->asynccomm) < 0)
+  if (pipe(c->connection.asynccomm) < 0)
     {
       IPMICONSOLE_DEBUG(("pipe: %s", strerror(errno)));
       if (errno == EMFILE)
@@ -489,28 +479,28 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  if (ipmiconsole_set_closeonexec(c, s->asynccomm[0]) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->connection.asynccomm[0]) < 0)
     {
       IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
     }
 
-  if (ipmiconsole_set_closeonexec(c, s->asynccomm[1]) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->connection.asynccomm[1]) < 0)
     {
       IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
     }
 
   /* Copy for API level */
-  c->asynccomm[0] = s->asynccomm[0];
-  c->asynccomm[1] = s->asynccomm[1];
+  c->asynccomm[0] = c->connection.asynccomm[0];
+  c->asynccomm[1] = c->connection.asynccomm[1];
 
   /* Data based on Configuration Parameters */
 
   if (ipmi_cipher_suite_id_to_algorithms(c->config.cipher_suite_id,
-                                         &(s->authentication_algorithm),
-                                         &(s->integrity_algorithm),
-                                         &(s->confidentiality_algorithm)) < 0)
+                                         &(c->connection.authentication_algorithm),
+                                         &(c->connection.integrity_algorithm),
+                                         &(c->connection.confidentiality_algorithm)) < 0)
     {
       IPMICONSOLE_DEBUG(("ipmi_cipher_suite_id_to_algorithms: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -519,103 +509,97 @@ _ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 
   /* Fiid Objects */
 
-  if (!(s->obj_rmcp_hdr_rq = Fiid_obj_create(c, tmpl_rmcp_hdr)))
+  if (!(c->connection.obj_rmcp_hdr_rq = Fiid_obj_create(c, tmpl_rmcp_hdr)))
     goto cleanup;
-  if (!(s->obj_rmcp_hdr_rs = Fiid_obj_create(c, tmpl_rmcp_hdr)))
+  if (!(c->connection.obj_rmcp_hdr_rs = Fiid_obj_create(c, tmpl_rmcp_hdr)))
     goto cleanup;
-  if (!(s->obj_lan_session_hdr_rq = Fiid_obj_create(c, tmpl_lan_session_hdr)))
+  if (!(c->connection.obj_lan_session_hdr_rq = Fiid_obj_create(c, tmpl_lan_session_hdr)))
     goto cleanup;
-  if (!(s->obj_lan_session_hdr_rs = Fiid_obj_create(c, tmpl_lan_session_hdr)))
+  if (!(c->connection.obj_lan_session_hdr_rs = Fiid_obj_create(c, tmpl_lan_session_hdr)))
     goto cleanup;
-  if (!(s->obj_lan_msg_hdr_rq = Fiid_obj_create(c, tmpl_lan_msg_hdr_rq)))
+  if (!(c->connection.obj_lan_msg_hdr_rq = Fiid_obj_create(c, tmpl_lan_msg_hdr_rq)))
     goto cleanup;
-  if (!(s->obj_lan_msg_hdr_rs = Fiid_obj_create(c, tmpl_lan_msg_hdr_rs)))
+  if (!(c->connection.obj_lan_msg_hdr_rs = Fiid_obj_create(c, tmpl_lan_msg_hdr_rs)))
     goto cleanup;
-  if (!(s->obj_lan_msg_trlr_rs = Fiid_obj_create(c, tmpl_lan_msg_trlr)))
+  if (!(c->connection.obj_lan_msg_trlr_rs = Fiid_obj_create(c, tmpl_lan_msg_trlr)))
     goto cleanup;
-  if (!(s->obj_rmcpplus_session_hdr_rq = Fiid_obj_create(c, tmpl_rmcpplus_session_hdr)))
+  if (!(c->connection.obj_rmcpplus_session_hdr_rq = Fiid_obj_create(c, tmpl_rmcpplus_session_hdr)))
     goto cleanup;
-  if (!(s->obj_rmcpplus_session_hdr_rs = Fiid_obj_create(c, tmpl_rmcpplus_session_hdr)))
+  if (!(c->connection.obj_rmcpplus_session_hdr_rs = Fiid_obj_create(c, tmpl_rmcpplus_session_hdr)))
     goto cleanup;
-  if (!(s->obj_rmcpplus_payload_rs = Fiid_obj_create(c, tmpl_rmcpplus_payload)))
+  if (!(c->connection.obj_rmcpplus_payload_rs = Fiid_obj_create(c, tmpl_rmcpplus_payload)))
     goto cleanup;
-  if (!(s->obj_rmcpplus_session_trlr_rq = Fiid_obj_create(c, tmpl_rmcpplus_session_trlr)))
+  if (!(c->connection.obj_rmcpplus_session_trlr_rq = Fiid_obj_create(c, tmpl_rmcpplus_session_trlr)))
     goto cleanup;
-  if (!(s->obj_rmcpplus_session_trlr_rs = Fiid_obj_create(c, tmpl_rmcpplus_session_trlr)))
+  if (!(c->connection.obj_rmcpplus_session_trlr_rs = Fiid_obj_create(c, tmpl_rmcpplus_session_trlr)))
     goto cleanup;
-  if (!(s->obj_authentication_capabilities_v20_rq = Fiid_obj_create(c, tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
+  if (!(c->connection.obj_authentication_capabilities_v20_rq = Fiid_obj_create(c, tmpl_cmd_get_channel_authentication_capabilities_v20_rq)))
     goto cleanup;
-  if (!(s->obj_authentication_capabilities_v20_rs = Fiid_obj_create(c, tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
+  if (!(c->connection.obj_authentication_capabilities_v20_rs = Fiid_obj_create(c, tmpl_cmd_get_channel_authentication_capabilities_v20_rs)))
     goto cleanup;
-  if (!(s->obj_open_session_request = Fiid_obj_create(c, tmpl_rmcpplus_open_session_request)))
+  if (!(c->connection.obj_open_session_request = Fiid_obj_create(c, tmpl_rmcpplus_open_session_request)))
     goto cleanup;
-  if (!(s->obj_open_session_response = Fiid_obj_create(c, tmpl_rmcpplus_open_session_response)))
+  if (!(c->connection.obj_open_session_response = Fiid_obj_create(c, tmpl_rmcpplus_open_session_response)))
     goto cleanup;
-  if (!(s->obj_rakp_message_1 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_1)))
+  if (!(c->connection.obj_rakp_message_1 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_1)))
     goto cleanup;
-  if (!(s->obj_rakp_message_2 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_2)))
+  if (!(c->connection.obj_rakp_message_2 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_2)))
     goto cleanup;
-  if (!(s->obj_rakp_message_3 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_3)))
+  if (!(c->connection.obj_rakp_message_3 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_3)))
     goto cleanup;
-  if (!(s->obj_rakp_message_4 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_4)))
+  if (!(c->connection.obj_rakp_message_4 = Fiid_obj_create(c, tmpl_rmcpplus_rakp_message_4)))
     goto cleanup;
-  if (!(s->obj_set_session_privilege_level_rq = Fiid_obj_create(c, tmpl_cmd_set_session_privilege_level_rq)))
+  if (!(c->connection.obj_set_session_privilege_level_rq = Fiid_obj_create(c, tmpl_cmd_set_session_privilege_level_rq)))
     goto cleanup;
-  if (!(s->obj_set_session_privilege_level_rs = Fiid_obj_create(c, tmpl_cmd_set_session_privilege_level_rs)))
+  if (!(c->connection.obj_set_session_privilege_level_rs = Fiid_obj_create(c, tmpl_cmd_set_session_privilege_level_rs)))
     goto cleanup;
-  if (!(s->obj_get_channel_payload_support_rq = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_support_rq)))
+  if (!(c->connection.obj_get_channel_payload_support_rq = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_support_rq)))
     goto cleanup;
-  if (!(s->obj_get_channel_payload_support_rs = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_support_rs)))
+  if (!(c->connection.obj_get_channel_payload_support_rs = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_support_rs)))
     goto cleanup;
-  if (!(s->obj_get_payload_activation_status_rq = Fiid_obj_create(c, tmpl_cmd_get_payload_activation_status_rq)))
+  if (!(c->connection.obj_get_payload_activation_status_rq = Fiid_obj_create(c, tmpl_cmd_get_payload_activation_status_rq)))
     goto cleanup;
-  if (!(s->obj_get_payload_activation_status_rs = Fiid_obj_create(c, tmpl_cmd_get_payload_activation_status_rs)))
+  if (!(c->connection.obj_get_payload_activation_status_rs = Fiid_obj_create(c, tmpl_cmd_get_payload_activation_status_rs)))
     goto cleanup;
-  if (!(s->obj_activate_payload_rq = Fiid_obj_create(c, tmpl_cmd_activate_payload_sol_rq)))
+  if (!(c->connection.obj_activate_payload_rq = Fiid_obj_create(c, tmpl_cmd_activate_payload_sol_rq)))
     goto cleanup;
-  if (!(s->obj_activate_payload_rs = Fiid_obj_create(c, tmpl_cmd_activate_payload_sol_rs)))
+  if (!(c->connection.obj_activate_payload_rs = Fiid_obj_create(c, tmpl_cmd_activate_payload_sol_rs)))
     goto cleanup;
-  if (!(s->obj_sol_payload_data_rq = Fiid_obj_create(c, tmpl_sol_payload_data_remote_console_to_bmc)))
+  if (!(c->connection.obj_sol_payload_data_rq = Fiid_obj_create(c, tmpl_sol_payload_data_remote_console_to_bmc)))
     goto cleanup;
-  if (!(s->obj_sol_payload_data_rs = Fiid_obj_create(c, tmpl_sol_payload_data_bmc_to_remote_console)))
+  if (!(c->connection.obj_sol_payload_data_rs = Fiid_obj_create(c, tmpl_sol_payload_data_bmc_to_remote_console)))
     goto cleanup;
-  if (!(s->obj_get_channel_payload_version_rq = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_version_rq)))
+  if (!(c->connection.obj_get_channel_payload_version_rq = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_version_rq)))
     goto cleanup;
-  if (!(s->obj_get_channel_payload_version_rs = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_version_rs)))
+  if (!(c->connection.obj_get_channel_payload_version_rs = Fiid_obj_create(c, tmpl_cmd_get_channel_payload_version_rs)))
     goto cleanup;
-  if (!(s->obj_deactivate_payload_rq = Fiid_obj_create(c, tmpl_cmd_deactivate_payload_rq)))
+  if (!(c->connection.obj_deactivate_payload_rq = Fiid_obj_create(c, tmpl_cmd_deactivate_payload_rq)))
     goto cleanup;
-  if (!(s->obj_deactivate_payload_rs = Fiid_obj_create(c, tmpl_cmd_deactivate_payload_rs)))
+  if (!(c->connection.obj_deactivate_payload_rs = Fiid_obj_create(c, tmpl_cmd_deactivate_payload_rs)))
     goto cleanup;
-  if (!(s->obj_close_session_rq = Fiid_obj_create(c, tmpl_cmd_close_session_rq)))
+  if (!(c->connection.obj_close_session_rq = Fiid_obj_create(c, tmpl_cmd_close_session_rq)))
     goto cleanup;
-  if (!(s->obj_close_session_rs = Fiid_obj_create(c, tmpl_cmd_close_session_rs)))
-    goto cleanup;
-
-  if (_ipmiconsole_ctx_session_maintenance_information_setup(c) < 0)
+  if (!(c->connection.obj_close_session_rs = Fiid_obj_create(c, tmpl_cmd_close_session_rs)))
     goto cleanup;
 
   return 0;
 
  cleanup:
-  _ipmiconsole_ctx_session_cleanup(c);
-  /* Previously called here, but this is supposed to be handled in API land */
+  _ipmiconsole_ctx_connection_cleanup(c);
+  /* Previously called here, but this is now supposed to be handled in API land */
   /* _ipmiconsole_ctx_api_managed_session_data_cleanup(c); */
   /* _ipmiconsole_ctx_api_managed_session_data_init(c); */
   return -1;
 }
 
 void
-_ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   int secure_malloc_flag;
   int perr;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  
-  s = &(c->session);
   
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
@@ -624,6 +608,8 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           
+  /* XXX */
+
   /* Indicates current status to user. */
   if (c->errnum != IPMICONSOLE_ERR_SUCCESS
       && !c->sol_session_established)
@@ -641,7 +627,7 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
       uint8_t val;
 
       if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
-          && s->deactivate_only_succeeded_flag)
+          && c->session.deactivate_only_succeeded_flag)
         val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
       else
         val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
@@ -670,106 +656,106 @@ _ipmiconsole_ctx_session_cleanup(ipmiconsole_ctx_t c)
    */
   if (c->config.engine_flags & IPMICONSOLE_ENGINE_CLOSE_FD)
     {
-      if (s->user_fd >= 0)
-        close(s->user_fd);
+      if (c->connection.user_fd >= 0)
+        close(c->connection.user_fd);
     }
-  if (s->ipmiconsole_fd >= 0)
-    close(s->ipmiconsole_fd);
-  if (s->console_remote_console_to_bmc)
-    cbuf_destroy(s->console_remote_console_to_bmc, secure_malloc_flag);
-  if (s->console_bmc_to_remote_console)
-    cbuf_destroy(s->console_bmc_to_remote_console, secure_malloc_flag);
-  if (s->ipmi_fd >= 0)
-    close(s->ipmi_fd);
-  if (s->ipmi_from_bmc)
-    cbuf_destroy(s->ipmi_from_bmc, secure_malloc_flag);
-  if (s->ipmi_to_bmc)
-    cbuf_destroy(s->ipmi_to_bmc, secure_malloc_flag);
+  if (c->connection.ipmiconsole_fd >= 0)
+    close(c->connection.ipmiconsole_fd);
+  if (c->connection.console_remote_console_to_bmc)
+    cbuf_destroy(c->connection.console_remote_console_to_bmc, secure_malloc_flag);
+  if (c->connection.console_bmc_to_remote_console)
+    cbuf_destroy(c->connection.console_bmc_to_remote_console, secure_malloc_flag);
+  if (c->connection.ipmi_fd >= 0)
+    close(c->connection.ipmi_fd);
+  if (c->connection.ipmi_from_bmc)
+    cbuf_destroy(c->connection.ipmi_from_bmc, secure_malloc_flag);
+  if (c->connection.ipmi_to_bmc)
+    cbuf_destroy(c->connection.ipmi_to_bmc, secure_malloc_flag);
   /* Similarly to the user_fd above, it is the responsibility of other
    * code to close asynccomm[0] and asynccomm[1], which is replicated
    * in the context.
    */
-  if (s->obj_rmcp_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_rmcp_hdr_rq);
-  if (s->obj_rmcp_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_rmcp_hdr_rs);
-  if (s->obj_lan_session_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_lan_session_hdr_rq);
-  if (s->obj_lan_session_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_lan_session_hdr_rs);
-  if (s->obj_lan_msg_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_lan_msg_hdr_rq);
-  if (s->obj_lan_msg_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_lan_msg_hdr_rs);
-  if (s->obj_lan_msg_trlr_rs)
-    Fiid_obj_destroy(c, s->obj_lan_msg_trlr_rs);
-  if (s->obj_rmcpplus_session_hdr_rq)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_hdr_rq);
-  if (s->obj_rmcpplus_session_hdr_rs)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_hdr_rs);
-  if (s->obj_rmcpplus_payload_rs)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_payload_rs);
-  if (s->obj_rmcpplus_session_trlr_rq)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_trlr_rq);
-  if (s->obj_rmcpplus_session_trlr_rs)
-    Fiid_obj_destroy(c, s->obj_rmcpplus_session_trlr_rs);
-  if (s->obj_authentication_capabilities_v20_rq)
-    Fiid_obj_destroy(c, s->obj_authentication_capabilities_v20_rq);
-  if (s->obj_authentication_capabilities_v20_rs)
-    Fiid_obj_destroy(c, s->obj_authentication_capabilities_v20_rs);
-  if (s->obj_open_session_request)
-    Fiid_obj_destroy(c, s->obj_open_session_request);
-  if (s->obj_open_session_response)
-    Fiid_obj_destroy(c, s->obj_open_session_response);
-  if (s->obj_rakp_message_1)
-    Fiid_obj_destroy(c, s->obj_rakp_message_1);
-  if (s->obj_rakp_message_2)
-    Fiid_obj_destroy(c, s->obj_rakp_message_2);
-  if (s->obj_rakp_message_3)
-    Fiid_obj_destroy(c, s->obj_rakp_message_3);
-  if (s->obj_rakp_message_4)
-    Fiid_obj_destroy(c, s->obj_rakp_message_4);
-  if (s->obj_set_session_privilege_level_rq)
-    Fiid_obj_destroy(c, s->obj_set_session_privilege_level_rq);
-  if (s->obj_set_session_privilege_level_rs)
-    Fiid_obj_destroy(c, s->obj_set_session_privilege_level_rs);
-  if (s->obj_get_channel_payload_support_rq)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_support_rq);
-  if (s->obj_get_channel_payload_support_rs)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_support_rs);
-  if (s->obj_get_payload_activation_status_rq)
-    Fiid_obj_destroy(c, s->obj_get_payload_activation_status_rq);
-  if (s->obj_get_payload_activation_status_rs)
-    Fiid_obj_destroy(c, s->obj_get_payload_activation_status_rs);
-  if (s->obj_activate_payload_rq)
-    Fiid_obj_destroy(c, s->obj_activate_payload_rq);
-  if (s->obj_activate_payload_rs)
-    Fiid_obj_destroy(c, s->obj_activate_payload_rs);
-  if (s->obj_sol_payload_data_rq)
-    Fiid_obj_destroy(c, s->obj_sol_payload_data_rq);
-  if (s->obj_sol_payload_data_rs)
-    Fiid_obj_destroy(c, s->obj_sol_payload_data_rs);
-  if (s->obj_get_channel_payload_version_rq)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_version_rq);
-  if (s->obj_get_channel_payload_version_rs)
-    Fiid_obj_destroy(c, s->obj_get_channel_payload_version_rs);
-  if (s->obj_deactivate_payload_rq)
-    Fiid_obj_destroy(c, s->obj_deactivate_payload_rq);
-  if (s->obj_deactivate_payload_rs)
-    Fiid_obj_destroy(c, s->obj_deactivate_payload_rs);
-  if (s->obj_close_session_rq)
-    Fiid_obj_destroy(c, s->obj_close_session_rq);
-  if (s->obj_close_session_rs)
-    Fiid_obj_destroy(c, s->obj_close_session_rs);
+  if (c->connection.obj_rmcp_hdr_rq)
+    Fiid_obj_destroy(c, c->connection.obj_rmcp_hdr_rq);
+  if (c->connection.obj_rmcp_hdr_rs)
+    Fiid_obj_destroy(c, c->connection.obj_rmcp_hdr_rs);
+  if (c->connection.obj_lan_session_hdr_rq)
+    Fiid_obj_destroy(c, c->connection.obj_lan_session_hdr_rq);
+  if (c->connection.obj_lan_session_hdr_rs)
+    Fiid_obj_destroy(c, c->connection.obj_lan_session_hdr_rs);
+  if (c->connection.obj_lan_msg_hdr_rq)
+    Fiid_obj_destroy(c, c->connection.obj_lan_msg_hdr_rq);
+  if (c->connection.obj_lan_msg_hdr_rs)
+    Fiid_obj_destroy(c, c->connection.obj_lan_msg_hdr_rs);
+  if (c->connection.obj_lan_msg_trlr_rs)
+    Fiid_obj_destroy(c, c->connection.obj_lan_msg_trlr_rs);
+  if (c->connection.obj_rmcpplus_session_hdr_rq)
+    Fiid_obj_destroy(c, c->connection.obj_rmcpplus_session_hdr_rq);
+  if (c->connection.obj_rmcpplus_session_hdr_rs)
+    Fiid_obj_destroy(c, c->connection.obj_rmcpplus_session_hdr_rs);
+  if (c->connection.obj_rmcpplus_payload_rs)
+    Fiid_obj_destroy(c, c->connection.obj_rmcpplus_payload_rs);
+  if (c->connection.obj_rmcpplus_session_trlr_rq)
+    Fiid_obj_destroy(c, c->connection.obj_rmcpplus_session_trlr_rq);
+  if (c->connection.obj_rmcpplus_session_trlr_rs)
+    Fiid_obj_destroy(c, c->connection.obj_rmcpplus_session_trlr_rs);
+  if (c->connection.obj_authentication_capabilities_v20_rq)
+    Fiid_obj_destroy(c, c->connection.obj_authentication_capabilities_v20_rq);
+  if (c->connection.obj_authentication_capabilities_v20_rs)
+    Fiid_obj_destroy(c, c->connection.obj_authentication_capabilities_v20_rs);
+  if (c->connection.obj_open_session_request)
+    Fiid_obj_destroy(c, c->connection.obj_open_session_request);
+  if (c->connection.obj_open_session_response)
+    Fiid_obj_destroy(c, c->connection.obj_open_session_response);
+  if (c->connection.obj_rakp_message_1)
+    Fiid_obj_destroy(c, c->connection.obj_rakp_message_1);
+  if (c->connection.obj_rakp_message_2)
+    Fiid_obj_destroy(c, c->connection.obj_rakp_message_2);
+  if (c->connection.obj_rakp_message_3)
+    Fiid_obj_destroy(c, c->connection.obj_rakp_message_3);
+  if (c->connection.obj_rakp_message_4)
+    Fiid_obj_destroy(c, c->connection.obj_rakp_message_4);
+  if (c->connection.obj_set_session_privilege_level_rq)
+    Fiid_obj_destroy(c, c->connection.obj_set_session_privilege_level_rq);
+  if (c->connection.obj_set_session_privilege_level_rs)
+    Fiid_obj_destroy(c, c->connection.obj_set_session_privilege_level_rs);
+  if (c->connection.obj_get_channel_payload_support_rq)
+    Fiid_obj_destroy(c, c->connection.obj_get_channel_payload_support_rq);
+  if (c->connection.obj_get_channel_payload_support_rs)
+    Fiid_obj_destroy(c, c->connection.obj_get_channel_payload_support_rs);
+  if (c->connection.obj_get_payload_activation_status_rq)
+    Fiid_obj_destroy(c, c->connection.obj_get_payload_activation_status_rq);
+  if (c->connection.obj_get_payload_activation_status_rs)
+    Fiid_obj_destroy(c, c->connection.obj_get_payload_activation_status_rs);
+  if (c->connection.obj_activate_payload_rq)
+    Fiid_obj_destroy(c, c->connection.obj_activate_payload_rq);
+  if (c->connection.obj_activate_payload_rs)
+    Fiid_obj_destroy(c, c->connection.obj_activate_payload_rs);
+  if (c->connection.obj_sol_payload_data_rq)
+    Fiid_obj_destroy(c, c->connection.obj_sol_payload_data_rq);
+  if (c->connection.obj_sol_payload_data_rs)
+    Fiid_obj_destroy(c, c->connection.obj_sol_payload_data_rs);
+  if (c->connection.obj_get_channel_payload_version_rq)
+    Fiid_obj_destroy(c, c->connection.obj_get_channel_payload_version_rq);
+  if (c->connection.obj_get_channel_payload_version_rs)
+    Fiid_obj_destroy(c, c->connection.obj_get_channel_payload_version_rs);
+  if (c->connection.obj_deactivate_payload_rq)
+    Fiid_obj_destroy(c, c->connection.obj_deactivate_payload_rq);
+  if (c->connection.obj_deactivate_payload_rs)
+    Fiid_obj_destroy(c, c->connection.obj_deactivate_payload_rs);
+  if (c->connection.obj_close_session_rq)
+    Fiid_obj_destroy(c, c->connection.obj_close_session_rq);
+  if (c->connection.obj_close_session_rs)
+    Fiid_obj_destroy(c, c->connection.obj_close_session_rs);
   
-  _ipmiconsole_ctx_session_init(c);
+  _ipmiconsole_ctx_connection_init(c);
 
   /* Be careful, if the user requested to destroy the context, we can
    * destroy it here.  But if we destroy it, there is no mutex to
    * unlock.
    */
 
-  /* Note: the code in _ipmiconsole_ctx_session_cleanup() and
+  /* Note: the code in _ipmiconsole_ctx_connection_cleanup() and
    * ipmiconsole_garbage_collector() may look like it may race and
    * could deadlock.  (ABBA and BAAB deadlock situation).  However,
    * the context mutexes c->destroyed_mutex are accessed from two
@@ -890,7 +876,7 @@ ipmiconsole_engine_setup(unsigned int thread_count)
 
   for (i = 0; i < IPMICONSOLE_THREAD_COUNT_MAX; i++)
     {
-      if (!(console_engine_ctxs[i] = list_create((ListDelF)_ipmiconsole_ctx_session_cleanup)))
+      if (!(console_engine_ctxs[i] = list_create((ListDelF)_ipmiconsole_ctx_connection_cleanup)))
         {
           IPMICONSOLE_DEBUG(("list_create: %s", strerror(errno)));
           goto cleanup;
@@ -1046,7 +1032,6 @@ static int
 _teardown_initiate(void *x, void *arg)
 {
   ipmiconsole_ctx_t c;
-  struct ipmiconsole_ctx_session *s;
 
   assert(x);
 
@@ -1055,10 +1040,8 @@ _teardown_initiate(void *x, void *arg)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
-  if (!s->close_session_flag)
-    s->close_session_flag++;
+  if (!c->session.close_session_flag)
+    c->session.close_session_flag++;
 
   return 0;
 }
@@ -1067,7 +1050,6 @@ static int
 _poll_setup(void *x, void *arg)
 {
   ipmiconsole_ctx_t c;
-  struct ipmiconsole_ctx_session *s;
   struct _ipmiconsole_poll_data *poll_data;
 
   assert(x);
@@ -1078,32 +1060,31 @@ _poll_setup(void *x, void *arg)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
   poll_data = (struct _ipmiconsole_poll_data *)arg;
 
-  poll_data->pfds[poll_data->pfds_index*3].fd = s->ipmi_fd;
+  poll_data->pfds[poll_data->pfds_index*3].fd = c->connection.ipmi_fd;
   poll_data->pfds[poll_data->pfds_index*3].events = 0;
   poll_data->pfds[poll_data->pfds_index*3].revents = 0;
   poll_data->pfds[poll_data->pfds_index*3].events |= POLLIN;
-  if (!cbuf_is_empty(s->ipmi_to_bmc))
+  if (!cbuf_is_empty(c->connection.ipmi_to_bmc))
     poll_data->pfds[poll_data->pfds_index*3].events |= POLLOUT;
 
   /* If the session is being torn down, don't bother settings flags on
    * these fds.  However, to avoid spinning due to an invalid fd or a
    * closed fd (i.e. get a POLLINVAL or POLLHUP), use the dummy_fd.
    */
-  if (!s->close_session_flag)
+  if (!c->session.close_session_flag)
     {
-      poll_data->pfds[poll_data->pfds_index*3 + 1].fd = s->asynccomm[0];
+      poll_data->pfds[poll_data->pfds_index*3 + 1].fd = c->connection.asynccomm[0];
       poll_data->pfds[poll_data->pfds_index*3 + 1].events = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 1].revents = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 1].events |= POLLIN;
  
-      poll_data->pfds[poll_data->pfds_index*3 + 2].fd = s->ipmiconsole_fd;
+      poll_data->pfds[poll_data->pfds_index*3 + 2].fd = c->connection.ipmiconsole_fd;
       poll_data->pfds[poll_data->pfds_index*3 + 2].events = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 2].revents = 0;
       poll_data->pfds[poll_data->pfds_index*3 + 2].events |= POLLIN;
-      if (!cbuf_is_empty(s->console_bmc_to_remote_console))
+      if (!cbuf_is_empty(c->connection.console_bmc_to_remote_console))
 	poll_data->pfds[poll_data->pfds_index*3 + 2].events |= POLLOUT;
     }
   else
@@ -1130,7 +1111,6 @@ _poll_setup(void *x, void *arg)
 static int
 _ipmi_recvfrom(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   char buffer[IPMICONSOLE_PACKET_BUFLEN];
   struct sockaddr_in from;
   unsigned int fromlen = sizeof(struct sockaddr_in);
@@ -1141,11 +1121,9 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-  
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
-  if ((len = ipmi_lan_recvfrom(s->ipmi_fd, 
+  if ((len = ipmi_lan_recvfrom(c->connection.ipmi_fd, 
                                buffer, 
                                IPMICONSOLE_PACKET_BUFLEN, 
                                0,
@@ -1166,7 +1144,7 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
 
   /* Sanity Check */
   if (from.sin_family != AF_INET
-      || from.sin_addr.s_addr != s->addr.sin_addr.s_addr)
+      || from.sin_addr.s_addr != c->session.addr.sin_addr.s_addr)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("received from invalid address"));
       /* Note: Not a fatal error, just return */
@@ -1174,20 +1152,20 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
     }
 
   /* Empty the cbuf if it's not empty */
-  if (!cbuf_is_empty(s->ipmi_from_bmc))
+  if (!cbuf_is_empty(c->connection.ipmi_from_bmc))
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_from_bmc not empty, draining"));
       do {
         char tempbuf[IPMICONSOLE_PACKET_BUFLEN];
-        if (cbuf_read(s->ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
+        if (cbuf_read(c->connection.ipmi_from_bmc, tempbuf, IPMICONSOLE_PACKET_BUFLEN) < 0)
           {
             IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
             break;
           }
-      } while(!cbuf_is_empty(s->ipmi_from_bmc));
+      } while(!cbuf_is_empty(c->connection.ipmi_from_bmc));
     }
   
-  if ((n = cbuf_write(s->ipmi_from_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = cbuf_write(c->connection.ipmi_from_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -1218,7 +1196,6 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
 static int
 _ipmi_sendto(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   char buffer[IPMICONSOLE_PACKET_BUFLEN];
   ssize_t len;
   int n;
@@ -1226,20 +1203,18 @@ _ipmi_sendto(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
-  if ((n = cbuf_read(s->ipmi_to_bmc, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
+  if ((n = cbuf_read(c->connection.ipmi_to_bmc, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
-  if ((len = ipmi_lan_sendto(s->ipmi_fd,
+  if ((len = ipmi_lan_sendto(c->connection.ipmi_fd,
                              buffer,
                              n, 
                              0, 
-                             (struct sockaddr *)&(s->addr),
+                             (struct sockaddr *)&(c->session.addr),
                              sizeof(struct sockaddr_in))) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_lan_sendto: %s", strerror(errno)));
@@ -1255,7 +1230,7 @@ _ipmi_sendto(ipmiconsole_ctx_t c)
     }
 
   /* cbuf should be empty now */
-  if (!cbuf_is_empty(s->ipmi_to_bmc))
+  if (!cbuf_is_empty(c->connection.ipmi_to_bmc))
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_to_bmc not empty"));
       /* Note: Not a fatal error, just return*/
@@ -1272,16 +1247,13 @@ _ipmi_sendto(ipmiconsole_ctx_t c)
 static int
 _asynccomm(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t val;
   ssize_t len;
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  s = &(c->session);
-
-  if ((len = read(s->asynccomm[0], (void *)&val, 1)) < 0)
+  if ((len = read(c->connection.asynccomm[0], (void *)&val, 1)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("read: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
@@ -1300,11 +1272,11 @@ _asynccomm(ipmiconsole_ctx_t c)
    */
   if (val == IPMICONSOLE_PIPE_GENERATE_BREAK_CODE)
     {
-      if (!(s->break_requested))
+      if (!(c->session.break_requested))
 	{
-	  s->break_requested++;
+	  c->session.break_requested++;
 
-	  if ((s->console_remote_console_to_bmc_bytes_before_break = cbuf_used(s->console_remote_console_to_bmc)) < 0)
+	  if ((c->session.console_remote_console_to_bmc_bytes_before_break = cbuf_used(c->connection.console_remote_console_to_bmc)) < 0)
 	    {
 	      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_used: %s", strerror(errno)));
 	      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -1323,7 +1295,6 @@ _asynccomm(ipmiconsole_ctx_t c)
 static int
 _console_read(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   char buffer[IPMICONSOLE_PACKET_BUFLEN];
   ssize_t len;
   int n, dropped = 0;
@@ -1333,11 +1304,9 @@ _console_read(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(!c->session.close_session_flag);	
 
-  s = &(c->session);
-  
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
-  if ((len = read(s->ipmiconsole_fd,
+  if ((len = read(c->connection.ipmiconsole_fd,
                   buffer,
                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
@@ -1355,7 +1324,7 @@ _console_read(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if ((n = cbuf_write(s->console_remote_console_to_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
+  if ((n = cbuf_write(c->connection.console_remote_console_to_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -1386,7 +1355,6 @@ _console_read(ipmiconsole_ctx_t c)
 static int
 _console_write(ipmiconsole_ctx_t c)
 {
-  struct ipmiconsole_ctx_session *s;
   char buffer[IPMICONSOLE_PACKET_BUFLEN];
   ssize_t len;
   int n;
@@ -1402,16 +1370,14 @@ _console_write(ipmiconsole_ctx_t c)
    * Deal with it later.
    */
 
-  s = &(c->session);
-
-  if ((n = cbuf_read(s->console_bmc_to_remote_console, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
+  if ((n = cbuf_read(c->connection.console_bmc_to_remote_console, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return -1;
     }
 
-  if ((len = write(s->ipmiconsole_fd,
+  if ((len = write(c->connection.ipmiconsole_fd,
                    buffer,
                    n)) < 0)
     {
@@ -1437,7 +1403,7 @@ _console_write(ipmiconsole_ctx_t c)
     }
 
   /* cbuf should be empty now */
-  if (!cbuf_is_empty(s->console_bmc_to_remote_console))
+  if (!cbuf_is_empty(c->connection.console_bmc_to_remote_console))
     {
       IPMICONSOLE_CTX_DEBUG(c, ("console_bmc_to_remote_console not empty"));
       /* Note: Not a fatal error, just return*/

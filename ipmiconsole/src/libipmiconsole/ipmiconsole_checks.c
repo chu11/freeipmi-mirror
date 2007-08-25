@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.11 2007-08-23 17:02:30 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.12 2007-08-25 01:30:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -51,7 +51,6 @@
 int
 ipmiconsole_check_checksum(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   fiid_obj_t obj_cmd;
   int8_t rv;
 
@@ -67,12 +66,10 @@ ipmiconsole_check_checksum(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  s = &(c->session);
-
   obj_cmd = ipmiconsole_packet_object(c, p);
-  if ((rv = ipmi_lan_check_checksum(s->obj_lan_msg_hdr_rs,
+  if ((rv = ipmi_lan_check_checksum(c->connection.obj_lan_msg_hdr_rs,
 				    obj_cmd,
-				    s->obj_lan_msg_trlr_rs)) < 0)
+				    c->connection.obj_lan_msg_trlr_rs)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_lan_check_checksum: p = %d; %s", p, strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -91,7 +88,6 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
 				       uint8_t *buf,
 				       uint32_t buflen)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t *password;
   int8_t rv;
 
@@ -109,21 +105,19 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
   assert(buf);
   assert(buflen);
 
-  s = &(c->session);
-
   if (strlen((char *)c->config.password))
     password = c->config.password;
   else
     password = NULL;
 
-  if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(s->integrity_algorithm,
+  if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(c->connection.integrity_algorithm,
                                                                    buf,
                                                                    buflen,
-                                                                   s->integrity_key_ptr,
-                                                                   s->integrity_key_len,
+                                                                   c->session.integrity_key_ptr,
+                                                                   c->session.integrity_key_len,
                                                                    password,
                                                                    (password) ? strlen((char *)password) : 0,
-                                                                   s->obj_rmcpplus_session_trlr_rs)) < 0)
+                                                                   c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_packet_session_authentication_code: p = %d; %s", p, strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -139,7 +133,6 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
 int 
 ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint32_t shift_num, wrap_val;
   uint32_t session_sequence_number;
   uint64_t val;
@@ -157,8 +150,6 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
   
-  s = &(c->session);
-
   /* achu: This algorithm is more or less from Appendix A of the IPMI
    * spec.  It may not be entirely necessary for ipmipower, since the
    * requester sequence number puts packets into lock-step mode.  Oh
@@ -172,7 +163,7 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
    */
 
   if (Fiid_obj_get(c,
-		   s->obj_rmcpplus_session_hdr_rs,
+		   c->connection.obj_rmcpplus_session_hdr_rs,
 		   "session_sequence_number", 
 		   &val) < 0)
     return -1;
@@ -183,38 +174,38 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
     goto out;
 
   /* Drop duplicate packet */
-  if (session_sequence_number == s->highest_received_sequence_number)
+  if (session_sequence_number == c->session.highest_received_sequence_number)
     goto out;
 
   /* Check if sequence number is greater than highest received and is
    * within range 
    */
-  if (s->highest_received_sequence_number > (IPMI_SESSION_MAX_SEQUENCE_NUMBER - IPMI_SESSION_SEQUENCE_NUMBER_WINDOW))
+  if (c->session.highest_received_sequence_number > (IPMI_SESSION_MAX_SEQUENCE_NUMBER - IPMI_SESSION_SEQUENCE_NUMBER_WINDOW))
     {
-      wrap_val = IPMI_SESSION_SEQUENCE_NUMBER_WINDOW - (IPMI_SESSION_MAX_SEQUENCE_NUMBER - s->highest_received_sequence_number);
+      wrap_val = IPMI_SESSION_SEQUENCE_NUMBER_WINDOW - (IPMI_SESSION_MAX_SEQUENCE_NUMBER - c->session.highest_received_sequence_number);
 
-      if (session_sequence_number > s->highest_received_sequence_number || session_sequence_number <= wrap_val)
+      if (session_sequence_number > c->session.highest_received_sequence_number || session_sequence_number <= wrap_val)
 	{
-	  if (session_sequence_number > s->highest_received_sequence_number && session_sequence_number <= IPMI_SESSION_MAX_SEQUENCE_NUMBER)
-	    shift_num = session_sequence_number - s->highest_received_sequence_number;
+	  if (session_sequence_number > c->session.highest_received_sequence_number && session_sequence_number <= IPMI_SESSION_MAX_SEQUENCE_NUMBER)
+	    shift_num = session_sequence_number - c->session.highest_received_sequence_number;
 	  else
-	    shift_num = session_sequence_number + (IPMI_SESSION_MAX_SEQUENCE_NUMBER - s->highest_received_sequence_number);
+	    shift_num = session_sequence_number + (IPMI_SESSION_MAX_SEQUENCE_NUMBER - c->session.highest_received_sequence_number);
           
-	  s->highest_received_sequence_number = session_sequence_number;
-	  s->previously_received_list <<= shift_num;
-	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  c->session.highest_received_sequence_number = session_sequence_number;
+	  c->session.previously_received_list <<= shift_num;
+	  c->session.previously_received_list |= (0x1 << (shift_num - 1));
 	  rv++;
 	}
     }
   else
     {
-      if (session_sequence_number > s->highest_received_sequence_number
-	  && (session_sequence_number - s->highest_received_sequence_number) <= IPMI_SESSION_SEQUENCE_NUMBER_WINDOW)
+      if (session_sequence_number > c->session.highest_received_sequence_number
+	  && (session_sequence_number - c->session.highest_received_sequence_number) <= IPMI_SESSION_SEQUENCE_NUMBER_WINDOW)
 	{
-	  shift_num = (session_sequence_number - s->highest_received_sequence_number);
-	  s->highest_received_sequence_number = session_sequence_number;
-	  s->previously_received_list <<= shift_num;
-	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  shift_num = (session_sequence_number - c->session.highest_received_sequence_number);
+	  c->session.highest_received_sequence_number = session_sequence_number;
+	  c->session.previously_received_list <<= shift_num;
+	  c->session.previously_received_list |= (0x1 << (shift_num - 1));
 	  rv++;
 	}
     }
@@ -222,44 +213,44 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
   /* Check if sequence number is lower than highest received, is
    * within range, and hasn't been seen yet
    */
-  if (s->highest_received_sequence_number < IPMI_SESSION_SEQUENCE_NUMBER_WINDOW)
+  if (c->session.highest_received_sequence_number < IPMI_SESSION_SEQUENCE_NUMBER_WINDOW)
     {
-      wrap_val = IPMI_SESSION_MAX_SEQUENCE_NUMBER - (IPMI_SESSION_SEQUENCE_NUMBER_WINDOW - s->highest_received_sequence_number);
+      wrap_val = IPMI_SESSION_MAX_SEQUENCE_NUMBER - (IPMI_SESSION_SEQUENCE_NUMBER_WINDOW - c->session.highest_received_sequence_number);
 
-      if (session_sequence_number < s->highest_received_sequence_number || session_sequence_number >= wrap_val)
+      if (session_sequence_number < c->session.highest_received_sequence_number || session_sequence_number >= wrap_val)
 	{
-	  if (session_sequence_number > s->highest_received_sequence_number && session_sequence_number <= IPMI_SESSION_MAX_SEQUENCE_NUMBER)
-	    shift_num = s->highest_received_sequence_number + (IPMI_SESSION_MAX_SEQUENCE_NUMBER - session_sequence_number);
+	  if (session_sequence_number > c->session.highest_received_sequence_number && session_sequence_number <= IPMI_SESSION_MAX_SEQUENCE_NUMBER)
+	    shift_num = c->session.highest_received_sequence_number + (IPMI_SESSION_MAX_SEQUENCE_NUMBER - session_sequence_number);
 	  else
-	    shift_num = s->highest_received_sequence_number - session_sequence_number;
+	    shift_num = c->session.highest_received_sequence_number - session_sequence_number;
           
 	  /* Duplicate packet check*/
-	  if (s->previously_received_list & (0x1 << (shift_num - 1)))
+	  if (c->session.previously_received_list & (0x1 << (shift_num - 1)))
 	    goto out;
           
-	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  c->session.previously_received_list |= (0x1 << (shift_num - 1));
 	  rv++;
 	}
     }
   else
     {
-      if (session_sequence_number < s->highest_received_sequence_number
-	  && session_sequence_number >= (s->highest_received_sequence_number - IPMI_SESSION_SEQUENCE_NUMBER_WINDOW))
+      if (session_sequence_number < c->session.highest_received_sequence_number
+	  && session_sequence_number >= (c->session.highest_received_sequence_number - IPMI_SESSION_SEQUENCE_NUMBER_WINDOW))
 	{
-	  shift_num = s->highest_received_sequence_number - session_sequence_number;
+	  shift_num = c->session.highest_received_sequence_number - session_sequence_number;
           
 	  /* Duplicate packet check */
-	  if (s->previously_received_list & (0x1 << (shift_num - 1)))
+	  if (c->session.previously_received_list & (0x1 << (shift_num - 1)))
 	    goto out;
           
-	  s->previously_received_list |= (0x1 << (shift_num - 1));
+	  c->session.previously_received_list |= (0x1 << (shift_num - 1));
 	  rv++;
 	}
     }
   
  out:
   if (!rv)
-    IPMICONSOLE_CTX_DEBUG(c, ("session sequence number check failed; p = %d; session_sequence_number = %u; highest_received_sequence_number = %u", p, session_sequence_number, s->highest_received_sequence_number));
+    IPMICONSOLE_CTX_DEBUG(c, ("session sequence number check failed; p = %d; session_sequence_number = %u; highest_received_sequence_number = %u", p, session_sequence_number, c->session.highest_received_sequence_number));
   
   return rv;
 }
@@ -267,7 +258,6 @@ ipmiconsole_check_outbound_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pack
 int 
 ipmiconsole_check_session_id(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
 {
-  struct ipmiconsole_ctx_session *s;
   uint32_t session_id, expected_session_id; 
   uint64_t val;
 
@@ -286,8 +276,6 @@ ipmiconsole_check_session_id(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
          || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
          || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  s = &(c->session);
-
   if (p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2 
       || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4)
@@ -302,17 +290,17 @@ ipmiconsole_check_session_id(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 		       &val) < 0)
         return -1;
       session_id = val;
-      expected_session_id = s->remote_console_session_id;
+      expected_session_id = c->session.remote_console_session_id;
     }
   else 
     {
       if (Fiid_obj_get(c,
-		       s->obj_rmcpplus_session_hdr_rs,
+		       c->connection.obj_rmcpplus_session_hdr_rs,
 		       "session_id", 
 		       &val) < 0)
         return -1;
       session_id = val;
-      expected_session_id = s->remote_console_session_id;
+      expected_session_id = c->session.remote_console_session_id;
     }
   
   if (session_id != expected_session_id)
@@ -324,7 +312,6 @@ ipmiconsole_check_session_id(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 int 
 ipmiconsole_check_network_function(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t netfn, expected_netfn;
   uint64_t val;
 
@@ -340,10 +327,8 @@ ipmiconsole_check_network_function(ipmiconsole_ctx_t c, ipmiconsole_packet_type_
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
   
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-		   s->obj_lan_msg_hdr_rs, 
+		   c->connection.obj_lan_msg_hdr_rs, 
 		   "net_fn",
 		   &val) < 0)
     return -1;
@@ -359,7 +344,6 @@ ipmiconsole_check_network_function(ipmiconsole_ctx_t c, ipmiconsole_packet_type_
 int 
 ipmiconsole_check_command(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t cmd, expected_cmd;
   fiid_obj_t obj_cmd;
   uint64_t val;
@@ -376,8 +360,6 @@ ipmiconsole_check_command(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
   
-  s = &(c->session);
-
   obj_cmd = ipmiconsole_packet_object(c, p);
   if (Fiid_obj_get(c,
 		   obj_cmd, 
@@ -412,7 +394,6 @@ ipmiconsole_check_command(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 int 
 ipmiconsole_check_requester_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t req_seq, expected_req_seq;
   uint64_t val;
 
@@ -428,15 +409,13 @@ ipmiconsole_check_requester_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pac
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
     
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-		   s->obj_lan_msg_hdr_rs, 
+		   c->connection.obj_lan_msg_hdr_rs, 
 		   "rq_seq",
 		   &val) < 0)
     return -1;
   req_seq = val;
-  expected_req_seq = s->requester_sequence_number;
+  expected_req_seq = c->session.requester_sequence_number;
 
   if (req_seq != expected_req_seq)
     IPMICONSOLE_CTX_DEBUG(c, ("requester sequence number check failed; p = %d; req_seq = %X; expected_req_seq = %X", p, req_seq, expected_req_seq));
@@ -447,7 +426,6 @@ ipmiconsole_check_requester_sequence_number(ipmiconsole_ctx_t c, ipmiconsole_pac
 int 
 ipmiconsole_check_completion_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p) 
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t comp_code;
   fiid_obj_t obj_cmd;
   uint64_t val;
@@ -464,8 +442,6 @@ ipmiconsole_check_completion_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 	 
-  s = &(c->session);
-
   obj_cmd = ipmiconsole_packet_object(c, p);
   if (Fiid_obj_get(c,
 		   obj_cmd, 
@@ -483,7 +459,6 @@ ipmiconsole_check_completion_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t
 int
 ipmiconsole_check_payload_type(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t payload_type, expected_payload_type;
   uint64_t val;
 
@@ -502,10 +477,8 @@ ipmiconsole_check_payload_type(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-		   s->obj_rmcpplus_session_hdr_rs, 
+		   c->connection.obj_rmcpplus_session_hdr_rs, 
 		   "payload_type",
 		   &val) < 0)
     return -1;
@@ -531,7 +504,6 @@ ipmiconsole_check_payload_type(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 int
 ipmiconsole_check_message_tag(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t message_tag, expected_message_tag;
   fiid_obj_t obj_cmd;
   uint64_t val;
@@ -543,8 +515,6 @@ ipmiconsole_check_message_tag(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
 	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
 
-  s = &(c->session);
-
   obj_cmd = ipmiconsole_packet_object(c, p);
   if (Fiid_obj_get(c,
 		   obj_cmd,
@@ -552,7 +522,7 @@ ipmiconsole_check_message_tag(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 		   &val) < 0)
     return -1;
   message_tag = val;
-  expected_message_tag = s->message_tag;
+  expected_message_tag = c->session.message_tag;
 
   if (message_tag != expected_message_tag)
     IPMICONSOLE_CTX_DEBUG(c, ("message tag check failed; p = %d", p));
@@ -563,7 +533,6 @@ ipmiconsole_check_message_tag(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 int
 ipmiconsole_check_rmcpplus_status_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t rmcpplus_status_code;
   uint64_t val;
   fiid_obj_t obj_cmd;
@@ -574,8 +543,6 @@ ipmiconsole_check_rmcpplus_status_code(ipmiconsole_ctx_t c, ipmiconsole_packet_t
   assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE
 	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2
 	 || p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
-
-  s = &(c->session);
 
   obj_cmd = ipmiconsole_packet_object(c, p); 
   if (Fiid_obj_get(c,
@@ -594,7 +561,6 @@ ipmiconsole_check_rmcpplus_status_code(ipmiconsole_ctx_t c, ipmiconsole_packet_t
 int
 ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t privilege;
   uint64_t val;
   int rv;
@@ -603,10 +569,8 @@ ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconso
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(p == IPMICONSOLE_PACKET_TYPE_OPEN_SESSION_RESPONSE);
 
-  s = &(c->session);
-
   if (Fiid_obj_get(c,
-		   s->obj_open_session_response,
+		   c->connection.obj_open_session_response,
 		   "maximum_privilege_level",
 		   &val) < 0)
     return -1;
@@ -648,7 +612,6 @@ ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconso
 int
 ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
   int32_t managed_system_random_number_len;
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
@@ -666,8 +629,6 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_2);
 
-  s = &(c->session);
-  
   /* IPMI Workaround
    *
    * Intel IPMI 2.0 implementations pad their usernames.
@@ -700,35 +661,35 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
       int32_t keybuf_len;
 
       if ((keybuf_len = Fiid_obj_get_data(c,
-					  s->obj_rakp_message_2,
+					  c->connection.obj_rakp_message_2,
 					  "key_exchange_authentication_code",
 					  keybuf,
 					  IPMICONSOLE_PACKET_BUFLEN)) < 0)
 	return -1;
 
-      if (s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+      if (c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)
 	{
 	  if (Fiid_obj_clear_field(c,
-				   s->obj_rakp_message_2, 
+				   c->connection.obj_rakp_message_2, 
 				   "key_exchange_authentication_code") < 0)
 	    return -1;
 	}
-      else if (s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+      else if (c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
                && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
 	{
 	  if (Fiid_obj_set_data(c,
-				s->obj_rakp_message_2,
+				c->connection.obj_rakp_message_2,
 				"key_exchange_authentication_code",
 				keybuf,
 				IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
 	    return -1;
 	}
-      else if (s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      else if (c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
                && keybuf_len == (IPMI_HMAC_MD5_DIGEST_LENGTH + 1))
 	{
 	  if (Fiid_obj_set_data(c,
-				s->obj_rakp_message_2,
+				c->connection.obj_rakp_message_2,
 				"key_exchange_authentication_code",
 				keybuf,
 				IPMI_HMAC_MD5_DIGEST_LENGTH) < 0)
@@ -749,7 +710,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
-      && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
@@ -761,13 +722,13 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * need to shorten it.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0
-      && s->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+      && c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int32_t buf_len;
 
       buf_len = Fiid_obj_get_data(c,
-                                  s->obj_rakp_message_2,
+                                  c->connection.obj_rakp_message_2,
                                   "key_exchange_authentication_code",
                                   buf,
                                   IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
@@ -775,10 +736,10 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
       if (buf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
         {
           Fiid_obj_clear_field(c,
-                               s->obj_rakp_message_2,
+                               c->connection.obj_rakp_message_2,
                                "key_exchange_authentication_code");
           Fiid_obj_set_data(c,
-                            s->obj_rakp_message_2,
+                            c->connection.obj_rakp_message_2,
                             "key_exchange_authentication_code",
                             buf,
                             IPMI_HMAC_SHA1_DIGEST_LENGTH);
@@ -787,14 +748,14 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 
 
   if (Fiid_obj_get(c,
-		   s->obj_open_session_response,
+		   c->connection.obj_open_session_response,
 		   "managed_system_session_id",
 		   &val) < 0)
     return -1;
   managed_system_session_id = val;
   
   if ((managed_system_random_number_len = Fiid_obj_get_data(c,
-							    s->obj_rakp_message_2,
+							    c->connection.obj_rakp_message_2,
 							    "managed_system_random_number",
 							    managed_system_random_number,
 							    IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
@@ -808,7 +769,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
     }
 
   if ((managed_system_guid_len = Fiid_obj_get_data(c,
-						   s->obj_rakp_message_2,
+						   c->connection.obj_rakp_message_2,
 						   "managed_system_guid",
 						   managed_system_guid,
 						   IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
@@ -821,22 +782,22 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
       return -1;
     }
   
-  if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(s->authentication_algorithm,
+  if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(c->connection.authentication_algorithm,
                                                                         password,
                                                                         password_len,
-                                                                        s->remote_console_session_id,
+                                                                        c->session.remote_console_session_id,
                                                                         managed_system_session_id,
-                                                                        s->remote_console_random_number,
+                                                                        c->session.remote_console_random_number,
                                                                         IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                                                         managed_system_random_number,
                                                                         managed_system_random_number_len,
                                                                         managed_system_guid,
                                                                         managed_system_guid_len,
-                                                                        s->name_only_lookup,
+                                                                        c->session.name_only_lookup,
                                                                         c->config.privilege_level,
                                                                         username,
                                                                         username_len,
-                                                                        s->obj_rakp_message_2)) < 0)
+                                                                        c->connection.obj_rakp_message_2)) < 0)
     IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code: p = %d; %s", p, strerror(errno)));
   
   if (!rv)
@@ -848,7 +809,6 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 int
 ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
   uint32_t managed_system_session_id;
@@ -860,8 +820,6 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_4);
 
-  s = &(c->session);
-
   /* IPMI Workaround
    *
    * Intel IPMI 2.0 implementations respond with the integrity check
@@ -870,28 +828,28 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
     {
-      if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+      if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
-      else if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+      else if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1;
-      else if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+      else if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
-      else if (s->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+      else if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         /* achu: I have not been able to reverse engineer this.  So accept it */
         return 1;
     }
   else
-    authentication_algorithm = s->authentication_algorithm;
+    authentication_algorithm = c->connection.authentication_algorithm;
 
   if (Fiid_obj_get(c,
-		   s->obj_open_session_response,
+		   c->connection.obj_open_session_response,
 		   "managed_system_session_id",
 		   &val) < 0)
     return -1;
   managed_system_session_id = val;
 
   if ((managed_system_guid_len = Fiid_obj_get_data(c,
-						   s->obj_rakp_message_2,
+						   c->connection.obj_rakp_message_2,
 						   "managed_system_guid",
 						   managed_system_guid,
 						   IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
@@ -904,14 +862,14 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
     }
 
   if ((rv = ipmi_rmcpplus_check_rakp_4_integrity_check_value(authentication_algorithm,
-                                                             s->sik_key_ptr,
-                                                             s->sik_key_len,
-                                                             s->remote_console_random_number,
+                                                             c->session.sik_key_ptr,
+                                                             c->session.sik_key_len,
+                                                             c->session.remote_console_random_number,
                                                              IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                                              managed_system_session_id,
                                                              managed_system_guid,
                                                              managed_system_guid_len,
-                                                             s->obj_rakp_message_4)) < 0)
+                                                             c->connection.obj_rakp_message_4)) < 0)
     IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_rakp_4_integrity_check_value: p = %d; %s", p, strerror(errno)));
 
   if (!rv)
@@ -923,7 +881,6 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
 int
 ipmiconsole_check_payload_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   int8_t rv;
 
   assert(c);
@@ -938,10 +895,8 @@ ipmiconsole_check_payload_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  s = &(c->session);
-
-  if ((rv = ipmi_rmcpplus_check_payload_pad(s->confidentiality_algorithm,
-					    s->obj_rmcpplus_payload_rs)) < 0)
+  if ((rv = ipmi_rmcpplus_check_payload_pad(c->connection.confidentiality_algorithm,
+					    c->connection.obj_rmcpplus_payload_rs)) < 0)
     IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_payload_pad: p = %d; %s", p, strerror(errno)));
 
   if (!rv)
@@ -953,7 +908,6 @@ ipmiconsole_check_payload_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 int
 ipmiconsole_check_integrity_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
-  struct ipmiconsole_ctx_session *s;
   int8_t rv;
 
   assert(c);
@@ -968,9 +922,7 @@ ipmiconsole_check_integrity_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  s = &(c->session);
-
-  if ((rv = ipmi_rmcpplus_check_integrity_pad(s->obj_rmcpplus_session_trlr_rs)) < 0)
+  if ((rv = ipmi_rmcpplus_check_integrity_pad(c->connection.obj_rmcpplus_session_trlr_rs)) < 0)
 
     IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_integrity_pad: p = %d; %s", p, strerror(errno)));
 

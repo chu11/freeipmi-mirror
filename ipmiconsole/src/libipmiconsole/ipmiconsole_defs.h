@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.41 2007-08-25 00:53:25 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.42 2007-08-25 01:30:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -245,7 +245,8 @@ struct ipmiconsole_ctx_config {
   uint32_t workaround_flags;
 };
 
-struct ipmiconsole_ctx_session {
+/* Sockets, pipes, etc. used for the ipmi connection */
+struct ipmiconsole_ctx_connection {
 
   /* File Descriptor User Interface */
   int user_fd;                  /* never touched by this library */
@@ -255,7 +256,6 @@ struct ipmiconsole_ctx_session {
 
   /* Connection Data */
   int ipmi_fd;
-  int16_t console_port;
   cbuf_t ipmi_from_bmc;
   cbuf_t ipmi_to_bmc;
 
@@ -309,13 +309,17 @@ struct ipmiconsole_ctx_session {
   fiid_obj_t obj_deactivate_payload_rs;
   fiid_obj_t obj_close_session_rq;
   fiid_obj_t obj_close_session_rs;
+};
 
-  /* 
-   * IPMI Session Maintenance Information
-   *
-   * Everything below will need to be re-initialized if the session is
-   * being reattempted under a different port.
-   */
+/* 
+ * IPMI Session Information
+ *
+ * Everything below will need to be re-initialized if the session is
+ * being reattempted under a different port.
+ */
+struct ipmiconsole_ctx_session {
+  int16_t console_port;
+
   struct sockaddr_in addr;
 
   /* Session timeout maintenance */
@@ -448,6 +452,7 @@ struct ipmiconsole_ctx {
   unsigned int user_has_destroyed;
   unsigned int moved_to_destroyed;
 
+  struct ipmiconsole_ctx_connection connection; 
   struct ipmiconsole_ctx_session session; 
 };
 

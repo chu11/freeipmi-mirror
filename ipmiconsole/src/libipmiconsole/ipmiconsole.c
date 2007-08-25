@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.56 2007-08-24 21:37:45 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.57 2007-08-25 01:30:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -204,7 +204,10 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if (_ipmiconsole_ctx_session_setup(c) < 0)
+  if (_ipmiconsole_ctx_connection_setup(c) < 0)
+    goto cleanup;
+
+  if (_ipmiconsole_ctx_session_init(c) < 0)
     goto cleanup;
   
   if (ipmiconsole_engine_submit_ctx(c) < 0)
@@ -234,7 +237,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
   return 0;
 
  cleanup:
-  _ipmiconsole_ctx_session_cleanup(c);
+  _ipmiconsole_ctx_connection_cleanup(c);
   _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
   _ipmiconsole_ctx_api_managed_session_data_init(c);
   return -1;
@@ -425,7 +428,10 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   /* Set to success, so we know if an IPMI error occurred */
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
  
-  if (_ipmiconsole_ctx_session_setup(c) < 0)
+  if (_ipmiconsole_ctx_connection_setup(c) < 0)
+    goto cleanup;
+
+  if (_ipmiconsole_ctx_session_init(c) < 0)
     goto cleanup;
 
   if (_ipmiconsole_blocking_notification_setup(c) < 0)
@@ -438,16 +444,16 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   if (_ipmiconsole_block(c) < 0)
     {
       /* don't go to cleanup, b/c the engine will call
-       * _ipmiconsole_cleanup_ctx_session().
+       * _ipmiconsole_ctx_connection_cleanup().
        */
-      goto cleanup_ctx_managed_session_data_only;
+      goto cleanup_ctx_api_managed_session_data_only;
     }
   
   if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      goto cleanup_ctx_managed_session_data_only;
+      goto cleanup_ctx_api_managed_session_data_only;
     }
   
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
@@ -460,15 +466,15 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      goto cleanup_ctx_managed_session_data_only;
+      goto cleanup_ctx_api_managed_session_data_only;
     }
 
   c->session_submitted++;
   return 0;
 
  cleanup:
-  _ipmiconsole_ctx_session_cleanup(c);
- cleanup_ctx_managed_session_data_only:
+  _ipmiconsole_ctx_connection_cleanup(c);
+ cleanup_ctx_api_managed_session_data_only:
   _ipmiconsole_blocking_notification_cleanup(c);
   _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
   _ipmiconsole_ctx_api_managed_session_data_init(c);
