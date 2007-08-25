@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.43 2007-08-25 01:35:24 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.44 2007-08-25 01:36:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -250,7 +250,7 @@ struct ipmiconsole_ctx_config {
   uint8_t confidentiality_algorithm;
 };
 
-/* Sockets, pipes, etc. used for the ipmi connection */
+/* Sockets, pipes, objects, etc. used for data */
 struct ipmiconsole_ctx_connection {
 
   /* File Descriptor User Interface */
