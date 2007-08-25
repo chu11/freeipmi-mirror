@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.53 2007-08-25 01:30:48 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.54 2007-08-25 01:35:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -494,18 +494,6 @@ _ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   /* Copy for API level */
   c->asynccomm[0] = c->connection.asynccomm[0];
   c->asynccomm[1] = c->connection.asynccomm[1];
-
-  /* Data based on Configuration Parameters */
-
-  if (ipmi_cipher_suite_id_to_algorithms(c->config.cipher_suite_id,
-                                         &(c->connection.authentication_algorithm),
-                                         &(c->connection.integrity_algorithm),
-                                         &(c->connection.confidentiality_algorithm)) < 0)
-    {
-      IPMICONSOLE_DEBUG(("ipmi_cipher_suite_id_to_algorithms: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      goto cleanup;
-    }
 
   /* Fiid Objects */
 

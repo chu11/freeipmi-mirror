@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.42 2007-08-25 01:30:47 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.43 2007-08-25 01:35:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -243,6 +243,11 @@ struct ipmiconsole_ctx_config {
   uint32_t debug_flags;
   uint32_t security_flags;
   uint32_t workaround_flags;
+
+  /* Data based on Configuration Parameters */
+  uint8_t authentication_algorithm;
+  uint8_t integrity_algorithm;
+  uint8_t confidentiality_algorithm;
 };
 
 /* Sockets, pipes, etc. used for the ipmi connection */
@@ -261,11 +266,6 @@ struct ipmiconsole_ctx_connection {
 
   /* Pipe for non-fd communication: from API to engine */
   int asynccomm[2];
-
-  /* Data based on Configuration Parameters */
-  uint8_t authentication_algorithm;
-  uint8_t integrity_algorithm;
-  uint8_t confidentiality_algorithm;
 
   /* Fiid Objects */
 

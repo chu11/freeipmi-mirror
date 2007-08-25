@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.12 2007-08-25 01:30:47 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.13 2007-08-25 01:35:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -110,7 +110,7 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
   else
     password = NULL;
 
-  if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(c->connection.integrity_algorithm,
+  if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(c->config.integrity_algorithm,
                                                                    buf,
                                                                    buflen,
                                                                    c->session.integrity_key_ptr,
@@ -667,7 +667,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 					  IPMICONSOLE_PACKET_BUFLEN)) < 0)
 	return -1;
 
-      if (c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+      if (c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)
 	{
 	  if (Fiid_obj_clear_field(c,
@@ -675,7 +675,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 				   "key_exchange_authentication_code") < 0)
 	    return -1;
 	}
-      else if (c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+      else if (c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
                && keybuf_len == (IPMI_HMAC_SHA1_DIGEST_LENGTH + 1))
 	{
 	  if (Fiid_obj_set_data(c,
@@ -685,7 +685,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 				IPMI_HMAC_SHA1_DIGEST_LENGTH) < 0)
 	    return -1;
 	}
-      else if (c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      else if (c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
                && keybuf_len == (IPMI_HMAC_MD5_DIGEST_LENGTH + 1))
 	{
 	  if (Fiid_obj_set_data(c,
@@ -710,7 +710,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
-      && c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
@@ -722,7 +722,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * need to shorten it.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0
-      && c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+      && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int32_t buf_len;
@@ -782,7 +782,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
       return -1;
     }
   
-  if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(c->connection.authentication_algorithm,
+  if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(c->config.authentication_algorithm,
                                                                         password,
                                                                         password_len,
                                                                         c->session.remote_console_session_id,
@@ -828,18 +828,18 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
     {
-      if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+      if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
-      else if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+      else if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1;
-      else if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+      else if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
-      else if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+      else if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         /* achu: I have not been able to reverse engineer this.  So accept it */
         return 1;
     }
   else
-    authentication_algorithm = c->connection.authentication_algorithm;
+    authentication_algorithm = c->config.authentication_algorithm;
 
   if (Fiid_obj_get(c,
 		   c->connection.obj_open_session_response,
@@ -895,7 +895,7 @@ ipmiconsole_check_payload_pad(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 	 || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
 	 || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
-  if ((rv = ipmi_rmcpplus_check_payload_pad(c->connection.confidentiality_algorithm,
+  if ((rv = ipmi_rmcpplus_check_payload_pad(c->config.confidentiality_algorithm,
 					    c->connection.obj_rmcpplus_payload_rs)) < 0)
     IPMICONSOLE_CTX_DEBUG(c, ("ipmi_rmcpplus_check_payload_pad: p = %d; %s", p, strerror(errno)));
 

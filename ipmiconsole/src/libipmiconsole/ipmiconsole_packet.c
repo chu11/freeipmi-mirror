@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.6 2007-08-25 01:30:48 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.7 2007-08-25 01:35:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -360,9 +360,9 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
 	  if (ipmi_dump_rmcpplus_packet(fd,
 					c->config.hostname,
 					hdr,
-					c->connection.authentication_algorithm,
-					c->connection.integrity_algorithm,
-					c->connection.confidentiality_algorithm,
+					c->config.authentication_algorithm,
+					c->config.integrity_algorithm,
+					c->config.confidentiality_algorithm,
 					c->session.integrity_key_ptr,
 					c->session.integrity_key_len,
 					c->session.confidentiality_key_ptr,
@@ -513,9 +513,9 @@ ipmiconsole_packet_dump_unknown(ipmiconsole_ctx_t c,
       if (ipmi_dump_rmcpplus_packet(fd,
 				    c->config.hostname,
 				    hdr,
-				    c->connection.authentication_algorithm,
-				    c->connection.integrity_algorithm,
-				    c->connection.confidentiality_algorithm,
+				    c->config.authentication_algorithm,
+				    c->config.integrity_algorithm,
+				    c->config.confidentiality_algorithm,
 				    c->session.integrity_key_ptr,
 				    c->session.integrity_key_len,
 				    c->session.confidentiality_key_ptr,
@@ -790,7 +790,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
-      && c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
@@ -879,9 +879,9 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
     }
   else
     {
-      authentication_algorithm = c->connection.authentication_algorithm;
-      integrity_algorithm = c->connection.integrity_algorithm;
-      confidentiality_algorithm = c->connection.confidentiality_algorithm;
+      authentication_algorithm = c->config.authentication_algorithm;
+      integrity_algorithm = c->config.integrity_algorithm;
+      confidentiality_algorithm = c->config.confidentiality_algorithm;
       integrity_key = c->session.integrity_key_ptr;
       integrity_key_len = c->session.integrity_key_len;
       confidentiality_key = c->session.confidentiality_key_ptr;
@@ -937,9 +937,9 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
       if (fill_rmcpplus_open_session (c->session.message_tag,
 				      privilege_level,
 				      c->session.remote_console_session_id,
-				      c->connection.authentication_algorithm,
-				      c->connection.integrity_algorithm,
-				      c->connection.confidentiality_algorithm,
+				      c->config.authentication_algorithm,
+				      c->config.integrity_algorithm,
+				      c->config.confidentiality_algorithm,
 				      c->connection.obj_open_session_request) < 0)
 	{
  	  IPMICONSOLE_CTX_DEBUG(c, ("fill_rmcpplus_open_session: p = %d; %s", p, strerror(errno)));
@@ -997,7 +997,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 	  return -1;
 	}
       
-      if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code(c->connection.authentication_algorithm,
+      if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code(c->config.authentication_algorithm,
 													 password,
                                                                                                          password_len,
 													 managed_system_random_number,
@@ -1066,12 +1066,12 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
       uint8_t authentication_activation;
       uint8_t encryption_activation;
 
-      if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+      if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
 	authentication_activation = IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION;
       else
 	authentication_activation = IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION;
 
-      if (c->connection.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
+      if (c->config.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
 	encryption_activation = IPMI_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION;
       else
 	encryption_activation = IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION;
@@ -1231,13 +1231,13 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
   session_id = val;
 
   /* Determine Payload Authenticated Flag */
-  if (c->connection.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+  if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
     payload_authenticated = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
   else
     payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
 
   /* Determine Payload Encrypted Flag */
-  if (c->connection.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
+  if (c->config.confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
     payload_encrypted = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
   else
     payload_encrypted = IPMI_PAYLOAD_FLAG_ENCRYPTED;
@@ -1284,9 +1284,9 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
                                            password,
                                            (password) ? strlen((char *)password) : 0,
                                            0,
-                                           c->connection.authentication_algorithm,
-                                           c->connection.integrity_algorithm,
-                                           c->connection.confidentiality_algorithm,
+                                           c->config.authentication_algorithm,
+                                           c->config.integrity_algorithm,
+                                           c->config.confidentiality_algorithm,
                                            c->session.integrity_key_ptr,
                                            c->session.integrity_key_len,
                                            c->session.confidentiality_key_ptr,
@@ -1465,9 +1465,9 @@ ipmiconsole_packet_unassemble(ipmiconsole_ctx_t c,
 	    return -1;
 
 	  /* IPMI 2.0 Session Packets */
-	  if (unassemble_ipmi_rmcpplus_pkt(c->connection.authentication_algorithm,
-					   c->connection.integrity_algorithm,
-					   c->connection.confidentiality_algorithm,
+	  if (unassemble_ipmi_rmcpplus_pkt(c->config.authentication_algorithm,
+					   c->config.integrity_algorithm,
+					   c->config.confidentiality_algorithm,
 					   c->session.integrity_key_ptr,
 					   c->session.integrity_key_len,
 					   c->session.confidentiality_key_ptr,

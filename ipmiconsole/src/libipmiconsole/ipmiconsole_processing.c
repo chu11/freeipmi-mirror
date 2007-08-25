@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.45 2007-08-25 01:30:48 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.46 2007-08-25 01:35:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1790,7 +1790,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
-      && c->connection.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
   
@@ -1813,9 +1813,9 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  if (ipmi_calculate_rmcpplus_session_keys(c->connection.authentication_algorithm,
-                                           c->connection.integrity_algorithm,
-                                           c->connection.confidentiality_algorithm,
+  if (ipmi_calculate_rmcpplus_session_keys(c->config.authentication_algorithm,
+                                           c->config.integrity_algorithm,
+                                           c->config.confidentiality_algorithm,
                                            password,
                                            password_len,
                                            k_g,

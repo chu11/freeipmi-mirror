@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.57 2007-08-25 01:30:47 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.58 2007-08-25 01:35:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -640,6 +640,17 @@ ipmiconsole_ctx_create(char *hostname,
   c->config.security_flags = protocol_config->security_flags;
 
   c->config.workaround_flags = protocol_config->workaround_flags;
+
+  /* Data based on Configuration Parameters */
+
+  if (ipmi_cipher_suite_id_to_algorithms(c->config.cipher_suite_id,
+                                         &(c->config.authentication_algorithm),
+                                         &(c->config.integrity_algorithm),
+                                         &(c->config.confidentiality_algorithm)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("ipmi_cipher_suite_id_to_algorithms: %s", strerror(errno)));
+      goto cleanup;
+    }
 
   if ((perr = pthread_mutex_init(&c->status_mutex, NULL)) != 0)
     {
