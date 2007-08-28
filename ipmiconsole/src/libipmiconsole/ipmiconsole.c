@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.64 2007-08-28 21:06:24 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.65 2007-08-28 23:07:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -155,7 +155,9 @@ ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
 }
 
 int 
-ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
+ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
+                          Ipmiconsole_callback callback,
+                          void *callback_arg)
 {
   int perr;
 
@@ -175,6 +177,14 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
       c->errnum = IPMICONSOLE_ERR_CTX_IS_SUBMITTED;
       return -1;
     }
+
+  /* Set to success, so we know if an IPMI error occurred */
+  c->errnum = IPMICONSOLE_ERR_SUCCESS;
+
+  if (ipmiconsole_ctx_non_blocking_init(c,
+                                        callback,
+                                        callback_arg) < 0)
+    goto cleanup;
 
   if (ipmiconsole_ctx_connection_setup(c) < 0)
     goto cleanup;

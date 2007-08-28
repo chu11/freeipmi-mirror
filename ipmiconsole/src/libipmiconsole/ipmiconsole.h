@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.60 2007-08-28 22:48:27 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.61 2007-08-28 23:07:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -413,14 +413,6 @@ struct ipmiconsole_protocol_config
 };
 
 /* 
- * Ipmiconsole_callback
- *
- * Function prototype for a callback function.  See
- * ipmiconsole_engine_config below.
- */
-typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
-
-/* 
  * ipmiconsole_engine_config
  *
  * Configuration information for how the engine should interact with
@@ -431,26 +423,6 @@ typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
  *   Bitwise OR of flags indicating how the ipmiconsole engine should
  *   behave for a particular context.  Pass 0 for default behavior.
  *
- * callback
- *  
- *   If specified, a callback function will be called from the engine
- *   when a SOL session has been established or a SOL establishment
- *   error has occurred.  Will only be called under a non-blocking
- *   engine submission via ipmiconsole_engine_submit().  Will be
- *   called once and only once during an individual engine submission.
- *   For example, if a SOL session is established then a later session
- *   timeout occurs, the later session timeout will not generate a
- *   function call to the callback.  Pass NULL for no callback.
- *
- *   The callback function call be called simultaneously from
- *   different engine threads.  It is the user's responsibility to
- *   protect against any race conditions in their callback function.
- *
- * callback_arg
- *
- *   Specify an arbitrary argument to be passed to the callback
- *   routine.
- *
  * debug_flags
  *
  *   Bitwise OR of flags indicating how debug output should (or should
@@ -460,14 +432,20 @@ typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
 struct ipmiconsole_engine_config
 {
   unsigned int engine_flags;
-  Ipmiconsole_callback callback;
-  void *callback_arg;
   unsigned int debug_flags;
 };
 
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 
 typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
+
+/* 
+ * Ipmiconsole_callback
+ *
+ * Function prototype for a callback function.
+ * ipmiconsole_engine_submit() below.
+ */
+typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
 
 /* 
  * ipmiconsole_engine_init
@@ -518,15 +496,37 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * this.  On an error, ipmiconsole_ctx_errnum() can be used to
  * determine the specific IPMI related error that occurred.
  *
- * C) Use a callback function.  The callback functions specified in a
- * struct ipmiconsole_engine_config will be called directly after a
- * SOL session has been established or an error has occurred.  Within
- * those callback functions, ipmiconsole_ctx_status() can be used to
- * determine which has occurred.
+ * C) Specify a callback function.  The callback function specified as
+ * a parameter below will be called directly after a SOL session has
+ * been established or an error has occurred.  Within those callback
+ * functions, ipmiconsole_ctx_status() can be used to determine which
+ * has occurred.
+ *
+ * callback
+ *  
+ *   If specified, a callback function will be called from the engine
+ *   when a SOL session has been established or a SOL establishment
+ *   error has occurred.  Will only be called under a non-blocking
+ *   engine submission via ipmiconsole_engine_submit().  Will be
+ *   called once and only once during an individual engine submission.
+ *   For example, if a SOL session is established then a later session
+ *   timeout occurs, the later session timeout will not generate a
+ *   function call to the callback.  Pass NULL for no callback.
+ *
+ *   The callback function call be called simultaneously from
+ *   different engine threads.  It is the user's responsibility to
+ *   protect against any race conditions in their callback function.
+ *
+ * callback_arg
+ *
+ *   Specify an arbitrary argument to be passed to the callback
+ *   routine.
  *
  * Returns 0 on success, -1 on error.  
  */
-int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
+int ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
+                              Ipmiconsole_callback callback,
+                              void *callback_arg);
 
 /* 
  * ipmiconsole_engine_submit_block

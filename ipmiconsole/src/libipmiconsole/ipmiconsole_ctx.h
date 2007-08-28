@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.h,v 1.3 2007-08-28 21:06:24 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.h,v 1.4 2007-08-28 23:07:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,11 +47,13 @@ int ipmiconsole_ctx_signal_init(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_signal_cleanup(ipmiconsole_ctx_t c);
 
+int ipmiconsole_ctx_non_blocking_init(ipmiconsole_ctx_t c,
+                                      Ipmiconsole_callback callback,
+                                      void *callback_arg);
+
 int ipmiconsole_ctx_blocking_init(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c);
-
-void ipmiconsole_ctx_connection_init(ipmiconsole_ctx_t c);
 
 int ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c);
 

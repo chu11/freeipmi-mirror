@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.48 2007-08-28 21:06:24 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.49 2007-08-28 23:07:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -246,8 +246,6 @@ struct ipmiconsole_ctx_config {
 
   /* engine config */
   uint32_t engine_flags;
-  Ipmiconsole_callback callback;
-  void *callback_arg;
   uint32_t debug_flags;
 
   /* Data based on Configuration Parameters */
@@ -417,6 +415,12 @@ struct ipmiconsole_ctx_signal {
   unsigned int moved_to_destroyed;
 };
 
+/* non-blocking potential parameters */
+struct ipmiconsole_ctx_non_blocking {
+  Ipmiconsole_callback callback;
+  void *callback_arg;
+};
+
 /* Info, pipe, and mutex for engine submission blocking */
 struct ipmiconsole_ctx_blocking {
   pthread_mutex_t blocking_mutex;
@@ -459,6 +463,8 @@ struct ipmiconsole_ctx {
   struct ipmiconsole_ctx_debug debug;
 
   struct ipmiconsole_ctx_signal signal;
+
+  struct ipmiconsole_ctx_non_blocking non_blocking;
 
   struct ipmiconsole_ctx_blocking blocking;
 

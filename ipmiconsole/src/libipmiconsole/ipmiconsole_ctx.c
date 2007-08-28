@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.4 2007-08-28 21:18:06 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.5 2007-08-28 23:07:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -196,10 +196,6 @@ ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
 
   c->config.engine_flags = engine_config->engine_flags;
 
-  c->config.callback = engine_config->callback;
-
-  c->config.callback_arg = engine_config->callback_arg;
-
   c->config.debug_flags = engine_config->debug_flags;
 
   /* Data based on Configuration Parameters */
@@ -328,6 +324,21 @@ ipmiconsole_ctx_signal_cleanup(ipmiconsole_ctx_t c)
 }
 
 int
+ipmiconsole_ctx_non_blocking_init(ipmiconsole_ctx_t c,
+                                  Ipmiconsole_callback callback,
+                                  void *callback_arg)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
+
+  c->non_blocking.callback = callback;
+  c->non_blocking.callback_arg = callback_arg;
+
+  return 0;
+}
+
+int
 ipmiconsole_ctx_blocking_init(ipmiconsole_ctx_t c)
 {
   int perr;
@@ -359,8 +370,8 @@ ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c)
   pthread_mutex_destroy(&(c->blocking.blocking_mutex));
 }
 
-void
-ipmiconsole_ctx_connection_init(ipmiconsole_ctx_t c)
+static void
+_ipmiconsole_ctx_connection_init(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -384,7 +395,7 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(!(c->session_submitted));
 
-  ipmiconsole_ctx_connection_init(c);
+  _ipmiconsole_ctx_connection_init(c);
 
   /* File Descriptor User Interface */
 
@@ -643,8 +654,8 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   /* only call the callback if it's an initial SOL error and blocking
    * was not requested 
    */
-  if (status_initial && !blocking_requested && c->config.callback)
-    (*(c->config.callback))(c, c->config.callback_arg);
+  if (status_initial && !blocking_requested && c->non_blocking.callback)
+    (*(c->non_blocking.callback))(c, c->non_blocking.callback_arg);
 
   /* Under default circumstances, close only the ipmiconsole_fd so
    * that an error will be detected by the user via a EOF on a read()
@@ -752,7 +763,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   if (c->connection.obj_close_session_rs)
     Fiid_obj_destroy(c, c->connection.obj_close_session_rs);
   
-  ipmiconsole_ctx_connection_init(c);
+  _ipmiconsole_ctx_connection_init(c);
 
   /* Be careful, if the user requested to destroy the context, we can
    * destroy it here.  But if we destroy it, there is no mutex to

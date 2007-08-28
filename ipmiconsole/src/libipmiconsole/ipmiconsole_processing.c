@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.50 2007-08-28 21:18:06 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.51 2007-08-28 23:07:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2959,6 +2959,34 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       return 0;
     }
 
+  if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+      /* Attempt to close the session cleanly */
+      c->session.close_session_flag++;
+      if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+        return -1;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      return 0;
+    }
+
+  c->signal.status = IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED;
+
+  if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+
+      /* Attempt to close the session cleanly */
+      c->session.close_session_flag++;
+      if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+        return -1;
+      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+      return 0;
+    }
+
   if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
@@ -2999,34 +3027,6 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
     }
 
   if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-
-      /* Attempt to close the session cleanly */
-      c->session.close_session_flag++;
-      if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-        return -1;
-      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-      return 0;
-    }
-
-  if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
-    {
-      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-
-      /* Attempt to close the session cleanly */
-      c->session.close_session_flag++;
-      if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
-        return -1;
-      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
-      return 0;
-    }
-
-  c->signal.status = IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED;
-
-  if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -3096,8 +3096,8 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
     }
 
   /* only call callback if blocking was not requested */
-  if (!blocking_requested && c->config.callback)
-    (*(c->config.callback))(c, c->config.callback_arg);
+  if (!blocking_requested && c->non_blocking.callback)
+    (*(c->non_blocking.callback))(c, c->non_blocking.callback_arg);
 
   /* It's possible the user entered some data before the SOL
    * session was established.  We send that data now.  Otherwise
