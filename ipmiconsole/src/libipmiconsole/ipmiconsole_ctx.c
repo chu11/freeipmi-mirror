@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.2 2007-08-28 20:43:33 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.3 2007-08-28 21:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,7 +117,8 @@ int
 ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
                             char *hostname,
                             struct ipmiconsole_ipmi_config *ipmi_config,
-                            struct ipmiconsole_protocol_config *protocol_config)
+                            struct ipmiconsole_protocol_config *protocol_config,
+                            struct ipmiconsole_engine_config *engine_config)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -188,11 +189,18 @@ ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
     c->config.maximum_retransmission_count = protocol_config->maximum_retransmission_count;
   else
     c->config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
-  c->config.engine_flags = protocol_config->engine_flags;
 
   c->config.security_flags = protocol_config->security_flags;
 
   c->config.workaround_flags = protocol_config->workaround_flags;
+
+  c->config.engine_flags = engine_config->engine_flags;
+
+  c->config.callback = engine_config->callback;
+
+  c->config.callback_arg = engine_config->callback_arg;
+
+  c->config.debug_flags = engine_config->debug_flags;
 
   /* Data based on Configuration Parameters */
 
@@ -237,13 +245,10 @@ ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
 }
 
 int
-ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c, uint32_t debug_flags)
+ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(!(debug_flags & ~IPMICONSOLE_DEBUG_MASK));
-
-  c->config.debug_flags = debug_flags;
 
   if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     {

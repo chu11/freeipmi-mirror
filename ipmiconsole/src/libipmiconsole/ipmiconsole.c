@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.63 2007-08-28 20:43:33 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.64 2007-08-28 21:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -464,7 +464,8 @@ ipmiconsole_engine_teardown(int cleanup_sol_sessions)
 ipmiconsole_ctx_t 
 ipmiconsole_ctx_create(char *hostname,
 		       struct ipmiconsole_ipmi_config *ipmi_config,
-		       struct ipmiconsole_protocol_config *protocol_config)
+		       struct ipmiconsole_protocol_config *protocol_config,
+		       struct ipmiconsole_engine_config *engine_config)
 {
   ipmiconsole_ctx_t c = NULL;
 
@@ -472,6 +473,7 @@ ipmiconsole_ctx_create(char *hostname,
       || (hostname && strlen(hostname) > MAXHOSTNAMELEN)
       || !ipmi_config
       || !protocol_config
+      || !engine_config
       || (ipmi_config->username && strlen(ipmi_config->username) > IPMI_MAX_USER_NAME_LENGTH)
       || (ipmi_config->password && strlen(ipmi_config->password) > IPMI_2_0_MAX_PASSWORD_LENGTH)
       || (ipmi_config->k_g && ipmi_config->k_g_len > IPMI_MAX_K_G_LENGTH)
@@ -481,10 +483,10 @@ ipmiconsole_ctx_create(char *hostname,
 	      && ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_ADMIN))
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
 	  && !IPMI_CIPHER_SUITE_ID_SUPPORTED(ipmi_config->cipher_suite_id))
-      || (protocol_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
-      || (protocol_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK)
       || (protocol_config->security_flags & ~IPMICONSOLE_SECURITY_MASK)
-      || (protocol_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK))
+      || (protocol_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
+      || (engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
+      || (engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       errno = EINVAL;
       return NULL;
@@ -512,10 +514,12 @@ ipmiconsole_ctx_create(char *hostname,
   if (ipmiconsole_ctx_config_init(c,
                                   hostname,
                                   ipmi_config,
-                                  protocol_config) < 0)
+                                  protocol_config,
+                                  engine_config) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_debug_setup(c, protocol_config->debug_flags) < 0)
+  /* must be called after ipmiconsole_ctx_config_init() */
+  if (ipmiconsole_ctx_debug_setup(c) < 0)
     goto cleanup;
 
   if (ipmiconsole_ctx_signal_init(c) < 0)
@@ -540,7 +544,9 @@ ipmiconsole_ctx_create(char *hostname,
 
   ipmiconsole_ctx_blocking_cleanup(c);
 
-  /* Note: use protocol_config->security_flags not c->security_flags */ 
+  /* Note: use protocol_config->security_flags not
+   * c->config.security_flags, b/c we don't know where it failed
+   */ 
   if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else

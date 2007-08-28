@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.33 2007-08-23 16:46:45 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.34 2007-08-28 21:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -288,6 +288,7 @@ main(int argc, char **argv)
   ipmiconsole_ctx_t c = NULL;
   struct ipmiconsole_ipmi_config ipmi_config;
   struct ipmiconsole_protocol_config protocol_config;
+  struct ipmiconsole_engine_config engine_config;
   int debug_flags = 0;
   int fd = -1;
 
@@ -338,8 +339,6 @@ main(int argc, char **argv)
   protocol_config.retransmission_keepalive_timeout_len = -1; 
   protocol_config.acceptable_packet_errors_count = -1; 
   protocol_config.maximum_retransmission_count = -1; 
-  protocol_config.engine_flags = 0;
-  protocol_config.debug_flags = debug_flags;
   protocol_config.security_flags = 0;
   if (conf->dont_steal)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE;
@@ -349,9 +348,15 @@ main(int argc, char **argv)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_LOCK_MEMORY;
   protocol_config.workaround_flags = conf->workaround_flags;
 
+  engine_config.engine_flags = 0;
+  engine_config.callback = NULL;
+  engine_config.callback_arg = 0;
+  engine_config.debug_flags = debug_flags;
+
   if (!(c = ipmiconsole_ctx_create(conf->hostname,
 				   &ipmi_config,
-				   &protocol_config)))
+				   &protocol_config,
+                                   &engine_config)))
     {
       perror("ipmiconsole_ctx_create");
       goto cleanup;

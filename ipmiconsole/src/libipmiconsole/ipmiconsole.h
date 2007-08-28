@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.57 2007-08-24 17:38:31 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.58 2007-08-28 21:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,7 +74,7 @@ extern "C" {
  * Debug Flags
  *
  * Utilized with ipmiconsole_engine_init() or with struct
- * ipmiconsole_protocol_config below.
+ * ipmiconsole_engine_config below.
  * 
  * STDOUT       - Output debugging to stdout
  * STDERR       - Output debugging to stderr
@@ -100,7 +100,7 @@ extern "C" {
 /* 
  * Engine Flags
  *
- * Utilized with struct ipmiconsole_protocol_config below.
+ * Utilized with struct ipmiconsole_engine_config below.
  * 
  * CLOSE_FD
  *
@@ -333,8 +333,7 @@ struct ipmiconsole_ipmi_config
 /* 
  * ipmiconsole_protocol_config
  *
- * Configuration information for the ipmi console engine
- * and the behavior by which it should behave.
+ * Configuration information for the ipmi protocol management. 
  *
  * session_timeout_len
  *
@@ -387,16 +386,6 @@ struct ipmiconsole_ipmi_config
  *   packets (in particular 'ping' packets to keep an IPMI session
  *   alive) to be accepted by the remote BMC, but not SOL packets.
  *
- * engine_flags
- *
- *  Bitwise OR of flags indicating how the ipmiconsole engine should
- *  behave for a particular context.  Pass 0 for default bheavior.
- *
- * debug_flags
- *
- *   Bitwise OR of flags indicating how debug output should (or should
- *   not) be output. Pass 0 for default of no debugging.
- *
  * security_flags
  *
  *   Bitwise OR of flags indicating any protocol behavior that should
@@ -420,10 +409,56 @@ struct ipmiconsole_protocol_config
   int retransmission_keepalive_timeout_len;
   int acceptable_packet_errors_count;
   int maximum_retransmission_count;
-  unsigned int engine_flags;
-  unsigned int debug_flags;
   unsigned int security_flags; 
   unsigned int workaround_flags;
+};
+
+/* 
+ * Ipmiconsole_callback
+ *
+ * Function prototype for a callback function
+ */
+typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
+
+/* 
+ * ipmiconsole_engine_config
+ *
+ * Configuration information for how the engine should interact with
+ * the user API.
+ *
+ * engine_flags
+ *
+ *   Bitwise OR of flags indicating how the ipmiconsole engine should
+ *   behave for a particular context.  Pass 0 for default behavior.
+ *
+ * callback
+ *  
+ *   If specified, a callback function will be called from the engine
+ *   when a SOL session has been established or a SOL establishment
+ *   error has occurred.  Will only be called under a non-blocking
+ *   engine submission via ipmiconsole_engine_submit().  Will be
+ *   called once and only once during an engine submission.  For
+ *   example, if a SOL session is established then a later session
+ *   timeout occurs, the later session timeout will not generate a
+ *   function call to the callback.  Pass NULL for no callback.
+ *
+ * callback_arg
+ *
+ *   Specify an arbitrary argument to be passed to the callback
+ *   routine.
+ *
+ * debug_flags
+ *
+ *   Bitwise OR of flags indicating how debug output should (or should
+ *   not) be output. Pass 0 for default of no debugging.
+ *
+ */
+struct ipmiconsole_engine_config
+{
+  unsigned int engine_flags;
+  Ipmiconsole_callback callback;
+  void *callback_arg;
+  unsigned int debug_flags;
 };
 
 /* 
@@ -474,6 +509,13 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * this.  On an error, ipmiconsole_ctx_errnum() can be used to
  * determine the specific IPMI related error that occurred.
  *
+ * C) using callback functions.  The callback functions specified in a
+ * struct ipmiconsole_engine_config will be called directly after a
+ * SOL session has been established or an error has occurred.  Within
+ * those callback functions, ipmiconsole_ctx_errnum() or
+ * ipmiconsole_ctx_status() can be used to determine which has
+ * occurred.
+ *
  * Returns 0 on success, -1 on error
  */
 int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
@@ -520,11 +562,18 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
  *
  * ipmi_config
  *
- *   IPMI configuration.  See ipmiconsole_ipmi_config definition above.
+ *   IPMI configuration.  See ipmiconsole_ipmi_config definition
+ *   above.
  *
  * protocol_config
  *
- *   IPMI protocol configuration.  See ipmiconsole_protocol_config definition above.
+ *   IPMI protocol configuration.  See ipmiconsole_protocol_config
+ *   definition above.
+ *
+ * engine_config
+ *
+ *   Ipmiconsole engine configuration.  See ipmiconsole_engine_config
+ *   definition above.
  *
  * Returns ctx on success, NULL on error.
  *
@@ -532,7 +581,8 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
  */
 ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname,
 					 struct ipmiconsole_ipmi_config *ipmi_config,
-					 struct ipmiconsole_protocol_config *protocol_config);
+					 struct ipmiconsole_protocol_config *protocol_config,
+					 struct ipmiconsole_engine_config *engine_config);
 
 /* 
  * ipmiconsole_ctx_errnum

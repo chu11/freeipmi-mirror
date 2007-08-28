@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.h,v 1.2 2007-08-28 20:43:33 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.h,v 1.3 2007-08-28 21:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,9 +36,10 @@ void ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c);
 int ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
                                 char *hostname,
                                 struct ipmiconsole_ipmi_config *ipmi_config,
-                                struct ipmiconsole_protocol_config *protocol_config);
+                                struct ipmiconsole_protocol_config *protocol_config,
+                                struct ipmiconsole_engine_config *engine_config);
 
-int ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c, uint32_t debug_flags);
+int ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_debug_cleanup(ipmiconsole_ctx_t c);
 

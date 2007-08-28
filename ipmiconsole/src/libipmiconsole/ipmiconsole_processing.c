@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.48 2007-08-28 18:26:19 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.49 2007-08-28 21:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,6 +64,7 @@
 #include "secure.h"
 #include "timeval.h"
 #include "ipmiconsole_processing.h"
+#include "ipmiconsole_ctx.h"
 #include "ipmiconsole_checks.h"
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"

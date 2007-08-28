@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.47 2007-08-28 17:50:08 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.48 2007-08-28 21:06:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -223,7 +223,8 @@ typedef enum
 
 /* Protocol/User Config Data */
 struct ipmiconsole_ctx_config {
-  /* Configuration Parameters */
+
+  /* ipmi config */
   char hostname[MAXHOSTNAMELEN+1];
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1];
   uint8_t password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
@@ -232,6 +233,7 @@ struct ipmiconsole_ctx_config {
   uint8_t privilege_level;
   uint8_t cipher_suite_id;
 
+  /* protocol config */
   unsigned int session_timeout_len;
   unsigned int retransmission_timeout_len;
   unsigned int retransmission_backoff_count;
@@ -239,10 +241,14 @@ struct ipmiconsole_ctx_config {
   unsigned int retransmission_keepalive_timeout_len;
   unsigned int acceptable_packet_errors_count;
   unsigned int maximum_retransmission_count;
-  uint32_t engine_flags;
-  uint32_t debug_flags;
   uint32_t security_flags;
   uint32_t workaround_flags;
+
+  /* engine config */
+  uint32_t engine_flags;
+  Ipmiconsole_callback callback;
+  void *callback_arg;
+  uint32_t debug_flags;
 
   /* Data based on Configuration Parameters */
   uint8_t authentication_algorithm;
