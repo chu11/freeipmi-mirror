@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.59 2007-08-28 16:48:06 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.60 2007-08-28 17:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -108,20 +108,20 @@ static char *ipmiconsole_errmsgs[] =
   };
 
 static void
-_ipmiconsole_ctx_api_managed_session_data_init(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_fds_init(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   /* init to -1 b/c -1 isn't a legit fd */
-  c->user_fd = -1;
-  c->asynccomm[0] = -1;
-  c->asynccomm[1] = -1;
+  c->fds.user_fd = -1;
+  c->fds.asynccomm[0] = -1;
+  c->fds.asynccomm[1] = -1;
 }
 
 static void
-_ipmiconsole_ctx_api_managed_session_data_cleanup(ipmiconsole_ctx_t c)
+_ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -131,9 +131,9 @@ _ipmiconsole_ctx_api_managed_session_data_cleanup(ipmiconsole_ctx_t c)
    * engine.  Closing asynccomm[1] first could result in a EPIPE
    * instead.
    */
-  close(c->user_fd);
-  close(c->asynccomm[0]);
-  close(c->asynccomm[1]);
+  close(c->fds.user_fd);
+  close(c->fds.asynccomm[0]);
+  close(c->fds.asynccomm[1]);
 }
 
 int 
@@ -238,8 +238,8 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
 
  cleanup:
   _ipmiconsole_ctx_connection_cleanup(c);
-  _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
-  _ipmiconsole_ctx_api_managed_session_data_init(c);
+  _ipmiconsole_ctx_fds_cleanup(c);
+  _ipmiconsole_ctx_fds_init(c);
   return -1;
 }
 
@@ -446,14 +446,14 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
       /* don't go to cleanup, b/c the engine will call
        * _ipmiconsole_ctx_connection_cleanup().
        */
-      goto cleanup_ctx_api_managed_session_data_only;
+      goto cleanup_ctx_fds_only;
     }
   
   if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      goto cleanup_ctx_api_managed_session_data_only;
+      goto cleanup_ctx_fds_only;
     }
   
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
@@ -466,7 +466,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
-      goto cleanup_ctx_api_managed_session_data_only;
+      goto cleanup_ctx_fds_only;
     }
 
   c->session_submitted++;
@@ -474,10 +474,10 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
 
  cleanup:
   _ipmiconsole_ctx_connection_cleanup(c);
- cleanup_ctx_api_managed_session_data_only:
+ cleanup_ctx_fds_only:
   _ipmiconsole_blocking_notification_cleanup(c);
-  _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
-  _ipmiconsole_ctx_api_managed_session_data_init(c);
+  _ipmiconsole_ctx_fds_cleanup(c);
+  _ipmiconsole_ctx_fds_init(c);
   return -1;
 }
 
@@ -670,11 +670,6 @@ ipmiconsole_ctx_create(char *hostname,
 
   c->sol_session_established = 0;
 
-  /* only initializes value, no need to destroy/cleanup anything in here */
-  _ipmiconsole_ctx_api_managed_session_data_init(c);
-
-  c->session_submitted = 0;
-
   if ((perr = pthread_mutex_init(&c->destroyed_mutex, NULL)) != 0)
     {
       errno = perr;
@@ -682,6 +677,11 @@ ipmiconsole_ctx_create(char *hostname,
     }
   c->user_has_destroyed = 0;
   c->moved_to_destroyed = 0;
+
+  /* only initializes value, no need to destroy/cleanup anything in here */
+  _ipmiconsole_ctx_fds_init(c);
+
+  c->session_submitted = 0;
 
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
   return c;
@@ -779,7 +779,7 @@ ipmiconsole_ctx_fd(ipmiconsole_ctx_t c)
     }
 
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
-  return c->user_fd;
+  return c->fds.user_fd;
 }
 
 int 
@@ -799,7 +799,7 @@ ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c)
     }
 
   val = IPMICONSOLE_PIPE_GENERATE_BREAK_CODE;
-  if (write(c->asynccomm[1], &val, 1) < 0)
+  if (write(c->fds.asynccomm[1], &val, 1) < 0)
     {
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       return -1;
@@ -821,8 +821,8 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
     {
       int perr;
 
-      _ipmiconsole_ctx_api_managed_session_data_cleanup(c);
-      _ipmiconsole_ctx_api_managed_session_data_init(c);
+      _ipmiconsole_ctx_fds_cleanup(c);
+      _ipmiconsole_ctx_fds_init(c);
 
       if ((perr = pthread_mutex_lock(&(c->destroyed_mutex))) != 0)
         {

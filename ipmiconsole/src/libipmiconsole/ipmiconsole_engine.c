@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.55 2007-08-28 16:48:06 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.56 2007-08-28 17:17:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -406,7 +406,7 @@ _ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
     }
 
   /* Copy for API level */
-  c->user_fd = c->connection.user_fd;
+  c->fds.user_fd = c->connection.user_fd;
 
   secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
 
@@ -492,8 +492,8 @@ _ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
     }
 
   /* Copy for API level */
-  c->asynccomm[0] = c->connection.asynccomm[0];
-  c->asynccomm[1] = c->connection.asynccomm[1];
+  c->fds.asynccomm[0] = c->connection.asynccomm[0];
+  c->fds.asynccomm[1] = c->connection.asynccomm[1];
 
   /* Fiid Objects */
 

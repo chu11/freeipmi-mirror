@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.45 2007-08-28 16:48:06 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.46 2007-08-28 17:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -396,6 +396,26 @@ struct ipmiconsole_ctx_debug {
   int debug_fd;
 };
 
+struct ipmiconsole_ctx_fds {
+  /* Copy from ipmiconsole_ctx_session, these file descriptors are
+   * managed exclusively by API level, not the engine.
+   *
+   * The need to manage asynccomm at the API level is b/c users could
+   * access it via ipmiconsole_ctx_generate_break().  If one end of
+   * the asynccomm is closed by the engine, it becomes difficult to
+   * know if we can actually generate a break.  
+   * 
+   * We could manage this situation through some mutexes, but that would
+   * slow down closing/generate-break code.  We could capture EPIPE in the
+   * API and return a "IS_CLOSING" error to the user, but that would require
+   * the user to set SIGPIPE to SIG_IGN.  Moving it to all be managed in 
+   * the API level is best.  We just have to check for POLLNVAL in the 
+   * engine poll().
+   */
+  int user_fd;
+  int asynccomm[2];
+};
+
 struct ipmiconsole_ctx {
   /* Two magics - first indicates the context is still valid.  Second
    * is pretty much a flag that indicates the context has been
@@ -418,22 +438,18 @@ struct ipmiconsole_ctx {
   int blocking_notification[2];
   int sol_session_established;
 
-  /* Copy from session context - managed exclusively by API level, not engine 
-   *
-   * The need to manage asynccomm at the API level is b/c users could
-   * access it via ipmiconsole_ctx_generate_break().  If one end of
-   * the asynccomm is closed by the engine, it becomes difficult to
-   * know if we can actually generate a break.  
-   * 
-   * We could manage this situation through some mutexes, but that would
-   * slow down closing/generate-break code.  We could capture EPIPE in the
-   * API and return a "IS_CLOSING" error to the user, but that would require
-   * the user to set SIGPIPE to SIG_IGN.  Moving it to all be managed in 
-   * the API level is best.  We just have to check for POLLNVAL in the 
-   * engine poll().
+  /* user_has_destroyed - flags and mutex used when the user has destroyed
+   * the context and it is now the responsibility of the
+   * engine/garbage-collector to cleanup.
    */
-  int user_fd;
-  int asynccomm[2];
+  pthread_mutex_t destroyed_mutex;
+  unsigned int user_has_destroyed;
+  unsigned int moved_to_destroyed;
+
+  struct ipmiconsole_ctx_connection connection; 
+  struct ipmiconsole_ctx_session session; 
+
+  struct ipmiconsole_ctx_fds fds;
 
   /* session_submitted - flag indicates context submitted to engine
    * successfully.  Does not indicate any state of success/failure for
@@ -446,17 +462,6 @@ struct ipmiconsole_ctx {
    * Engine threads will never touch this.
    */
   unsigned int session_submitted;
-
-  /* user_has_destroyed - flags and mutex used when the user has destroyed
-   * the context and it is now the responsibility of the
-   * engine/garbage-collector to cleanup.
-   */
-  pthread_mutex_t destroyed_mutex;
-  unsigned int user_has_destroyed;
-  unsigned int moved_to_destroyed;
-
-  struct ipmiconsole_ctx_connection connection; 
-  struct ipmiconsole_ctx_session session; 
 };
 
 #endif /* _IPMICONSOLE_DEFS_H */
