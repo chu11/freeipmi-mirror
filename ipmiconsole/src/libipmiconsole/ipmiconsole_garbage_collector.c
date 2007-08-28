@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.5 2007-08-28 18:26:19 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.6 2007-08-28 23:11:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,7 +100,7 @@ ipmiconsole_garbage_collector(void *arg)
       if (n && FD_ISSET(garbage_collector_notifier[0], &rds))
         break;
       
-      /* Note: the code in _ipmiconsole_ctx_connection_cleanup() and
+      /* Note: the code in ipmiconsole_ctx_connection_cleanup() and
        * ipmiconsole_garbage_collector() may look like it may race and
        * could deadlock.  (ABBA and BAAB deadlock situation).  However,
        * the context mutexes c->destroyed_mutex are accessed from two
