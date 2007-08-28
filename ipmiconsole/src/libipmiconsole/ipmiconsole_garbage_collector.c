@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.3 2007-08-25 01:30:48 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.4 2007-08-28 17:50:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -118,18 +118,18 @@ ipmiconsole_garbage_collector(void *arg)
       
       while ((c = (ipmiconsole_ctx_t)list_next(itr)))
         {
-          if ((perr = pthread_mutex_lock(&(c->destroyed_mutex))) != 0)
+          if ((perr = pthread_mutex_lock(&(c->signal.destroyed_mutex))) != 0)
             IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
           /* Be careful, if the user requested to destroy the context, we can
            * destroy it here.  But if we destroy it, there is no mutex to
            * unlock.
            */
-          if (c->user_has_destroyed)
+          if (c->signal.user_has_destroyed)
             _ipmiconsole_ctx_cleanup(c);
           else
             {
-              if ((perr = pthread_mutex_unlock(&(c->destroyed_mutex))) != 0)
+              if ((perr = pthread_mutex_unlock(&(c->signal.destroyed_mutex))) != 0)
                 IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
             }
         }

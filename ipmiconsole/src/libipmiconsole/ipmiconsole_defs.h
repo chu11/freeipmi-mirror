@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.46 2007-08-28 17:17:43 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.47 2007-08-28 17:50:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -250,7 +250,7 @@ struct ipmiconsole_ctx_config {
   uint8_t confidentiality_algorithm;
 };
 
-/* Sockets, pipes, objects, etc. used for data */
+/* Sockets, pipes, objects, etc. used for data in a SOL session */
 struct ipmiconsole_ctx_connection {
 
   /* File Descriptor User Interface */
@@ -312,9 +312,9 @@ struct ipmiconsole_ctx_connection {
 };
 
 /* 
- * IPMI Session Information
- *
- * Everything below will need to be re-initialized if the session is
+ * IPMI Session Information - actual data used to keep track of a SOL
+ * session.  Separated from ipmiconsole_ctx_connection above, b/c
+ * everything below will need to be re-initialized if the session is
  * being reattempted under a different port.
  */
 struct ipmiconsole_ctx_session {
@@ -392,8 +392,31 @@ struct ipmiconsole_ctx_session {
   uint8_t last_sol_output_accepted_character_count;
 };
 
+/* Context debug stuff */
 struct ipmiconsole_ctx_debug {
   int debug_fd;
+};
+
+/* Mutexes + flags for signaling between the API and engine */
+struct ipmiconsole_ctx_signal {
+  pthread_mutex_t status_mutex;
+  unsigned int status;
+
+  /* user_has_destroyed - flags and mutex used when the user has destroyed
+   * the context and it is now the responsibility of the
+   * engine/garbage-collector to cleanup.
+   */
+  pthread_mutex_t destroyed_mutex;
+  unsigned int user_has_destroyed;
+  unsigned int moved_to_destroyed;
+};
+
+/* Info, pipe, and mutex for engine submission blocking */
+struct ipmiconsole_ctx_blocking {
+  pthread_mutex_t blocking_mutex;
+  int blocking_submit_requested;
+  int blocking_notification[2];
+  int sol_session_established;
 };
 
 struct ipmiconsole_ctx_fds {
@@ -429,24 +452,12 @@ struct ipmiconsole_ctx {
   
   struct ipmiconsole_ctx_debug debug;
 
-  pthread_mutex_t status_mutex;
-  unsigned int status;
+  struct ipmiconsole_ctx_signal signal;
 
-  /* Info, pipe, and mutex for engine submission blocking */
-  pthread_mutex_t blocking_mutex;
-  int blocking_submit_requested;
-  int blocking_notification[2];
-  int sol_session_established;
-
-  /* user_has_destroyed - flags and mutex used when the user has destroyed
-   * the context and it is now the responsibility of the
-   * engine/garbage-collector to cleanup.
-   */
-  pthread_mutex_t destroyed_mutex;
-  unsigned int user_has_destroyed;
-  unsigned int moved_to_destroyed;
+  struct ipmiconsole_ctx_blocking blocking;
 
   struct ipmiconsole_ctx_connection connection; 
+
   struct ipmiconsole_ctx_session session; 
 
   struct ipmiconsole_ctx_fds fds;

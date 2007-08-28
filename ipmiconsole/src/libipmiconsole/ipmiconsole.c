@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.60 2007-08-28 17:17:43 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.61 2007-08-28 17:50:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -136,6 +136,76 @@ _ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c)
   close(c->fds.asynccomm[1]);
 }
 
+static int
+_ipmiconsole_ctx_signal_init(ipmiconsole_ctx_t c)
+{
+  int perr;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
+
+  if ((perr = pthread_mutex_init(&c->signal.status_mutex, NULL)) != 0)
+    {
+      errno = perr;
+      return -1;
+    }
+  c->signal.status = IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED;
+
+  if ((perr = pthread_mutex_init(&c->signal.destroyed_mutex, NULL)) != 0)
+    {
+      errno = perr;
+      return -1;
+    }
+  c->signal.user_has_destroyed = 0;
+  c->signal.moved_to_destroyed = 0;
+
+  return 0;
+}
+
+static void
+_ipmiconsole_ctx_signal_cleanup(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
+
+  pthread_mutex_destroy(&(c->signal.status_mutex));
+  pthread_mutex_destroy(&(c->signal.destroyed_mutex));
+}
+
+static int
+_ipmiconsole_ctx_blocking_init(ipmiconsole_ctx_t c)
+{
+  int perr;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
+
+  if ((perr = pthread_mutex_init(&c->blocking.blocking_mutex, NULL)) != 0)
+    {
+      errno = perr;
+      return -1;
+    }
+  c->blocking.blocking_submit_requested = 0;
+  c->blocking.blocking_notification[0] = -1;
+  c->blocking.blocking_notification[1] = -1;
+  c->blocking.sol_session_established = 0;
+
+  return 0;
+}
+
+static void
+_ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
+
+  pthread_mutex_destroy(&(c->blocking.blocking_mutex));
+}
+
 int 
 ipmiconsole_engine_init(unsigned int thread_count, unsigned int debug_flags)
 {
@@ -213,7 +283,7 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
   if (ipmiconsole_engine_submit_ctx(c) < 0)
     goto cleanup;
 
-  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -223,10 +293,10 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c)
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
    * already be set 
    */
-  if (c->status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
-    c->status = IPMICONSOLE_CTX_STATUS_SUBMITTED;
+  if (c->signal.status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
+    c->signal.status = IPMICONSOLE_CTX_STATUS_SUBMITTED;
   
-  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -252,23 +322,23 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
 
-  if (c->blocking_submit_requested)
+  if (c->blocking.blocking_submit_requested)
     {
-      if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+      if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
           return -1;
         }
 
-      close(c->blocking_notification[0]);
-      close(c->blocking_notification[1]);
-      c->blocking_notification[0] = -1;
-      c->blocking_notification[1] = -1;
-      c->blocking_submit_requested = 0;
-      c->sol_session_established = 0;
+      close(c->blocking.blocking_notification[0]);
+      close(c->blocking.blocking_notification[1]);
+      c->blocking.blocking_notification[0] = -1;
+      c->blocking.blocking_notification[1] = -1;
+      c->blocking.blocking_submit_requested = 0;
+      c->blocking.sol_session_established = 0;
       
-      if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -288,16 +358,16 @@ _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
   
-  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
-  if (pipe(c->blocking_notification) < 0)
+  if (pipe(c->blocking.blocking_notification) < 0)
     {
-      if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
         IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       IPMICONSOLE_CTX_DEBUG(c, ("pipe: %s", strerror(errno)));
       if (errno == EMFILE)
@@ -306,22 +376,22 @@ _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
         c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
       goto cleanup;
     }
-  c->blocking_submit_requested++;
-  c->sol_session_established = 0;
+  c->blocking.blocking_submit_requested++;
+  c->blocking.sol_session_established = 0;
 
-  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+  if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
-  if (ipmiconsole_set_closeonexec(c, c->blocking_notification[0]) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->blocking.blocking_notification[0]) < 0)
     {
       IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
     }
-  if (ipmiconsole_set_closeonexec(c, c->blocking_notification[1]) < 0)
+  if (ipmiconsole_set_closeonexec(c, c->blocking.blocking_notification[1]) < 0)
     {
       IPMICONSOLE_DEBUG(("closeonexec error"));
       goto cleanup;
@@ -343,12 +413,12 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
-  assert(c->blocking_submit_requested);
+  assert(c->blocking.blocking_submit_requested);
 
   FD_ZERO(&rds);
-  FD_SET(c->blocking_notification[0], &rds);
+  FD_SET(c->blocking.blocking_notification[0], &rds);
 
-  if ((n = select(c->blocking_notification[0] + 1, &rds, NULL, NULL, NULL)) < 0)
+  if ((n = select(c->blocking.blocking_notification[0] + 1, &rds, NULL, NULL, NULL)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("select: %s", strerror(errno)));
       c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
@@ -362,12 +432,12 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  if (FD_ISSET(c->blocking_notification[0], &rds))
+  if (FD_ISSET(c->blocking.blocking_notification[0], &rds))
     {
       uint8_t val;
       ssize_t len;
 
-      if ((len = read(c->blocking_notification[0], (void *)&val, 1)) < 0)
+      if ((len = read(c->blocking.blocking_notification[0], (void *)&val, 1)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("read: %s", strerror(errno)));
           c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
@@ -449,7 +519,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
       goto cleanup_ctx_fds_only;
     }
   
-  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -459,10 +529,10 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
    * already be set 
    */
-  if (c->status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
-    c->status = IPMICONSOLE_CTX_STATUS_SUBMITTED;
+  if (c->signal.status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
+    c->signal.status = IPMICONSOLE_CTX_STATUS_SUBMITTED;
   
-  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -494,7 +564,6 @@ ipmiconsole_ctx_create(char *hostname,
 		       struct ipmiconsole_protocol_config *protocol_config)
 {
   ipmiconsole_ctx_t c = NULL;
-  int perr;
 
   if (!hostname
       || (hostname && strlen(hostname) > MAXHOSTNAMELEN)
@@ -652,31 +721,11 @@ ipmiconsole_ctx_create(char *hostname,
   if (ipmiconsole_ctx_debug_setup(c, protocol_config->debug_flags) < 0)
     goto cleanup;
 
-  if ((perr = pthread_mutex_init(&c->status_mutex, NULL)) != 0)
-    {
-      errno = perr;
-      goto cleanup;
-    }
-  c->status = IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED;
+  if (_ipmiconsole_ctx_signal_init(c) < 0)
+    goto cleanup;
 
-  if ((perr = pthread_mutex_init(&c->blocking_mutex, NULL)) != 0)
-    {
-      errno = perr;
-      goto cleanup;
-    }
-  c->blocking_submit_requested = 0;
-  c->blocking_notification[0] = -1;
-  c->blocking_notification[1] = -1;
-
-  c->sol_session_established = 0;
-
-  if ((perr = pthread_mutex_init(&c->destroyed_mutex, NULL)) != 0)
-    {
-      errno = perr;
-      goto cleanup;
-    }
-  c->user_has_destroyed = 0;
-  c->moved_to_destroyed = 0;
+  if (_ipmiconsole_ctx_blocking_init(c) < 0)
+    goto cleanup;
 
   /* only initializes value, no need to destroy/cleanup anything in here */
   _ipmiconsole_ctx_fds_init(c);
@@ -690,14 +739,9 @@ ipmiconsole_ctx_create(char *hostname,
 
   ipmiconsole_ctx_debug_cleanup(c);
 
-  /* Note: Don't call _ipmiconsole_ctx_cleanup(), all of the context
-   * variables may not be setup correctly.
-   */
-  pthread_mutex_destroy(&(c->status_mutex));
+  _ipmiconsole_ctx_signal_cleanup(c);
 
-  pthread_mutex_destroy(&(c->blocking_mutex));
-
-  pthread_mutex_destroy(&(c->destroyed_mutex));
+  _ipmiconsole_ctx_blocking_cleanup(c);
 
   /* Note: use protocol_config->security_flags not c->security_flags */ 
   if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
@@ -745,16 +789,16 @@ ipmiconsole_ctx_status(ipmiconsole_ctx_t c)
    * returning IPMICONSOLE_CTX_STATUS_ERROR.
    */
 
-  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
       return IPMICONSOLE_CTX_STATUS_ERROR;
     }
   
-  status = c->status;
+  status = c->signal.status;
   
-  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -824,21 +868,21 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
       _ipmiconsole_ctx_fds_cleanup(c);
       _ipmiconsole_ctx_fds_init(c);
 
-      if ((perr = pthread_mutex_lock(&(c->destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_lock(&(c->signal.destroyed_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
         }
 
-      if (!c->user_has_destroyed)
-        c->user_has_destroyed++;
+      if (!c->signal.user_has_destroyed)
+        c->signal.user_has_destroyed++;
 
       /* must change magic in this mutex, to avoid racing
        * to destroy the context.
        */
       c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
 
-      if ((perr = pthread_mutex_unlock(&(c->destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock(&(c->signal.destroyed_mutex))) != 0)
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
           c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;

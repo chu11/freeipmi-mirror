@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.46 2007-08-25 01:35:25 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.47 2007-08-28 17:50:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2957,7 +2957,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       return 0;
     }
 
-  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -2971,16 +2971,16 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
     }
 
   /* Wake up code waiting for SOL to be established */
-  if (c->blocking_submit_requested)
+  if (c->blocking.blocking_submit_requested)
     {
       uint8_t val;
 
-      c->sol_session_established++;
+      c->blocking.sol_session_established++;
 
       val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
-      if (write(c->blocking_notification[1], &val, 1) < 0)
+      if (write(c->blocking.blocking_notification[1], &val, 1) < 0)
         {
-          if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+          if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
             IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
           IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
@@ -2994,7 +2994,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
         }
     }
 
-  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+  if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -3007,7 +3007,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       return 0;
     }
 
-  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
@@ -3020,9 +3020,9 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       return 0;
     }
 
-  c->status = IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED;
+  c->signal.status = IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED;
 
-  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
       c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.56 2007-08-28 17:17:44 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.57 2007-08-28 17:50:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -168,12 +168,10 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
    */
 
   ipmiconsole_ctx_debug_cleanup(c);
-
-  pthread_mutex_destroy(&(c->status_mutex));
-
-  pthread_mutex_destroy(&(c->blocking_mutex));
-
-  pthread_mutex_destroy(&(c->destroyed_mutex));
+  
+  /* XXX */
+  /* ipmiconsole_ctx_signal_cleanup(c); */
+  /* ipmiconsole_ctx_blocking_cleanup(c); */
 
   c->errnum = IPMICONSOLE_ERR_CTX_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
@@ -593,24 +591,21 @@ _ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
 
   /* We have to cleanup, so in general continue on even if locking fails */
 
-  if ((perr = pthread_mutex_lock(&(c->status_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-          
-  /* XXX */
-
-  /* Indicates current status to user. */
-  if (c->errnum != IPMICONSOLE_ERR_SUCCESS
-      && !c->sol_session_established)
-    c->status = IPMICONSOLE_CTX_STATUS_SOL_ERROR;
   
-  if ((perr = pthread_mutex_unlock(&(c->status_mutex))) != 0)
+  /* Don't change status if it's already been set before */
+  if (c->signal.status != IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED)
+    c->signal.status = IPMICONSOLE_CTX_STATUS_SOL_ERROR;
+  
+  if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
-  if ((perr = pthread_mutex_lock(&(c->blocking_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
-  if (c->blocking_submit_requested
-      && !c->sol_session_established)
+  if (c->blocking.blocking_submit_requested
+      && !c->blocking.sol_session_established)
     {
       uint8_t val;
 
@@ -620,14 +615,14 @@ _ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
       else
         val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
 
-      if (write(c->blocking_notification[1], &val, 1) < 0)
+      if (write(c->blocking.blocking_notification[1], &val, 1) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
           c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
         }
     }
 
-  if ((perr = pthread_mutex_unlock(&(c->blocking_mutex))) != 0)
+  if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
   /* Under default circumstances, close only the ipmiconsole_fd so
@@ -750,18 +745,18 @@ _ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
    * different lists.  So the c->destroyed_mutex context can never be
    * raced against in these two functions.
    */
-  if ((perr = pthread_mutex_lock(&(c->destroyed_mutex))) != 0)
+  if ((perr = pthread_mutex_lock(&(c->signal.destroyed_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
-  if (c->user_has_destroyed)
+  if (c->signal.user_has_destroyed)
     _ipmiconsole_ctx_cleanup(c);
   else
     {
-      if (!c->moved_to_destroyed)
+      if (!c->signal.moved_to_destroyed)
         {
           void *ptr;
 
-          c->moved_to_destroyed++;
+          c->signal.moved_to_destroyed++;
           
           /* I suppose if we fail here, we mem-leak?? Log for now ... */
           
@@ -778,7 +773,7 @@ _ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
             IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
         }
       
-      if ((perr = pthread_mutex_unlock(&(c->destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock(&(c->signal.destroyed_mutex))) != 0)
         IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
     }
 }
