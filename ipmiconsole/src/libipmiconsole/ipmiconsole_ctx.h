@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.h,v 1.4 2007-08-28 23:07:55 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.h,v 1.5 2007-08-28 23:26:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -29,29 +29,29 @@
 
 #include "ipmiconsole.h"
 
-void ipmiconsole_ctx_init(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c);
 
-int ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
-                                char *hostname,
-                                struct ipmiconsole_ipmi_config *ipmi_config,
-                                struct ipmiconsole_protocol_config *protocol_config,
-                                struct ipmiconsole_engine_config *engine_config);
+int ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
+                                 char *hostname,
+                                 struct ipmiconsole_ipmi_config *ipmi_config,
+                                 struct ipmiconsole_protocol_config *protocol_config,
+                                 struct ipmiconsole_engine_config *engine_config);
 
 int ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_debug_cleanup(ipmiconsole_ctx_t c);
 
-int ipmiconsole_ctx_signal_init(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_signal_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_signal_cleanup(ipmiconsole_ctx_t c);
 
-int ipmiconsole_ctx_non_blocking_init(ipmiconsole_ctx_t c,
-                                      Ipmiconsole_callback callback,
-                                      void *callback_arg);
+int ipmiconsole_ctx_non_blocking_setup(ipmiconsole_ctx_t c,
+                                       Ipmiconsole_callback callback,
+                                       void *callback_arg);
 
-int ipmiconsole_ctx_blocking_init(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_blocking_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c);
 
@@ -59,9 +59,9 @@ int ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c);
 
-int ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c);
 
-void ipmiconsole_ctx_fds_init(ipmiconsole_ctx_t c);
+void ipmiconsole_ctx_fds_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c);
 

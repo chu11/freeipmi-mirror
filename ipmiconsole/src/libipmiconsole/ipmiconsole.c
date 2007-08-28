@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.65 2007-08-28 23:07:55 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.66 2007-08-28 23:26:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -181,15 +181,15 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
   /* Set to success, so we know if an IPMI error occurred */
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
 
-  if (ipmiconsole_ctx_non_blocking_init(c,
-                                        callback,
-                                        callback_arg) < 0)
+  if (ipmiconsole_ctx_non_blocking_setup(c,
+                                         callback,
+                                         callback_arg) < 0)
     goto cleanup;
 
   if (ipmiconsole_ctx_connection_setup(c) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_session_init(c) < 0)
+  if (ipmiconsole_ctx_session_setup(c) < 0)
     goto cleanup;
   
   if (ipmiconsole_engine_submit_ctx(c) < 0)
@@ -222,7 +222,6 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
   ipmiconsole_ctx_connection_cleanup(c);
   /* fds are the API responsibility, even though we didn't create them */
   ipmiconsole_ctx_fds_cleanup(c);
-  ipmiconsole_ctx_fds_init(c);
   return -1;
 }
 
@@ -414,7 +413,7 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
   if (ipmiconsole_ctx_connection_setup(c) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_session_init(c) < 0)
+  if (ipmiconsole_ctx_session_setup(c) < 0)
     goto cleanup;
 
   if (_ipmiconsole_blocking_notification_setup(c) < 0)
@@ -460,7 +459,6 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
  cleanup_ctx_fds_only:
   _ipmiconsole_blocking_notification_cleanup(c);
   ipmiconsole_ctx_fds_cleanup(c);
-  ipmiconsole_ctx_fds_init(c);
   return -1;
 }
 
@@ -519,27 +517,28 @@ ipmiconsole_ctx_create(char *hostname,
         }
     }
 
-  ipmiconsole_ctx_init(c);
+  if (ipmiconsole_ctx_setup(c) < 0)
+    goto cleanup;
 
-  if (ipmiconsole_ctx_config_init(c,
-                                  hostname,
-                                  ipmi_config,
-                                  protocol_config,
-                                  engine_config) < 0)
+  if (ipmiconsole_ctx_config_setup(c,
+                                   hostname,
+                                   ipmi_config,
+                                   protocol_config,
+                                   engine_config) < 0)
     goto cleanup;
 
   /* must be called after ipmiconsole_ctx_config_init() */
   if (ipmiconsole_ctx_debug_setup(c) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_signal_init(c) < 0)
+  if (ipmiconsole_ctx_signal_setup(c) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_blocking_init(c) < 0)
+  if (ipmiconsole_ctx_blocking_setup(c) < 0)
     goto cleanup;
 
   /* only initializes value, no need to destroy/cleanup anything in here */
-  ipmiconsole_ctx_fds_init(c);
+  ipmiconsole_ctx_fds_setup(c);
 
   c->session_submitted = 0;
 
@@ -679,7 +678,6 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
       int perr;
 
       ipmiconsole_ctx_fds_cleanup(c);
-      ipmiconsole_ctx_fds_init(c);
 
       if ((perr = pthread_mutex_lock(&(c->signal.destroyed_mutex))) != 0)
         {

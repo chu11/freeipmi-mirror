@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.5 2007-08-28 23:07:55 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.6 2007-08-28 23:26:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,16 +77,19 @@
 extern List console_engine_ctxs_to_destroy;
 extern pthread_mutex_t console_engine_ctxs_to_destroy_mutex;
 
-void
-ipmiconsole_ctx_init(ipmiconsole_ctx_t c)
+int
+ipmiconsole_ctx_setup(ipmiconsole_ctx_t c)
 {
   assert(c);
+
   /* magic may not be set yet, no assert */
 
   memset(c, '\0', sizeof(struct ipmiconsole_ctx));
   c->magic = IPMICONSOLE_CTX_MAGIC;
   c->api_magic = IPMICONSOLE_CTX_API_MAGIC;
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
+
+  return 0;
 }
 
 void
@@ -114,11 +117,11 @@ ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 }
 
 int 
-ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
-                            char *hostname,
-                            struct ipmiconsole_ipmi_config *ipmi_config,
-                            struct ipmiconsole_protocol_config *protocol_config,
-                            struct ipmiconsole_engine_config *engine_config)
+ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
+                             char *hostname,
+                             struct ipmiconsole_ipmi_config *ipmi_config,
+                             struct ipmiconsole_protocol_config *protocol_config,
+                             struct ipmiconsole_engine_config *engine_config)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -286,7 +289,7 @@ ipmiconsole_ctx_debug_cleanup(ipmiconsole_ctx_t c)
 }
 
 int
-ipmiconsole_ctx_signal_init(ipmiconsole_ctx_t c)
+ipmiconsole_ctx_signal_setup(ipmiconsole_ctx_t c)
 {
   int perr;
 
@@ -324,9 +327,9 @@ ipmiconsole_ctx_signal_cleanup(ipmiconsole_ctx_t c)
 }
 
 int
-ipmiconsole_ctx_non_blocking_init(ipmiconsole_ctx_t c,
-                                  Ipmiconsole_callback callback,
-                                  void *callback_arg)
+ipmiconsole_ctx_non_blocking_setup(ipmiconsole_ctx_t c,
+                                   Ipmiconsole_callback callback,
+                                   void *callback_arg)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -339,7 +342,7 @@ ipmiconsole_ctx_non_blocking_init(ipmiconsole_ctx_t c,
 }
 
 int
-ipmiconsole_ctx_blocking_init(ipmiconsole_ctx_t c)
+ipmiconsole_ctx_blocking_setup(ipmiconsole_ctx_t c)
 {
   int perr;
 
@@ -593,7 +596,7 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   ipmiconsole_ctx_connection_cleanup(c);
   /* Previously called here, but this is now supposed to be handled in API land */
   /* _ipmiconsole_ctx_fds_cleanup(c); */
-  /* _ipmiconsole_ctx_fds_init(c); */
+  /* _ipmiconsole_ctx_fds_setup(c); */
   return -1;
 }
 
@@ -980,7 +983,7 @@ ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c)
 }
 
 void
-ipmiconsole_ctx_fds_init(ipmiconsole_ctx_t c)
+ipmiconsole_ctx_fds_setup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -1006,4 +1009,7 @@ ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c)
   close(c->fds.user_fd);
   close(c->fds.asynccomm[0]);
   close(c->fds.asynccomm[1]);
+  c->fds.user_fd = -1;
+  c->fds.asynccomm[0] = -1;
+  c->fds.asynccomm[1] = -1;
 }

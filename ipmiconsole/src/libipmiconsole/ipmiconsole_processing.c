@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.51 2007-08-28 23:07:55 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.52 2007-08-28 23:26:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3358,7 +3358,7 @@ _process_protocol_state_close_session_sent(ipmiconsole_ctx_t c)
 
       c->session.try_new_port_flag = 0;
 
-      if (ipmiconsole_ctx_session_init(c) < 0)
+      if (ipmiconsole_ctx_session_setup(c) < 0)
         /* Session is closed, just exit on error */
         return -1;
 
