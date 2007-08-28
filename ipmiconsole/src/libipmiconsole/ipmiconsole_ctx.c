@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.3 2007-08-28 21:06:24 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.4 2007-08-28 21:18:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -589,6 +589,8 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
 void
 ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
 {
+  int blocking_requested = 0;
+  int status_initial = 0;
   int secure_malloc_flag;
   int perr;
 
@@ -604,7 +606,10 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   
   /* Don't change status if it's already been set before */
   if (c->signal.status != IPMICONSOLE_CTX_STATUS_SOL_ESTABLISHED)
-    c->signal.status = IPMICONSOLE_CTX_STATUS_SOL_ERROR;
+    {
+      c->signal.status = IPMICONSOLE_CTX_STATUS_SOL_ERROR;
+      status_initial++;
+    }
   
   if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
@@ -616,6 +621,8 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
       && !c->blocking.sol_session_established)
     {
       uint8_t val;
+
+      blocking_requested++;
 
       if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
           && c->session.deactivate_only_succeeded_flag)
@@ -632,6 +639,12 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
 
   if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+
+  /* only call the callback if it's an initial SOL error and blocking
+   * was not requested 
+   */
+  if (status_initial && !blocking_requested && c->config.callback)
+    (*(c->config.callback))(c, c->config.callback_arg);
 
   /* Under default circumstances, close only the ipmiconsole_fd so
    * that an error will be detected by the user via a EOF on a read()

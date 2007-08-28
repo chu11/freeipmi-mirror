@@ -3,7 +3,9 @@
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.h,
 	ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.c: New files.
 
-	* ipmiconsole/src/libipmiconsole: Continue re-factoring.
+	* ipmiconsole/src/libipmiconsole: Continue re-factoring
+	re-organization.  Support ipmiconsole_engine_config structure.
+	Support non-blocking callbacks.
 	
 2007-08-24  Albert Chu <chu11@llnl.gov>
 

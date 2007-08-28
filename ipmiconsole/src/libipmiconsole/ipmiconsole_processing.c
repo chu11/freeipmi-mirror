@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.49 2007-08-28 21:06:24 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.50 2007-08-28 21:18:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2852,6 +2852,7 @@ _process_protocol_state_get_payload_activation_status_sent(ipmiconsole_ctx_t c)
 static int
 _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 {
+  int blocking_requested = 0;
   int perr, ret;
 
   assert(c);
@@ -2976,6 +2977,8 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
     {
       uint8_t val;
 
+      blocking_requested++;
+      
       c->blocking.sol_session_established++;
 
       val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
@@ -3091,6 +3094,10 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
           return 0;
         }
     }
+
+  /* only call callback if blocking was not requested */
+  if (!blocking_requested && c->config.callback)
+    (*(c->config.callback))(c, c->config.callback_arg);
 
   /* It's possible the user entered some data before the SOL
    * session was established.  We send that data now.  Otherwise

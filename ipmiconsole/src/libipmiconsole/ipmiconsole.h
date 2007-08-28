@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.58 2007-08-28 21:06:24 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.59 2007-08-28 21:18:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -416,7 +416,8 @@ struct ipmiconsole_protocol_config
 /* 
  * Ipmiconsole_callback
  *
- * Function prototype for a callback function
+ * Function prototype for a callback function.  See
+ * ipmiconsole_engine_config below.
  */
 typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
 
@@ -441,6 +442,10 @@ typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
  *   example, if a SOL session is established then a later session
  *   timeout occurs, the later session timeout will not generate a
  *   function call to the callback.  Pass NULL for no callback.
+ *
+ *   The callback function call be called simultaneously from
+ *   different engine threads.  It is the user's responsibility to
+ *   protect against this race conditions in their callback function.
  *
  * callback_arg
  *
