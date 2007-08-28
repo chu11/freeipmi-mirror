@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.59 2007-08-28 21:18:06 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.60 2007-08-28 22:48:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -122,8 +122,8 @@ extern "C" {
  *
  * When submitting a context to the engine non-blocking, another way
  * to determine if the SOL session has been established is if data has
- * output the remote console and is available for you to read.  Under
- * most circumstances, this isn't a controllable situation.
+ * output from the remote console and is available for you to read.
+ * Under most circumstances, this isn't a controllable situation.
  *
  * This flag will inform the engine to output a single NUL character
  * ('\0') to the console once a SOL session has been established.  If
@@ -148,14 +148,16 @@ extern "C" {
  * libipmiconsole will attempt to deactivate the earlier SOL session
  * and activate the SOL session under the current one.  This default
  * behavior exists for several reasons, most notably that earlier SOL
- * sessions may have simply not been able to be deactivate properly.
- * This security flag changes the default behavior to return an error
- * if SOL is already detected as being in use.
+ * sessions may have not been able to be deactivate properly.  This
+ * security flag changes the default behavior to return an error if
+ * SOL is already detected as being in use.  If it is detected as in
+ * use, the errnum returned from ipmiconsole_ctx_errnum() would be
+ * IPMICONSOLE_ERR_SOL_INUSE.
  *   
  * LOCK_MEMORY
  *
  * Inform libipmiconsole to lock memory to prevent sensitive
- * information (such as usernames and passwords) to be swappable.
+ * information (such as usernames and passwords) to be non-swappable.
  *
  * DEACTIVATE_ONLY
  *
@@ -197,9 +199,10 @@ extern "C" {
  * SUPERMICRO_2_0
  *
  * There are several small IPMI compliance issues on early Supermicro
- * IPMI SOL implementations.  Mostly involving the authentication
- * codes returned the RAKP2 portion of authentication.  This
- * workaround flag will get around the problem.
+ * IPMI SOL implementations.  Most involve the authentication codes
+ * returned during the RAKP2 portion of authentication.  This
+ * workaround flag will get around the problem.  These compliance bugs
+ * are confirmed to be fixed on newer firmware.
  *
  * SUN_2_0
  *
@@ -210,8 +213,8 @@ extern "C" {
  *
  * Work around Asus IPMI 2.0 SOL payload size bug.
  *
- * Note: Non-logical bitmask order is set for consistency of masks
- * with libfreeipmi bitmasks.
+ * Note: The non-logical bitmask order below is set for consistency of
+ * masks with libfreeipmi bitmasks.
  */
 #define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0                   0x00010000
@@ -256,14 +259,10 @@ enum ipmiconsole_ctx_status
   };
 typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
 
-#define IPMICONSOLE_THREAD_COUNT_MAX       32
-
-typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
-
 /* 
  * ipmiconsole_ipmi_config
  *
- * Configuration information for connection to the remote IPMI
+ * Authentication information for a connection to a remote IPMI
  * machine.
  *
  * username 
@@ -333,7 +332,7 @@ struct ipmiconsole_ipmi_config
 /* 
  * ipmiconsole_protocol_config
  *
- * Configuration information for the ipmi protocol management. 
+ * Configuration information for the IPMI protocol management. 
  *
  * session_timeout_len
  *
@@ -425,7 +424,7 @@ typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
  * ipmiconsole_engine_config
  *
  * Configuration information for how the engine should interact with
- * the user API.
+ * the user or API.
  *
  * engine_flags
  *
@@ -438,14 +437,14 @@ typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
  *   when a SOL session has been established or a SOL establishment
  *   error has occurred.  Will only be called under a non-blocking
  *   engine submission via ipmiconsole_engine_submit().  Will be
- *   called once and only once during an engine submission.  For
- *   example, if a SOL session is established then a later session
+ *   called once and only once during an individual engine submission.
+ *   For example, if a SOL session is established then a later session
  *   timeout occurs, the later session timeout will not generate a
  *   function call to the callback.  Pass NULL for no callback.
  *
  *   The callback function call be called simultaneously from
  *   different engine threads.  It is the user's responsibility to
- *   protect against this race conditions in their callback function.
+ *   protect against any race conditions in their callback function.
  *
  * callback_arg
  *
@@ -465,6 +464,10 @@ struct ipmiconsole_engine_config
   void *callback_arg;
   unsigned int debug_flags;
 };
+
+#define IPMICONSOLE_THREAD_COUNT_MAX       32
+
+typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
 
 /* 
  * ipmiconsole_engine_init
@@ -495,17 +498,18 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * function can return prior to a SOL session being established.  A
  * return value of 0 indicates the context was submitted properly.  A
  * return value of -1 indicates an error occurred during the
- * submission.  The error need not reflect an IPMI related issue.
+ * submission.  On an error, ipmiconsole_ctx_errnum() can be used to
+ * determine the type of error that occured.
  *
  * After a context has been submitted, the user may determine if a SOL
  * session has been established several ways:
  *
- * A) poll on the context status, retrieved via
+ * A) Poll on the context status, retrieved via
  * ipmiconsole_ctx_status().  On an error, ipmiconsole_ctx_errnum()
  * can be used to determine the specific IPMI related error that
  * occurred.
  *
- * B) poll on the context file descriptor, retrieved via
+ * B) Poll on the context file descriptor, retrieved via
  * ipmiconsole_ctx_fd().  A SOL establishment error will result in an
  * EOF being returned on the file descriptor (Assuming the CLOSE_FD
  * Engine flag has not been set).  A proper SOL establishment can be
@@ -514,14 +518,13 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  * this.  On an error, ipmiconsole_ctx_errnum() can be used to
  * determine the specific IPMI related error that occurred.
  *
- * C) using callback functions.  The callback functions specified in a
+ * C) Use a callback function.  The callback functions specified in a
  * struct ipmiconsole_engine_config will be called directly after a
  * SOL session has been established or an error has occurred.  Within
- * those callback functions, ipmiconsole_ctx_errnum() or
- * ipmiconsole_ctx_status() can be used to determine which has
- * occurred.
+ * those callback functions, ipmiconsole_ctx_status() can be used to
+ * determine which has occurred.
  *
- * Returns 0 on success, -1 on error
+ * Returns 0 on success, -1 on error.  
  */
 int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
 
@@ -534,7 +537,7 @@ int ipmiconsole_engine_submit(ipmiconsole_ctx_t c);
  * an error occurred.  On an error, ipmiconsole_ctx_errnum() can be
  * used to determine the type of error that occured.
  *
- * Returns 0 on success, -1 on error
+ * Returns 0 on success, -1 on error.  
  */
 int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
 
@@ -556,7 +559,8 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
  * ipmiconsole_ctx_create
  *
  * Create a ipmiconsole context.  The context can then be submitted
- * into the ipmiconsole engine to establish an SOL session.  The
+ * into the ipmiconsole engine (via ipmiconsole_engine_submit() or
+ * ipmiconsole_engine_submit_block()) to establish a SOL session.  The
  * context cannot be submitted to the ipmiconsole engine more than
  * once.  After it has been submitted to the ipmiconsole, it cannot be
  * reused.
@@ -581,8 +585,6 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
  *   definition above.
  *
  * Returns ctx on success, NULL on error.
- *
- * The user is always responsible for destroying the context.
  */
 ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname,
 					 struct ipmiconsole_ipmi_config *ipmi_config,
@@ -618,7 +620,9 @@ ipmiconsole_ctx_status_t ipmiconsole_ctx_status(ipmiconsole_ctx_t c);
  * ipmiconsole_ctx_fd
  *
  * Returns a file descriptor for console reading and writing after it
- * has been submitted to the engine.  Returns -1 on error.  
+ * has been submitted to the engine.  Returns -1 on error.
+ * ipmiconsole_ctx_errnum() can be called to determine the cause of
+ * the error.
  *
  * If the user closes the file descriptor while the serial over lan
  * session is established, the session will be torn down in the
@@ -639,7 +643,8 @@ int ipmiconsole_ctx_fd(ipmiconsole_ctx_t c);
  *
  * Generate a break on an active serial over LAN session.
  *
- * Returns 0 on success, -1 on error
+ * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
+ * called to determine the cause of the error.
  */
 int ipmiconsole_ctx_generate_break(ipmiconsole_ctx_t c);
 
