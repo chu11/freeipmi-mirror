@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.1 2007-08-28 18:26:19 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.2 2007-08-28 20:43:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -111,6 +111,129 @@ ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
     free(c);
+}
+
+int 
+ipmiconsole_ctx_config_init(ipmiconsole_ctx_t c,
+                            char *hostname,
+                            struct ipmiconsole_ipmi_config *ipmi_config,
+                            struct ipmiconsole_protocol_config *protocol_config)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  strcpy(c->config.hostname, hostname);
+
+  if (ipmi_config->username)
+    strcpy((char *)c->config.username, ipmi_config->username);
+
+  if (ipmi_config->password)
+    strcpy((char *)c->config.password, ipmi_config->password);
+
+  /* k_g may contain nulls */
+  if (ipmi_config->k_g && ipmi_config->k_g_len)
+    {
+      memcpy(c->config.k_g, ipmi_config->k_g, ipmi_config->k_g_len);
+      c->config.k_g_len = ipmi_config->k_g_len;
+    }
+
+  if (ipmi_config->privilege_level >= 0)
+    {
+      if (ipmi_config->privilege_level == IPMICONSOLE_PRIVILEGE_USER)
+        c->config.privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
+      else if (ipmi_config->privilege_level == IPMICONSOLE_PRIVILEGE_OPERATOR)
+        c->config.privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+      else
+        c->config.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
+    }
+  else
+    c->config.privilege_level = IPMI_PRIVILEGE_LEVEL_DEFAULT;
+
+  if (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN)
+    c->config.cipher_suite_id = ipmi_config->cipher_suite_id;
+  else
+    c->config.cipher_suite_id = IPMI_CIPHER_SUITE_ID_DEFAULT;
+
+  if (protocol_config->session_timeout_len > 0)
+    c->config.session_timeout_len = protocol_config->session_timeout_len;
+  else
+    c->config.session_timeout_len = IPMICONSOLE_SESSION_TIMEOUT_LENGTH_DEFAULT;
+
+  if (protocol_config->retransmission_timeout_len > 0)
+    c->config.retransmission_timeout_len = protocol_config->retransmission_timeout_len;
+  else
+    c->config.retransmission_timeout_len = IPMICONSOLE_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT;
+
+  if (protocol_config->retransmission_backoff_count > 0)
+    c->config.retransmission_backoff_count = protocol_config->retransmission_backoff_count;
+  else
+    c->config.retransmission_backoff_count = IPMICONSOLE_RETRANSMISSION_BACKOFF_COUNT_DEFAULT;
+
+  if (protocol_config->keepalive_timeout_len > 0)
+    c->config.keepalive_timeout_len = protocol_config->keepalive_timeout_len;
+  else
+    c->config.keepalive_timeout_len = IPMICONSOLE_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
+
+  if (protocol_config->retransmission_keepalive_timeout_len > 0)
+    c->config.retransmission_keepalive_timeout_len = protocol_config->retransmission_keepalive_timeout_len;
+  else
+    c->config.retransmission_keepalive_timeout_len = IPMICONSOLE_RETRANSMISSION_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
+
+  if (protocol_config->acceptable_packet_errors_count > 0)
+    c->config.acceptable_packet_errors_count = protocol_config->acceptable_packet_errors_count;
+  else
+    c->config.acceptable_packet_errors_count = IPMICONSOLE_ACCEPTABLE_PACKET_ERRORS_COUNT_DEFAULT;
+
+  if (protocol_config->maximum_retransmission_count > 0)
+    c->config.maximum_retransmission_count = protocol_config->maximum_retransmission_count;
+  else
+    c->config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
+  c->config.engine_flags = protocol_config->engine_flags;
+
+  c->config.security_flags = protocol_config->security_flags;
+
+  c->config.workaround_flags = protocol_config->workaround_flags;
+
+  /* Data based on Configuration Parameters */
+
+  if (ipmi_cipher_suite_id_to_algorithms(c->config.cipher_suite_id,
+                                         &(c->config.authentication_algorithm),
+                                         &(c->config.integrity_algorithm),
+                                         &(c->config.confidentiality_algorithm)) < 0)
+    {
+      IPMICONSOLE_DEBUG(("ipmi_cipher_suite_id_to_algorithms: %s", strerror(errno)));
+      return -1;
+    }
+
+  /* Retransmission timeout cannot be larger than the session timeout */
+  if (c->config.retransmission_timeout_len > c->config.session_timeout_len)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  /* Keepalive timeout cannot be larger than the session timeout */
+  if (c->config.keepalive_timeout_len > c->config.session_timeout_len)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  /* Retransmission timeout cannot be larger than the keepalive timeout */
+  if (c->config.retransmission_timeout_len > c->config.keepalive_timeout_len)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  /* Retransmission keepalive timeout cannot be larger than the keepalive timeout */
+  if (c->config.retransmission_keepalive_timeout_len > c->config.keepalive_timeout_len)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  return 0;
 }
 
 int
