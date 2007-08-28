@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.4 2007-08-28 17:50:09 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.5 2007-08-28 18:26:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -53,6 +53,7 @@
 #include "ipmiconsole_defs.h"
 
 #include "list.h"
+#include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"
 
@@ -126,7 +127,7 @@ ipmiconsole_garbage_collector(void *arg)
            * unlock.
            */
           if (c->signal.user_has_destroyed)
-            _ipmiconsole_ctx_cleanup(c);
+            ipmiconsole_ctx_cleanup(c);
           else
             {
               if ((perr = pthread_mutex_unlock(&(c->signal.destroyed_mutex))) != 0)

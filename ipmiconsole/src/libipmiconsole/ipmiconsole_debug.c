@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.4 2007-08-28 16:48:06 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.5 2007-08-28 18:26:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -57,13 +57,6 @@
 
 #include "fd.h"
 
-#ifndef NDEBUG
-#define IPMICONSOLE_DEBUG_DIRECTORY    "/tmp"
-#else  /* !NDEBUG */
-#define IPMICONSOLE_DEBUG_DIRECTORY    "/var/log/ipmiconsole"
-#endif /* !NDEBUG */
-#define IPMICONSOLE_DEBUG_FILENAME     "ipmiconsole_debug"
-
 static uint32_t console_debug_flags = 0;
 static int console_debug_fd = -1;
 static pthread_mutex_t console_stdout_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -106,54 +99,6 @@ ipmiconsole_debug_cleanup(void)
       console_debug_fd = -1;
     }
   console_debug_flags = 0;
-}
-
-int
-ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c, uint32_t debug_flags)
-{
-  assert(c);
-  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(!(debug_flags & ~IPMICONSOLE_DEBUG_MASK));
-
-  c->config.debug_flags = debug_flags;
-
-  if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
-    {
-      char filename[MAXPATHLEN];
-      snprintf(filename, 
-	       MAXPATHLEN,
-	       "%s/%s.%s", 
-	       IPMICONSOLE_DEBUG_DIRECTORY,
-	       IPMICONSOLE_DEBUG_FILENAME,
-	       c->config.hostname);
-  
-      if ((c->debug.debug_fd = open(filename, 
-                                    O_CREAT | O_APPEND | O_WRONLY, 
-                                    0600)) < 0)
-	{
-	  c->config.debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
-	  IPMICONSOLE_CTX_DEBUG(c, ("open: %s", strerror(errno)));
-	  c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-	  c->config.debug_flags = 0;
-	  return -1;
-	}
-    }
-  
-  return 0;
-}
-
-void
-ipmiconsole_ctx_debug_cleanup(ipmiconsole_ctx_t c)
-{
-  assert(c);
-  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  
-  if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE && c->debug.debug_fd >= 0)
-    {
-      close(c->debug.debug_fd);
-      c->debug.debug_fd = -1;
-    }
-  c->config.debug_flags = 0;
 }
 
 static void

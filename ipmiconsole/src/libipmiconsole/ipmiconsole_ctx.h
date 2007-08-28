@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.h,v 1.11 2007-08-28 18:26:19 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.h,v 1.1 2007-08-28 18:26:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,21 +24,37 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
 \*****************************************************************************/
 
-#ifndef _IPMICONSOLE_ENGINE_H
-#define _IPMICONSOLE_ENGINE_H
+#ifndef _IPMICONSOLE_CTX_H
+#define _IPMICONSOLE_CTX_H
 
 #include "ipmiconsole.h"
 
-int ipmiconsole_engine_setup(unsigned int thread_count);
+void ipmiconsole_ctx_init(ipmiconsole_ctx_t c);
 
-int ipmiconsole_engine_is_setup(void);
+void ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c);
 
-int ipmiconsole_engine_thread_count(void);
+int ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c, uint32_t debug_flags);
 
-int ipmiconsole_engine_thread_create(void);
+void ipmiconsole_ctx_debug_cleanup(ipmiconsole_ctx_t c);
 
-int ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c);
+int ipmiconsole_ctx_signal_init(ipmiconsole_ctx_t c);
 
-int ipmiconsole_engine_cleanup(int cleanup_sol_sessions);
+void ipmiconsole_ctx_signal_cleanup(ipmiconsole_ctx_t c);
 
-#endif /* _IPMICONSOLE_ENGINE_H */
+int ipmiconsole_ctx_blocking_init(ipmiconsole_ctx_t c);
+
+void ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c);
+
+void ipmiconsole_ctx_connection_init(ipmiconsole_ctx_t c);
+
+int ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c);
+
+void ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c);
+
+int ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c);
+
+void ipmiconsole_ctx_fds_init(ipmiconsole_ctx_t c);
+
+void ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c);
+
+#endif /* _IPMICONSOLE_CTX_H */

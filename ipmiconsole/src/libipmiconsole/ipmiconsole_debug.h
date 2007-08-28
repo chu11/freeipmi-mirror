@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.h,v 1.2 2007-08-23 17:02:30 chu11 Exp $
+ *  $Id: ipmiconsole_debug.h,v 1.3 2007-08-28 18:26:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,6 +33,13 @@
 
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
+
+#ifndef NDEBUG
+#define IPMICONSOLE_DEBUG_DIRECTORY    "/tmp"
+#else  /* !NDEBUG */
+#define IPMICONSOLE_DEBUG_DIRECTORY    "/var/log/ipmiconsole"
+#endif /* !NDEBUG */
+#define IPMICONSOLE_DEBUG_FILENAME     "ipmiconsole_debug"
 
 #define IPMICONSOLE_DEBUG_ERROR_BUFLEN 4096
 
@@ -89,10 +96,6 @@
 int ipmiconsole_debug_setup(uint32_t debug_flags);
 
 void ipmiconsole_debug_cleanup(void);
-
-int ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c, uint32_t debug_flags);
-
-void ipmiconsole_ctx_debug_cleanup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_debug(const char *fmt, ...);
 
