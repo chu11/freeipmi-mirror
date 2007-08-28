@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.7 2007-08-25 01:35:25 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.8 2007-08-28 16:48:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -292,7 +292,7 @@ ipmiconsole_packet_dump(ipmiconsole_ctx_t c,
   else if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDERR)
     fd = STDERR_FILENO;
   else if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
-    fd = c->debug_fd;
+    fd = c->debug.debug_fd;
   else
     return 0;
 
@@ -479,7 +479,7 @@ ipmiconsole_packet_dump_unknown(ipmiconsole_ctx_t c,
   else if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDERR)
     fd = STDERR_FILENO;
   else if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
-    fd = c->debug_fd;
+    fd = c->debug.debug_fd;
   else
     return 0;
 

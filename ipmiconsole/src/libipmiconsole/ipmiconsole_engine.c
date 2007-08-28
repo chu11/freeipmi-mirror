@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.54 2007-08-25 01:35:24 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.55 2007-08-28 16:48:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -167,11 +167,11 @@ _ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
    * managed from API land.
    */
 
+  ipmiconsole_ctx_debug_cleanup(c);
+
   pthread_mutex_destroy(&(c->status_mutex));
 
   pthread_mutex_destroy(&(c->blocking_mutex));
-
-  ipmiconsole_ctx_debug_cleanup(c);
 
   pthread_mutex_destroy(&(c->destroyed_mutex));
 

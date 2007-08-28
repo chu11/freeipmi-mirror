@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.44 2007-08-25 01:36:34 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.45 2007-08-28 16:48:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -392,6 +392,10 @@ struct ipmiconsole_ctx_session {
   uint8_t last_sol_output_accepted_character_count;
 };
 
+struct ipmiconsole_ctx_debug {
+  int debug_fd;
+};
+
 struct ipmiconsole_ctx {
   /* Two magics - first indicates the context is still valid.  Second
    * is pretty much a flag that indicates the context has been
@@ -402,6 +406,8 @@ struct ipmiconsole_ctx {
   int errnum;
 
   struct ipmiconsole_ctx_config config;
+  
+  struct ipmiconsole_ctx_debug debug;
 
   pthread_mutex_t status_mutex;
   unsigned int status;
@@ -411,9 +417,6 @@ struct ipmiconsole_ctx {
   int blocking_submit_requested;
   int blocking_notification[2];
   int sol_session_established;
-
-  /* Debug Data */
-  int debug_fd;
 
   /* Copy from session context - managed exclusively by API level, not engine 
    *

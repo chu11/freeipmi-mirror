@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.58 2007-08-25 01:35:24 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.59 2007-08-28 16:48:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -632,9 +632,6 @@ ipmiconsole_ctx_create(char *hostname,
       goto cleanup;
     }
  
-  if (ipmiconsole_ctx_debug_setup(c, protocol_config->debug_flags) < 0)
-    goto cleanup;
-
   c->config.engine_flags = protocol_config->engine_flags;
 
   c->config.security_flags = protocol_config->security_flags;
@@ -651,6 +648,9 @@ ipmiconsole_ctx_create(char *hostname,
       IPMICONSOLE_DEBUG(("ipmi_cipher_suite_id_to_algorithms: %s", strerror(errno)));
       goto cleanup;
     }
+
+  if (ipmiconsole_ctx_debug_setup(c, protocol_config->debug_flags) < 0)
+    goto cleanup;
 
   if ((perr = pthread_mutex_init(&c->status_mutex, NULL)) != 0)
     {
@@ -688,14 +688,14 @@ ipmiconsole_ctx_create(char *hostname,
 
  cleanup:
 
+  ipmiconsole_ctx_debug_cleanup(c);
+
   /* Note: Don't call _ipmiconsole_ctx_cleanup(), all of the context
    * variables may not be setup correctly.
    */
   pthread_mutex_destroy(&(c->status_mutex));
 
   pthread_mutex_destroy(&(c->blocking_mutex));
-
-  ipmiconsole_ctx_debug_cleanup(c);
 
   pthread_mutex_destroy(&(c->destroyed_mutex));
 
