@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.69 2007-08-29 21:25:36 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.70 2007-08-29 21:27:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -237,7 +237,7 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -254,7 +254,7 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -268,7 +268,7 @@ _ipmiconsole_blocking_notification_setup(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
   
-  /* We're setting up, so no mutex locking needed */
+  /* We're setting up, so no mutex locking needed at this point */
 
   if (pipe(c->blocking.blocking_notification) < 0)
     {
