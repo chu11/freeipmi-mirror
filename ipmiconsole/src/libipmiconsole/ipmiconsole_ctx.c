@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.12 2007-08-29 23:02:28 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.13 2007-08-29 23:04:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -453,14 +453,14 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   if (!(c->connection.console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
   if (!(c->connection.console_bmc_to_remote_console = cbuf_create(CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MIN, CONSOLE_BMC_TO_REMOTE_CONSOLE_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
@@ -497,14 +497,14 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   if (!(c->connection.ipmi_from_bmc = cbuf_create(IPMI_FROM_BMC_BUF_MIN, IPMI_FROM_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
   if (!(c->connection.ipmi_to_bmc = cbuf_create(IPMI_TO_BMC_BUF_MIN, IPMI_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
       IPMICONSOLE_DEBUG(("cbuf_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
 
@@ -882,7 +882,7 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
           || h_errnop == NO_ADDRESS
           || h_errnop == NO_DATA)
         {
-          c->errnum = IPMICONSOLE_ERR_HOSTNAME_INVALID;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
           return -1;
         }
       IPMICONSOLE_DEBUG(("gethostbyname_r: %s", hstrerror(h_errnop)));
@@ -919,14 +919,14 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
                       sizeof(c->session.message_tag)) < 0)
     {
       IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   if (ipmi_get_random(&(c->session.requester_sequence_number),
                       sizeof(c->session.requester_sequence_number)) < 0)
     {
       IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   c->session.requester_sequence_number %= (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
@@ -941,7 +941,7 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
                           sizeof(c->session.remote_console_session_id)) < 0)
         {
           IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return -1;
         }
     } while (!c->session.remote_console_session_id);
@@ -950,7 +950,7 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
     {
       IPMICONSOLE_DEBUG(("ipmi_get_random: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
