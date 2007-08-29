@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.10 2007-08-29 21:25:36 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.11 2007-08-29 21:28:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1051,6 +1051,7 @@ ipmiconsole_ctx_get_errnum(ipmiconsole_ctx_t c)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
   errnum = c->errnum;
+  c->errnum_retrieved++;
   
   if ((perr = pthread_mutex_unlock(&(c->errnum_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
