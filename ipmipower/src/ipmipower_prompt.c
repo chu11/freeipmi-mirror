@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.49 2007-08-09 17:35:34 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.50 2007-08-29 00:39:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -372,8 +372,7 @@ _cmd_k_g(char **argv)
           cbuf_printf(ttyout, "k_g changed\n");
 #else  /* !NDEBUG */
           cbuf_printf(ttyout, "k_g: %s\n", 
-                      (conf->k_g_len) ? 
-                      format_kg(buf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
+                      (conf->k_g_len) ? format_kg(buf, IPMI_MAX_K_G_LENGTH*2+3, conf->k_g) : "NULL");
 #endif /* !NDEBUG */
         }
     }
@@ -595,11 +594,11 @@ _cmd_config(void)
       hostlist_t badconnection = NULL;
 #endif /* NDEBUG */
 
-      rv = hostlist_ranged_string(conf->hosts, IPMIPOWER_HOSTLIST_BUFLEN, 
+      rv = hostlist_ranged_string(conf->hosts, 
+                                  IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0)
-        cbuf_printf(ttyout, "Hostname:                     can't output, overflows "
-                    "internal buffer\n");
+        cbuf_printf(ttyout, "Hostname:                     can't output\n");
       if (rv > 0)
         cbuf_printf(ttyout, "Hostname:                     %s\n", buffer);
 
@@ -626,24 +625,21 @@ _cmd_config(void)
       rv = hostlist_ranged_string(discovered, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0)
-        cbuf_printf(ttyout, "Discovered:                   can't output, overflows "
-                    "internal buffer\n");
+        cbuf_printf(ttyout, "Discovered:                   can't output\n");
       if (rv > 0)
         cbuf_printf(ttyout, "Discovered:                   %s\n", buffer);
 
       rv = hostlist_ranged_string(undiscovered, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0)
-        cbuf_printf(ttyout, "Undiscovered:                 can't output, overflows "
-                    "internal buffer\n");
+        cbuf_printf(ttyout, "Undiscovered:                 can't output\n");
       if (rv > 0)
         cbuf_printf(ttyout, "Undiscovered:                 %s\n", buffer);
 
       rv = hostlist_ranged_string(badconnection, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0) 
-        cbuf_printf(ttyout, "BadConnection:                can't output, overflows "
-                    "internal buffer\n");
+        cbuf_printf(ttyout, "BadConnection:                can't output\n");
       if (rv > 0)
         cbuf_printf(ttyout, "BadConnection:                %s\n", buffer);
 
@@ -696,21 +692,36 @@ _cmd_config(void)
   cbuf_printf(ttyout, "Logging:                      %s\n",
 	      (conf->log) ? "on" : "off");
   if (conf->log)
-    cbuf_printf(ttyout, "Logfile:                      %s\n", conf->logfile);
+    cbuf_printf(ttyout, "Logfile:                      %s\n", 
+                conf->logfile);
 #endif /* NDEBUG */
-  cbuf_printf(ttyout, "Session Timeout:              %d ms\n", conf->session_timeout_len);
-  cbuf_printf(ttyout, "Retransmission Timeout:       %d ms\n", conf->retransmission_timeout_len);
-  cbuf_printf(ttyout, "Retransmission Wait Timeout:  %d ms\n", conf->retransmission_wait_timeout_len);
-  cbuf_printf(ttyout, "Retransmission Backoff Count: %d\n", conf->retransmission_backoff_count);
-  cbuf_printf(ttyout, "Ping Interval:                %d ms\n", conf->ping_interval_len);
-  cbuf_printf(ttyout, "Ping Timeout:                 %d ms\n", conf->ping_timeout_len);
-  cbuf_printf(ttyout, "Ping Packet Count:            %d\n", conf->ping_packet_count);
-  cbuf_printf(ttyout, "Ping Percent:                 %d percent\n", conf->ping_percent);
-  cbuf_printf(ttyout, "Ping Consec Count:            %d\n", conf->ping_consec_count);
+  cbuf_printf(ttyout, "Session Timeout:              %d ms\n", 
+              conf->session_timeout_len);
+  cbuf_printf(ttyout, "Retransmission Timeout:       %d ms\n", 
+              conf->retransmission_timeout_len);
+  cbuf_printf(ttyout, "Retransmission Wait Timeout:  %d ms\n", 
+              conf->retransmission_wait_timeout_len);
+  cbuf_printf(ttyout, "Retransmission Backoff Count: %d\n", 
+              conf->retransmission_backoff_count);
+  cbuf_printf(ttyout, "Ping Interval:                %d ms\n",
+              conf->ping_interval_len);
+  cbuf_printf(ttyout, "Ping Timeout:                 %d ms\n", 
+              conf->ping_timeout_len);
+  cbuf_printf(ttyout, "Ping Packet Count:            %d\n", 
+              conf->ping_packet_count);
+  cbuf_printf(ttyout, "Ping Percent:                 %d percent\n", 
+              conf->ping_percent);
+  cbuf_printf(ttyout, "Ping Consec Count:            %d\n", 
+              conf->ping_consec_count);
 }
 
 static void 
-_cmd_set_int(char **argv, int *val, char *str, int allow_zero, int min, int max) 
+_cmd_set_int(char **argv, 
+             int *val, 
+             char *str, 
+             int allow_zero,
+             int min, 
+             int max) 
 {
   assert(argv != NULL && val != NULL && str != NULL);
 
@@ -812,7 +823,7 @@ ipmipower_prompt_process_cmdline(void)
 
           if (argv[0] != NULL) 
             {
-              /* support original hostnames (plural) for backwards compatability */
+              /* support hostnames (plural) for backwards compatability */
               if (strcmp(argv[0], "hostnames") == 0
                   || strcmp(argv[0], "hostname") == 0)
                 _cmd_hostname(argv);
@@ -851,7 +862,7 @@ ipmipower_prompt_process_cmdline(void)
               else if (strcmp(argv[0], "authentication_type") == 0
                        || strcmp(argv[0], "authentication-type") == 0)
                 _cmd_authentication_type(argv);
-              /* support original "privilege" command for backwards compatability */
+              /* support "privilege" command for backwards compatability */
               else if (strcmp(argv[0], "privilege") == 0
                        || strcmp(argv[0], "privilege-level") == 0)
                 _cmd_privilege_level(argv);
@@ -864,74 +875,114 @@ ipmipower_prompt_process_cmdline(void)
                        || strcmp(argv[0], "cipher-suite-id") == 0)
                 _cmd_cipher_suite_id(argv);
               else if (strcmp(argv[0], "on-if-off") == 0)
-                _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
+                _cmd_set_flag(argv,
+                              &conf->on_if_off, 
+                              "on-if-off");
               else if (strcmp(argv[0], "wait-until-on") == 0)
-                _cmd_set_flag(argv, &conf->wait_until_on, "wait-until-on");
+                _cmd_set_flag(argv,
+                              &conf->wait_until_on, 
+                              "wait-until-on");
               else if (strcmp(argv[0], "wait-until-off") == 0)
-                _cmd_set_flag(argv, &conf->wait_until_off, "wait-until-off");
+                _cmd_set_flag(argv,
+                              &conf->wait_until_off,
+                              "wait-until-off");
               else if (strcmp(argv[0], "consolidate-output") == 0)
-                _cmd_set_flag(argv, &conf->consolidate_output, "consolidate-output");
+                _cmd_set_flag(argv, 
+                              &conf->consolidate_output, 
+                              "consolidate-output");
               else if (strcmp(argv[0], "workaround-flags") == 0)
                 _cmd_workaround_flags(argv);
               else if (strcmp(argv[0], "debug") == 0) 
                 {
-                  _cmd_set_flag(argv, &conf->debug, "debugging");
+                  _cmd_set_flag(argv,
+                                &conf->debug, 
+                                "debugging");
                   err_cbuf(conf->debug, ttyerr);
                   err_cbuf_dump_file_stream(conf->debug, stderr);
                 }
 #ifndef NDEBUG
               else if (strcmp(argv[0], "rmcpdump") == 0)
-                _cmd_set_flag(argv, &conf->rmcpdump, "rmcp dump");
+                _cmd_set_flag(argv, 
+                              &conf->rmcpdump,
+                              "rmcp dump");
               else if (strcmp(argv[0], "log") == 0)
                 _cmd_log(argv);
               else if (strcmp(argv[0], "logfile") == 0)
                 _cmd_logfile(argv);
 #endif /* NDEBUG */
               else if (strcmp(argv[0], "happyeaster") == 0)
-                cbuf_printf(ttyout, "Ipmipower by Albert Chu <chu11@llnl.gov>\n");
+                cbuf_printf(ttyout, "by Albert Chu <chu11@llnl.gov>\n");
               else if (strcmp(argv[0], "config") == 0)
                 _cmd_config();
-              /* support original "timeout" for backwards compatability */
+              /* support "timeout" for backwards compatability */
               else if (strcmp(argv[0], "timeout") == 0
                        || strcmp(argv[0], "session-timeout") == 0)
-                _cmd_set_int(argv, &conf->session_timeout_len, "timeout", 0, 
-                             IPMIPOWER_SESSION_TIMEOUT_MIN, IPMIPOWER_SESSION_TIMEOUT_MAX);
-              /* support original "retry-timeout" for backwards compatability */
+                _cmd_set_int(argv, 
+                             &conf->session_timeout_len, 
+                             "timeout",
+                             0, 
+                             IPMIPOWER_SESSION_TIMEOUT_MIN, 
+                             IPMIPOWER_SESSION_TIMEOUT_MAX);
+              /* support "retry-timeout" for backwards compatability */
               else if (strcmp(argv[0], "retry-timeout") == 0
                        || strcmp(argv[0], "retransmission-timeout") == 0)
-                _cmd_set_int(argv, &conf->retransmission_timeout_len, "retransmission-timeout", 1,
-                             IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, conf->session_timeout_len);
-              /* support original "retry-wait-timeout" for backwards compatability */
+                _cmd_set_int(argv, 
+                             &conf->retransmission_timeout_len, 
+                             "retransmission-timeout", 1,
+                             IPMIPOWER_RETRANSMISSION_TIMEOUT_MIN, 
+                             conf->session_timeout_len);
+              /* support "retry-wait-timeout" for backwards compatability */
               else if (strcmp(argv[0], "retry-wait-timeout") == 0
                        || strcmp(argv[0], "retransmission-wait-timeout") == 0)
-                _cmd_set_int(argv, &conf->retransmission_wait_timeout_len, 
-			     "retransmission-wait-timeout", 1,
-                             IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN, conf->session_timeout_len);
-              /* support original "retry-backoff-count" for backwards compatability */
+                _cmd_set_int(argv, 
+                             &conf->retransmission_wait_timeout_len, 
+			     "retransmission-wait-timeout", 
+                             1,
+                             IPMIPOWER_RETRANSMISSION_WAIT_TIMEOUT_MIN, 
+                             conf->session_timeout_len);
+              /* support "retry-backoff-count" for backwards compatability */
               else if (strcmp(argv[0], "retry-backoff-count") == 0
                        || strcmp(argv[0], "retransmission-backoff-count") == 0)
-                _cmd_set_int(argv, &conf->retransmission_backoff_count, 
-                             "retransmission-backoff-count", 1,
+                _cmd_set_int(argv, 
+                             &conf->retransmission_backoff_count, 
+                             "retransmission-backoff-count", 
+                             1,
                              IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MIN,
                              IPMIPOWER_RETRANSMISSION_BACKOFF_COUNT_MAX);
               else if (strcmp(argv[0], "ping-interval") == 0)
-                _cmd_set_int(argv, &conf->ping_interval_len, "ping-interval", 1, 
-                             IPMIPOWER_PING_INTERVAL_MIN, conf->ping_timeout_len);
+                _cmd_set_int(argv,
+                             &conf->ping_interval_len, 
+                             "ping-interval", 
+                             1, 
+                             IPMIPOWER_PING_INTERVAL_MIN,
+                             conf->ping_timeout_len);
               else if (strcmp(argv[0], "ping-timeout") == 0)
-                _cmd_set_int(argv, &conf->ping_timeout_len, "ping-timeout", 1, 
+                _cmd_set_int(argv, 
+                             &conf->ping_timeout_len, 
+                             "ping-timeout",
+                             1, 
                              IPMIPOWER_PING_TIMEOUT_MIN, 
                              IPMIPOWER_PING_TIMEOUT_MAX);
               else if (strcmp(argv[0], "ping-packet-count") == 0)
-                _cmd_set_int(argv, &conf->ping_packet_count, "ping-packet-count",
-                             1, IPMIPOWER_PING_PACKET_COUNT_MIN, 
+                _cmd_set_int(argv, 
+                             &conf->ping_packet_count, 
+                             "ping-packet-count",
+                             1, 
+                             IPMIPOWER_PING_PACKET_COUNT_MIN, 
                              IPMIPOWER_PING_PACKET_COUNT_MAX);
               else if (strcmp(argv[0], "ping-percent") == 0)
-                _cmd_set_int(argv, &conf->ping_percent, "ping-percent", 
-                             1, IPMIPOWER_PING_PERCENT_MIN, 
+                _cmd_set_int(argv,
+                             &conf->ping_percent,
+                             "ping-percent", 
+                             1, 
+                             IPMIPOWER_PING_PERCENT_MIN, 
                              IPMIPOWER_PING_PERCENT_MAX);
               else if (strcmp(argv[0], "ping-consec-count") == 0)
-                _cmd_set_int(argv, &conf->ping_consec_count, "ping-consec-count", 
-                             1, IPMIPOWER_PING_CONSEC_COUNT_MIN, 
+                _cmd_set_int(argv,
+                             &conf->ping_consec_count, 
+                             "ping-consec-count", 
+                             1, 
+                             IPMIPOWER_PING_CONSEC_COUNT_MIN, 
                              conf->ping_packet_count);
               else
                 cbuf_printf(ttyout, "unknown command - type \"help\"\n");
