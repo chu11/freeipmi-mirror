@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.h,v 1.6 2007-08-29 16:08:39 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.h,v 1.7 2007-08-29 18:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,13 +33,16 @@ int ipmiconsole_ctx_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c);
 
-void ipmiconsole_ctx_debug_signal_block_main_cleanup(ipmiconsole_ctx_t c);
+/* Wrapper for list callback */
+void ipmiconsole_ctx_list_cleanup(ipmiconsole_ctx_t c);
 
 int ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
                                  char *hostname,
                                  struct ipmiconsole_ipmi_config *ipmi_config,
                                  struct ipmiconsole_protocol_config *protocol_config,
                                  struct ipmiconsole_engine_config *engine_config);
+
+void ipmiconsole_ctx_config_cleanup(ipmiconsole_ctx_t c);
 
 int ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c);
 
@@ -66,6 +69,8 @@ int ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c);
 void ipmiconsole_ctx_fds_setup(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c);
+
+int ipmiconsole_ctx_get_errnum(ipmiconsole_ctx_t c);
 
 void ipmiconsole_ctx_set_errnum(ipmiconsole_ctx_t c, int errnum);
 

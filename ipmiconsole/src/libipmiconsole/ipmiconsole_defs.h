@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.50 2007-08-29 16:08:39 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.51 2007-08-29 18:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -406,9 +406,10 @@ struct ipmiconsole_ctx_signal {
   pthread_mutex_t status_mutex;
   unsigned int status;
 
-  /* user_has_destroyed - flags and mutex used when the user has destroyed
-   * the context and it is now the responsibility of the
-   * engine/garbage-collector to cleanup.
+  /* user_has_destroyed - flags and mutex used when the user has
+   * destroyed the context and it is now the responsibility of the
+   * engine/garbage-collector to cleanup.  Need to mutex to avoid
+   * destroy races.
    */
   pthread_mutex_t destroyed_mutex;
   unsigned int user_has_destroyed;
@@ -423,7 +424,21 @@ struct ipmiconsole_ctx_non_blocking {
 
 /* Info, pipe, and mutex for engine submission blocking */
 struct ipmiconsole_ctx_blocking {
-  pthread_mutex_t blocking_mutex;
+  /* The data below can be touched by both the engine and API, but due
+   * to the current coding, it is impossible for both to ever be
+   * touched simultaneously, so a mutex isn't necessary anymore.
+   *
+   * blocking_submit_requested is initialized in API land, and then
+   * later read in engine land after the context is submitted.
+   *
+   * sol_session_established is initialied in API land, afterwards it
+   * is only touched in the engine after a context is submitted.
+   *
+   * after initialization, the API and Engine only touch their
+   * ends of the pipe.
+   *
+   * Naturally, on cleanup, both sides are done touching anything.
+   */
   int blocking_submit_requested;
   int blocking_notification[2];
   int sol_session_established;
@@ -444,6 +459,7 @@ struct ipmiconsole_ctx_fds {
    * the user to set SIGPIPE to SIG_IGN.  Moving it to all be managed in 
    * the API level is best.  We just have to check for POLLNVAL in the 
    * engine poll().
+   *
    */
   int user_fd;
   int asynccomm[2];

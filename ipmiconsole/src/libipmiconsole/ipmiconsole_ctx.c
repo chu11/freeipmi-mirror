@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.8 2007-08-29 16:08:39 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.9 2007-08-29 18:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -120,11 +120,12 @@ ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
 
 /* Wrapper for list callback */
 void 
-ipmiconsole_ctx_debug_signal_block_main_cleanup(ipmiconsole_ctx_t c)
+ipmiconsole_ctx_list_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
+  ipmiconsole_ctx_config_cleanup(c);
   ipmiconsole_ctx_debug_cleanup(c);
   ipmiconsole_ctx_signal_cleanup(c);
   ipmiconsole_ctx_blocking_cleanup(c);
@@ -258,6 +259,15 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   return 0;
 }
 
+void
+ipmiconsole_ctx_config_cleanup(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+  
+  /* nothing now, reserve for later */
+}
+
 int
 ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c)
 {
@@ -356,16 +366,9 @@ ipmiconsole_ctx_non_blocking_setup(ipmiconsole_ctx_t c,
 int
 ipmiconsole_ctx_blocking_setup(ipmiconsole_ctx_t c)
 {
-  int perr;
-
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  if ((perr = pthread_mutex_init(&c->blocking.blocking_mutex, NULL)) != 0)
-    {
-      errno = perr;
-      return -1;
-    }
   c->blocking.blocking_submit_requested = 0;
   c->blocking.blocking_notification[0] = -1;
   c->blocking.blocking_notification[1] = -1;
@@ -380,7 +383,7 @@ ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  pthread_mutex_destroy(&(c->blocking.blocking_mutex));
+  /* nothing to do anymore, but leave the function here anyways */
 }
 
 static void
@@ -638,9 +641,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
-  if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-
+  /* no mutex required, see comments in ipmiconsole_defs.h */
   if (c->blocking.blocking_submit_requested
       && !c->blocking.sol_session_established)
     {
@@ -655,14 +656,8 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
         val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR;
 
       if (write(c->blocking.blocking_notification[1], &val, 1) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
-        }
+        IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
     }
-
-  if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
-    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
   /* only call the callback if it's an initial SOL error and blocking
    * was not requested 
@@ -1027,12 +1022,51 @@ ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c)
   c->fds.asynccomm[1] = -1;
 }
 
-void 
-ipmiconsole_ctx_set_errnum(ipmiconsole_ctx_t c, int errnum)
+int
+ipmiconsole_ctx_get_errnum(ipmiconsole_ctx_t c)
 {
+  int perr;
+  int errnum;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
+  /* What do we do if a mutex lock/unlock fails here?  Ignore for
+   * now. 
+   */
+
+  if ((perr = pthread_mutex_lock(&(c->errnum_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+
+  errnum = c->errnum;
   
+  if ((perr = pthread_mutex_unlock(&(c->errnum_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+
+  return errnum;
+}
+
+void 
+ipmiconsole_ctx_set_errnum(ipmiconsole_ctx_t c, int errnum)
+{
+  int perr;
+
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  /* What do we do if a mutex lock/unlock fails here?  Ignore for
+   * now. 
+   */
+
+  if ((perr = pthread_mutex_lock(&(c->errnum_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+
+  if (c->errnum_retrieved)
+    {
+      c->errnum = errnum;
+      c->errnum_retrieved = 0;
+    }
   
+  if ((perr = pthread_mutex_unlock(&(c->errnum_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.59 2007-08-29 16:08:39 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.60 2007-08-29 18:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -256,7 +256,7 @@ ipmiconsole_engine_setup(unsigned int thread_count)
       goto cleanup;
     }
 
-  if (!(console_engine_ctxs_to_destroy = list_create((ListDelF)ipmiconsole_ctx_debug_signal_block_main_cleanup)))
+  if (!(console_engine_ctxs_to_destroy = list_create((ListDelF)ipmiconsole_ctx_list_cleanup)))
     {
       IPMICONSOLE_DEBUG(("list_create: %s", strerror(errno)));
       goto cleanup;
