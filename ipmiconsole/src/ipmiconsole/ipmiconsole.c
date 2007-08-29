@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.34 2007-08-28 21:06:24 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.35 2007-08-29 00:48:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -194,7 +194,9 @@ _stdin(ipmiconsole_ctx_t c,
 	      printf("[generate break]\r\n");
 	      if (ipmiconsole_ctx_generate_break(c) < 0)
 		{
-		  fprintf(stderr, "ipmiconsole_ctx_generate_break: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+		  fprintf(stderr, 
+                          "ipmiconsole_ctx_generate_break: %s\r\n",
+                          ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
 		  return -1;
 		}
 	    }
@@ -232,9 +234,11 @@ _stdin(ipmiconsole_ctx_t c,
 	  else
             {
               if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_STOLEN)
-                printf("\r\n[%s]\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                printf("\r\n[%s]\r\n", 
+                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
               else
-                printf("\r\n[error received]: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                printf("\r\n[error received]: %s\r\n", 
+                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
             }
 	  return -1;
 	}
@@ -349,8 +353,6 @@ main(int argc, char **argv)
   protocol_config.workaround_flags = conf->workaround_flags;
 
   engine_config.engine_flags = 0;
-  engine_config.callback = NULL;
-  engine_config.callback_arg = 0;
   engine_config.debug_flags = debug_flags;
 
   if (!(c = ipmiconsole_ctx_create(conf->hostname,
@@ -464,9 +466,11 @@ main(int argc, char **argv)
 	    {
 	      /* b/c we're exitting */
               if (ipmiconsole_ctx_errnum(c) == IPMICONSOLE_ERR_SOL_STOLEN)
-                printf("\r\n[%s]\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                printf("\r\n[%s]\r\n", 
+                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
               else
-                printf("\r\n[error received]: %s\r\n", ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
+                printf("\r\n[error received]: %s\r\n", 
+                       ipmiconsole_ctx_strerror(ipmiconsole_ctx_errnum(c)));
 	      goto cleanup;
 	    }
 

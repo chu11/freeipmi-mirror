@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.6 2007-08-28 23:26:20 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.7 2007-08-29 00:48:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -814,7 +814,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
 }
 
 int
-ipmiconsole_ctx_session_init(ipmiconsole_ctx_t c)
+ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
 {
 #ifdef HAVE_FUNC_GETHOSTBYNAME_R_6
   struct hostent hent;
