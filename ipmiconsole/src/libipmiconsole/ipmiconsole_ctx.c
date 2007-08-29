@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.11 2007-08-29 21:28:00 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.12 2007-08-29 23:02:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,8 +96,7 @@ ipmiconsole_ctx_setup(ipmiconsole_ctx_t c)
       return -1;
     }
 
-  c->errnum = IPMICONSOLE_ERR_SUCCESS;
-  c->errnum_retrieved = 0;
+  ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SUCCESS);
 
   return 0;
 }
@@ -108,8 +107,9 @@ ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
+  /* don't call ctx_set_errnum after the mutex_destroy */
+  ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_CTX_INVALID);
   pthread_mutex_destroy(&(c->errnum_mutex));
-  c->errnum = IPMICONSOLE_ERR_CTX_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
   if (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
@@ -290,7 +290,7 @@ ipmiconsole_ctx_debug_setup(ipmiconsole_ctx_t c)
         {
           c->config.debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
           IPMICONSOLE_CTX_DEBUG(c, ("open: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           c->config.debug_flags = 0;
           return -1;
         }
@@ -426,9 +426,9 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("socketpair: %s", strerror(errno)));
       if (errno == EMFILE)
-        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES);
       else
-        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   c->connection.user_fd = sv[0];
@@ -470,9 +470,9 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("socket: %s", strerror(errno)));
       if (errno == EMFILE)
-        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES);
       else
-        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -490,7 +490,7 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   if (bind(c->connection.ipmi_fd, (struct sockaddr *)&srcaddr, sizeof(struct sockaddr_in)) < 0)
     {
       IPMICONSOLE_DEBUG(("bind: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -513,9 +513,9 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG(("pipe: %s", strerror(errno)));
       if (errno == EMFILE)
-        c->errnum = IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_TOO_MANY_OPEN_FILES);
       else
-        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -865,7 +865,7 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
   if (gettimeofday(&(c->session.last_ipmi_packet_received), NULL) < 0)
     {
       IPMICONSOLE_DEBUG(("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }  
 
@@ -886,13 +886,13 @@ ipmiconsole_ctx_session_setup(ipmiconsole_ctx_t c)
           return -1;
         }
       IPMICONSOLE_DEBUG(("gethostbyname_r: %s", hstrerror(h_errnop)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
   if (!hptr)
     {
-      c->errnum = IPMICONSOLE_ERR_HOSTNAME_INVALID;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
       return -1;
     }
 #else /* !HAVE_FUNC_GETHOSTBYNAME_R */
@@ -1077,7 +1077,13 @@ ipmiconsole_ctx_set_errnum(ipmiconsole_ctx_t c, int errnum)
   if (c->errnum_retrieved)
     {
       c->errnum = errnum;
-      c->errnum_retrieved = 0;
+      /* If the errnum is ERR_SUCCESS, it is not required for the user
+       * to retrieve it 
+       */
+      if (errnum == IPMICONSOLE_ERR_SUCCESS)
+        c->errnum_retrieved = 1;
+      else
+        c->errnum_retrieved = 0;
     }
   
   if ((perr = pthread_mutex_unlock(&(c->errnum_mutex))) != 0)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.60 2007-08-29 18:45:49 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.61 2007-08-29 23:02:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -457,7 +457,7 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
                                &fromlen)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_lan_recvfrom: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -494,21 +494,21 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
   if ((n = cbuf_write(c->connection.ipmi_from_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (n != len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; len=%d", n, len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -532,7 +532,7 @@ _ipmi_sendto(ipmiconsole_ctx_t c)
   if ((n = cbuf_read(c->connection.ipmi_to_bmc, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -544,14 +544,14 @@ _ipmi_sendto(ipmiconsole_ctx_t c)
                              sizeof(struct sockaddr_in))) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_lan_sendto: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
   if (len != n)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_lan_sendto: invalid bytes written; n=%d; len=%d", n, len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -582,14 +582,14 @@ _asynccomm(ipmiconsole_ctx_t c)
   if ((len = read(c->connection.asynccomm[0], (void *)&val, 1)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("read: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
   if (!len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("asynccomm closed"));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -605,7 +605,7 @@ _asynccomm(ipmiconsole_ctx_t c)
 	  if ((c->session.console_remote_console_to_bmc_bytes_before_break = cbuf_used(c->connection.console_remote_console_to_bmc)) < 0)
 	    {
 	      IPMICONSOLE_CTX_DEBUG(c, ("cbuf_used: %s", strerror(errno)));
-	      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+	      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 	      return -1;
 	    }
 	}
@@ -637,7 +637,7 @@ _console_read(ipmiconsole_ctx_t c)
                   IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("read: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -646,28 +646,28 @@ _console_read(ipmiconsole_ctx_t c)
       /* Returning -1 closes the session, but really this error is ok
        * since the user is allowed to close the session
        */
-      c->errnum = IPMICONSOLE_ERR_SUCCESS;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SUCCESS);
       return -1;
     }
 
   if ((n = cbuf_write(c->connection.console_remote_console_to_bmc, buffer, len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (n != len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; len=%d", n, len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   
@@ -699,7 +699,7 @@ _console_write(ipmiconsole_ctx_t c)
   if ((n = cbuf_read(c->connection.console_bmc_to_remote_console, buffer, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -714,17 +714,17 @@ _console_write(ipmiconsole_ctx_t c)
           /* This error is ok since the user is allowed to close the
            * session
            */
-          c->errnum = IPMICONSOLE_ERR_SUCCESS;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SUCCESS);
         }
       else
-        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
   if (len != n)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("write: invalid bytes written; n=%d; len=%d", n, len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -1143,7 +1143,7 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
       if ((perr = pthread_mutex_lock(&console_engine_ctxs_mutex[i])))
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           goto cleanup_thread_count;
         }
       
@@ -1156,7 +1156,7 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
       if ((perr = pthread_mutex_unlock(&console_engine_ctxs_mutex[i])))
         {
           IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           goto cleanup_thread_count;
         }
     }
@@ -1164,7 +1164,7 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_lock(&console_engine_ctxs_mutex[index])))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup_thread_count;
     }
 
@@ -1172,14 +1172,14 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
     {
       /* Note: Don't do a CTX debug, this is more of a global debug */
       IPMICONSOLE_DEBUG(("list_append: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup_ctxs;
     }
 
   if (ptr != (void *)c)
     {
       IPMICONSOLE_DEBUG(("list_append: invalid pointer: ptr=%p; c=%p", ptr, c));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup_ctxs;
     }
 
@@ -1201,7 +1201,7 @@ ipmiconsole_engine_submit_ctx(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&console_engine_ctxs_mutex[index])))
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup_thread_count;
     }
   

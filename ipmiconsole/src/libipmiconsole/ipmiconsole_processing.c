@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.54 2007-08-29 21:25:36 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.55 2007-08-29 23:02:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -134,21 +134,21 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (n != pkt_len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; pkt_len=%d", n, pkt_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   
@@ -160,7 +160,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   if (gettimeofday(t, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -234,7 +234,7 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
                          max_character_send_size)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("cbuf_read: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           goto cleanup;
         }
       c->session.sol_input_character_data_len = n;
@@ -260,28 +260,28 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
   if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
   if (n != pkt_len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; pkt_len=%d", n, pkt_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
   
   if (gettimeofday(&(c->session.last_sol_input_packet_sent), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
     
@@ -343,21 +343,21 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
   if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (n != pkt_len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; pkt_len=%d", n, pkt_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   
@@ -424,28 +424,28 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
   if ((n = cbuf_write(c->connection.ipmi_to_bmc, pkt, pkt_len, &dropped, secure_malloc_flag)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (n != pkt_len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; pkt_len=%d", n, pkt_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
   if (dropped)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
   
   if (gettimeofday(&(c->session.last_sol_input_packet_sent), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -470,7 +470,7 @@ _receive_packet_data_reset(ipmiconsole_ctx_t c)
   if (gettimeofday(&(c->session.last_ipmi_packet_received), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -490,7 +490,7 @@ _receive_ping_packet_data_reset(ipmiconsole_ctx_t c)
   if (gettimeofday(&(c->session.last_ipmi_packet_received), NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -515,7 +515,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   if ((pkt_len = cbuf_peek(c->connection.ipmi_from_bmc, pkt, IPMICONSOLE_PACKET_BUFLEN)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_peek: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -525,14 +525,14 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   if ((dropped = cbuf_drop(c->connection.ipmi_from_bmc, pkt_len)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_drop: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
   if (dropped != pkt_len)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("cbuf_drop: invalid bytes dropped: dropped=%d pkt_len=%d", dropped, pkt_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -680,7 +680,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           if (!ret)
             {
               _receive_packet_data_reset(c);
-              c->errnum = IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
               goto cleanup;
             }
         }
@@ -692,7 +692,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           if (!ret)
             {
               _receive_packet_data_reset(c);
-              c->errnum = IPMICONSOLE_ERR_PASSWORD_INVALID;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_PASSWORD_INVALID);
               goto cleanup;
 
             }
@@ -705,7 +705,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
           if (!ret)
             {
               _receive_packet_data_reset(c);
-              c->errnum = IPMICONSOLE_ERR_K_G_INVALID;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_K_G_INVALID);
               goto cleanup;
             }
         }
@@ -1196,7 +1196,7 @@ _receive_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   else
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid packet type: %d", p));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
@@ -1326,7 +1326,7 @@ _session_timeout(ipmiconsole_ctx_t c)
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -1362,7 +1362,7 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -1373,7 +1373,7 @@ _ipmi_retransmission_timeout(ipmiconsole_ctx_t c)
   if (c->session.retransmission_count > c->config.maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive retransmissions"));
-      c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT);
       return -1;
     }
 #if 0
@@ -1495,7 +1495,7 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
   
@@ -1506,7 +1506,7 @@ _sol_retransmission_timeout(ipmiconsole_ctx_t c)
   if (c->session.retransmission_count > c->config.maximum_retransmission_count)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to excessive sol retransmissions"));
-      c->errnum = IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT);
       return -1;
     }
 #if 0
@@ -1550,7 +1550,7 @@ _keepalive_is_necessary(ipmiconsole_ctx_t c)
   if (gettimeofday(&current, NULL) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
 
@@ -1591,7 +1591,7 @@ _keepalive_timeout(ipmiconsole_ctx_t c)
       if (gettimeofday(&current, NULL) < 0)
 	{
 	  IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-	  c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+	  ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
 	  return -1;
 	}
 
@@ -1641,7 +1641,7 @@ _check_for_ipmi_2_0_support(ipmiconsole_ctx_t c)
   if (!ipmi_v20_extended_capabilities_available
       || !channel_supports_ipmi_v20_connections)
     {
-      c->errnum = IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE);
       return 0;
     }
   
@@ -1715,14 +1715,14 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
           || (strlen((char *)c->config.username)
               && !authentication_status_non_null_username))
         {
-          c->errnum = IPMICONSOLE_ERR_USERNAME_INVALID;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_USERNAME_INVALID);
           return -1;
         }
 
       if ((!c->config.k_g_len && authentication_status_k_g)
           || (c->config.k_g_len && !authentication_status_k_g))
         {
-          c->errnum = IPMICONSOLE_ERR_K_G_INVALID;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_K_G_INVALID);
           return -1;
         }
     }
@@ -1810,7 +1810,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
   if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid managed_system_random_number_len = %d", managed_system_random_number_len));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -1837,7 +1837,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
                                            &(c->session.confidentiality_key_len)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("ipmi_calculate_rmcpplus_session_keys: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return -1;
     }
 
@@ -1911,7 +1911,7 @@ _check_sol_activated(ipmiconsole_ctx_t c)
   if (c->session.sol_instance_capacity > IPMI_INSTANCES_ACTIVATED_LENGTH)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid instance capacity: %d", c->session.sol_instance_capacity));
-      c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_BMC_IMPLEMENTATION);
       return -1;
     }
   
@@ -1938,7 +1938,7 @@ _check_sol_activated(ipmiconsole_ctx_t c)
   if (c->config.security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE
       && c->session.sol_instances_activated_count)
     {
-      c->errnum = IPMICONSOLE_ERR_SOL_INUSE;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_INUSE);
       return -1;
     }
 
@@ -1972,7 +1972,7 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
     {
       if (c->config.security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE)
 	{
-	  c->errnum = IPMICONSOLE_ERR_SOL_INUSE;
+	  ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_INUSE);
 	  return -1;
 	}
       
@@ -1982,21 +1982,21 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
   if (comp_code == IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("SOL unavailable"));
-      c->errnum = IPMICONSOLE_ERR_SOL_UNAVAILABLE;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_UNAVAILABLE);
       return -1;
     }
 
   if (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("SOL requires no encryption"));
-      c->errnum = IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION);
       return -1;
     }
 
   if (comp_code == IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("SOL requires encryption"));
-      c->errnum = IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION);
       return -1;
     }
 
@@ -2119,7 +2119,7 @@ _check_try_new_port(ipmiconsole_ctx_t c)
       if (c->session.console_port != console_port)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("multiple new console ports attempted"));
-          c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_BMC_IMPLEMENTATION);
           return -1;
         }
       return 1;
@@ -2219,7 +2219,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
   if (sol_deactivating)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("SOL Deactivating"));
-      c->errnum = IPMICONSOLE_ERR_SOL_STOLEN;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_STOLEN);
       goto cleanup;
     }
 
@@ -2252,7 +2252,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
           if ((n = cbuf_drop(c->connection.console_remote_console_to_bmc, accepted_character_count)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG(c, ("cbuf_drop: %s", strerror(errno)));
-              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
           
@@ -2349,21 +2349,21 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
 	  if (n < 0)
 	    {
               IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
 
           if (n != character_data_len_to_write)
             {
               IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d; character_data_len_to_write=%d", n, character_data_len_to_write));
-              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
           
           if (dropped)
             {
               IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-              c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
        }
@@ -2443,7 +2443,7 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
       if (gettimeofday(&current, NULL) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           return -1;
         }
       
@@ -2505,7 +2505,7 @@ _calculate_timeout(ipmiconsole_ctx_t c, unsigned int *timeout)
       if (gettimeofday(&current, NULL) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("gettimeofday: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           return -1;
         }
       
@@ -2753,7 +2753,7 @@ _process_protocol_state_get_channel_payload_support_sent(ipmiconsole_ctx_t c)
   if (!ret)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("SOL unavailable"));
-      c->errnum = IPMICONSOLE_ERR_SOL_UNAVAILABLE;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_UNAVAILABLE);
       c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
         return -1;
@@ -2921,7 +2921,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 
   if (!ret)
     {
-      c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_BMC_IMPLEMENTATION);
       c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
@@ -2962,7 +2962,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_lock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 
       /* Attempt to close the session cleanly */
       c->session.close_session_flag++;
@@ -2977,7 +2977,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 
       /* Attempt to close the session cleanly */
       c->session.close_session_flag++;
@@ -2990,7 +2990,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 
       /* Attempt to close the session cleanly */
       c->session.close_session_flag++;
@@ -3016,7 +3016,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
             IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
           IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           /* Attempt to close the session cleanly */
           c->session.close_session_flag++;
           if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
@@ -3029,7 +3029,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
     {
       IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 
       /* Attempt to close the session cleanly */
       c->session.close_session_flag++;
@@ -3058,7 +3058,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       if (n < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: %s", strerror(errno)));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 
           /* Attempt to close the session cleanly */
           c->session.close_session_flag++;
@@ -3071,7 +3071,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       if (n != 1)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: invalid bytes written; n=%d", n));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 
           /* Attempt to close the session cleanly */
           c->session.close_session_flag++;
@@ -3084,7 +3084,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       if (dropped)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("cbuf_write: dropped data: dropped=%d", dropped));
-          c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
 
           /* Attempt to close the session cleanly */
           c->session.close_session_flag++;
@@ -3211,7 +3211,7 @@ _process_protocol_state_sol_session_receive(ipmiconsole_ctx_t c, ipmiconsole_pac
   else
     {
       IPMICONSOLE_CTX_DEBUG(c, ("invalid packet received: p = %d", p));
-      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       c->session.close_session_flag++;
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         return -1;
@@ -3289,7 +3289,7 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
                *
                */
               IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive payload deactivations"));
-              c->errnum = IPMICONSOLE_ERR_BMC_IMPLEMENTATION;
+              ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_BMC_IMPLEMENTATION);
               c->session.close_session_flag++;
               if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
                 return -1;
@@ -3325,7 +3325,7 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
 
   /* Shouldn't be possible to reach this point */
   IPMICONSOLE_CTX_DEBUG(c, ("deactivate payload logic bug"));
-  c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+  ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
   return -1;
 }
 
@@ -3371,7 +3371,7 @@ _process_protocol_state_close_session_sent(ipmiconsole_ctx_t c)
 
   /* Shouldn't be possible to reach this point */
   IPMICONSOLE_CTX_DEBUG(c, ("close session logic bug"));
-  c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+  ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
   return -1;
 }
 
@@ -3417,7 +3417,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
   if (ret)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("closing session due to session timeout"));
-      c->errnum = IPMICONSOLE_ERR_SESSION_TIMEOUT;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SESSION_TIMEOUT);
       goto close_session;
     }
 
@@ -3488,7 +3488,7 @@ _process_ctx(ipmiconsole_ctx_t c, unsigned int *timeout)
 	{
 	  /* Attempt to close the session cleanly */
 	  IPMICONSOLE_CTX_DEBUG(c, ("closing with excessive errors"));
-	  c->errnum = IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED;
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED);
 	  c->session.close_session_flag++;
 	  if ((ret = _close_session(c)) < 0)
 	    goto close_session;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_util.c,v 1.1 2007-08-23 15:46:50 chu11 Exp $
+ *  $Id: ipmiconsole_util.c,v 1.2 2007-08-29 23:02:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,6 +46,8 @@
 #include "ipmiconsole_defs.h"
 
 #include "list.h"
+#include "ipmiconsole_util.h"
+#include "ipmiconsole_ctx.h"
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"
 
@@ -60,7 +62,7 @@ ipmiconsole_set_closeonexec(ipmiconsole_ctx_t c, int fd)
     {
       IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
       if (c && c->magic == IPMICONSOLE_CTX_MAGIC)
-        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
   closeonexec |= FD_CLOEXEC;
@@ -68,7 +70,7 @@ ipmiconsole_set_closeonexec(ipmiconsole_ctx_t c, int fd)
     {
       IPMICONSOLE_DEBUG(("fcntl: %s", strerror(errno)));
       if (c && c->magic == IPMICONSOLE_CTX_MAGIC)
-        c->errnum = IPMICONSOLE_ERR_SYSTEM_ERROR;
+        ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return -1;
     }
   
