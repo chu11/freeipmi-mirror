@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.9 2007-08-29 18:45:49 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.10 2007-08-29 21:25:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -366,9 +366,16 @@ ipmiconsole_ctx_non_blocking_setup(ipmiconsole_ctx_t c,
 int
 ipmiconsole_ctx_blocking_setup(ipmiconsole_ctx_t c)
 {
+  int perr;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
+  if ((perr = pthread_mutex_init(&c->blocking.blocking_mutex, NULL)) != 0)
+    {
+      errno = perr;
+      return -1;
+    }
   c->blocking.blocking_submit_requested = 0;
   c->blocking.blocking_notification[0] = -1;
   c->blocking.blocking_notification[1] = -1;
@@ -383,7 +390,7 @@ ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  /* nothing to do anymore, but leave the function here anyways */
+  pthread_mutex_destroy(&(c->blocking.blocking_mutex));
 }
 
 static void
@@ -641,7 +648,9 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   if ((perr = pthread_mutex_unlock(&(c->signal.status_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
-  /* no mutex required, see comments in ipmiconsole_defs.h */
+  if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+
   if (c->blocking.blocking_submit_requested
       && !c->blocking.sol_session_established)
     {
@@ -658,6 +667,9 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
       if (write(c->blocking.blocking_notification[1], &val, 1) < 0)
         IPMICONSOLE_CTX_DEBUG(c, ("write: %s", strerror(errno)));
     }
+
+  if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
+    IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
   /* only call the callback if it's an initial SOL error and blocking
    * was not requested 

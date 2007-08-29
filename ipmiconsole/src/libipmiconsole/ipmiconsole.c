@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.68 2007-08-29 18:45:48 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.69 2007-08-29 21:25:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -202,8 +202,8 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
       goto cleanup;
     }
   
-  /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
-   * already be set 
+  /* Check for NOT_SUBMITTED, conceivably SOL_ERROR or SOL_ESTABLISHED
+   * could already be set
    */
   if (c->signal.status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
     c->signal.status = IPMICONSOLE_CTX_STATUS_SUBMITTED;
@@ -228,9 +228,18 @@ ipmiconsole_engine_submit(ipmiconsole_ctx_t c,
 static int
 _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
 {
+  int perr;
+
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->api_magic == IPMICONSOLE_CTX_API_MAGIC);
+
+  if ((perr = pthread_mutex_lock(&(c->blocking.blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      return -1;
+    }
 
   if (c->blocking.blocking_submit_requested)
     {
@@ -240,6 +249,13 @@ _ipmiconsole_blocking_notification_cleanup(ipmiconsole_ctx_t c)
       c->blocking.blocking_notification[1] = -1;
       c->blocking.blocking_submit_requested = 0;
       c->blocking.sol_session_established = 0;
+    }
+  
+  if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
+    {
+      IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
+      c->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+      return -1;
     }
 
   return 0;
@@ -298,10 +314,14 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
   FD_ZERO(&rds);
   FD_SET(c->blocking.blocking_notification[0], &rds);
 
+  /* No mutex required here, just reading off the pipe, the pipe is
+   * all controled in API land
+   */
+
   if ((n = select(c->blocking.blocking_notification[0] + 1, &rds, NULL, NULL, NULL)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG(c, ("select: %s", strerror(errno)));
-     ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -320,7 +340,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
       if ((len = read(c->blocking.blocking_notification[0], (void *)&val, 1)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG(c, ("read: %s", strerror(errno)));
-         ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
+          ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           goto cleanup;
         }
       
@@ -405,8 +425,8 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
       goto cleanup_ctx_fds_only;
     }
   
-  /* Check for NONE status, conceivably ERROR or SOL_ESTABLISHED could
-   * already be set 
+  /* Check for NOT_SUBMITTED, conceivably SOL_ERROR or SOL_ESTABLISHED
+   * could already be set
    */
   if (c->signal.status == IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED)
     c->signal.status = IPMICONSOLE_CTX_STATUS_SUBMITTED;

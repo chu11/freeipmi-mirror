@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.51 2007-08-29 18:45:49 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.52 2007-08-29 21:25:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -403,6 +403,13 @@ struct ipmiconsole_ctx_debug {
 
 /* Mutexes + flags for signaling between the API and engine */
 struct ipmiconsole_ctx_signal {
+  /* Conceptually there is not a race with the status.  The API initializes
+   * the status, and the engine is the only one that modifies it.
+   *
+   * However, there is a tiny race in
+   * ipmiconsole_engine_submit{_block}().  Conceptually, the status
+   * could be set before we even initialize the status to SUBMITTED.
+   */
   pthread_mutex_t status_mutex;
   unsigned int status;
 
@@ -424,21 +431,26 @@ struct ipmiconsole_ctx_non_blocking {
 
 /* Info, pipe, and mutex for engine submission blocking */
 struct ipmiconsole_ctx_blocking {
-  /* The data below can be touched by both the engine and API, but due
-   * to the current coding, it is impossible for both to ever be
-   * touched simultaneously, so a mutex isn't necessary anymore.
+  /* Conceptually, it is impossible for both to ever be touched
+   * simultaneously so a mutex may not seem necessary.
    *
-   * blocking_submit_requested is initialized in API land, and then
-   * later read in engine land after the context is submitted.
+   * blocking_submit_requested is initialized/set in API land, and
+   * then later read in engine land after the context is submitted.
+   * It is never read again in API land and never written to in engine
+   * land.
    *
    * sol_session_established is initialied in API land, afterwards it
-   * is only touched in the engine after a context is submitted.
+   * is only written/read in the engine after a context is submitted.
    *
    * after initialization, the API and Engine only touch their
    * ends of the pipe.
    *
-   * Naturally, on cleanup, both sides are done touching anything.
+   * However, there is a tiny race that is possible.  After the
+   * session is submitted, the blocking code in _ipmiconsole_block()
+   * could fail, such as in the call to select().  We do not want the
+   * engine and API to race reading/writing under this circumstance.
    */
+  pthread_mutex_t blocking_mutex;
   int blocking_submit_requested;
   int blocking_notification[2];
   int sol_session_established;
