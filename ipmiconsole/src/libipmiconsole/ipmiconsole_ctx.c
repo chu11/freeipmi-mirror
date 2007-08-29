@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.7 2007-08-29 00:48:00 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.8 2007-08-29 16:08:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,6 +80,8 @@ extern pthread_mutex_t console_engine_ctxs_to_destroy_mutex;
 int
 ipmiconsole_ctx_setup(ipmiconsole_ctx_t c)
 {
+  int perr;
+
   assert(c);
 
   /* magic may not be set yet, no assert */
@@ -87,7 +89,15 @@ ipmiconsole_ctx_setup(ipmiconsole_ctx_t c)
   memset(c, '\0', sizeof(struct ipmiconsole_ctx));
   c->magic = IPMICONSOLE_CTX_MAGIC;
   c->api_magic = IPMICONSOLE_CTX_API_MAGIC;
+
+  if ((perr = pthread_mutex_init(&(c->errnum_mutex), NULL)) != 0)
+    {
+      errno = perr;
+      return -1;
+    }
+
   c->errnum = IPMICONSOLE_ERR_SUCCESS;
+  c->errnum_retrieved = 0;
 
   return 0;
 }
@@ -98,15 +108,7 @@ ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  /* Notes: don't call
-   * _ipmiconsole_ctx_api_managed_session_data_cleanup(), that is only
-   * managed from API land.
-   */
-
-  ipmiconsole_ctx_debug_cleanup(c);
-  ipmiconsole_ctx_signal_cleanup(c);
-  ipmiconsole_ctx_blocking_cleanup(c);
-
+  pthread_mutex_destroy(&(c->errnum_mutex));
   c->errnum = IPMICONSOLE_ERR_CTX_INVALID;
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
@@ -114,6 +116,19 @@ ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
     free(c);
+}
+
+/* Wrapper for list callback */
+void 
+ipmiconsole_ctx_debug_signal_block_main_cleanup(ipmiconsole_ctx_t c)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  ipmiconsole_ctx_debug_cleanup(c);
+  ipmiconsole_ctx_signal_cleanup(c);
+  ipmiconsole_ctx_blocking_cleanup(c);
+  ipmiconsole_ctx_cleanup(c);
 }
 
 int 
@@ -295,7 +310,6 @@ ipmiconsole_ctx_signal_setup(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   if ((perr = pthread_mutex_init(&c->signal.status_mutex, NULL)) != 0)
     {
@@ -320,7 +334,6 @@ ipmiconsole_ctx_signal_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   pthread_mutex_destroy(&(c->signal.status_mutex));
   pthread_mutex_destroy(&(c->signal.destroyed_mutex));
@@ -333,7 +346,6 @@ ipmiconsole_ctx_non_blocking_setup(ipmiconsole_ctx_t c,
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   c->non_blocking.callback = callback;
   c->non_blocking.callback_arg = callback_arg;
@@ -348,7 +360,6 @@ ipmiconsole_ctx_blocking_setup(ipmiconsole_ctx_t c)
 
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   if ((perr = pthread_mutex_init(&c->blocking.blocking_mutex, NULL)) != 0)
     {
@@ -368,7 +379,6 @@ ipmiconsole_ctx_blocking_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   pthread_mutex_destroy(&(c->blocking.blocking_mutex));
 }
@@ -784,7 +794,12 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
   if (c->signal.user_has_destroyed)
-    ipmiconsole_ctx_cleanup(c);
+    {
+      ipmiconsole_ctx_debug_cleanup(c);
+      ipmiconsole_ctx_signal_cleanup(c);
+      ipmiconsole_ctx_blocking_cleanup(c);
+      ipmiconsole_ctx_cleanup(c);
+    }
   else
     {
       if (!c->signal.moved_to_destroyed)
@@ -987,7 +1002,6 @@ ipmiconsole_ctx_fds_setup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   /* init to -1 b/c -1 isn't a legit fd */
   c->fds.user_fd = -1;
@@ -1000,7 +1014,6 @@ ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c)
 {
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
-  assert(c->api_magic = IPMICONSOLE_CTX_API_MAGIC);
 
   /* Note: Close asynccomm[0] first, so an EBADFD error occurs in the
    * engine.  Closing asynccomm[1] first could result in a EPIPE
@@ -1012,4 +1025,14 @@ ipmiconsole_ctx_fds_cleanup(ipmiconsole_ctx_t c)
   c->fds.user_fd = -1;
   c->fds.asynccomm[0] = -1;
   c->fds.asynccomm[1] = -1;
+}
+
+void 
+ipmiconsole_ctx_set_errnum(ipmiconsole_ctx_t c, int errnum)
+{
+  assert(c);
+  assert(c->magic == IPMICONSOLE_CTX_MAGIC);
+
+  
+  
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.49 2007-08-28 23:07:55 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.50 2007-08-29 16:08:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -456,7 +456,9 @@ struct ipmiconsole_ctx {
    */
   uint32_t magic;
   uint32_t api_magic;
+  pthread_mutex_t errnum_mutex;
   int errnum;
+  int errnum_retrieved;
 
   struct ipmiconsole_ctx_config config;
   

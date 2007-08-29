@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.66 2007-08-28 23:26:19 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.67 2007-08-29 16:08:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -704,5 +704,8 @@ ipmiconsole_ctx_destroy(ipmiconsole_ctx_t c)
 
   /* else session never submitted, so we have to cleanup */
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
+  ipmiconsole_ctx_debug_cleanup(c);
+  ipmiconsole_ctx_signal_cleanup(c);
+  ipmiconsole_ctx_blocking_cleanup(c);
   ipmiconsole_ctx_cleanup(c);
 }
