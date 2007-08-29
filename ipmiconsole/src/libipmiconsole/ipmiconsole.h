@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.61 2007-08-28 23:07:55 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.62 2007-08-29 23:30:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -455,6 +455,8 @@ typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
  * called before ipmi console contexts can be submitted into the
  * engine.
  *
+ * Parameters:
+ *
  * thread_count
  * 
  *   Number of threads the engine will support.
@@ -489,18 +491,30 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  *
  * B) Poll on the context file descriptor, retrieved via
  * ipmiconsole_ctx_fd().  A SOL establishment error will result in an
- * EOF being returned on the file descriptor (Assuming the CLOSE_FD
- * Engine flag has not been set).  A proper SOL establishment can be
- * determined via a readable character on the file descriptor.  The
- * use of the OUTPUT_ON_SOL_ESTABLISHED Engine flag above can aid in
- * this.  On an error, ipmiconsole_ctx_errnum() can be used to
- * determine the specific IPMI related error that occurred.
+ * EOF being returned on the file descriptor.  A proper SOL
+ * establishment can be determined via a readable character on the
+ * file descriptor.  The use of the OUTPUT_ON_SOL_ESTABLISHED Engine
+ * flag above can aid in this.  the CLOSE_FD Engine flag can be set to
+ * slightly alter this behavior, please see above. On an error,
+ * ipmiconsole_ctx_errnum() can be used to determine the specific IPMI
+ * related error that occurred.
  *
  * C) Specify a callback function.  The callback function specified as
  * a parameter below will be called directly after a SOL session has
  * been established or an error has occurred.  Within those callback
  * functions, ipmiconsole_ctx_status() can be used to determine which
  * has occurred.
+ *
+ * Due to the non-blocking semantics of this function, it is possible
+ * that multiple errors could occur simultaneously and the errnum
+ * retrieved via ipmiconsole_ctx_errnum() may not be the one that
+ * caused the SOL session to fail.  However, this will not occur given
+ * proper usage of the API.  For example, if the user called
+ * ipmiconsole_engine_submit() twice with the same context, an SOL
+ * error in the engine background could race with the setting of the
+ * errnum IPMICONSOLE_ERR_CTX_IS_SUBMITTED in the second call.
+ *
+ * Parameters:
  *
  * callback
  *  
@@ -547,6 +561,8 @@ int ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c);
  * Teardown the ipmiconsole engine.  This function will destroy
  * all threads and contexts managed by the engine.
  *
+ * Parameters:
+ *
  * cleanup_sol_sessions
  *
  *   If set to non zero, SOL sessions will be torn down cleanly.
@@ -564,6 +580,8 @@ void ipmiconsole_engine_teardown(int cleanup_sol_sessions);
  * context cannot be submitted to the ipmiconsole engine more than
  * once.  After it has been submitted to the ipmiconsole, it cannot be
  * reused.
+ *
+ * Parameters:
  *
  * hostname
  *
@@ -594,7 +612,8 @@ ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname,
 /* 
  * ipmiconsole_ctx_errnum
  *
- * Returns the errnum of the most recently caused error
+ * Returns the errnum of the most recently recorded error for the
+ * context that has not yet been read by the user.
  */
 int ipmiconsole_ctx_errnum(ipmiconsole_ctx_t c);
 
