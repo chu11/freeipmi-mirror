@@ -1,3 +1,8 @@
+2007-08-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/: Begin support errnum locking
+	and required retrieval of error code.
+
 2007-08-28  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole_ctx.h,
