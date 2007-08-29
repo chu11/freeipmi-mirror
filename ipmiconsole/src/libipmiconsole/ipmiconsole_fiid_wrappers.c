@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_fiid_wrappers.c,v 1.4 2007-08-29 23:02:28 chu11 Exp $
+ *  $Id: ipmiconsole_fiid_wrappers.c,v 1.5 2007-08-29 23:09:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,7 +96,7 @@ Fiid_obj_create(ipmiconsole_ctx_t c, fiid_template_t tmpl)
   if (!(obj = fiid_obj_create(tmpl)))
     {
       IPMICONSOLE_CTX_DEBUG(c, ("fiid_obj_create: %s", strerror(errno)));
-      c->errnum = IPMICONSOLE_ERR_OUT_OF_MEMORY;
+      ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_OUT_OF_MEMORY);
       return NULL;
     }
 
