@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.55 2007-08-29 23:02:29 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.56 2007-08-30 00:26:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3012,6 +3012,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED;
       if (write(c->blocking.blocking_notification[1], &val, 1) < 0)
         {
+          /* unlock before setting errnum */
           if ((perr = pthread_mutex_unlock(&(c->blocking.blocking_mutex))) != 0)
             IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
 
