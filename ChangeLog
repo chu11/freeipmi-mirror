@@ -13,6 +13,9 @@
 	usage.
 
 	* ipmiconsole/ipmiconsole.8.pre.in: Fix for file name change.
+
+	* ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Tear down SOL
+	sessions cleanly by default.
 	
 2007-08-29  Albert Chu <chu11@llnl.gov>
 
