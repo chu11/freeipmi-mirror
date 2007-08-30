@@ -1,15 +1,15 @@
-
+.LP
 Intel SR870BN4: BMCs would not respond to retransmissions of a Get
 Session Challenge Request if a previous Get Session Challenge response
 was lost.  Resolved by sending retransmitted Get Session Challenge
 requests from a different source port.  Automatically handled.
-
+.LP
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
 packet responses return empty session IDs to the client.  In order to
 work around this issue, the "idzero" workaround must be specified.
 The option will allow empty session IDs to be accepted by the client.
 This problem is apparently fixed in later firmware releases.
-
+.LP
 Dell PowerEdge 2850,SC1425: When Per-Message Authentication is
 disabled, packet responses contain non-null authentication data (when
 it should in fact be null).  In order to work around this issue, the
@@ -17,22 +17,22 @@ it should in fact be null).  In order to work around this issue, the
 unexpected non-null authcodes to be checked as though they were
 expected. This compliance bug is confirmed to be fixed on newer
 firmware.
-
+.LP
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
 In order to work around this issue, the "forcepermsg" workaround must
 be specified.  The option will force Per Message Authentication to be
 used no matter what is advertised by the remote BMC.
-
+.LP
 Supermicro H8QME with SIMSO daughter card: The remote BMC will
 advertise that Per Message Authentication is disabled, but actually
 require it for the protocol. Automatically handled.
-
+.LP
 Asus P5M2/P5MT-R: The motherboard does not properly report username
 capabilities and or K_g status, leading to invalid username or K_g
 errors.  In order to work around this issue, the "authcap" workaround
 must be specified.
-
+.LP
 Intel SE7520AF2 with Intel Server Management Module (Professional
 Edition): There are a number of Intel IPMI 2.0 bugs which can be
 worked around by specifying the "intel20" workaround.  The
@@ -40,15 +40,15 @@ workarounds include padding of usernames, automatic acceptance of a
 RAKP 4 response integrity check when using the integrity algorithm
 MD5-128, and password truncation if the authentication algorithm is
 HMAC-MD5-128.
-
+.LP
 Supermicro H8QME with SIMSO daughter card: There are several
 Supermicro IPMI 2.0 bugs on early firmware revisions which can be
 worked around using the "supermicro20" workaround.  These compliance
 bugs are confirmed to be fixed on newer firmware.
-
+.LP
 Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
 around by specifying the "sun20" workaround.  The workarounds include
 handling invalid lengthed hash keys and invalid cipher suite records.
-
+.LP
 Asus P5M2: An Asus IPMI 2.0 SOL payload size bug can be worked around
 using the "asus20" workaround.

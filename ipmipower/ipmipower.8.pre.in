@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.pre.in,v 1.4 2007-08-16 00:05:23 chu11 Exp $
+\."$Id: ipmipower.8.pre.in,v 1.5 2007-08-30 17:59:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,20 +35,20 @@ allows users to remotely power on, off, cycle, hard reset, get a power
 status query, perform a pulse diagnostic interrupt, or initiate a
 soft-shutdown of the OS via ACPI through the IPMI over LAN protocol.
 See IPMI over LAN below for more information on IPMI.
-
+.LP
 When a power command (--on, --off, --cycle, --reset, --stat, --pulse,
 or --soft) is specified on the command line,
 .B ipmipower 
 will attempt to run the power command on all hostnames listed on the
 command line then exit.
-
+.LP
 If no power commands are specified on the command line, 
 .B ipmipower 
 will run in interactive mode.  Interactive mode gives the user a
 command line interface to enter various commands.  Details of the
 interactive command line interface can be found below under
 INTERACTIVE COMMANDS.
-
+.LP
 See EXAMPLES below for examples of how ipmipower is commonly used.
 
 .SH "BASIC OPTIONS"
@@ -456,19 +456,19 @@ Hard reset nodes foo[0-2] with non-null username and password
 When powering on a powered off machine, the client must have a means
 by which to resolve the MAC address of the remote machine's ethernet
 card.  This is typically done in one of two ways.
-
+.LP
 1) Enable gratuitous ARPs on the remote machine.  The remote machine
 will send out a gratuitous ARP, which advertises the ethernet IP and
 MAC address so that other machines on the network this information
 their local ARP cache.  For large clusters, this method is not
 recommended since gratuitous ARPs can flood the network with
 unnecessary traffic.
-
+.LP
 2) Permanently store the remote machine's MAC address in the local ARP
 cache.  This is the more common approach on large clusters.
-
+.LP
 Other methods are listed in the IPMI specification.
-
+.LP
 If 
 .B ipmipower 
 is running a tad slow when running a power control command on the
@@ -489,7 +489,7 @@ In order to prevent brute force attacks, some BMCs will "lock up"
 after a number of username, password, or privilege errors.  There is
 no known way to cleanly deal with a "locked up" BMC.  The best option
 is to simply wait "awhile".
-
+.LP
 On certain operating systems, if you input your username and password
 on the command line, the username and password may be discovered by
 other users when using the
@@ -497,7 +497,7 @@ other users when using the
 command or looking in the /proc file system.  More secure solutions
 are to configure this information in the config file, in interactive
 mode, or with the -P and -K options.
-
+.LP
 IPMI specifications do not require BMCs to perform a power control
 operation before returning a completion code to the caller.
 Therefore, it is possible for
@@ -509,9 +509,8 @@ a successful completion code to
 before the "power off" operation is actually performed.  Subsequent
 power status queries may return "on" for several seconds, until the
 BMC actually performs the "power off" operation.
-
+.LP
 .if @WITH_DEBUG@ \{
-
 This version of ipmipower was compiled with debugging.  When compiled
 with debugging,
 .B ipmipower 
@@ -519,7 +518,7 @@ is insecure.  The following were intentionally
 left in
 .B ipmipower
 for debugging purposes:
-
+.LP
 .IP o 2
 Sensitive command line arguments are not cleared from memory.
 .IP o
@@ -530,7 +529,7 @@ to stdout.
 .IP o
 Configuration info such as username and password can be output to the
 log file.
-
+.LP
 Before placing ipmipower in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}

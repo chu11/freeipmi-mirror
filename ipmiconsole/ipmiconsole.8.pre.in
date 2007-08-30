@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.7 2007-08-20 23:22:43 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.8 2007-08-30 17:59:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -45,7 +45,7 @@ access must be configured and enabled.  The FreeIPMI tool
 .B bmc-config(1) 
 may be used to do this configuration.  A BMC configuration tool may
 have also been distributed with the machine.
-
+.LP
 Often (although not always), console redirection must be directed to
 an alternate COM port.  This is typically configured in the BIOS.
 
@@ -121,48 +121,47 @@ Send a single escape character.
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 
 .SH "IPMICONSOLE TROUBLESHOOTING"
-
 The following are common issues for given error messages specifically
 for 
 .B ipmiconsole.
-
+.LP
 "SOL unavailable" - SOL is not configured for use on the remote BMC.
 It may be not configured in general or for the specific user
 specified.  Authenticating with a different user may be sufficient,
 however the IPMI protocol does not reveal detail on what is not
 configured on the remote BMC.
-
+.LP
 "SOL in use" - SOL is already in use on the remote BMC.  If you do not
 specify the
 .I --dont-steal
 option, 
 .B ipmiconsole
 will attempt to steal the SOL session away from the other session.
-
+.LP
 "SOL session stolen" - Your SOL session has been stolen by another
 session.  You may wish to try and steal the session back by reconnecting.
-
+.LP
 "SOL requires encryption" - SOL requires a cipher suite id that
 includes encryption.  Please try to use cipher suite id 3, 8, or 12.
 It may also be possible the encryption requirements are not configured
 correctly on the remote BMC.
-
+.LP
 "SOL requires no encryption" - SOL requires a cipher suite id that
 does not use encryption.  Please try to use cipher suite id 0, 1, 2,
 6, 7, or 11.  It may also be possible the encryption requirements are
 not configured correctly on the remote BMC.
-
+.LP
 "BMC Implementation" - The BMC on the remote machine has a severe
 problem in its implementation.  Please see the WORKAROUNDS section
 below for possible workarounds.  A workaround may be needed to get
 around this problem, please contact the authors.
-
+.LP
 "excess retransmissions sent" - An excessive number of retransmissions
 of SOL packets has occurred and 
 .B ipmiconsole
 has given up.  This may be due to network issues or SOL issues.
 Please try to reconnect.
-
+.LP
 "excess errors received" - An excessive number of SOL packet errors
 has occurred and 
 .B ipmiconsole

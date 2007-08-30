@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmidetect.8.in,v 1.3 2007-08-02 20:50:13 chu11 Exp $
+\."$Id: ipmidetect.8.in,v 1.4 2007-08-30 17:59:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,7 +39,7 @@ library
 and
 .B ipmidetectd(8)
 daemon.
-
+.LP
 .B ipmidetect
 will output the status of each IPMI node configured with
 .B ipmidetectd(8)
@@ -50,7 +50,6 @@ separated lists.  See the section below on HOST RANGES for
 instructions on how to list hosts in hostrange format.  The hostnames
 listed must be the shortened names of hostnames.
 
-.br
 .SH OPTIONS
 .TP
 .B "-h, --help"
@@ -92,25 +91,25 @@ hosts.  This form should not be confused with regular expression
 character classes (also denoted by ``[]''). For example, foo[19] does
 not represent foo1 or foo9, but rather represents a degenerate range:
 foo19.
-
+.LP
 This range syntax is meant only as a convenience on clusters with a
 prefixNN naming convention and specification of ranges should not be
 considered necessary -- the list foo1,foo9 could be specified as such,
 or by the range foo[1,9].
-
+.LP
 Some examples of range usage follow:
-
+.LP
 List all nodes among foo01,foo02,...,foo05 that are detected/undetected 
     ipmidetect foo[01-05]
-
+.LP
 List all nodes among foo7,foo9,foo10 that are detected/undetected
     ipmidetect foo[7,9-10]
-
+.LP
 As a reminder to the reader, some shells will interpret brackets ('['
 and ']') for pattern matching.  Depending on your shell, it may be
 necessary to enclose ranged lists within quotes.  For example, in
 tcsh, the above two examples should be executed as:
-
+.nf
     ipmidetect "foo[01-05]"
     ipmidetect "foo[7,9-10]"
 

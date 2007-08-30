@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.8 2007-08-02 20:50:13 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.9 2007-08-30 17:59:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,11 +40,11 @@ the
 command (See KNOWN ISSUES in 
 .B ipmiconsole(1) 
 for details).
-
+.LP
 By default, the configuration file is stored at /etc/ipmiconsole.conf.
 But users may select a different configuration file at the command
 line through the --config option.  
-
+.LP
 The user can still override the configuration file values by
 specifying the options on the command line.  The configuration file
 does not stop a user from specifying any options on the command line.
@@ -57,7 +57,7 @@ by any amount of whitespace.  Multiple arguments are also separated by
 whitespace.  Comments can be marked by using the pound sign ("#")
 character, and lines can be continued on the next using backslash
 ("\\").
-
+.LP
 Note that it is possible to list the username and password in the
 configuration file.  If this data is stored in a configuration file,
 system administrators should limit access to this file.

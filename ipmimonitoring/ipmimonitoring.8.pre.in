@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmimonitoring.8.pre.in,v 1.6 2007-08-16 15:58:06 chu11 Exp $
+\."$Id: ipmimonitoring.8.pre.in,v 1.7 2007-08-30 17:59:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,7 +39,7 @@ file @IPMI_MONITORING_SENSOR_CONFIG_FILE_DEFAULT@.  The library and
 tool are primarily used for host monitoring activities.  For more
 general sensor reading use, it is recommended that users use
 .B ipmi-sensors(8).
-
+.LP
 .B Ipmimonitoring
 will cache the sensor data repository of the machine for later retrieval.
 So the first time you run 
@@ -114,16 +114,15 @@ Turn on debugging.
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 
 .SH "IPMIMONITORING TROUBLESHOOTING"
-
 The following are common issues for given error messages specifically
 for
 .B ipmimonitoring.
-
+.LP
 "sensor config file parse error" - A parse error was found in the 
 .B libipmimonitoring(3)
 sensor configuration file.  Please see
 .B libipmimonitoring(3).
-
+.LP
 "sdr cache permission error" - The default SDR cache directory cannot
 be accessed.  Please specify an alternate directory with the 
 .I --cache-dir
@@ -166,12 +165,12 @@ is insecure.  The following were intentionally
 left in
 .B ipmimonitoring
 for debugging purposes:
-
+.LP
 .IP o 2
 Command line arguments are not cleared from memory.
 .IP o
 Core dumps are enabled.
-
+.LP
 Before placing ipmimonitoring in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
