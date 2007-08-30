@@ -6,6 +6,13 @@
 	* Fix consistency issue with macro names between libraries.
 
 	* Various manpage groff/text formatting fixes.
+
+	*
+	common/doc/manpage-common-workaround-outofband-2-0-only-text.man:
+	Rename to manpage-common-workaround-sol-only-text.man due to
+	usage.
+
+	* ipmiconsole/ipmiconsole.8.pre.in: Fix for file name change.
 	
 2007-08-29  Albert Chu <chu11@llnl.gov>
 

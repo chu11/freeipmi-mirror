@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.8 2007-08-30 17:59:32 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.9 2007-08-30 18:43:20 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -169,7 +169,7 @@ has given up.  This may be due to network issues or SOL issues.
 Please try to reconnect.
 
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
-#include <@top_srcdir@/common/doc/manpage-common-workaround-outofband-2-0-only-text.man>
+#include <@top_srcdir@/common/doc/manpage-common-workaround-sol-only-text.man>
 
 .SH "EXAMPLES"
 .B # ipmiconsole -h ahost -u myusername -p mypassword
