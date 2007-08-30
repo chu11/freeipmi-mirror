@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.61 2007-08-29 23:02:28 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.62 2007-08-30 21:27:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -904,7 +904,7 @@ _ipmiconsole_engine(void *arg)
           if (poll_data.pfds[i*3].revents & POLLERR)
             {
               IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLERR"));
-	      poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+	      ipmiconsole_ctx_set_errnum(poll_data.pfds_ctxs[i], IPMICONSOLE_ERR_INTERNAL_ERROR);
 	      poll_data.pfds_ctxs[i]->session.close_session_flag++;
               continue;
             }
@@ -916,7 +916,7 @@ _ipmiconsole_engine(void *arg)
                    * which is ok.
                    */
 		  IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLNVAL"));
-		  poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_SUCCESS;
+                  ipmiconsole_ctx_set_errnum(poll_data.pfds_ctxs[i], IPMICONSOLE_ERR_SUCCESS);
 		  poll_data.pfds_ctxs[i]->session.close_session_flag++;
 		  continue;
                 }
@@ -926,21 +926,21 @@ _ipmiconsole_engine(void *arg)
                    * the socketpair so it's ok.
                    */
 		  IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLHUP"));
-		  poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_SUCCESS;
+                  ipmiconsole_ctx_set_errnum(poll_data.pfds_ctxs[i], IPMICONSOLE_ERR_SUCCESS);
 		  poll_data.pfds_ctxs[i]->session.close_session_flag++;
 		  continue;
 		}
               if (poll_data.pfds[i*3+1].revents & POLLERR)
                 {
                   IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLERR"));
-                  poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+                  ipmiconsole_ctx_set_errnum(poll_data.pfds_ctxs[i], IPMICONSOLE_ERR_INTERNAL_ERROR);
                   poll_data.pfds_ctxs[i]->session.close_session_flag++;
                   continue;
                 }
 	      if (poll_data.pfds[i*3+2].revents & POLLERR)
 		{
 		  IPMICONSOLE_CTX_DEBUG(poll_data.pfds_ctxs[i], ("POLLERR"));
-		  poll_data.pfds_ctxs[i]->errnum = IPMICONSOLE_ERR_INTERNAL_ERROR;
+                  ipmiconsole_ctx_set_errnum(poll_data.pfds_ctxs[i], IPMICONSOLE_ERR_INTERNAL_ERROR);
 		  poll_data.pfds_ctxs[i]->session.close_session_flag++;
 		  continue;
 		}

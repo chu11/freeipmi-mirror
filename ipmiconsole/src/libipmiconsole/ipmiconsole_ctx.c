@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.13 2007-08-29 23:04:00 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.14 2007-08-30 21:27:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1074,17 +1074,20 @@ ipmiconsole_ctx_set_errnum(ipmiconsole_ctx_t c, int errnum)
   if ((perr = pthread_mutex_lock(&(c->errnum_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_lock: %s", strerror(perr)));
 
-  if (c->errnum_retrieved)
+  /* If the errnum is ERR_SUCCESS, it is not required for the user
+   * to retrieve it 
+   */
+  if (c->errnum_retrieved
+      || c->errnum == IPMICONSOLE_ERR_SUCCESS)
     {
       c->errnum = errnum;
-      /* If the errnum is ERR_SUCCESS, it is not required for the user
-       * to retrieve it 
-       */
       if (errnum == IPMICONSOLE_ERR_SUCCESS)
         c->errnum_retrieved = 1;
       else
         c->errnum_retrieved = 0;
     }
+  else
+    IPMICONSOLE_DEBUG(("could not set errnum: current = %d, desired = %d", c->errnum, errnum));
   
   if ((perr = pthread_mutex_unlock(&(c->errnum_mutex))) != 0)
     IPMICONSOLE_DEBUG(("pthread_mutex_unlock: %s", strerror(perr)));
