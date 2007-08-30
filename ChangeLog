@@ -1,5 +1,10 @@
 2007-08-30  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/, ipmiconsole/, common/doc: Change ASUS ipmi 2.0
+	workaround to be a more generic "ignore sol payload size".
+
+	* Fix consistency issue with macro names between libraries.
+
 	* Various manpage groff/text formatting fixes.
 	
 2007-08-29  Albert Chu <chu11@llnl.gov>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.56 2007-08-30 00:26:09 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.57 2007-08-30 18:41:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1760,7 +1760,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
    *
    * Intel IPMI 2.0 implementations pad their usernames.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen((char *)c->config.username))
@@ -1790,7 +1790,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
    * when the passwords are > 16 bytes long.  The BMCs probably assume
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION
       && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -2059,7 +2059,7 @@ _check_payload_sizes_legitimate(ipmiconsole_ctx_t c)
    * check and assume a reasonable size.
    *
    */
-  if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_ASUS_2_0))
+  if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE))
     {
       if (max_inbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
           && max_inbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len
@@ -2704,7 +2704,7 @@ _process_protocol_state_set_session_privilege_level_sent(ipmiconsole_ctx_t c)
    * The Get Channel Payload Support isn't supported in Sun's.  Skip this
    * part of the state machine and pray for the best I guess.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)
     {
       if (_send_ipmi_packet(c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
         {

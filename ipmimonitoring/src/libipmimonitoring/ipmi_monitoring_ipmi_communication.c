@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.9 2007-08-23 17:34:57 chu11 Exp $
+ *  $Id: ipmi_monitoring_ipmi_communication.c,v 1.10 2007-08-30 18:41:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -365,8 +365,7 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
   unsigned workaround_flags_mask = (IPMI_MONITORING_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES
                                     | IPMI_MONITORING_WORKAROUND_FLAGS_INTEL_2_0_SESSION
                                     | IPMI_MONITORING_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION
-                                    | IPMI_MONITORING_WORKAROUND_FLAGS_ASUS_2_0_SESSION);
+                                    | IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION);
   assert(c);
   assert(c->magic == IPMI_MONITORING_MAGIC);
   assert(c->comm.dev);
@@ -441,8 +440,6 @@ _ipmi_2_0_init(ipmi_monitoring_ctx_t c,
         workaround_flags |= IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION;
       if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_SUN_2_0_SESSION)
         workaround_flags |= IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION;
-      if (config->workaround_flags & IPMI_MONITORING_WORKAROUND_FLAGS_ASUS_2_0_SESSION)
-        workaround_flags |= IPMI_WORKAROUND_FLAGS_ASUS_2_0_SESSION;
     }
   
   if ((_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)

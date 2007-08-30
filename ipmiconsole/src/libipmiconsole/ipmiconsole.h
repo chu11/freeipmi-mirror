@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.62 2007-08-29 23:30:07 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.63 2007-08-30 18:41:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -180,7 +180,13 @@ extern "C" {
  * invalid username or K_g errors.  This workaround flag will work
  * around the problem.
  *
- * INTEL_2_0
+ * IGNORE_SOL_PAYLOAD_SIZE
+ *
+ * Discovered on an ASUS P5M2 motherboard, the motherboard reports
+ * invalid SOL payload sizes.  This workaround flag will ignore the
+ * payload size and choose a reasonable default.
+ *
+ * INTEL_2_0_SESSION
  *
  * All currently known IPMI 2.0 implementations on Intel motherboards
  * contain a number of authentication bugs.  They include username
@@ -196,7 +202,7 @@ extern "C" {
  * engineered for this non-compliance bug, however straight forward
  * MD5-128 has not yet been reverse engineered.
  *
- * SUPERMICRO_2_0
+ * SUPERMICRO_2_0_SESSION
  *
  * There are several small IPMI compliance issues on early Supermicro
  * IPMI SOL implementations.  Most involve the authentication codes
@@ -204,23 +210,19 @@ extern "C" {
  * workaround flag will get around the problem.  These compliance bugs
  * are confirmed to be fixed on newer firmware.
  *
- * SUN_2_0
+ * SUN_2_0_SESSION
  *
  * Work around several IPMI 2.0 compliance problems, mostly involving
  * invalid lengthed hash keys and unsupported payload types.
- *
- * ASUS_2_0
- *
- * Work around Asus IPMI 2.0 SOL payload size bug.
  *
  * Note: The non-logical bitmask order below is set for consistency of
  * masks with libfreeipmi bitmasks.
  */
 #define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
-#define IPMICONSOLE_WORKAROUND_INTEL_2_0                   0x00010000
-#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0              0x00020000
-#define IPMICONSOLE_WORKAROUND_SUN_2_0                     0x00040000
-#define IPMICONSOLE_WORKAROUND_ASUS_2_0                    0x00080000
+#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE     0x00010000
+#define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
+#define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
+#define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
 
 /*
  * Context Status

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.52 2007-08-29 21:25:36 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.53 2007-08-30 18:41:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -212,10 +212,10 @@ typedef enum
 
 #define IPMICONSOLE_WORKAROUND_MASK \
         (IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES \
-         | IPMICONSOLE_WORKAROUND_INTEL_2_0 \
-	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0 \
-         | IPMICONSOLE_WORKAROUND_SUN_2_0 \
-         | IPMICONSOLE_WORKAROUND_ASUS_2_0)
+         | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE \
+         | IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION \
+	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION \
+         | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)
 
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED 0x1
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR       0x2

@@ -21,5 +21,5 @@ Sun Fire 4100: There are several IPMI 2.0 bugs which can be worked
 around by specifying the "sun20" workaround.  The workarounds include
 handling invalid lengthed hash keys and invalid cipher suite records.
 .LP
-Asus P5M2: An Asus IPMI 2.0 SOL payload size bug can be worked around
-using the "asus20" workaround.
+Asus P5M2: An incorrect IPMI 2.0 SOL payload size can be ignored using
+the "solpayloadsize" workaround.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_config.c,v 1.24 2007-08-23 17:34:57 chu11 Exp $
+ *  $Id: ipmiconsole_config.c,v 1.25 2007-08-30 18:41:26 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -259,14 +259,14 @@ cmdline_parse (int key,
       /* convert to ipmiconsole flags */
       if (tmp & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
         conf->workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
+      if (tmp & IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
       if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
       if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION;
       if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
-      if (tmp & IPMI_WORKAROUND_FLAGS_ASUS_2_0_SESSION)
-        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_ASUS_2_0;
+        conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
       conf->workaround_flags_set_on_cmdline++;
       break;
     case IPMICONSOLE_DEBUG_KEY:	/* --debug */
@@ -460,12 +460,14 @@ _cb_workaround_flags(conffile_t cf,
   /* convert to ipmiconsole flags */
   if (tmp & IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES)
     conf->workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
+  if (tmp & IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE)
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE;
   if (tmp & IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION)
-    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0;
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION;
   else if (tmp & IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION)
-    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0;
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION;
   else if (tmp & IPMI_WORKAROUND_FLAGS_SUN_2_0_SESSION)
-    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0;
+    conf->workaround_flags |= IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION;
   return 0;
 }
 

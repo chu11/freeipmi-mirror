@@ -18,6 +18,8 @@ o Converted some tools to use argp instead of getopt for consistency
 o Support basic --debug option in most tools under the non-debug builds.
 o Updated manpages with more information, examples, and trouble
   shooting tips.
+o Previously supported "ASUS 2.0" workaround has been adjusted to be the
+  more generic "IGNORE SOL PAYLOAD SIZE" workaround.
 o Made many command line options consistent across FreeIPMI.  Notable
   changes include:
   1) All --priv-level and --privilege options are now --privilege-level

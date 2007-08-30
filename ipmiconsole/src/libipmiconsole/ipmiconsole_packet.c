@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.9 2007-08-29 23:02:28 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.10 2007-08-30 18:41:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -753,7 +753,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
    *
    * Intel IPMI 2.0 implementations pad their usernames.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION
       && p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
@@ -790,7 +790,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
    * when the passwords are > 16 bytes long.  The BMCs probably assume
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION
       && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -930,7 +930,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
        *
        * Intel IPMI 2.0 implementations don't support the highest level privilege.
        */
-      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
         privilege_level = c->config.privilege_level;
       else
         privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
@@ -957,7 +957,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
        *
        * Intel IPMI 2.0 implementations use this flag incorrectly.
        */
-      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = c->session.name_only_lookup;

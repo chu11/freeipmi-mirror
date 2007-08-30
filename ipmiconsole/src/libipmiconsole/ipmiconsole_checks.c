@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.14 2007-08-29 23:02:28 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.15 2007-08-30 18:41:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -581,7 +581,7 @@ ipmiconsole_check_open_session_response_privilege(ipmiconsole_ctx_t c, ipmiconso
    *
    * Intel IPMI 2.0 implementations don't support the highest level privilege.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
     rv = (privilege == c->config.privilege_level) ? 1 : 0;
   else
     {
@@ -634,7 +634,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    *
    * Intel IPMI 2.0 implementations pad their usernames.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen((char *)c->config.username))
@@ -656,7 +656,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * Supermicro IPMI 2.0 implementations may have invalid payload lengths
    * on the RAKP response packet.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION)
     {
       uint8_t keybuf[IPMICONSOLE_PACKET_BUFLEN];
       int32_t keybuf_len;
@@ -710,7 +710,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * when the passwords are > 16 bytes long.  The BMCs probably assume
    * all keys are <= 16 bytes in length.  So we have to adjust.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION
       && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
@@ -722,7 +722,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
    * The key exchange authentication code is the wrong length.  We
    * need to shorten it.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION
       && c->config.authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
       uint8_t buf[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
@@ -827,7 +827,7 @@ ipmiconsole_check_rakp_4_integrity_check_value(ipmiconsole_ctx_t c, ipmiconsole_
    * value based on the integrity algorithm rather than the
    * authentication algorithm.
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
     {
       if (c->config.integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
