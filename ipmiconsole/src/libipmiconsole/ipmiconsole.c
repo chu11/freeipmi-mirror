@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.71 2007-08-29 23:30:07 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.72 2007-08-31 15:47:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -438,6 +438,8 @@ ipmiconsole_engine_submit_block(ipmiconsole_ctx_t c)
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup_ctx_fds_only;
     }
+
+  _ipmiconsole_blocking_notification_cleanup(c);
 
   c->session_submitted++;
   ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SUCCESS);

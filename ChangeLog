@@ -1,3 +1,8 @@
+2007-08-31  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
+	(ipmiconsole_engine_submit_block): Fix fd leak corner case.
+	
 2007-08-30  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, ipmiconsole/, common/doc: Change ASUS ipmi 2.0
@@ -16,6 +21,9 @@
 
 	* ipmiconsole/src/ipmiconsole/ipmiconsole.c (main): Tear down SOL
 	sessions cleanly by default.
+
+	* ipmiconsole/src/libipmiconsole/ipmiconsole_garbage_collector.c
+	(ipmiconsole_garbage_collector): Fix destructor corner case.
 	
 2007-08-29  Albert Chu <chu11@llnl.gov>
 
