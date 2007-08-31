@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.14 2007-08-30 21:27:23 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.15 2007-08-31 00:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -814,7 +814,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
           void *ptr;
 
           c->signal.moved_to_destroyed++;
-          
+
           /* I suppose if we fail here, we mem-leak?? Log for now ... */
           
           if ((perr = pthread_mutex_lock(&(console_engine_ctxs_to_destroy_mutex))) != 0)

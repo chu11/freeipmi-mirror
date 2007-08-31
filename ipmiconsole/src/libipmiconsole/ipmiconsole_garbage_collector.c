@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_garbage_collector.c,v 1.7 2007-08-29 16:08:39 chu11 Exp $
+ *  $Id: ipmiconsole_garbage_collector.c,v 1.8 2007-08-31 00:07:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,10 +128,8 @@ ipmiconsole_garbage_collector(void *arg)
            */
           if (c->signal.user_has_destroyed)
             {
-              ipmiconsole_ctx_debug_cleanup(c);
-              ipmiconsole_ctx_signal_cleanup(c);
-              ipmiconsole_ctx_blocking_cleanup(c);
-              ipmiconsole_ctx_cleanup(c);
+              if (!list_delete(itr))
+                IPMICONSOLE_DEBUG(("list_delete: %s", strerror(errno)));
             }
           else
             {
