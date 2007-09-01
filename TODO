@@ -73,7 +73,6 @@ ipmiconsole
 -----------
 retry under a different port
 - has never been tried/tested
-accessor functions for callback?
 
 inband
 ------
