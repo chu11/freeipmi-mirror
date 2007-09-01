@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.15 2007-08-31 00:07:58 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.16 2007-09-01 23:11:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -675,7 +675,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
    * was not requested 
    */
   if (status_initial && !blocking_requested && c->non_blocking.callback)
-    (*(c->non_blocking.callback))(c, c->non_blocking.callback_arg);
+    (*(c->non_blocking.callback))(c->non_blocking.callback_arg);
 
   /* Under default circumstances, close only the ipmiconsole_fd so
    * that an error will be detected by the user via a EOF on a read()

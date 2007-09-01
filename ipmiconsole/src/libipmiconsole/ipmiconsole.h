@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.63 2007-08-30 18:41:26 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.64 2007-09-01 23:11:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -447,7 +447,7 @@ typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
  * Function prototype for a callback function.
  * ipmiconsole_engine_submit() below.
  */
-typedef void (*Ipmiconsole_callback)(ipmiconsole_ctx_t c, void *);
+typedef void (*Ipmiconsole_callback)(void *);
 
 /* 
  * ipmiconsole_engine_init
@@ -529,14 +529,15 @@ int ipmiconsole_engine_init(unsigned int thread_count,
  *   timeout occurs, the later session timeout will not generate a
  *   function call to the callback.  Pass NULL for no callback.
  *
- *   The callback function call be called simultaneously from
- *   different engine threads.  It is the user's responsibility to
- *   protect against any race conditions in their callback function.
+ *   The callback function can be called simultaneously from different
+ *   engine threads.  It is the user's responsibility to protect
+ *   against any race conditions in their callback function.
  *
  * callback_arg
  *
  *   Specify an arbitrary argument to be passed to the callback
- *   routine.
+ *   routine.  If the callback will be required to process the context
+ *   status, the context should be included in this argument.
  *
  * Returns 0 on success, -1 on error.  
  */

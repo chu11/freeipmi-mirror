@@ -2,6 +2,8 @@
 
 	* ipmiconsole/src/libipmiconsole/: Adjust callback parameters for
 	more generic use.
+
+	* configure.ac: Check for threads support in gcrypt.
 	
 2007-08-31  Albert Chu <chu11@llnl.gov>
 

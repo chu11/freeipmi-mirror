@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.57 2007-08-30 18:41:27 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.58 2007-09-01 23:11:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -3098,7 +3098,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
 
   /* only call callback if blocking was not requested */
   if (!blocking_requested && c->non_blocking.callback)
-    (*(c->non_blocking.callback))(c, c->non_blocking.callback_arg);
+    (*(c->non_blocking.callback))(c->non_blocking.callback_arg);
 
   /* It's possible the user entered some data before the SOL
    * session was established.  We send that data now.  Otherwise

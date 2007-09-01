@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.5.0.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.94 2007-08-14 10:10:42 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.95 2007-09-01 23:11:15 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -236,6 +236,17 @@ AC_CHECK_LIB([gcrypt], [gcry_md_open], [have_gcrypt=yes], [have_gcrypt=no])
 if test "x${have_gcrypt}" = "xno"; then
    AC_MSG_ERROR([libgcrypt required to build libfreeipmi])
    AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
+fi
+AC_CHECK_HEADER([gcrypt.h], [have_gcrypte_header=yes], [have_gcrypt_header=no])
+if test "x${have_gcrypt_header}" = "xno"; then
+   AC_MSG_ERROR([gcrypt.h not found])
+fi
+AC_CHECK_DECL([GCRYCTL_SET_THREAD_CBS], 
+              [have_gcrypt_threads=yes],
+              [have_gcrypt_threads=no],
+              [#include <gcrypt.h>])
+if test "x${have_gcrypt_threads}" = "xno"; then
+   AC_MSG_ERROR([libgcrypt with threads support required for libfreeipmi])
 fi
 
 dnl FreeBSD < 5 has getopt_long in a separate gnugetopt library
