@@ -1,3 +1,8 @@
+2007-09-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/: Adjust callback parameters for
+	more generic use.
+	
 2007-08-31  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/ipmiconsole.c
