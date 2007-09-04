@@ -447,7 +447,7 @@ cannot be used.
 7) Non-generic error messages
 -----------------------------
 
-Under some circumstances, it is preferred to return generic error
+Under some circumstances, it may be preferred to return generic error
 messages to the user, so that a malicious user cannot infer remote
 login information from different error messages returned.  For
 example, returning a generic error message of "Permission Denied"
@@ -529,6 +529,5 @@ username/password error is returned to a user could also give a
 malicious user information on the username/password of the remote BMC.
 
 In the end, the authors have felt the overall benefits provided by the
-checking of these values provides more than the cost.  Given overall
-industry implementation, this viewpoint could be changed in the
-future.
+checking of these values provides more than the cost.  Changes in the
+overall industry implementation could change this viewpoint later.
