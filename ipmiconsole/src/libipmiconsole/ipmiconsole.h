@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.64 2007-09-01 23:11:15 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.65 2007-09-04 22:25:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,80 +98,9 @@ extern "C" {
 #define IPMICONSOLE_PRIVILEGE_ADMIN               2 
 
 /* 
- * Engine Flags
- *
- * Utilized with struct ipmiconsole_engine_config below.
- * 
- * CLOSE_FD
- *
- * By default, the ipmiconsole engine will not close the file
- * descriptor (returned by ipmiconsole_ctx_fd()) when an error occurs
- * within the ipmiconsole engine (such as a session timeout).  A user
- * will subsequently see an EOF on a read() or an EPIPE on a write()
- * to know an error occurred.
- *
- * This flag will inform the engine to close the file descriptor on
- * error.  This will change the behavior of how the user should
- * program with the file descriptor.  For example, calls to read() and
- * write() would likely return with EBADF errors instead of EOF or
- * EPIPE errors respectively.  Calls to select() may return with EBADF
- * errors and calls to poll() could result in POLLNVAL returned
- * events.
- *
- * OUTPUT_ON_SOL_ESTABLISHED
- *
- * When submitting a context to the engine non-blocking, another way
- * to determine if the SOL session has been established is if data has
- * output from the remote console and is available for you to read.
- * Under most circumstances, this isn't a controllable situation.
- *
- * This flag will inform the engine to output a single NUL character
- * ('\0') to the console once a SOL session has been established.  If
- * the CLOSE_FD flag isn't used above, this would allow the user to
- * expect an EOF vs. 1 byte of data on a read() to determine if the
- * SOL session has failed or succeeded.  The user may choose to output
- * the NUL anyways (it should do no harm) or simply throw out the
- * first byte ever read from remote console.
- *
- */
-#define IPMICONSOLE_ENGINE_CLOSE_FD                  0x00000001
-#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
-       
-/* 
- * Security Flags
- *
- * Utilized with struct ipmiconsole_protocol_config below.
- * 
- * ERROR_ON_SOL_INUSE
- *
- * Under most circumstances, if SOL is detected as being in use,
- * libipmiconsole will attempt to deactivate the earlier SOL session
- * and activate the SOL session under the current one.  This default
- * behavior exists for several reasons, most notably that earlier SOL
- * sessions may have not been able to be deactivate properly.  This
- * security flag changes the default behavior to return an error if
- * SOL is already detected as being in use.  If it is detected as in
- * use, the errnum returned from ipmiconsole_ctx_errnum() would be
- * IPMICONSOLE_ERR_SOL_INUSE.
- *   
- * LOCK_MEMORY
- *
- * Inform libipmiconsole to lock memory to prevent sensitive
- * information (such as usernames and passwords) to be non-swappable.
- *
- * DEACTIVATE_ONLY
- *
- * Only attempt to deactivate the SOL session.  If an SOL session is
- * not active, do nothing.
- */
-#define IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE 0x00000001
-#define IPMICONSOLE_SECURITY_LOCK_MEMORY        0x00000002
-#define IPMICONSOLE_SECURITY_DEACTIVATE_ONLY    0x00000004
-
-/* 
  * Workaround Flags
  *
- * Utilized with struct ipmiconsole_protocol_config below.
+ * Utilized with struct ipmiconsole_ipmi_config below.
  * 
  * AUTHENTICATION_CAPABILITIES
  *
@@ -223,6 +152,77 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
+       
+/* 
+ * Security Flags
+ *
+ * Utilized with struct ipmiconsole_protocol_config below.
+ * 
+ * ERROR_ON_SOL_INUSE
+ *
+ * Under most circumstances, if SOL is detected as being in use,
+ * libipmiconsole will attempt to deactivate the earlier SOL session
+ * and activate the SOL session under the current one.  This default
+ * behavior exists for several reasons, most notably that earlier SOL
+ * sessions may have not been able to be deactivate properly.  This
+ * security flag changes the default behavior to return an error if
+ * SOL is already detected as being in use.  If it is detected as in
+ * use, the errnum returned from ipmiconsole_ctx_errnum() would be
+ * IPMICONSOLE_ERR_SOL_INUSE.
+ *   
+ * DEACTIVATE_ONLY
+ *
+ * Only attempt to deactivate the SOL session.  If an SOL session is
+ * not active, do nothing.
+ */
+#define IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE 0x00000001
+#define IPMICONSOLE_SECURITY_DEACTIVATE_ONLY    0x00000002
+
+/* 
+ * Engine Flags
+ *
+ * Utilized with struct ipmiconsole_engine_config below.
+ * 
+ * CLOSE_FD
+ *
+ * By default, the ipmiconsole engine will not close the file
+ * descriptor (returned by ipmiconsole_ctx_fd()) when an error occurs
+ * within the ipmiconsole engine (such as a session timeout).  A user
+ * will subsequently see an EOF on a read() or an EPIPE on a write()
+ * to know an error occurred.
+ *
+ * This flag will inform the engine to close the file descriptor on
+ * error.  This will change the behavior of how the user should
+ * program with the file descriptor.  For example, calls to read() and
+ * write() would likely return with EBADF errors instead of EOF or
+ * EPIPE errors respectively.  Calls to select() may return with EBADF
+ * errors and calls to poll() could result in POLLNVAL returned
+ * events.
+ *
+ * OUTPUT_ON_SOL_ESTABLISHED
+ *
+ * When submitting a context to the engine non-blocking, another way
+ * to determine if the SOL session has been established is if data has
+ * output from the remote console and is available for you to read.
+ * Under most circumstances, this isn't a controllable situation.
+ *
+ * This flag will inform the engine to output a single NUL character
+ * ('\0') to the console once a SOL session has been established.  If
+ * the CLOSE_FD flag isn't used above, this would allow the user to
+ * expect an EOF vs. 1 byte of data on a read() to determine if the
+ * SOL session has failed or succeeded.  The user may choose to output
+ * the NUL anyways (it should do no harm) or simply throw out the
+ * first byte ever read from remote console.
+ *
+ * LOCK_MEMORY
+ *
+ * Inform libipmiconsole to lock memory to prevent sensitive
+ * information (such as usernames and passwords) to be non-swappable.
+ *
+ */
+#define IPMICONSOLE_ENGINE_CLOSE_FD                  0x00000001
+#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
+#define IPMICONSOLE_ENGINE_LOCK_MEMORY               0x00000004
 
 /*
  * Context Status
@@ -264,8 +264,7 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
 /* 
  * ipmiconsole_ipmi_config
  *
- * Authentication information for a connection to a remote IPMI
- * machine.
+ * IPMI configuration for a connection to a remote IPMI machine.
  *
  * username 
  *
@@ -320,6 +319,13 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
  *   12 - A = HMAC-MD5; I = MD5-128; C = AES-CBC-128
  *
  *   Pass < 0 for default of 3.
+ *
+ * workaround_flags
+ *
+ *   Bitwise OR of flags indicating IPMI implementation changes.  Some
+ *   BMCs which are non-compliant and may require a workaround flag
+ *   for correct operation. Pass 0 for default of no modifications to
+ *   the IPMI protocol.
  */
 struct ipmiconsole_ipmi_config 
 {
@@ -329,6 +335,7 @@ struct ipmiconsole_ipmi_config
   unsigned int k_g_len;
   int privilege_level;
   int cipher_suite_id;
+  unsigned int workaround_flags;
 };
 
 /* 
@@ -393,13 +400,6 @@ struct ipmiconsole_ipmi_config
  *   be changed from the default for security reasons.  Pass 0 for
  *   default of no modifications to behavior.
  *
- * workaround_flags
- *
- *   Bitwise OR of flags indicating any behavior which should be
- *   changed from the default to handle IPMI non-compliance problems.
- *   Some BMCs which are non-compliant may require a workaround flag
- *   for correct operation. Pass 0 for default of no modifications to
- *   behavior.
  */
 struct ipmiconsole_protocol_config
 {
@@ -411,7 +411,6 @@ struct ipmiconsole_protocol_config
   int acceptable_packet_errors_count;
   int maximum_retransmission_count;
   unsigned int security_flags; 
-  unsigned int workaround_flags;
 };
 
 /* 

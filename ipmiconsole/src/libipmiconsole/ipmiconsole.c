@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.72 2007-08-31 15:47:36 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.73 2007-09-04 22:25:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -482,8 +482,8 @@ ipmiconsole_ctx_create(char *hostname,
 	      && ipmi_config->privilege_level != IPMICONSOLE_PRIVILEGE_ADMIN))
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
 	  && !IPMI_CIPHER_SUITE_ID_SUPPORTED(ipmi_config->cipher_suite_id))
+      || (ipmi_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
       || (protocol_config->security_flags & ~IPMICONSOLE_SECURITY_MASK)
-      || (protocol_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
       || (engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
       || (engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
@@ -491,7 +491,7 @@ ipmiconsole_ctx_create(char *hostname,
       return NULL;
     }
 
-  if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
+  if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     {
       if (!(c = (ipmiconsole_ctx_t)secure_malloc(sizeof(struct ipmiconsole_ctx))))
         {
@@ -549,7 +549,7 @@ ipmiconsole_ctx_create(char *hostname,
   /* Note: use protocol_config->security_flags not
    * c->config.security_flags, b/c we don't know where it failed
    */ 
-  if (protocol_config->security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
+  if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
     free(c);

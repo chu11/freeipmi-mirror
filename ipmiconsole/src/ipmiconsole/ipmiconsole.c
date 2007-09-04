@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.36 2007-08-30 23:46:37 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.37 2007-09-04 22:25:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -335,6 +335,7 @@ main(int argc, char **argv)
     ipmi_config.k_g_len = conf->k_g_len;
   ipmi_config.privilege_level = conf->privilege;
   ipmi_config.cipher_suite_id = conf->cipher_suite_id;
+  ipmi_config.workaround_flags = conf->workaround_flags;
 
   protocol_config.session_timeout_len = -1; 
   protocol_config.retransmission_timeout_len = -1; 
@@ -348,11 +349,10 @@ main(int argc, char **argv)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE;
   if (conf->deactivate)
     protocol_config.security_flags |= IPMICONSOLE_SECURITY_DEACTIVATE_ONLY;
-  if (conf->lock_memory)
-    protocol_config.security_flags |= IPMICONSOLE_SECURITY_LOCK_MEMORY;
-  protocol_config.workaround_flags = conf->workaround_flags;
 
   engine_config.engine_flags = 0;
+  if (conf->lock_memory)
+    engine_config.engine_flags |= IPMICONSOLE_ENGINE_LOCK_MEMORY;
   engine_config.debug_flags = debug_flags;
 
   if (!(c = ipmiconsole_ctx_create(conf->hostname,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.62 2007-08-30 21:27:23 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.63 2007-09-04 22:25:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -447,7 +447,7 @@ _ipmi_recvfrom(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   if ((len = ipmi_lan_recvfrom(c->connection.ipmi_fd, 
                                buffer, 
@@ -630,7 +630,7 @@ _console_read(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(!c->session.close_session_flag);	
 
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   if ((len = read(c->connection.ipmiconsole_fd,
                   buffer,

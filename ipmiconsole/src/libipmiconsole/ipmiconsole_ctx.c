@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.16 2007-09-01 23:11:15 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.17 2007-09-04 22:25:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -112,7 +112,7 @@ ipmiconsole_ctx_cleanup(ipmiconsole_ctx_t c)
   pthread_mutex_destroy(&(c->errnum_mutex));
   c->magic = ~IPMICONSOLE_CTX_MAGIC;
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
-  if (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY)
+  if (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));
   else
     free(c);
@@ -174,6 +174,8 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   else
     c->config.cipher_suite_id = IPMI_CIPHER_SUITE_ID_DEFAULT;
 
+  c->config.workaround_flags = ipmi_config->workaround_flags;
+
   if (protocol_config->session_timeout_len > 0)
     c->config.session_timeout_len = protocol_config->session_timeout_len;
   else
@@ -210,8 +212,6 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
     c->config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
 
   c->config.security_flags = protocol_config->security_flags;
-
-  c->config.workaround_flags = protocol_config->workaround_flags;
 
   c->config.engine_flags = engine_config->engine_flags;
 
@@ -448,7 +448,7 @@ ipmiconsole_ctx_connection_setup(ipmiconsole_ctx_t c)
   /* Copy for API level */
   c->fds.user_fd = c->connection.user_fd;
 
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   if (!(c->connection.console_remote_console_to_bmc = cbuf_create(CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MIN, CONSOLE_REMOTE_CONSOLE_TO_BMC_BUF_MAX, secure_malloc_flag)))
     {
@@ -631,7 +631,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   /* We have to cleanup, so in general continue on even if locking fails */
 

@@ -1,3 +1,9 @@
+2007-09-04  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/src/libipmiconsole/: Move workaround_flags from
+	protocol_config to ipmi_config.  Move LOCK_MEMORY from a security
+	flags to an engine_flag.
+	
 2007-09-01  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Adjust callback parameters for

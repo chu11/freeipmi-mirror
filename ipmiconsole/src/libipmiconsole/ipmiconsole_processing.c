@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.58 2007-09-01 23:11:15 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.59 2007-09-04 22:25:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -87,7 +87,7 @@ _send_ipmi_packet(ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(IPMICONSOLE_PACKET_TYPE_REQUEST(p));
 
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   if (p == IPMICONSOLE_PACKET_TYPE_GET_AUTHENTICATION_CAPABILITIES_V20_RQ
       || p == IPMICONSOLE_PACKET_TYPE_GET_CHANNEL_PAYLOAD_SUPPORT_RQ
@@ -187,7 +187,7 @@ _send_sol_packet_with_character_data(ipmiconsole_ctx_t c,
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   assert(!cbuf_is_empty(c->connection.console_remote_console_to_bmc));
 
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -310,7 +310,7 @@ _send_sol_packet_ack_only(ipmiconsole_ctx_t c,
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -380,7 +380,7 @@ _send_sol_packet_generate_break(ipmiconsole_ctx_t c,
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
   
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * Notes: The IPMI session sequence number should be incremented.  Since
@@ -2149,7 +2149,7 @@ _sol_bmc_to_remote_console_packet(ipmiconsole_ctx_t c)
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
   assert(c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
-  secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+  secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
   /* 
    * The packet is either an ACK to a packet we sent, or
@@ -3048,7 +3048,7 @@ _process_protocol_state_activate_payload_sent(ipmiconsole_ctx_t c)
       int dropped;
       int secure_malloc_flag;
 
-      secure_malloc_flag = (c->config.security_flags & IPMICONSOLE_SECURITY_LOCK_MEMORY) ? 1 : 0;
+      secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
       n = cbuf_write(c->connection.console_bmc_to_remote_console,
                      "\0",
