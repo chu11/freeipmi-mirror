@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.9 2007-08-30 18:43:20 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.10 2007-09-04 23:09:37 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,7 +65,50 @@ Specify the privilege level to be used.  The currently available
 privilege levels are USER, OPERATOR, and ADMIN.  Defaults to ADMIN if
 not specified.  The privilege must be atleast the minimum required by
 the remote host to establish a SOL session.
-#include <@top_srcdir@/common/doc/manpage-common-cipher-suite-id.man>
+.TP
+\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
+Specify the IPMI 2.0 cipher suite ID to use. The Cipher Suite ID
+identifies a set of authentication, integrity, and confidentiality
+algorithms to use for IPMI 2.0 communication. The authentication
+algorithm identifies the algorithm to use for session setup, the
+integrity algorithm identifies the algorithm to use for session packet
+signatures, and the confidentiality algorithm identifies the algorithm
+to use for payload encryption. Defaults to cipher suite ID 3 if not
+specified.  The user should be aware that only cipher suite ids 3, 8,
+and 12 encrypt console payloads.  Console information will be sent in
+the clear an alternate cipher suite id is selected.  The following
+cipher suite ids are currently supported:
+.sp
+0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
+.sp
+3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
+\." .sp
+\." 4 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128
+\." .sp
+\." 5 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40
+.sp
+6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
+.sp
+8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
+\." .sp
+\." 9 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-128
+\." .sp
+\." 10 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-40
+.sp
+11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None
+.sp
+12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128
+\." .sp
+\." 13 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128
+\." .sp
+\." 14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
+
 #include <@top_srcdir@/common/doc/manpage-common-workaround-flags.man>
 .TP
 \fB\-N\fR, \fB\-\-dont-steal\fR

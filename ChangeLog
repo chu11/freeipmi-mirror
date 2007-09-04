@@ -3,6 +3,9 @@
 	* ipmiconsole/src/libipmiconsole/: Move workaround_flags from
 	protocol_config to ipmi_config.  Move LOCK_MEMORY from a security
 	flags to an engine_flag.  Rename security flags to behavior flags.
+
+	* ipmiconsole/ipmiconsole.8.pre.in: Add encryption documentation
+	info on the cipher suite id.
 	
 2007-09-01  Albert Chu <chu11@llnl.gov>
 
