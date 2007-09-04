@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.65 2007-09-04 22:25:44 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.66 2007-09-04 22:37:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -154,7 +154,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
        
 /* 
- * Security Flags
+ * Behavior Flags
  *
  * Utilized with struct ipmiconsole_protocol_config below.
  * 
@@ -175,8 +175,8 @@ extern "C" {
  * Only attempt to deactivate the SOL session.  If an SOL session is
  * not active, do nothing.
  */
-#define IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE 0x00000001
-#define IPMICONSOLE_SECURITY_DEACTIVATE_ONLY    0x00000002
+#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE 0x00000001
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY    0x00000002
 
 /* 
  * Engine Flags
@@ -394,11 +394,11 @@ struct ipmiconsole_ipmi_config
  *   packets (in particular 'ping' packets to keep an IPMI session
  *   alive) to be accepted by the remote BMC, but not SOL packets.
  *
- * security_flags
+ * behavior_flags
  *
  *   Bitwise OR of flags indicating any protocol behavior that should
- *   be changed from the default for security reasons.  Pass 0 for
- *   default of no modifications to behavior.
+ *   be changed from the default.  Pass 0 for default of no
+ *   modifications to behavior.
  *
  */
 struct ipmiconsole_protocol_config
@@ -410,7 +410,7 @@ struct ipmiconsole_protocol_config
   int retransmission_keepalive_timeout_len;
   int acceptable_packet_errors_count;
   int maximum_retransmission_count;
-  unsigned int security_flags; 
+  unsigned int behavior_flags; 
 };
 
 /* 

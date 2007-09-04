@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.59 2007-09-04 22:25:44 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.60 2007-09-04 22:37:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1935,7 +1935,7 @@ _check_sol_activated(ipmiconsole_ctx_t c)
         }
     }
   
-  if (c->config.security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE
+  if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE
       && c->session.sol_instances_activated_count)
     {
       ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_INUSE);
@@ -1970,7 +1970,7 @@ _check_sol_activated2(ipmiconsole_ctx_t c)
   if (comp_code == IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
       || comp_code == IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED)
     {
-      if (c->config.security_flags & IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE)
+      if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE)
 	{
 	  ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_SOL_INUSE);
 	  return -1;
@@ -2793,7 +2793,7 @@ _process_protocol_state_get_payload_activation_status_sent(ipmiconsole_ctx_t c)
       return 0;
     }
 
-  if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
+  if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
     {
       if (ret)
         {
@@ -3236,7 +3236,7 @@ _process_protocol_state_deactivate_payload_sent(ipmiconsole_ctx_t c)
   assert(c);
   assert(c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
+  if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
     c->session.deactivate_only_succeeded_flag++;
 
   if (c->session.close_session_flag || c->session.try_new_port_flag)

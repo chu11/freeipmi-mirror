@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.37 2007-09-04 22:25:44 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.38 2007-09-04 22:37:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -344,11 +344,11 @@ main(int argc, char **argv)
   protocol_config.retransmission_keepalive_timeout_len = -1; 
   protocol_config.acceptable_packet_errors_count = -1; 
   protocol_config.maximum_retransmission_count = -1; 
-  protocol_config.security_flags = 0;
+  protocol_config.behavior_flags = 0;
   if (conf->dont_steal)
-    protocol_config.security_flags |= IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE;
+    protocol_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE;
   if (conf->deactivate)
-    protocol_config.security_flags |= IPMICONSOLE_SECURITY_DEACTIVATE_ONLY;
+    protocol_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY;
 
   engine_config.engine_flags = 0;
   if (conf->lock_memory)

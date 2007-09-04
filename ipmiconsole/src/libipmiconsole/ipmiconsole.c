@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.73 2007-09-04 22:25:44 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.74 2007-09-04 22:37:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -356,7 +356,7 @@ _ipmiconsole_block(ipmiconsole_ctx_t c)
         goto success;
       else if (val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR)
         goto cleanup;
-      else if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+      else if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY
                && val == IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED)
         goto success;
       else
@@ -483,7 +483,7 @@ ipmiconsole_ctx_create(char *hostname,
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
 	  && !IPMI_CIPHER_SUITE_ID_SUPPORTED(ipmi_config->cipher_suite_id))
       || (ipmi_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
-      || (protocol_config->security_flags & ~IPMICONSOLE_SECURITY_MASK)
+      || (protocol_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
       || (engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
       || (engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
@@ -546,8 +546,8 @@ ipmiconsole_ctx_create(char *hostname,
 
   ipmiconsole_ctx_blocking_cleanup(c);
 
-  /* Note: use protocol_config->security_flags not
-   * c->config.security_flags, b/c we don't know where it failed
+  /* Note: use engine_config->engine_flags not c->config.engine_flags,
+   * b/c we don't know where we failed earlier.
    */ 
   if (engine_config->engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY)
     secure_free(c, sizeof(struct ipmiconsole_ctx));

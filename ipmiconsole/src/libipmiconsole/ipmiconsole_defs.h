@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.54 2007-09-04 22:25:44 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.55 2007-09-04 22:37:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -208,9 +208,9 @@ typedef enum
 	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION \
          | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)
 
-#define IPMICONSOLE_SECURITY_MASK \
-        (IPMICONSOLE_SECURITY_ERROR_ON_SOL_INUSE \
-         | IPMICONSOLE_SECURITY_DEACTIVATE_ONLY)
+#define IPMICONSOLE_BEHAVIOR_MASK \
+        (IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE \
+         | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
 
 #define IPMICONSOLE_ENGINE_MASK \
         (IPMICONSOLE_ENGINE_CLOSE_FD \
@@ -242,7 +242,7 @@ struct ipmiconsole_ctx_config {
   unsigned int retransmission_keepalive_timeout_len;
   unsigned int acceptable_packet_errors_count;
   unsigned int maximum_retransmission_count;
-  uint32_t security_flags;
+  uint32_t behavior_flags;
 
   /* engine config */
   uint32_t engine_flags;

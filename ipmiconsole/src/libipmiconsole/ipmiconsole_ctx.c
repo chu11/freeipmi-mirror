@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.17 2007-09-04 22:25:44 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.18 2007-09-04 22:37:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -211,7 +211,7 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   else
     c->config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
 
-  c->config.security_flags = protocol_config->security_flags;
+  c->config.behavior_flags = protocol_config->behavior_flags;
 
   c->config.engine_flags = engine_config->engine_flags;
 
@@ -658,7 +658,7 @@ ipmiconsole_ctx_connection_cleanup(ipmiconsole_ctx_t c)
 
       blocking_requested++;
 
-      if (c->config.security_flags & IPMICONSOLE_SECURITY_DEACTIVATE_ONLY
+      if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY
           && c->session.deactivate_only_succeeded_flag)
         val = IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_DEACTIVATED;
       else

@@ -2,7 +2,7 @@
 
 	* ipmiconsole/src/libipmiconsole/: Move workaround_flags from
 	protocol_config to ipmi_config.  Move LOCK_MEMORY from a security
-	flags to an engine_flag.
+	flags to an engine_flag.  Rename security flags to behavior flags.
 	
 2007-09-01  Albert Chu <chu11@llnl.gov>
 
