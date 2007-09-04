@@ -50,6 +50,35 @@ List available sections for checkout.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print additional detailed information.
+.SH "GENERAL USE"
+Most users of 
+.B bmc-config
+will want to:
+.LP
+A) Run 
+.B bmc-config
+with --checkout to get a copy of the current BMC configuration and
+store it in a file.  The standard output can be redirected to a file
+or a file can be specified with the --filename option.
+.LP
+B) Edit the configuration file with an editor.  See 
+.B bmc-config.conf(5)
+for information on what the fields in the configuration file mean.
+.LP
+C) Commit the configuration back to the BMC using the --commit option and specifying
+the configuration file with the --filename option.
+.LP
+For users with large clusters or sets of nodes, you may wish to use
+the same configuration file for all nodes.  The one problem with this
+is that the IP address and MAC address will be different on each node
+in your cluster and thus can't be configured through the same config
+file.  The IP address and MAC address in your config file may be
+overwritten on the command line using --key-pair option.  The
+following example could be used in a script to configure each node in
+a cluster with the same BMC config file.  The script only needs to
+determine the correct IP address and MAC address to use.
+.LP
+.B # bmc-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" -f my_bmc.conf
 #include <@top_srcdir@/common/doc/manpage-common-troubleshooting.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/common/doc/manpage-common-workaround-text.man>
@@ -82,35 +111,6 @@ Commit key 'lan_conf_misc:gratuitous_arp_interval' of value '4' to the BMC.
 .PP
 Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:gratuitous_arp_interval' of value '4' to the BMC.
 .PP
-.SH "GENERAL USE"
-Most users of 
-.B bmc-config
-will want to:
-.LP
-A) Run 
-.B bmc-config
-with --checkout to get a copy of the current BMC configuration and
-store it in a file.  The standard output can be redirected to a file
-or a file can be specified with the --filename option.
-.LP
-B) Edit the configuration file with an editor.  See 
-.B bmc-config.conf(5)
-for information on what the fields in the configuration file mean.
-.LP
-C) Commit the configuration back to the BMC using the --commit option and specifying
-the configuration file with the --filename option.
-.LP
-For users with large clusters or sets of nodes, you may wish to use
-the same configuration file for all nodes.  The one problem with this
-is that the IP address and MAC address will be different on each node
-in your cluster and thus can't be configured through the same config
-file.  The IP address and MAC address in your config file may be
-overwritten on the command line using --key-pair option.  The
-following example could be used in a script to configure each node in
-a cluster with the same BMC config file.  The script only needs to
-determine the correct IP address and MAC address to use.
-.LP
-.B # bmc-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" -f my_bmc.conf
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT
