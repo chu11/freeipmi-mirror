@@ -27,12 +27,12 @@ Missing Serial Config
 Chassis Config?
 
 pef-config
---------
+-----------
 * conf.5 manpage
 * how to specify event reading type codes
 
 bmc-config/pef-config
--------------------
+---------------------
 bmc/pef-config - parsing bad, re-design, output error info
 installed template
 ---
@@ -52,9 +52,9 @@ remove bmc-autoconfig?
 general
 -------
 event handling
-timeout options for most FreeIPMI tools?
 sdr caching requires versioning
 tool for getting channel information - in ipmi-device tool for 0.5.0?
+remove get authentication capabilities checks?
 
 ipmi-chassis
 ------------
@@ -65,23 +65,14 @@ put boot options into bmc-config?
 re-architecture
 ---------------
 libfreeipmi re-arch for better error codes
-libfreeipmi udm - re-arch for inband/outofband/lanplus
-split udm into another lib
 udm strerror - w/ buffer for command specific errors
+split udm into another lib
 
 ipmiconsole
 -----------
 retry under a different port
 - has never been tried/tested
 
-inband
-------
-real timeout mechanism like out of band
-
-doc
----
-trouble-shooting guide to error codes
-examples on how to execute in each manpage
 
 RELEASE TODOS
 -------------
