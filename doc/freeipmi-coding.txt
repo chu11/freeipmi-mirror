@@ -5,8 +5,8 @@ by
 Albert Chu
 chu11@llnl.gov
 
-These are some short descriptions on coding style, API style, and some
-design decisions done in FreeIPMI's libraries and tools.
+These are some short descriptions on coding style, API style, design
+decisions done in FreeIPMI's libraries, and various other thoughts.
 
 1) Code Style
 -------------
@@ -444,3 +444,91 @@ struct packet
 
 cannot be used.
 
+7) Non-generic error messages
+-----------------------------
+
+Under some circumstances, it is preferred to return generic error
+messages to the user, so that a malicious user cannot infer remote
+login information from different error messages returned.  For
+example, returning a generic error message of "Permission Denied"
+would not give a malicious user information on whether the username or
+password was input incorrectly.
+
+The authors have elected to not implement this, because the benefits
+did not seem to outweigh the costs.  There are many vendor
+implementations of IPMI and many configuration options (authentication
+mechanism, cipher suite id, username, password, K_g, privilege level)
+needed for proper IPMI session establishment.  The number of error
+messages that could be mapped into a generic "Permission Denied" would
+make it too difficult for users to determine why they failed to
+connect properly.
+
+8) Get Channel Authentication Capabilities Command
+--------------------------------------------------
+
+The Get Channel Authentication Capabilities Command is typically the
+first packet sent in the IPMI session.  It returns information 
+on the remote machine's support of:
+
+A) IPMI 1.5 authentication mechanisms (i.e. md2, md5, etc.)
+B) IPMI 1.5 and/or IPMI 2.0
+C) per msg authentication
+D) K_g status
+E) null username/non-null username/anonymous logins
+
+Currently, in FreeIPMI, we check each of these values during the
+session setup to determine if a person can connect to the remote
+machine later in the protocol:
+
+A) If the user input an unsupported authentication mechanism, we
+return an error.
+
+B) If the user requested IPMI 2.0, but the remote machine doesn't
+support IPMI 2.0, we return an error.
+
+C) We determine if per msg authentication should be considered later
+in the protocol session.
+
+D) If the user was required/not-required to input a K_g value, we
+return an error appropriately.
+
+E) If the user input an unsupported username/password combination, we
+return an error appropriately.
+
+There is a question as to what values above, if any, need to be
+checked and appropriate errors returned to the user.  The Get Channel
+Authentication Capabilities command is often implemented incorrectly
+by a number of vendors, so that overall benefit of checks
+has been put in question.  The authors have elected to keep 
+all the checks for the following reasons.
+
+A and B should be checked to avoid potential timeouts:
+
+A) Later in the protocol, the password could be sent/hashed
+incorrectly, leading to a timeout because packets are not accepted by
+the remote machine.
+
+B) If the remote machine does not support IPMI 2.0, later packets
+could timeout because the remote machine does not recognize the packet
+format.
+
+C's checks could be skipped as long as per msg authentication was not
+supported.
+
+D checks could be skipped, because an improper null vs non-null K_g
+will be caught later during IPMI 2.0 authentication.
+
+E's checks are the most complicated.  An improper null vs non-null
+username will be caught later during IPMI 1.5 and IPMI 2.0
+authentication.  An improper null vs non-null password can be caught
+later during IPMI 2.0 authentication, but may result in a timeout
+during IPMI 1.5 authentication.
+
+An argument could also be made that the speed at which an invalid
+username/password error is returned to a user could also give a
+malicious user information on the username/password of the remote BMC.
+
+In the end, the authors have felt the overall benefits provided by the
+checking of these values provides more than the cost.  Given overall
+industry implementation, this viewpoint could be changed in the
+future.
