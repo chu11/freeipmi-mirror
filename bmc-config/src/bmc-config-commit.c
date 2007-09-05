@@ -238,8 +238,7 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
 
                   if (this_ret == BMC_ERR_NON_FATAL_ERROR)
                     {
-                      if (args->verbose)
-                        fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key);
+                      fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key);
                       ret = BMC_ERR_NON_FATAL_ERROR;
                     }
                 }

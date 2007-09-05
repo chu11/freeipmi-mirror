@@ -2,6 +2,9 @@
 
 	* ipmiconsole/src/libipmiconsole/: Move behavior_flags into
 	engine_config.
+
+	* bmc-config/src/bmc-config-commit.c (bmc_commit_file): Output
+	invalid commit error message by default, not in verbose mode.
 	
 2007-09-04  Albert Chu <chu11@llnl.gov>
 
