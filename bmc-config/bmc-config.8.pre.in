@@ -3,7 +3,11 @@
 bmc-config \- manual page for bmc-config.  BMC Config version @PACKAGE_VERSION@
 .SH DESCRIPTION
 .B Bmc-config
-is used to get and set the configuration a BMC.  The majority of
+is used to get and set BMC configuration parameters, such as the IP
+Address, Username, and Password.  This configuration is required before
+most IPMI tools can be used to access a machine remotely.
+
+The majority of
 configuration operations require ADMIN privilege when using
 .B bmc-config
 out-of-band.  Although connecting via a user with ADMIN privileges is

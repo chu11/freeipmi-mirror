@@ -65,14 +65,13 @@ put boot options into bmc-config?
 re-architecture
 ---------------
 libfreeipmi re-arch for better error codes
-udm strerror - w/ buffer for command specific errors
 split udm into another lib
 
 ipmiconsole
 -----------
 retry under a different port
 - has never been tried/tested
-common tests
+common tests to keep in mind
 - ipmiconsole_engine_teardown() before ipmiconsole_ctx_destroy()
 - block vs. non_block
 - engine_flags CLOSE_FD

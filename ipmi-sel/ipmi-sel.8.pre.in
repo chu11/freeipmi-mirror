@@ -69,6 +69,8 @@ Delete all SEL entries on the local machine.
 .PP
 Delete SEL entries in the range 12 to 42 on the local machine.
 .PP
+.SH "SEE ALSO"
+bmc-config(8)
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

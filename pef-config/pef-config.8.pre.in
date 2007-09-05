@@ -79,6 +79,8 @@ Show all difference between the current BMC configuration and the pef-data2.conf
 .PP
 Commit all configuration values from pef-data1.conf file to the BMC.
 .PP
+.SH "SEE ALSO"
+bmc-config(8)
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

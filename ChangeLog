@@ -11,6 +11,8 @@
 
 	* Update FSF address throughout.  Make address consistent
 	throughout for easier search/replace later.
+
+	* Various manpage and documentation updates.
 	
 2007-09-04  Albert Chu <chu11@llnl.gov>
 
