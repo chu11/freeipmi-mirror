@@ -33,6 +33,7 @@ pef-config
 
 bmc-config/pef-config
 ---------------------
+section header comments
 bmc/pef-config - parsing bad, re-design, output error info
 installed template
 ---
