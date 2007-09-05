@@ -125,8 +125,8 @@ wopr2
  baz=/etc
  xyzzy=dynamic
 
-We see that for this particular cluster's config file, one node's
-config is off.
+We see that for this particular pretend cluster config file, one
+node's configuration is different.
 
 Another problem that often comes up with large clusters is that nodes
 are removed from the cluster for servicing or are down due to hardware
@@ -190,7 +190,7 @@ the remote node.  This can disrupt the CPU of running jobs on the
 cluster and removes the advantages that IPMI over LAN does not
 interrupt a CPU.
 
-Starting with FreeIPMI 0.4.0 hostrange support has been added into
+Starting with FreeIPMI 0.4.0, hostrange support has been added into
 ipmi-chassis, ipmi-fru, ipmi-raw, ipmi-sensors, ipmi-sel, bmc-info,
 and ipmimonitoring (it has existed in ipmipower since 0.1.0).  More
 than one node at a time can be specified on the command line using the

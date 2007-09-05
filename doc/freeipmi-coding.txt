@@ -11,8 +11,9 @@ decisions done in FreeIPMI's libraries, and various other thoughts.
 1) Code Style
 -------------
 
-Please use the the coding style of the other code in FreeIPMI.  Here's
-a short example that covers the generics of our code style.
+The GNU coding style was selected for FreeIPMI.  Please try to follow
+the coding style used in the rest of FreeIPMI.  Here's a short example
+that covers the generics of our code style.
 
 int
 main(int argc, char **argv)
@@ -28,6 +29,15 @@ main(int argc, char **argv)
     {
       printf("foobar\n");
       printf("xyzzy\n");
+    }
+
+  while (a++ < 5)
+    printf("lala\n");
+
+  while (b++ < 7)
+    {
+      printf("blah\n");
+      printf("garble\n");
     }
 }
 
@@ -46,7 +56,7 @@ the IPMI Chassis Control command, which uses the '0' to power off a
 node.
 
 In programs, when appropriate, output error messages to the user
-indicating that how and why the parameters input were incorrect.
+indicating that how and why the inputted parameters were incorrect.
 
 3) Code Consistency
 -------------------
@@ -58,25 +68,22 @@ convention (which is discussed in more detail below).
 Although there may be situations that a particular API style or naming
 convention will make things easier for you and your code (such as
 shortening the name of a function, decreasing the number of parameters
-you need to pass to a function, etc), we ask that your code be
-consistent so that it does not confuse other developers.
+you need to pass to a function via a struct, etc.), we ask that your
+code be consistent so that it does not confuse other developers.
 
 If there is a distinct technical reason that you must use a different
 API style, please bring it up with the FreeIPMI authors.
 
 For example, pretty much all of the "fill" functions in libfreeipmi
-take the exact parameters they need to fill a fiid object, which is
-also passed into the function as a parameter.  All parameters are
-passed by value, not by a pointer or other method (i.e. object,
-struct, enum, etc.).
+take the exact parameters they need to fill the fiid object which is
+passed along as a parameter.  All parameters are passed by value, not
+by a pointer or other method (i.e. object, struct, etc.).
 
-The fill_cmd_chassis_identify() is a rare exception, but the technical
-reason is justified by the authors.  Both fields in the IPMI chassis
-identify packet are passed by pointer instead of passed by value.  The
-reason is that both fields are optional and need not be filled.  In
-other words, the packet can truncated in the eyes of the IPMI spec.
-The pointer gives the caller the ability to set values (by passing a
-valid pointer) or not (by passing NULL).
+Exceptions do exist.  For example, fill_cmd_chassis_identify() takes
+parameters passed by pointer instead of passed by value.  The reason
+is that both fields are optional and need not be filled according to
+the IPMI specification.  The pointer gives the caller the ability to
+set values (by passing a valid pointer) or not (by passing NULL).
 
 4) Libfreeipmi naming conventions
 ---------------------------------
@@ -113,7 +120,7 @@ is the file for messaging support commands, chapter 22 of the IPMI 2.0 spec.
 tmpl_cmd_get_channel_authentication_capabilities_rq
 tmpl_cmd_get_channel_authentication_capabilities_rs
 
-are the templates for the get channel authentication capapilities
+are the templates for the Get Channel Authentication Capapilities
 command.  They are listed first in the file b/c they are the first
 commands in the IPMI Messaging Support Commands chapter implemented in
 that file.
@@ -151,22 +158,23 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs =
     {8,  "oem_auxiliary_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}
   };
 
-The fields listed in the templates above directly match table 22-15.
+The fields listed in the templates above directly match table 22-15,
+the Get Channel Authentication Capabilities request and response
+commands.
 
 int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level,
                                                          fiid_obj_t obj_cmd_rq);
 
-And the function above matches the naming and takes exactly the
-parameters needed by the get authentication capabilities request
+The function above matches the naming and takes exactly the parameters
+needed by the Get Channel Authentication Capabilities request
 template.
 
 The coding conditions specified above may lead to function names or
-function parameters names that will lead to the functions exceeding
-the 80 column mark or having very long parameter lists.  We accept
-this annoyance (or poor coding style, we admit it), as we consider
-matching the specification as the primary objective of the coding
-style in libfreeipmi.
+function parameters names that exceed the 80 column mark or having
+very long parameter lists.  We accept this annoyance (or poor coding
+style, we admit it), as we consider matching the specification as the
+primary objective of the coding style in libfreeipmi.
 
 For example: 
 
@@ -208,7 +216,8 @@ what the parameters are if you are reading along with the spec.
 Because we want the code to match the IPMI spec as closely as
 possible, we currently accept the code inefficiencies (due to large
 stacks of parameters) that come with having long parameters lists and
-the atrocities of having gigantic 25+ paramter function calls in code.
+the atrocities of having gigantic 25+ parameter function calls in
+code.
 
 5) Error tracing/syslogging macros
 ----------------------------------
@@ -216,6 +225,8 @@ the atrocities of having gigantic 25+ paramter function calls in code.
 Throughout libfreeipmi, you will see various macros such as:
 
 ERR
+
+or 
 
 FIID_OBJ_CREATE_CLEANUP
 
@@ -282,13 +293,16 @@ C) Relatively efficient.
 Cons:
 
 A) Have to deal with endian problems.
-B) Lots of code.  Structs and marshalling/unmarshalling functions for
-each packet type.
-C) Relatively difficult to deal with optional fields. (Need flags in
-struct to indicate if a field was set/unset.)
-D) Relatively difficult to deal with variable length fields. (Need len
-parameters in struct to specify length.)
-E) Difficult to do large packet dumps (you only get hex).
+B) Lots of code.  Structs and marshalling/unmarshalling functions are
+required for each packet type.
+C) Relatively difficult to deal with optional fields. (You'll need
+flags in the struct to indicate if a field was set/unset.)
+D) Relatively difficult to deal with variable length fields. (You'll
+need a length parameter in the struct to indicate the length of a
+field.)
+E) Difficult to do large packet dumps (you only get hex, or you have
+to create a separate debug function for each struct or packet type if
+you want nicer output).
 
 Method B: Cast a buffer to a packed struct:
 -------------------------------------------
@@ -313,7 +327,8 @@ pkt->field_4 = ntohs(pkt->field_4);
 
 Pros:
 
-A) less code.  No need to create functions for marshalling/unmarshalling.
+A) Less code.  There's no need to create specific functions for
+marshalling/unmarshalling each packet type.
 B) The struct definition describes packets exactly.
 C) Very efficient (little actual marshalling/unmarshalling needs to be done.)
 
@@ -323,7 +338,9 @@ A) Have to deal with endian problems.
 B) Have to deal with portability of struct packing techniques (differences in compilers).
 C) No mechanism to deal with optional fields (how do you know if something is set?)
 D) No mechanism to deal with variable length fields (how do you know how long the field is?)
-E) Difficult to do large packet dumps (you only get hex).
+E) Difficult to do large packet dumps (you only get hex, or you have
+to create a separate debug function for each struct or packet type if
+you want nicer output).
 
 Our Method C: Fiid:
 -------------------
@@ -358,8 +375,9 @@ The pros and cons of the fiid method are:
 
 Pros:
 
-A) No need to deal with endian problems (handled internally in API).
-B) No need to deal with struct packing issues (bit shifts are handled internally in API).
+A) No need to deal with endian problems (handled internally in the API).
+B) No need to deal with struct packing issues (bit shifts are handled
+internally in the API).
 C) Easier to deal with optional fields (just don't set a field).
 D) Easier to deal with variable length fields (set whatever length you want).
 E) Templates describe the packets exactly.
@@ -370,7 +388,8 @@ Cons:
 
 A) Need to learn/use a reasonably sized API.
 B) Pretty inefficient (lots of string comparisons).
-C) Lots of duplicate templates (relative inability to "inherit" structs).
+C) Lots of duplicate templates (relative inability to "inherit"
+structs without #define mangling).
 
 The authors acknowledge that the fiid interface is far less efficient
 than the traditional methods and may annoy some.  However, some of
@@ -431,7 +450,7 @@ marshalling/unmarshalling has problems with handling these.
 
 It should be noted that in IPMI, many of the optional and/or variable
 length fields may not be in the "trailer" of a packet.  Therefore, a 
-traditional struct method of dealing with a variable length method:
+traditional struct method of dealing with a variable length packet:
 
 struct packet
 {
