@@ -1,4 +1,4 @@
-SUBDIRS = src bmc-autoconfig
+SUBDIRS = src 
 
 MANS_CPP=bmc-config.8
 

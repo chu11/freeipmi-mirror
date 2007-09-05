@@ -168,7 +168,6 @@ fi
 %{_libdir}/libfreeipmi*so*
 %{_libdir}/libipmidetect*so*
 %{_localstatedir}/lib/*
-%{_sbindir}/bmc-autoconfig
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
 %{_sbindir}/ipmi-fru
@@ -183,7 +182,6 @@ fi
 %{_sbindir}/ipmiconsole
 %{_sbindir}/ipmi-chassis
 %{_sbindir}/ipmidetect
-%{_mandir}/man8/bmc-autoconfig.8*
 %{_mandir}/man8/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man8/bmc-info.8*
