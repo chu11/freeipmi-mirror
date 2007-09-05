@@ -1660,11 +1660,12 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                                  0)))
     goto cleanup;
 
+  /* userid 1 is the NULL username, so comment it out by default */
   if (bmc_config_section_add_keyvalue (state_data,
                                        user_section,
                                        "Username",
                                        "Give Username",
-                                       0,
+                                       (userid == 1) ? BMC_CHECKOUT_KEY_COMMENTED_OUT : 0,
                                        username_checkout,
                                        username_commit,
                                        username_diff,

@@ -13,6 +13,10 @@
 	throughout for easier search/replace later.
 
 	* Various manpage and documentation updates.
+
+	* bmc-config/src/bmc-user-sections.c (bmc_user_section_get):
+	Comment out username for user id 1, since that typically isn't
+	modifiable.
 	
 2007-09-04  Albert Chu <chu11@llnl.gov>
 
