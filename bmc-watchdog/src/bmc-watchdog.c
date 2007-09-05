@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.70 2007-08-29 00:11:17 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.71 2007-09-05 20:13:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -22,7 +22,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with Bmc-Watchdog; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H

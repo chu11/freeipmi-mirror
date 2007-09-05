@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_debug.c,v 1.5 2007-08-28 18:26:19 chu11 Exp $
+ *  $Id: ipmiconsole_debug.c,v 1.6 2007-09-05 20:13:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #ifdef HAVE_CONFIG_H

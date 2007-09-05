@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.conf.5.in,v 1.9 2007-08-30 17:59:32 chu11 Exp $
+\."$Id: ipmiconsole.conf.5.in,v 1.10 2007-09-05 20:13:27 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
 \."  
 \."  You should have received a copy of the GNU General Public License along
 \."  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
-\."  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+\."  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \."############################################################################
 .TH ipmiconsole.conf 5 "@ISODATE@" "ipmiconsole @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"

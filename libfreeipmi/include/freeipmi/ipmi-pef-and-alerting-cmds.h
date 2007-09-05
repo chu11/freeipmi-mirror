@@ -15,10 +15,10 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.13 2007-06-08 20:13:25 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.14 2007-09-05 20:13:38 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H

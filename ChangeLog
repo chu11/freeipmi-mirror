@@ -8,6 +8,9 @@
 
 	* bmc-config/, configure.ac, freeipmi.spec.in: Remove
 	bmc-autoconfig.
+
+	* Update FSF address throughout.  Make address consistent
+	throughout for easier search/replace later.
 	
 2007-09-04  Albert Chu <chu11@llnl.gov>
 

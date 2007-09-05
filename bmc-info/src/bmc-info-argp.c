@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.12 2007-08-02 20:50:06 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.13 2007-09-05 20:13:22 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -17,7 +17,7 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
 #if HAVE_CONFIG_H

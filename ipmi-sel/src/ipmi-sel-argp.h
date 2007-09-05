@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.h,v 1.8 2007-01-22 23:39:27 chu11 Exp $ 
+   $Id: ipmi-sel-argp.h,v 1.9 2007-09-05 20:13:27 chu11 Exp $ 
    
    ipmi-sel-argp.h - System Event Logger utility.
    
@@ -17,7 +17,7 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
 #ifndef _IPMI_SEL_ARGP_H

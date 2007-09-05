@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: secure.h,v 1.1 2006-11-06 00:13:12 chu11 Exp $
+ *  $Id: secure.h,v 1.2 2007-09-05 20:13:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #ifndef _SECURE_H

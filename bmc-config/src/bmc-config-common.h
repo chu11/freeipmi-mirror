@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-config-common.h,v 1.5 2007-08-02 20:50:05 chu11 Exp $ 
+   $Id: bmc-config-common.h,v 1.6 2007-09-05 20:13:21 chu11 Exp $ 
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
 #ifndef _BMC_CONFIG_COMMON_H

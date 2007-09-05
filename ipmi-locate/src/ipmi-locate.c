@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.31 2007-08-02 20:50:12 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.32 2007-09-05 20:13:26 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -17,7 +17,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
 #include <stdio.h>

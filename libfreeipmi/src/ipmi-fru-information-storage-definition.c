@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru-information-storage-definition.c,v 1.2 2007-08-02 20:50:18 chu11 Exp $
+ *  $Id: ipmi-fru-information-storage-definition.c,v 1.3 2007-09-05 20:13:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -22,7 +22,7 @@
  *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #ifdef HAVE_CONFIG_H
