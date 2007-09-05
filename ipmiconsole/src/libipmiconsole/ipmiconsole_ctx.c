@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.18 2007-09-04 22:37:16 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.19 2007-09-05 15:44:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -211,9 +211,9 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   else
     c->config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
 
-  c->config.behavior_flags = protocol_config->behavior_flags;
-
   c->config.engine_flags = engine_config->engine_flags;
+
+  c->config.behavior_flags = engine_config->behavior_flags;
 
   c->config.debug_flags = engine_config->debug_flags;
 

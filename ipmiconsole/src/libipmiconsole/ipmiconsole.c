@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.c,v 1.74 2007-09-04 22:37:16 chu11 Exp $
+ *  $Id: ipmiconsole.c,v 1.75 2007-09-05 15:44:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -483,8 +483,8 @@ ipmiconsole_ctx_create(char *hostname,
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
 	  && !IPMI_CIPHER_SUITE_ID_SUPPORTED(ipmi_config->cipher_suite_id))
       || (ipmi_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
-      || (protocol_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
       || (engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
+      || (engine_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
       || (engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       errno = EINVAL;

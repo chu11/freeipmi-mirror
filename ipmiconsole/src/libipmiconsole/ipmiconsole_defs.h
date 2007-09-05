@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.55 2007-09-04 22:37:16 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.56 2007-09-05 15:44:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -208,14 +208,14 @@ typedef enum
 	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION \
          | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)
 
-#define IPMICONSOLE_BEHAVIOR_MASK \
-        (IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE \
-         | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
-
 #define IPMICONSOLE_ENGINE_MASK \
         (IPMICONSOLE_ENGINE_CLOSE_FD \
          | IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED \
          | IPMICONSOLE_ENGINE_LOCK_MEMORY)
+
+#define IPMICONSOLE_BEHAVIOR_MASK \
+        (IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE \
+         | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
 
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED 0x1
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR       0x2
@@ -242,10 +242,10 @@ struct ipmiconsole_ctx_config {
   unsigned int retransmission_keepalive_timeout_len;
   unsigned int acceptable_packet_errors_count;
   unsigned int maximum_retransmission_count;
-  uint32_t behavior_flags;
 
   /* engine config */
   uint32_t engine_flags;
+  uint32_t behavior_flags;
   uint32_t debug_flags;
 
   /* Data based on Configuration Parameters */

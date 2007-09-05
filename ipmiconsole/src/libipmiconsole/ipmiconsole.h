@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.66 2007-09-04 22:37:16 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.67 2007-09-05 15:44:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,7 +74,15 @@ extern "C" {
  * Debug Flags
  *
  * Utilized with ipmiconsole_engine_init() or with struct
- * ipmiconsole_engine_config below.
+ * ipmiconsole_engine_config below for debugging.
+ *
+ * When used with ipmiconsole_engine_init(), enables debugging in
+ * libipmiconsole global activities, such as the libipmiconsole engine
+ * threads.
+ *
+ * When used with struct ipmiconsole_engine_config and a context,
+ * enables debugging specific to an IPMI connection with a specific
+ * host.
  * 
  * STDOUT       - Output debugging to stdout
  * STDERR       - Output debugging to stderr
@@ -91,7 +99,8 @@ extern "C" {
 /* 
  * IPMI Privilege Constants
  *
- * Utilized with struct ipmiconsole_ipmi_config below.
+ * Utilized with struct ipmiconsole_ipmi_config below to specify a
+ * privilege level to authenticate with.
  */
 #define IPMICONSOLE_PRIVILEGE_USER                0
 #define IPMICONSOLE_PRIVILEGE_OPERATOR            1
@@ -100,14 +109,16 @@ extern "C" {
 /* 
  * Workaround Flags
  *
- * Utilized with struct ipmiconsole_ipmi_config below.
+ * Utilized with struct ipmiconsole_ipmi_config below to specify
+ * workarounds for specific motherboard manufacturers.
  * 
  * AUTHENTICATION_CAPABILITIES
  *
  * Discoverd on an ASUS P5M2 motherboard, the motherboard does not
  * properly report username capabilities or K_g status, leading to
  * invalid username or K_g errors.  This workaround flag will work
- * around the problem.
+ * around the problem.  This problem is also confirmed on an ASUS
+ * P5MT-R.
  *
  * IGNORE_SOL_PAYLOAD_SIZE
  *
@@ -154,34 +165,10 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000
        
 /* 
- * Behavior Flags
- *
- * Utilized with struct ipmiconsole_protocol_config below.
- * 
- * ERROR_ON_SOL_INUSE
- *
- * Under most circumstances, if SOL is detected as being in use,
- * libipmiconsole will attempt to deactivate the earlier SOL session
- * and activate the SOL session under the current one.  This default
- * behavior exists for several reasons, most notably that earlier SOL
- * sessions may have not been able to be deactivate properly.  This
- * security flag changes the default behavior to return an error if
- * SOL is already detected as being in use.  If it is detected as in
- * use, the errnum returned from ipmiconsole_ctx_errnum() would be
- * IPMICONSOLE_ERR_SOL_INUSE.
- *   
- * DEACTIVATE_ONLY
- *
- * Only attempt to deactivate the SOL session.  If an SOL session is
- * not active, do nothing.
- */
-#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE 0x00000001
-#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY    0x00000002
-
-/* 
  * Engine Flags
  *
- * Utilized with struct ipmiconsole_engine_config below.
+ * Utilized with struct ipmiconsole_engine_config below to alter
+ * libipmiconsole engine behavior.
  * 
  * CLOSE_FD
  *
@@ -223,6 +210,32 @@ extern "C" {
 #define IPMICONSOLE_ENGINE_CLOSE_FD                  0x00000001
 #define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
 #define IPMICONSOLE_ENGINE_LOCK_MEMORY               0x00000004
+
+/* 
+ * Behavior Flags
+ *
+ * Utilized with struct ipmiconsole_protocol_config below to atler
+ * SOL connection behavior.
+ * 
+ * ERROR_ON_SOL_INUSE
+ *
+ * Under most circumstances, if SOL is detected as being in use,
+ * libipmiconsole will attempt to deactivate the earlier SOL session
+ * and activate the SOL session under the current one.  This default
+ * behavior exists for several reasons, most notably that earlier SOL
+ * sessions may have not been able to be deactivate properly.  This
+ * security flag changes the default behavior to return an error if
+ * SOL is already detected as being in use.  If it is detected as in
+ * use, the errnum returned from ipmiconsole_ctx_errnum() would be
+ * IPMICONSOLE_ERR_SOL_INUSE.
+ *   
+ * DEACTIVATE_ONLY
+ *
+ * Only attempt to deactivate the SOL session.  If an SOL session is
+ * not active, do nothing.
+ */
+#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE 0x00000001
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY    0x00000002
 
 /*
  * Context Status
@@ -394,12 +407,6 @@ struct ipmiconsole_ipmi_config
  *   packets (in particular 'ping' packets to keep an IPMI session
  *   alive) to be accepted by the remote BMC, but not SOL packets.
  *
- * behavior_flags
- *
- *   Bitwise OR of flags indicating any protocol behavior that should
- *   be changed from the default.  Pass 0 for default of no
- *   modifications to behavior.
- *
  */
 struct ipmiconsole_protocol_config
 {
@@ -410,7 +417,6 @@ struct ipmiconsole_protocol_config
   int retransmission_keepalive_timeout_len;
   int acceptable_packet_errors_count;
   int maximum_retransmission_count;
-  unsigned int behavior_flags; 
 };
 
 /* 
@@ -424,6 +430,12 @@ struct ipmiconsole_protocol_config
  *   Bitwise OR of flags indicating how the ipmiconsole engine should
  *   behave for a particular context.  Pass 0 for default behavior.
  *
+ * behavior_flags
+ *
+ *   Bitwise OR of flags indicating any protocol behavior that should
+ *   be changed from the default.  Pass 0 for default of no
+ *   modifications to behavior.
+ *
  * debug_flags
  *
  *   Bitwise OR of flags indicating how debug output should (or should
@@ -433,6 +445,7 @@ struct ipmiconsole_protocol_config
 struct ipmiconsole_engine_config
 {
   unsigned int engine_flags;
+  unsigned int behavior_flags; 
   unsigned int debug_flags;
 };
 
