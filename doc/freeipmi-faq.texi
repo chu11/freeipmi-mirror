@@ -239,7 +239,7 @@ Channel Information:
     Protocol Type: IPMB-1.0
 @end example
 
-In the above example, its clear to see that pwopr[2-4] has different
+In the above example, its clear to see that pwopr[2-4] have different
 firmware than pwopr[0-1,5].
 
 Ipmidetect can be used to enhance the efficiency of the hostranged
