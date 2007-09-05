@@ -84,6 +84,15 @@ common tests
 - close fd from ipmiconsole_ctx_fd()  - close session
 - fd-leaks
 
+ASUS issues to resolve
+----------------------
+K_g status from get channel authentication capabilities incorrect (P5MT-R)
+SOL report incorrect port (P5MT-R)
+duplicate seq number (P5M2)
+SOL config read (P5M2, P5MT-R)
+get/st payload access (P5M2, P5MT-R)
+invalid RAKP2 err code (P5MT-R)
+
 RELEASE TODOS
 -------------
 Email freeipmi-users && freeipmi-devel
