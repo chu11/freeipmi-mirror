@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_workarounds.c,v 1.8 2007-09-05 20:13:36 chu11 Exp $
+ *  $Id: ipmipower_workarounds.c,v 1.9 2007-09-06 20:12:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,8 +90,6 @@ ipmipower_workarounds_string(uint32_t workaround_flags)
 
   memset(workarounds_buffer, '\0', IPMIPOWER_WORKAROUNDS_BUFLEN);
   
-  printf("workaround_flags = %x\n", workaround_flags);
-
   if (workaround_flags & WORKAROUND_FLAG_ACCEPT_SESSION_ID_ZERO)
     {
       if (not_first)
