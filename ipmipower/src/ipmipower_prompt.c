@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.51 2007-09-05 20:13:35 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.52 2007-09-06 21:05:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,10 +106,10 @@ _cmd_advanced(void)
               "wait-until-on [on|off]                  - Toggle wait-until-on functionality.\n"
               "wait-until-off [on|off]                 - Toggle wait-until-off functionality.\n"
               "consolidate-output [on|off]             - Toggle consolidate-output functionality.\n"
-              "workaround-flags WORKAROUNDS            - Specify workaround flags.\n");
+              "workaround-flags WORKAROUNDS            - Specify workaround flags.\n"
+              "debug [on|off]                          - Toggle debug to stderr.\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
-              "debug [on|off]                          - Toggle debug to stderr.\n"
               "rmcpdump [on|off]                       - Toggle RMCP dump output.\n"
 	      "log [on|off]                            - Toggle logging output.\n"
 	      "logfile [FILE]                          - Specify a new log file.  No input for default.\n");
