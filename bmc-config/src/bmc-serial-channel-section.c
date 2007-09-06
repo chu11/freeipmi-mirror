@@ -1016,6 +1016,7 @@ bmc_serial_channel_section_get (bmc_config_state_data_t *state_data)
 
   if (!(serial_channel_section = bmc_config_section_create (state_data, 
                                                             "Serial_Channel",
+                                                            NULL,
                                                             0)))
     goto cleanup;
 

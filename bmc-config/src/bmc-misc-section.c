@@ -79,6 +79,7 @@ bmc_misc_section_get (bmc_config_state_data_t *state_data)
 
   if (!(misc_section = bmc_config_section_create (state_data, 
                                                   "Misc",
+                                                  NULL,
                                                   0)))
     goto cleanup;
 

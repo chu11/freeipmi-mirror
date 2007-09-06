@@ -17,6 +17,9 @@
 	* bmc-config/src/bmc-user-sections.c (bmc_user_section_get):
 	Comment out username for user id 1, since that typically isn't
 	modifiable.
+
+	* bmc-config/, pef-config/: Re-architect sections for support of
+	section comments.
 	
 2007-09-04  Albert Chu <chu11@llnl.gov>
 

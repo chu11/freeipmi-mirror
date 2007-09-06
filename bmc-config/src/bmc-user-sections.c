@@ -1657,6 +1657,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
   if (!(user_section = bmc_config_section_create(state_data, 
                                                  buf,
+                                                 NULL,
                                                  0)))
     goto cleanup;
 

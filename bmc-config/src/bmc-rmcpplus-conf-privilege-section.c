@@ -448,6 +448,7 @@ bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 
   if (!(rmcpplus_conf_privilege_section = bmc_config_section_create (state_data, 
                                                                      "Rmcpplus_Conf_Privilege",
+                                                                     NULL,
                                                                      0)))
     goto cleanup;
 

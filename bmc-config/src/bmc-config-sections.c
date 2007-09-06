@@ -152,6 +152,7 @@ bmc_config_sections_list_destroy(bmc_config_state_data_t *state_data,
 struct section * 
 bmc_config_section_create (bmc_config_state_data_t *state_data,
                            char *section_name,
+                           Section_Comment comment,
                            unsigned int flags)
 {
   struct section *section = NULL;
@@ -171,6 +172,7 @@ bmc_config_section_create (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
+  section->comment = comment;
   section->flags = flags;
 
   return section;

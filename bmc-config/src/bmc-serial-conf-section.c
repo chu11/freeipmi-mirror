@@ -852,6 +852,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
 
   if (!(bmc_serial_conf_section = bmc_config_section_create(state_data, 
                                                             "Serial_Conf", 
+                                                            NULL,
                                                             0)))
     goto cleanup;
 

@@ -8,9 +8,13 @@
 #define PEF_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x2
 #define PEF_DO_NOT_CHECKOUT                             0x4
 
+/* Output a comment/instructions for a particular section */
+typedef pef_err_t (*Section_Comment) (pef_config_state_data_t *state_data);
+
 struct section {
   struct section *next;
   char *section_name;
+  Section_Comment comment;
   unsigned int flags;
   struct keyvalue *keyvalues;
 };
@@ -56,6 +60,7 @@ void pef_config_sections_list_destroy (pef_config_state_data_t *state_data,
 
 struct section * pef_config_section_create (pef_config_state_data_t *state_data, 
                                             char *section_name,
+                                            Section_Comment comment,
                                             unsigned int flags);
 
 void pef_config_section_destroy (pef_config_state_data_t *state_data, 
