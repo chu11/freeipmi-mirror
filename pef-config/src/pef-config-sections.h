@@ -9,7 +9,8 @@
 #define PEF_DO_NOT_CHECKOUT                             0x4
 
 /* Output a comment/instructions for a particular section */
-typedef pef_err_t (*Section_Comment) (pef_config_state_data_t *state_data);
+typedef pef_err_t (*Section_Comment) (pef_config_state_data_t *state_data,
+                                      char *section_name);
 
 struct section {
   struct section *next;

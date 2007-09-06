@@ -31,7 +31,8 @@
 #define BMC_DO_NOT_CHECKOUT                             0x04
 
 /* Output a comment/instructions for a particular section */
-typedef bmc_err_t (*Section_Comment) (bmc_config_state_data_t *state_data);
+typedef bmc_err_t (*Section_Comment) (bmc_config_state_data_t *state_data, 
+                                      char *section_name);
 
 struct section {
   struct section *next;

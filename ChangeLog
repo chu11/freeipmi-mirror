@@ -1,3 +1,9 @@
+2007-09-06  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config-sections.h,
+	pef-config/src/pef-config-sections.h: Add section_name parameter
+	to comment callback.
+	
 2007-09-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/src/libipmiconsole/: Move behavior_flags into
