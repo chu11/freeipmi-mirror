@@ -6,6 +6,11 @@
 
 	* ipmi-sensors, ipmi-sel, ipmi-fru: Fix seg-fault possibility
 	corner case.
+
+	* ipmipower/: Remove debug statement.
+
+	* common/src/cmdline-parse-common.h (parse_authentication_type):
+	Fix parsing bug.
 	
 2007-09-05  Albert Chu <chu11@llnl.gov>
 
