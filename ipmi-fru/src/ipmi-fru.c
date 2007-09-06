@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.3 2007-09-05 20:13:26 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.4 2007-09-06 20:32:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -397,6 +397,7 @@ _ipmi_fru(pstdout_state_t pstate,
   int exit_code = -1;
 
   prog_data = (ipmi_fru_prog_data_t *)arg;
+  memset(&state_data, '\0', sizeof(ipmi_fru_state_data_t));
 
   if (!(dev = ipmi_device_open(prog_data->progname,
                                hostname,
@@ -412,7 +413,6 @@ _ipmi_fru(pstdout_state_t pstate,
       goto cleanup;
     }
   
-  memset(&state_data, '\0', sizeof(ipmi_fru_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;

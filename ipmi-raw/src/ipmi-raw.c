@@ -342,6 +342,7 @@ _ipmi_raw (pstdout_state_t pstate,
   int exit_code = -1;
 
   prog_data = (ipmi_raw_prog_data_t *)arg;
+  memset(&state_data, '\0', sizeof(ipmi_raw_state_data_t));
 
   if (!(dev = ipmi_device_open(prog_data->progname,
                                hostname,
@@ -357,7 +358,6 @@ _ipmi_raw (pstdout_state_t pstate,
       goto cleanup;
     }
 
-  memset(&state_data, '\0', sizeof(ipmi_raw_state_data_t));
   state_data.dev = dev;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;

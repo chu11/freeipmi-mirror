@@ -3,6 +3,9 @@
 	* bmc-config/src/bmc-config-sections.h,
 	pef-config/src/pef-config-sections.h: Add section_name parameter
 	to comment callback.
+
+	* ipmi-sensors, ipmi-sel, ipmi-fru: Fix seg-fault possibility
+	corner case.
 	
 2007-09-05  Albert Chu <chu11@llnl.gov>
 
