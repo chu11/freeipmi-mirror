@@ -10,7 +10,8 @@
 
 /* Output a comment/instructions for a particular section */
 typedef pef_err_t (*Section_Comment) (pef_config_state_data_t *state_data,
-                                      char *section_name);
+                                      char *section_name,
+                                      FILE *fp);
 
 struct section {
   struct section *next;

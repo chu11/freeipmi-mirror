@@ -65,9 +65,11 @@ with --checkout to get a copy of the current BMC configuration and
 store it in a file.  The standard output can be redirected to a file
 or a file can be specified with the --filename option.
 .LP
-B) Edit the configuration file with an editor.  See 
+B) Edit the configuration file with an editor.  Comments throughout the
+file will give instructions on how to configure the fields.
+The 
 .B bmc-config.conf(5)
-for information on what the fields in the configuration file mean.
+provides additional information on the meaning of different fields.
 .LP
 C) Commit the configuration back to the BMC using the --commit option and specifying
 the configuration file with the --filename option.

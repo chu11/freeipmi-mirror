@@ -1,6 +1,10 @@
 2007-09-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole.8.pre.in: Fix text.
+
+	* common/src/format-text.h, common/src/format-text.c: New files.
+
+	* bmc-config/: Begin supporting comments in the checkout.
 	
 2007-09-06  Albert Chu <chu11@llnl.gov>
 

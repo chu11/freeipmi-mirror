@@ -25,7 +25,8 @@ noinst_HEADERS = \
 	secure.h \
 	timeval.h \
 	pstdout.h \
-	hostrange.h 
+	hostrange.h \
+	format-text.h 
 
 noinst_LTLIBRARIES = \
 	libcmdlineparsecommon.la \
@@ -41,7 +42,8 @@ noinst_LTLIBRARIES = \
 	libcbuf.la \
 	libllnlcommon.la \
 	libpstdout.la \
-	libhostrange.la
+	libhostrange.la \
+	libformattext.la
 
 libcmdlineparsecommon_la_SOURCES = cmdline-parse-common.c
 libcmdlineparsecommon_la_CPPFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
@@ -93,6 +95,8 @@ libpstdout_la_LDFLAGS = $(PTHREAD_LIBS)
 
 libhostrange_la_SOURCES = hostrange.c
 libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
+
+libformattext_la_SOURCES = format-text.c
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

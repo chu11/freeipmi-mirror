@@ -1641,6 +1641,76 @@ serial_session_limit_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
+static bmc_err_t
+section_user1_comments(bmc_config_state_data_t *state_data,
+                       char *section_name,
+                       FILE *fp)
+{
+  char buf[COMMENT_BUFLEN];
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "UserN",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+      return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "In the following User sections, users should configure usernames, "
+                  "passwords, and access rights for IPMI over LAN communication. "
+                  "Usernames can be set to any string with the exception of User1, which "
+                  "is a fixed to the \"anonymous\" username in IPMI.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "For those wishing to configure IPMI over LAN access for a username, at "
+                  "minimum set \"Enable_User\" to \"Yes\", \"Lan_Enable_IPMI_Msgs\" to \"Yes\", "
+                  "and \"Lan_Privilege_Limit\" to a reasonable privilege level.  The "
+                  "privilege level is used to limit various IPMI operations for "
+                  "individual usernames.  It is recommened that atleast 1 username be "
+                  "created with a different maximum privilege levels of \"User\", \"Operator\", "
+                  "and \"Administrator\".",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
+                  "\"Password20\" and \"SOL_Payload_Access\" field may be listed below. "
+                  "\"Password20\" may be used to set up to a 20 byte password for the "
+                  "username rather than a maximum 16 byte password.  Its use is optional. "
+                  "Set the \"SOL_Payload_Access\" field to \"Yes\" or \"No\" to enable or disable "
+                  "this username's ability to access SOL.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+    
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "Please do not forget to uncomment those fields, such as \"Password\", "
+                  "that may be commented out during the checkout.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  return BMC_ERR_SUCCESS;
+}
+
 struct section *
 bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
 {
@@ -1655,11 +1725,22 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
 
   snprintf(buf, 64, "User%d", userid);
 
-  if (!(user_section = bmc_config_section_create(state_data, 
-                                                 buf,
-                                                 NULL,
-                                                 0)))
-    goto cleanup;
+  if (userid == 1)
+    {
+      if (!(user_section = bmc_config_section_create(state_data, 
+                                                     buf,
+                                                     section_user1_comments,
+                                                     0)))
+        goto cleanup;
+    }
+  else
+    {
+      if (!(user_section = bmc_config_section_create(state_data, 
+                                                     buf,
+                                                     NULL,
+                                                     0)))
+        goto cleanup;
+    }
 
   /* userid 1 is the NULL username, so comment it out by default */
   if (bmc_config_section_add_keyvalue (state_data,
