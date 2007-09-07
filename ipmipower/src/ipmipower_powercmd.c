@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.114 2007-09-07 01:26:21 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.115 2007-09-07 16:15:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2231,8 +2231,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	    }
 	}
       else if (conf->wait_until_off == IPMIPOWER_TRUE
-          && ip->cmd == POWER_CMD_POWER_OFF
-	  && ip->wait_until_off_state)
+               && ip->cmd == POWER_CMD_POWER_OFF
+               && ip->wait_until_off_state)
 	{
           if (!power_state)
 	    {
