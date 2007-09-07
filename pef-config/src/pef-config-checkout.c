@@ -27,9 +27,22 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
   struct keyvalue *kv;
   pef_err_t rv = PEF_ERR_FATAL_ERROR;
   pef_err_t ret = PEF_ERR_SUCCESS;
+  pef_err_t this_ret;
 
   if (sect->flags & PEF_DO_NOT_CHECKOUT)
     return ret;
+
+  if (sect->comment)
+    {
+      if ((this_ret = (*sect->comment)(state_data,
+                                       sect->section_name,
+                                       fp)) != PEF_ERR_SUCCESS)
+        {
+          if (args->verbose)
+            fprintf (fp, "\t## FATAL: Comment output error %s\n");
+          ret = this_ret;
+        }
+    }
 
   fprintf (fp, "Section %s\n", sect->section_name);
 
@@ -38,8 +51,6 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
 
   while (kv)
     {
-      pef_err_t this_ret;
-
       /* achu: Certain keys should be "hidden" and not be checked out.
        * They only linger for backwards compatability to FreeIPMI's
        * 0.2.0 bmc-config, which have several options with typoed
