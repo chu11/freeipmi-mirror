@@ -1,3 +1,7 @@
+2007-09-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole.8.pre.in: Fix text.
+	
 2007-09-06  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-sections.h,

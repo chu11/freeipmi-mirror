@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiconsole.8.pre.in,v 1.11 2007-09-05 20:13:27 chu11 Exp $
+\."$Id: ipmiconsole.8.pre.in,v 1.12 2007-09-07 16:17:26 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2006 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -196,8 +196,8 @@ not configured correctly on the remote BMC.
 .LP
 "BMC Implementation" - The BMC on the remote machine has a severe
 problem in its implementation.  Please see the WORKAROUNDS section
-below for possible workarounds.  A workaround may be needed to get
-around this problem, please contact the authors.
+below for possible workarounds.  If additional vendor workarounds are
+required, please contact the authors.
 .LP
 "excess retransmissions sent" - An excessive number of retransmissions
 of SOL packets has occurred and 
