@@ -1328,6 +1328,40 @@ oem_oem_proprietary_diff (bmc_config_state_data_t *state_data,
                                      &(auth.oem_level_oem_proprietary));
 }
 
+static bmc_err_t
+section_lan_conf_auth_comments(bmc_config_state_data_t *state_data,
+                               char *section_name,
+                               FILE *fp)
+{
+  char buf[COMMENT_BUFLEN];
+
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  section_name,
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  "In the Lan_Conf_Auth section, allowable authentication mechanisms for "
+                  "IPMI 1.5 is configured.  Most users will want to set all \"MD5\" "
+                  "authentication to \"Yes\" and the rest to \"No\".  If you have "
+                  "configured a NULL username and a NULL password for a username, you "
+                  "will also want to configure the \"None\" fields to \"Yes\".",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  return BMC_ERR_SUCCESS;
+}
+
 struct section *
 bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
 {
@@ -1335,7 +1369,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
 
   if (!(lan_conf_auth_section = bmc_config_section_create(state_data, 
                                                           "Lan_Conf_Auth",
-                                                          NULL,
+                                                          section_lan_conf_auth_comments,
                                                           0)))
     goto cleanup;
 

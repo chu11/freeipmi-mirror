@@ -1031,6 +1031,64 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
+static bmc_err_t
+section_lan_channel_comments(bmc_config_state_data_t *state_data,
+                             char *section_name,
+                             FILE *fp)
+{
+  char buf[COMMENT_BUFLEN];
+
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  section_name,
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+      return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "In the Lan_Channel section, general IPMI over LAN can be enabled for "
+                  "disabled. In the below, \"Volatile\" configurations are immediately "
+                  "configured onto the BMC and will have immediate effect on the system. "
+                  "\"Non_Volatile\" configurations are only available after the next "
+                  "system reset.  Generally, both the \"Volatile\" and \"Non_Volatile\" "
+                  "equivalent fields should be configured identically.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "For those wishing to enable IPMI over LAN access the \"Access_Mode\" "
+                  "fields should be set to \"Always_Available\". "
+                  "\"Channel_Privilege_Limit\" should be set to the highest privilege "
+                  "level any username configured may authenticate with.  Typically, this "
+                  "is set to \"Administrator\".",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+    
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "\"User_Level_Auth\" and \"Per_Message_Auth\" are typically set to "
+                  "\"Yes\" for additional security.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  return BMC_ERR_SUCCESS;
+}
+
 struct section *
 bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
 {
@@ -1038,7 +1096,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
 
   if (!(lan_channel_section = bmc_config_section_create (state_data, 
                                                          "Lan_Channel",
-                                                         NULL,
+                                                         section_lan_channel_comments,
                                                          0)))
     goto cleanup;
 

@@ -133,7 +133,7 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
                                        fp)) != BMC_ERR_SUCCESS)
         {
           if (args->verbose)
-            fprintf (fp, "\t## FATAL: Comment output error %s\n");
+            fprintf (fp, "\t## FATAL: Comment output error\n");
           ret = this_ret;
         }
     }

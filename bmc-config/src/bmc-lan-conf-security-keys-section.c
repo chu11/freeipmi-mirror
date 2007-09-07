@@ -184,6 +184,39 @@ k_g_validate (bmc_config_state_data_t *state_data,
   return BMC_VALIDATE_VALID_VALUE;
 }
 
+static bmc_err_t
+section_lan_conf_security_keys_comments(bmc_config_state_data_t *state_data,
+                                        char *section_name,
+                                        FILE *fp)
+{
+  char buf[COMMENT_BUFLEN];
+
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  section_name,
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
+                  "K_g BMC key may be configurable.  The K_g key is an optional key that "
+                  "can be set for two key authentication in IPMI 2.0.  It is optionally "
+                  "configured.  Most users will wish to set this to zero (or blank).",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  return BMC_ERR_SUCCESS;
+}
+
 struct section *
 bmc_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
@@ -191,7 +224,7 @@ bmc_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 
   if (!(lan_conf_security_keys_section = bmc_config_section_create (state_data, 
                                                                     "Lan_Conf_Security_Keys",
-                                                                    NULL,
+                                                                    section_lan_conf_security_keys_comments,
                                                                     0)))
     goto cleanup;
 

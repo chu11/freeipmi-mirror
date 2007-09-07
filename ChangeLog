@@ -4,8 +4,9 @@
 
 	* common/src/format-text.h, common/src/format-text.c: New files.
 
-	* bmc-config/: Begin supporting comments in the checkout.
-	
+	* bmc-config/: Begin supporting comments in the checkout.  Update
+	bmc-config manpage.
+
 2007-09-06  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-config-sections.h,

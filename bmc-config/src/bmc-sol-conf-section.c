@@ -940,6 +940,57 @@ port_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
+static bmc_err_t
+section_sol_conf_comments(bmc_config_state_data_t *state_data,
+                          char *section_name,
+                          FILE *fp)
+{
+  char buf[COMMENT_BUFLEN];
+
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  section_name,
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
+                  "following configuration options will allow the user to configure "
+                  "SOL for their systems.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  "For most users that want to enable SOL, minimally \"Enable_SOL\" "
+                  "should be set to \"Yes\" and \"SOL_Privilege_Level\" should be set to "
+                  "the highest privilege level any username configured can authenticate "
+                  "with (typically \"Administrator\").  For security purposes, "
+                  "\"Force_SOL_Payload_Authentication\" and "
+                  "\"Force_SOL_Payload_Encryption\" should be set to \"Yes\", however "
+                  "some systems may not support SOL authentication and encryption (this "
+                  "depends on cipher suite ID support).  The \"Non_Volatile_Bit_Rate\" "
+                  "and \"Volatile_Bit_Rate\" should both be set to the appropriate baud "
+                  "rate for your system.  This is typically the same baud rate configured "
+                  "in the BIOS and/or operating system.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  return BMC_ERR_SUCCESS;
+}
+
 struct section *
 bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
 {
@@ -947,7 +998,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
 
   if (!(sol_conf_section = bmc_config_section_create(state_data,
                                                      "SOL_Conf",
-                                                     NULL,
+                                                     section_sol_conf_comments,
                                                      0)))
     goto cleanup;
 

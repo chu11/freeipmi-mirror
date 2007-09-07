@@ -1648,6 +1648,8 @@ section_user1_comments(bmc_config_state_data_t *state_data,
 {
   char buf[COMMENT_BUFLEN];
 
+  fprintf(fp, "#\n");
+
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
                   "UserN",

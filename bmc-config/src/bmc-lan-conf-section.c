@@ -784,6 +784,39 @@ vlan_priority_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
+static bmc_err_t
+section_lan_conf_comments(bmc_config_state_data_t *state_data,
+                          char *section_name,
+                          FILE *fp)
+{
+  char buf[COMMENT_BUFLEN];
+
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  section_name,
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+      return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX, 
+                  COMMENT_COLUMN_WIDTH,
+                  "In the Lan_Conf section, typical networking configuration is setup. "
+                  "Most users will choose to set \"Static\" for the \"IP_Address_Source\" "
+                  "and set the appropriate \"IP_Address\", \"MAC_Address\", "
+                  "\"Subnet_Mask\", etc. for the machine.",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  return BMC_ERR_SUCCESS;
+}
+
 struct section *
 bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
 {
@@ -791,7 +824,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
 
   if (!(lan_conf_section = bmc_config_section_create (state_data, 
                                                       "Lan_Conf",
-                                                      NULL,
+                                                      section_lan_conf_comments,
                                                       0)))
     goto cleanup;
   

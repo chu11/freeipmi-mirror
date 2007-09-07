@@ -158,6 +158,10 @@ Future versions of this manpage will try to include more information.
      	## Possible values: Yes/No
      	Oem_Enable_Auth_Type_Oem_Proprietary         No
      EndSection
+     Section Lan_Conf_Security_Keys
+        ## Give string or blank to clear. Max 20 chars
+        K_G
+     EndSection
      Section Lan_Conf_Misc
      	## Possible values: Yes/No
      	Enable_Gratuitous_Arps                       Yes
@@ -305,6 +309,11 @@ fields.  The respective MAC addresses for the IP addresses are
 configured under \fIMac_Address\fR, \fIDefault_Gateway_Mac_Address\fR,
 and \fIBackup_Gateway_Mac_Address\fR.
 .LP
+It is not required to setup the BMC \fIIP_Address\fR to be the same
+\fIP_Address\fR used by your operating system for that network
+interface.  However, if you choose to use a different address, an
+alternate ARP configuration may need to be setup.
+.LP
 To instead setup your BMC network information via DHCP, the field
 \fIIP_Address_Source\fR should be configured with "Use_DHCP".
 .LP
@@ -328,8 +337,17 @@ should be enabled.  In the above example, \fIMd2\fR and \fIMd5\fR are
 the only authentication mechanisms that are enabled for users 
 with "User", "Operator" and "Administrator" privileges.
 
+.SH "Section Lan_Conf_Security_Keys"
+This section supports configuration of the IPMI 2.0 K_g key.  The key
+is used for two-key authentication in IPMI 2.0.  In most tools, when
+doing IPMI 2.0, the K_g can be optionally specified.  It is not
+required for IPMI 2.0 operation.
+.LP
+In the above example, we have elected to leave this field blank so the
+K_g key is not used.
+
 .SH "Section Lan_Conf_Misc"
-This section lists miscaellaneous IPMI over LAN configuration options.
+This section lists miscellaneous IPMI over LAN configuration options.
 Normally, these are optional IPMI configuration options that are not
 implemented on all BMCs.
 .LP
@@ -407,7 +425,10 @@ data.
 Generally speaking, HMAC-SHA1 based algorithms are stronger than
 HMAC-MD5, which are better than MD5-128 algorithms.  AES-CBC-128
 confidentiality algorithms are stronger than xRC4-128 algorithms,
-which are better than xRC4-40 algorithms.
+which are better than xRC4-40 algorithms.  Cipher suite ID 3 is
+therefore typically considered the most secure.  Some users may wish
+to set cipher suite ID 3 to a privilege level and disable all 
+remaining cipher suite IDs.
 .LP
 The above example configuration has decided to allow any user with
 "Administrator" privileges use any Cipher Suite algorithm suite which

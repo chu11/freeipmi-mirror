@@ -441,6 +441,44 @@ id_14_diff (bmc_config_state_data_t *state_data,
   return id_diff (state_data, sect, kv, 14);
 }
 
+static bmc_err_t
+section_rmcpplus_conf_privilege_comments(bmc_config_state_data_t *state_data,
+                                         char *section_name,
+                                         FILE *fp)
+{
+  char buf[COMMENT_BUFLEN];
+
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  section_name,
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  if (format_text(COMMENT_PREFIX,
+                  COMMENT_COLUMN_WIDTH,
+                  "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), rmcpplus "
+                  "cipher suite ids may be configurable below.  In the "
+                  "Rmcpplus_Conf_Privilege section, user privilege levels "
+                  "required for authentication under IPMI 2.0 (including Serial-over-LAN) "
+                  "are set for each supported cipher suite ID.  Each cipher suite ID "
+                  "supports different sets of authentication, integrity, and encryption "
+                  "algorithms for IPMI 2.0.  Typically, the highest privilege level any "
+                  "username configured should be set.  This is typically "
+                  "\"Administrator\".",
+                  buf,
+                  COMMENT_BUFLEN) < 0)
+    return BMC_ERR_NON_FATAL_ERROR;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+
+  return BMC_ERR_SUCCESS;
+}
+
 struct section *
 bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
@@ -448,7 +486,7 @@ bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 
   if (!(rmcpplus_conf_privilege_section = bmc_config_section_create (state_data, 
                                                                      "Rmcpplus_Conf_Privilege",
-                                                                     NULL,
+                                                                     section_rmcpplus_conf_privilege_comments,
                                                                      0)))
     goto cleanup;
 
