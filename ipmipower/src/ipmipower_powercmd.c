@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.113 2007-09-05 20:13:35 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.114 2007-09-07 01:26:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2285,8 +2285,12 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
           
-          /* Typically there is no response from the IPMI close command if
-           * the POWER_CMD_POWER_RESET power control command is
+          /* IPMI Workaround (achu)
+           *
+           * Discovered on Intel Tiger4 (SR870BN4)
+           *
+           * There is no response from the IPMI close command if the
+           * POWER_CMD_POWER_RESET power control command is
            * successful.  So just skip the close session.
            */
           if (ip->cmd == POWER_CMD_POWER_RESET)
