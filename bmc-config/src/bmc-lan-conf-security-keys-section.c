@@ -190,12 +190,14 @@ section_lan_conf_security_keys_comments(bmc_config_state_data_t *state_data,
                                         FILE *fp)
 {
   char buf[COMMENT_BUFLEN];
+  char section_name_buf[COMMENT_BUFLEN];
 
   fprintf(fp, "#\n");
 
+  sprintf(section_name_buf, "Section %s Comments", section_name);
   if (format_text(COMMENT_PREFIX,
                   COMMENT_COLUMN_WIDTH,
-                  section_name,
+                  section_name_buf,
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
@@ -207,7 +209,7 @@ section_lan_conf_security_keys_comments(bmc_config_state_data_t *state_data,
                   "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
                   "K_g BMC key may be configurable.  The K_g key is an optional key that "
                   "can be set for two key authentication in IPMI 2.0.  It is optionally "
-                  "configured.  Most users will wish to set this to zero (or blank).",
+                  "configured.  Most users will may to set this to zero (or blank).",
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;

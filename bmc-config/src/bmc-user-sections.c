@@ -1652,17 +1652,17 @@ section_user1_comments(bmc_config_state_data_t *state_data,
 
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
-                  "UserN",
+                  "Section UserX Comments",
                   buf,
                   COMMENT_BUFLEN) < 0)
-      return BMC_ERR_NON_FATAL_ERROR;
+    return BMC_ERR_NON_FATAL_ERROR;
   fprintf(fp, "%s", buf);
   fprintf(fp, "#\n");
 
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
                   "In the following User sections, users should configure usernames, "
-                  "passwords, and access rights for IPMI over LAN communication. "
+                  "passwords, and access rights for IPMI over LAN communication.  "
                   "Usernames can be set to any string with the exception of User1, which "
                   "is a fixed to the \"anonymous\" username in IPMI.",
                   buf,
@@ -1673,13 +1673,15 @@ section_user1_comments(bmc_config_state_data_t *state_data,
 
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
-                  "For those wishing to configure IPMI over LAN access for a username, at "
-                  "minimum set \"Enable_User\" to \"Yes\", \"Lan_Enable_IPMI_Msgs\" to \"Yes\", "
-                  "and \"Lan_Privilege_Limit\" to a reasonable privilege level.  The "
+                  "For IPMI over LAN access for a username, set \"Enable_User\" to "
+                  "\"Yes\", \"Lan_Enable_IPMI_Msgs\" to \"Yes\", "
+                  "and \"Lan_Privilege_Limit\" to a privilege level.  The "
                   "privilege level is used to limit various IPMI operations for "
-                  "individual usernames.  It is recommened that atleast 1 username be "
-                  "created with a different maximum privilege levels of \"User\", \"Operator\", "
-                  "and \"Administrator\".",
+                  "individual usernames.  It is recommened that atleast one username be "
+                  "created with a privilege limit \"Administrator\", so all system "
+                  "functions are available to atleast one username via IPMI over LAN.  "
+                  "For security reasons, we recommend not enabling the \"anonymous\" "
+                  "User1.",
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
@@ -1689,9 +1691,9 @@ section_user1_comments(bmc_config_state_data_t *state_data,
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
                   "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
-                  "\"Password20\" and \"SOL_Payload_Access\" field may be listed below. "
+                  "\"Password20\" and \"SOL_Payload_Access\" field may be listed below.  "
                   "\"Password20\" may be used to set up to a 20 byte password for the "
-                  "username rather than a maximum 16 byte password.  Its use is optional. "
+                  "username rather than a maximum 16 byte password.  Its use is optional.  "
                   "Set the \"SOL_Payload_Access\" field to \"Yes\" or \"No\" to enable or disable "
                   "this username's ability to access SOL.",
                   buf,

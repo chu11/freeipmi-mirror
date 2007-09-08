@@ -447,12 +447,14 @@ section_rmcpplus_conf_privilege_comments(bmc_config_state_data_t *state_data,
                                          FILE *fp)
 {
   char buf[COMMENT_BUFLEN];
+  char section_name_buf[COMMENT_BUFLEN];
 
   fprintf(fp, "#\n");
-
+  
+  sprintf(section_name_buf, "Section %s Comments", section_name);
   if (format_text(COMMENT_PREFIX,
                   COMMENT_COLUMN_WIDTH,
-                  section_name,
+                  section_name_buf,
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
@@ -461,15 +463,16 @@ section_rmcpplus_conf_privilege_comments(bmc_config_state_data_t *state_data,
 
   if (format_text(COMMENT_PREFIX,
                   COMMENT_COLUMN_WIDTH,
-                  "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), rmcpplus "
-                  "cipher suite ids may be configurable below.  In the "
-                  "Rmcpplus_Conf_Privilege section, user privilege levels "
-                  "required for authentication under IPMI 2.0 (including Serial-over-LAN) "
+
+                  "If your system supports IPMI 2.0 and Serial-over-LAN (SOL),"
+                  "cipher suite IDs may be configurable below.  In the "
+                  "Rmcpplus_Conf_Privilege section, maximum user privilege levels "
+                  "allowed for authentication under IPMI 2.0 (including Serial-over-LAN) "
                   "are set for each supported cipher suite ID.  Each cipher suite ID "
                   "supports different sets of authentication, integrity, and encryption "
                   "algorithms for IPMI 2.0.  Typically, the highest privilege level any "
-                  "username configured should be set.  This is typically "
-                  "\"Administrator\".",
+                  "username configured should set for support under a cipher suite ID. "
+                  "This is typically \"Administrator\".",
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;

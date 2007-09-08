@@ -946,12 +946,14 @@ section_sol_conf_comments(bmc_config_state_data_t *state_data,
                           FILE *fp)
 {
   char buf[COMMENT_BUFLEN];
+  char section_name_buf[COMMENT_BUFLEN];
 
   fprintf(fp, "#\n");
 
+  sprintf(section_name_buf, "Section %s Comments", section_name);
   if (format_text(COMMENT_PREFIX,
                   COMMENT_COLUMN_WIDTH,
-                  section_name,
+                  section_name_buf,
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
@@ -961,8 +963,7 @@ section_sol_conf_comments(bmc_config_state_data_t *state_data,
   if (format_text(COMMENT_PREFIX,
                   COMMENT_COLUMN_WIDTH,
                   "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
-                  "following configuration options will allow the user to configure "
-                  "SOL for their systems.",
+                  "following configuration options will allow SOL configuration.",
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
@@ -977,8 +978,8 @@ section_sol_conf_comments(bmc_config_state_data_t *state_data,
                   "with (typically \"Administrator\").  For security purposes, "
                   "\"Force_SOL_Payload_Authentication\" and "
                   "\"Force_SOL_Payload_Encryption\" should be set to \"Yes\", however "
-                  "some systems may not support SOL authentication and encryption (this "
-                  "depends on cipher suite ID support).  The \"Non_Volatile_Bit_Rate\" "
+                  "forced authentication and/or encryption depends on the cipher suite "
+                  "IDs supported. The \"Non_Volatile_Bit_Rate\" "
                   "and \"Volatile_Bit_Rate\" should both be set to the appropriate baud "
                   "rate for your system.  This is typically the same baud rate configured "
                   "in the BIOS and/or operating system.",

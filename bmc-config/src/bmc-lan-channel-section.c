@@ -1037,12 +1037,14 @@ section_lan_channel_comments(bmc_config_state_data_t *state_data,
                              FILE *fp)
 {
   char buf[COMMENT_BUFLEN];
+  char section_name_buf[COMMENT_BUFLEN];
 
   fprintf(fp, "#\n");
 
+  sprintf(section_name_buf, "Section %s Comments", section_name);
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
-                  section_name,
+                  section_name_buf,
                   buf,
                   COMMENT_BUFLEN) < 0)
       return BMC_ERR_NON_FATAL_ERROR;
@@ -1052,8 +1054,8 @@ section_lan_channel_comments(bmc_config_state_data_t *state_data,
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
                   "In the Lan_Channel section, general IPMI over LAN can be enabled for "
-                  "disabled. In the below, \"Volatile\" configurations are immediately "
-                  "configured onto the BMC and will have immediate effect on the system. "
+                  "disabled.  In the below, \"Volatile\" configurations are immediately "
+                  "configured onto the BMC and will have immediate effect on the system.  "
                   "\"Non_Volatile\" configurations are only available after the next "
                   "system reset.  Generally, both the \"Volatile\" and \"Non_Volatile\" "
                   "equivalent fields should be configured identically.",
@@ -1065,10 +1067,10 @@ section_lan_channel_comments(bmc_config_state_data_t *state_data,
 
   if (format_text(COMMENT_PREFIX, 
                   COMMENT_COLUMN_WIDTH,
-                  "For those wishing to enable IPMI over LAN access the \"Access_Mode\" "
-                  "fields should be set to \"Always_Available\". "
+                  "To enable IPMI over LAN, typically \"Access_Mode\" "
+                  "should be set to \"Always_Available\".  "
                   "\"Channel_Privilege_Limit\" should be set to the highest privilege "
-                  "level any username configured may authenticate with.  Typically, this "
+                  "level any username was configured with.  Typically, this "
                   "is set to \"Administrator\".",
                   buf,
                   COMMENT_BUFLEN) < 0)

@@ -1334,12 +1334,14 @@ section_lan_conf_auth_comments(bmc_config_state_data_t *state_data,
                                FILE *fp)
 {
   char buf[COMMENT_BUFLEN];
+  char section_name_buf[COMMENT_BUFLEN];
 
   fprintf(fp, "#\n");
 
+  sprintf(section_name_buf, "Section %s Comments", section_name);
   if (format_text(COMMENT_PREFIX,
                   COMMENT_COLUMN_WIDTH,
-                  section_name,
+                  section_name_buf,
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
@@ -1351,8 +1353,9 @@ section_lan_conf_auth_comments(bmc_config_state_data_t *state_data,
                   "In the Lan_Conf_Auth section, allowable authentication mechanisms for "
                   "IPMI 1.5 is configured.  Most users will want to set all \"MD5\" "
                   "authentication to \"Yes\" and the rest to \"No\".  If you have "
-                  "configured a NULL username and a NULL password for a username, you "
-                  "will also want to configure the \"None\" fields to \"Yes\".",
+                  "configured a NULL username and a NULL password, you "
+                  "will also want to configure some of the \"None\" fields to \"Yes\" "
+                  "to allow \"None\" authentication to work.",
                   buf,
                   COMMENT_BUFLEN) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
