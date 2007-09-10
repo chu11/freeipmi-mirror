@@ -14,6 +14,7 @@ o Refined many error messages to provide more accurate descriptions of
   errors.
 o Removed CALLBACK and OEM privilege capabilities in most tools.
 o Removed bmc-autoconfig tool.
+o Added comments/instructions to bmc-config checkout.
 o Converted some tools to use argp instead of getopt for consistency
   between tools.
 o Support basic --debug option in most tools under the non-debug builds.
