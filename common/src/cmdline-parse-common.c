@@ -166,6 +166,8 @@ parse_workaround_flags(char *str)
         flags |= IPMI_WORKAROUND_FLAGS_AUTHENTICATION_CAPABILITIES;
       else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR))
         flags |= IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE;
+      else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PORT_STR))
+        flags |= IPMI_WORKAROUND_FLAGS_IGNORE_SOL_PORT;
       else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION_STR))
         flags |= IPMI_WORKAROUND_FLAGS_INTEL_2_0_SESSION;
       else if (!strcasecmp(tok, IPMI_WORKAROUND_FLAGS_SUPERMICRO_2_0_SESSION_STR))

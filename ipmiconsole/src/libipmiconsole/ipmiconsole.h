@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole.h,v 1.68 2007-09-05 20:13:28 chu11 Exp $
+ *  $Id: ipmiconsole.h,v 1.69 2007-09-11 22:49:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -126,6 +126,12 @@ extern "C" {
  * invalid SOL payload sizes.  This workaround flag will ignore the
  * payload size and choose a reasonable default.
  *
+ * IGNORE_SOL_PORT
+ *
+ * Discovered on an ASUS P5MT-R motherboard, the motherboard reports
+ * an invalid SOL port.  This workaround flag will ignore the invalid
+ * port and continue with the default.
+ *
  * INTEL_2_0_SESSION
  *
  * All currently known IPMI 2.0 implementations on Intel motherboards
@@ -160,6 +166,7 @@ extern "C" {
  */
 #define IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES 0x00000010
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE     0x00010000
+#define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT             0x00020000
 #define IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION           0x01000000
 #define IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION      0x02000000
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION             0x04000000

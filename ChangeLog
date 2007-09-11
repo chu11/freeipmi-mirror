@@ -1,5 +1,10 @@
 2007-09-11  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/, common/src/, ipmiconsole/: Support new ignore SOL
+	port workaround.
+	
+2007-09-11  Albert Chu <chu11@llnl.gov>
+
 	* common/src/format-text.h, common/src/format-text.c, bmc-config/:
 	Re-do text formatting for section comments.
 

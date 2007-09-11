@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.57 2007-09-05 20:13:28 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.58 2007-09-11 22:49:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -204,6 +204,7 @@ typedef enum
 #define IPMICONSOLE_WORKAROUND_MASK \
         (IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES \
          | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE \
+         | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT \
          | IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION \
 	 | IPMICONSOLE_WORKAROUND_SUPERMICRO_2_0_SESSION \
          | IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)

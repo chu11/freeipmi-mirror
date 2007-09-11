@@ -23,3 +23,6 @@ handling invalid lengthed hash keys and invalid cipher suite records.
 .LP
 Asus P5M2: An incorrect IPMI 2.0 SOL payload size can be ignored using
 the "solpayloadsize" workaround.
+.LP
+Asus P5MT-R: An invalid IPMI 2.0 SOL port can be ignored (and the
+default port used) by using the "solport" workaround.

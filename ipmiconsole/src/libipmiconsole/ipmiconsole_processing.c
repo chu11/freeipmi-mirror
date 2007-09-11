@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.61 2007-09-05 20:13:29 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.62 2007-09-11 22:49:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2110,8 +2110,18 @@ _check_try_new_port(ipmiconsole_ctx_t c)
     {
       if (c->session.console_port != console_port)
         {
-          c->session.console_port = console_port;
-          return 1;
+          /* IPMI Workaround
+           *
+           * Discovered on an ASUS P5MT-R motherboard.
+           *
+           * A non-default port is specified but we shouldn't try to connect
+           * to it.  So just skip setting the new port.
+           */
+          if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT))
+            {
+              c->session.console_port = console_port;
+              return 1;
+            }
         }
     }
   else
