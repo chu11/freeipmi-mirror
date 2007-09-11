@@ -789,32 +789,16 @@ section_lan_conf_comments(bmc_config_state_data_t *state_data,
                           char *section_name,
                           FILE *fp)
 {
-  char buf[COMMENT_BUFLEN];
-  char section_name_buf[COMMENT_BUFLEN];
+  char *str = 
+    "In the Lan_Conf section, typical networking configuration is setup.  "
+    "Most users will choose to set \"Static\" for the \"IP_Address_Source\" "
+    "and set the appropriate \"IP_Address\", \"MAC_Address\", "
+    "\"Subnet_Mask\", etc. for the machine.";
 
-  fprintf(fp, "#\n");
-
-  sprintf(section_name_buf, "Section %s Comments", section_name);
-  if (format_text(COMMENT_PREFIX, 
-                  COMMENT_COLUMN_WIDTH,
-                  section_name_buf,
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-      return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX, 
-                  COMMENT_COLUMN_WIDTH,
-                  "In the Lan_Conf section, typical networking configuration is setup.  "
-                  "Most users will choose to set \"Static\" for the \"IP_Address_Source\" "
-                  "and set the appropriate \"IP_Address\", \"MAC_Address\", "
-                  "\"Subnet_Mask\", etc. for the machine.",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
+  if (format_section_comments(section_name,
+                              str,
+                              fp) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
 
   return BMC_ERR_SUCCESS;
 }

@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-config-common.h,v 1.7 2007-09-07 21:09:53 chu11 Exp $ 
+   $Id: bmc-config-common.h,v 1.8 2007-09-11 16:32:06 chu11 Exp $ 
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -67,10 +67,6 @@
 #include "tool-common.h"
 #include "ipmi-sensor-api.h"
 #include "xmalloc.h"
-
-#define COMMENT_PREFIX          '#'
-#define COMMENT_COLUMN_WIDTH    80
-#define COMMENT_BUFLEN          4096
 
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0

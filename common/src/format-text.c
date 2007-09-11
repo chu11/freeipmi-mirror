@@ -15,18 +15,16 @@
  * but I can't find one.  So here's my hacked up simple one.
  */
 
-#define MAX_COLUMN_WIDTH 80
+#define FORMAT_TEXT_BUFLEN       4096
+#define FORMAT_TEXT_COLUMN_WIDTH 80
 
-int
-format_text(char prefix,
-            int column_width,
-            char *in,
-            char *out,
-            unsigned int outsize)
+static int
+_format_text(char *in,
+             char *out,
+             unsigned int outsize)
 {
   char *inbuf = NULL;
   char *tokbuf;
-  char *spacechars = " ";
   char *tok;
   int linelen = 0;
   int totalwritten = 0;
@@ -46,16 +44,16 @@ format_text(char prefix,
   if ((outsize - 1) <= (totalwritten + 2))
     goto cleanup;
     
-  sprintf(out, "%c ", prefix);
+  sprintf(out, "# ");
   totalwritten += 2;
   linelen += 2;
 
-  tok = strtok_r(inbuf, spacechars, &tokbuf);
+  tok = strtok_r(inbuf, " ", &tokbuf);
   while (tok)
     {
       int toklen = strlen(tok);
 
-      if ((linelen + toklen) > MAX_COLUMN_WIDTH)
+      if ((linelen + toklen) > FORMAT_TEXT_COLUMN_WIDTH)
         {
           /* +1 because "\n# " is 3 bytes*/
           if ((outsize - 1) <= (totalwritten + 3))
@@ -75,7 +73,7 @@ format_text(char prefix,
       totalwritten += (toklen + 1);
       linelen += (toklen + 1);
 
-      tok = strtok_r(NULL, spacechars, &tokbuf);
+      tok = strtok_r(NULL, " ", &tokbuf);
     }
 
   /* +1 for the newline at the end */
@@ -83,6 +81,59 @@ format_text(char prefix,
     goto cleanup;
   
   strcat(out, "\n");
+  
+  rv = 0;
+ cleanup:
+  free(inbuf);
+  return rv;
+}
+
+int
+format_section_comments(char *section_name,
+                        char *in,
+                        FILE *fp)
+{
+  char section_name_buf[FORMAT_TEXT_BUFLEN];
+  char buf[FORMAT_TEXT_BUFLEN];
+  char *inbuf = NULL;
+  char *tokbuf;
+  char *tok;
+  int rv = -1;
+
+  assert(section_name);
+  assert(in);
+  assert(fp);
+
+  if (!(inbuf = strdup(in)))
+    goto cleanup;
+
+  fprintf(fp, "#\n");
+
+  /* XXX: assume no overrun */
+  snprintf(section_name_buf, 
+           FORMAT_TEXT_BUFLEN,
+           "Section %s Comments", 
+           section_name);
+
+  if (_format_text(section_name_buf,
+                   buf,
+                   FORMAT_TEXT_BUFLEN) < 0)
+    goto cleanup;
+  fprintf(fp, "%s", buf);
+  fprintf(fp, "#\n");
+  
+  tok = strtok_r(inbuf, "\n", &tokbuf);
+  while (tok)
+    {
+      if (_format_text(tok,
+                       buf,
+                       FORMAT_TEXT_BUFLEN) < 0)
+        goto cleanup;
+      fprintf(fp, "%s", buf);
+      fprintf(fp, "#\n");
+
+      tok = strtok_r(NULL, "\n", &tokbuf);
+    }
   
   rv = 0;
  cleanup:

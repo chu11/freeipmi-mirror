@@ -77,44 +77,21 @@ section_misc_comments(bmc_config_state_data_t *state_data,
                       char *section_name,
                       FILE *fp)
 {
-  char buf[COMMENT_BUFLEN];
-  char section_name_buf[COMMENT_BUFLEN];
+  char *str = 
+    "The following miscellaneous configuration options are optionally "
+    "implemented by the vendor.  They may not be available your system and "
+    "may not be visible below."
+    "\n"
+    "The \"Power_Restore_Policy\" determines the behavior of the machine "
+    "when AC power returns after a power loss.  The behavior can be set to "
+    "always power on the machine (\"On_State_AC_Apply\"), power off the "
+    "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
+    "existed before the power loss (\"Restore_State_AC_Apply\").";
 
-  fprintf(fp, "#\n");
-
-  sprintf(section_name_buf, "Section %s Comments", section_name);
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  section_name_buf,
-                  buf,
-                  COMMENT_BUFLEN) < 0)
+  if (format_section_comments(section_name,
+                              str,
+                              fp) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  "The following miscellaneous configuration options are optionally "
-                  "implemented by the vendor.  They may not be available your system and "
-                  "may not be visible below.",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  "The \"Power_Restore_Policy\" determines the behavior of the machine "
-                  "when AC power returns after a power loss.  The behavior can be set to "
-                  "always power on the machine (\"On_State_AC_Apply\"), power off the "
-                  "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
-                  "existed before the power loss (\"Restore_State_AC_Apply\").",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
 
   return BMC_ERR_SUCCESS;
 }

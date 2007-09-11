@@ -945,49 +945,26 @@ section_sol_conf_comments(bmc_config_state_data_t *state_data,
                           char *section_name,
                           FILE *fp)
 {
-  char buf[COMMENT_BUFLEN];
-  char section_name_buf[COMMENT_BUFLEN];
-
-  fprintf(fp, "#\n");
-
-  sprintf(section_name_buf, "Section %s Comments", section_name);
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  section_name_buf,
-                  buf,
-                  COMMENT_BUFLEN) < 0)
+  char *str = 
+    "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
+    "following configuration options will allow SOL configuration."
+    "\n"
+    "For most users that want to enable SOL, minimally \"Enable_SOL\" "
+    "should be set to \"Yes\" and \"SOL_Privilege_Level\" should be set to "
+    "the highest privilege level any username configured can authenticate "
+    "with (typically \"Administrator\").  For security purposes, "
+    "\"Force_SOL_Payload_Authentication\" and "
+    "\"Force_SOL_Payload_Encryption\" should be set to \"Yes\", however "
+    "forced authentication and/or encryption depends on the cipher suite "
+    "IDs supported. The \"Non_Volatile_Bit_Rate\" "
+    "and \"Volatile_Bit_Rate\" should both be set to the appropriate baud "
+    "rate for your system.  This is typically the same baud rate configured "
+    "in the BIOS and/or operating system.";
+  
+  if (format_section_comments(section_name,
+                              str,
+                              fp) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
-                  "following configuration options will allow SOL configuration.",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  "For most users that want to enable SOL, minimally \"Enable_SOL\" "
-                  "should be set to \"Yes\" and \"SOL_Privilege_Level\" should be set to "
-                  "the highest privilege level any username configured can authenticate "
-                  "with (typically \"Administrator\").  For security purposes, "
-                  "\"Force_SOL_Payload_Authentication\" and "
-                  "\"Force_SOL_Payload_Encryption\" should be set to \"Yes\", however "
-                  "forced authentication and/or encryption depends on the cipher suite "
-                  "IDs supported. The \"Non_Volatile_Bit_Rate\" "
-                  "and \"Volatile_Bit_Rate\" should both be set to the appropriate baud "
-                  "rate for your system.  This is typically the same baud rate configured "
-                  "in the BIOS and/or operating system.",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
 
   return BMC_ERR_SUCCESS;
 }

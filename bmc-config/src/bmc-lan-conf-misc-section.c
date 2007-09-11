@@ -257,56 +257,26 @@ section_lan_conf_misc_comments(bmc_config_state_data_t *state_data,
                                char *section_name,
                                FILE *fp)
 {
-  char buf[COMMENT_BUFLEN];
-  char section_name_buf[COMMENT_BUFLEN];
+  char *str = 
+    "The following miscellaneous configuration options are optionally "
+    "implemented by the vendor.  They may not be available your system and "
+    "may not be visible below."
+    "\n"
+    "If set to \"Yes\", \"Enable_Gratuitous_ARPs\" will inform the BMC to "
+    "regularly send out Gratuitous ARPs to allow other machines on a "
+    "network resolve the BMC's MAC Address.  Many users will want to set "
+    "this to \"Yes\" because it offers the easiest way to support BMC IP "
+    "Address resolution.  However, it will increase traffic on your "
+    "network.  The \"Gratuitous_ARP_Interval\" can be used to set the "
+    "period a Gratuitous ARP is always sent."
+    "\n"
+    "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to"
+    "respond to ARP requests from other machines.";
 
-  fprintf(fp, "#\n");
-
-  sprintf(section_name_buf, "Section %s Comments", section_name);
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  section_name_buf,
-                  buf,
-                  COMMENT_BUFLEN) < 0)
+  if (format_section_comments(section_name,
+                              str,
+                              fp) < 0)
     return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  "The following miscellaneous configuration options are optionally "
-                  "implemented by the vendor.  They may not be available your system and "
-                  "may not be visible below.",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  "If set to \"Yes\", \"Enable_Gratuitous_ARPs\" will inform the BMC to "
-                  "regularly send out Gratuitous ARPs to allow other machines on a "
-                  "network resolve the BMC's MAC Address.  Many users will want to set "
-                  "this to \"Yes\" because it offers the easiest way to support BMC IP "
-                  "Address resolution.  However, it will increase traffic on your "
-                  "network.  The \"Gratuitous_ARP_Interval\" can be used to set the "
-                  "period a Gratuitous ARP is always sent.",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
-
-  if (format_text(COMMENT_PREFIX,
-                  COMMENT_COLUMN_WIDTH,
-                  "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to"
-                  "respond to ARP requests from other machines.",
-                  buf,
-                  COMMENT_BUFLEN) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-  fprintf(fp, "%s", buf);
-  fprintf(fp, "#\n");
 
   return BMC_ERR_SUCCESS;
 }

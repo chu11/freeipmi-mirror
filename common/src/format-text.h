@@ -1,9 +1,9 @@
 #ifndef _FORMAT_TEXT_H
 #define _FORMAT_TEXT_H
 
-int format_text(char prefix, 
-                int column_width,
-                char *in, 
-                char *out, 
-                unsigned int outsize);
+#include <stdio.h>
+
+int format_section_comments(char *section_name,
+                            char *in,
+                            FILE *fp);
 #endif
