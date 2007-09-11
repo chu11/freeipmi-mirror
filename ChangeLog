@@ -2,6 +2,8 @@
 
 	* common/src/format-text.h, common/src/format-text.c, bmc-config/:
 	Re-do text formatting for section comments.
+
+	* freeipmi.spec.in: Add texinfo buildrequires.
 	
 2007-09-07  Albert Chu <chu11@llnl.gov>
 
