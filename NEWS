@@ -2,93 +2,77 @@
 -----
 For Users
 ---------
-o Added previously missing IPMI 2.0 (-D LAN_2_0) support into most
-  other FreeIPMI tools (ipmi-chassis, ipmi-fru, ipmi-sensors,
-  ipmi-sel, ipmi-raw, ipmimonitoring).
-o Ported IPMI compliance workarounds in ipmipower, ipmiconsole, and
-  ipmimonitoring into most other FreeIPMI tools.
-o Added more strict IPMI over LAN implementation into most tools.
-o Ported many features from other tools into ipmimonitoring. 
-o Added openipmi driver to bmc-watchdog.
-o Refined many error messages to provide more accurate descriptions of
-  errors.
-o Removed CALLBACK and OEM privilege capabilities in most tools.
-o Removed bmc-autoconfig tool.
-o Added comments/instructions to bmc-config checkout.
-o Converted some tools to use argp instead of getopt for consistency
-  between tools.
-o Support basic --debug option in most tools under the non-debug builds.
-o Updated manpages with more information, examples, and trouble
-  shooting tips.
-o Previously supported "ASUS 2.0" workaround has been adjusted to be the
-  more generic "IGNORE SOL PAYLOAD SIZE" workaround.
-o Support new "IGNORE SOL PORT" workaround.
-o Made many command line options consistent across FreeIPMI.  Notable
-  changes include:
-  1) All --priv-level and --privilege options are now --privilege-level
-     Backwards compatability has been maintained when possible.
-  2) All --auth-type options are now --authentication-type
-     Backwards compatability has been maintained when possible.
-  3) All --reg-space or --register-space options are now --register-spacing.
-     Backwards compatability has been maintained when possible.
-  4) In ipmipower, --hostnames (plural) is now --hostname (not-plural).  
-     Internally --hostnames is maintained for backwards compatability.
-  5) In ipmipower, --timeout is now --session-timeout.
-     Internally, --timeout is maintained for backwards compatability.
-  5) The -T option and -I option in ipmipower have been flipped for consistency.
-  6) The -c option in ipmiconsole is now the -I option.  The -c option is
-     internally maintained for backwards comptability.
-  7) Compliance workaround options in ipmiconsole now follow the -W
-     option convention.
-  8) The "plain" authentication type argument is now the
-     "straight_password_key" authentication type argument.  "plain" is
-     internally maintained for backwards compatability.
-  9) Short option -I changed to -D in bmc-watchdog for consistency to
-     other tools.
-  10) The short option -r for --register-spacing has been removed in
-      many tools for consistency with other in-band command line options.
-  11) Short options for most debugging options have been removed.
-  12) All "--retry" options are now "--retransmission" options.
-      Backwards compatability has been maintained when possible.
-  13) All -H and -h (help) options have been changed to -? for
-      consistency with all tools. Backwards compatability has been
-      maintained when possible.
-  14) All -v (version) options have been changed to -V for consistency
-      with all tools. Backwards compatability has been maintained when
-      possible.
-o Similarly, renamed configuration file options or interactive prompt
-  options for consistency with the command line.  Backwards
-  compatability has been maintained when possible.
-o Similarly, fixed inconsistencies with dashes vs. underscores in
-  command line options, configuration file options, or interactive
-  prompt options.  Backwards compatability has been maintained when
-  possible.
-o Similarly, updated manpages for consistency across tools.
-o Removed the quiet and silent options from bmc-config.
+o Added previously missing IPMI 2.0 (-D LAN_2_0) support into
+  ipmi-chassis, ipmi-fru, ipmi-sensors, ipmi-sel, ipmi-raw, and
+  ipmimonitoring.
+o Added more strict IPMI over LAN implementation into ipmi-chassis,
+  ipmi-fru, ipmi-sensors, ipmi-sel, ipmi-raw, and ipmimonitoring.
 o OpenIPMI and KCS Inband drivers will timeout after a certain period
   of time, so tools will no longer hang if the BMC is non-functional.
+o Ported IPMI compliance workarounds from ipmipower, ipmiconsole, and
+  ipmimonitoring into ipmi-chassis, ipmi-fru, ipmi-sensors, ipmi-sel,
+  and ipmi-raw.
+o Updated all manpages with more instructions, information, examples,
+  and trouble shooting tips.
+o Support --debug option under the non-debug builds.
+o Rewrote error messages to provide more accurate descriptions.
+o Removed CALLBACK and OEM privilege capabilities in most tools.
+o Removed the quiet and silent options from bmc-config.
+o Added openipmi driver to bmc-watchdog.
+o Removed bmc-autoconfig tool.
+o Added more details comments and instructions to bmc-config checkout.
+o Converted ipmiconsole, ipmipower, and ipmimonitoring to use argp
+  instead of getopt of consistency of usage output.
+o Re-word "ASUS 2.0" workaround into generic "IGNORE SOL PAYLOAD SIZE"
+  workaround.
+o Support new "IGNORE SOL PORT" workaround.
+o Made many command line options, interactive prompt, and config file
+  options consistent across FreeIPMI tools.  Inconsistencies between
+  dashes and underscores have been fixed in a number of places.
+  Backwards compatability has been maintained when possible. Notable
+  changes include:
+  o --priv-level and --privilege options are now --privilege-level.
+  o --auth-type options are now --authentication-type.
+  o --reg-space or --register-space options are now --register-spacing.
+  o --hostnames (plural) is now --hostname (not-plural).  
+  o --timeout is now --session-timeout.
+  o --retry is now --retransmission.
+  o All tools now use -W (--workarounds) to specify workarounds.
+  o The "plain" authentication type is now the
+    "straight_password_key" authentication type.
+  o The short option -r for --register-spacing has been removed for
+    consistency with other command line options.
+  o Short options for most debugging options have been removed.
+  o All -H and -h (help) options have been changed to -? for
+    consistency in all tools. 
+  o All -v (version) options have been changed to -V for consistency
+    with all tools. 
+  o The -T option and -I option in ipmipower have been flipped for
+    consistency with other tools.
+  o The -c option in ipmiconsole is now the -I option.
+  o Short option -I changed to -D in bmc-watchdog for consistency to
+    other tools.
 o Various minor bug fixes and enhancements.
 
 For Developers
 --------------
-o Added IPMI 2.0 into UDM 
-o Added workarounds into UDM for IPMI 1.5 and IPMI 2.0 known
-  compliance issues from vendors.
+o Added IPMI 2.0 into UDM.
+o Added workarounds into UDM for IPMI 1.5 and IPMI 2.0.
 o Added IPMI 2.0 into libipmimonitoring API.
 o Modified libipmiconsole API for use in Conman.
 o Added scalability fixes into libipmiconsole for Conman.
-o Fix various library variable names and macros for consistency.  For
-  example:
+o Fix various library variable names and macros for consistency.
+  Notable changes.
   1) ipmi_ver_minor and ipmi_ver_major in struct ipmi_locate_info have
      been renamed to ipmi_version_minor and ipmi_version_major.
-  2) reg_space/register_spacing has been renamed to register_spacing globally.
+  2) reg_space/register_space have been renamed to register_spacing globally.
   3) privilege has been replaced to privilege_level globally.
   4) Various library error codes have been renamed for consistency.
      For example OUTMEM has been changed to OUT_OF_MEMORY globally.
   5) Various error codes and messages have been renamed/redone to give
      more useful information.  For example, IPMI_ERR_PRIVILEGE is now
-     IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED (and the error message
-     has been updated as well).
+     IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED and the error message
+     has been updated consistently.
 o Various bug fixes and enhancements.
      
 0.4.3
