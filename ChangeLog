@@ -1,3 +1,7 @@
+2007-09-15  Albert Chu <chu11@llnl.gov>
+
+	* NEWS: Update.
+	
 2007-09-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, common/src/, ipmiconsole/: Support new ignore SOL
