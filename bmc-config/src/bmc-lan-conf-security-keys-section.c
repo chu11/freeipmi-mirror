@@ -1,3 +1,13 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
@@ -5,6 +15,8 @@
 #include "bmc-config-map.h"
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
+
+#include "tool-common.h"
 
 static bmc_err_t
 k_r_checkout (bmc_config_state_data_t *state_data,

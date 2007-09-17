@@ -10,9 +10,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif	/* HAVE_UNISTD_H */
-#ifdef HAVE_ERROR_H
-#include <error.h>
-#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>

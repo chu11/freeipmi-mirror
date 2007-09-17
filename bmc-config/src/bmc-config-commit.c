@@ -1,6 +1,17 @@
-#include "bmc-config-commit.h"
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+#include <assert.h>
 
 #include "bmc-config.h"
+#include "bmc-config-commit.h"
 #include "bmc-config-common.h"
 #include "bmc-config-parser.h"
 #include "bmc-config-sections.h"
