@@ -252,12 +252,11 @@ gratuitous_arp_interval_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
-section_lan_conf_misc_comments(bmc_config_state_data_t *state_data,
-                               char *section_name,
-                               FILE *fp)
+struct section *
+bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
 {
-  char *str = 
+  struct section *lan_conf_misc_section = NULL;
+  char *section_comment = 
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
     "may not be visible below."
@@ -273,22 +272,10 @@ section_lan_conf_misc_comments(bmc_config_state_data_t *state_data,
     "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to"
     "respond to ARP requests from other machines.";
 
-  if (format_section_comments(section_name,
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
-{
-  struct section *lan_conf_misc_section = NULL;
-
   if (!(lan_conf_misc_section = bmc_config_section_create (state_data, 
                                                            "Lan_Conf_Misc",
-                                                           section_lan_conf_misc_comments,
+                                                           "Lan_Conf_Misc",
+                                                           section_comment,
                                                            0)))
     goto cleanup;
 

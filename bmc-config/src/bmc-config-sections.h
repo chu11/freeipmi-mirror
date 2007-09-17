@@ -30,15 +30,11 @@
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
 #define BMC_DO_NOT_CHECKOUT                             0x04
 
-/* Output a comment/instructions for a particular section */
-typedef bmc_err_t (*Section_Comment) (bmc_config_state_data_t *state_data, 
-                                      char *section_name,
-                                      FILE *fp);
-
 struct section {
   struct section *next;
   char *section_name;
-  Section_Comment comment;
+  char *section_comment_section_name;
+  char *section_comment;
   unsigned int flags;
   struct keyvalue *keyvalues;
 };
@@ -84,7 +80,8 @@ void bmc_config_sections_list_destroy (bmc_config_state_data_t *state_data,
 
 struct section * bmc_config_section_create (bmc_config_state_data_t *state_data, 
                                             char *section_name,
-                                            Section_Comment comment,
+                                            char *section_comment_section_name,
+                                            char *section_comment,
 					    unsigned int flags);
 
 void bmc_config_section_destroy (bmc_config_state_data_t *state_data, 

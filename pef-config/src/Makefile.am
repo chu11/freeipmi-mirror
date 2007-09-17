@@ -25,7 +25,8 @@ pef_config_LDADD = ../../common/src/libcmdlineparsecommon.la \
 		   ../../libfreeipmi/src/libfreeipmi.la \
 		   ../../common/src/libfreeipmiportability.la \
 		   ../../common/src/libsdr.la \
-		   ../../common/src/libsensor.la 
+		   ../../common/src/libsensor.la \
+		   ../../common/src/libformattext.la
  
 noinst_HEADERS = \
 	pef-config.h \
@@ -69,6 +70,9 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src \
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libsensor.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libformattext.la : force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

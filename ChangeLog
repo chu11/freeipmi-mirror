@@ -1,3 +1,8 @@
+2007-09-17  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/, pef-config/: Re-arch section comments again.  Add
+	serial section comments.
+	
 2007-09-15  Albert Chu <chu11@llnl.gov>
 
 	* NEWS: Update.

@@ -1641,12 +1641,12 @@ serial_session_limit_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
-section_user1_comments(bmc_config_state_data_t *state_data,
-                       char *section_name,
-                       FILE *fp)
+struct section *
+bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
 {
-  char *str = 
+  struct section *user_section = NULL;
+  char section_name[64];
+  char *section_comment = 
     "In the following User sections, users should configure usernames, "
     "passwords, and access rights for IPMI over LAN communication.  "
     "Usernames can be set to any string with the exception of User1, which "
@@ -1671,20 +1671,6 @@ section_user1_comments(bmc_config_state_data_t *state_data,
     "\n"
     "Please do not forget to uncomment those fields, such as \"Password\", "
     "that may be commented out during the checkout.";
-    
-  if (format_section_comments("UserX",
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
-{
-  struct section *user_section = NULL;
-  char buf[64];
 
   if (userid <= 0)
     {
@@ -1692,20 +1678,22 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
       return NULL;
     }
 
-  snprintf(buf, 64, "User%d", userid);
+  snprintf(section_name, 64, "User%d", userid);
 
   if (userid == 1)
     {
       if (!(user_section = bmc_config_section_create(state_data, 
-                                                     buf,
-                                                     section_user1_comments,
+                                                     section_name,
+                                                     "UserX",
+                                                     section_comment,
                                                      0)))
         goto cleanup;
     }
   else
     {
       if (!(user_section = bmc_config_section_create(state_data, 
-                                                     buf,
+                                                     section_name,
+                                                     NULL,
                                                      NULL,
                                                      0)))
         goto cleanup;

@@ -152,7 +152,8 @@ bmc_config_sections_list_destroy(bmc_config_state_data_t *state_data,
 struct section * 
 bmc_config_section_create (bmc_config_state_data_t *state_data,
                            char *section_name,
-                           Section_Comment comment,
+                           char *section_comment_section_name,
+                           char *section_comment,
                            unsigned int flags)
 {
   struct section *section = NULL;
@@ -172,7 +173,24 @@ bmc_config_section_create (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  section->comment = comment;
+  if (section_comment_section_name)
+    {
+      if (!(section->section_comment_section_name = strdup(section_comment_section_name)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+    }
+
+  if (section_comment)
+    {
+      if (!(section->section_comment = strdup(section_comment)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+    }
+
   section->flags = flags;
 
   return section;
@@ -190,6 +208,12 @@ bmc_config_section_destroy (bmc_config_state_data_t *state_data,
     {
       if (section->section_name)
 	free(section->section_name);
+
+      if (section->section_comment_section_name)
+        free(section->section_comment_section_name);
+
+      if (section->section_comment)
+        free(section->section_comment);
       
       while (section->keyvalues)
 	{

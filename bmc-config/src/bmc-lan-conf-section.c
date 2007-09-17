@@ -784,33 +784,20 @@ vlan_priority_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
-section_lan_conf_comments(bmc_config_state_data_t *state_data,
-                          char *section_name,
-                          FILE *fp)
+struct section *
+bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
 {
-  char *str = 
+  struct section *lan_conf_section = NULL;
+  char *section_comment = 
     "In the Lan_Conf section, typical networking configuration is setup.  "
     "Most users will choose to set \"Static\" for the \"IP_Address_Source\" "
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
 
-  if (format_section_comments(section_name,
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
-{
-  struct section *lan_conf_section = NULL;
-
   if (!(lan_conf_section = bmc_config_section_create (state_data, 
                                                       "Lan_Conf",
-                                                      section_lan_conf_comments,
+                                                      "Lan_Conf",
+                                                      section_comment,
                                                       0)))
     goto cleanup;
   

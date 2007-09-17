@@ -151,7 +151,8 @@ pef_config_sections_list_destroy(pef_config_state_data_t *state_data,
 struct section * 
 pef_config_section_create (pef_config_state_data_t *state_data,
                            char *section_name,
-                           Section_Comment comment,
+                           char *section_comment_section_name,
+                           char *section_comment,
                            unsigned int flags)
 {
   struct section *section = NULL;
@@ -171,7 +172,24 @@ pef_config_section_create (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  section->comment = comment;
+  if (section_comment_section_name)
+    {
+      if (!(section->section_comment_section_name = strdup(section_comment_section_name)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+    }
+
+  if (section_comment)
+    {
+      if (!(section->section_comment = strdup(section_comment)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+    }
+
   section->flags = flags;
 
   return section;

@@ -18,6 +18,8 @@
 #include "pef-config-utils.h"
 #include "pef-config-wrapper.h"
 
+#include "format-text.h"
+
 static pef_err_t
 pef_checkout_section_common (pef_config_state_data_t *state_data,
                              struct section *sect,
@@ -32,15 +34,16 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
   if (sect->flags & PEF_DO_NOT_CHECKOUT)
     return ret;
 
-  if (sect->comment)
+  if (sect->section_comment_section_name
+      && sect->section_comment)
     {
-      if ((this_ret = (*sect->comment)(state_data,
-                                       sect->section_name,
-                                       fp)) != PEF_ERR_SUCCESS)
+      if (format_section_comments(sect->section_comment_section_name,
+                                  sect->section_comment,
+                                  fp) < 0)
         {
           if (args->verbose)
             fprintf (fp, "\t## FATAL: Comment output error\n");
-          ret = this_ret;
+          ret = PEF_ERR_NON_FATAL_ERROR;
         }
     }
 

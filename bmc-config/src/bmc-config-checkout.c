@@ -126,15 +126,16 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
   if (sect->flags & BMC_DO_NOT_CHECKOUT)
     return ret;
 
-  if (sect->comment)
+  if (sect->section_comment_section_name
+      && sect->section_comment)
     {
-      if ((this_ret = (*sect->comment)(state_data, 
-                                       sect->section_name,
-                                       fp)) != BMC_ERR_SUCCESS)
+      if (format_section_comments(sect->section_comment_section_name,
+                                  sect->section_comment,
+                                  fp) < 0)
         {
           if (args->verbose)
             fprintf (fp, "\t## FATAL: Comment output error\n");
-          ret = this_ret;
+          ret = BMC_ERR_NON_FATAL_ERROR;
         }
     }
 

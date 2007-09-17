@@ -72,12 +72,11 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
-section_misc_comments(bmc_config_state_data_t *state_data,
-                      char *section_name,
-                      FILE *fp)
+struct section *
+bmc_misc_section_get (bmc_config_state_data_t *state_data)
 {
-  char *str = 
+  struct section *misc_section = NULL;
+  char *section_comment = 
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
     "may not be visible below."
@@ -88,22 +87,10 @@ section_misc_comments(bmc_config_state_data_t *state_data,
     "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
     "existed before the power loss (\"Restore_State_AC_Apply\").";
 
-  if (format_section_comments(section_name,
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_misc_section_get (bmc_config_state_data_t *state_data)
-{
-  struct section *misc_section = NULL;
-
   if (!(misc_section = bmc_config_section_create (state_data, 
                                                   "Misc",
-                                                  section_misc_comments,
+                                                  "Misc",
+                                                  section_comment,
                                                   0)))
     goto cleanup;
 
