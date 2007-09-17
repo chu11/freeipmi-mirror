@@ -32,10 +32,11 @@ enum argp_option_keys
     CHECKOUT_KEY = 'o', 
     COMMIT_KEY = 'c', 
     DIFF_KEY = 'd',
+    FILENAME_KEY = 'f',
+    KEYPAIR_KEY = 'k',
+    SECTIONS_KEY = 'S',
     LIST_SECTIONS_KEY = 'L',
     VERBOSE_KEY = 'v',
-    FILENAME_KEY = 'f',
-    SECTIONS_KEY = 'S',
   };
 
 typedef enum
@@ -89,6 +90,7 @@ struct pef_config_arguments
 
   int verbose;
   char *filename;
+  struct keypair *keypairs;
   struct sectionstr *sectionstrs;
 };
 

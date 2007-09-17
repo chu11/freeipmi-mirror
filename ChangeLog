@@ -3,8 +3,10 @@
 	* bmc-config/, pef-config/: Re-arch section comments again.  Add
 	serial section comments.
 
-	* bmc-config/: General code cleanup to make code more similar to
-	pef-config for later common code merging.
+	* pef-config/: Support keypairs.
+	
+	* bmc-config/, pef-config/: General code cleanup to make code more
+	similar to between tools for later code merging.
 	
 2007-09-15  Albert Chu <chu11@llnl.gov>
 

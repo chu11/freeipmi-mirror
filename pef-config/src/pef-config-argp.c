@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.6 2007-09-05 20:13:46 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.7 2007-09-17 17:18:55 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -73,21 +73,43 @@ static struct argp_option options[] =
     {"checkout",   CHECKOUT_KEY,   0, 0,
      "Fetch configuration information from the BMC.", 26},
     {"commit",     COMMIT_KEY,     0, 0,
-     "Update configuration information to the BMC from a config file.", 27},
+     "Update configuration information to the BMC from a config file or key pairs.", 27},
     {"diff",       DIFF_KEY,       0, 0,
      "Show differences between the BMC and a config file.", 28},
-    {"listsections", LIST_SECTIONS_KEY, 0, 0,
-     "List available sections for checkout.", 29},
-    {"verbose", VERBOSE_KEY, 0, 0,  
-     "Print additional detailed information.", 30},
     {"filename", FILENAME_KEY, "FILENAME", 0,
-     "Specify a PEF config file for PEF checkout/commit/diff.", 31},
+     "Specify a PEF config file for PEF checkout/commit/diff.", 29},
+    {"key-pair", 'k', "KEY-PAIR", 0,
+     "Specify KEY=VALUE pairs for checkout/commit/diff.", 30},
     {"section", SECTIONS_KEY, "SECTION", 0,
-     "Specify a SECTION for checkout.", 32},
+     "Specify a SECTION for checkout.", 31},
+    {"listsections", LIST_SECTIONS_KEY, 0, 0,
+     "List available sections for checkout.", 32},
+    {"verbose", VERBOSE_KEY, 0, 0,  
+     "Print additional detailed information.", 33},
     { 0 }
   };
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
+
+static struct keypair *
+_create_keypair(char *arg)
+{
+  struct keypair *kp;
+
+  if (!(kp = (struct keypair *)malloc(sizeof(struct keypair))))
+    {
+      perror("malloc");
+      exit(1);
+    }
+  if (!(kp->keypair = strdup(arg)))
+    {
+      perror("strdup");
+      exit(1);
+    }
+  kp->next = NULL;
+
+  return kp;
+}
 
 static struct sectionstr *
 _create_sectionstr(char *arg)
@@ -113,6 +135,7 @@ static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct pef_config_arguments *cmd_args = state->input;
+  struct keypair *kp;
   struct sectionstr *sstr;
   
   switch (key)
@@ -129,12 +152,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case DIFF_KEY:
       cmd_args->action = PEF_ACTION_DIFF;
       break;
-    case LIST_SECTIONS_KEY:
-      cmd_args->action = PEF_ACTION_LIST_SECTIONS;
-      break;
-    case VERBOSE_KEY:
-      cmd_args->verbose = 1;
-      break;
     case FILENAME_KEY:
       if (cmd_args->filename) /* If specified more than once */
         free (cmd_args->filename);
@@ -143,6 +160,21 @@ parse_opt (int key, char *arg, struct argp_state *state)
           perror("strdup");
           exit(1);
         }
+      break;
+    case KEYPAIR_KEY:
+      kp = _create_keypair(arg);
+      if (cmd_args->keypairs)
+        {
+          struct keypair *p = NULL;
+
+          p = cmd_args->keypairs;
+          while (p->next)
+            p = p->next;
+
+          p->next = kp;
+        }
+      else
+        cmd_args->keypairs = kp;
       break;
     case SECTIONS_KEY:
       sstr = _create_sectionstr(arg);
@@ -158,6 +190,12 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       else
         cmd_args->sectionstrs = sstr;
+      break;
+    case LIST_SECTIONS_KEY:
+      cmd_args->action = PEF_ACTION_LIST_SECTIONS;
+      break;
+    case VERBOSE_KEY:
+      cmd_args->verbose = 1;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -180,6 +218,7 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
   cmd_args->action = 0;
   cmd_args->verbose = 0;
   cmd_args->filename = NULL;
+  cmd_args->keypairs = NULL;
   cmd_args->sectionstrs = NULL;
 
   /* ADMIN is minimum for pef-config b/c its needed for many of the
@@ -191,51 +230,70 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
 }
 
 int
-pef_config_args_validate (struct pef_config_arguments *args)
+pef_config_args_validate (struct pef_config_arguments *cmd_args)
 {
   int ret = 0;
 
   // action is non 0 and -1
-  if (! args->action || args->action == -1)
+  if (! cmd_args->action || cmd_args->action == -1)
     {
       fprintf (stderr,
                "Exactly one of --info, --checkout, --commit, --diff, or --listsections MUST be given\n");
       return -1;
     }
 
-  if (args->filename)
+  // filename and keypair both given for checkout or diff
+  if (cmd_args->filename && cmd_args->keypairs
+      && (cmd_args->action == PEF_ACTION_CHECKOUT
+          || cmd_args->action == PEF_ACTION_DIFF))
     {
-      switch (args->action)
+      fprintf (stderr,
+               "Both --filename or --keypair cannot be used\n");
+      return -1;
+    }
+
+  // only one of keypairs or section can be given for checkout
+  if (cmd_args->action == PEF_ACTION_CHECKOUT
+      && (cmd_args->keypairs && cmd_args->sectionstrs))
+    {
+      fprintf (stderr,
+               "Only one of --filename, --keypair, and --section can be used\n");
+      return -1;
+    }
+
+  if (cmd_args->filename)
+    {
+      switch (cmd_args->action)
         {
         case PEF_ACTION_COMMIT: case PEF_ACTION_DIFF:
-          if (access (args->filename, R_OK) != 0)
+          if (access (cmd_args->filename, R_OK) != 0)
             {
-              perror (args->filename);
+              perror (cmd_args->filename);
               return -1;
             }
           break;
         case PEF_ACTION_CHECKOUT:
-          if (access (args->filename, F_OK) == 0)
+          if (access (cmd_args->filename, F_OK) == 0)
             {
-              if (access (args->filename, W_OK) != 0)
+              if (access (cmd_args->filename, W_OK) != 0)
                 {
-                  perror (args->filename);
+                  perror (cmd_args->filename);
                   return -1;
                 }
             }
           else
             {
               int fd;
-              fd = open (args->filename, O_CREAT);
+              fd = open (cmd_args->filename, O_CREAT);
               if (fd == -1)
                 {
-                  perror (args->filename);
+                  perror (cmd_args->filename);
                   return -1;
                 }
               else
                 {
                   close (fd);
-                  unlink (args->filename);
+                  unlink (cmd_args->filename);
                 }
             }
           break;
