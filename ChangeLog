@@ -1,3 +1,7 @@
+2007-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* common/src/config-parse.h, common/src/config-parse.c: New files.
+	
 2007-09-15  Albert Chu <chu11@llnl.gov>
 
 	* NEWS: Update.
