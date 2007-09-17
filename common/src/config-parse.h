@@ -25,29 +25,35 @@
 
 #include "config-parse.h"
 
-struct config_keypair
+struct config_key
 {
-  char *section_name;
   char *key_name;
-  struct config_keypair *next;
+  char *description;
+  unsigned int flags;
+  struct config_key *next;
 };
 
 struct config_keyvalue {
   char *key_name;
-  char *description;
-  unsigned int flags;
   char *value;
   struct config_keyvalue *next;
 };
 
 struct config_section {
-  Section_Comment comment; 
+  char *section_name;
   unsigned int flags;
+#if 0
+  Section_Comment comment; 
   Section_Checkout checkout;
   Section_Commit commit;
   Section_Diff diff;
   Section_Validate validate;
+#endif
+  /* keys in this section */
+  struct config_key *keys;
+  /* key and values read from the file */
   struct config_keyvalue *keyvalues;
+  struct config_keyvalue *keyvalues_last;
   struct config_section *next;
 };
 
