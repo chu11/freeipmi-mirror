@@ -1,3 +1,13 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
@@ -940,12 +950,11 @@ port_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
-section_sol_conf_comments(bmc_config_state_data_t *state_data,
-                          char *section_name,
-                          FILE *fp)
+struct section *
+bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
 {
-  char *str = 
+  struct section * sol_conf_section = NULL;
+  char *section_comment = 
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
     "following configuration options will allow SOL configuration."
     "\n"
@@ -960,23 +969,11 @@ section_sol_conf_comments(bmc_config_state_data_t *state_data,
     "and \"Volatile_Bit_Rate\" should both be set to the appropriate baud "
     "rate for your system.  This is typically the same baud rate configured "
     "in the BIOS and/or operating system.";
-  
-  if (format_section_comments(section_name,
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
-{
-  struct section * sol_conf_section = NULL;
 
   if (!(sol_conf_section = bmc_config_section_create(state_data,
                                                      "SOL_Conf",
-                                                     section_sol_conf_comments,
+                                                     "SOL_Conf",
+                                                     section_comment,
                                                      0)))
     goto cleanup;
 

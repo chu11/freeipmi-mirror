@@ -1245,6 +1245,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
   if (!(pef_section = pef_config_section_create (state_data, 
                                                  "PEF_Conf",
                                                  NULL,
+                                                 NULL,
                                                  0)))
     goto cleanup;
 

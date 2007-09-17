@@ -1,9 +1,9 @@
-#ifndef _FORMAT_TEXT_H
-#define _FORMAT_TEXT_H
+#ifndef _CONFIG_COMMENT_H
+#define _CONFIG_COMMENT_H
 
 #include <stdio.h>
 
-int format_section_comments(char *section_name,
+int config_section_comments(char *section_name,
                             char *in,
                             FILE *fp);
 #endif

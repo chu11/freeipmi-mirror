@@ -1,3 +1,13 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
@@ -1013,10 +1023,23 @@ struct section *
 bmc_serial_channel_section_get (bmc_config_state_data_t *state_data)
 {
   struct section * serial_channel_section = NULL;
+  char *section_comment = 
+    "In the Serial_Channel section, IPMI over Serial communication can be "
+    "enabled or disabled.  "
+    "In the below, \"Volatile\" configurations are immediately "
+    "configured onto the BMC and will have immediate effect on the system.  "
+    "\"Non_Volatile\" configurations are only available after the next "
+    "system reset.  Generally, both the \"Volatile\" and \"Non_Volatile\" "
+    "equivalent fields should be configured identically."
+    "\n"
+    "Most users will only be interested in IPMI over LAN, therefore serial "
+    "communication can be disabled.  This can be done by setting "
+    "\"Access_Mode\" to \"Disabled\".";
 
   if (!(serial_channel_section = bmc_config_section_create (state_data, 
                                                             "Serial_Channel",
-                                                            NULL,
+                                                            "Serial_Channel",
+                                                            section_comment,
                                                             0)))
     goto cleanup;
 

@@ -101,6 +101,7 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
   if (!(sect = pef_config_section_create (state_data,
                                           "Community_String",
                                           NULL, 
+                                          NULL, 
                                           0)))
     goto cleanup;
 

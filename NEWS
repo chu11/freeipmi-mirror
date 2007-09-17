@@ -19,6 +19,7 @@ o Rewrote error messages to provide more accurate descriptions.
 o Removed CALLBACK and OEM privilege capabilities in most tools.
 o Removed the quiet and silent options from bmc-config.
 o Added openipmi driver to bmc-watchdog.
+o Added keypair command line support to pef-config.
 o Removed bmc-autoconfig tool.
 o Added more details comments and instructions to bmc-config checkout.
 o Converted ipmiconsole, ipmipower, and ipmimonitoring to use argp

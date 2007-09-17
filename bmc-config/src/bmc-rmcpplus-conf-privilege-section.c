@@ -1,3 +1,13 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
@@ -441,12 +451,11 @@ id_14_diff (bmc_config_state_data_t *state_data,
   return id_diff (state_data, sect, kv, 14);
 }
 
-static bmc_err_t
-section_rmcpplus_conf_privilege_comments(bmc_config_state_data_t *state_data,
-                                         char *section_name,
-                                         FILE *fp)
+struct section *
+bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
-  char *str = 
+  struct section *rmcpplus_conf_privilege_section = NULL;
+  char *section_comment = 
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL),"
     "cipher suite IDs may be configurable below.  In the "
     "Rmcpplus_Conf_Privilege section, maximum user privilege levels "
@@ -457,22 +466,10 @@ section_rmcpplus_conf_privilege_comments(bmc_config_state_data_t *state_data,
     "username configured should set for support under a cipher suite ID. "
     "This is typically \"Administrator\".";
 
-  if (format_section_comments(section_name,
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
-{
-  struct section *rmcpplus_conf_privilege_section = NULL;
-
   if (!(rmcpplus_conf_privilege_section = bmc_config_section_create (state_data, 
                                                                      "Rmcpplus_Conf_Privilege",
-                                                                     section_rmcpplus_conf_privilege_comments,
+                                                                     "Rmcpplus_Conf_Privilege",
+                                                                     section_comment,
                                                                      0)))
     goto cleanup;
 

@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-parse.h"
+#include "config-common.h"
 
 #define CONFIG_PARSE_BUFLEN 4096
 
@@ -76,7 +76,7 @@ _set_keyvalue(struct config_section *section,
       goto cleanup;
     }
 
-  if (!(kv->value = strdup(value)))
+  if (!(kv->value_input = strdup(value)))
     {
       perror("strdup");
       goto cleanup;
@@ -102,8 +102,8 @@ _set_keyvalue(struct config_section *section,
     {
       if (kv->key_name)
         free(kv->key_name);
-      if (kv->value)
-        free(kv->value);
+      if (kv->value_input)
+        free(kv->value_input);
       free(kv);
     }
   return -1;

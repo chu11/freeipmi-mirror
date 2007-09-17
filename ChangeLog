@@ -2,6 +2,16 @@
 
 	* common/src/config-parse.h, common/src/config-parse.c: New files.
 	
+2007-09-17  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/, pef-config/: Re-arch section comments again.  Add
+	serial section comments.
+
+	* pef-config/: Support keypairs.
+	
+	* bmc-config/, pef-config/: General code cleanup to make code more
+	similar to between tools for later code merging.
+	
 2007-09-15  Albert Chu <chu11@llnl.gov>
 
 	* NEWS: Update.

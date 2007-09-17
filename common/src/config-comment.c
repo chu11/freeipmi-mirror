@@ -15,13 +15,13 @@
  * but I can't find one.  So here's my hacked up simple one.
  */
 
-#define FORMAT_TEXT_BUFLEN       4096
-#define FORMAT_TEXT_COLUMN_WIDTH 80
+#define FORMAT_COMMENT_BUFLEN       4096
+#define FORMAT_COMMENT_COLUMN_WIDTH 80
 
 static int
-_format_text(char *in,
-             char *out,
-             unsigned int outsize)
+_format_comment(char *in,
+                char *out,
+                unsigned int outsize)
 {
   char *inbuf = NULL;
   char *tokbuf;
@@ -53,7 +53,7 @@ _format_text(char *in,
     {
       int toklen = strlen(tok);
 
-      if ((linelen + toklen) > FORMAT_TEXT_COLUMN_WIDTH)
+      if ((linelen + toklen) > FORMAT_COMMENT_COLUMN_WIDTH)
         {
           /* +1 because "\n# " is 3 bytes*/
           if ((outsize - 1) <= (totalwritten + 3))
@@ -89,12 +89,12 @@ _format_text(char *in,
 }
 
 int
-format_section_comments(char *section_name,
+config_section_comments(char *section_name,
                         char *in,
                         FILE *fp)
 {
-  char section_name_buf[FORMAT_TEXT_BUFLEN];
-  char buf[FORMAT_TEXT_BUFLEN];
+  char section_name_buf[FORMAT_COMMENT_BUFLEN];
+  char buf[FORMAT_COMMENT_BUFLEN];
   char *inbuf = NULL;
   char *tokbuf;
   char *tok;
@@ -111,13 +111,13 @@ format_section_comments(char *section_name,
 
   /* XXX: assume no overrun */
   snprintf(section_name_buf, 
-           FORMAT_TEXT_BUFLEN,
+           FORMAT_COMMENT_BUFLEN,
            "Section %s Comments", 
            section_name);
 
-  if (_format_text(section_name_buf,
-                   buf,
-                   FORMAT_TEXT_BUFLEN) < 0)
+  if (_format_comment(section_name_buf,
+                      buf,
+                      FORMAT_COMMENT_BUFLEN) < 0)
     goto cleanup;
   fprintf(fp, "%s", buf);
   fprintf(fp, "#\n");
@@ -125,9 +125,9 @@ format_section_comments(char *section_name,
   tok = strtok_r(inbuf, "\n", &tokbuf);
   while (tok)
     {
-      if (_format_text(tok,
-                       buf,
-                       FORMAT_TEXT_BUFLEN) < 0)
+      if (_format_comment(tok,
+                          buf,
+                          FORMAT_COMMENT_BUFLEN) < 0)
         goto cleanup;
       fprintf(fp, "%s", buf);
       fprintf(fp, "#\n");

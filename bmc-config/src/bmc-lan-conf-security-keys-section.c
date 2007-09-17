@@ -1,3 +1,13 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
@@ -5,6 +15,8 @@
 #include "bmc-config-map.h"
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
+
+#include "tool-common.h"
 
 static bmc_err_t
 k_r_checkout (bmc_config_state_data_t *state_data,
@@ -184,33 +196,20 @@ k_g_validate (bmc_config_state_data_t *state_data,
   return BMC_VALIDATE_VALID_VALUE;
 }
 
-static bmc_err_t
-section_lan_conf_security_keys_comments(bmc_config_state_data_t *state_data,
-                                        char *section_name,
-                                        FILE *fp)
+struct section *
+bmc_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
-  char *str = 
+  struct section *lan_conf_security_keys_section = NULL;
+  char *section_comment = 
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
     "K_g BMC key may be configurable.  The K_g key is an optional key that "
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will may to set this to zero (or blank).";
 
-  if (format_section_comments(section_name,
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
-{
-  struct section *lan_conf_security_keys_section = NULL;
-
   if (!(lan_conf_security_keys_section = bmc_config_section_create (state_data, 
                                                                     "Lan_Conf_Security_Keys",
-                                                                    section_lan_conf_security_keys_comments,
+                                                                    "Lan_Conf_Security_Keys",
+                                                                    section_comment,
                                                                     0)))
     goto cleanup;
 

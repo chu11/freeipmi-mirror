@@ -1048,6 +1048,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
   if (!(sect = pef_config_section_create (state_data, 
                                           buf, 
                                           NULL, 
+                                          NULL, 
                                           0)))
     goto cleanup;
 

@@ -1,8 +1,21 @@
-#include "bmc-config-checkout.h"
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+#include <assert.h>
 
 #include "bmc-config.h"
+#include "bmc-config-checkout.h"
 #include "bmc-config-common.h"
 #include "bmc-config-sections.h"
+
+#include "config-comment.h"
 
 static bmc_err_t
 bmc_checkout_keypair (bmc_config_state_data_t *state_data,
@@ -126,15 +139,16 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
   if (sect->flags & BMC_DO_NOT_CHECKOUT)
     return ret;
 
-  if (sect->comment)
+  if (sect->section_comment_section_name
+      && sect->section_comment)
     {
-      if ((this_ret = (*sect->comment)(state_data, 
-                                       sect->section_name,
-                                       fp)) != BMC_ERR_SUCCESS)
+      if (config_section_comments(sect->section_comment_section_name,
+                                  sect->section_comment,
+                                  fp) < 0)
         {
           if (args->verbose)
             fprintf (fp, "\t## FATAL: Comment output error\n");
-          ret = this_ret;
+          ret = BMC_ERR_NON_FATAL_ERROR;
         }
     }
 

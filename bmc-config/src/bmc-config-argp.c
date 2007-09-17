@@ -150,19 +150,19 @@ _create_sectionstr(char *arg)
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct bmc_config_arguments *args = state->input;
+  struct bmc_config_arguments *cmd_args = state->input;
   struct keypair *kp;
   struct sectionstr *sstr;
 
   switch (key)
     {
     case 'v':
-      args->verbose = 1;
+      cmd_args->verbose = 1;
       break;
     case 'f':
-      if (args->filename) /* If specified more than once */
-	free (args->filename);
-      if (!(args->filename = strdup (arg)))
+      if (cmd_args->filename) /* If specified more than once */
+	free (cmd_args->filename);
+      if (!(cmd_args->filename = strdup (arg)))
         {
           perror("strdup");
           exit(1);
@@ -172,62 +172,62 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'k':
 
       kp = _create_keypair(arg);
-      if (args->keypairs)
+      if (cmd_args->keypairs)
         {
           struct keypair *p = NULL;
           
-          p = args->keypairs;
+          p = cmd_args->keypairs;
           while (p->next)
             p = p->next;
           
           p->next = kp;
         }
       else
-        args->keypairs = kp;
+        cmd_args->keypairs = kp;
       break;
 
     case 'S':
       sstr = _create_sectionstr(arg);
-      if (args->sectionstrs)
+      if (cmd_args->sectionstrs)
         {
           struct sectionstr *p = NULL;
           
-          p = args->sectionstrs;
+          p = cmd_args->sectionstrs;
           while (p->next)
             p = p->next;
           
           p->next = sstr;
         }
       else
-        args->sectionstrs = sstr;
+        cmd_args->sectionstrs = sstr;
       break;
 
     case 'L':
-      if (! args->action)
-	args->action = BMC_ACTION_LIST_SECTIONS;
+      if (! cmd_args->action)
+	cmd_args->action = BMC_ACTION_LIST_SECTIONS;
       else
-	args->action = -1;
+	cmd_args->action = -1;
       break;
 
     case 'o':
-      if (! args->action)
-	args->action = BMC_ACTION_CHECKOUT;
+      if (! cmd_args->action)
+	cmd_args->action = BMC_ACTION_CHECKOUT;
       else
-	args->action = -1;
+	cmd_args->action = -1;
       break;
 
     case 'i':
-      if (! args->action)
-	args->action = BMC_ACTION_COMMIT;
+      if (! cmd_args->action)
+	cmd_args->action = BMC_ACTION_COMMIT;
       else
-	args->action = -1;
+	cmd_args->action = -1;
       break;
 
     case 'd':
-      if (! args->action)
-	args->action = BMC_ACTION_DIFF;
+      if (! cmd_args->action)
+	cmd_args->action = BMC_ACTION_DIFF;
       else
-	args->action = -1;
+	cmd_args->action = -1;
       break;
 
     case ARGP_KEY_ARG:
@@ -235,37 +235,37 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     default:
-      return common_parse_opt (key, arg, state, &args->common);
+      return common_parse_opt (key, arg, state, &cmd_args->common);
     }
   return 0;
 }
 
 void
-bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *args)
+bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
 {
-  init_common_cmd_args (&(args->common));
-  args->verbose = 0;
-  args->filename = NULL;
-  args->keypairs = NULL;
-  args->sectionstrs = NULL;
-  args->action = 0;
+  init_common_cmd_args (&(cmd_args->common));
+  cmd_args->verbose = 0;
+  cmd_args->filename = NULL;
+  cmd_args->keypairs = NULL;
+  cmd_args->sectionstrs = NULL;
+  cmd_args->action = 0;
 
   /* ADMIN is minimum for bmc-config b/c its needed for many of the
    * ipmi cmds used
    */
-  args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
+  cmd_args->common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
   
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, args);
-  verify_common_cmd_args (&(args->common));
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, cmd_args);
+  verify_common_cmd_args (&(cmd_args->common));
 }
 
 int
-bmc_config_args_validate (struct bmc_config_arguments *args)
+bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
 {
   int ret = 0;
 
   // action is non 0 and -1
-  if (! args->action || args->action == -1) 
+  if (! cmd_args->action || cmd_args->action == -1) 
     {
       fprintf (stderr, 
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
@@ -273,9 +273,9 @@ bmc_config_args_validate (struct bmc_config_arguments *args)
     }
 
   // filename and keypair both given for checkout or diff
-  if (args->filename && args->keypairs 
-      && (args->action == BMC_ACTION_CHECKOUT
-          || args->action == BMC_ACTION_DIFF))
+  if (cmd_args->filename && cmd_args->keypairs 
+      && (cmd_args->action == BMC_ACTION_CHECKOUT
+          || cmd_args->action == BMC_ACTION_DIFF))
     {
       fprintf (stderr, 
                "Both --filename or --keypair cannot be used\n");
@@ -283,8 +283,8 @@ bmc_config_args_validate (struct bmc_config_arguments *args)
     }
 
   // only one of keypairs or section can be given for checkout
-  if (args->action == BMC_ACTION_CHECKOUT
-      && (args->keypairs && args->sectionstrs))
+  if (cmd_args->action == BMC_ACTION_CHECKOUT
+      && (cmd_args->keypairs && cmd_args->sectionstrs))
     {
       fprintf (stderr, 
                "Only one of --filename, --keypair, and --section can be used\n");
@@ -293,39 +293,39 @@ bmc_config_args_validate (struct bmc_config_arguments *args)
 
   // filename is readable if commit, writable/creatable if checkout
 
-  if (args->filename) 
+  if (cmd_args->filename) 
     {
-      switch (args->action) 
+      switch (cmd_args->action) 
         {
         case BMC_ACTION_COMMIT: case BMC_ACTION_DIFF:
-          if (access (args->filename, R_OK) != 0) 
+          if (access (cmd_args->filename, R_OK) != 0) 
             {
-              perror (args->filename);
+              perror (cmd_args->filename);
               return -1;
             }
           break;
         case BMC_ACTION_CHECKOUT:
-          if (access (args->filename, F_OK) == 0) 
+          if (access (cmd_args->filename, F_OK) == 0) 
             {
-              if (access (args->filename, W_OK) != 0) 
+              if (access (cmd_args->filename, W_OK) != 0) 
                 {
-                  perror (args->filename);
+                  perror (cmd_args->filename);
                   return -1;
                 }
             } 
           else 
             {
               int fd;
-              fd = open (args->filename, O_CREAT);
+              fd = open (cmd_args->filename, O_CREAT);
               if (fd == -1) 
                 {
-                  perror (args->filename);
+                  perror (cmd_args->filename);
                   return -1;
                 } 
               else 
                 {
                   close (fd);
-                  unlink (args->filename);
+                  unlink (cmd_args->filename);
                 }
             }
           break;

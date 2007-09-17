@@ -7,10 +7,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-sensor-api.h"

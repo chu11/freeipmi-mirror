@@ -18,6 +18,116 @@
 #include "pef-config-utils.h"
 #include "pef-config-wrapper.h"
 
+#include "config-comment.h"
+
+static pef_err_t
+pef_checkout_keypair (pef_config_state_data_t *state_data,
+                      struct keypair *kp)
+{
+  char *keypair = NULL;
+  char *section_name;
+  char *key_name;
+  struct section *sect;
+  struct keyvalue *kv;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret = PEF_ERR_SUCCESS;
+
+  if (!(keypair = strdup (kp->keypair)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+
+  section_name = strtok (keypair, ":");
+  key_name = strtok (NULL, "");
+
+  if (!(section_name && key_name))
+    {
+      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  section_name = strtok (section_name, " \t");
+  key_name = strtok (key_name, " \t");
+
+  sect = state_data->sections;
+  while (sect)
+    {
+      if (same (section_name, sect->section_name))
+        break;
+      sect = sect->next;
+    }
+
+  if (!sect)
+    {
+      fprintf (stderr, "Unknown section `%s'\n", section_name);
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  kv = sect->keyvalues;
+
+  while (kv)
+    {
+      if (same (key_name, kv->key))
+        break;
+      kv = kv->next;
+    }
+
+  if (!kv)
+    {
+      fprintf (stderr, "Unknown key `%s' in section `%s'\n",
+               key_name, section_name);
+      rv = PEF_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if ((ret = kv->checkout (state_data, sect, kv)) == PEF_ERR_FATAL_ERROR)
+    goto cleanup;
+
+  if (ret == PEF_ERR_SUCCESS)
+    printf ("%s:%s=%s\n", key_name, section_name, kv->value);
+  else
+    printf ("Error fetching value for %s in %s\n", key_name, section_name);
+
+  rv = ret;
+ cleanup:
+  if (keypair)
+    free(keypair);
+  return rv;
+}
+
+static pef_err_t
+pef_checkout_keypairs (pef_config_state_data_t *state_data)
+{
+  struct pef_config_arguments *args;
+  struct keypair *kp;
+  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  pef_err_t ret = PEF_ERR_SUCCESS;
+
+  args = state_data->prog_data->args;
+
+  kp = args->keypairs;
+  while (kp)
+    {
+      pef_err_t this_ret;
+
+      if ((this_ret = pef_checkout_keypair(state_data,
+                                           kp)) == PEF_ERR_FATAL_ERROR)
+        goto cleanup;
+
+      if (this_ret == PEF_ERR_NON_FATAL_ERROR)
+        ret = PEF_ERR_NON_FATAL_ERROR;
+
+      kp = kp->next;
+    }
+
+  rv = ret;
+ cleanup:
+  return rv;
+}
+
 static pef_err_t
 pef_checkout_section_common (pef_config_state_data_t *state_data,
                              struct section *sect,
@@ -32,15 +142,16 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
   if (sect->flags & PEF_DO_NOT_CHECKOUT)
     return ret;
 
-  if (sect->comment)
+  if (sect->section_comment_section_name
+      && sect->section_comment)
     {
-      if ((this_ret = (*sect->comment)(state_data,
-                                       sect->section_name,
-                                       fp)) != PEF_ERR_SUCCESS)
+      if (config_section_comments(sect->section_comment_section_name,
+                                  sect->section_comment,
+                                  fp) < 0)
         {
           if (args->verbose)
             fprintf (fp, "\t## FATAL: Comment output error\n");
-          ret = this_ret;
+          ret = PEF_ERR_NON_FATAL_ERROR;
         }
     }
 
@@ -251,7 +362,9 @@ pef_checkout (pef_config_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->sectionstrs)
+  if (args->keypairs)
+    ret = pef_checkout_keypairs (state_data);
+  else if (args->sectionstrs)
     ret = pef_checkout_section (state_data);
   else
     ret = pef_checkout_file (state_data);

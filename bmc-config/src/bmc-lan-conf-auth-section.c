@@ -1,3 +1,13 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
@@ -1328,12 +1338,11 @@ oem_oem_proprietary_diff (bmc_config_state_data_t *state_data,
                                      &(auth.oem_level_oem_proprietary));
 }
 
-static bmc_err_t
-section_lan_conf_auth_comments(bmc_config_state_data_t *state_data,
-                               char *section_name,
-                               FILE *fp)
+struct section *
+bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
 {
-  char *str =
+  struct section *lan_conf_auth_section = NULL;
+  char *section_comment =
     "In the Lan_Conf_Auth section, allowable authentication mechanisms for "
     "IPMI 1.5 is configured.  Most users will want to set all \"MD5\" "
     "authentication to \"Yes\" and the rest to \"No\".  If you have "
@@ -1341,22 +1350,10 @@ section_lan_conf_auth_comments(bmc_config_state_data_t *state_data,
     "will also want to configure some of the \"None\" fields to \"Yes\" "
     "to allow \"None\" authentication to work.";
 
-  if (format_section_comments(section_name,
-                              str,
-                              fp) < 0)
-    return BMC_ERR_NON_FATAL_ERROR;
-
-  return BMC_ERR_SUCCESS;
-}
-
-struct section *
-bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
-{
-  struct section *lan_conf_auth_section = NULL;
-
   if (!(lan_conf_auth_section = bmc_config_section_create(state_data, 
                                                           "Lan_Conf_Auth",
-                                                          section_lan_conf_auth_comments,
+                                                          "Lan_Conf_Auth",
+                                                          section_comment,
                                                           0)))
     goto cleanup;
 

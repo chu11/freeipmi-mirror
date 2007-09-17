@@ -25,6 +25,7 @@
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
 
 #include "cmdline-parse-common.h"
 

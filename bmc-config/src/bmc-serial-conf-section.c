@@ -1,3 +1,13 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
@@ -849,10 +859,15 @@ struct section *
 bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *bmc_serial_conf_section = NULL;
+  char *section_comment = 
+    "In the Serial_Conf section, typical serial communication configuration "
+    "is setup.  Most users will only be interested in IPMI over LAN, "
+    "therefore this section can generally be ignored.";
 
   if (!(bmc_serial_conf_section = bmc_config_section_create(state_data, 
                                                             "Serial_Conf", 
-                                                            NULL,
+                                                            "Serial_Conf", 
+                                                            section_comment,
                                                             0)))
     goto cleanup;
 
