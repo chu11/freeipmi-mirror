@@ -13,7 +13,8 @@
 #include "config-util.h"
 
 struct config_section *
-find_section(struct config_section *sections, const char *section_name)
+config_find_section(struct config_section *sections, 
+                    const char *section_name)
 {
   struct config_section *s = NULL;
 
@@ -32,7 +33,8 @@ find_section(struct config_section *sections, const char *section_name)
 }
 
 struct config_key *
-find_key(struct config_section *section, const char *key_name)
+config_find_key(struct config_section *section, 
+                const char *key_name)
 {
   struct config_key *k = NULL;
 
@@ -47,5 +49,24 @@ find_key(struct config_section *section, const char *key_name)
       k = k->next;
     }
 
+  return k;
+}
+
+struct config_key *
+config_find_section_key(struct config_section *sections,
+                        const char *section_name, 
+                        const char *key_name)
+{
+  struct config_section *s;
+  struct config_key *k;
+
+  assert(sections);
+  assert(section_name);
+  assert(key_name);
+
+  if (!(s = config_find_section(sections, section_name)))
+    return NULL;
+  if (!(k = config_find_key(s, key_name)))
+    return NULL;
   return k;
 }

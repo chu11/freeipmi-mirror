@@ -5,9 +5,14 @@
 
 #include "config-common.h"
 
-struct config_section *find_section(struct config_section *sections, const char *section_name);
+struct config_section *config_find_section(struct config_section *sections, 
+                                           const char *section_name);
 
-struct config_key *find_key(struct config_section *section, const char *key_name);
+struct config_key *config_find_key(struct config_section *section, 
+                                   const char *key_name);
 
+struct config_key *config_find_section_key(struct config_section *sections,
+                                           const char *section_name, 
+                                           const char *key_name);
 
 #endif /* _CONFIG_UTIL_H_ */

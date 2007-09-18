@@ -11,66 +11,10 @@
 #include <assert.h>
 
 #include "config-parse.h"
+#include "config-section.h"
 #include "config-util.h"
 
 #define CONFIG_PARSE_BUFLEN 4096
-
-static int
-_set_key_value_input(struct config_section *section, 
-                     struct config_key *key,
-                     const char *value)
-{
-  struct config_keyvalue *kv = NULL;
-
-  assert(section);
-  assert(key);
-  assert(value);
-  
-  if (!(kv = malloc(sizeof(struct config_keyvalue))))
-    {
-      perror("malloc");
-      goto cleanup;
-    }
-  memset(kv, '\0', sizeof(struct config_keyvalue));
-
-  if (!(kv->key_name = strdup(key->key_name)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  if (!(kv->value_input = strdup(value)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  kv->next = NULL;
-
-  if (section->keyvalues_last)
-    {
-      (section->keyvalues_last)->next = kv;
-      section->keyvalues_last = kv;
-    }
-  else
-    {
-      section->keyvalues = kv;
-      section->keyvalues_last = kv;
-    }
-
-  return 0;
-
- cleanup:
-  if (kv)
-    {
-      if (kv->key_name)
-        free(kv->key_name);
-      if (kv->value_input)
-        free(kv->value_input);
-      free(kv);
-    }
-  return -1;
-}
 
 int 
 config_parse (struct config_section *sections, FILE *fp, int debug)
@@ -117,7 +61,7 @@ config_parse (struct config_section *sections, FILE *fp, int debug)
               goto cleanup;
             }
           
-          if (!(section = find_section(sections, tok)))
+          if (!(section = config_find_section(sections, tok)))
             {
               fprintf(stderr, "Unknown section `%s'\n", tok);
               goto cleanup;
@@ -156,7 +100,7 @@ config_parse (struct config_section *sections, FILE *fp, int debug)
           goto cleanup;
         }
 
-      if (!(key = find_key(section, str)))
+      if (!(key = config_find_key(section, str)))
         {
           fprintf(stderr, 
                   "Unknown key `%s' in section `%s'\n", 
@@ -176,7 +120,10 @@ config_parse (struct config_section *sections, FILE *fp, int debug)
                 key->key_name, 
                 tok);
 
-      if (_set_key_value_input(section, key, tok) < 0)
+      if (config_section_add_keyvalue(section,
+                                      key,
+                                      tok,
+                                      NULL) < 0)
         goto cleanup;
     }
 

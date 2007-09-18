@@ -37,10 +37,9 @@ struct config_key
 };
 
 struct config_keyvalue {
-  char *key_name;
+  struct config_key *key;
   char *value_input;            /* value input by user for commit and diff */
   char *value_output;           /* value read on bmc for checkout and diff */
-  struct config_key *key;
   struct config_keyvalue *next;
 };
 
@@ -57,6 +56,8 @@ typedef config_err_t (*Section_Commit) (const char *section_name,
 
 struct config_section {
   char *section_name;
+  char *section_comment_section_name;
+  char *section_comment;
   unsigned int flags;
   Section_Checkout checkout;
   Section_Commit commit;
@@ -65,7 +66,6 @@ struct config_section {
   struct config_key *keys;
   /* key and values read for checkout/commit/diff */
   struct config_keyvalue *keyvalues;
-  struct config_keyvalue *keyvalues_last;
   struct config_section *next;
 };
 
