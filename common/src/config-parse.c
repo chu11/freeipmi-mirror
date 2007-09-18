@@ -10,52 +10,15 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-common.h"
+#include "config-parse.h"
+#include "config-util.h"
 
 #define CONFIG_PARSE_BUFLEN 4096
 
-static struct config_section *
-_find_section(struct config_section *sections, const char *section_name)
-{
-  struct config_section *s = NULL;
-
-  assert(sections);
-  assert(section_name);
-
-  s = sections;
-  while (s)
-    {
-      if (!strcasecmp(section_name, s->section_name))
-        break;
-      s = s->next;
-    }
-
-  return s;
-}
-
-static struct config_key *
-_find_key(struct config_section *section, const char *key_name)
-{
-  struct config_key *k = NULL;
-
-  assert(section);
-  assert(key_name);
-
-  k = section->keys;
-  while (k)
-    {
-      if (!strcasecmp(key_name, k->key_name))
-        break;
-      k = k->next;
-    }
-
-  return k;
-}
-
 static int
-_set_keyvalue(struct config_section *section, 
-              struct config_key *key,
-              const char *value)
+_set_key_value_input(struct config_section *section, 
+                     struct config_key *key,
+                     const char *value)
 {
   struct config_keyvalue *kv = NULL;
 
@@ -154,7 +117,7 @@ config_parse (struct config_section *sections, FILE *fp, int debug)
               goto cleanup;
             }
           
-          if (!(section = _find_section(sections, tok)))
+          if (!(section = find_section(sections, tok)))
             {
               fprintf(stderr, "Unknown section `%s'\n", tok);
               goto cleanup;
@@ -193,7 +156,7 @@ config_parse (struct config_section *sections, FILE *fp, int debug)
           goto cleanup;
         }
 
-      if (!(key = _find_key(section, str)))
+      if (!(key = find_key(section, str)))
         {
           fprintf(stderr, 
                   "Unknown key `%s' in section `%s'\n", 
@@ -213,7 +176,7 @@ config_parse (struct config_section *sections, FILE *fp, int debug)
                 key->key_name, 
                 tok);
 
-      if (_set_keyvalue(section, key, tok) < 0)
+      if (_set_key_value_input(section, key, tok) < 0)
         goto cleanup;
     }
 

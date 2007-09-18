@@ -27,7 +27,10 @@ noinst_HEADERS = \
 	pstdout.h \
 	hostrange.h \
 	config-common.h \
-	config-comment.h 
+	config-comment.h \
+	config-parse.h \
+	config-section.h \
+	config-util.h
 
 noinst_LTLIBRARIES = \
 	libcmdlineparsecommon.la \
@@ -97,7 +100,11 @@ libpstdout_la_LDFLAGS = $(PTHREAD_LIBS)
 libhostrange_la_SOURCES = hostrange.c
 libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
 
-libconfigcommon_la_SOURCES = config-parse.c config-comment.c
+libconfigcommon_la_SOURCES = \
+	config-comment.c \
+	config-parse.c \
+	config-section.c \
+	config-util.c
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
