@@ -25,7 +25,7 @@ Show general information about PEF configuration.
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information from the BMC.
 .TP
-\fB\-i\fR, \fB\-\-commit\fR
+\fB\-c\fR, \fB\-\-commit\fR
 Update configuration information to the BMC from a config file or key pairs.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR

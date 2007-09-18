@@ -1,3 +1,11 @@
+2007-09-18  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/pef-config.8.pre.in: Fix incorrect --commit short
+	option documentation (reported by Manu Sharma).
+
+	* bmc-config/: Make --commit short option consistent to
+	pef-config.
+	
 2007-09-17  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/, pef-config/: Re-arch section comments again.  Add

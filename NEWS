@@ -53,6 +53,7 @@ o Made many command line options, interactive prompt, and config file
   o The -c option in ipmiconsole is now the -I option.
   o Short option -I changed to -D in bmc-watchdog for consistency to
     other tools.
+  o The -i option in bmc-config is now the -c option.
 o Various minor bug fixes and enhancements.
 
 For Developers
