@@ -3,6 +3,8 @@
 	* pef-config/pef-config.8.pre.in: Fix manpage typo (found by Manu
 	Sharma).
 	
+        * Tagged Release-0_4_4
+
 2007-08-28  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update version for release.
