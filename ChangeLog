@@ -7,6 +7,9 @@
 	
 	* bmc-config/, pef-config/: General code cleanup to make code more
 	similar to between tools for later code merging.
+
+	* bmc-config/bmc-config.8.pre.in, pef-config/pef-config.8.pre.in:
+	Add note that commit keypairs will overwrite file keypairs.
 	
 2007-09-15  Albert Chu <chu11@llnl.gov>
 
