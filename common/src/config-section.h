@@ -32,6 +32,10 @@ int config_section_add_keyvalue(struct config_section *section,
                                 const char *value_input,
                                 const char *value_output);
 
+int config_section_update_keyvalue(struct config_keyvalue *keyvalue,
+                                   const char *value_input,
+                                   const char *value_output);
+
 config_err_t config_sections_output_list(struct config_section *sections);
 
 #endif /* _CONFIG_SECTION_H_ */

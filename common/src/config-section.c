@@ -268,6 +268,36 @@ config_section_add_keyvalue(struct config_section *section,
   return -1;
 }
 
+int
+config_section_update_keyvalue(struct config_keyvalue *keyvalue,
+                               const char *value_input,
+                               const char *value_output)
+{
+  assert(keyvalue);
+  assert(!(value_input && keyvalue->value_input));
+  assert(!(value_output && keyvalue->value_output));
+
+  if (value_input)
+    {
+      if (!(keyvalue->value_input = strdup(value_input)))
+        {
+          perror("strdup");
+          return -1;
+        }
+    }
+
+  if (value_output)
+    {
+      if (!(keyvalue->value_output = strdup(value_output)))
+        {
+          perror("strdup");
+          return -1;
+        }
+    }
+   
+  return 0;
+}
+
 config_err_t 
 config_sections_output_list(struct config_section *sections)
 {
