@@ -19,7 +19,7 @@ Show PEF information
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information from BMC.
 .TP
-\fB\-i\fR, \fB\-\-commit\fR
+\fB\-c\fR, \fB\-\-commit\fR
 Update configuration information to BMC.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
