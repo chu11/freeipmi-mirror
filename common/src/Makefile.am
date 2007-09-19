@@ -34,7 +34,8 @@ noinst_HEADERS = \
 	config-keyinput.h \
 	config-parse.h \
 	config-section.h \
-	config-util.h
+	config-util.h \
+	config-validate.h
 
 noinst_LTLIBRARIES = \
 	libcmdlineparsecommon.la \
@@ -112,7 +113,8 @@ libconfigcommon_la_SOURCES = \
 	config-keyinput.c \
 	config-parse.c \
 	config-section.c \
-	config-util.c
+	config-util.c \
+	config-validate.c
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

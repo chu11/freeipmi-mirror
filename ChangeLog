@@ -4,10 +4,12 @@
 	common/src/config-comment.c, common/src/config-checkout.h,
 	common/src/config-checkout.c, common/src/config-commit.h,
 	common/src/config-commit.c, common/src/config-diff.h,
-	common/src/config-diff.c, common/src/config-parse.h,
+	common/src/config-diff.c, common/src/config-keyinput.h,
+	common/src/config-keyinput.c, common/src/config-parse.h,
 	common/src/config-parse.c, common/src/config-section.h,
 	common/src/config-section.c, common/src/config-util.h,
-	common/src/config-util.c: New files.
+	common/src/config-util.c, common/src/config-validate.h,
+	common/src/config-validate.c: New files.
 
 	* common/src/format-text.h, common/src/format-text.c: Removed
 	files.
