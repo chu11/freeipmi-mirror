@@ -31,6 +31,7 @@ noinst_HEADERS = \
 	config-comment.h \
 	config-commit.h \
 	config-diff.h \
+	config-keyinput.h \
 	config-parse.h \
 	config-section.h \
 	config-util.h
@@ -108,6 +109,7 @@ libconfigcommon_la_SOURCES = \
 	config-comment.c \
 	config-commit.c \
 	config-diff.c \
+	config-keyinput.c \
 	config-parse.c \
 	config-section.c \
 	config-util.c

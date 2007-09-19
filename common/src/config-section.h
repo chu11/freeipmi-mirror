@@ -12,9 +12,9 @@ int config_section_append(struct config_section **sections,
 
 void config_sections_destroy(struct config_section *sections);
 
-struct config_section *config_section_create(char *section_name,
-                                             char *section_comment_section_name,
-                                             char *section_comment,
+struct config_section *config_section_create(const char *section_name,
+                                             const char *section_comment_section_name,
+                                             const char *section_comment,
                                              unsigned int flags,
                                              Section_Checkout checkout,
                                              Section_Commit commit);
@@ -38,6 +38,7 @@ int config_section_update_keyvalue(struct config_keyvalue *keyvalue,
 
 /* returns -1 on error, number of non-valid values otherwise */
 int config_sections_validate_keyvalue_inputs(struct config_section *sections,
+                                             int value_input_required,
                                              int debug,
                                              void *arg);
 

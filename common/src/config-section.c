@@ -48,9 +48,9 @@ config_sections_destroy(struct config_section *sections)
 }
 
 struct config_section *
-config_section_create(char *section_name,
-                      char *section_comment_section_name,
-                      char *section_comment,
+config_section_create(const char *section_name,
+                      const char *section_comment_section_name,
+                      const char *section_comment,
                       unsigned int flags,
                       Section_Checkout checkout,
                       Section_Commit commit)
@@ -100,7 +100,7 @@ config_section_create(char *section_name,
   return section;
  cleanup:
   if (section)
-    config_section_destroy (section);
+    config_section_destroy(section);
   return NULL;
 }
 
@@ -306,6 +306,7 @@ config_section_update_keyvalue(struct config_keyvalue *keyvalue,
 
 int
 config_sections_validate_keyvalue_inputs(struct config_section *sections,
+                                         int value_input_required,
                                          int debug,
                                          void *arg)
 {
@@ -323,6 +324,16 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
       kv = s->keyvalues;
       while (kv)
         {        
+          if (value_input_required && !kv->value_input)
+            {
+              fprintf(stderr,
+                      "Value not specified for key '%s' in section '%s'\n",
+                      kv->key->key_name,
+                      s->section_name);
+              nonvalid_count++;
+              goto next_kv;
+            }
+
           if (kv->value_input)
             {
               config_validate_t v;
@@ -344,6 +355,7 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
                   nonvalid_count++;
                 }
             }
+        next_kv:
           kv = kv->next;
         }
 
