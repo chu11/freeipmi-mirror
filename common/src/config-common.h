@@ -45,6 +45,7 @@ struct config_keyvalue {
 
 /* checkout procedure fills the value into kv->value as printable string */
 typedef config_err_t (*Section_Checkout) (const char *section_name,
+                                          struct config_keyvalue *keyvalues,
                                           FILE *fp,
                                           void *arg);
 
