@@ -10,5 +10,5 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "config-util.h"
+#include "config-validate.h"
 
