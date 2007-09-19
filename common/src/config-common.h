@@ -25,6 +25,7 @@ typedef enum
 typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *key,
                                            const char *value,
+                                           int debug,
                                            void *arg);
 
 struct config_key
@@ -47,12 +48,14 @@ struct config_keyvalue {
 typedef config_err_t (*Section_Checkout) (const char *section_name,
                                           struct config_keyvalue *keyvalues,
                                           FILE *fp,
+                                          int debug,
                                           void *arg);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
 typedef config_err_t (*Section_Commit) (const char *section_name,
                                         struct config_keyvalue *keyvalues,
+                                        int debug,
                                         void *arg);
 
 struct config_section {

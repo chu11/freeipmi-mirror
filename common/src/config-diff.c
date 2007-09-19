@@ -11,3 +11,4 @@
 #include <assert.h>
 
 #include "config-diff.h"
+

@@ -54,6 +54,7 @@ config_checkout_section(struct config_section *section,
   if (section->checkout(section->section_name,
                         section->keyvalues,
                         fp,
+                        debug,
                         arg) == CONFIG_ERR_FATAL_ERROR)
     return CONFIG_ERR_FATAL_ERROR;
 
