@@ -11,6 +11,9 @@ struct config_section *config_find_section(struct config_section *sections,
 struct config_key *config_find_key(struct config_section *section, 
                                    const char *key_name);
 
+struct config_keyvalue *config_find_keyvalue(struct config_section *section, 
+                                             const char *key_name);
+
 struct config_key *config_find_section_key(struct config_section *sections,
                                            const char *section_name, 
                                            const char *key_name);

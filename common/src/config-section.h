@@ -36,6 +36,16 @@ int config_section_update_keyvalue(struct config_keyvalue *keyvalue,
                                    const char *value_input,
                                    const char *value_output);
 
+/* returns -1 on error, number of non-valid values otherwise */
+int config_sections_validate_keyvalue_inputs(struct config_section *sections,
+                                             int debug,
+                                             void *arg);
+
+/* returns -1 on error, 0 on success */
+int config_sections_insert_keyvalues(struct config_section *sections,
+                                     struct config_keyinput *keyinputs,
+                                     int debug);
+
 config_err_t config_sections_output_list(struct config_section *sections);
 
 #endif /* _CONFIG_SECTION_H_ */

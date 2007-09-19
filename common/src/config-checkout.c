@@ -24,7 +24,6 @@ config_checkout_section(struct config_section *section,
   config_err_t rv = CONFIG_ERR_SUCCESS;
 
   assert(section);
-  assert(fp);
 
   if (section->flags & CONFIG_DO_NOT_CHECKOUT)
     return CONFIG_ERR_SUCCESS;
@@ -53,10 +52,13 @@ config_checkout_section(struct config_section *section,
 
   if (section->checkout(section->section_name,
                         section->keyvalues,
-                        fp,
                         debug,
                         arg) == CONFIG_ERR_FATAL_ERROR)
     return CONFIG_ERR_FATAL_ERROR;
+
+  /* checking out for a diff, no need to output */
+  if (!fp)
+    return rv;
 
   if (section->section_comment_section_name
       && section->section_comment)
@@ -77,9 +79,7 @@ config_checkout_section(struct config_section *section,
   while (kv)
     { 
       int key_len = 0;
-
-      fprintf(fp, "\t## %s\n", kv->key->description);
-      
+   
       /* If a value was not checked out, don't output the field 
        * 
        * Note that a checked out value can be an empty string
@@ -87,6 +87,8 @@ config_checkout_section(struct config_section *section,
        */
       if (kv->value_output)
         {
+          fprintf(fp, "\t## %s\n", kv->key->description);
+
           /* achu: Certain keys should have their checked out
            * value automatically commented out.  Sometimes (in the
            * case of passwords) they cannot be checked out, so the
@@ -109,13 +111,27 @@ config_checkout_section(struct config_section *section,
           else
             key_len = fprintf(fp, "\t%s", kv->key->key_name);
           
-          while (key_len <= 45)
+          while (key_len <= CONFIG_CHECKOUT_LINE_LEN)
             {
               fprintf(fp, " ");
               key_len++;
             }
           
           fprintf(fp, "%s\n", kv->value_output);
+        }
+      else
+        {
+          /* Some fields you still output even though there is no retrieved value */
+          if (kv->key->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT)
+            {
+              key_len = fprintf(fp, "\t## %s", kv->key->key_name);
+              while (key_len <= CONFIG_CHECKOUT_LINE_LEN)
+                {
+                  fprintf(fp, " ");
+                  key_len++;
+                }
+              fprintf(fp, "\n");
+            }
         }
 
       kv = kv->next;
@@ -136,12 +152,14 @@ config_checkout_all(struct config_section *sections,
   config_err_t ret;
 
   assert(sections);
-  assert(fp);
 
   s = sections;
   while (s)
     {
-      if ((ret = config_checkout_section(s, fp, debug, arg)) != CONFIG_ERR_SUCCESS)
+      if ((ret = config_checkout_section(s, 
+                                         fp, 
+                                         debug, 
+                                         arg)) != CONFIG_ERR_SUCCESS)
         {
           if (ret == CONFIG_ERR_FATAL_ERROR)
             {

@@ -7,6 +7,8 @@
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
 #define CONFIG_DO_NOT_CHECKOUT                             0x04
 
+#define CONFIG_CHECKOUT_LINE_LEN                           45
+
 typedef enum
   {
     CONFIG_ERR_FATAL_ERROR = -2,
@@ -28,6 +30,14 @@ typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            int debug,
                                            void *arg);
 
+struct config_keyinput
+{
+  char *section_name;
+  char *key_name;
+  char *value_input;
+  struct config_keyinput *next;
+};
+
 struct config_key
 {
   char *key_name;
@@ -47,7 +57,6 @@ struct config_keyvalue {
 /* checkout procedure fills the value into kv->value as printable string */
 typedef config_err_t (*Section_Checkout) (const char *section_name,
                                           struct config_keyvalue *keyvalues,
-                                          FILE *fp,
                                           int debug,
                                           void *arg);
 

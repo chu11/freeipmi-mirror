@@ -52,6 +52,26 @@ config_find_key(struct config_section *section,
   return k;
 }
 
+struct config_keyvalue *
+config_find_keyvalue(struct config_section *section, 
+                     const char *key_name)
+{
+  struct config_keyvalue *kv = NULL;
+
+  assert(section);
+  assert(key_name);
+
+  kv = section->keyvalues;
+  while (kv)
+    {
+      if (!strcasecmp(key_name, kv->key->key_name))
+        break;
+      kv = kv->next;
+    }
+
+  return kv;
+}
+
 struct config_key *
 config_find_section_key(struct config_section *sections,
                         const char *section_name, 

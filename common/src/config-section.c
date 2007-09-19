@@ -11,6 +11,7 @@
 #include <assert.h>
 
 #include "config-section.h"
+#include "config-util.h"
 
 int
 config_section_append(struct config_section **sections,
@@ -274,11 +275,13 @@ config_section_update_keyvalue(struct config_keyvalue *keyvalue,
                                const char *value_output)
 {
   assert(keyvalue);
-  assert(!(value_input && keyvalue->value_input));
-  assert(!(value_output && keyvalue->value_output));
 
   if (value_input)
     {
+      /* overwrite values, usually user specifies something on command line */
+      if (keyvalue->value_input)
+        free(keyvalue->value_input);
+
       if (!(keyvalue->value_input = strdup(value_input)))
         {
           perror("strdup");
@@ -288,6 +291,9 @@ config_section_update_keyvalue(struct config_keyvalue *keyvalue,
 
   if (value_output)
     {
+      if (keyvalue->value_output)
+        free(keyvalue->value_output);
+
       if (!(keyvalue->value_output = strdup(value_output)))
         {
           perror("strdup");
@@ -297,6 +303,122 @@ config_section_update_keyvalue(struct config_keyvalue *keyvalue,
    
   return 0;
 }
+
+int
+config_sections_validate_keyvalue_inputs(struct config_section *sections,
+                                         int debug,
+                                         void *arg)
+{
+  struct config_section *s;
+  int nonvalid_count = 0;
+  int rv = -1;
+
+  assert(sections);
+
+  s = sections;
+  while (s)
+    {
+      struct config_keyvalue *kv;
+
+      kv = s->keyvalues;
+      while (kv)
+        {        
+          if (kv->value_input)
+            {
+              config_validate_t v;
+
+              if ((v = kv->key->validate(s->section_name,
+                                         kv->key->key_name,
+                                         kv->value_input,
+                                         debug,
+                                         arg)) == CONFIG_VALIDATE_FATAL_ERROR)
+                goto cleanup;
+
+              if (v == CONFIG_VALIDATE_INVALID_VALUE)
+                {
+                  fprintf(stderr,
+                          "Invalid value '%s' for key '%s' in section '%s'\n",
+                          kv->value_input,
+                          kv->key->key_name,
+                          s->section_name);
+                  nonvalid_count++;
+                }
+            }
+          kv = kv->next;
+        }
+
+      s = s->next;
+    }
+  
+  rv = nonvalid_count;
+ cleanup:
+  return rv;
+}
+
+int
+config_sections_insert_keyvalues(struct config_section *sections,
+                                 struct config_keyinput *keyinputs,
+                                 int debug)
+{
+  struct config_section *s;
+  struct config_key *k;
+  struct config_keyvalue *kv;
+  struct config_keyinput *ki;
+  int rv = 0;
+
+  assert(sections);
+  assert(keyinputs);
+
+  ki = keyinputs;
+  while (ki)
+    {
+      if (!(s = config_find_section(sections, ki->section_name)))
+        {
+          fprintf(stderr, "Unknown section `%s'\n", ki->section_name);
+          rv = -1;
+          goto next_keyinput;
+        }
+
+      if (!(k = config_find_key(s, ki->key_name)))
+        {
+          fprintf(stderr,
+                  "Unknown key `%s' in section `%s'\n",
+                  ki->key_name,
+                  ki->section_name);
+          rv = -1;
+          goto next_keyinput;
+        }
+
+      if ((kv = config_find_keyvalue(s, ki->key_name)))
+        {
+          if (config_section_update_keyvalue(kv,
+                                             ki->value_input,
+                                             NULL) < 0)
+            {
+              rv = -1;
+              goto cleanup;
+            }
+        }
+      else
+        {
+          if (config_section_add_keyvalue(s,
+                                          k,
+                                          ki->value_input,
+                                          NULL) < 0)
+            {
+              rv = -1;
+              goto cleanup;
+            }
+        }
+
+    next_keyinput:
+      ki = ki->next;
+    }
+  
+ cleanup:
+  return rv;
+}
+
 
 config_err_t 
 config_sections_output_list(struct config_section *sections)
