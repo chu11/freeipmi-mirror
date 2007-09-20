@@ -13,6 +13,57 @@
 #include "config-section.h"
 #include "config-util.h"
 
+struct config_section_str *
+config_section_str_create(char *section_name)
+{
+  struct config_section_str *s = NULL;
+  
+  if (!(s = (struct config_section_str *)malloc(sizeof(struct config_section_str))))
+    {
+      perror("malloc");
+      goto cleanup;
+    }
+
+  if (!(s->section_name = strdup(section_name)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+  s->next = NULL;
+
+  return s;
+
+ cleanup:
+  if (s)
+    {
+      if (s->section_name)
+        free(s->section_name);
+      free(s);
+    }
+  return NULL;
+}
+
+int
+config_section_str_append(struct config_section_str **section_strs,
+                          struct config_section_str *section_str)
+{
+  assert(section_strs);
+  assert(section_str);
+
+  if (*section_strs)
+    {
+      struct config_section_str *sstr = *section_strs;
+      while (sstr->next)
+        sstr = sstr->next;
+      sstr->next = section_str;
+    }
+  else
+    *section_strs = section_str;
+
+  return 0;
+}
+
+
 int
 config_section_append(struct config_section **sections,
                       struct config_section *section)

@@ -23,6 +23,17 @@ typedef enum
     CONFIG_VALIDATE_VALID_VALUE = 0,
   } config_validate_t;
 
+struct config_section_str
+{
+  char *section_name;
+  struct config_section_str *next;
+};
+
+struct config_section_str *config_section_str_create(char *section_name);
+
+int config_section_str_append(struct config_section_str **section_strs,
+                              struct config_section_str *section_str);
+
 /* validate procedure finds if value is suitable to be set as kv->value */
 typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *key_name,
