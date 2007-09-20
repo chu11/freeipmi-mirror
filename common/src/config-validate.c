@@ -17,7 +17,9 @@
 #include "config-validate.h"
 
 config_validate_t 
-config_yes_no_validate(const char *value)
+config_yes_no_validate(const char *section_name, 
+                       const char *key_name,
+                       const char *value)
 {
   assert(value);
 
@@ -48,7 +50,9 @@ _number_range(const char *value,
 }
 
 config_validate_t 
-config_number_range_three_bits(const char *value)
+config_number_range_three_bits(const char *section_name, 
+                               const char *key_name,
+                               const char *value)
 {
   assert(value);
 
@@ -56,7 +60,9 @@ config_number_range_three_bits(const char *value)
 }
 
 config_validate_t 
-config_number_range_four_bits(const char *value)
+config_number_range_four_bits(const char *section_name, 
+                              const char *key_name,
+                              const char *value)
 {
   assert(value);
 
@@ -64,7 +70,9 @@ config_number_range_four_bits(const char *value)
 }
 
 config_validate_t 
-config_number_range_seven_bits(const char *value)
+config_number_range_seven_bits(const char *section_name, 
+                               const char *key_name,
+                               const char *value)
 {
   assert(value);
 
@@ -72,7 +80,9 @@ config_number_range_seven_bits(const char *value)
 }
 
 config_validate_t 
-config_number_range_one_byte(const char *value)
+config_number_range_one_byte(const char *section_name, 
+                             const char *key_name,
+                             const char *value)
 {
   assert(value);
 
@@ -80,7 +90,9 @@ config_number_range_one_byte(const char *value)
 }
 
 config_validate_t 
-config_number_range_one_byte_non_zero(const char *value)
+config_number_range_one_byte_non_zero(const char *section_name, 
+                                      const char *key_name,
+                                      const char *value)
 {
   assert(value);
 
@@ -88,7 +100,9 @@ config_number_range_one_byte_non_zero(const char *value)
 }
 
 config_validate_t 
-config_number_range_two_bytes(const char *value)
+config_number_range_two_bytes(const char *section_name, 
+                              const char *key_name,
+                              const char *value)
 {
   assert(value);
 
@@ -96,7 +110,9 @@ config_number_range_two_bytes(const char *value)
 }
 
 config_validate_t 
-config_ip_address_validate(const char *value)
+config_ip_address_validate(const char *section_name, 
+                           const char *key_name,
+                           const char *value)
 {
   struct in_addr a;
 
@@ -108,7 +124,9 @@ config_ip_address_validate(const char *value)
 }
 
 config_validate_t 
-config_mac_address_validate(const char *value)
+config_mac_address_validate(const char *section_name, 
+                            const char *key_name,
+                            const char *value)
 {
   unsigned int foo;
 
