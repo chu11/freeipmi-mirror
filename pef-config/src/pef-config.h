@@ -26,6 +26,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "cmdline-parse-common.h"
 
+#include "config-common.h"
+
 enum argp_option_keys
   { 
     INFO_KEY = 'i', 
@@ -38,15 +40,6 @@ enum argp_option_keys
     LIST_SECTIONS_KEY = 'L',
     VERBOSE_KEY = 'v',
   };
-
-typedef enum
-  {
-    PEF_ACTION_INFO = 1,
-    PEF_ACTION_CHECKOUT,
-    PEF_ACTION_COMMIT,
-    PEF_ACTION_DIFF,
-    PEF_ACTION_LIST_SECTIONS,
-  } pef_action_t;
 
 typedef enum
   {
@@ -86,7 +79,7 @@ struct pef_config_arguments
 {
   struct common_cmd_args common;
   
-  pef_action_t action;
+  config_action_t action;
 
   int verbose;
   char *filename;

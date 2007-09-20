@@ -68,6 +68,8 @@
 #include "tool-common.h"
 #include "freeipmi-portability.h"
 
+#include "config-common.h"
+
 void
 _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
 {
@@ -124,16 +126,16 @@ _bmc_config (void *arg)
   state_data.sections = sections;
 
   switch (prog_data->args->action) {
-  case BMC_ACTION_CHECKOUT:
+  case CONFIG_ACTION_CHECKOUT:
     ret = bmc_checkout (&state_data);
     break;
-  case BMC_ACTION_COMMIT:
+  case CONFIG_ACTION_COMMIT:
     ret = bmc_commit (&state_data);
     break;
-  case BMC_ACTION_DIFF:
+  case CONFIG_ACTION_DIFF:
     ret = bmc_diff (&state_data);
     break;
-  case BMC_ACTION_LIST_SECTIONS:
+  case CONFIG_ACTION_LIST_SECTIONS:
     ret = bmc_config_sections_list (&state_data);
     break;
   }
@@ -166,7 +168,7 @@ main (int argc, char *argv[])
   ipmi_disable_coredump();
 
   prog_data.progname = argv[0];
-  bmc_config_argp (argc, argv, &cmd_args);
+  bmc_config_argp_parse (argc, argv, &cmd_args);
 
   if (bmc_config_args_validate (&cmd_args) < 0)
     return (EXIT_FAILURE);

@@ -43,6 +43,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "pef-config-info.h"
 #include "pef-config-sections.h"
 
+#include "config-common.h"
+
 void
 _pef_config_state_data_init(pef_config_state_data_t *state_data)
 {
@@ -96,19 +98,19 @@ _pef_config (void *arg)
   state_data.sections = sections;
 
   switch (prog_data->args->action) {
-  case PEF_ACTION_INFO:
+  case CONFIG_ACTION_INFO:
     ret = pef_info (&state_data);
     break;
-  case PEF_ACTION_CHECKOUT:
+  case CONFIG_ACTION_CHECKOUT:
     ret = pef_checkout (&state_data);
     break;
-  case PEF_ACTION_COMMIT:
+  case CONFIG_ACTION_COMMIT:
     ret = pef_commit (&state_data);
     break;
-  case PEF_ACTION_DIFF:
+  case CONFIG_ACTION_DIFF:
     ret = pef_diff (&state_data);
     break;
-  case PEF_ACTION_LIST_SECTIONS:
+  case CONFIG_ACTION_LIST_SECTIONS:
     ret = pef_config_sections_list (&state_data);
     break;
   }
