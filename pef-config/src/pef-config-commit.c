@@ -219,14 +219,26 @@ pef_commit_file (pef_config_state_data_t *state_data)
   else
     fp = stdin;
 
+  /* 1st pass - read in input from file */
   if ((this_ret = pef_config_parser (state_data, fp)) == PEF_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == PEF_ERR_NON_FATAL_ERROR)
     ret = PEF_ERR_NON_FATAL_ERROR;
 
+  /* 2nd pass - feed in keypair elements from the command line to override file keypairs */
+  if (args->keypairs)
+    {
+      if ((this_ret = pef_keypair_feed (state_data)) == PEF_ERR_FATAL_ERROR)
+        goto cleanup;
+
+      if (this_ret == PEF_ERR_NON_FATAL_ERROR)
+        ret = PEF_ERR_NON_FATAL_ERROR;
+    }
+
   if (ret == PEF_ERR_SUCCESS)
     {
+      /* 3rd pass */
       struct section *sect = state_data->sections;
       while (sect)
         {
