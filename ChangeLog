@@ -14,6 +14,15 @@
 	* common/src/format-text.h, common/src/format-text.c: Removed
 	files.
 	
+2007-09-20  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/, pef-config/: Change -k keypair option to -e due to
+	added IPMI 2.0 support.  Add consistency to argp architecture.
+
+2007-09-19  Albert Chu <chu11@llnl.gov>
+
+	* pef-config/src/pef-config-commit.c: Fix keypair support.
+	
 2007-09-18  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/pef-config.8.pre.in: Fix incorrect --commit short

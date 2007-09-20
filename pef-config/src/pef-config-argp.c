@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.6.2.1 2007-09-17 23:04:59 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.6.2.2 2007-09-20 16:21:20 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -34,9 +34,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#if HAVE_FCNTL_H
 #include <sys/types.h>
 #include <sys/stat.h>
+#if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
@@ -78,7 +78,7 @@ static struct argp_option options[] =
      "Show differences between the BMC and a config file.", 28},
     {"filename", FILENAME_KEY, "FILENAME", 0,
      "Specify a PEF config file for PEF checkout/commit/diff.", 29},
-    {"key-pair", 'k', "KEY-PAIR", 0,
+    {"key-pair", KEYPAIR_KEY, "KEY-PAIR", 0,
      "Specify KEY=VALUE pairs for checkout/commit/diff.", 30},
     {"section", SECTIONS_KEY, "SECTION", 0,
      "Specify a SECTION for checkout.", 31},
@@ -144,13 +144,22 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->action = PEF_ACTION_INFO;
       break;
     case CHECKOUT_KEY:
-      cmd_args->action = PEF_ACTION_CHECKOUT;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_CHECKOUT;
+      else
+        cmd_args->action = -1;
       break;
     case COMMIT_KEY:
-      cmd_args->action = PEF_ACTION_COMMIT;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_COMMIT;
+      else
+        cmd_args->action = -1;
       break;
     case DIFF_KEY:
-      cmd_args->action = PEF_ACTION_DIFF;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_DIFF;
+      else
+        cmd_args->action = -1;
       break;
     case FILENAME_KEY:
       if (cmd_args->filename) /* If specified more than once */
@@ -192,7 +201,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
         cmd_args->sectionstrs = sstr;
       break;
     case LIST_SECTIONS_KEY:
-      cmd_args->action = PEF_ACTION_LIST_SECTIONS;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_LIST_SECTIONS;
+      else
+        cmd_args->action = -1;
       break;
     case VERBOSE_KEY:
       cmd_args->verbose = 1;

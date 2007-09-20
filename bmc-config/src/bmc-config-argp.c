@@ -82,21 +82,21 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL_ADMIN,
   ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
   ARGP_COMMON_OPTIONS_DEBUG,
-  {"checkout", 'o', 0, 0, 
+  {"checkout", CHECKOUT_KEY, 0, 0, 
    "Fetch configuration information from the BMC.", 25},
-  {"commit", 'c', 0, 0, 
+  {"commit", COMMIT_KEY, 0, 0, 
    "Update configuration information to the BMC from a config file or key pairs.", 26},
-  {"diff", 'd', 0, 0, 
+  {"diff", DIFF_KEY, 0, 0, 
    "Show differences between the BMC and a config file or key pairs.", 27},
-  {"filename", 'f', "FILENAME", 0, 
+  {"filename", FILENAME_KEY, "FILENAME", 0, 
    "Specify a BMC config file for BMC checkout/commit/diff.", 28},
-  {"key-pair", 'k', "KEY-PAIR", 0, 
+  {"key-pair", KEYPAIR_KEY, "KEY-PAIR", 0, 
    "Specify KEY=VALUE pairs for checkout/commit/diff.", 29},
-  {"section", 'S', "SECTION", 0,
+  {"section", SECTIONS_KEY, "SECTION", 0,
    "Specify a SECTION for checkout.", 30},
-  {"listsections", 'L', 0, 0,
+  {"listsections", LIST_SECTIONS_KEY, 0, 0,
    "List available sections for checkout.", 31},
-  {"verbose",   'v', 0, 0,  
+  {"verbose", VERBOSE_KEY, 0, 0,  
    "Print additional detailed information.", 32},
   { 0, }
 };
@@ -156,10 +156,25 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case 'v':
-      cmd_args->verbose = 1;
+    case CHECKOUT_KEY:
+      if (!cmd_args->action)
+	cmd_args->action = BMC_ACTION_CHECKOUT;
+      else
+	cmd_args->action = -1;
       break;
-    case 'f':
+    case COMMIT_KEY:
+      if (!cmd_args->action)
+	cmd_args->action = BMC_ACTION_COMMIT;
+      else
+	cmd_args->action = -1;
+      break;
+    case DIFF_KEY:
+      if (!cmd_args->action)
+	cmd_args->action = BMC_ACTION_DIFF;
+      else
+	cmd_args->action = -1;
+      break;
+    case FILENAME_KEY:
       if (cmd_args->filename) /* If specified more than once */
 	free (cmd_args->filename);
       if (!(cmd_args->filename = strdup (arg)))
@@ -168,9 +183,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
           exit(1);
         }
       break;
-
-    case 'k':
-
+    case KEYPAIR_KEY:
       kp = _create_keypair(arg);
       if (cmd_args->keypairs)
         {
@@ -185,8 +198,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       else
         cmd_args->keypairs = kp;
       break;
-
-    case 'S':
+    case SECTIONS_KEY:
       sstr = _create_sectionstr(arg);
       if (cmd_args->sectionstrs)
         {
@@ -201,39 +213,18 @@ parse_opt (int key, char *arg, struct argp_state *state)
       else
         cmd_args->sectionstrs = sstr;
       break;
-
-    case 'L':
-      if (! cmd_args->action)
+    case LIST_SECTIONS_KEY:
+      if (!cmd_args->action)
 	cmd_args->action = BMC_ACTION_LIST_SECTIONS;
       else
 	cmd_args->action = -1;
       break;
-
-    case 'o':
-      if (! cmd_args->action)
-	cmd_args->action = BMC_ACTION_CHECKOUT;
-      else
-	cmd_args->action = -1;
+    case VERBOSE_KEY:
+      cmd_args->verbose = 1;
       break;
-
-    case 'i':
-      if (! cmd_args->action)
-	cmd_args->action = BMC_ACTION_COMMIT;
-      else
-	cmd_args->action = -1;
-      break;
-
-    case 'd':
-      if (! cmd_args->action)
-	cmd_args->action = BMC_ACTION_DIFF;
-      else
-	cmd_args->action = -1;
-      break;
-
     case ARGP_KEY_ARG:
       argp_usage (state);
       break;
-
     default:
       return common_parse_opt (key, arg, state, &cmd_args->common);
     }

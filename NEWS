@@ -54,6 +54,7 @@ o Made many command line options, interactive prompt, and config file
   o Short option -I changed to -D in bmc-watchdog for consistency to
     other tools.
   o The -i option in bmc-config is now the -c option.
+  o The -k option in bmc-config and pef-config is now the -e option.
 o Various minor bug fixes and enhancements.
 
 For Developers
