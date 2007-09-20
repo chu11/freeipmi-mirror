@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.8 2007-09-20 16:10:31 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.9 2007-09-20 16:18:28 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -144,13 +144,22 @@ parse_opt (int key, char *arg, struct argp_state *state)
       cmd_args->action = PEF_ACTION_INFO;
       break;
     case CHECKOUT_KEY:
-      cmd_args->action = PEF_ACTION_CHECKOUT;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_CHECKOUT;
+      else
+        cmd_args->action = -1;
       break;
     case COMMIT_KEY:
-      cmd_args->action = PEF_ACTION_COMMIT;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_COMMIT;
+      else
+        cmd_args->action = -1;
       break;
     case DIFF_KEY:
-      cmd_args->action = PEF_ACTION_DIFF;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_DIFF;
+      else
+        cmd_args->action = -1;
       break;
     case FILENAME_KEY:
       if (cmd_args->filename) /* If specified more than once */
@@ -192,7 +201,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
         cmd_args->sectionstrs = sstr;
       break;
     case LIST_SECTIONS_KEY:
-      cmd_args->action = PEF_ACTION_LIST_SECTIONS;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_LIST_SECTIONS;
+      else
+        cmd_args->action = -1;
       break;
     case VERBOSE_KEY:
       cmd_args->verbose = 1;
