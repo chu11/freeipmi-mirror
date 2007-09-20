@@ -33,7 +33,7 @@ enum argp_option_keys
     COMMIT_KEY = 'c', 
     DIFF_KEY = 'd',
     FILENAME_KEY = 'f',
-    KEYPAIR_KEY = 'k',
+    KEYPAIR_KEY = 'e',
     SECTIONS_KEY = 'S',
     LIST_SECTIONS_KEY = 'L',
     VERBOSE_KEY = 'v',

@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.7 2007-09-17 17:18:55 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.8 2007-09-20 16:10:31 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -78,7 +78,7 @@ static struct argp_option options[] =
      "Show differences between the BMC and a config file.", 28},
     {"filename", FILENAME_KEY, "FILENAME", 0,
      "Specify a PEF config file for PEF checkout/commit/diff.", 29},
-    {"key-pair", 'k', "KEY-PAIR", 0,
+    {"key-pair", KEYPAIR_KEY, "KEY-PAIR", 0,
      "Specify KEY=VALUE pairs for checkout/commit/diff.", 30},
     {"section", SECTIONS_KEY, "SECTION", 0,
      "Specify a SECTION for checkout.", 31},

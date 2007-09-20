@@ -31,6 +31,18 @@
 
 #define CIPHER_SUITE_LEN 16
 
+enum argp_option_keys
+  { 
+    CHECKOUT_KEY = 'o', 
+    COMMIT_KEY = 'c', 
+    DIFF_KEY = 'd',
+    FILENAME_KEY = 'f',
+    KEYPAIR_KEY = 'e',
+    SECTIONS_KEY = 'S',
+    LIST_SECTIONS_KEY = 'L',
+    VERBOSE_KEY = 'v',
+  };
+
 typedef enum
   {
     BMC_ACTION_CHECKOUT = 1,

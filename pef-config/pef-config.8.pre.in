@@ -34,7 +34,7 @@ Show differences between the BMC and a config file.
 \fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
 Specify a PEF config file for PEF checkout/commit/diff.
 .TP
-\fB\-k\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
+\fB\-e\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
 Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
 used multiple times.  On commit, any KEY=VALUE pairs will overwrite
 any pairs specified in a file with \fB\-\-filename\fR.
