@@ -49,13 +49,6 @@ typedef enum
     PEF_DIFF_DIFFERENT = 1,
   } pef_diff_t;
 
-typedef enum
-  {
-    PEF_VALIDATE_FATAL_ERROR = -2,
-    PEF_VALIDATE_INVALID_VALUE = -1,
-    PEF_VALIDATE_VALID_VALUE = 0,
-  } pef_validate_t;
-
 struct keypair
 {
   char *keypair;

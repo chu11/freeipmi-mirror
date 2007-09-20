@@ -53,13 +53,6 @@ typedef enum
     BMC_DIFF_DIFFERENT = 1,
   } bmc_diff_t;
 
-typedef enum
-  {
-    BMC_VALIDATE_FATAL_ERROR = -2,
-    BMC_VALIDATE_INVALID_VALUE = -1,
-    BMC_VALIDATE_VALID_VALUE = 0,
-  } bmc_validate_t;
-
 struct keypair
 {
   char *keypair;
