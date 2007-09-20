@@ -17,6 +17,9 @@
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 static pef_err_t
 alert_policy_get (pef_config_state_data_t *state_data,
                   uint8_t alert_policy_entry_number,
@@ -1071,7 +1074,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        policy_enabled_checkout,
                                        policy_enabled_commit,
                                        policy_enabled_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1082,7 +1085,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        policy_number_checkout,
                                        policy_number_commit,
                                        policy_number_diff,
-                                       number_range_four_bits) < 0) 
+                                       config_number_range_four_bits) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1093,7 +1096,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        destination_selector_checkout,
                                        destination_selector_commit,
                                        destination_selector_diff,
-                                       number_range_four_bits) < 0) 
+                                       config_number_range_four_bits) < 0) 
     goto cleanup;
 
   /* XXX: This will mem-leak.  Deal with this when
@@ -1113,7 +1116,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        channel_number_checkout,
                                        channel_number_commit,
                                        channel_number_diff,
-                                       number_range_four_bits) < 0) 
+                                       config_number_range_four_bits) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1124,7 +1127,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        alert_string_set_selector_checkout,
                                        alert_string_set_selector_commit,
                                        alert_string_set_selector_diff,
-                                       number_range_seven_bits) < 0) 
+                                       config_number_range_seven_bits) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1135,7 +1138,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        event_specific_alert_string_checkout,
                                        event_specific_alert_string_commit,
                                        event_specific_alert_string_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   return sect;

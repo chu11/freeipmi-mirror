@@ -19,6 +19,9 @@
 
 #include "freeipmi-portability.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 #define PEF_CONFIG_MAXIPADDRLEN 16
 #define PEF_CONFIG_MAXMACADDRLEN 24
 
@@ -574,9 +577,9 @@ alert_retries_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-pef_validate_t
-alert_retries_validate (pef_config_state_data_t *state_data,
-                        const struct section *sect,
+static config_validate_t
+alert_retries_validate (const char *section_name,
+                        const char *key_name,
                         const char *value)
 {
   long int conv;
@@ -585,12 +588,12 @@ alert_retries_validate (pef_config_state_data_t *state_data,
   conv = strtol (value, &endptr, 0);
 
   if (*endptr)
-    return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_INVALID_VALUE;
 
   if (conv < 0 || conv > IPMI_ALERT_RETRIES_MAX)
-    return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_INVALID_VALUE;
 
-  return PEF_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_VALID_VALUE;
 }
 
 static pef_err_t
@@ -1063,7 +1066,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        alert_acknowledge_checkout,
                                        alert_acknowledge_commit,
                                        alert_acknowledge_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1074,7 +1077,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        alert_acknowledge_timeout_checkout,
                                        alert_acknowledge_timeout_commit,
                                        alert_acknowledge_timeout_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1107,7 +1110,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        alert_ip_address_checkout,
                                        alert_ip_address_commit,
                                        alert_ip_address_diff,
-                                       ip_address_validate) < 0) 
+                                       config_ip_address_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1118,7 +1121,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        alert_mac_address_checkout,
                                        alert_mac_address_commit,
                                        alert_mac_address_diff,
-                                       mac_address_validate) < 0) 
+                                       config_mac_address_validate) < 0) 
     goto cleanup;
 
   return sect;

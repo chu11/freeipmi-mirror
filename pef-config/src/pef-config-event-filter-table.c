@@ -17,6 +17,9 @@
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 struct event_filter_table {
   uint8_t filter_type;
   uint8_t enable_filter;
@@ -3396,7 +3399,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        enable_filter_checkout,
                                        enable_filter_commit,
                                        enable_filter_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3407,7 +3410,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_filter_action_alert_checkout,
                                        event_filter_action_alert_commit,
                                        event_filter_action_alert_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3418,7 +3421,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_filter_action_power_off_checkout,
                                        event_filter_action_power_off_commit,
                                        event_filter_action_power_off_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3429,7 +3432,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_filter_action_reset_checkout,
                                        event_filter_action_reset_commit,
                                        event_filter_action_reset_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3440,7 +3443,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_filter_action_power_cycle_checkout,
                                        event_filter_action_power_cycle_commit,
                                        event_filter_action_power_cycle_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3451,7 +3454,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_filter_action_oem_checkout,
                                        event_filter_action_oem_commit,
                                        event_filter_action_oem_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3462,7 +3465,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_filter_action_diagnostic_interrupt_checkout,
                                        event_filter_action_diagnostic_interrupt_commit,
                                        event_filter_action_diagnostic_interrupt_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3473,7 +3476,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_filter_action_group_control_operation_checkout,
                                        event_filter_action_group_control_operation_commit,
                                        event_filter_action_group_control_operation_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3484,7 +3487,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        alert_policy_number_checkout,
                                        alert_policy_number_commit,
                                        alert_policy_number_diff,
-                                       number_range_four_bits) < 0) 
+                                       config_number_range_four_bits) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3495,7 +3498,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        group_control_selector_checkout,
                                        group_control_selector_commit,
                                        group_control_selector_diff,
-                                       number_range_three_bits) < 0) 
+                                       config_number_range_three_bits) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3517,7 +3520,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        generator_id_byte_1_checkout,
                                        generator_id_byte_1_commit,
                                        generator_id_byte_1_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3528,7 +3531,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        generator_id_byte_2_checkout,
                                        generator_id_byte_2_commit,
                                        generator_id_byte_2_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3550,7 +3553,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        sensor_number_checkout,
                                        sensor_number_commit,
                                        sensor_number_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3561,7 +3564,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_trigger_checkout,
                                        event_trigger_commit,
                                        event_trigger_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3572,7 +3575,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data1_offset_mask_checkout,
                                        event_data1_offset_mask_commit,
                                        event_data1_offset_mask_diff,
-                                       number_range_two_bytes) < 0) 
+                                       config_number_range_two_bytes) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3583,7 +3586,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data1_and_mask_checkout,
                                        event_data1_and_mask_commit,
                                        event_data1_and_mask_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3594,7 +3597,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data1_compare1_checkout,
                                        event_data1_compare1_commit,
                                        event_data1_compare1_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3605,7 +3608,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data1_compare2_checkout,
                                        event_data1_compare2_commit,
                                        event_data1_compare2_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
   
   if (pef_config_section_add_keyvalue (state_data,
@@ -3616,7 +3619,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data2_and_mask_checkout,
                                        event_data2_and_mask_commit,
                                        event_data2_and_mask_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3627,7 +3630,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data2_compare1_checkout,
                                        event_data2_compare1_commit,
                                        event_data2_compare1_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3638,7 +3641,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data2_compare2_checkout,
                                        event_data2_compare2_commit,
                                        event_data2_compare2_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3649,7 +3652,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data3_and_mask_checkout,
                                        event_data3_and_mask_commit,
                                        event_data3_and_mask_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3660,7 +3663,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data3_compare1_checkout,
                                        event_data3_compare1_commit,
                                        event_data3_compare1_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -3671,7 +3674,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_data3_compare2_checkout,
                                        event_data3_compare2_commit,
                                        event_data3_compare2_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   return sect;

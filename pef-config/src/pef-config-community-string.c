@@ -83,14 +83,14 @@ community_string_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-static pef_validate_t
-community_string_validate (pef_config_state_data_t *state_data,
-                           const struct section *sect,
+static config_validate_t
+community_string_validate (const char *section_name,
+                           const char *key_name,
                            const char *value)
 {
   if (!value || strlen (value) > IPMI_MAX_COMMUNITY_STRING_LENGTH)
-    return PEF_VALIDATE_INVALID_VALUE;
-  return PEF_VALIDATE_VALID_VALUE;
+    return CONFIG_VALIDATE_INVALID_VALUE;
+  return CONFIG_VALIDATE_VALID_VALUE;
 }
 
 struct section *

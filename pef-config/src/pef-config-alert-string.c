@@ -17,6 +17,9 @@
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 /* achu: presumably there is no maximum.  We could read/write blocks
    forever based on block numbers.  However, we need to have some
    artificial max for the sake of pef-config.
@@ -409,14 +412,14 @@ alert_string_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-static pef_validate_t
-alert_string_validate (pef_config_state_data_t *state_data,
-                       const struct section *sect,
+static config_validate_t
+alert_string_validate (const char *section_name,
+                       const char *key_name,
                        const char *value)
 {
   if (strlen (value) <= PEF_ALERT_STRING_MAX_LEN)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
 struct section *
@@ -448,7 +451,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                                        event_filter_number_checkout,
                                        event_filter_number_commit,
                                        event_filter_number_diff,
-                                       number_range_seven_bits) < 0) 
+                                       config_number_range_seven_bits) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -459,7 +462,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                                        alert_string_set_checkout,
                                        alert_string_set_commit,
                                        alert_string_set_diff,
-                                       number_range_seven_bits) < 0) 
+                                       config_number_range_seven_bits) < 0) 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,

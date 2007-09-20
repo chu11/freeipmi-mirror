@@ -17,6 +17,9 @@
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 static pef_err_t
 pef_control_checkout (pef_config_state_data_t *state_data,
 		      uint8_t *pef,
@@ -1257,7 +1260,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_pef_checkout,
                                        enable_pef_commit,
                                        enable_pef_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1268,7 +1271,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_pef_event_messages_checkout,
                                        enable_pef_event_messages_commit,
                                        enable_pef_event_messages_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1279,7 +1282,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_pef_startup_delay_checkout,
                                        enable_pef_startup_delay_commit,
                                        enable_pef_startup_delay_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1290,7 +1293,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_pef_alert_startup_delay_checkout,
                                        enable_pef_alert_startup_delay_commit,
                                        enable_pef_alert_startup_delay_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
   
   if (pef_config_section_add_keyvalue (state_data,
@@ -1301,7 +1304,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_alert_action_checkout,
                                        enable_alert_action_commit,
                                        enable_alert_action_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1312,7 +1315,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_power_down_action_checkout,
                                        enable_power_down_action_commit,
                                        enable_power_down_action_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1323,7 +1326,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_reset_action_checkout,
                                        enable_reset_action_commit,
                                        enable_reset_action_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1334,7 +1337,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_power_cycle_action_checkout,
                                        enable_power_cycle_action_commit,
                                        enable_power_cycle_action_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1345,7 +1348,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_oem_action_checkout,
                                        enable_oem_action_commit,
                                        enable_oem_action_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1356,7 +1359,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        enable_diagnostic_interrupt_checkout,
                                        enable_diagnostic_interrupt_commit,
                                        enable_diagnostic_interrupt_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1367,7 +1370,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        pef_startup_delay_checkout,
                                        pef_startup_delay_commit,
                                        pef_startup_delay_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
@@ -1378,7 +1381,7 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                        pef_alert_startup_delay_checkout,
                                        pef_alert_startup_delay_commit,
                                        pef_alert_startup_delay_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   return pef_section;

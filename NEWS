@@ -53,6 +53,7 @@ o Made many command line options, interactive prompt, and config file
   o The -c option in ipmiconsole is now the -I option.
   o Short option -I changed to -D in bmc-watchdog for consistency to
     other tools.
+  o The -i option in bmc-config is now the -c option.
 o Various minor bug fixes and enhancements.
 
 For Developers
@@ -76,6 +77,13 @@ o Fix various library variable names and macros for consistency.
      has been updated consistently.
 o Various bug fixes and enhancements.
      
+0.4.4
+-----
+o Alter userncame-capabilities workaround to
+authentication-capabilities workaronds to cover more situations.
+o Fix libipmiconsole new console port corner case.
+o Fix manpage typos.
+
 0.4.3
 -----
 o Add ASUS P5M2 workarounds in ipmipower, ipmiconsole, and ipmimonitoring.

@@ -25,7 +25,7 @@ Show general information about PEF configuration.
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information from the BMC.
 .TP
-\fB\-i\fR, \fB\-\-commit\fR
+\fB\-c\fR, \fB\-\-commit\fR
 Update configuration information to the BMC from a config file or key pairs.
 .TP
 \fB\-d\fR, \fB\-\-diff\fR
@@ -35,7 +35,9 @@ Show differences between the BMC and a config file.
 Specify a PEF config file for PEF checkout/commit/diff.
 .TP
 \fB\-k\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
-Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be used multiple times.
+Specify KEY=VALUE pairs for checkout/commit/diff.  This option can be
+used multiple times.  On commit, any KEY=VALUE pairs will overwrite
+any pairs specified in a file with \fB\-\-filename\fR.
 .TP
 \fB\-S\fR "SECTION", \fB\-\-section=\fR"SECTION"
 Specify a SECTION for checkout.  This option can be used multiple times.

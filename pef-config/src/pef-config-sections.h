@@ -4,6 +4,8 @@
 #include "pef-config.h"
 #include "pef-config-common.h"
 
+#include "config-common.h"
+
 #define PEF_CHECKOUT_KEY_COMMENTED_OUT                  0x1
 #define PEF_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x2
 #define PEF_DO_NOT_CHECKOUT                             0x4
@@ -34,11 +36,6 @@ typedef pef_diff_t (*Keyvalue_Diff) (pef_config_state_data_t *state_data,
                                      const struct section *sect,
                                      const struct keyvalue *kv);
 
-/* validate procedure finds if value is suitable to be set as kv->value */
-typedef pef_validate_t (*Keyvalue_Validate) (pef_config_state_data_t *state_data,
-                                             const struct section *sect,
-                                             const char *value);
-
 struct keyvalue {
   struct keyvalue *next;
   const char *key;
@@ -48,7 +45,7 @@ struct keyvalue {
   Keyvalue_Checkout checkout;
   Keyvalue_Commit commit;
   Keyvalue_Diff diff;
-  Keyvalue_Validate validate;
+  Key_Validate validate;
 };
 
 struct section * pef_config_sections_list_create (pef_config_state_data_t *state_data);
@@ -73,7 +70,7 @@ int pef_config_section_add_keyvalue (pef_config_state_data_t *state_data,
                                      Keyvalue_Checkout checkout,
                                      Keyvalue_Commit commit,
                                      Keyvalue_Diff diff,
-                                     Keyvalue_Validate validate);
+                                     Key_Validate validate);
 
 struct keyvalue * pef_config_section_find_keyvalue (pef_config_state_data_t *state_data,
                                                     const char *section_name,

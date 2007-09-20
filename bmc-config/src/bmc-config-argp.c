@@ -84,7 +84,7 @@ static struct argp_option options[] = {
   ARGP_COMMON_OPTIONS_DEBUG,
   {"checkout", 'o', 0, 0, 
    "Fetch configuration information from the BMC.", 25},
-  {"commit", 'i', 0, 0, 
+  {"commit", 'c', 0, 0, 
    "Update configuration information to the BMC from a config file or key pairs.", 26},
   {"diff", 'd', 0, 0, 
    "Show differences between the BMC and a config file or key pairs.", 27},
