@@ -166,7 +166,7 @@ main (int argc, char *argv[])
   ipmi_disable_coredump();
 
   prog_data.progname = argv[0];
-  bmc_config_argp (argc, argv, &cmd_args);
+  bmc_config_argp_parse (argc, argv, &cmd_args);
 
   if (bmc_config_args_validate (&cmd_args) < 0)
     return (EXIT_FAILURE);

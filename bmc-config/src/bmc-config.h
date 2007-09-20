@@ -88,13 +88,13 @@ struct sectionstr
 struct bmc_config_arguments
 {
   struct common_cmd_args common;
-  unsigned char verbose;
 
+  bmc_action_t action;
+
+  int verbose;
   char *filename;
   struct keypair *keypairs;
   struct sectionstr *sectionstrs;
-
-  bmc_action_t action;
 };
 
 typedef struct bmc_config_prog_data
