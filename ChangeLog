@@ -1,4 +1,3 @@
-<<<<<<< ChangeLog
 2007-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	* common/src/config-common.h, common/src/config-comment.h,
@@ -15,7 +14,6 @@
 	* common/src/format-text.h, common/src/format-text.c: Removed
 	files.
 	
-=======
 2007-09-18  Albert Chu <chu11@llnl.gov>
 
 	* pef-config/pef-config.8.pre.in: Fix incorrect --commit short
@@ -24,7 +22,6 @@
 	* bmc-config/: Make --commit short option consistent to
 	pef-config.
 	
->>>>>>> 1.1250
 2007-09-17  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/, pef-config/: Re-arch section comments again.  Add
