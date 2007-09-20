@@ -18,8 +18,6 @@ config_commit_section(struct config_section *section,
                       int debug,
                       void *arg)
 {
-  struct config_keyvalue *kv;
-
   assert(section);
   assert(fp);
 

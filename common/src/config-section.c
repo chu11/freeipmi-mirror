@@ -338,11 +338,7 @@ config_sections_validate_keyvalue_inputs(struct config_section *sections,
             {
               config_validate_t v;
 
-              if ((v = kv->key->validate(s->section_name,
-                                         kv->key->key_name,
-                                         kv->value_input,
-                                         debug,
-                                         arg)) == CONFIG_VALIDATE_FATAL_ERROR)
+              if ((v = kv->key->validate(kv->value_input)) == CONFIG_VALIDATE_FATAL_ERROR)
                 goto cleanup;
 
               if (v == CONFIG_VALIDATE_INVALID_VALUE)
