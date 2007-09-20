@@ -31,9 +31,9 @@ config_yes_no_validate(const char *section_name,
 }
 
 config_validate_t 
-_number_range(const char *value,
-              int min,
-              int max)
+config_check_number_range(const char *value,
+                          int min,
+                          int max)
 {
   long int conv;
   char *endptr;
@@ -60,7 +60,7 @@ config_number_range_three_bits(const char *section_name,
   assert(key_name);
   assert(value);
 
-  return _number_range(value, 0, 7);
+  return config_check_number_range(value, 0, 7);
 }
 
 config_validate_t 
@@ -72,7 +72,7 @@ config_number_range_four_bits(const char *section_name,
   assert(key_name);
   assert(value);
 
-  return _number_range(value, 0, 15);
+  return config_check_number_range(value, 0, 15);
 }
 
 config_validate_t 
@@ -84,7 +84,7 @@ config_number_range_seven_bits(const char *section_name,
   assert(key_name);
   assert(value);
 
-  return _number_range(value, 0, 127);
+  return config_check_number_range(value, 0, 127);
 }
 
 config_validate_t 
@@ -96,7 +96,7 @@ config_number_range_twelve_bits(const char *section_name,
   assert(key_name);
   assert(value);
 
-  return _number_range(value, 0, 4095);
+  return config_check_number_range(value, 0, 4095);
 }
 
 config_validate_t 
@@ -108,7 +108,7 @@ config_number_range_one_byte(const char *section_name,
   assert(key_name);
   assert(value);
 
-  return _number_range(value, 0, 255);
+  return config_check_number_range(value, 0, 255);
 }
 
 config_validate_t 
@@ -120,7 +120,7 @@ config_number_range_one_byte_non_zero(const char *section_name,
   assert(key_name);
   assert(value);
 
-  return _number_range(value, 1, 255);
+  return config_check_number_range(value, 1, 255);
 }
 
 config_validate_t 
@@ -132,7 +132,7 @@ config_number_range_two_bytes(const char *section_name,
   assert(key_name);
   assert(value);
 
-  return _number_range(value, 0, 65535);
+  return config_check_number_range(value, 0, 65535);
 }
 
 config_validate_t 

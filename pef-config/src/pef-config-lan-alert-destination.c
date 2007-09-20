@@ -582,18 +582,7 @@ alert_retries_validate (const char *section_name,
                         const char *key_name,
                         const char *value)
 {
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return CONFIG_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > IPMI_ALERT_RETRIES_MAX)
-    return CONFIG_VALIDATE_INVALID_VALUE;
-
-  return CONFIG_VALIDATE_VALID_VALUE;
+  return config_check_number_range(value, 0, IPMI_ALERT_RETRIES_MAX);
 }
 
 static pef_err_t
