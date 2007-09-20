@@ -232,7 +232,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void
-bmc_config_argp (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
+bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
   cmd_args->verbose = 0;

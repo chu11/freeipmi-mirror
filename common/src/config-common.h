@@ -11,6 +11,15 @@
 
 typedef enum
   {
+    CONFIG_ACTION_INFO = 1,
+    CONFIG_ACTION_CHECKOUT,
+    CONFIG_ACTION_COMMIT,
+    CONFIG_ACTION_DIFF,
+    CONFIG_ACTION_LIST_SECTIONS,
+  } config_action_t;
+
+typedef enum
+  {
     CONFIG_ERR_FATAL_ERROR = -2,
     CONFIG_ERR_NON_FATAL_ERROR = -1,
     CONFIG_ERR_SUCCESS = 0,
