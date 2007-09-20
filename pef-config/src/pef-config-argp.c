@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.9 2007-09-20 16:18:28 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.10 2007-09-20 16:25:48 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -141,7 +141,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case INFO_KEY:
-      cmd_args->action = PEF_ACTION_INFO;
+      if (!cmd_args->action)
+        cmd_args->action = PEF_ACTION_INFO;
+      else
+        cmd_args->action = -1;
       break;
     case CHECKOUT_KEY:
       if (!cmd_args->action)
