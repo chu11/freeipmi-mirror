@@ -25,7 +25,7 @@ typedef enum
 
 /* validate procedure finds if value is suitable to be set as kv->value */
 typedef config_validate_t (*Key_Validate) (const char *section_name,
-                                           const char *key,
+                                           const char *key_name,
                                            const char *value,
                                            int debug,
                                            void *arg);
