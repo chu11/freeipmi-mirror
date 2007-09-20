@@ -39,7 +39,7 @@
 #include "pef-config-utils.h"
 #include "pef-config-wrapper.h"
 
-pef_err_t
+config_err_t
 get_pef_control (pef_config_state_data_t *state_data,
                  uint8_t *pef,
                  uint8_t *pef_event_messages,
@@ -48,7 +48,7 @@ get_pef_control (pef_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_control_rs)))
     goto cleanup;
@@ -59,7 +59,7 @@ get_pef_control (pef_config_state_data_t *state_data,
                                                              BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -79,14 +79,14 @@ get_pef_control (pef_config_state_data_t *state_data,
     goto cleanup;
   *pef_alert_startup_delay = val;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_pef_control (pef_config_state_data_t *state_data,
                  uint8_t pef,
                  uint8_t pef_event_messages,
@@ -94,7 +94,7 @@ set_pef_control (pef_config_state_data_t *state_data,
                  uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
@@ -106,18 +106,18 @@ set_pef_control (pef_config_state_data_t *state_data,
                                                              pef_alert_startup_delay,
                                                              obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_pef_action_global_control (pef_config_state_data_t *state_data,
                                uint8_t *alert_action,
                                uint8_t *power_down_action,
@@ -128,7 +128,7 @@ get_pef_action_global_control (pef_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs)))
     goto cleanup;
@@ -139,7 +139,7 @@ get_pef_action_global_control (pef_config_state_data_t *state_data,
                                                                            BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -167,14 +167,14 @@ get_pef_action_global_control (pef_config_state_data_t *state_data,
     goto cleanup;
   *diagnostic_interrupt = val;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_pef_action_global_control (pef_config_state_data_t *state_data,
                                uint8_t alert_action,
                                uint8_t power_down_action,
@@ -184,7 +184,7 @@ set_pef_action_global_control (pef_config_state_data_t *state_data,
                                uint8_t diagnostic_interrupt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
@@ -198,24 +198,24 @@ set_pef_action_global_control (pef_config_state_data_t *state_data,
                                                                            diagnostic_interrupt,
                                                                            obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_pef_startup_delay (pef_config_state_data_t *state_data,
                        uint8_t *pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs)))
     goto cleanup;
@@ -226,7 +226,7 @@ get_pef_startup_delay (pef_config_state_data_t *state_data,
                                                                    BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -234,19 +234,19 @@ get_pef_startup_delay (pef_config_state_data_t *state_data,
     goto cleanup;
   *pef_startup_delay = val;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_pef_startup_delay (pef_config_state_data_t *state_data,
                        uint8_t pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
@@ -255,24 +255,24 @@ set_pef_startup_delay (pef_config_state_data_t *state_data,
                                                                    pef_startup_delay,
                                                                    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_pef_alert_startup_delay (pef_config_state_data_t *state_data,
                              uint8_t *pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
     goto cleanup;
@@ -283,7 +283,7 @@ get_pef_alert_startup_delay (pef_config_state_data_t *state_data,
                                                                          BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -291,19 +291,19 @@ get_pef_alert_startup_delay (pef_config_state_data_t *state_data,
     goto cleanup;
   *pef_alert_startup_delay = val;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_pef_alert_startup_delay (pef_config_state_data_t *state_data,
                              uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
@@ -312,18 +312,18 @@ set_pef_alert_startup_delay (pef_config_state_data_t *state_data,
                                                                          pef_alert_startup_delay,
                                                                          obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_pef_alert_string_keys (pef_config_state_data_t *state_data,
                            uint8_t string_selector,
                            uint8_t *event_filter_number,
@@ -331,7 +331,7 @@ get_pef_alert_string_keys (pef_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs)))
     goto cleanup;
@@ -342,7 +342,7 @@ get_pef_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -354,21 +354,21 @@ get_pef_alert_string_keys (pef_config_state_data_t *state_data,
     goto cleanup;
   *alert_string_set = val;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_pef_alert_string_keys (pef_config_state_data_t *state_data,
                            uint8_t string_selector,
                            uint8_t event_filter_number,
                            uint8_t alert_string_set)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
@@ -379,25 +379,25 @@ set_pef_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    alert_string_set,
                                                                    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_pef_alert_string (pef_config_state_data_t *state_data,
                       uint8_t string_selector,
                       uint8_t *alert_string,
                       uint32_t alert_string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   int blocks;
   int i;
 
@@ -422,7 +422,7 @@ get_pef_alert_string (pef_config_state_data_t *state_data,
                                                                   i + 1,
                                                                   obj_cmd_rs) < 0)
         {
-          rv = PEF_ERR_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
       
@@ -445,20 +445,20 @@ get_pef_alert_string (pef_config_state_data_t *state_data,
     }
 
  done:
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_pef_alert_string (pef_config_state_data_t *state_data,
                       uint8_t string_selector,
                       uint8_t *alert_string)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   uint8_t *alert_string_buf = NULL;
   int alert_string_len = 0;
   int alert_string_buf_len = 0;
@@ -505,12 +505,12 @@ set_pef_alert_string (pef_config_state_data_t *state_data,
                                                                    len_to_write,
                                                                    obj_cmd_rs) < 0)
         {
-          rv = PEF_ERR_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (alert_string_buf)
     free(alert_string_buf);
@@ -519,20 +519,20 @@ set_pef_alert_string (pef_config_state_data_t *state_data,
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_bmc_community_string (pef_config_state_data_t *state_data,
                           char *community_string,
                           uint32_t community_string_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
   uint8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_community_string_rs)))
     goto cleanup;
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -545,7 +545,7 @@ get_bmc_community_string (pef_config_state_data_t *state_data,
                                                                   BLOCK_SELECTOR,
                                                                   obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -555,26 +555,26 @@ get_bmc_community_string (pef_config_state_data_t *state_data,
                          community_string_len) < 0)
     goto cleanup;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_bmc_community_string (pef_config_state_data_t *state_data,
                           char *community_string)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
   uint8_t channel_number;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -586,18 +586,18 @@ set_bmc_community_string (pef_config_state_data_t *state_data,
                                                                   (community_string) ? strlen((char *)community_string) : 0,
                                                                   obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_bmc_destination_type(pef_config_state_data_t *state_data,
                          uint8_t destination_selector,
                          uint8_t *alert_destination_type,
@@ -607,8 +607,8 @@ get_bmc_destination_type(pef_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
   uint8_t channel_number;
 
   assert(state_data);
@@ -617,7 +617,7 @@ get_bmc_destination_type(pef_config_state_data_t *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_type_rs)))
     goto cleanup;
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -630,7 +630,7 @@ get_bmc_destination_type(pef_config_state_data_t *state_data,
                                                                   BLOCK_SELECTOR,
                                                                   obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -650,14 +650,14 @@ get_bmc_destination_type(pef_config_state_data_t *state_data,
     goto cleanup;
   *alert_retries = val;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_bmc_destination_type(pef_config_state_data_t *state_data,
                          uint8_t destination_selector,
                          uint8_t alert_destination_type,
@@ -666,8 +666,8 @@ set_bmc_destination_type(pef_config_state_data_t *state_data,
                          uint8_t alert_retries)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
   uint8_t channel_number;
 
   assert(state_data);
@@ -676,7 +676,7 @@ set_bmc_destination_type(pef_config_state_data_t *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -691,18 +691,18 @@ set_bmc_destination_type(pef_config_state_data_t *state_data,
                                                                   alert_retries,
                                                                   obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_bmc_destination_addresses(pef_config_state_data_t *state_data,
                               uint8_t destination_selector,
                               uint8_t *alert_gateway,
@@ -715,8 +715,8 @@ get_bmc_destination_addresses(pef_config_state_data_t *state_data,
   uint64_t val;
   uint8_t alert_ip_address_bytes[4];
   uint8_t alert_mac_address_bytes[6];
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
   uint8_t channel_number;
 
   assert(state_data);
@@ -725,7 +725,7 @@ get_bmc_destination_addresses(pef_config_state_data_t *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs)))
     goto cleanup;
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -738,7 +738,7 @@ get_bmc_destination_addresses(pef_config_state_data_t *state_data,
                                                                        BLOCK_SELECTOR,
                                                                        obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -784,14 +784,14 @@ get_bmc_destination_addresses(pef_config_state_data_t *state_data,
                 alert_mac_address_bytes[5]);
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_bmc_destination_addresses(pef_config_state_data_t *state_data,
                               uint8_t destination_selector,
                               uint8_t alert_gateway,
@@ -801,8 +801,8 @@ set_bmc_destination_addresses(pef_config_state_data_t *state_data,
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t alert_ip_address_val = 0;
   uint64_t alert_mac_address_val = 0;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
   uint8_t channel_number;
 
   assert(state_data);
@@ -811,7 +811,7 @@ set_bmc_destination_addresses(pef_config_state_data_t *state_data,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != PEF_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -831,18 +831,18 @@ set_bmc_destination_addresses(pef_config_state_data_t *state_data,
                                                                        alert_mac_address_val,
                                                                        obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data, 
                                      uint8_t alert_policy_entry_number,
                                      uint8_t *policy_type,
@@ -855,7 +855,7 @@ get_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
   assert(state_data);
   assert(alert_policy_entry_number);
@@ -869,7 +869,7 @@ get_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data,
 								    BLOCK_SELECTOR, 
 								    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -899,14 +899,14 @@ get_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data,
     goto cleanup;
   *event_specific_alert_string = val;
   
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data, 
                                      uint8_t alert_policy_entry_number,
                                      uint8_t policy_type,
@@ -918,7 +918,7 @@ set_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data,
                                      uint8_t event_specific_alert_string)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
   assert(state_data);
   assert(alert_policy_entry_number);
@@ -937,18 +937,18 @@ set_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data,
 								    event_specific_alert_string, 
 								    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
       
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 get_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data, 
                                      uint8_t filter_number,
                                      uint8_t *filter_type,
@@ -981,7 +981,7 @@ get_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
   assert(state_data);
   assert(filter_number);
@@ -995,7 +995,7 @@ get_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data,
 								    BLOCK_SELECTOR,
 								    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
  
@@ -1085,14 +1085,14 @@ get_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data,
     goto cleanup;
   *event_data3_compare2 = val;
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-pef_err_t
+config_err_t
 set_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data, 
                                      uint8_t filter_number,
                                      uint8_t filter_type,
@@ -1124,7 +1124,7 @@ set_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data,
                                      uint8_t event_data3_compare2)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
   assert(state_data);
   assert(filter_number);
@@ -1163,11 +1163,11 @@ set_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data,
 								    event_data3_compare2, 
 								    obj_cmd_rs) < 0)
     {
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);

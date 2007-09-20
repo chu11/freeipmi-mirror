@@ -19,7 +19,7 @@
 #include "config-common.h"
 #include "config-validate.h"
 
-static bmc_err_t
+static config_err_t
 sol_auth_checkout (bmc_config_state_data_t *state_data,
 		   uint8_t *sol_privilege_level,
 		   uint8_t *force_sol_payload_authentication,
@@ -28,12 +28,12 @@ sol_auth_checkout (bmc_config_state_data_t *state_data,
   uint8_t tmp_sol_privilege_level;
   uint8_t tmp_force_sol_payload_authentication;
   uint8_t tmp_force_sol_payload_encryption;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_authentication (state_data,
                                          &tmp_sol_privilege_level,
                                          &tmp_force_sol_payload_authentication,
-                                         &tmp_force_sol_payload_encryption)) != BMC_ERR_SUCCESS)
+                                         &tmp_force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (sol_privilege_level)
@@ -45,11 +45,11 @@ sol_auth_checkout (bmc_config_state_data_t *state_data,
   if (force_sol_payload_encryption)
     *force_sol_payload_encryption = tmp_force_sol_payload_encryption;
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
 
-static bmc_err_t
+static config_err_t
 sol_auth_commit (bmc_config_state_data_t *state_data,
 		 uint8_t *sol_privilege_level,
 		 uint8_t *force_sol_payload_authentication,
@@ -58,12 +58,12 @@ sol_auth_commit (bmc_config_state_data_t *state_data,
   uint8_t tmp_sol_privilege_level;
   uint8_t tmp_force_sol_payload_authentication;
   uint8_t tmp_force_sol_payload_encryption;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_authentication (state_data,
                                          &tmp_sol_privilege_level,
                                          &tmp_force_sol_payload_authentication,
-                                         &tmp_force_sol_payload_encryption)) != BMC_ERR_SUCCESS)
+                                         &tmp_force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (sol_privilege_level)
@@ -81,16 +81,16 @@ sol_auth_commit (bmc_config_state_data_t *state_data,
 				     tmp_force_sol_payload_encryption);
 }
 
-static bmc_err_t
+static config_err_t
 enable_sol_checkout (bmc_config_state_data_t *state_data,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
   uint8_t enable;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_enable (state_data,
-                                 &enable)) != BMC_ERR_SUCCESS)
+                                 &enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -101,7 +101,7 @@ enable_sol_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -109,14 +109,14 @@ enable_sol_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 enable_sol_commit (bmc_config_state_data_t *state_data,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
@@ -132,13 +132,13 @@ enable_sol_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
   
   if ((rc = get_sol_sol_enable (state_data,
-                                &got_value)) != BMC_ERR_SUCCESS)
+                                &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -158,18 +158,18 @@ enable_sol_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
+static config_err_t
 sol_privilege_level_checkout (bmc_config_state_data_t *state_data,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
   uint8_t value;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = sol_auth_checkout (state_data,
                                 &value,
                                 NULL,
-                                NULL)) != BMC_ERR_SUCCESS)
+                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -178,12 +178,12 @@ sol_privilege_level_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (privilege_level_string (value))))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 sol_privilege_level_commit (bmc_config_state_data_t *state_data,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
@@ -202,15 +202,15 @@ sol_privilege_level_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = sol_auth_checkout (state_data,
                                &got_value,
                                NULL,
-                               NULL)) != BMC_ERR_SUCCESS)
+                               NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -232,18 +232,18 @@ sol_privilege_level_diff (bmc_config_state_data_t *state_data,
 
 
 /* force_sol_payload_authentication */
-static bmc_err_t
+static config_err_t
 force_sol_payload_authentication_checkout (bmc_config_state_data_t *state_data,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
   uint8_t value;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = sol_auth_checkout (state_data,
                                 NULL,
                                 &value,
-                                NULL)) != BMC_ERR_SUCCESS)
+                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -254,7 +254,7 @@ force_sol_payload_authentication_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -262,14 +262,14 @@ force_sol_payload_authentication_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 force_sol_payload_authentication_commit (bmc_config_state_data_t *state_data,
 					 const struct section *sect,
 					 const struct keyvalue *kv)
@@ -288,15 +288,15 @@ force_sol_payload_authentication_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = sol_auth_checkout (state_data,
                                NULL,
                                &got_value,
-                               NULL)) != BMC_ERR_SUCCESS)
+                               NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -318,18 +318,18 @@ force_sol_payload_authentication_diff (bmc_config_state_data_t *state_data,
 
 /* force_sol_payload_encryption */
 
-static bmc_err_t
+static config_err_t
 force_sol_payload_encryption_checkout (bmc_config_state_data_t *state_data,
 					   const struct section *sect,
 					   struct keyvalue *kv)
 {
   uint8_t value;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = sol_auth_checkout (state_data,
                                 NULL,
                                 NULL,
-                                &value)) != BMC_ERR_SUCCESS)
+                                &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -340,7 +340,7 @@ force_sol_payload_encryption_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -348,14 +348,14 @@ force_sol_payload_encryption_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 force_sol_payload_encryption_commit (bmc_config_state_data_t *state_data,
 				     const struct section *sect,
 				     const struct keyvalue *kv)
@@ -374,15 +374,15 @@ force_sol_payload_encryption_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = sol_auth_checkout (state_data,
                                NULL,
                                NULL,
-                               &got_value)) != BMC_ERR_SUCCESS)
+                               &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -404,18 +404,18 @@ force_sol_payload_encryption_diff (bmc_config_state_data_t *state_data,
 
 /* character_accumulate_interval */
 
-static bmc_err_t
+static config_err_t
 character_accumulate_interval_checkout (bmc_config_state_data_t *state_data,
 					const struct section *sect,
 					struct keyvalue *kv)
 {
   uint8_t interval;
   uint8_t threshold;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_character_accumulate_interval_and_send_threshold (state_data,
                                                                        &interval,
-                                                                       &threshold)) != BMC_ERR_SUCCESS)
+                                                                       &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -424,23 +424,23 @@ character_accumulate_interval_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", interval) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 character_accumulate_interval_commit (bmc_config_state_data_t *state_data,
 				      const struct section *sect,
 				      const struct keyvalue *kv)
 {
   uint8_t interval;
   uint8_t threshold;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_character_accumulate_interval_and_send_threshold (state_data,
                                                                        &interval,
-                                                                       &threshold)) != BMC_ERR_SUCCESS)
+                                                                       &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   interval = atoi (kv->value);
@@ -459,14 +459,14 @@ character_accumulate_interval_diff (bmc_config_state_data_t *state_data,
   uint8_t passed_value;
   uint8_t interval;
   uint8_t threshold;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_sol_character_accumulate_interval_and_send_threshold (state_data,
                                                                       &interval,
-                                                                      &threshold)) != BMC_ERR_SUCCESS)
+                                                                      &threshold)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -491,18 +491,18 @@ character_accumulate_interval_diff (bmc_config_state_data_t *state_data,
 
 /* character_send_threshold */
 
-static bmc_err_t
+static config_err_t
 character_send_threshold_checkout (bmc_config_state_data_t *state_data,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
   uint8_t interval;
   uint8_t threshold;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_character_accumulate_interval_and_send_threshold (state_data,
                                                                        &interval,
-                                                                       &threshold)) != BMC_ERR_SUCCESS)
+                                                                       &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -511,23 +511,23 @@ character_send_threshold_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", threshold) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 character_send_threshold_commit (bmc_config_state_data_t *state_data,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
 {
   uint8_t interval;
   uint8_t threshold;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_character_accumulate_interval_and_send_threshold (state_data,
                                                                        &interval,
-                                                                       &threshold)) != BMC_ERR_SUCCESS)
+                                                                       &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   threshold = atoi (kv->value);
@@ -546,14 +546,14 @@ character_send_threshold_diff (bmc_config_state_data_t *state_data,
   uint8_t passed_value;
   uint8_t interval;
   uint8_t threshold;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_sol_character_accumulate_interval_and_send_threshold (state_data,
                                                                       &interval,
-                                                                      &threshold)) != BMC_ERR_SUCCESS)
+                                                                      &threshold)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -578,18 +578,18 @@ character_send_threshold_diff (bmc_config_state_data_t *state_data,
 
 /* sol_retry_count */
 
-static bmc_err_t
+static config_err_t
 sol_retry_count_checkout (bmc_config_state_data_t *state_data,
 			  const struct section *sect,
 			  struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_retry (state_data,
                                 &count,
-                                &interval)) != BMC_ERR_SUCCESS)
+                                &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -598,24 +598,24 @@ sol_retry_count_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", count) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
 
-static bmc_err_t
+static config_err_t
 sol_retry_count_commit (bmc_config_state_data_t *state_data,
 			const struct section *sect,
 			const struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_retry (state_data,
                                 &count,
-                                &interval)) != BMC_ERR_SUCCESS)
+                                &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   count = atoi (kv->value);
@@ -634,14 +634,14 @@ sol_retry_count_diff (bmc_config_state_data_t *state_data,
   uint8_t got_value;
   uint8_t count;
   uint8_t interval;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_sol_sol_retry (state_data,
                                &count,
-                               &interval)) != BMC_ERR_SUCCESS)
+                               &interval)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -666,18 +666,18 @@ sol_retry_count_diff (bmc_config_state_data_t *state_data,
 
 /* sol_retry_interval */
 
-static bmc_err_t
+static config_err_t
 sol_retry_interval_checkout (bmc_config_state_data_t *state_data,
 			     const struct section *sect,
 			     struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_retry (state_data,
                                 &count,
-                                &interval)) != BMC_ERR_SUCCESS)
+                                &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -686,24 +686,24 @@ sol_retry_interval_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", interval) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
 
-static bmc_err_t
+static config_err_t
 sol_retry_interval_commit (bmc_config_state_data_t *state_data,
 			   const struct section *sect,
 			   const struct keyvalue *kv)
 {
   uint8_t count;
   uint8_t interval;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_retry (state_data,
                                 &count,
-                                &interval)) != BMC_ERR_SUCCESS)
+                                &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   interval = atoi (kv->value);
@@ -722,14 +722,14 @@ sol_retry_interval_diff (bmc_config_state_data_t *state_data,
   uint8_t got_value;
   uint8_t count;
   uint8_t interval;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_sol_sol_retry (state_data,
                                &count,
-                               &interval)) != BMC_ERR_SUCCESS)
+                               &interval)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -752,16 +752,16 @@ sol_retry_interval_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
+static config_err_t
 non_volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
 				const struct section *sect,
 				struct keyvalue *kv)
 {
   uint8_t bitrate;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_non_volatile_bit_rate (state_data,
-                                                &bitrate)) != BMC_ERR_SUCCESS)
+                                                &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -770,12 +770,12 @@ non_volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 non_volatile_bit_rate_commit (bmc_config_state_data_t *state_data,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
@@ -791,13 +791,13 @@ non_volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_sol_sol_non_volatile_bit_rate (state_data,
-                                               &got_value)) != BMC_ERR_SUCCESS)
+                                               &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -819,16 +819,16 @@ non_volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
 
 /* volatile_bit_rate */
 
-static bmc_err_t
+static config_err_t
 volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
   uint8_t bitrate;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_volatile_bit_rate (state_data,
-                                            &bitrate)) != BMC_ERR_SUCCESS)
+                                            &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -837,12 +837,12 @@ volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 volatile_bit_rate_commit (bmc_config_state_data_t *state_data,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -858,13 +858,13 @@ volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_sol_sol_volatile_bit_rate (state_data,
-					   &got_value)) != BMC_ERR_SUCCESS)
+					   &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -885,16 +885,16 @@ volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
+static config_err_t
 port_checkout (bmc_config_state_data_t *state_data,
 	       const struct section *sect,
 	       struct keyvalue *kv)
 {
   uint16_t port;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_sol_sol_payload_port_number (state_data,
-                                              &port)) != BMC_ERR_SUCCESS)
+                                              &port)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -903,13 +903,13 @@ port_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", port) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
 
-static bmc_err_t
+static config_err_t
 port_commit (bmc_config_state_data_t *state_data,
 	     const struct section *sect,
 	     const struct keyvalue *kv)
@@ -925,13 +925,13 @@ port_diff (bmc_config_state_data_t *state_data,
 {
   uint16_t got_value;
   uint16_t passed_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_sol_sol_payload_port_number (state_data,
-                                             &got_value)) != BMC_ERR_SUCCESS)
+                                             &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }

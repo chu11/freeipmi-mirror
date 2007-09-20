@@ -26,7 +26,7 @@
 */
 #define PEF_ALERT_STRING_MAX_LEN 64
 
-static pef_err_t
+static config_err_t
 string_keys_get (pef_config_state_data_t *state_data,
                  uint8_t string_selector,
                  uint8_t *event_filter_number,
@@ -34,12 +34,12 @@ string_keys_get (pef_config_state_data_t *state_data,
 {
   uint8_t tmp_event_filter_number;
   uint8_t tmp_alert_string_set;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_pef_alert_string_keys (state_data,
                                         string_selector,
                                         &tmp_event_filter_number,
-                                        &tmp_alert_string_set)) != PEF_ERR_SUCCESS)
+                                        &tmp_alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (event_filter_number)
@@ -47,10 +47,10 @@ string_keys_get (pef_config_state_data_t *state_data,
   if (alert_string_set)
     *alert_string_set = tmp_alert_string_set;
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 string_keys_set (pef_config_state_data_t *state_data,
                  uint8_t string_selector,
                  uint8_t event_filter_number,
@@ -60,12 +60,12 @@ string_keys_set (pef_config_state_data_t *state_data,
 {
   uint8_t tmp_event_filter_number;
   uint8_t tmp_alert_string_set;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_pef_alert_string_keys(state_data,
                                        string_selector,
                                        &tmp_event_filter_number,
-                                       &tmp_alert_string_set)) != PEF_ERR_SUCCESS)
+                                       &tmp_alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (event_filter_number_is_set)
@@ -76,35 +76,35 @@ string_keys_set (pef_config_state_data_t *state_data,
   if ((ret = set_pef_alert_string_keys(state_data,
                                        string_selector,
                                        tmp_event_filter_number,
-                                       tmp_alert_string_set)) != PEF_ERR_SUCCESS)
+                                       tmp_alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 event_filter_number_checkout (pef_config_state_data_t *state_data,
                               const struct section *sect,
                               struct keyvalue *kv)
 {
   uint8_t event_filter_number;
-  pef_err_t ret;
+  config_err_t ret;
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
 
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if ((ret = string_keys_get (state_data,
                               string_selector,
                               &event_filter_number,
-                              NULL)) != PEF_ERR_SUCCESS)
+                              NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -113,30 +113,30 @@ event_filter_number_checkout (pef_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%u", event_filter_number) < 0)
     {
       perror("asprintf");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 event_filter_number_commit (pef_config_state_data_t *state_data,
                             const struct section *sect,
                             const struct keyvalue *kv)
 {
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
-  pef_err_t ret;
+  config_err_t ret;
   uint8_t event_filter_number;
 
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   event_filter_number = atoi (kv->value);
 
@@ -153,7 +153,7 @@ event_filter_number_diff (pef_config_state_data_t *state_data,
 {
   uint8_t get_val;
   uint8_t passed_val;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
@@ -161,18 +161,18 @@ event_filter_number_diff (pef_config_state_data_t *state_data,
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((rc = get_number_of_alert_strings (state_data,
-                                         &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                         &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return rc;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if ((rc = string_keys_get (state_data,
                              string_selector,
                              &get_val,
-                             NULL)) != PEF_ERR_SUCCESS)
+                             NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -194,29 +194,29 @@ event_filter_number_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-static pef_err_t
+static config_err_t
 alert_string_set_checkout (pef_config_state_data_t *state_data,
                            const struct section *sect,
                            struct keyvalue *kv)
 {
   uint8_t alert_string_set;
-  pef_err_t ret;
+  config_err_t ret;
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
 
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if ((ret = string_keys_get (state_data,
                               string_selector,
                               NULL,
-                              &alert_string_set)) != PEF_ERR_SUCCESS)
+                              &alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -225,30 +225,30 @@ alert_string_set_checkout (pef_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%u", alert_string_set) < 0)
     {
       perror("asprintf");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 alert_string_set_commit (pef_config_state_data_t *state_data,
                          const struct section *sect,
                          const struct keyvalue *kv)
 {
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
-  pef_err_t ret;
+  config_err_t ret;
   uint8_t alert_string_set;
 
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   alert_string_set = atoi (kv->value);
 
@@ -265,7 +265,7 @@ alert_string_set_diff (pef_config_state_data_t *state_data,
 {
   uint8_t get_val;
   uint8_t passed_val;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
@@ -273,18 +273,18 @@ alert_string_set_diff (pef_config_state_data_t *state_data,
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((rc = get_number_of_alert_strings (state_data,
-                                         &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                         &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return rc;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if ((rc = string_keys_get (state_data,
                              string_selector,
                              NULL,
-                             &get_val)) != PEF_ERR_SUCCESS)
+                             &get_val)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -306,29 +306,29 @@ alert_string_set_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-static pef_err_t
+static config_err_t
 alert_string_checkout (pef_config_state_data_t *state_data,
                        const struct section *sect,
                        struct keyvalue *kv)
 {
   uint8_t alert_string[PEF_ALERT_STRING_MAX_LEN+1] = { 0, };
-  pef_err_t ret;
+  config_err_t ret;
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
 
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if ((ret = get_pef_alert_string (state_data,
                                    string_selector,
                                    alert_string,
-                                   PEF_ALERT_STRING_MAX_LEN+1)) != PEF_ERR_SUCCESS) 
+                                   PEF_ALERT_STRING_MAX_LEN+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
   if (kv->value)
@@ -337,32 +337,32 @@ alert_string_checkout (pef_config_state_data_t *state_data,
   if (!(kv->value = strdup ((char *)alert_string)))
     {
       perror("strdup");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 alert_string_commit (pef_config_state_data_t *state_data,
                      const struct section *sect,
                      const struct keyvalue *kv)
 { 
-  pef_err_t ret;
+  config_err_t ret;
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
 
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if (!kv->value)
-    return PEF_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   return set_pef_alert_string (state_data,
                                string_selector,
@@ -375,7 +375,7 @@ alert_string_diff (pef_config_state_data_t *state_data,
                    const struct keyvalue *kv)
 {
   uint8_t alert_string[PEF_ALERT_STRING_MAX_LEN+1] = { 0, };
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
@@ -383,18 +383,18 @@ alert_string_diff (pef_config_state_data_t *state_data,
   string_selector = atoi (sect->section_name + strlen ("Alert_String_"));
 
   if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != PEF_ERR_SUCCESS)
+                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (string_selector > number_of_alert_strings)
-    return PEF_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
   
   if ((rc = get_pef_alert_string (state_data,
                                   string_selector,
                                   alert_string,
-                                  PEF_ALERT_STRING_MAX_LEN+1)) != PEF_ERR_SUCCESS)
+                                  PEF_ALERT_STRING_MAX_LEN+1)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }

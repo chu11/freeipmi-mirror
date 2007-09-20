@@ -53,7 +53,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
   int i;
 
   if (get_number_of_lan_alert_destinations(state_data, 
-                                           &number_of_lan_alert_destinations) != PEF_ERR_SUCCESS)
+                                           &number_of_lan_alert_destinations) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->verbose)
         fprintf (stderr, "## FATAL: Unable to get Number of Alert Destinations\n");
@@ -61,7 +61,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
     }
 
   if (get_number_of_alert_policy_entries(state_data,
-                                         &number_of_alert_policy_entries) != PEF_ERR_SUCCESS)
+                                         &number_of_alert_policy_entries) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->verbose)
         fprintf (stderr, "## FATAL: Unable to get Number of Alert Policy Entries\n");
@@ -69,7 +69,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
     }
 
   if (get_number_of_alert_strings(state_data,
-                                  &number_of_alert_strings) != PEF_ERR_SUCCESS)
+                                  &number_of_alert_strings) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->verbose)
         fprintf (stderr, "## FATAL: Unable to get Number of Alert Strings\n");
@@ -77,7 +77,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
     }
   
   if (get_number_of_event_filters(state_data, 
-                                  &number_of_event_filters) != PEF_ERR_SUCCESS)
+                                  &number_of_event_filters) != CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->verbose)
         fprintf (stderr, "## FATAL: Unable to get Number of Event Filters\n");
@@ -372,7 +372,7 @@ pef_config_section_set_value (pef_config_state_data_t *state_data,
   return 0;
 }
 
-pef_err_t
+config_err_t
 pef_config_section_commit_value (pef_config_state_data_t *state_data,
                                  const char *section_name,
                                  const char *key_name,
@@ -382,23 +382,23 @@ pef_config_section_commit_value (pef_config_state_data_t *state_data,
   struct keyvalue *kv;
 
   if (!(sect = pef_config_section_find_section (state_data, section_name)))
-    return PEF_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   if (!(kv = pef_config_section_find_keyvalue (state_data, section_name, key_name)))
-    return PEF_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   if (kv->validate)
     {
       config_validate_t v;
 
       if ((v = kv->validate (section_name, key_name, value)) == CONFIG_VALIDATE_FATAL_ERROR)
-        return PEF_ERR_FATAL_ERROR;
+        return CONFIG_ERR_FATAL_ERROR;
       
       if (v == CONFIG_VALIDATE_INVALID_VALUE)
         {
           fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                    value, key_name);
-          return PEF_ERR_NON_FATAL_ERROR;
+          return CONFIG_ERR_NON_FATAL_ERROR;
         }
     }
 
@@ -408,7 +408,7 @@ pef_config_section_commit_value (pef_config_state_data_t *state_data,
   if (!(kv->value = strdup (value)))
     {
       perror("strdup");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return kv->commit (state_data, sect, kv);
@@ -424,23 +424,23 @@ pef_config_section_diff_value (pef_config_state_data_t *state_data,
   struct keyvalue *kv;
 
   if (!(sect = pef_config_section_find_section (state_data, section_name)))
-    return PEF_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   if (!(kv = pef_config_section_find_keyvalue (state_data, section_name, key_name)))
-    return PEF_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   if (kv->validate)
     {
       config_validate_t v;
 
       if ((v = kv->validate (section_name, key_name, value)) == CONFIG_VALIDATE_FATAL_ERROR)
-        return PEF_ERR_FATAL_ERROR;
+        return CONFIG_ERR_FATAL_ERROR;
       
       if (v == CONFIG_VALIDATE_INVALID_VALUE)
         {
           fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                    value, key_name);
-          return PEF_ERR_NON_FATAL_ERROR;
+          return CONFIG_ERR_NON_FATAL_ERROR;
         }
     }
 
@@ -450,13 +450,13 @@ pef_config_section_diff_value (pef_config_state_data_t *state_data,
   if (!(kv->value = strdup (value)))
     {
       perror("strdup");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return kv->diff (state_data, sect, kv);
 }
 
-pef_err_t
+config_err_t
 pef_config_sections_list (pef_config_state_data_t *state_data)
 {
   struct section *sect;
@@ -471,5 +471,5 @@ pef_config_sections_list (pef_config_state_data_t *state_data)
       sect = sect->next;
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }

@@ -16,16 +16,16 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
-static bmc_err_t
+static config_err_t
 power_restore_policy_checkout (bmc_config_state_data_t *state_data,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
   uint8_t policy;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_bmc_power_restore_policy (state_data,
-                                           &policy)) != BMC_ERR_SUCCESS)
+                                           &policy)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -34,12 +34,12 @@ power_restore_policy_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (power_restore_policy_string (policy))))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 power_restore_policy_commit (bmc_config_state_data_t *state_data,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
@@ -55,13 +55,13 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
   
   if ((rc = get_bmc_power_restore_policy (state_data,
-                                          &got_value)) != BMC_ERR_SUCCESS)
+                                          &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }

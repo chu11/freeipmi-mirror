@@ -146,7 +146,7 @@ pef_diff_file (pef_config_state_data_t *state_data)
   return rv;
 }
 
-pef_err_t
+config_err_t
 pef_diff (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
@@ -160,10 +160,10 @@ pef_diff (pef_config_state_data_t *state_data)
     ret = pef_diff_file (state_data);
 
   if (ret == PEF_DIFF_SAME)
-    return PEF_ERR_SUCCESS;
+    return CONFIG_ERR_SUCCESS;
   if (ret == PEF_DIFF_DIFFERENT || ret == PEF_DIFF_NON_FATAL_ERROR)
-    return PEF_ERR_NON_FATAL_ERROR;
-  return PEF_ERR_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
+  return CONFIG_ERR_FATAL_ERROR;
 }
 
 void 

@@ -47,13 +47,6 @@ enum argp_option_keys
 
 typedef enum
   {
-    BMC_ERR_FATAL_ERROR = -2,
-    BMC_ERR_NON_FATAL_ERROR = -1,
-    BMC_ERR_SUCCESS = 0,
-  } bmc_err_t;
-
-typedef enum
-  {
     BMC_DIFF_FATAL_ERROR = -2,
     BMC_DIFF_NON_FATAL_ERROR = -1,
     BMC_DIFF_SAME = 0,

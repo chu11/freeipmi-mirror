@@ -42,13 +42,13 @@ struct section {
 };
 
 /* checkout procedure fills the value into kv->value as printable string */
-typedef bmc_err_t (*Keyvalue_Checkout) (bmc_config_state_data_t *state_data,
+typedef config_err_t (*Keyvalue_Checkout) (bmc_config_state_data_t *state_data,
                                         const struct section *sect,
                                         struct keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
-typedef bmc_err_t (*Keyvalue_Commit) (bmc_config_state_data_t *state_data,
+typedef config_err_t (*Keyvalue_Commit) (bmc_config_state_data_t *state_data,
                                       const struct section *sect,
                                       const struct keyvalue *kv);
 
@@ -103,7 +103,7 @@ int bmc_config_section_set_value (bmc_config_state_data_t *state_data,
                                   const char *key_name,
                                   const char *value);
 
-bmc_err_t bmc_config_section_commit_value (bmc_config_state_data_t *state_data,
+config_err_t bmc_config_section_commit_value (bmc_config_state_data_t *state_data,
                                            const char *section_name,
                                            const char *key_name,
                                            const char *value);
@@ -113,6 +113,6 @@ int bmc_config_section_diff_value (bmc_config_state_data_t *state_data,
                                    const char *key_name,
                                    const char *value);
 
-bmc_err_t bmc_config_sections_list (bmc_config_state_data_t *state_data);
+config_err_t bmc_config_sections_list (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_CONFIG_SECTIONS_H_ */

@@ -70,7 +70,7 @@ _pef_config (void *arg)
   char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
   struct section *sections = NULL;
   int exit_code = -1;
-  pef_err_t ret = 0;
+  config_err_t ret = 0;
 
   prog_data = (pef_config_prog_data_t *) arg;
   
@@ -115,7 +115,7 @@ _pef_config (void *arg)
     break;
   }
 
-  if (ret == PEF_ERR_FATAL_ERROR || ret == PEF_ERR_NON_FATAL_ERROR)
+  if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

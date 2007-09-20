@@ -43,13 +43,6 @@ enum argp_option_keys
 
 typedef enum
   {
-    PEF_ERR_FATAL_ERROR = -2,
-    PEF_ERR_NON_FATAL_ERROR = -1,
-    PEF_ERR_SUCCESS = 0,
-  } pef_err_t;
-
-typedef enum
-  {
     PEF_DIFF_FATAL_ERROR = -2,
     PEF_DIFF_NON_FATAL_ERROR = -1,
     PEF_DIFF_SAME = 0,

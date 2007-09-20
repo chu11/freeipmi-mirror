@@ -15,7 +15,7 @@
 #include "bmc-config-diff.h"
 #include "bmc-config-sections.h"
 
-bmc_err_t
+config_err_t
 bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
 { 
   char buf[4096];
@@ -24,7 +24,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
   char *key_name = NULL;
   char *value = NULL;
   char *tok;
-  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   struct bmc_config_arguments *args;
 
   args = state_data->prog_data->args;
@@ -149,7 +149,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
         goto cleanup;
     }
 
-  rv = BMC_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (section_name)
     free(section_name);

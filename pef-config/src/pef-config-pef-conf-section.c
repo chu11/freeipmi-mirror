@@ -20,7 +20,7 @@
 #include "config-common.h"
 #include "config-validate.h"
 
-static pef_err_t
+static config_err_t
 pef_control_checkout (pef_config_state_data_t *state_data,
 		      uint8_t *pef,
 		      uint8_t *pef_event_messages,
@@ -31,13 +31,13 @@ pef_control_checkout (pef_config_state_data_t *state_data,
   uint8_t tmp_pef_event_messages;
   uint8_t tmp_pef_startup_delay;
   uint8_t tmp_pef_alert_startup_delay;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_pef_control (state_data,
                               &tmp_pef,
                               &tmp_pef_event_messages,
                               &tmp_pef_startup_delay,
-                              &tmp_pef_alert_startup_delay)) != PEF_ERR_SUCCESS)
+                              &tmp_pef_alert_startup_delay)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (pef)
@@ -52,10 +52,10 @@ pef_control_checkout (pef_config_state_data_t *state_data,
   if (pef_alert_startup_delay)
     *pef_alert_startup_delay = tmp_pef_alert_startup_delay;
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 pef_control_commit (pef_config_state_data_t *state_data,
 		    uint8_t *pef,
 		    uint8_t *pef_event_messages,
@@ -66,13 +66,13 @@ pef_control_commit (pef_config_state_data_t *state_data,
   uint8_t tmp_pef_event_messages;
   uint8_t tmp_pef_startup_delay;
   uint8_t tmp_pef_alert_startup_delay;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_pef_control (state_data,
                               &tmp_pef,
                               &tmp_pef_event_messages,
                               &tmp_pef_startup_delay,
-                              &tmp_pef_alert_startup_delay)) != PEF_ERR_SUCCESS)
+                              &tmp_pef_alert_startup_delay)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (pef)
@@ -94,19 +94,19 @@ pef_control_commit (pef_config_state_data_t *state_data,
 			  tmp_pef_alert_startup_delay);
 }
 
-static pef_err_t
+static config_err_t
 enable_pef_checkout (pef_config_state_data_t *state_data,
 		     const struct section *sect,
 		     struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
   
   if ((ret = pef_control_checkout (state_data,
                                    &value,
                                    NULL,
                                    NULL,
-                                   NULL)) != PEF_ERR_SUCCESS)
+                                   NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -117,7 +117,7 @@ enable_pef_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -125,14 +125,14 @@ enable_pef_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_pef_commit (pef_config_state_data_t *state_data,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
@@ -152,16 +152,16 @@ enable_pef_diff (pef_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
 
   if ((rc = pef_control_checkout (state_data,
                                   &got_value,
                                   NULL,
                                   NULL,
-                                  NULL)) != PEF_ERR_SUCCESS)
+                                  NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -183,19 +183,19 @@ enable_pef_diff (pef_config_state_data_t *state_data,
 
 /* event_messages */
 
-static pef_err_t
+static config_err_t
 enable_pef_event_messages_checkout (pef_config_state_data_t *state_data,
 				    const struct section *sect,
 				    struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
   
   if ((ret = pef_control_checkout (state_data,
                                    NULL,
                                    &value,
                                    NULL,
-                                   NULL)) != PEF_ERR_SUCCESS)
+                                   NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -206,7 +206,7 @@ enable_pef_event_messages_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -214,14 +214,14 @@ enable_pef_event_messages_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_pef_event_messages_commit (pef_config_state_data_t *state_data,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
@@ -241,16 +241,16 @@ enable_pef_event_messages_diff (pef_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
 
   if ((rc = pef_control_checkout (state_data,
                                   NULL,
                                   &got_value,
                                   NULL,
-                                  NULL)) != PEF_ERR_SUCCESS)
+                                  NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -272,19 +272,19 @@ enable_pef_event_messages_diff (pef_config_state_data_t *state_data,
 
 /* startup_delay */
 
-static pef_err_t
+static config_err_t
 enable_pef_startup_delay_checkout (pef_config_state_data_t *state_data,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
   
   if ((ret = pef_control_checkout (state_data,
                                    NULL,
                                    NULL,
                                    &value,
-                                   NULL)) != PEF_ERR_SUCCESS)
+                                   NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -295,7 +295,7 @@ enable_pef_startup_delay_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -303,13 +303,13 @@ enable_pef_startup_delay_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_pef_startup_delay_commit (pef_config_state_data_t *state_data,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
@@ -329,16 +329,16 @@ enable_pef_startup_delay_diff (pef_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
 
   if ((rc = pef_control_checkout (state_data,
                                   NULL,
                                   NULL,
                                   &got_value,
-                                  NULL)) != PEF_ERR_SUCCESS)
+                                  NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -360,19 +360,19 @@ enable_pef_startup_delay_diff (pef_config_state_data_t *state_data,
 
 /* alert_startup_delay */
 
-static pef_err_t
+static config_err_t
 enable_pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
 					 const struct section *sect,
 					 struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
   
   if ((ret = pef_control_checkout (state_data,
                                    NULL,
                                    NULL,
                                    NULL,
-                                   &value)) != PEF_ERR_SUCCESS)
+                                   &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -383,7 +383,7 @@ enable_pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -391,14 +391,14 @@ enable_pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_pef_alert_startup_delay_commit (pef_config_state_data_t *state_data,
 				       const struct section *sect,
 				       const struct keyvalue *kv)
@@ -418,16 +418,16 @@ enable_pef_alert_startup_delay_diff (pef_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
 
   if ((rc = pef_control_checkout (state_data,
                                   NULL,
                                   NULL,
                                   NULL,
-                                  &got_value)) != PEF_ERR_SUCCESS)
+                                  &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -447,7 +447,7 @@ enable_pef_alert_startup_delay_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-static pef_err_t
+static config_err_t
 pef_global_control_checkout (pef_config_state_data_t *state_data,
 			     uint8_t *alert_action,
 			     uint8_t *power_down_action,
@@ -462,7 +462,7 @@ pef_global_control_checkout (pef_config_state_data_t *state_data,
   uint8_t tmp_power_cycle_action;
   uint8_t tmp_oem_action;
   uint8_t tmp_diagnostic_interrupt;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_pef_action_global_control (state_data,
                                             &tmp_alert_action,
@@ -470,7 +470,7 @@ pef_global_control_checkout (pef_config_state_data_t *state_data,
                                             &tmp_reset_action,
                                             &tmp_power_cycle_action,
                                             &tmp_oem_action,
-                                            &tmp_diagnostic_interrupt)) != PEF_ERR_SUCCESS)
+                                            &tmp_diagnostic_interrupt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (alert_action)
@@ -486,11 +486,11 @@ pef_global_control_checkout (pef_config_state_data_t *state_data,
   if (diagnostic_interrupt)
     *diagnostic_interrupt = tmp_diagnostic_interrupt;
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
 
-static pef_err_t
+static config_err_t
 pef_global_control_commit (pef_config_state_data_t *state_data,
 			   uint8_t *alert_action,
 			   uint8_t *power_down_action,
@@ -505,7 +505,7 @@ pef_global_control_commit (pef_config_state_data_t *state_data,
   uint8_t tmp_power_cycle_action;
   uint8_t tmp_oem_action;
   uint8_t tmp_diagnostic_interrupt;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_pef_action_global_control (state_data,
                                             &tmp_alert_action,
@@ -513,7 +513,7 @@ pef_global_control_commit (pef_config_state_data_t *state_data,
                                             &tmp_reset_action,
                                             &tmp_power_cycle_action,
                                             &tmp_oem_action,
-                                            &tmp_diagnostic_interrupt)) != PEF_ERR_SUCCESS)
+                                            &tmp_diagnostic_interrupt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (alert_action)
@@ -540,13 +540,13 @@ pef_global_control_commit (pef_config_state_data_t *state_data,
 
 /* alert_action */
 			   
-static pef_err_t
+static config_err_t
 enable_alert_action_checkout (pef_config_state_data_t *state_data,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = pef_global_control_checkout (state_data,
                                           &value,
@@ -554,7 +554,7 @@ enable_alert_action_checkout (pef_config_state_data_t *state_data,
                                           NULL,
                                           NULL,
                                           NULL,
-                                          NULL)) != PEF_ERR_SUCCESS)
+                                          NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -565,7 +565,7 @@ enable_alert_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -573,13 +573,13 @@ enable_alert_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_alert_action_commit (pef_config_state_data_t *state_data,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
@@ -601,7 +601,7 @@ enable_alert_action_diff (pef_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
 
   if ((rc = pef_global_control_checkout (state_data,
@@ -610,9 +610,9 @@ enable_alert_action_diff (pef_config_state_data_t *state_data,
                                          NULL,
                                          NULL,
                                          NULL,
-                                         NULL)) != PEF_ERR_SUCCESS)
+                                         NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -634,13 +634,13 @@ enable_alert_action_diff (pef_config_state_data_t *state_data,
 
 /* power_down_action */
 
-static pef_err_t
+static config_err_t
 enable_power_down_action_checkout (pef_config_state_data_t *state_data,
 				   const struct section *sect,
 				   struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = pef_global_control_checkout (state_data,
                                           NULL,
@@ -648,7 +648,7 @@ enable_power_down_action_checkout (pef_config_state_data_t *state_data,
                                           NULL,
                                           NULL,
                                           NULL,
-                                          NULL)) != PEF_ERR_SUCCESS)
+                                          NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -659,7 +659,7 @@ enable_power_down_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -667,13 +667,13 @@ enable_power_down_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_power_down_action_commit (pef_config_state_data_t *state_data,
 				 const struct section *sect,
 				 const struct keyvalue *kv)
@@ -695,7 +695,7 @@ enable_power_down_action_diff (pef_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   
   if ((rc = pef_global_control_checkout (state_data,
@@ -704,9 +704,9 @@ enable_power_down_action_diff (pef_config_state_data_t *state_data,
                                          NULL,
                                          NULL,
                                          NULL,
-                                         NULL)) != PEF_ERR_SUCCESS)
+                                         NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -727,13 +727,13 @@ enable_power_down_action_diff (pef_config_state_data_t *state_data,
 
 /* reset_action */
 
-static pef_err_t
+static config_err_t
 enable_reset_action_checkout (pef_config_state_data_t *state_data,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = pef_global_control_checkout (state_data,
                                           NULL,
@@ -741,7 +741,7 @@ enable_reset_action_checkout (pef_config_state_data_t *state_data,
                                           &value,
                                           NULL,
                                           NULL,
-                                          NULL)) != PEF_ERR_SUCCESS)
+                                          NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -752,7 +752,7 @@ enable_reset_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -760,13 +760,13 @@ enable_reset_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_reset_action_commit (pef_config_state_data_t *state_data,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
@@ -788,7 +788,7 @@ enable_reset_action_diff (pef_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   
   if ((rc = pef_global_control_checkout (state_data,
@@ -797,9 +797,9 @@ enable_reset_action_diff (pef_config_state_data_t *state_data,
                                          &got_value,
                                          NULL,
                                          NULL,
-                                         NULL)) != PEF_ERR_SUCCESS)
+                                         NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -820,13 +820,13 @@ enable_reset_action_diff (pef_config_state_data_t *state_data,
 
 /* power_cycle_action */
 
-static pef_err_t
+static config_err_t
 enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
 				    const struct section *sect,
 				    struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = pef_global_control_checkout (state_data,
                                           NULL,
@@ -834,7 +834,7 @@ enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
                                           NULL,
                                           &value,
                                           NULL,
-                                          NULL)) != PEF_ERR_SUCCESS)
+                                          NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -845,7 +845,7 @@ enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -853,13 +853,13 @@ enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_power_cycle_action_commit (pef_config_state_data_t *state_data,
 				  const struct section *sect,
 				  const struct keyvalue *kv)
@@ -881,7 +881,7 @@ enable_power_cycle_action_diff (pef_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   
   if ((rc = pef_global_control_checkout (state_data,
@@ -890,9 +890,9 @@ enable_power_cycle_action_diff (pef_config_state_data_t *state_data,
                                          NULL,
                                          &got_value,
                                          NULL,
-                                         NULL)) != PEF_ERR_SUCCESS)
+                                         NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -913,13 +913,13 @@ enable_power_cycle_action_diff (pef_config_state_data_t *state_data,
 
 /* OEM_action */
 
-static pef_err_t
+static config_err_t
 enable_oem_action_checkout (pef_config_state_data_t *state_data,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = pef_global_control_checkout (state_data,
                                           NULL,
@@ -927,7 +927,7 @@ enable_oem_action_checkout (pef_config_state_data_t *state_data,
                                           NULL,
                                           NULL,
                                           &value,
-                                          NULL)) != PEF_ERR_SUCCESS)
+                                          NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -938,7 +938,7 @@ enable_oem_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -946,13 +946,13 @@ enable_oem_action_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_oem_action_commit (pef_config_state_data_t *state_data,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -974,7 +974,7 @@ enable_oem_action_diff (pef_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   
   if ((rc = pef_global_control_checkout (state_data,
@@ -983,9 +983,9 @@ enable_oem_action_diff (pef_config_state_data_t *state_data,
                                          NULL,
                                          NULL,
                                          &got_value,
-                                         NULL)) != PEF_ERR_SUCCESS)
+                                         NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -1007,13 +1007,13 @@ enable_oem_action_diff (pef_config_state_data_t *state_data,
 
 /* diagnostic_interrupt */
 
-static pef_err_t
+static config_err_t
 enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
                                       const struct section *sect,
                                       struct keyvalue *kv)
 {
   uint8_t value;
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = pef_global_control_checkout (state_data,
                                           NULL,
@@ -1021,7 +1021,7 @@ enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
                                           NULL,
                                           NULL,
                                           NULL,
-                                          &value)) != PEF_ERR_SUCCESS)
+                                          &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1032,7 +1032,7 @@ enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1040,13 +1040,13 @@ enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return PEF_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 enable_diagnostic_interrupt_commit (pef_config_state_data_t *state_data,
 				    const struct section *sect,
 				    const struct keyvalue *kv)
@@ -1068,7 +1068,7 @@ enable_diagnostic_interrupt_diff (pef_config_state_data_t *state_data,
 {
   uint8_t passed_value;
   uint8_t got_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   
   if ((rc = pef_global_control_checkout (state_data,
@@ -1077,9 +1077,9 @@ enable_diagnostic_interrupt_diff (pef_config_state_data_t *state_data,
                                          NULL,
                                          NULL,
                                          NULL,
-                                         &got_value)) != PEF_ERR_SUCCESS)
+                                         &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -1102,16 +1102,16 @@ enable_diagnostic_interrupt_diff (pef_config_state_data_t *state_data,
 
 /* pef_startup_delay */
 
-static pef_err_t
+static config_err_t
 pef_startup_delay_checkout (pef_config_state_data_t *state_data,
 			    const struct section *sect,
 			    struct keyvalue *kv)
 {
   uint8_t delay;
-  pef_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_pef_startup_delay (state_data,
-                                    &delay)) != PEF_ERR_SUCCESS)
+                                    &delay)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1120,12 +1120,12 @@ pef_startup_delay_checkout (pef_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", delay) < 0)
     {
       perror("asprintf");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 pef_startup_delay_commit (pef_config_state_data_t *state_data,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
@@ -1142,13 +1142,13 @@ pef_startup_delay_diff (pef_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   
   if ((rc = get_pef_startup_delay (state_data,
-                                   &got_value)) != PEF_ERR_SUCCESS)
+                                   &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
@@ -1172,16 +1172,16 @@ pef_startup_delay_diff (pef_config_state_data_t *state_data,
 
 /* alert_startup_delay */
 
-static pef_err_t
+static config_err_t
 pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
   uint8_t delay;
-  pef_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_pef_alert_startup_delay (state_data,
-                                          &delay)) != PEF_ERR_SUCCESS)
+                                          &delay)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1190,12 +1190,12 @@ pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", delay) < 0)
     {
       perror("asprintf");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 pef_alert_startup_delay_commit (pef_config_state_data_t *state_data,
 				const struct section *sect,
 				const struct keyvalue *kv)
@@ -1212,13 +1212,13 @@ pef_alert_startup_delay_diff (pef_config_state_data_t *state_data,
 {
   uint8_t got_value;
   uint8_t passed_value;
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
   
   if ((rc = get_pef_alert_startup_delay (state_data,
-                                         &got_value)) != PEF_ERR_SUCCESS)
+                                         &got_value)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }

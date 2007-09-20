@@ -3,6 +3,8 @@
 
 #include "pef-config.h"
 
-pef_err_t pef_info (pef_config_state_data_t *state_data);
+#include "config-common.h"
+
+config_err_t pef_info (pef_config_state_data_t *state_data);
 
 #endif

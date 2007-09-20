@@ -23,29 +23,29 @@ int
 bmc_get_num_users (bmc_config_state_data_t *state_data)
 {
   uint8_t users = 0;
-  bmc_err_t ret;
+  config_err_t ret;
 
-  if ((ret = get_bmc_max_users (state_data, &users)) != BMC_ERR_SUCCESS)
+  if ((ret = get_bmc_max_users (state_data, &users)) != CONFIG_ERR_SUCCESS)
     return (-1);
   return (int)users;
 }
 
 /* username */
 
-static bmc_err_t
+static config_err_t
 username_checkout (bmc_config_state_data_t *state_data,
 		   const struct section *sect,
 		   struct keyvalue *kv)
 {
   uint8_t userid;
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
-  bmc_err_t ret;
+  config_err_t ret;
 
   userid = atoi (sect->section_name + strlen ("User"));
   if ((ret = get_bmc_username (state_data,
                                userid,
                                username,
-                               IPMI_MAX_USER_NAME_LENGTH+1)) != BMC_ERR_SUCCESS) 
+                               IPMI_MAX_USER_NAME_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
   if (kv->value)
@@ -54,13 +54,13 @@ username_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup ((char *)username)))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 username_commit (bmc_config_state_data_t *state_data,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
@@ -69,7 +69,7 @@ username_commit (bmc_config_state_data_t *state_data,
   userid = atoi (sect->section_name + strlen ("User"));
 
   if (!kv->value)
-    return BMC_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   return set_bmc_username (state_data,
 			   userid,
@@ -83,16 +83,16 @@ username_diff (bmc_config_state_data_t *state_data,
 {
   uint8_t userid;
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   userid = atoi (sect->section_name + strlen ("User"));
   if ((rc = get_bmc_username (state_data,
                               userid,
                               username,
-                              IPMI_MAX_USER_NAME_LENGTH+1)) != BMC_ERR_SUCCESS)
+                              IPMI_MAX_USER_NAME_LENGTH+1)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -143,7 +143,7 @@ username_validate (const char *section_name,
 
 /* enable_user */
 
-static bmc_err_t
+static config_err_t
 enable_user_checkout (bmc_config_state_data_t *state_data,
 		      const struct section *sect,
 		      struct keyvalue *kv)
@@ -155,7 +155,7 @@ enable_user_checkout (bmc_config_state_data_t *state_data,
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
   uint8_t tmp_user_id_enable_status;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_bmc_user_lan_channel_access (state_data,
                                               userid,
@@ -164,7 +164,7 @@ enable_user_checkout (bmc_config_state_data_t *state_data,
                                               &tmp_user_restricted_to_callback,
                                               &tmp_privilege_limit,
                                               &tmp_session_limit,
-                                              &tmp_user_id_enable_status)) != BMC_ERR_SUCCESS)
+                                              &tmp_user_id_enable_status)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -180,7 +180,7 @@ enable_user_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
@@ -188,7 +188,7 @@ enable_user_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else /* tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
@@ -196,14 +196,14 @@ enable_user_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 enable_user_commit (bmc_config_state_data_t *state_data,
 		    const struct section *sect,
 		    const struct keyvalue *kv)
@@ -227,7 +227,7 @@ enable_user_diff (bmc_config_state_data_t *state_data,
   uint8_t tmp_session_limit;
   uint8_t tmp_user_id_enable_status;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_bmc_user_lan_channel_access (state_data,
@@ -237,9 +237,9 @@ enable_user_diff (bmc_config_state_data_t *state_data,
                                              &tmp_user_restricted_to_callback,
                                              &tmp_privilege_limit,
                                              &tmp_session_limit,
-                                             &tmp_user_id_enable_status)) != BMC_ERR_SUCCESS)
+                                             &tmp_user_id_enable_status)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -267,7 +267,7 @@ enable_user_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
+static config_err_t
 password_checkout (bmc_config_state_data_t *state_data,
 		   const struct section *sect,
 		   struct keyvalue *kv)
@@ -278,13 +278,13 @@ password_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup ("")))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 password_commit (bmc_config_state_data_t *state_data,
 		 const struct section *sect,
 		 const struct keyvalue *kv)
@@ -329,7 +329,7 @@ password_validate (const char *section_name,
 
 /* password20 */
 
-static bmc_err_t
+static config_err_t
 password20_checkout (bmc_config_state_data_t *state_data,
 		     const struct section *sect,
 		     struct keyvalue *kv)
@@ -346,21 +346,21 @@ password20_checkout (bmc_config_state_data_t *state_data,
   if ((ret = check_bmc_user_password20 (state_data,
                                         userid,
                                         (uint8_t *)"foobar")) == BMC_DIFF_FATAL_ERROR)
-    return BMC_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   if (ret == BMC_DIFF_NON_FATAL_ERROR)
-    return BMC_ERR_NON_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if (!(kv->value = strdup ("")))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 password20_commit (bmc_config_state_data_t *state_data,
 		   const struct section *sect,
 		   const struct keyvalue *kv)
@@ -406,7 +406,7 @@ password20_validate (const char *section_name,
 
 /* lan_enable_ipmi_msgs */
 
-static bmc_err_t
+static config_err_t
 lan_channel_get (bmc_config_state_data_t *state_data,
 		 uint8_t userid,
 		 uint8_t *user_ipmi_messaging,
@@ -421,7 +421,7 @@ lan_channel_get (bmc_config_state_data_t *state_data,
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
   uint8_t tmp_user_id_enable_status;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_bmc_user_lan_channel_access (state_data,
                                               userid,
@@ -430,7 +430,7 @@ lan_channel_get (bmc_config_state_data_t *state_data,
                                               &tmp_user_restricted_to_callback,
                                               &tmp_privilege_limit,
                                               &tmp_session_limit,
-                                              &tmp_user_id_enable_status)) != BMC_ERR_SUCCESS)
+                                              &tmp_user_id_enable_status)) != CONFIG_ERR_SUCCESS)
     return ret;
   
   if (user_ipmi_messaging)
@@ -444,10 +444,10 @@ lan_channel_get (bmc_config_state_data_t *state_data,
   if (session_limit)
     *session_limit = tmp_session_limit;
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 lan_channel_set (bmc_config_state_data_t *state_data,
 		 uint8_t userid,
 		 uint8_t user_ipmi_messaging,
@@ -467,7 +467,7 @@ lan_channel_set (bmc_config_state_data_t *state_data,
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
   uint8_t tmp_user_id_enable_status;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_bmc_user_lan_channel_access (state_data,
                                               userid,
@@ -476,7 +476,7 @@ lan_channel_set (bmc_config_state_data_t *state_data,
                                               &tmp_user_restricted_to_callback,
                                               &tmp_privilege_limit,
                                               &tmp_session_limit,
-                                              &tmp_user_id_enable_status)) != BMC_ERR_SUCCESS)
+                                              &tmp_user_id_enable_status)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (user_ipmi_messaging_is_set)
@@ -496,23 +496,23 @@ lan_channel_set (bmc_config_state_data_t *state_data,
                                               tmp_user_link_authentication,
                                               tmp_user_restricted_to_callback,
                                               tmp_privilege_limit,
-                                              tmp_session_limit)) != BMC_ERR_SUCCESS)
+                                              tmp_session_limit)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
 
 /* lan_enable_ipmi_msgs */
 
-static bmc_err_t
+static config_err_t
 lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = lan_channel_get (state_data,
                               userid,
@@ -520,7 +520,7 @@ lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
                               0,
                               0,
                               0,
-                              0)) != BMC_ERR_SUCCESS)
+                              0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -531,7 +531,7 @@ lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -539,14 +539,14 @@ lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 lan_enable_ipmi_msgs_commit (bmc_config_state_data_t *state_data,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
@@ -569,7 +569,7 @@ lan_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = lan_channel_get (state_data,
@@ -578,9 +578,9 @@ lan_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
                               0,
                               0,
                               0,
-                              0)) != BMC_ERR_SUCCESS) 
+                              0)) != CONFIG_ERR_SUCCESS) 
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -602,14 +602,14 @@ lan_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
   
 /* lan_enable_link_auth */
 
-static bmc_err_t
+static config_err_t
 lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
 			       const struct section *sect,
 			       struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = lan_channel_get (state_data,
                               userid,
@@ -617,7 +617,7 @@ lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
                               &get_val,
                               0,
                               0,
-                              0)) != BMC_ERR_SUCCESS)
+                              0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -628,7 +628,7 @@ lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -636,14 +636,14 @@ lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 lan_enable_link_auth_commit (bmc_config_state_data_t *state_data,
                              const struct section *sect,
                              const struct keyvalue *kv)
@@ -666,7 +666,7 @@ lan_enable_link_auth_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = lan_channel_get (state_data,
@@ -675,9 +675,9 @@ lan_enable_link_auth_diff (bmc_config_state_data_t *state_data,
                              &get_val,
                              0,
                              0,
-                             0)) != BMC_ERR_SUCCESS)
+                             0)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -699,14 +699,14 @@ lan_enable_link_auth_diff (bmc_config_state_data_t *state_data,
 
 /* LAN_enable_restricted_to_callback */
 
-static bmc_err_t
+static config_err_t
 lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
                                             const struct section *sect,
                                             struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = lan_channel_get (state_data,
                               userid,
@@ -714,7 +714,7 @@ lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
                               0,
                               &get_val,
                               0,
-                              0)) != BMC_ERR_SUCCESS)
+                              0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -725,7 +725,7 @@ lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -733,14 +733,14 @@ lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 lan_enable_restricted_to_callback_commit (bmc_config_state_data_t *state_data,
                                           const struct section *sect,
                                           const struct keyvalue *kv)
@@ -763,7 +763,7 @@ lan_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = lan_channel_get (state_data,
@@ -772,9 +772,9 @@ lan_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
                              0,
                              &get_val,
                              0,
-                             0)) != BMC_ERR_SUCCESS)
+                             0)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -796,14 +796,14 @@ lan_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
 
 /* privilege_limit */
 
-static bmc_err_t
+static config_err_t
 lan_privilege_limit_checkout (bmc_config_state_data_t *state_data,
                               const struct section *sect,
                               struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = lan_channel_get (state_data,
                               userid,
@@ -811,7 +811,7 @@ lan_privilege_limit_checkout (bmc_config_state_data_t *state_data,
                               0,
                               0,
                               &get_val,
-                              0)) != BMC_ERR_SUCCESS)
+                              0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -820,13 +820,13 @@ lan_privilege_limit_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 lan_privilege_limit_commit (bmc_config_state_data_t *state_data,
                             const struct section *sect,
                             const struct keyvalue *kv)
@@ -849,7 +849,7 @@ lan_privilege_limit_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = lan_channel_get (state_data,
@@ -858,9 +858,9 @@ lan_privilege_limit_diff (bmc_config_state_data_t *state_data,
                              0,
                              0,
                              &get_val,
-                             0)) != BMC_ERR_SUCCESS)
+                             0)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -883,7 +883,7 @@ lan_privilege_limit_diff (bmc_config_state_data_t *state_data,
   
 /* lan_session_limit */
 
-static bmc_err_t
+static config_err_t
 lan_session_limit_checkout (bmc_config_state_data_t *state_data,
                             const struct section *sect,
                             struct keyvalue *kv)
@@ -898,7 +898,7 @@ lan_session_limit_checkout (bmc_config_state_data_t *state_data,
                               0,
                               0,
                               0,
-                              &get_val)) != BMC_ERR_SUCCESS)
+                              &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -907,13 +907,13 @@ lan_session_limit_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", get_val) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_NON_FATAL_ERROR;
+      return CONFIG_ERR_NON_FATAL_ERROR;
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 lan_session_limit_commit (bmc_config_state_data_t *state_data,
                           const struct section *sect,
                           const struct keyvalue *kv)
@@ -936,7 +936,7 @@ lan_session_limit_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = lan_channel_get (state_data,
@@ -945,9 +945,9 @@ lan_session_limit_diff (bmc_config_state_data_t *state_data,
                              0,
                              0,
                              0,
-                             &get_val)) != BMC_ERR_SUCCESS)
+                             &get_val)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -971,14 +971,14 @@ lan_session_limit_diff (bmc_config_state_data_t *state_data,
 
 /* sol_payload_access */
 
-static bmc_err_t
+static config_err_t
 sol_payload_access_checkout (bmc_config_state_data_t *state_data,
                              const struct section *sect,
                              struct keyvalue *kv)
 {
   int userid = atoi (sect->section_name + strlen ("User"));
   uint8_t have_access;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_bmc_user_payload_access (state_data,
                                           userid,
@@ -996,7 +996,7 @@ sol_payload_access_checkout (bmc_config_state_data_t *state_data,
                                           NULL,
                                           NULL,
                                           NULL,
-                                          NULL)) != BMC_ERR_SUCCESS)
+                                          NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1007,7 +1007,7 @@ sol_payload_access_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1015,13 +1015,13 @@ sol_payload_access_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 sol_payload_access_commit (bmc_config_state_data_t *state_data,
                            const struct section *sect,
                            const struct keyvalue *kv)
@@ -1049,7 +1049,7 @@ sol_payload_access_diff (bmc_config_state_data_t *state_data,
   int userid = atoi (sect->section_name + strlen ("User"));
   uint8_t have_access;
   uint8_t passed_value;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = get_bmc_user_payload_access (state_data,
@@ -1068,9 +1068,9 @@ sol_payload_access_diff (bmc_config_state_data_t *state_data,
                                          NULL,
                                          NULL,
                                          NULL,
-                                         NULL)) != BMC_ERR_SUCCESS)
+                                         NULL)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -1092,7 +1092,7 @@ sol_payload_access_diff (bmc_config_state_data_t *state_data,
 
 /* serial_enable_ipmi_msgs */
 
-static bmc_err_t
+static config_err_t
 serial_channel_get (bmc_config_state_data_t *state_data,
                     uint8_t userid,
                     uint8_t *user_ipmi_messaging,
@@ -1107,7 +1107,7 @@ serial_channel_get (bmc_config_state_data_t *state_data,
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
   uint8_t tmp_user_id_enable_status;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_bmc_user_serial_channel_access (state_data,
                                                  userid,
@@ -1116,7 +1116,7 @@ serial_channel_get (bmc_config_state_data_t *state_data,
                                                  &tmp_user_restricted_to_callback,
                                                  &tmp_privilege_limit,
                                                  &tmp_session_limit,
-                                                 &tmp_user_id_enable_status)) != BMC_ERR_SUCCESS)
+                                                 &tmp_user_id_enable_status)) != CONFIG_ERR_SUCCESS)
     return ret;
   
   if (user_ipmi_messaging)
@@ -1130,10 +1130,10 @@ serial_channel_get (bmc_config_state_data_t *state_data,
   if (session_limit)
     *session_limit = tmp_session_limit;
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 serial_channel_set (bmc_config_state_data_t *state_data,
                     uint8_t userid,
                     uint8_t user_ipmi_messaging,
@@ -1153,7 +1153,7 @@ serial_channel_set (bmc_config_state_data_t *state_data,
   uint8_t tmp_privilege_limit;
   uint8_t tmp_session_limit;
   uint8_t tmp_user_id_enable_status;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_bmc_user_serial_channel_access (state_data,
                                                  userid,
@@ -1162,7 +1162,7 @@ serial_channel_set (bmc_config_state_data_t *state_data,
                                                  &tmp_user_restricted_to_callback,
                                                  &tmp_privilege_limit,
                                                  &tmp_session_limit,
-                                                 &tmp_user_id_enable_status)) != BMC_ERR_SUCCESS)
+                                                 &tmp_user_id_enable_status)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (user_ipmi_messaging_is_set)
@@ -1190,14 +1190,14 @@ serial_channel_set (bmc_config_state_data_t *state_data,
 
 /* serial_enable_ipmi_msgs */
 
-static bmc_err_t
+static config_err_t
 serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
                                   const struct section *sect,
                                   struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = serial_channel_get (state_data,
                                  userid,
@@ -1205,7 +1205,7 @@ serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
                                  0,
                                  0,
                                  0,
-                                 0)) != BMC_ERR_SUCCESS)
+                                 0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1216,7 +1216,7 @@ serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1224,14 +1224,14 @@ serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 serial_enable_ipmi_msgs_commit (bmc_config_state_data_t *state_data,
                                 const struct section *sect,
                                 const struct keyvalue *kv)
@@ -1254,7 +1254,7 @@ serial_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = serial_channel_get (state_data,
@@ -1263,9 +1263,9 @@ serial_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
                                 0,
                                 0,
                                 0,
-                                0)) != BMC_ERR_SUCCESS)
+                                0)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -1287,14 +1287,14 @@ serial_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
   
 /* serial_enable_link_auth */
 
-static bmc_err_t
+static config_err_t
 serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
                                   const struct section *sect,
                                   struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = serial_channel_get (state_data,
                                  userid,
@@ -1302,7 +1302,7 @@ serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
                                  &get_val,
                                  0,
                                  0,
-                                 0)) != BMC_ERR_SUCCESS)
+                                 0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1313,7 +1313,7 @@ serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1321,14 +1321,14 @@ serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 serial_enable_link_auth_commit (bmc_config_state_data_t *state_data,
                                 const struct section *sect,
                                 const struct keyvalue *kv)
@@ -1351,7 +1351,7 @@ serial_enable_link_auth_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = serial_channel_get (state_data,
@@ -1360,9 +1360,9 @@ serial_enable_link_auth_diff (bmc_config_state_data_t *state_data,
                                 &get_val,
                                 0,
                                 0,
-                                0)) != BMC_ERR_SUCCESS)
+                                0)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -1384,14 +1384,14 @@ serial_enable_link_auth_diff (bmc_config_state_data_t *state_data,
 
 /* serial_enable_restricted_to_callback */
 
-static bmc_err_t
+static config_err_t
 serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
                                                const struct section *sect,
                                                struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = serial_channel_get (state_data,
                                  userid,
@@ -1399,7 +1399,7 @@ serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_da
                                  0,
                                  &get_val,
                                  0,
-                                 0)) != BMC_ERR_SUCCESS)
+                                 0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1410,7 +1410,7 @@ serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_da
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -1418,14 +1418,14 @@ serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_da
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 serial_enable_restricted_to_callback_commit (bmc_config_state_data_t *state_data,
                                              const struct section *sect,
                                              const struct keyvalue *kv)
@@ -1448,7 +1448,7 @@ serial_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = serial_channel_get (state_data,
@@ -1457,9 +1457,9 @@ serial_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
                                 0,
                                 &get_val,
                                 0,
-                                0)) != BMC_ERR_SUCCESS)
+                                0)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -1481,14 +1481,14 @@ serial_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
 
 /* privilege_limit */
 
-static bmc_err_t
+static config_err_t
 serial_privilege_limit_checkout (bmc_config_state_data_t *state_data,
                                  const struct section *sect,
                                  struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = serial_channel_get (state_data,
                                  userid,
@@ -1496,7 +1496,7 @@ serial_privilege_limit_checkout (bmc_config_state_data_t *state_data,
                                  0,
                                  0,
                                  &get_val,
-                                 0)) != BMC_ERR_SUCCESS)
+                                 0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -1505,13 +1505,13 @@ serial_privilege_limit_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 serial_privilege_limit_commit (bmc_config_state_data_t *state_data,
                                const struct section *sect,
                                const struct keyvalue *kv)
@@ -1534,7 +1534,7 @@ serial_privilege_limit_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = serial_channel_get (state_data,
@@ -1543,9 +1543,9 @@ serial_privilege_limit_diff (bmc_config_state_data_t *state_data,
                                 0,
                                 0,
                                 &get_val,
-                                0)) != BMC_ERR_SUCCESS)
+                                0)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
@@ -1568,14 +1568,14 @@ serial_privilege_limit_diff (bmc_config_state_data_t *state_data,
   
 /* serial_session_limit */
 
-static bmc_err_t
+static config_err_t
 serial_session_limit_checkout (bmc_config_state_data_t *state_data,
                                const struct section *sect,
                                struct keyvalue *kv)
 {
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = serial_channel_get (state_data,
                                  userid,
@@ -1583,7 +1583,7 @@ serial_session_limit_checkout (bmc_config_state_data_t *state_data,
                                  0,
                                  0,
                                  0,
-                                 &get_val)) != BMC_ERR_SUCCESS)
+                                 &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
   
   if (kv->value)
@@ -1592,13 +1592,13 @@ serial_session_limit_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", get_val) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_NON_FATAL_ERROR;
+      return CONFIG_ERR_NON_FATAL_ERROR;
     }
   
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 serial_session_limit_commit (bmc_config_state_data_t *state_data,
                              const struct section *sect,
                              const struct keyvalue *kv)
@@ -1621,7 +1621,7 @@ serial_session_limit_diff (bmc_config_state_data_t *state_data,
   uint8_t userid = atoi (sect->section_name + strlen ("User"));
   uint8_t get_val;
   unsigned long int passed_val;
-  bmc_err_t rc;
+  config_err_t rc;
   bmc_diff_t ret;
 
   if ((rc = serial_channel_get (state_data,
@@ -1630,9 +1630,9 @@ serial_session_limit_diff (bmc_config_state_data_t *state_data,
                                 0,
                                 0,
                                 0,
-                                &get_val)) != BMC_ERR_SUCCESS)
+                                &get_val)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }

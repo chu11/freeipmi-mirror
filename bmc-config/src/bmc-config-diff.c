@@ -146,7 +146,7 @@ bmc_diff_file (bmc_config_state_data_t *state_data)
   return rv;
 }
 
-bmc_err_t
+config_err_t
 bmc_diff (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
@@ -160,10 +160,10 @@ bmc_diff (bmc_config_state_data_t *state_data)
     ret = bmc_diff_file (state_data);
 
   if (ret == BMC_DIFF_SAME)
-    return BMC_ERR_SUCCESS;
+    return CONFIG_ERR_SUCCESS;
   if (ret == BMC_DIFF_DIFFERENT || ret == BMC_DIFF_NON_FATAL_ERROR)
-    return BMC_ERR_NON_FATAL_ERROR;
-  return BMC_ERR_FATAL_ERROR;
+    return CONFIG_ERR_NON_FATAL_ERROR;
+  return CONFIG_ERR_FATAL_ERROR;
 }
 
 void 

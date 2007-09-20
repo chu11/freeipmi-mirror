@@ -323,6 +323,7 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
             }
           break;
         case CONFIG_ACTION_LIST_SECTIONS:
+        case CONFIG_ACTION_INFO:
           /* do nothing - here to remove compile warning */
           break;
         }

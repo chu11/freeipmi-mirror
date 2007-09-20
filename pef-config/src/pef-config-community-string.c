@@ -15,17 +15,17 @@
 #include "pef-config-sections.h"
 #include "pef-config-wrapper.h"
 
-static pef_err_t
+static config_err_t
 community_string_checkout (pef_config_state_data_t *state_data,
                            const struct section *sect,
                            struct keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
-  pef_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_bmc_community_string (state_data,
                                        community_string,
-                                       IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != PEF_ERR_SUCCESS) 
+                                       IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
   if (kv->value)
@@ -34,19 +34,19 @@ community_string_checkout (pef_config_state_data_t *state_data,
   if (!(kv->value = strdup ((char *)community_string)))
     {
       perror("strdup");
-      return PEF_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return PEF_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static pef_err_t
+static config_err_t
 community_string_commit (pef_config_state_data_t *state_data,
                          const struct section *sect,
                          const struct keyvalue *kv)
 {
   if (!kv->value)
-    return PEF_ERR_FATAL_ERROR;
+    return CONFIG_ERR_FATAL_ERROR;
 
   return set_bmc_community_string (state_data,
                                    kv->value);
@@ -58,14 +58,14 @@ community_string_diff (pef_config_state_data_t *state_data,
                        const struct keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
-  pef_err_t rc;
+  config_err_t rc;
   pef_diff_t ret;
 
   if ((rc = get_bmc_community_string (state_data,
                                       community_string,
-                                      IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != PEF_ERR_SUCCESS)
+                                      IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == PEF_ERR_NON_FATAL_ERROR)
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return PEF_DIFF_NON_FATAL_ERROR;
       return PEF_DIFF_FATAL_ERROR;
     }
