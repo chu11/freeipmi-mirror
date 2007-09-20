@@ -10,6 +10,8 @@ int config_keyinput_parse_string(char *str,
                                  char **key_name,
                                  char **value);
 
+/* no config_keyinputs_create, responsibility of config tool to create list */
+
 int config_keyinput_append(struct config_keyinput **keyinputs,
                            struct config_keyinput *keyinput);
 

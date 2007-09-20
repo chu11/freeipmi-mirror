@@ -49,18 +49,6 @@ typedef enum
     PEF_DIFF_DIFFERENT = 1,
   } pef_diff_t;
 
-struct keypair
-{
-  char *keypair;
-  struct keypair *next;
-};
-
-struct sectionstr
-{
-  char *sectionstr;
-  struct sectionstr *next;
-};
-
 struct pef_config_arguments
 {
   struct common_cmd_args common;
@@ -69,8 +57,8 @@ struct pef_config_arguments
 
   int verbose;
   char *filename;
-  struct keypair *keypairs;
-  struct sectionstr *sectionstrs;
+  struct config_keyinput *keyinputs;
+  struct config_section_str *section_strs;
 };
 
 typedef struct pef_config_prog_data

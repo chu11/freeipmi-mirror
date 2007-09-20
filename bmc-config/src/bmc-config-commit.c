@@ -16,69 +16,33 @@
 #include "bmc-config-parser.h"
 #include "bmc-config-sections.h"
 
-static config_err_t
-bmc_commit_keypair (bmc_config_state_data_t *state_data,
-                    struct keypair *kp)
-{
-  char *keypair = NULL;
-  char *section_name;
-  char *key_name;
-  char *value;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-
-  if (!(keypair = strdup (kp->keypair)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  section_name = strtok (keypair, ":");
-  key_name = strtok (NULL, "=");
-  value = strtok (NULL, "");
-
-  if (!(section_name && key_name && value)) 
-    {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-     
-  section_name = strtok (section_name, " \t");
-  key_name = strtok (key_name, " \t");
-  value = strtok (value, " \t");
-
-  rv = bmc_config_section_commit_value (state_data, 
-                                        section_name,
-                                        key_name, 
-                                        value);
- cleanup:
-  if (keypair)
-    free(keypair);
-  return rv;
-}
+#include "config-common.h"
 
 static config_err_t
-bmc_commit_keypairs (bmc_config_state_data_t *state_data)
+bmc_commit_keyinputs (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
-  struct keypair *kp;
+  struct config_keyinput *ki;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
   args = state_data->prog_data->args;
 
-  kp = args->keypairs;
-  while (kp)
+  ki = args->keyinputs;
+  while (ki)
     {
       config_err_t this_ret;
 
-      if ((this_ret = bmc_commit_keypair(state_data, kp)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_config_section_commit_value (state_data,
+                                                       ki->section_name,
+                                                       ki->key_name,
+                                                       ki->value_input)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         ret = CONFIG_ERR_NON_FATAL_ERROR;
 
-      kp = kp->next;
+      ki = ki->next;
     }
 
   rv = ret;
@@ -87,52 +51,26 @@ bmc_commit_keypairs (bmc_config_state_data_t *state_data)
 }
 
 static config_err_t
-bmc_keypair_feed (bmc_config_state_data_t *state_data)
+bmc_keyinput_feed (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
-  struct keypair *kp;
+  struct config_keyinput *ki;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
   args = state_data->prog_data->args;
 
-  kp = args->keypairs;
-  while (kp)
+  ki = args->keyinputs;
+  while (ki)
     {
       struct section *sect;
-      char *keypair;
-      char *section_name;
-      char *key_name;
-      char *value;
       int found_section;
 
-      if (!(keypair = strdup (kp->keypair)))
-        {
-          perror("strdup");
-          goto cleanup;
-        }
-      
-      section_name = strtok (keypair, ":");
-      key_name = strtok (NULL, "=");
-      value = strtok (NULL, "");
-      
-      if (!(section_name && key_name && value)) 
-        {
-          fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-          free (keypair);
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
-          goto cleanup;
-        }
-     
-      section_name = strtok (section_name, " \t");
-      key_name = strtok (key_name, " \t");
-      value = strtok (value, " \t");
-      
       sect = state_data->sections;
       found_section = 0;
       while (sect) 
         {
-          if (!strcasecmp(sect->section_name, section_name))
+          if (!strcasecmp(sect->section_name, ki->section_name))
             {
               struct keyvalue *kv = sect->keyvalues;
 
@@ -142,17 +80,16 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
 
               while (kv) 
                 {
-                  if (!strcasecmp(kv->key, key_name))
+                  if (!strcasecmp(kv->key, ki->key_name))
                     {
                       found_key++;
 
                       if (kv->value)
                         free(kv->value);
                       
-                      if (!(kv->value = strdup(value)))
+                      if (!(kv->value = strdup(ki->value_input)))
                         {
                           perror("strdup");
-                          free(keypair);
                           goto cleanup;
                         }
 
@@ -163,8 +100,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
 
               if (!found_key)
                 {
-                  fprintf (stderr, "Invalid KEY in `%s'\n", kp->keypair);
-                  free (keypair);
+                  fprintf (stderr, "Invalid KEY `%s'\n", ki->key_name);
                   rv = CONFIG_ERR_NON_FATAL_ERROR;
                   goto cleanup;
                 }
@@ -176,15 +112,12 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
       
       if (!found_section)
         {
-          fprintf (stderr, "Invalid SECTION in `%s'\n", kp->keypair);
-          free (keypair);
+          fprintf (stderr, "Invalid SECTION `%s'\n", ki->section_name);
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
-      free (keypair);
-      keypair = NULL;
-      kp = kp->next;
+      ki = ki->next;
     }
 
   rv = ret;
@@ -223,10 +156,10 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
     ret = CONFIG_ERR_NON_FATAL_ERROR;
 
-  /* 2nd pass - feed in keypair elements from the command line to override file keypairs */
-  if (args->keypairs)
+  /* 2nd pass - feed in keyinput elements from the command line to override file keyinputs */
+  if (args->keyinputs)
     {
-      if ((this_ret = bmc_keypair_feed (state_data)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_keyinput_feed (state_data)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -281,7 +214,7 @@ bmc_commit (bmc_config_state_data_t *state_data)
   if (args->filename)
     ret = bmc_commit_file (state_data);
   else
-    ret = bmc_commit_keypairs (state_data);
+    ret = bmc_commit_keyinputs (state_data);
 
   return ret;
 }

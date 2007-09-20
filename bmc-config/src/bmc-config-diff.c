@@ -14,70 +14,33 @@
 #include "bmc-config-parser.h"
 #include "bmc-config-sections.h"
 
-static bmc_diff_t
-bmc_diff_keypair (bmc_config_state_data_t *state_data,
-                  struct keypair *kp)
-{
-  char *keypair = NULL;
-  char *section_name;
-  char *key_name;
-  char *value;
-  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
-  
-  if (!(keypair = strdup (kp->keypair)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  section_name = strtok (keypair, ":");
-  key_name = strtok (NULL, "=");
-  value = strtok (NULL, "");
-
-  if (!(section_name && key_name && value)) 
-    {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = BMC_DIFF_NON_FATAL_ERROR; 
-      goto cleanup;
-    }
-     
-  section_name = strtok (section_name, " \t");
-  key_name = strtok (key_name, " \t");
-  value = strtok (value, " \t");
-
-  rv = bmc_config_section_diff_value (state_data,
-                                      section_name, 
-                                      key_name,
-                                      value);
- cleanup:
-  if (keypair)
-    free (keypair);
-  return rv;
-}
+#include "config-common.h"
 
 static bmc_diff_t
-bmc_diff_keypairs (bmc_config_state_data_t *state_data)
+bmc_diff_keyinputs (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
-  struct keypair *kp;
+  struct config_keyinput *ki;
   bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
   bmc_diff_t ret = BMC_DIFF_SAME;
 
   args = state_data->prog_data->args;
 
-  kp = args->keypairs;
-  while (kp)
+  ki = args->keyinputs;
+  while (ki)
     {
       bmc_diff_t this_ret;
 
-      if ((this_ret = bmc_diff_keypair (state_data, 
-                                        kp)) == BMC_DIFF_FATAL_ERROR)
+      if ((this_ret = bmc_config_section_diff_value (state_data,
+                                                     ki->section_name, 
+                                                     ki->key_name,
+                                                     ki->value_input)) == BMC_DIFF_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
         ret = BMC_DIFF_NON_FATAL_ERROR;
 
-      kp = kp->next;
+      ki = ki->next;
     }
 
   rv = ret;
@@ -154,8 +117,8 @@ bmc_diff (bmc_config_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->keypairs)
-    ret = bmc_diff_keypairs (state_data);
+  if (args->keyinputs)
+    ret = bmc_diff_keyinputs (state_data);
   else
     ret = bmc_diff_file (state_data);
 

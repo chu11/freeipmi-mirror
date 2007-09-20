@@ -53,18 +53,6 @@ typedef enum
     BMC_DIFF_DIFFERENT = 1,
   } bmc_diff_t;
 
-struct keypair
-{
-  char *keypair;
-  struct keypair *next;
-};
-
-struct sectionstr
-{
-  char *sectionstr;
-  struct sectionstr *next;
-};
-
 struct bmc_config_arguments
 {
   struct common_cmd_args common;
@@ -73,8 +61,8 @@ struct bmc_config_arguments
 
   int verbose;
   char *filename;
-  struct keypair *keypairs;
-  struct sectionstr *sectionstrs;
+  struct config_keyinput *keyinputs;
+  struct config_section_str *section_strs;
 };
 
 typedef struct bmc_config_prog_data

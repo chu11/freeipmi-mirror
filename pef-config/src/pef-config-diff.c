@@ -14,70 +14,33 @@
 #include "pef-config-parser.h"
 #include "pef-config-sections.h"
 
-static pef_diff_t
-pef_diff_keypair (pef_config_state_data_t *state_data,
-                  struct keypair *kp)
-{
-  char *keypair = NULL;
-  char *section_name;
-  char *key_name;
-  char *value;
-  pef_diff_t rv = PEF_DIFF_FATAL_ERROR;
-
-  if (!(keypair = strdup (kp->keypair)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  section_name = strtok (keypair, ":");
-  key_name = strtok (NULL, "=");
-  value = strtok (NULL, "");
-
-  if (!(section_name && key_name && value))
-    {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = PEF_DIFF_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  section_name = strtok (section_name, " \t");
-  key_name = strtok (key_name, " \t");
-  value = strtok (value, " \t");
-
-  rv = pef_config_section_diff_value (state_data,
-                                      section_name,
-                                      key_name,
-                                      value);
- cleanup:
-  if (keypair)
-    free (keypair);
-  return rv;
-}
+#include "config-common.h"
 
 static pef_diff_t
-pef_diff_keypairs (pef_config_state_data_t *state_data)
+pef_diff_inputs (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
-  struct keypair *kp;
+  struct config_keyinput *ki;
   pef_diff_t rv = PEF_DIFF_FATAL_ERROR;
   pef_diff_t ret = PEF_DIFF_SAME;
 
   args = state_data->prog_data->args;
 
-  kp = args->keypairs;
-  while (kp)
+  ki = args->keyinputs;
+  while (ki)
     {
       pef_diff_t this_ret;
 
-      if ((this_ret = pef_diff_keypair (state_data,
-                                        kp)) == PEF_DIFF_FATAL_ERROR)
+      if ((this_ret = pef_config_section_diff_value (state_data,
+                                                     ki->section_name,
+                                                     ki->key_name,
+                                                     ki->value_input)) == PEF_DIFF_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == PEF_DIFF_NON_FATAL_ERROR)
         ret = PEF_DIFF_NON_FATAL_ERROR;
 
-      kp = kp->next;
+      ki = ki->next;
     }
 
   rv = ret;
@@ -154,8 +117,8 @@ pef_diff (pef_config_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->keypairs)
-    ret = pef_diff_keypairs (state_data);
+  if (args->keyinputs)
+    ret = pef_diff_inputs (state_data);
   else
     ret = pef_diff_file (state_data);
 

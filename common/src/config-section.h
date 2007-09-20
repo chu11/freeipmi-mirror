@@ -5,7 +5,14 @@
 
 #include "config-common.h"
 
-/* no config_setions_create, responsibility of config tool to create list */
+/* no config_section_strs_create, responsibility of config tool to create list */
+
+struct config_section_str *config_section_str_create(char *section_name);
+
+int config_section_str_append(struct config_section_str **section_strs,
+                              struct config_section_str *section_str);
+
+/* no config_sections_create, responsibility of config tool to create list */
 
 int config_section_append(struct config_section **sections, 
                           struct config_section *section);

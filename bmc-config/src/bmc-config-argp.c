@@ -67,6 +67,8 @@
 #include "bmc-config-sections.h"
 
 #include "config-common.h"
+#include "config-keyinput.h"
+#include "config-section.h"
 
 const char *argp_program_version = PACKAGE_VERSION;
 const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";
@@ -108,53 +110,16 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state);
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc};
 
-static struct keypair *
-_create_keypair(char *arg)
-{
-  struct keypair *kp;
-  
-  if (!(kp = (struct keypair *)malloc(sizeof(struct keypair))))
-    {
-      perror("malloc");
-      exit(1);
-    }
-  if (!(kp->keypair = strdup(arg)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  kp->next = NULL;
-
-  return kp;
-}
-
-static struct sectionstr *
-_create_sectionstr(char *arg)
-{
-  struct sectionstr *s;
-  
-  if (!(s = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
-    {
-      perror("malloc");
-      exit(1);
-    }
-  if (!(s->sectionstr = strdup(arg)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  s->next = NULL;
-
-  return s;
-}
-
 /* Parse a single option. */
 static error_t
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct bmc_config_arguments *cmd_args = state->input;
-  struct keypair *kp;
-  struct sectionstr *sstr;
+  struct config_keyinput *ki = NULL;
+  struct config_section_str *sstr = NULL;
+  char *section_name = NULL;
+  char *key_name = NULL;
+  char *value = NULL;
 
   switch (key)
     {
@@ -186,34 +151,57 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       break;
     case KEYPAIR_KEY:
-      kp = _create_keypair(arg);
-      if (cmd_args->keypairs)
+      if (config_keyinput_parse_string(arg,
+                                       &section_name,
+                                       &key_name,
+                                       &value) < 0)
         {
-          struct keypair *p = NULL;
-          
-          p = cmd_args->keypairs;
-          while (p->next)
-            p = p->next;
-          
-          p->next = kp;
+          fprintf(stderr,
+                  "Improperly input keypair '%s'\n",
+                  arg);
+          exit(1);
         }
-      else
-        cmd_args->keypairs = kp;
+      if (!(ki = config_keyinput_create(section_name,
+                                        key_name,
+                                        value)))
+        {
+          fprintf(stderr,
+                  "config_keyinput_create error\n");
+          exit(1);
+        }
+      if (config_keyinput_append(&(cmd_args->keyinputs),
+                                 ki) < 0)
+        {
+          fprintf(stderr,
+                  "config_keyinput_append error\n");
+          exit(1);
+        }
+      if (section_name)
+        free(section_name);
+      section_name = NULL;
+      if (key_name)
+        free(key_name);
+      key_name = NULL;
+      if (value)
+        free(value);
+      value = NULL;
+      ki = NULL;
       break;
     case SECTIONS_KEY:
-      sstr = _create_sectionstr(arg);
-      if (cmd_args->sectionstrs)
+      if (!(sstr = config_section_str_create(arg)))
         {
-          struct sectionstr *p = NULL;
-          
-          p = cmd_args->sectionstrs;
-          while (p->next)
-            p = p->next;
-          
-          p->next = sstr;
+          fprintf(stderr, 
+                  "config_section_str_create error\n");
+          exit(1);
         }
-      else
-        cmd_args->sectionstrs = sstr;
+      if (config_section_str_append(&(cmd_args->section_strs),
+                                    sstr) < 0)
+        {
+          fprintf(stderr, 
+                  "config_section_str_append error\n");
+          exit(1);
+        }
+      sstr = NULL;
       break;
     case LIST_SECTIONS_KEY:
       if (!cmd_args->action)
@@ -237,11 +225,11 @@ void
 bmc_config_argp_parse (int argc, char *argv[], struct bmc_config_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
+  cmd_args->action = 0;
   cmd_args->verbose = 0;
   cmd_args->filename = NULL;
-  cmd_args->keypairs = NULL;
-  cmd_args->sectionstrs = NULL;
-  cmd_args->action = 0;
+  cmd_args->keyinputs = NULL;
+  cmd_args->section_strs = NULL;
 
   /* ADMIN is minimum for bmc-config b/c its needed for many of the
    * ipmi cmds used
@@ -266,7 +254,7 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
     }
 
   // filename and keypair both given for checkout or diff
-  if (cmd_args->filename && cmd_args->keypairs 
+  if (cmd_args->filename && cmd_args->keyinputs
       && (cmd_args->action == CONFIG_ACTION_CHECKOUT
           || cmd_args->action == CONFIG_ACTION_DIFF))
     {
@@ -277,7 +265,7 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
 
   // only one of keypairs or section can be given for checkout
   if (cmd_args->action == CONFIG_ACTION_CHECKOUT
-      && (cmd_args->keypairs && cmd_args->sectionstrs))
+      && (cmd_args->keyinputs && cmd_args->section_strs))
     {
       fprintf (stderr, 
                "Only one of --filename, --keypair, and --section can be used\n");
