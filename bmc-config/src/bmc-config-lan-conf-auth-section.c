@@ -1342,7 +1342,7 @@ oem_oem_proprietary_diff (bmc_config_state_data_t *state_data,
 }
 
 struct section *
-bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
+bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *lan_conf_auth_section = NULL;
   char *section_comment =

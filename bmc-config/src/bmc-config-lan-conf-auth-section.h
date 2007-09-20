@@ -1,6 +1,6 @@
 /* 
 
-   bmc-config-checkout.h - function prototypes
+   bmc-config-lan-conf-auth-section.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,13 +20,12 @@
 */
 
 
-#ifndef _BMC_CONFIG_CHECKOUT_H_
-#define _BMC_CONFIG_CHECKOUT_H_
+#ifndef _BMC_CONFIG_LAN_CONF_AUTH_SECTION_H_
+#define _BMC_CONFIG_LAN_CONF_AUTH_SECTION_H_
 
 #include "bmc-config.h"
+#include "bmc-config-sections.h"
 
-#include "config-common.h"
+struct section * bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data);
 
-config_err_t bmc_checkout (bmc_config_state_data_t *state_data);
-
-#endif /* _BMC_CONFIG_CHECKOUT_H_ */
+#endif /* _BMC_CONFIG_LAN_CONF_AUTH_SECTION_H_ */

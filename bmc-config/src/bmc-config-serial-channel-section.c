@@ -22,17 +22,17 @@
 /* volatile */
 
 static config_err_t
-lan_channel_volatile_access_set (bmc_config_state_data_t *state_data,
-				 uint8_t access_mode,
-				 uint8_t access_mode_is_set,
-				 uint8_t user_level_authentication,
-				 uint8_t user_level_authentication_is_set,
-				 uint8_t per_message_authentication,
-				 uint8_t per_message_authentication_is_set,
-				 uint8_t pef_alerting,
-				 uint8_t pef_alerting_is_set,
-				 uint8_t channel_privilege_limit,
-				 uint8_t channel_privilege_limit_is_set)
+serial_channel_volatile_access_set (bmc_config_state_data_t *state_data,
+                                    uint8_t access_mode,
+                                    uint8_t access_mode_is_set,
+                                    uint8_t user_level_authentication,
+                                    uint8_t user_level_authentication_is_set,
+                                    uint8_t per_message_authentication,
+                                    uint8_t per_message_authentication_is_set,
+                                    uint8_t pef_alerting,
+                                    uint8_t pef_alerting_is_set,
+                                    uint8_t channel_privilege_limit,
+                                    uint8_t channel_privilege_limit_is_set)
 {
   uint8_t tmp_access_mode;
   uint8_t tmp_user_level_authentication;
@@ -41,12 +41,12 @@ lan_channel_volatile_access_set (bmc_config_state_data_t *state_data,
   uint8_t tmp_channel_privilege_limit;
   config_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
-                                                  &tmp_access_mode,
-                                                  &tmp_user_level_authentication,
-                                                  &tmp_per_message_authentication,
-                                                  &tmp_pef_alerting,
-                                                  &tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_bmc_serial_channel_volatile_access (state_data,
+                                                     &tmp_access_mode,
+                                                     &tmp_user_level_authentication,
+                                                     &tmp_per_message_authentication,
+                                                     &tmp_pef_alerting,
+                                                     &tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (access_mode_is_set)
@@ -60,12 +60,13 @@ lan_channel_volatile_access_set (bmc_config_state_data_t *state_data,
   if (channel_privilege_limit_is_set)
     tmp_channel_privilege_limit = channel_privilege_limit;
 
-  if ((ret = set_bmc_lan_channel_volatile_access (state_data,
-                                                  tmp_access_mode,
-                                                  tmp_user_level_authentication,
-                                                  tmp_per_message_authentication,
-                                                  tmp_pef_alerting,
-                                                  tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
+  if ((ret = set_bmc_serial_channel_volatile_access (state_data,
+                                                     tmp_access_mode,
+                                                     tmp_user_level_authentication,
+                                                     tmp_per_message_authentication,
+                                                     tmp_pef_alerting,
+                                                     tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
+
     return ret;
 
   return CONFIG_ERR_SUCCESS;
@@ -83,23 +84,22 @@ volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
   uint8_t foo;
   config_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
-                                                  &get_val,
-                                                  &foo,
-                                                  &foo,
-                                                  &foo,
-                                                  &foo)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_bmc_serial_channel_volatile_access (state_data,
+                                                     &get_val,
+                                                     &foo,
+                                                     &foo,
+                                                     &foo,
+                                                     &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
     free (kv->value);
-
   if (!(kv->value = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR ;
+      return -1;
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
@@ -110,12 +110,12 @@ volatile_access_mode_commit (bmc_config_state_data_t *state_data,
   uint8_t commit_val;
 
   commit_val = channel_access_mode (kv->value);
-  return lan_channel_volatile_access_set (state_data,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  0, 0);
+  return serial_channel_volatile_access_set (state_data,
+                                             commit_val, 1,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0);
 }
 
 static bmc_diff_t
@@ -129,12 +129,12 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
-                                                 &get_val,
-                                                 &foo,
-                                                 &foo,
-                                                 &foo,
-                                                 &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_volatile_access (state_data,
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
@@ -142,18 +142,16 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
     }
 
   passed_val = channel_access_mode (kv->value);
-
   if (passed_val == get_val)
-    ret = BMC_DIFF_SAME; 
-  else
+    ret = BMC_DIFF_SAME;
+  else 
     {
       ret = BMC_DIFF_DIFFERENT;
-      report_diff (sect->section_name, 
+      report_diff (sect->section_name,
                    kv->key,
                    kv->value,
                    channel_access_mode_string (get_val));
     }
-
   return ret;
 }
 
@@ -161,31 +159,29 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
-                                          const struct section *sect,
-                                          struct keyvalue *kv)
+					  const struct section *sect,
+					  struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
   config_err_t ret;
-  
-  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
-                                                  &foo,
-                                                  &get_val,
-                                                  &foo,
-                                                  &foo,
-                                                  &foo)) != CONFIG_ERR_SUCCESS)
+
+  if ((ret = get_bmc_serial_channel_volatile_access (state_data,
+                                                     &foo,
+                                                     &get_val,
+                                                     &foo,
+                                                     &foo,
+                                                     &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
     free (kv->value);
-
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
   else
@@ -193,10 +189,10 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
@@ -206,14 +202,13 @@ volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
 {
   uint8_t commit_val;
 
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set (state_data,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0,
-					  0, 0);
+  return serial_channel_volatile_access_set (state_data,
+                                             0, 0,
+                                             commit_val, 1,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0);
 }
 
 static bmc_diff_t
@@ -227,23 +222,23 @@ volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
-                                                 &foo,
-                                                 &get_val,
-                                                 &foo,
-                                                 &foo,
-                                                 &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_volatile_access (state_data,
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   passed_val = same (kv->value, "yes");
+
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
-  else
+  else 
     {
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
@@ -265,24 +260,22 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
   uint8_t foo;
   config_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
-                                                  &foo,
-                                                  &foo,
-                                                  &get_val,
-                                                  &foo,
-                                                  &foo)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_bmc_serial_channel_volatile_access (state_data,
+                                                     &foo,
+                                                     &foo,
+                                                     &get_val,
+                                                     &foo,
+                                                     &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
     free (kv->value);
-
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
   else
@@ -290,10 +283,10 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
@@ -303,14 +296,13 @@ volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
 {
   uint8_t commit_val;
 
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set (state_data,
-					  0, 0,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0,
-					  0, 0);
+  return serial_channel_volatile_access_set (state_data,
+                                             0, 0,
+                                             0, 0,
+                                             commit_val, 1,
+                                             0, 0,
+                                             0, 0);
 }
 
 static bmc_diff_t
@@ -324,23 +316,23 @@ volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
-                                                 &foo,
-                                                 &foo,
-                                                 &get_val,
-                                                 &foo,
-                                                 &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_volatile_access (state_data,
+                                                    &foo,
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo,
+                                                    &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   passed_val = same (kv->value, "yes");
+
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
-  else
+  else 
     {
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
@@ -348,7 +340,6 @@ volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
                    kv->value,
                    get_val ? "Yes" : "No");
     }
-
   return ret;
 }
 
@@ -362,24 +353,23 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
   uint8_t get_val;
   uint8_t foo;
   config_err_t ret;
-  
-  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
-                                                  &foo,
-                                                  &foo,
-                                                  &foo,
-                                                  &get_val,
-                                                  &foo)) != CONFIG_ERR_SUCCESS)
+
+  if ((ret = get_bmc_serial_channel_volatile_access (state_data,
+                                                     &foo,
+                                                     &foo,
+                                                     &foo,
+                                                     &get_val,
+                                                     &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
     free (kv->value);
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
   else
@@ -387,10 +377,10 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
@@ -400,14 +390,13 @@ volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
 {
   uint8_t commit_val;
 
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   commit_val = same (kv->value, "yes");
-  return lan_channel_volatile_access_set (state_data,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  commit_val, 1,
-					  0, 0);
+  return serial_channel_volatile_access_set (state_data,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             commit_val, 1,
+                                             0, 0);
 }
 
 static bmc_diff_t
@@ -421,19 +410,18 @@ volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
-                                                 &foo,
-                                                 &foo,
-                                                 &foo,
-                                                 &get_val,
-                                                 &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_volatile_access (state_data,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &get_val,
+                                                    &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  /* achu: Backwards values in this command are handled in bmc-config-api.c */
   passed_val = same (kv->value, "yes");
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
@@ -445,7 +433,6 @@ volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
                    kv->value,
                    get_val ? "Yes" : "No");
     }
-
   return ret;
 }
 
@@ -459,14 +446,14 @@ volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
   uint8_t get_val;
   uint8_t foo;
   config_err_t ret;
-  
-  if ((ret = get_bmc_lan_channel_volatile_access (state_data,
-                                                  &foo,
-                                                  &foo,
-                                                  &foo,
-                                                  &foo,
-                                                  &get_val)) != CONFIG_ERR_SUCCESS)
-    return ret; 
+
+  if ((ret = get_bmc_serial_channel_volatile_access (state_data,
+                                                     &foo,
+                                                     &foo,
+                                                     &foo,
+                                                     &foo,
+                                                     &get_val)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
   if (kv->value)
     free (kv->value);
@@ -474,10 +461,10 @@ volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
+      return -1;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
@@ -488,12 +475,12 @@ volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
   uint8_t commit_val;
 
   commit_val = privilege_level_number (kv->value);
-  return lan_channel_volatile_access_set (state_data,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  0, 0,
-					  commit_val, 1);
+  return serial_channel_volatile_access_set (state_data,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             0, 0,
+                                             commit_val, 1);
 }
 
 static bmc_diff_t
@@ -507,12 +494,12 @@ volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_volatile_access (state_data,
-                                                 &foo,
-                                                 &foo,
-                                                 &foo,
-                                                 &foo,
-                                                 &get_val)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_volatile_access (state_data,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &foo,
+                                                    &get_val)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
@@ -531,24 +518,23 @@ volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
                    kv->value,
                    privilege_level_string (get_val));
     }
-
   return ret;
 }
 
 /* non volatile */
 
-static int
-lan_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
-                                     uint8_t access_mode,
-                                     uint8_t access_mode_is_set,
-                                     uint8_t user_level_authentication,
-                                     uint8_t user_level_authentication_is_set,
-                                     uint8_t per_message_authentication,
-                                     uint8_t per_message_authentication_is_set,
-                                     uint8_t pef_alerting,
-                                     uint8_t pef_alerting_is_set,
-                                     uint8_t channel_privilege_limit,
-                                     uint8_t channel_privilege_limit_is_set)
+static config_err_t
+serial_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
+                                        uint8_t access_mode,
+                                        uint8_t access_mode_is_set,
+                                        uint8_t user_level_authentication,
+                                        uint8_t user_level_authentication_is_set,
+                                        uint8_t per_message_authentication,
+                                        uint8_t per_message_authentication_is_set,
+                                        uint8_t pef_alerting,
+                                        uint8_t pef_alerting_is_set,
+                                        uint8_t channel_privilege_limit,
+                                        uint8_t channel_privilege_limit_is_set)
 {
   uint8_t tmp_access_mode;
   uint8_t tmp_user_level_authentication;
@@ -557,12 +543,12 @@ lan_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
   uint8_t tmp_channel_privilege_limit;
   config_err_t ret;
   
-  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                      &tmp_access_mode,
-                                                      &tmp_user_level_authentication,
-                                                      &tmp_per_message_authentication,
-                                                      &tmp_pef_alerting,
-                                                      &tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                         &tmp_access_mode,
+                                                         &tmp_user_level_authentication,
+                                                         &tmp_per_message_authentication,
+                                                         &tmp_pef_alerting,
+                                                         &tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (access_mode_is_set)
@@ -576,12 +562,12 @@ lan_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
   if (channel_privilege_limit_is_set)
     tmp_channel_privilege_limit = channel_privilege_limit;
 
-  if ((ret = set_bmc_lan_channel_non_volatile_access (state_data,
-                                                      tmp_access_mode,
-                                                      tmp_user_level_authentication,
-                                                      tmp_per_message_authentication,
-                                                      tmp_pef_alerting,
-                                                      tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
+  if ((ret = set_bmc_serial_channel_non_volatile_access (state_data,
+                                                         tmp_access_mode,
+                                                         tmp_user_level_authentication,
+                                                         tmp_per_message_authentication,
+                                                         tmp_pef_alerting,
+                                                         tmp_channel_privilege_limit)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   return CONFIG_ERR_SUCCESS;
@@ -599,12 +585,12 @@ non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
   uint8_t foo;
   config_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                      &get_val,
-                                                      &foo,
-                                                      &foo,
-                                                      &foo,
-                                                      &foo)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                         &get_val,
+                                                         &foo,
+                                                         &foo,
+                                                         &foo,
+                                                         &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -612,31 +598,31 @@ non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR ;
+      return -1;
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
 non_volatile_access_mode_commit (bmc_config_state_data_t *state_data,
-				 const struct section *sect,
-				 const struct keyvalue *kv)
+                                 const struct section *sect,
+                                 const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = channel_access_mode (kv->value);
-  return lan_channel_non_volatile_access_set (state_data,
-                                              commit_val, 1,
-                                              0, 0,
-                                              0, 0,
-                                              0, 0,
-                                              0, 0);
+  return serial_channel_non_volatile_access_set (state_data,
+                                                 commit_val, 1,
+                                                 0, 0,
+                                                 0, 0,
+                                                 0, 0,
+                                                 0, 0);
 }
 
 static bmc_diff_t
 non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       const struct keyvalue *kv)
+                               const struct section *sect,
+                               const struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -644,12 +630,12 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                     &get_val,
-                                                     &foo,
-                                                     &foo,
-                                                     &foo,
-                                                     &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                        &get_val,
+                                                        &foo,
+                                                        &foo,
+                                                        &foo,
+                                                        &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
@@ -657,17 +643,17 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
     }
 
   passed_val = channel_access_mode (kv->value);
+
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
-  else
+  else 
     {
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
-                   get_val ? "Yes" : "No");
+                   channel_access_mode_string (get_val));
     }
-
   return ret;
 }
 
@@ -675,30 +661,29 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
-					      const struct section *sect,
-					      struct keyvalue *kv)
+                                              const struct section *sect,
+                                              struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
   config_err_t ret;
 
-  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                      &foo,
-                                                      &get_val,
-                                                      &foo,
-                                                      &foo,
-                                                      &foo)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                         &foo,
+                                                         &get_val,
+                                                         &foo,
+                                                         &foo,
+                                                         &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
     free (kv->value);
-
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
   else
@@ -706,26 +691,26 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
 non_volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
-					    const struct section *sect,
-					    const struct keyvalue *kv)
+                                            const struct section *sect,
+                                            const struct keyvalue *kv)
 {
   uint8_t commit_val;
-  
+
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set (state_data,
-					      0, 0,
-					      commit_val, 1,
-					      0, 0,
-					      0, 0,
-					      0, 0);
+  return serial_channel_non_volatile_access_set (state_data,
+                                                 0, 0,
+                                                 commit_val, 1,
+                                                 0, 0,
+                                                 0, 0,
+                                                 0, 0);
 }
 
 static bmc_diff_t
@@ -739,12 +724,12 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                     &foo,
-                                                     &get_val,
-                                                     &foo,
-                                                     &foo,
-                                                     &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                        &foo,
+                                                        &get_val,
+                                                        &foo,
+                                                        &foo,
+                                                        &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
@@ -752,6 +737,7 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
     }
 
   passed_val = same (kv->value, "yes");
+
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
   else 
@@ -762,7 +748,6 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
                    kv->value,
                    get_val ? "Yes" : "No");
     }
-
   return ret;
 }
 
@@ -770,30 +755,29 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
-					   const struct section *sect,
-					   struct keyvalue *kv)
+                                           const struct section *sect,
+                                           struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
   config_err_t ret;
-  
-  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                      &foo,
-                                                      &foo,
-                                                      &get_val,
-                                                      &foo,
-                                                      &foo)) != CONFIG_ERR_SUCCESS)
+
+  if ((ret = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                         &foo,
+                                                         &foo,
+                                                         &get_val,
+                                                         &foo,
+                                                         &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
     free (kv->value);
-
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
   else
@@ -801,32 +785,32 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
 non_volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
-					 const struct section *sect,
-					 const struct keyvalue *kv)
+                                         const struct section *sect,
+                                         const struct keyvalue *kv)
 {
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set (state_data,
-					      0, 0,
-					      0, 0,
-					      commit_val, 1,
-					      0, 0,
-					      0, 0);
+  return serial_channel_non_volatile_access_set (state_data,
+                                                 0, 0,
+                                                 0, 0,
+                                                 commit_val, 1,
+                                                 0, 0,
+                                                 0, 0);
 }
 
 static bmc_diff_t
 non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
-				       const struct section *sect,
-				       const struct keyvalue *kv)
+                                       const struct section *sect,
+                                       const struct keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -834,12 +818,12 @@ non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                     &foo,
-                                                     &foo,
-                                                     &get_val,
-                                                     &foo,
-                                                     &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                        &foo,
+                                                        &foo,
+                                                        &get_val,
+                                                        &foo,
+                                                        &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
@@ -858,7 +842,6 @@ non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
                    kv->value,
                    get_val ? "Yes" : "No");
     }
-
   return ret;
 }
 
@@ -872,24 +855,23 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
   uint8_t get_val;
   uint8_t foo;
   config_err_t ret;
-  
-  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                      &foo,
-                                                      &foo,
-                                                      &foo,
-                                                      &get_val,
-                                                      &foo)) != CONFIG_ERR_SUCCESS)
+
+  if ((ret = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                         &foo,
+                                                         &foo,
+                                                         &foo,
+                                                         &get_val,
+                                                         &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
     free (kv->value);
-
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
   else
@@ -897,10 +879,10 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
+          return -1;
         }
     }
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
@@ -911,12 +893,12 @@ non_volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
   uint8_t commit_val;
 
   commit_val = same (kv->value, "yes");
-  return lan_channel_non_volatile_access_set (state_data,
-					      0, 0,
-					      0, 0,
-					      0, 0,
-					      commit_val, 1,
-					      0, 0);
+  return serial_channel_non_volatile_access_set (state_data,
+						 0, 0,
+						 0, 0,
+						 0, 0,
+						 commit_val, 1,
+						 0, 0);
 }
 
 static bmc_diff_t
@@ -930,12 +912,12 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                     &foo,
-                                                     &foo,
-                                                     &foo,
-                                                     &get_val,
-                                                     &foo)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                        &foo,
+                                                        &foo,
+                                                        &foo,
+                                                        &get_val,
+                                                        &foo)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
@@ -943,7 +925,6 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
     }
 
   passed_val = same (kv->value, "yes");
-
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
   else 
@@ -954,7 +935,6 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
                    kv->value,
                    get_val ? "Yes" : "No");
     }
-
   return ret;
 }
 
@@ -968,13 +948,13 @@ non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
   uint8_t get_val;
   uint8_t foo;
   config_err_t ret;
-  
-  if ((ret = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                      &foo,
-                                                      &foo,
-                                                      &foo,
-                                                      &foo,
-                                                      &get_val)) != CONFIG_ERR_SUCCESS)
+
+  if ((ret = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                         &foo,
+                                                         &foo,
+                                                         &foo,
+                                                         &foo,
+                                                         &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -983,10 +963,10 @@ non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
   if (!(kv->value = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR ;
+      return -1;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return 0;
 }
 
 static config_err_t
@@ -997,12 +977,12 @@ non_volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
   uint8_t commit_val;
 
   commit_val = privilege_level_number (kv->value);
-  return lan_channel_non_volatile_access_set (state_data,
-					      0, 0,
-					      0, 0,
-					      0, 0,
-					      0, 0,
-					      commit_val, 1);
+  return serial_channel_non_volatile_access_set (state_data,
+						 0, 0,
+						 0, 0,
+						 0, 0,
+						 0, 0,
+						 commit_val, 1);
 }
 
 static bmc_diff_t
@@ -1016,12 +996,12 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
   config_err_t rc;
   bmc_diff_t ret;
 
-  if ((rc = get_bmc_lan_channel_non_volatile_access (state_data,
-                                                     &foo,
-                                                     &foo,
-                                                     &foo,
-                                                     &foo,
-                                                     &get_val)) != CONFIG_ERR_SUCCESS)
+  if ((rc = get_bmc_serial_channel_non_volatile_access (state_data,
+                                                        &foo,
+                                                        &foo,
+                                                        &foo,
+                                                        &foo,
+                                                        &get_val)) != CONFIG_ERR_SUCCESS)
     {
       if (rc == CONFIG_ERR_NON_FATAL_ERROR)
         return BMC_DIFF_NON_FATAL_ERROR;
@@ -1029,7 +1009,6 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
     }
 
   passed_val = privilege_level_number (kv->value);
-  
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
   else 
@@ -1040,40 +1019,35 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
                    kv->value,
                    privilege_level_string (get_val));
     }
-  
   return ret;
 }
 
 struct section *
-bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
+bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section * lan_channel_section = NULL;
+  struct section *serial_channel_section = NULL;
   char *section_comment = 
-    "In the Lan_Channel section, general IPMI over LAN can be enabled for "
-    "disabled.  In the below, \"Volatile\" configurations are immediately "
+    "In the Serial_Channel section, IPMI over Serial communication can be "
+    "enabled or disabled.  "
+    "In the below, \"Volatile\" configurations are immediately "
     "configured onto the BMC and will have immediate effect on the system.  "
     "\"Non_Volatile\" configurations are only available after the next "
     "system reset.  Generally, both the \"Volatile\" and \"Non_Volatile\" "
     "equivalent fields should be configured identically."
     "\n"
-    "To enable IPMI over LAN, typically \"Access_Mode\" "
-    "should be set to \"Always_Available\".  "
-    "\"Channel_Privilege_Limit\" should be set to the highest privilege "
-    "level any username was configured with.  Typically, this "
-    "is set to \"Administrator\"."
-    "\n"
-    "\"User_Level_Auth\" and \"Per_Message_Auth\" are typically set to "
-    "\"Yes\" for additional security.";
+    "Most users will only be interested in IPMI over LAN, therefore serial "
+    "communication can be disabled.  This can be done by setting "
+    "\"Access_Mode\" to \"Disabled\".";
 
-  if (!(lan_channel_section = bmc_config_section_create (state_data, 
-                                                         "Lan_Channel",
-                                                         "Lan_Channel",
-                                                         section_comment,
-                                                         0)))
+  if (!(serial_channel_section = bmc_config_section_create (state_data, 
+                                                            "Serial_Channel",
+                                                            "Serial_Channel",
+                                                            section_comment,
+                                                            0)))
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Volatile_Access_Mode",
                                        "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                                        0,
@@ -1084,7 +1058,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Volatile_Enable_User_Level_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1095,7 +1069,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Volatile_Enable_Per_Message_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1106,7 +1080,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Volatile_Enable_Pef_Alerting",
                                        "Possible values: Yes/No",
                                        0,
@@ -1117,7 +1091,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Volatile_Channel_Privilege_Limit",
                                        "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -1128,7 +1102,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Non_Volatile_Access_Mode",
                                        "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                                        0,
@@ -1139,7 +1113,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Non_Volatile_Enable_User_Level_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1150,7 +1124,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Non_Volatile_Enable_Per_Message_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1161,7 +1135,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Non_Volatile_Enable_Pef_Alerting",
                                        "Possible values: Yes/No",
                                        0,
@@ -1172,7 +1146,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_channel_section,
+                                       serial_channel_section,
                                        "Non_Volatile_Channel_Privilege_Limit",
                                        "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -1182,11 +1156,11 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        privilege_level_number_validate) < 0)
     goto cleanup;
 
-  return lan_channel_section;
+  return serial_channel_section;
 
  cleanup:
-  if (lan_channel_section)
-    bmc_config_section_destroy(state_data, lan_channel_section);
+  if (serial_channel_section)
+    bmc_config_section_destroy(state_data, serial_channel_section);
   return NULL;
 }
 

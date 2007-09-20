@@ -1,6 +1,6 @@
 /* 
 
-   bmc-serial-channel-section.h
+   bmc-config-rmcpplus-conf-privilege-section.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_SERIAL_CHANNEL_SECTION_H_
-#define _BMC_SERIAL_CHANNEL_SECTION_H_
+#ifndef _BMC_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_
+#define _BMC_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-struct section * bmc_serial_channel_section_get (bmc_config_state_data_t *state_data);
+struct section * bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data);
 
-#endif /* _BMC_SERIAL_CHANNEL_SECTION_H_ */
+#endif /* _BMC_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_ */

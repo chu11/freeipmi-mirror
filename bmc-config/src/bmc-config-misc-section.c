@@ -83,7 +83,7 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
 }
 
 struct section *
-bmc_misc_section_get (bmc_config_state_data_t *state_data)
+bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *misc_section = NULL;
   char *section_comment = 

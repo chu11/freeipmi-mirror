@@ -1,6 +1,6 @@
 /* 
 
-   bmc-config-parser.h - function prototypes
+   bmc-config-lan-conf-misc-section.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_CONFIG_PARSER_H_
-#define _BMC_CONFIG_PARSER_H_
+#ifndef _BMC_CONFIG_LAN_CONF_MISC_SECTION_H_
+#define _BMC_CONFIG_LAN_CONF_MISC_SECTION_H_
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-config_err_t bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp);
+struct section * bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data);
 
-#endif /* _BMC_CONFIG_PARSER_H_ */
+#endif /* _BMC_CONFIG_LAN_CONF_MISC_SECTION_H_ */
