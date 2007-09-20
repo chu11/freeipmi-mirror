@@ -5,6 +5,11 @@
 
 #include "config-common.h"
 
+int config_keyinput_parse_string(char *str,
+                                 char **section_name,
+                                 char **key_name,
+                                 char **value);
+
 int config_keyinput_append(struct config_keyinput **keyinputs,
                            struct config_keyinput *keyinput);
 

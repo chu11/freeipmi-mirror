@@ -13,6 +13,100 @@
 #include "config-keyinput.h"
 
 int 
+config_keyinput_parse_string(char *str,
+                             char **section_name,
+                             char **key_name,
+                             char **value)
+{
+  char *str_temp = NULL;
+  char *section_name_tok = NULL;
+  char *key_name_tok = NULL;
+  char *value_tok = NULL;
+  char *ptr;
+  char *buf;
+  int rv;
+
+  assert(str);
+  assert(section_name);
+  assert(key_name);
+  assert(value);
+
+  *section_name = NULL;
+  *key_name = NULL;
+  *value = NULL;
+
+  if (!(str_temp = strdup(str)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+
+  section_name_tok = strtok_r(str_temp, ":", &buf);
+  key_name_tok = strtok_r(NULL, "=", &buf);
+  value_tok = strtok_r(NULL, "\0", &buf);
+
+  /* get rid of spaces stuck in the string */
+  if (section_name_tok)
+    section_name_tok = strtok_r(section_name_tok, " \t", &buf);
+  if (key_name_tok)
+    key_name_tok = strtok_r(key_name_tok, " \t", &buf);
+  if (value_tok)
+    value_tok = strtok_r(value_tok, " \t", &buf);
+
+  if (section_name_tok)
+    {
+      if (!(ptr = strdup(section_name_tok)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+      *section_name = ptr;
+    }
+  if (key_name_tok)
+    {
+      if (!(ptr = strdup(key_name_tok)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+      *key_name = ptr;
+    }
+  if (value_tok)
+    {
+      if (!(ptr = strdup(value_tok)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+      *value = ptr;
+    }
+
+  rv = 0;
+ cleanup:
+  if (str_temp)
+    free(str_temp);
+  if (rv < 0)
+    {
+      if (*section_name)
+        {
+          free(*section_name);
+          *section_name = NULL;
+        }
+      if (*key_name)
+        {
+          free(*key_name);
+          *key_name = NULL;
+        }
+      if (*value)
+        {
+          free(*value);
+          *value = NULL;
+        }
+    }
+  return rv;
+}
+
+int 
 config_keyinput_append(struct config_keyinput **keyinputs,
                        struct config_keyinput *keyinput)
 {
