@@ -26,6 +26,8 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 
+#include "config-common.h"
+
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT                  0x01
 #define BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
 #define BMC_DO_NOT_CHECKOUT                             0x04
@@ -56,11 +58,6 @@ typedef bmc_diff_t (*Keyvalue_Diff) (bmc_config_state_data_t *state_data,
                                      const struct section *sect,
                                      const struct keyvalue *kv);
 
-/* validate procedure finds if value is suitable to be set as kv->value */
-typedef bmc_validate_t (*Keyvalue_Validate) (bmc_config_state_data_t *state_data,
-                                             const struct section *sect,
-                                             const char *value);
-
 struct keyvalue {
   struct keyvalue *next;
   const char *key;
@@ -70,7 +67,7 @@ struct keyvalue {
   Keyvalue_Checkout checkout;
   Keyvalue_Commit commit;
   Keyvalue_Diff diff;
-  Keyvalue_Validate validate;
+  Key_Validate validate;
 };
 
 struct section * bmc_config_sections_list_create (bmc_config_state_data_t *state_data);
@@ -95,7 +92,7 @@ int bmc_config_section_add_keyvalue (bmc_config_state_data_t *state_data,
                                      Keyvalue_Checkout checkout,
                                      Keyvalue_Commit commit,
                                      Keyvalue_Diff diff,
-                                     Keyvalue_Validate validate);
+                                     Key_Validate validate);
 
 struct keyvalue * bmc_config_section_find_keyvalue (bmc_config_state_data_t *state_data,
                                                     const char *section_name,

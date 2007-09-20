@@ -16,6 +16,9 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 int
 bmc_get_num_users (bmc_config_state_data_t *state_data)
 {
@@ -117,25 +120,25 @@ username_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_validate_t
-username_validate (bmc_config_state_data_t *state_data,
-		   const struct section *sect,
+static config_validate_t
+username_validate (const char *section_name,
+                   const char *key_name,
 		   const char *value)
 {
   uint8_t userid;
-  userid = atoi (sect->section_name + strlen ("User"));
+  userid = atoi (section_name + strlen ("User"));
 
   if (userid == 1) 
     {
       if (!value || same (value, "null") || same (value, "anonymous"))
-        return BMC_VALIDATE_VALID_VALUE;
+        return CONFIG_VALIDATE_VALID_VALUE;
       else
-        return BMC_VALIDATE_INVALID_VALUE;
+        return CONFIG_VALIDATE_INVALID_VALUE;
     } 
 
   if (!value || strlen (value) > IPMI_MAX_USER_NAME_LENGTH)
-    return BMC_VALIDATE_INVALID_VALUE;
-  return BMC_VALIDATE_VALID_VALUE;
+    return CONFIG_VALIDATE_INVALID_VALUE;
+  return CONFIG_VALIDATE_VALID_VALUE;
 }
 
 /* enable_user */
@@ -314,14 +317,14 @@ password_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_validate_t
-password_validate (bmc_config_state_data_t *state_data,
-		   const struct section *sect,
+static config_validate_t
+password_validate (const char *section_name,
+                   const char *key_name,
 		   const char *value)
 {
   if (strlen (value) <= IPMI_1_5_MAX_PASSWORD_LENGTH)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
 /* password20 */
@@ -391,14 +394,14 @@ password20_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_validate_t
-password20_validate (bmc_config_state_data_t *state_data,
-		     const struct section *sect,
+static config_validate_t
+password20_validate (const char *section_name,
+                     const char *key_name,
 		     const char *value)
 {
   if (strlen (value) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
-    return BMC_VALIDATE_VALID_VALUE;
-  return BMC_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
 /* lan_enable_ipmi_msgs */
@@ -1729,7 +1732,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        enable_user_checkout,
                                        enable_user_commit,
                                        enable_user_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1762,7 +1765,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        lan_enable_ipmi_msgs_checkout,
                                        lan_enable_ipmi_msgs_commit,
                                        lan_enable_ipmi_msgs_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1773,7 +1776,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        lan_enable_link_auth_checkout,
                                        lan_enable_link_auth_commit,
                                        lan_enable_link_auth_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1784,7 +1787,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        lan_enable_restricted_to_callback_checkout,
                                        lan_enable_restricted_to_callback_commit,
                                        lan_enable_restricted_to_callback_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
@@ -1796,7 +1799,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        lan_enable_restricted_to_callback_checkout,
                                        lan_enable_restricted_to_callback_commit,
                                        lan_enable_restricted_to_callback_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1818,7 +1821,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        lan_session_limit_checkout,
                                        lan_session_limit_commit,
                                        lan_session_limit_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1829,7 +1832,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        sol_payload_access_checkout,
                                        sol_payload_access_commit,
                                        sol_payload_access_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1840,7 +1843,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        serial_enable_ipmi_msgs_checkout,
                                        serial_enable_ipmi_msgs_commit,
                                        serial_enable_ipmi_msgs_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1851,7 +1854,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        serial_enable_link_auth_checkout,
                                        serial_enable_link_auth_commit,
                                        serial_enable_link_auth_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1862,7 +1865,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        serial_enable_restricted_to_callback_checkout,
                                        serial_enable_restricted_to_callback_commit,
                                        serial_enable_restricted_to_callback_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
@@ -1874,7 +1877,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        serial_enable_restricted_to_callback_checkout,
                                        serial_enable_restricted_to_callback_commit,
                                        serial_enable_restricted_to_callback_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1896,7 +1899,7 @@ bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                        serial_session_limit_checkout,
                                        serial_session_limit_commit,
                                        serial_session_limit_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   return user_section;

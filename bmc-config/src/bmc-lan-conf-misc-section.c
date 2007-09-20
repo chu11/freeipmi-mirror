@@ -16,6 +16,9 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 static bmc_err_t
 enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
 				 const struct section *sect,
@@ -297,7 +300,7 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                                        enable_gratuitous_arps_checkout,
                                        enable_gratuitous_arps_commit,
                                        enable_gratuitous_arps_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -308,7 +311,7 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                                        enable_arp_response_checkout,
                                        enable_arp_response_commit,
                                        enable_arp_response_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -319,7 +322,7 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                                        gratuitous_arp_interval_checkout,
                                        gratuitous_arp_interval_commit,
                                        gratuitous_arp_interval_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
   return lan_conf_misc_section;
 

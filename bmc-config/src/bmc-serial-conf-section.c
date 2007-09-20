@@ -16,6 +16,9 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 static bmc_err_t
 serial_conf_checkout (bmc_config_state_data_t *state_data,
 		      uint8_t *basic_mode,
@@ -879,7 +882,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        enable_basic_mode_checkout,
                                        enable_basic_mode_commit,
                                        enable_basic_mode_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -890,7 +893,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        enable_ppp_mode_checkout,
                                        enable_ppp_mode_commit,
                                        enable_ppp_mode_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -901,7 +904,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        enable_terminal_mode_checkout,
                                        enable_terminal_mode_commit,
                                        enable_terminal_mode_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -923,7 +926,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        page_blackout_interval_checkout,
                                        page_blackout_interval_commit,
                                        page_blackout_interval_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -934,7 +937,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        call_retry_interval_checkout,
                                        call_retry_interval_commit,
                                        call_retry_interval_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
@@ -946,7 +949,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        call_retry_interval_checkout,
                                        call_retry_interval_commit,
                                        call_retry_interval_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -957,7 +960,7 @@ bmc_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        enable_dtr_hangup_checkout,
                                        enable_dtr_hangup_commit,
                                        enable_dtr_hangup_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

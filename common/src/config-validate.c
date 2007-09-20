@@ -21,6 +21,8 @@ config_yes_no_validate(const char *section_name,
                        const char *key_name,
                        const char *value)
 {
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   if (!strcasecmp(value, "yes") || !strcasecmp(value, "no"))
@@ -54,6 +56,8 @@ config_number_range_three_bits(const char *section_name,
                                const char *key_name,
                                const char *value)
 {
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   return _number_range(value, 0, 7);
@@ -64,6 +68,8 @@ config_number_range_four_bits(const char *section_name,
                               const char *key_name,
                               const char *value)
 {
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   return _number_range(value, 0, 15);
@@ -74,9 +80,23 @@ config_number_range_seven_bits(const char *section_name,
                                const char *key_name,
                                const char *value)
 {
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   return _number_range(value, 0, 127);
+}
+
+config_validate_t 
+config_number_range_twelve_bits(const char *section_name, 
+                                const char *key_name,
+                                const char *value)
+{
+  assert(section_name);
+  assert(key_name);
+  assert(value);
+
+  return _number_range(value, 0, 4095);
 }
 
 config_validate_t 
@@ -84,6 +104,8 @@ config_number_range_one_byte(const char *section_name,
                              const char *key_name,
                              const char *value)
 {
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   return _number_range(value, 0, 255);
@@ -94,6 +116,8 @@ config_number_range_one_byte_non_zero(const char *section_name,
                                       const char *key_name,
                                       const char *value)
 {
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   return _number_range(value, 1, 255);
@@ -104,6 +128,8 @@ config_number_range_two_bytes(const char *section_name,
                               const char *key_name,
                               const char *value)
 {
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   return _number_range(value, 0, 65535);
@@ -116,6 +142,8 @@ config_ip_address_validate(const char *section_name,
 {
   struct in_addr a;
 
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   if (inet_aton(value, &a))
@@ -130,6 +158,8 @@ config_mac_address_validate(const char *section_name,
 {
   unsigned int foo;
 
+  assert(section_name);
+  assert(key_name);
   assert(value);
 
   if (sscanf(value,

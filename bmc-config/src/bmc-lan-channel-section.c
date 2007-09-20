@@ -16,6 +16,9 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 /* volatile */
 
 static bmc_err_t
@@ -1088,7 +1091,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        volatile_enable_user_level_auth_checkout,
                                        volatile_enable_user_level_auth_commit,
                                        volatile_enable_user_level_auth_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1099,7 +1102,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        volatile_enable_per_msg_auth_checkout,
                                        volatile_enable_per_msg_auth_commit,
                                        volatile_enable_per_msg_auth_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1110,7 +1113,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        volatile_enable_pef_alerting_checkout,
                                        volatile_enable_pef_alerting_commit,
                                        volatile_enable_pef_alerting_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1143,7 +1146,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        non_volatile_enable_user_level_auth_checkout,
                                        non_volatile_enable_user_level_auth_commit,
                                        non_volatile_enable_user_level_auth_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1154,7 +1157,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        non_volatile_enable_per_msg_auth_checkout,
                                        non_volatile_enable_per_msg_auth_commit,
                                        non_volatile_enable_per_msg_auth_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1165,7 +1168,7 @@ bmc_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        non_volatile_enable_pef_alerting_checkout,
                                        non_volatile_enable_pef_alerting_commit,
                                        non_volatile_enable_pef_alerting_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,

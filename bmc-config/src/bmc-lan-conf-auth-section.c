@@ -15,6 +15,9 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 struct bmc_authentication_level {
   uint8_t callback_level_none;
   uint8_t callback_level_md2;
@@ -1365,7 +1368,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        callback_none_checkout,
                                        callback_none_commit,
                                        callback_none_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1376,7 +1379,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        callback_md2_checkout,
                                        callback_md2_commit,
                                        callback_md2_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1387,7 +1390,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        callback_md5_checkout,
                                        callback_md5_commit,
                                        callback_md5_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1398,7 +1401,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        callback_straight_password_checkout,
                                        callback_straight_password_commit,
                                        callback_straight_password_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1409,7 +1412,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        callback_oem_proprietary_checkout,
                                        callback_oem_proprietary_commit,
                                        callback_oem_proprietary_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1420,7 +1423,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        user_none_checkout,
                                        user_none_commit,
                                        user_none_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1431,7 +1434,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        user_md2_checkout,
                                        user_md2_commit,
                                        user_md2_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1442,7 +1445,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        user_md5_checkout,
                                        user_md5_commit,
                                        user_md5_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1453,7 +1456,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        user_straight_password_checkout,
                                        user_straight_password_commit,
                                        user_straight_password_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1464,7 +1467,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        user_oem_proprietary_checkout,
                                        user_oem_proprietary_commit,
                                        user_oem_proprietary_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1475,7 +1478,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        operator_none_checkout,
                                        operator_none_commit,
                                        operator_none_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1486,7 +1489,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        operator_md2_checkout,
                                        operator_md2_commit,
                                        operator_md2_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1497,7 +1500,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        operator_md5_checkout,
                                        operator_md5_commit,
                                        operator_md5_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1508,7 +1511,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        operator_straight_password_checkout,
                                        operator_straight_password_commit,
                                        operator_straight_password_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1519,7 +1522,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        operator_oem_proprietary_checkout,
                                        operator_oem_proprietary_commit,
                                        operator_oem_proprietary_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1530,7 +1533,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        admin_none_checkout,
                                        admin_none_commit,
                                        admin_none_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1541,7 +1544,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        admin_md2_checkout,
                                        admin_md2_commit,
                                        admin_md2_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1552,7 +1555,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        admin_md5_checkout,
                                        admin_md5_commit,
                                        admin_md5_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1563,7 +1566,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        admin_straight_password_checkout,
                                        admin_straight_password_commit,
                                        admin_straight_password_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1574,7 +1577,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        admin_oem_proprietary_checkout,
                                        admin_oem_proprietary_commit,
                                        admin_oem_proprietary_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1585,7 +1588,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        oem_none_checkout,
                                        oem_none_commit,
                                        oem_none_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1596,7 +1599,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        oem_md2_checkout,
                                        oem_md2_commit,
                                        oem_md2_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1607,7 +1610,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        oem_md5_checkout,
                                        oem_md5_commit,
                                        oem_md5_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1618,7 +1621,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        oem_straight_password_checkout,
                                        oem_straight_password_commit,
                                        oem_straight_password_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1629,7 +1632,7 @@ bmc_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                        oem_oem_proprietary_checkout,
                                        oem_oem_proprietary_commit,
                                        oem_oem_proprietary_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   return lan_conf_auth_section;

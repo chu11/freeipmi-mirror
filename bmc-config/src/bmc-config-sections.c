@@ -230,7 +230,7 @@ bmc_config_section_add_keyvalue (bmc_config_state_data_t *state_data,
                                  Keyvalue_Checkout checkout,
                                  Keyvalue_Commit commit,
                                  Keyvalue_Diff diff,
-                                 Keyvalue_Validate validate)
+                                 Key_Validate validate)
 {
   struct keyvalue *kv;
 
@@ -351,12 +351,12 @@ bmc_config_section_set_value (bmc_config_state_data_t *state_data,
 
   if (kv->validate)
     {
-      bmc_validate_t v;
+      config_validate_t v;
 
-      if ((v = kv->validate (state_data, sect, value)) == BMC_VALIDATE_FATAL_ERROR)
+      if ((v = kv->validate (section_name, key_name, value)) == CONFIG_VALIDATE_FATAL_ERROR)
         return -1;
       
-      if (v == BMC_VALIDATE_INVALID_VALUE)
+      if (v == CONFIG_VALIDATE_INVALID_VALUE)
         {
           fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                    value, key_name);
@@ -393,12 +393,12 @@ bmc_config_section_commit_value (bmc_config_state_data_t *state_data,
 
   if (kv->validate)
     {
-      bmc_validate_t v;
+      config_validate_t v;
 
-      if ((v = kv->validate (state_data, sect, value)) == BMC_VALIDATE_FATAL_ERROR)
+      if ((v = kv->validate (section_name, key_name, value)) == CONFIG_VALIDATE_FATAL_ERROR)
         return BMC_ERR_FATAL_ERROR;
       
-      if (v == BMC_VALIDATE_INVALID_VALUE)
+      if (v == CONFIG_VALIDATE_INVALID_VALUE)
         {
           fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                    value, key_name);
@@ -435,12 +435,12 @@ bmc_config_section_diff_value (bmc_config_state_data_t *state_data,
 
   if (kv->validate)
     {
-      bmc_validate_t v;
+      config_validate_t v;
 
-      if ((v = kv->validate (state_data, sect, value)) == BMC_VALIDATE_FATAL_ERROR)
+      if ((v = kv->validate (section_name, key_name, value)) == CONFIG_VALIDATE_FATAL_ERROR)
         return BMC_ERR_FATAL_ERROR;
       
-      if (v == BMC_VALIDATE_INVALID_VALUE)
+      if (v == CONFIG_VALIDATE_INVALID_VALUE)
         {
           fprintf (stderr, "Invalid value `%s' for key `%s'\n",
                    value, key_name);

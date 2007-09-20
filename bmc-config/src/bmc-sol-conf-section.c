@@ -16,6 +16,9 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 static bmc_err_t
 sol_auth_checkout (bmc_config_state_data_t *state_data,
 		   uint8_t *sol_privilege_level,
@@ -985,7 +988,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        enable_sol_checkout,
                                        enable_sol_commit,
                                        enable_sol_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1007,7 +1010,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        force_sol_payload_authentication_checkout,
                                        force_sol_payload_authentication_commit,
                                        force_sol_payload_authentication_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1018,7 +1021,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        force_sol_payload_encryption_checkout,
                                        force_sol_payload_encryption_commit,
                                        force_sol_payload_encryption_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1029,7 +1032,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        character_accumulate_interval_checkout,
                                        character_accumulate_interval_commit,
                                        character_accumulate_interval_diff,
-                                       number_range_one_byte_non_zero) < 0)
+                                       config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1040,7 +1043,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        character_send_threshold_checkout,
                                        character_send_threshold_commit,
                                        character_send_threshold_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1051,7 +1054,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        sol_retry_count_checkout,
                                        sol_retry_count_commit,
                                        sol_retry_count_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1062,7 +1065,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        sol_retry_interval_checkout,
                                        sol_retry_interval_commit,
                                        sol_retry_interval_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -1095,7 +1098,7 @@ bmc_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        port_checkout,
                                        port_commit,
                                        port_diff,
-                                       number_range_two_bytes) < 0)
+                                       config_number_range_two_bytes) < 0)
     goto cleanup;
 
   return sol_conf_section;

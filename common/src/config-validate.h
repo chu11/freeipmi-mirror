@@ -21,6 +21,10 @@ config_validate_t config_number_range_seven_bits(const char *section_name,
                                                  const char *key_name,
                                                  const char *value);
 
+config_validate_t config_number_range_twelve_bits(const char *section_name, 
+                                                  const char *key_name,
+                                                  const char *value);
+
 config_validate_t config_number_range_one_byte(const char *section_name, 
                                                const char *key_name,
                                                const char *value);

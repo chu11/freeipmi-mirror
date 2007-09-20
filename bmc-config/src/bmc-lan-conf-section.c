@@ -17,6 +17,9 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
+#include "config-common.h"
+#include "config-validate.h"
+
 #define BMC_MAXIPADDRLEN 16
 #define BMC_MAXMACADDRLEN 24
 
@@ -615,26 +618,6 @@ vlan_id_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_validate_t
-vlan_id_validate (bmc_config_state_data_t *state_data,
-		  const struct section *sect,
-		  const char *value)
-{
-  char *endptr;
-  long int num;
-
-  num = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  /* Vlan ids are 12 bits */
-  if (num < 0 || num > 4095)
-    return BMC_VALIDATE_INVALID_VALUE;
-
-  return BMC_VALIDATE_VALID_VALUE;
-}
-
 static bmc_err_t
 vlan_id_enable_checkout (bmc_config_state_data_t *state_data,
 			 const struct section *sect,
@@ -830,7 +813,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        ip_address_checkout,
                                        ip_address_commit,
                                        ip_address_diff,
-                                       ip_address_validate) < 0) 
+                                       config_ip_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -841,7 +824,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        mac_address_checkout,
                                        mac_address_commit,
                                        mac_address_diff,
-                                       mac_address_validate) < 0) 
+                                       config_mac_address_validate) < 0) 
     goto cleanup;
 
   /* TODO: checking valid netmask is not same as checking valid IP */
@@ -853,7 +836,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        subnet_mask_checkout,
                                        subnet_mask_commit,
                                        subnet_mask_diff,
-                                       ip_address_validate) < 0) 
+                                       config_ip_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -864,7 +847,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        default_gateway_address_checkout,
                                        default_gateway_address_commit,
                                        default_gateway_address_diff,
-                                       ip_address_validate) < 0) 
+                                       config_ip_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -875,7 +858,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        default_gateway_mac_address_checkout,
                                        default_gateway_mac_address_commit,
                                        default_gateway_mac_address_diff,
-                                       mac_address_validate) < 0) 
+                                       config_mac_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -886,7 +869,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        backup_gateway_address_checkout,
                                        backup_gateway_address_commit,
                                        backup_gateway_address_diff,
-                                       ip_address_validate) < 0) 
+                                       config_ip_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -897,7 +880,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        backup_gateway_mac_address_checkout,
                                        backup_gateway_mac_address_commit,
                                        backup_gateway_mac_address_diff,
-                                       mac_address_validate) < 0) 
+                                       config_mac_address_validate) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -908,7 +891,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        vlan_id_checkout,
                                        vlan_id_commit,
                                        vlan_id_diff,
-                                       vlan_id_validate) < 0) 
+                                       config_number_range_twelve_bits) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -919,7 +902,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        vlan_id_enable_checkout,
                                        vlan_id_enable_commit,
                                        vlan_id_enable_diff,
-                                       yes_no_validate) < 0) 
+                                       config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -930,7 +913,7 @@ bmc_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        vlan_priority_checkout,
                                        vlan_priority_commit,
                                        vlan_priority_diff,
-                                       number_range_one_byte) < 0) 
+                                       config_number_range_one_byte) < 0) 
     goto cleanup;
 
   return lan_conf_section;
