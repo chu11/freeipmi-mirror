@@ -108,7 +108,7 @@ bmc_misc_section_get (bmc_config_state_data_t *state_data)
                                        misc_section,
                                        "Power_Restore_Policy",
                                        "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                                       BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                       CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                                        power_restore_policy_checkout,
                                        power_restore_policy_commit,
                                        power_restore_policy_diff,

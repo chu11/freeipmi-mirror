@@ -469,7 +469,7 @@ bmc_config_sections_list (bmc_config_state_data_t *state_data)
 
   while (sect)
     {
-      if (!(sect->flags & BMC_DO_NOT_CHECKOUT))
+      if (!(sect->flags & CONFIG_DO_NOT_CHECKOUT))
 	printf("%s\n", sect->section_name); 
       sect = sect->next;
     }

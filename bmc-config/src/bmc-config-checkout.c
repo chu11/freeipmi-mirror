@@ -112,7 +112,7 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
   config_err_t ret = CONFIG_ERR_SUCCESS;
   config_err_t this_ret;
 
-  if (sect->flags & BMC_DO_NOT_CHECKOUT)
+  if (sect->flags & CONFIG_DO_NOT_CHECKOUT)
     return ret;
 
   if (sect->section_comment_section_name
@@ -140,7 +140,7 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
        * 0.2.0 bmc-config, which have several options with typoed
        * names.
        */
-      if (kv->flags & BMC_DO_NOT_CHECKOUT)
+      if (kv->flags & CONFIG_DO_NOT_CHECKOUT)
         {
           kv = kv->next;
           continue;
@@ -177,9 +177,9 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
            * Some other keys may or may not have a value, depending on
            * the IPMI version or the implementation.
            */
-          if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT)
+          if (kv->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT)
             key_len = fprintf(fp, "\t## %s", kv->key);
-          else if (kv->flags & BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
+          else if (kv->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
             {
               if (kv->value && strlen(kv->value))
                 key_len = fprintf (fp, "\t%s", kv->key);

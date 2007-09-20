@@ -28,10 +28,6 @@
 
 #include "config-common.h"
 
-#define BMC_CHECKOUT_KEY_COMMENTED_OUT                  0x01
-#define BMC_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
-#define BMC_DO_NOT_CHECKOUT                             0x04
-
 struct section {
   struct section *next;
   char *section_name;

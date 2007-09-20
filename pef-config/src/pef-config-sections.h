@@ -6,10 +6,6 @@
 
 #include "config-common.h"
 
-#define PEF_CHECKOUT_KEY_COMMENTED_OUT                  0x1
-#define PEF_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x2
-#define PEF_DO_NOT_CHECKOUT                             0x4
-
 struct section {
   struct section *next;
   char *section_name;
