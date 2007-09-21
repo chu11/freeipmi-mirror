@@ -1210,12 +1210,21 @@ _pef_conf_checkout(const char *section_name,
                    void *arg)
 {
   bmc_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
 
   assert(section_name);
   assert(keyvalues);
   assert(arg);
 
   state_data = (bmc_config_state_data_t *)arg;
+
+  kv = keyvalues;
+  while (kv)
+    {
+      assert(!kv->value_output);
+
+      kv = kv->next;
+    }
 }
 
 static config_err_t
@@ -1225,12 +1234,21 @@ _pef_conf_commit(const char *section_name,
                  void *arg)
 {
   bmc_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
 
   assert(section_name);
   assert(keyvalues);
   assert(arg);
 
   state_data = (bmc_config_state_data_t *)arg;
+
+  kv = keyvalues;
+  while (kv)
+    {
+      assert(kv->value_input);
+
+      kv = kv->next;
+    }
 }
 
 struct config_section *

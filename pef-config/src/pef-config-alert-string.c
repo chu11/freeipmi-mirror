@@ -420,6 +420,7 @@ _alert_string_checkout(const char *section_name,
                        void *arg)
 {
   pef_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
 
   assert(section_name);
   assert(keyvalues);
@@ -427,7 +428,13 @@ _alert_string_checkout(const char *section_name,
 
   state_data = (pef_config_state_data_t *)arg;
 
+  kv = keyvalues;
+  while (kv)
+    {
+      assert(!kv->value_output);
 
+      kv = kv->next;
+    }
 }
 
 static config_err_t
@@ -437,12 +444,21 @@ _alert_string_commit(const char *section_name,
                      void *arg)
 {
   pef_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
 
   assert(section_name);
   assert(keyvalues);
   assert(arg);
 
   state_data = (pef_config_state_data_t *)arg;
+
+  kv = keyvalues;
+  while (kv)
+    {
+      assert(kv->value_input);
+
+      kv = kv->next;
+    }
 }
 
 struct config_section *
