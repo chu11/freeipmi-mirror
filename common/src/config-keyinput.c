@@ -88,6 +88,16 @@ config_keyinput_parse_string(char *str,
         }
       *value = ptr;
     }
+  else
+    {
+      /* value can be empty */
+      if (!(ptr = strdup("")))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+      *value = ptr;
+    }
 
   rv = 0;
  cleanup:
