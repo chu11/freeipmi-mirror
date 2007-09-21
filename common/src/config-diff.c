@@ -60,7 +60,8 @@ config_diff(struct config_section *sections,
   s = sections;
   while (s)
     {
-      if ((ret = config_checkout_section(s, 
+      if ((ret = config_checkout_section(s,
+                                         0, 
                                          NULL, 
                                          debug, 
                                          arg)) != CONFIG_ERR_SUCCESS)
