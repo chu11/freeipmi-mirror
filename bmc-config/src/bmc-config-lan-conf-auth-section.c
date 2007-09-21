@@ -296,8 +296,8 @@ _lan_conf_auth_checkout(const char *section_name,
                         void *arg)
 {
   bmc_config_state_data_t *state_data;
-  struct config_keyvalue *kv;
   struct authentication_type_enables ate;
+  config_err_t rv = CONFIG_ERR_SUCCESS;
   config_err_t ret;
 
   assert(section_name);
@@ -310,90 +310,97 @@ _lan_conf_auth_checkout(const char *section_name,
 
   if ((ret = _get_lan_conf_authentication_type_enables(state_data, 
                                                        debug,
-                                                       &ate)) != CONFIG_ERR_SUCCESS)
-    return ret;
+                                                       &ate)) == CONFIG_ERR_FATAL_ERROR)
+    return CONFIG_ERR_FATAL_ERROR;
 
-  kv = keyvalues;
-  while (kv)
+  if (ret == CONFIG_ERR_SUCCESS)
     {
-      uint8_t flag;
-
-      assert(!kv->value_output);
-
-      if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_NONE))
-        flag = ate.callback_level_none;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD2))
-        flag = ate.callback_level_md2;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD5))
-        flag = ate.callback_level_md5;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_STRAIGHT_PASSWORD))
-        flag = ate.callback_level_straight_password;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_OEM_PROPRIETARY))
-        flag = ate.callback_level_oem_proprietary;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_NONE))
-        flag = ate.user_level_none;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD2))
-        flag = ate.user_level_md2;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD5))
-        flag = ate.user_level_md5;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_STRAIGHT_PASSWORD))
-        flag = ate.user_level_straight_password;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_OEM_PROPRIETARY))
-        flag = ate.user_level_oem_proprietary;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_NONE))
-        flag = ate.operator_level_none;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD2))
-        flag = ate.operator_level_md2;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD5))
-        flag = ate.operator_level_md5;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_STRAIGHT_PASSWORD))
-        flag = ate.operator_level_straight_password;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_OEM_PROPRIETARY))
-        flag = ate.operator_level_oem_proprietary;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_NONE))
-        flag = ate.admin_level_none;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD2))
-        flag = ate.admin_level_md2;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD5))
-        flag = ate.admin_level_md5;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_STRAIGHT_PASSWORD))
-        flag = ate.admin_level_straight_password;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_OEM_PROPRIETARY))
-        flag = ate.admin_level_oem_proprietary;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_NONE))
-        flag = ate.oem_level_none;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD2))
-        flag = ate.oem_level_md2;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD5))
-        flag = ate.oem_level_md5;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_STRAIGHT_PASSWORD))
-        flag = ate.oem_level_straight_password;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
-        flag = ate.oem_level_oem_proprietary;
-      else
+      struct config_keyvalue *kv;
+  
+      kv = keyvalues;
+      while (kv)
         {
-          if (debug)
-            fprintf(stderr, 
-                    "ERROR: Unknown key '%s' in '%s'\n",
-                    kv->key->key_name,
-                    section_name);
-          goto next_loop;
-        }
-
-      if (config_section_update_keyvalue(kv,
-                                         NULL,
-                                         flag ? "Yes" : "No") < 0)
-        {
-          if (debug)
-            fprintf(stderr, "config_section_update_keyvalue error\n");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+          uint8_t flag;
           
-    next_loop:
-      kv = kv->next;
-    }
+          assert(!kv->value_output);
 
-  return CONFIG_ERR_SUCCESS;
+          if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_NONE))
+            flag = ate.callback_level_none;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD2))
+            flag = ate.callback_level_md2;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD5))
+            flag = ate.callback_level_md5;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_STRAIGHT_PASSWORD))
+            flag = ate.callback_level_straight_password;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_OEM_PROPRIETARY))
+            flag = ate.callback_level_oem_proprietary;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_NONE))
+            flag = ate.user_level_none;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD2))
+            flag = ate.user_level_md2;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD5))
+            flag = ate.user_level_md5;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_STRAIGHT_PASSWORD))
+            flag = ate.user_level_straight_password;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_OEM_PROPRIETARY))
+            flag = ate.user_level_oem_proprietary;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_NONE))
+            flag = ate.operator_level_none;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD2))
+            flag = ate.operator_level_md2;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD5))
+            flag = ate.operator_level_md5;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_STRAIGHT_PASSWORD))
+            flag = ate.operator_level_straight_password;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_OEM_PROPRIETARY))
+            flag = ate.operator_level_oem_proprietary;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_NONE))
+            flag = ate.admin_level_none;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD2))
+            flag = ate.admin_level_md2;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD5))
+            flag = ate.admin_level_md5;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_STRAIGHT_PASSWORD))
+            flag = ate.admin_level_straight_password;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_OEM_PROPRIETARY))
+            flag = ate.admin_level_oem_proprietary;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_NONE))
+            flag = ate.oem_level_none;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD2))
+            flag = ate.oem_level_md2;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD5))
+            flag = ate.oem_level_md5;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_STRAIGHT_PASSWORD))
+            flag = ate.oem_level_straight_password;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
+            flag = ate.oem_level_oem_proprietary;
+          else
+            {
+              if (debug)
+                fprintf(stderr, 
+                        "ERROR: Unknown key '%s' in '%s'\n",
+                        kv->key->key_name,
+                        section_name);
+              goto next_loop;
+            }
+
+          if (config_section_update_keyvalue(kv,
+                                             NULL,
+                                             flag ? "Yes" : "No") < 0)
+            {
+              if (debug)
+                fprintf(stderr, "config_section_update_keyvalue error\n");
+              return CONFIG_ERR_FATAL_ERROR;
+            }
+          
+        next_loop:
+          kv = kv->next;
+        }
+    }
+  else 
+    rv = ret;
+
+  return rv;
 }
 
 static config_err_t
@@ -403,8 +410,8 @@ _lan_conf_auth_commit(const char *section_name,
                       void *arg)
 {
   bmc_config_state_data_t *state_data;
-  struct config_keyvalue *kv;
   struct authentication_type_enables ate;
+  config_err_t rv = CONFIG_ERR_SUCCESS;
   config_err_t ret;
 
   assert(section_name);
@@ -417,86 +424,96 @@ _lan_conf_auth_commit(const char *section_name,
 
   if ((ret = _get_lan_conf_authentication_type_enables(state_data, 
                                                        debug,
-                                                       &ate)) != CONFIG_ERR_SUCCESS)
-    return ret;
+                                                       &ate)) == CONFIG_ERR_FATAL_ERROR)
+    return CONFIG_ERR_FATAL_ERROR;
 
-  kv = keyvalues;
-  while (kv)
+  if (ret == CONFIG_ERR_SUCCESS)
     {
-      uint8_t flag;
+      struct config_keyvalue *kv;
 
-      assert(kv->value_input);
-
-      flag = same (kv->value_input, "yes");
-
-      if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_NONE))
-        ate.callback_level_none = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD2))
-        ate.callback_level_md2 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD5))
-        ate.callback_level_md5 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_STRAIGHT_PASSWORD))
-        ate.callback_level_straight_password = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_OEM_PROPRIETARY))
-        ate.callback_level_oem_proprietary = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_NONE))
-        ate.user_level_none = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD2))
-        ate.user_level_md2 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD5))
-        ate.user_level_md5 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_STRAIGHT_PASSWORD))
-        ate.user_level_straight_password = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_OEM_PROPRIETARY))
-        ate.user_level_oem_proprietary = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_NONE))
-        ate.operator_level_none = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD2))
-        ate.operator_level_md2 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD5))
-        ate.operator_level_md5 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_STRAIGHT_PASSWORD))
-        ate.operator_level_straight_password = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_OEM_PROPRIETARY))
-        ate.operator_level_oem_proprietary = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_NONE))
-        ate.admin_level_none = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD2))
-        ate.admin_level_md2 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD5))
-        ate.admin_level_md5 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_STRAIGHT_PASSWORD))
-        ate.admin_level_straight_password = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_OEM_PROPRIETARY))
-        ate.admin_level_oem_proprietary = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_NONE))
-        ate.oem_level_none = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD2))
-        ate.oem_level_md2 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD5))
-        ate.oem_level_md5 = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_STRAIGHT_PASSWORD))
-        ate.oem_level_straight_password = flag;
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
-        ate.oem_level_oem_proprietary = flag;
-      else
+      kv = keyvalues;
+      while (kv)
         {
-          if (debug)
-            fprintf(stderr, 
-                    "ERROR: Unknown key '%s' in '%s'\n",
-                    kv->key->key_name,
-                    section_name);
-        }
+          uint8_t flag;
           
-      kv = kv->next;
+          assert(kv->value_input);
+          
+          flag = same (kv->value_input, "yes");
+          
+          if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_NONE))
+            ate.callback_level_none = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD2))
+            ate.callback_level_md2 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD5))
+            ate.callback_level_md5 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_STRAIGHT_PASSWORD))
+            ate.callback_level_straight_password = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_OEM_PROPRIETARY))
+            ate.callback_level_oem_proprietary = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_NONE))
+            ate.user_level_none = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD2))
+            ate.user_level_md2 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD5))
+            ate.user_level_md5 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_STRAIGHT_PASSWORD))
+            ate.user_level_straight_password = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_OEM_PROPRIETARY))
+            ate.user_level_oem_proprietary = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_NONE))
+            ate.operator_level_none = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD2))
+            ate.operator_level_md2 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD5))
+            ate.operator_level_md5 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_STRAIGHT_PASSWORD))
+            ate.operator_level_straight_password = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_OEM_PROPRIETARY))
+            ate.operator_level_oem_proprietary = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_NONE))
+            ate.admin_level_none = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD2))
+            ate.admin_level_md2 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD5))
+            ate.admin_level_md5 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_STRAIGHT_PASSWORD))
+            ate.admin_level_straight_password = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_OEM_PROPRIETARY))
+            ate.admin_level_oem_proprietary = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_NONE))
+            ate.oem_level_none = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD2))
+            ate.oem_level_md2 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD5))
+            ate.oem_level_md5 = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_STRAIGHT_PASSWORD))
+            ate.oem_level_straight_password = flag;
+          else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
+            ate.oem_level_oem_proprietary = flag;
+          else
+            {
+              if (debug)
+                fprintf(stderr, 
+                    "ERROR: Unknown key '%s' in '%s'\n",
+                        kv->key->key_name,
+                        section_name);
+            }
+          
+          kv = kv->next;
+        }
+
+      if ((ret = _set_lan_conf_authentication_type_enables(state_data, 
+                                                           debug,
+                                                           &ate)) == CONFIG_ERR_FATAL_ERROR)
+        return CONFIG_ERR_FATAL_ERROR;
+
+      if (ret != CONFIG_ERR_SUCCESS)
+        rv = ret;
     }
+  else
+    rv = ret;
 
-  if ((ret = _set_lan_conf_authentication_type_enables(state_data, 
-                                                       debug,
-                                                       &ate)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return CONFIG_ERR_SUCCESS;
+  return rv;
 }
 
                  

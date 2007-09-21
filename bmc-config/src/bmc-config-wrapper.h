@@ -103,11 +103,6 @@ config_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data,
                                        uint8_t vlan_id_enable);
 config_err_t set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
                                              uint8_t vlan_priority);
-config_err_t set_bmc_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data, 
-                                                         uint8_t bmc_generated_gratuitous_arps,
-                                                         uint8_t bmc_generated_arp_responses);
-config_err_t set_bmc_lan_conf_gratuitous_arp_interval (bmc_config_state_data_t *state_data, 
-                                                       uint8_t gratuitous_arp_interval);
 config_err_t set_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
                                                      uint8_t access_mode, 
                                                      uint8_t user_level_authentication, 
@@ -249,12 +244,6 @@ config_err_t get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *s
 config_err_t get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
                                                           char *backup_gateway_mac_address,
                                                           unsigned int backup_gateway_mac_address_len);
-config_err_t get_bmc_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data, 
-                                                         uint8_t *gratuitous_arps, 
-                                                         uint8_t *arp_response);
-config_err_t get_bmc_lan_conf_gratuitous_arp_interval (bmc_config_state_data_t *state_data, 
-                                                       uint8_t *gratuitous_arp_interval);
-
 config_err_t get_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
                                                      uint8_t *access_mode, 
                                                      uint8_t *user_level_authentication, 

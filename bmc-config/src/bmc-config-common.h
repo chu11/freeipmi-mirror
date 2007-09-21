@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-config-common.h,v 1.8.2.2 2007-09-21 00:45:20 chu11 Exp $ 
+   $Id: bmc-config-common.h,v 1.8.2.3 2007-09-21 22:49:55 chu11 Exp $ 
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -20,6 +20,8 @@
 
 #ifndef _BMC_CONFIG_COMMON_H
 #define _BMC_CONFIG_COMMON_H
+
+#define BMC_CONFIG_BUFLEN 1024
 
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0

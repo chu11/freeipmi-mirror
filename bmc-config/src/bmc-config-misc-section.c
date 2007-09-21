@@ -93,6 +93,7 @@ _misc_section_checkout(const char *section_name,
 {
   bmc_config_state_data_t *state_data;
   struct config_keyvalue *kv;
+  config_err_t rv = CONFIG_ERR_SUCCESS;
   config_err_t ret;
   uint8_t power_restore_policy;
 
@@ -111,17 +112,21 @@ _misc_section_checkout(const char *section_name,
         {
           if ((ret = _get_bmc_power_restore_policy (state_data,
                                                     debug,
-                                                    &power_restore_policy)) != CONFIG_ERR_SUCCESS)
-            return ret;
-
-          if (config_section_update_keyvalue(kv,
-                                             NULL,
-                                             power_restore_policy_string(power_restore_policy)) < 0)
+                                                    &power_restore_policy)) == CONFIG_ERR_FATAL_ERROR)
+            return CONFIG_ERR_FATAL_ERROR;
+          if (ret == CONFIG_ERR_SUCCESS)
             {
-              if (debug)
-                fprintf(stderr, "config_section_update_keyvalue error\n");
-              return CONFIG_ERR_FATAL_ERROR;
+              if (config_section_update_keyvalue(kv,
+                                                 NULL,
+                                                 power_restore_policy_string(power_restore_policy)) < 0)
+                {
+                  if (debug)
+                    fprintf(stderr, "config_section_update_keyvalue error\n");
+                  return CONFIG_ERR_FATAL_ERROR;
+                }
             }
+          else
+            rv = ret;
         }
       else
         {
@@ -135,7 +140,7 @@ _misc_section_checkout(const char *section_name,
       kv = kv->next;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return rv;
 }
 
 static config_err_t
@@ -146,6 +151,7 @@ _misc_section_commit(const char *section_name,
 {
   bmc_config_state_data_t *state_data;
   struct config_keyvalue *kv;
+  config_err_t rv = CONFIG_ERR_SUCCESS;
   config_err_t ret;
   uint8_t power_restore_policy;
 
@@ -166,8 +172,10 @@ _misc_section_commit(const char *section_name,
 
           if ((ret = _set_bmc_power_restore_policy (state_data,
                                                     debug,
-                                                    power_restore_policy)) != CONFIG_ERR_SUCCESS)
-            return ret;
+                                                    power_restore_policy)) == CONFIG_ERR_FATAL_ERROR)
+            return CONFIG_ERR_FATAL_ERROR;
+          if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+            rv = ret;
         }
       else
         {
@@ -181,7 +189,7 @@ _misc_section_commit(const char *section_name,
       kv = kv->next;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  return rv;
 }
 
 struct config_section *

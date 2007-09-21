@@ -296,7 +296,6 @@ _rmcpplus_conf_privilege_checkout(const char *section_name,
                                   void *arg)
 {
   bmc_config_state_data_t *state_data;
-  struct config_keyvalue *kv;
   uint8_t cipher_suite_id_supported[CIPHER_SUITE_LEN];
   uint8_t cipher_suite_privilege[CIPHER_SUITE_LEN];
   unsigned int cipher_suite_entry_count;
@@ -315,58 +314,65 @@ _rmcpplus_conf_privilege_checkout(const char *section_name,
                                                       CIPHER_SUITE_LEN,
                                                       cipher_suite_privilege,
                                                       CIPHER_SUITE_LEN,
-                                                      &cipher_suite_entry_count)) != CONFIG_ERR_SUCCESS)
-    return ret;
+                                                      &cipher_suite_entry_count)) == CONFIG_ERR_FATAL_ERROR)
+    return CONFIG_ERR_FATAL_ERROR;
 
-  kv = keyvalues;
-  while (kv)
+  if (ret == CONFIG_ERR_SUCCESS)
     {
-      assert(!kv->value_output);
+      struct config_keyvalue *kv;
 
-      if (strstr(kv->key->key_name, KEY_NAME_CIPHER_SUITE_ID_PREFIX))
+      kv = keyvalues;
+      while (kv)
         {
-          uint8_t cipher_suite_id;
-          uint8_t privilege;
-          int id_found = 0;
-          int i;
+          assert(!kv->value_output);
 
-          cipher_suite_id = atoi(kv->key->key_name + strlen(KEY_NAME_CIPHER_SUITE_ID_PREFIX));
-
-          for (i = 0; i < cipher_suite_entry_count; i++)
+          if (strstr(kv->key->key_name, KEY_NAME_CIPHER_SUITE_ID_PREFIX))
             {
-              if (cipher_suite_id_supported[i] == cipher_suite_id)
-                {
-                  privilege = cipher_suite_privilege[cipher_suite_id];
-                  id_found++;
-                  break;
-                }
-            }
+              uint8_t cipher_suite_id;
+              uint8_t privilege;
+              int id_found = 0;
+              int i;
 
-          if (id_found)
-            {
-              if (config_section_update_keyvalue(kv,
-                                                 NULL,
-                                                 rmcpplus_privilege_string(privilege)) < 0)
+              cipher_suite_id = atoi(kv->key->key_name + strlen(KEY_NAME_CIPHER_SUITE_ID_PREFIX));
+
+              for (i = 0; i < cipher_suite_entry_count; i++)
                 {
-                  if (debug)
-                    fprintf(stderr, "config_section_update_keyvalue error\n");
-                  return CONFIG_ERR_FATAL_ERROR;
+                  if (cipher_suite_id_supported[i] == cipher_suite_id)
+                    {
+                      privilege = cipher_suite_privilege[cipher_suite_id];
+                      id_found++;
+                      break;
+                    }
                 }
+
+              if (id_found)
+                {
+                  if (config_section_update_keyvalue(kv,
+                                                     NULL,
+                                                     rmcpplus_privilege_string(privilege)) < 0)
+                    {
+                      if (debug)
+                        fprintf(stderr, "config_section_update_keyvalue error\n");
+                      return CONFIG_ERR_FATAL_ERROR;
+                    }
+                }
+              else
+                rv = CONFIG_ERR_NON_FATAL_ERROR;
             }
           else
-            rv = CONFIG_ERR_NON_FATAL_ERROR;
-        }
-      else
-        {
-          if (debug)
-            fprintf(stderr,
-                    "ERROR: Unknown key '%s' in '%s'\n",
-                    kv->key->key_name,
-                    section_name);
-        }
+            {
+              if (debug)
+                fprintf(stderr,
+                        "ERROR: Unknown key '%s' in '%s'\n",
+                        kv->key->key_name,
+                        section_name);
+            }
 
-      kv = kv->next;
+          kv = kv->next;
+        }
     }
+  else
+    rv = ret;
 
   return rv;
 }
@@ -382,6 +388,7 @@ _rmcpplus_conf_privilege_commit(const char *section_name,
   uint8_t cipher_suite_id_supported[CIPHER_SUITE_LEN];
   uint8_t cipher_suite_privilege[CIPHER_SUITE_LEN];
   unsigned int cipher_suite_entry_count;
+  config_err_t rv = CONFIG_ERR_SUCCESS;
   config_err_t ret;
 
   assert(section_name);
@@ -396,42 +403,51 @@ _rmcpplus_conf_privilege_commit(const char *section_name,
                                                       CIPHER_SUITE_LEN,
                                                       cipher_suite_privilege,
                                                       CIPHER_SUITE_LEN,
-                                                      &cipher_suite_entry_count)) != CONFIG_ERR_SUCCESS)
-    return ret;
+                                                      &cipher_suite_entry_count)) == CONFIG_ERR_FATAL_ERROR)
+    return CONFIG_ERR_FATAL_ERROR;
 
-  kv = keyvalues;
-  while (kv)
+  if (ret == CONFIG_ERR_SUCCESS)
     {
-      assert(kv->value_input);
+      struct config_keyvalue *kv;
 
-      if (strstr(kv->key->key_name, KEY_NAME_CIPHER_SUITE_ID_PREFIX))
+      kv = keyvalues;
+      while (kv)
         {
-          uint8_t cipher_suite_id;
-          uint8_t privilege;
-
-          cipher_suite_id = atoi(kv->key->key_name + strlen(KEY_NAME_CIPHER_SUITE_ID_PREFIX));
-          privilege = rmcpplus_privilege_number(kv->value_input);
-          cipher_suite_privilege[cipher_suite_id] = privilege;
+          assert(kv->value_input);
+          
+          if (strstr(kv->key->key_name, KEY_NAME_CIPHER_SUITE_ID_PREFIX))
+            {
+              uint8_t cipher_suite_id;
+              uint8_t privilege;
+              
+              cipher_suite_id = atoi(kv->key->key_name + strlen(KEY_NAME_CIPHER_SUITE_ID_PREFIX));
+              privilege = rmcpplus_privilege_number(kv->value_input);
+              cipher_suite_privilege[cipher_suite_id] = privilege;
+            }
+          else
+            {
+              if (debug)
+                fprintf(stderr,
+                        "ERROR: Unknown key '%s' in '%s'\n",
+                        kv->key->key_name,
+                        section_name);
+            }
+          
+          kv = kv->next;
         }
-      else
-        {
-          if (debug)
-            fprintf(stderr,
-                    "ERROR: Unknown key '%s' in '%s'\n",
-                    kv->key->key_name,
-                    section_name);
-        }
-
-      kv = kv->next;
+      
+      if ((ret = _set_rmcpplus_cipher_suite_id_privileges(state_data,
+                                                          debug,
+                                                          cipher_suite_privilege,
+                                                          CIPHER_SUITE_LEN)) == CONFIG_ERR_FATAL_ERROR)
+        return CONFIG_ERR_FATAL_ERROR;
+      if (ret != CONFIG_ERR_SUCCESS)
+        rv = ret;
     }
+  else
+    rv = ret;
 
-  if ((ret = _set_rmcpplus_cipher_suite_id_privileges(state_data,
-                                                      debug,
-                                                      cipher_suite_privilege,
-                                                      CIPHER_SUITE_LEN)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return CONFIG_ERR_SUCCESS;
+  return rv;
 }
 
 struct config_section *
