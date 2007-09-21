@@ -52,7 +52,22 @@ config_section_str_append(struct config_section_str **section_strs,
 
   if (*section_strs)
     {
-      struct config_section_str *sstr = *section_strs;
+      struct config_section_str *sstr;
+
+      sstr = *section_strs;
+      while (sstr)
+        {
+          if (!strcasecmp(sstr->section_name, section_str->section_name))
+            {
+              fprintf(stderr,
+                      "Duplicate section '%s' specified\n",
+                      sstr->section_name);
+              return -1;
+            }
+          sstr = sstr->next;
+        }
+
+      sstr = *section_strs;
       while (sstr->next)
         sstr = sstr->next;
       sstr->next = section_str;

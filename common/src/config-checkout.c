@@ -16,7 +16,7 @@
 
 config_err_t
 config_checkout_section(struct config_section *section, 
-                        int all_if_none_specified,
+                        int all_keys_if_none_specified,
                         FILE *fp,
                         int debug,
                         void *arg)
@@ -32,7 +32,7 @@ config_checkout_section(struct config_section *section,
   /* if no keyvalues specified by user, we want to checkout all keys,
    * so build keyvalues list appropriately 
    */
-  if (all_if_none_specified && !section->keyvalues)
+  if (all_keys_if_none_specified && !section->keyvalues)
     {
       struct config_key *k;
 
@@ -147,7 +147,7 @@ config_checkout_section(struct config_section *section,
 
 config_err_t 
 config_checkout_all(struct config_section *sections, 
-                    int all_if_none_specified,
+                    int all_keys_if_none_specified,
                     FILE *fp,
                     int debug,
                     void *arg)
@@ -162,7 +162,7 @@ config_checkout_all(struct config_section *sections,
   while (s)
     {
       if ((ret = config_checkout_section(s, 
-                                         all_if_none_specified,
+                                         all_keys_if_none_specified,
                                          fp, 
                                          debug, 
                                          arg)) != CONFIG_ERR_SUCCESS)

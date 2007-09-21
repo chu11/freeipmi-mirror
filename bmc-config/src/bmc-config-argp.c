@@ -156,9 +156,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
                                        &key_name,
                                        &value) < 0)
         {
-          fprintf(stderr,
-                  "Improperly input keypair '%s'\n",
-                  arg);
+          /* error printed in function call */
           exit(1);
         }
       if (!(ki = config_keyinput_create(section_name,
@@ -172,8 +170,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       if (config_keyinput_append(&(cmd_args->keyinputs),
                                  ki) < 0)
         {
-          fprintf(stderr,
-                  "config_keyinput_append error\n");
+          /* error printed in function call */
           exit(1);
         }
       if (section_name)
@@ -197,8 +194,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       if (config_section_str_append(&(cmd_args->section_strs),
                                     sstr) < 0)
         {
-          fprintf(stderr, 
-                  "config_section_str_append error\n");
+          /* error printed in function call */
           exit(1);
         }
       sstr = NULL;
@@ -253,10 +249,9 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
       return -1;
     }
 
-  // filename and keypair both given for checkout or diff
+  // filename and keypair both given for diff
   if (cmd_args->filename && cmd_args->keyinputs
-      && (cmd_args->action == CONFIG_ACTION_CHECKOUT
-          || cmd_args->action == CONFIG_ACTION_DIFF))
+      && cmd_args->action == CONFIG_ACTION_DIFF)
     {
       fprintf (stderr, 
                "Both --filename or --keypair cannot be used\n");
@@ -268,7 +263,7 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
       && (cmd_args->keyinputs && cmd_args->section_strs))
     {
       fprintf (stderr, 
-               "Only one of --filename, --keypair, and --section can be used\n");
+               "Only one of --keypair and --section can be used\n");
       return -1;
     }
 

@@ -6,13 +6,13 @@
 #include "config-common.h"
 
 config_err_t config_checkout_section(struct config_section *section, 
-                                     int all_if_none_specified,
+                                     int all_keys_if_none_specified,
                                      FILE *fp,
                                      int debug,
                                      void *arg);
 
 config_err_t config_checkout_all(struct config_section *sections, 
-                                 int all_if_none_specified,
+                                 int all_keys_if_none_specified,
                                  FILE *fp,
                                  int debug,
                                  void *arg);

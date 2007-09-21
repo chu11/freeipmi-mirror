@@ -45,6 +45,14 @@ config_keyinput_parse_string(char *str,
   key_name_tok = strtok_r(NULL, "=", &buf);
   value_tok = strtok_r(NULL, "\0", &buf);
 
+  if (!(section_name_tok && key_name_tok))
+    {
+      fprintf(stderr,
+              "Improperly input keypair '%s'\n",
+              str);
+      goto cleanup;
+    }
+
   /* get rid of spaces stuck in the string */
   if (section_name_tok)
     section_name_tok = strtok_r(section_name_tok, " \t", &buf);
@@ -115,10 +123,26 @@ config_keyinput_append(struct config_keyinput **keyinputs,
 
   if (*keyinputs)
     {
-      struct config_keyinput *s = *keyinputs;
-      while (s->next)
-        s = s->next;
-      s->next = keyinput;
+      struct config_keyinput *ki;
+
+      ki = *keyinputs;
+      while (ki)
+        {
+          if (!strcasecmp(ki->section_name, keyinput->section_name)
+              && !strcasecmp(ki->key_name, keyinput->key_name))
+            {
+              fprintf(stderr,
+                      "Duplicate section:key pair '%s:%s' specified\n",
+                      ki->section_name, ki->key_name);
+              return -1;
+            }
+          ki = ki->next;
+        }
+
+      ki = *keyinputs;
+      while (ki->next)
+        ki = ki->next;
+      ki->next = keyinput;
     }
   else
     *keyinputs = keyinput;
