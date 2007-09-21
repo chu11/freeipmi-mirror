@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "pef-config.h"
 #include "pef-config-common.h"
@@ -412,6 +413,38 @@ alert_string_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
+static config_err_t
+_alert_string_checkout(const char *section_name,
+                       struct config_keyvalue *keyvalues,
+                       int debug,
+                       void *arg)
+{
+  pef_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (pef_config_state_data_t *)arg;
+
+
+}
+
+static config_err_t
+_alert_string_commit(const char *section_name,
+                     struct config_keyvalue *keyvalues,
+                     int debug,
+                     void *arg)
+{
+  pef_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (pef_config_state_data_t *)arg;
+}
+
 struct config_section *
 pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int num)
 {
@@ -430,8 +463,9 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                                       NULL, 
                                       NULL, 
                                       0,
-                                      NULL, /* XXX */
-                                      NULL)))
+                                      _alert_string_checkout,
+                                      _alert_string_commit)))
+
     goto cleanup;
 
   if (config_section_add_key (sect,

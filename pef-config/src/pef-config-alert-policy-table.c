@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "pef-config.h"
 #include "pef-config-common.h"
@@ -1009,6 +1010,38 @@ event_specific_alert_string_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
+static config_err_t
+_alert_policy_table_checkout(const char *section_name,
+                             struct config_keyvalue *keyvalues,
+                             int debug,
+                             void *arg)
+{
+  pef_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (pef_config_state_data_t *)arg;
+
+
+}
+
+static config_err_t
+_alert_policy_table_commit(const char *section_name,
+                           struct config_keyvalue *keyvalues,
+                           int debug,
+                           void *arg)
+{
+  pef_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (pef_config_state_data_t *)arg;
+}
+
 struct config_section *
 pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, int num)
 {
@@ -1030,8 +1063,8 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                       NULL, 
                                       NULL, 
                                       0,
-                                      NULL, /* XXX */
-                                      NULL)))
+                                      _alert_policy_table_checkout,
+                                      _alert_policy_table_commit)))
     goto cleanup;
 
   if (config_section_add_key (sect,
