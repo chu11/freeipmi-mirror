@@ -11,17 +11,19 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
-#include "bmc-config-diff.h"
 #include "bmc-config-map.h"
-#include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
 #include "tool-common.h"
 
+#include "config-common.h"
+#include "config-section.h"
+#include "config-validate.h"
+
 static config_err_t
 k_r_checkout (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      struct keyvalue *kv)
+	      const struct config_section *sect,
+	      struct config_keyvalue *kv)
 {
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   config_err_t ret;
@@ -33,11 +35,8 @@ k_r_checkout (bmc_config_state_data_t *state_data,
                       IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
-  if (!(kv->value = strdup ((char *)k_r)))
+  if (!(kv->value_output = strdup ((char *)k_r)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -48,18 +47,18 @@ k_r_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 k_r_commit (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   return set_k_r (state_data,
-		  (uint8_t *)kv->value, 
-		  kv->value ? strlen (kv->value): 0);
+		  (uint8_t *)kv->value_input, 
+		  kv->value_input ? strlen (kv->value_input): 0);
 }
 
 static bmc_diff_t
 k_r_diff (bmc_config_state_data_t *state_data,
-	  const struct section *sect,
-	  const struct keyvalue *kv)
+	  const struct config_section *sect,
+	  const struct config_keyvalue *kv)
 {
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   config_err_t ret;
@@ -70,12 +69,12 @@ k_r_diff (bmc_config_state_data_t *state_data,
                       IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (strcmp (kv->value?kv->value:"", (char *)k_r)) 
+  if (strcmp (kv->value_input?kv->value_input:"", (char *)k_r)) 
     {
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    (char *)k_r);
     } 
   else
@@ -98,8 +97,8 @@ k_r_validate (const char *section_name,
 
 static config_err_t
 k_g_checkout (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      struct keyvalue *kv)
+	      const struct config_section *sect,
+	      struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   config_err_t ret;
@@ -111,19 +110,16 @@ k_g_checkout (bmc_config_state_data_t *state_data,
                       IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = (char *)malloc(IPMI_MAX_K_G_LENGTH*2+3)))
+  if (!(kv->value_output = (char *)malloc(IPMI_MAX_K_G_LENGTH*2+3)))
     {
       perror("malloc");
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  if (!format_kg(kv->value, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
+  if (!format_kg(kv->value_output, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
     {
-      free (kv->value);
-      kv->value = NULL;
+      free (kv->value_output);
+      kv->value_output = NULL;
       return CONFIG_ERR_FATAL_ERROR;
     }
 
@@ -132,15 +128,15 @@ k_g_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 k_g_commit (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   int k_g_len;
   
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
   
-  if ((k_g_len = parse_kg(k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value)) < 0)
+  if ((k_g_len = parse_kg(k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return set_k_g (state_data, k_g, k_g_len);
@@ -148,8 +144,8 @@ k_g_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 k_g_diff (bmc_config_state_data_t *state_data,
-	  const struct section *sect,
-	  const struct keyvalue *kv)
+	  const struct config_section *sect,
+	  const struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   uint8_t kv_k_g[IPMI_MAX_K_G_LENGTH+1];
@@ -165,7 +161,7 @@ k_g_diff (bmc_config_state_data_t *state_data,
   if (!format_kg(k_g_str, IPMI_MAX_K_G_LENGTH*2+3, k_g))
     return CONFIG_ERR_FATAL_ERROR;
 
-  if (parse_kg(kv_k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value) < 0)
+  if (parse_kg(kv_k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   /* a printable k_g key can have two representations, so compare the
@@ -175,7 +171,7 @@ k_g_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    k_g_str);
     }
   else
@@ -196,49 +192,42 @@ k_g_validate (const char *section_name,
   return CONFIG_VALIDATE_VALID_VALUE;
 }
 
-struct section *
+struct config_section *
 bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *lan_conf_security_keys_section = NULL;
+  struct config_section *lan_conf_security_keys_section = NULL;
   char *section_comment = 
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
     "K_g BMC key may be configurable.  The K_g key is an optional key that "
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will may to set this to zero (or blank).";
 
-  if (!(lan_conf_security_keys_section = bmc_config_section_create (state_data, 
-                                                                    "Lan_Conf_Security_Keys",
-                                                                    "Lan_Conf_Security_Keys",
-                                                                    section_comment,
-                                                                    0)))
+  if (!(lan_conf_security_keys_section = config_section_create ("Lan_Conf_Security_Keys",
+                                                                "Lan_Conf_Security_Keys",
+                                                                section_comment,
+                                                                0,
+                                                                NULL, /* XXX */
+                                                                NULL)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_conf_security_keys_section,
-                                       "K_R",
-                                       "Give string or blank to clear. Max 20 chars",
-                                       0,
-                                       k_r_checkout,
-                                       k_r_commit,
-                                       k_r_diff,
-                                       k_r_validate) < 0)
+  if (config_section_add_key (lan_conf_security_keys_section,
+                              "K_R",
+                              "Give string or blank to clear. Max 20 chars",
+                              0,
+                              k_r_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       lan_conf_security_keys_section,
-                                       "K_G",
-                                       "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
-                                       0,
-                                       k_g_checkout,
-                                       k_g_commit,
-                                       k_g_diff,
-                                       k_g_validate) < 0)
+  if (config_section_add_key (lan_conf_security_keys_section,
+                              "K_G",
+                              "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
+                              0,
+                              k_g_validate) < 0)
     goto cleanup;
 
   return lan_conf_security_keys_section;
 
  cleanup:
   if (lan_conf_security_keys_section)
-    bmc_config_section_destroy(state_data, lan_conf_security_keys_section);
+    config_section_destroy(lan_conf_security_keys_section);
   return NULL;
 }

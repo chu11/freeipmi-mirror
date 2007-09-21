@@ -11,7 +11,6 @@
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
-#include "bmc-config-diff.h"
 #include "bmc-config-map.h"
 #include "bmc-config-sections.h"
 #include "bmc-config-wrapper.h"

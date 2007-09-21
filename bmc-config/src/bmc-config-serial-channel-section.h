@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-struct section * bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data);
+struct config_section *bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_CONFIG_SERIAL_CHANNEL_SECTION_H_ */

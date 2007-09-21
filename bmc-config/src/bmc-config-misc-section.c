@@ -11,15 +11,17 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
-#include "bmc-config-diff.h"
 #include "bmc-config-map.h"
-#include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
+
+#include "config-common.h"
+#include "config-section.h"
+#include "config-validate.h"
 
 static config_err_t
 power_restore_policy_checkout (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+			       const struct config_section *sect,
+			       struct config_keyvalue *kv)
 {
   uint8_t policy;
   config_err_t ret;
@@ -28,10 +30,7 @@ power_restore_policy_checkout (bmc_config_state_data_t *state_data,
                                            &policy)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup (power_restore_policy_string (policy))))
+  if (!(kv->value_output = strdup (power_restore_policy_string (policy))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -41,17 +40,17 @@ power_restore_policy_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 power_restore_policy_commit (bmc_config_state_data_t *state_data,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+			     const struct config_section *sect,
+			     const struct config_keyvalue *kv)
 {
   return set_bmc_power_restore_policy (state_data,
-				       power_restore_policy_number (kv->value));
+				       power_restore_policy_number (kv->value_input));
 }
 
 static bmc_diff_t
 power_restore_policy_diff (bmc_config_state_data_t *state_data,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+			   const struct config_section *sect,
+			   const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -66,7 +65,7 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
   
-  passed_value = power_restore_policy_number (kv->value);
+  passed_value = power_restore_policy_number (kv->value_input);
 
   if (passed_value == got_value)
     ret = BMC_DIFF_SAME;
@@ -75,17 +74,17 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    power_restore_policy_string (got_value));
     }
 
   return ret;
 }
 
-struct section *
+struct config_section *
 bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *misc_section = NULL;
+  struct config_section *misc_section = NULL;
   char *section_comment = 
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
@@ -97,28 +96,25 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
     "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
     "existed before the power loss (\"Restore_State_AC_Apply\").";
 
-  if (!(misc_section = bmc_config_section_create (state_data, 
-                                                  "Misc",
-                                                  "Misc",
-                                                  section_comment,
-                                                  0)))
+  if (!(misc_section = config_section_create ("Misc",
+                                              "Misc",
+                                              section_comment,
+                                              0,
+                                              NULL, /* XXX */
+                                              NULL)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       misc_section,
-                                       "Power_Restore_Policy",
-                                       "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                                       CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                                       power_restore_policy_checkout,
-                                       power_restore_policy_commit,
-                                       power_restore_policy_diff,
-                                       power_restore_policy_number_validate) < 0)
+  if (config_section_add_key (misc_section,
+                              "Power_Restore_Policy",
+                              "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              power_restore_policy_number_validate) < 0)
     goto cleanup;
 
   return misc_section;
 
  cleanup:
   if (misc_section)
-    bmc_config_section_destroy(state_data, misc_section);
+    config_section_destroy(misc_section);
   return NULL;
 }

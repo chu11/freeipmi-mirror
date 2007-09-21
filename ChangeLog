@@ -13,6 +13,9 @@
 
 	* common/src/format-text.h, common/src/format-text.c: Removed
 	files.
+
+	* bmc-config/, pef-config/: Re-arch with common library and new
+	architecture.
 	
 2007-09-20  Albert Chu <chu11@llnl.gov>
 

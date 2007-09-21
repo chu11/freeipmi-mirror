@@ -11,12 +11,11 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
-#include "bmc-config-diff.h"
 #include "bmc-config-map.h"
-#include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
 #include "config-common.h"
+#include "config-section.h"
 #include "config-validate.h"
 
 /* volatile */
@@ -77,8 +76,8 @@ serial_channel_volatile_access_set (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+			       const struct config_section *sect,
+			       struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -92,9 +91,7 @@ volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  if (!(kv->value = strdup (channel_access_mode_string (get_val))))
+  if (!(kv->value_output = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
       return -1;
@@ -104,12 +101,12 @@ volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_access_mode_commit (bmc_config_state_data_t *state_data,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+			     const struct config_section *sect,
+			     const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = channel_access_mode (kv->value);
+  commit_val = channel_access_mode (kv->value_input);
   return serial_channel_volatile_access_set (state_data,
                                              commit_val, 1,
                                              0, 0,
@@ -120,8 +117,8 @@ volatile_access_mode_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 volatile_access_mode_diff (bmc_config_state_data_t *state_data,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+			   const struct config_section *sect,
+			   const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -141,7 +138,7 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = channel_access_mode (kv->value);
+  passed_val = channel_access_mode (kv->value_input);
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
   else 
@@ -149,7 +146,7 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    channel_access_mode_string (get_val));
     }
   return ret;
@@ -159,8 +156,8 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
-					  const struct section *sect,
-					  struct keyvalue *kv)
+					  const struct config_section *sect,
+					  struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -174,11 +171,9 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return -1;
@@ -186,7 +181,7 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return -1;
@@ -197,12 +192,12 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
-					const struct section *sect,
-					const struct keyvalue *kv)
+					const struct config_section *sect,
+					const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return serial_channel_volatile_access_set (state_data,
                                              0, 0,
                                              commit_val, 1,
@@ -213,8 +208,8 @@ volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
-				      const struct section *sect,
-				      const struct keyvalue *kv)
+				      const struct config_section *sect,
+				      const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -234,7 +229,7 @@ volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
 
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
@@ -243,7 +238,7 @@ volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -253,8 +248,8 @@ volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
-				       const struct section *sect,
-				       struct keyvalue *kv)
+				       const struct config_section *sect,
+				       struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -268,11 +263,9 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return -1;
@@ -280,7 +273,7 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return -1;
@@ -291,12 +284,12 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
-				     const struct section *sect,
-				     const struct keyvalue *kv)
+				     const struct config_section *sect,
+				     const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return serial_channel_volatile_access_set (state_data,
                                              0, 0,
                                              0, 0,
@@ -307,8 +300,8 @@ volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
-				   const struct section *sect,
-				   const struct keyvalue *kv)
+				   const struct config_section *sect,
+				   const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -328,7 +321,7 @@ volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
 
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
@@ -337,7 +330,7 @@ volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -347,8 +340,8 @@ volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
-				       const struct section *sect,
-				       struct keyvalue *kv)
+				       const struct config_section *sect,
+				       struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -362,11 +355,9 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return -1;
@@ -374,7 +365,7 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return -1;
@@ -385,12 +376,12 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
-				     const struct section *sect,
-				     const struct keyvalue *kv)
+				     const struct config_section *sect,
+				     const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return serial_channel_volatile_access_set (state_data,
                                              0, 0,
                                              0, 0,
@@ -401,8 +392,8 @@ volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
-				   const struct section *sect,
-				   const struct keyvalue *kv)
+				   const struct config_section *sect,
+				   const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -422,7 +413,7 @@ volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
   else 
@@ -430,7 +421,7 @@ volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -440,8 +431,8 @@ volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
-				      const struct section *sect,
-				      struct keyvalue *kv)
+				      const struct config_section *sect,
+				      struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -455,10 +446,7 @@ volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
                                                      &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup (privilege_level_string (get_val))))
+  if (!(kv->value_output = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
       return -1;
@@ -469,12 +457,12 @@ volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
-				    const struct section *sect,
-				    const struct keyvalue *kv)
+				    const struct config_section *sect,
+				    const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = privilege_level_number (kv->value);
+  commit_val = privilege_level_number (kv->value_input);
   return serial_channel_volatile_access_set (state_data,
                                              0, 0,
                                              0, 0,
@@ -485,8 +473,8 @@ volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
-				  const struct section *sect,
-				  const struct keyvalue *kv)
+				  const struct config_section *sect,
+				  const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -506,7 +494,7 @@ volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = privilege_level_number (kv->value);
+  passed_val = privilege_level_number (kv->value_input);
 
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
@@ -515,7 +503,7 @@ volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    privilege_level_string (get_val));
     }
   return ret;
@@ -578,8 +566,8 @@ serial_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
-                                   const struct section *sect,
-                                   struct keyvalue *kv)
+                                   const struct config_section *sect,
+                                   struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -593,9 +581,7 @@ non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  if (!(kv->value = strdup (channel_access_mode_string (get_val))))
+  if (!(kv->value_output = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
       return -1;
@@ -605,12 +591,12 @@ non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_access_mode_commit (bmc_config_state_data_t *state_data,
-                                 const struct section *sect,
-                                 const struct keyvalue *kv)
+                                 const struct config_section *sect,
+                                 const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = channel_access_mode (kv->value);
+  commit_val = channel_access_mode (kv->value_input);
   return serial_channel_non_volatile_access_set (state_data,
                                                  commit_val, 1,
                                                  0, 0,
@@ -621,8 +607,8 @@ non_volatile_access_mode_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
-                               const struct section *sect,
-                               const struct keyvalue *kv)
+                               const struct config_section *sect,
+                               const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -642,7 +628,7 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = channel_access_mode (kv->value);
+  passed_val = channel_access_mode (kv->value_input);
 
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
@@ -651,7 +637,7 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    channel_access_mode_string (get_val));
     }
   return ret;
@@ -661,8 +647,8 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
-                                              const struct section *sect,
-                                              struct keyvalue *kv)
+                                              const struct config_section *sect,
+                                              struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -676,11 +662,9 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return -1;
@@ -688,7 +672,7 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return -1;
@@ -699,12 +683,12 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
 
 static config_err_t
 non_volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
-                                            const struct section *sect,
-                                            const struct keyvalue *kv)
+                                            const struct config_section *sect,
+                                            const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return serial_channel_non_volatile_access_set (state_data,
                                                  0, 0,
                                                  commit_val, 1,
@@ -715,8 +699,8 @@ non_volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
-                                          const struct section *sect,
-                                          const struct keyvalue *kv)
+                                          const struct config_section *sect,
+                                          const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -736,7 +720,7 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
 
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
@@ -745,7 +729,7 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -755,8 +739,8 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
-                                           const struct section *sect,
-                                           struct keyvalue *kv)
+                                           const struct config_section *sect,
+                                           struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -770,11 +754,9 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return -1;
@@ -782,7 +764,7 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return -1;
@@ -793,12 +775,12 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
-                                         const struct section *sect,
-                                         const struct keyvalue *kv)
+                                         const struct config_section *sect,
+                                         const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return serial_channel_non_volatile_access_set (state_data,
                                                  0, 0,
                                                  0, 0,
@@ -809,8 +791,8 @@ non_volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
-                                       const struct section *sect,
-                                       const struct keyvalue *kv)
+                                       const struct config_section *sect,
+                                       const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -830,7 +812,7 @@ non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
 
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
@@ -839,7 +821,7 @@ non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -849,8 +831,8 @@ non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
-					   const struct section *sect,
-					   struct keyvalue *kv)
+					   const struct config_section *sect,
+					   struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -864,11 +846,9 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return -1;
@@ -876,7 +856,7 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return -1;
@@ -887,12 +867,12 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
-					 const struct section *sect,
-					 const struct keyvalue *kv)
+					 const struct config_section *sect,
+					 const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return serial_channel_non_volatile_access_set (state_data,
 						 0, 0,
 						 0, 0,
@@ -903,8 +883,8 @@ non_volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
-				       const struct section *sect,
-				       const struct keyvalue *kv)
+				       const struct config_section *sect,
+				       const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -924,7 +904,7 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
   else 
@@ -932,7 +912,7 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -942,8 +922,8 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
-					  const struct section *sect,
-					  struct keyvalue *kv)
+					  const struct config_section *sect,
+					  struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -957,10 +937,7 @@ non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
                                                          &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup (privilege_level_string (get_val))))
+  if (!(kv->value_output = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
       return -1;
@@ -971,12 +948,12 @@ non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
-					const struct section *sect,
-					const struct keyvalue *kv)
+					const struct config_section *sect,
+					const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
 
-  commit_val = privilege_level_number (kv->value);
+  commit_val = privilege_level_number (kv->value_input);
   return serial_channel_non_volatile_access_set (state_data,
 						 0, 0,
 						 0, 0,
@@ -987,8 +964,8 @@ non_volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
-				      const struct section *sect,
-				      const struct keyvalue *kv)
+				      const struct config_section *sect,
+				      const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t foo;
@@ -1008,7 +985,7 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_val = privilege_level_number (kv->value);
+  passed_val = privilege_level_number (kv->value_input);
   if (passed_val == get_val)
     ret = BMC_DIFF_SAME;
   else 
@@ -1016,16 +993,16 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    privilege_level_string (get_val));
     }
   return ret;
 }
 
-struct section *
+struct config_section *
 bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *serial_channel_section = NULL;
+  struct config_section *serial_channel_section = NULL;
   char *section_comment = 
     "In the Serial_Channel section, IPMI over Serial communication can be "
     "enabled or disabled.  "
@@ -1039,128 +1016,89 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
     "communication can be disabled.  This can be done by setting "
     "\"Access_Mode\" to \"Disabled\".";
 
-  if (!(serial_channel_section = bmc_config_section_create (state_data, 
-                                                            "Serial_Channel",
-                                                            "Serial_Channel",
-                                                            section_comment,
-                                                            0)))
+  if (!(serial_channel_section = config_section_create ("Serial_Channel",
+                                                        "Serial_Channel",
+                                                        section_comment,
+                                                        0,
+                                                        NULL, /* XXX */
+                                                        NULL)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Volatile_Access_Mode",
-                                       "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-                                       0,
-                                       volatile_access_mode_checkout,
-                                       volatile_access_mode_commit,
-                                       volatile_access_mode_diff,
-                                       channel_access_mode_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Volatile_Access_Mode",
+                              "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
+                              0,
+                              channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Volatile_Enable_User_Level_Auth",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       volatile_enable_user_level_auth_checkout,
-                                       volatile_enable_user_level_auth_commit,
-                                       volatile_enable_user_level_auth_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Volatile_Enable_User_Level_Auth",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Volatile_Enable_Per_Message_Auth",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       volatile_enable_per_msg_auth_checkout,
-                                       volatile_enable_per_msg_auth_commit,
-                                       volatile_enable_per_msg_auth_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Volatile_Enable_Per_Message_Auth",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Volatile_Enable_Pef_Alerting",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       volatile_enable_pef_alerting_checkout,
-                                       volatile_enable_pef_alerting_commit,
-                                       volatile_enable_pef_alerting_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Volatile_Enable_Pef_Alerting",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Volatile_Channel_Privilege_Limit",
-                                       "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                                       0,
-                                       volatile_channel_priv_limit_checkout,
-                                       volatile_channel_priv_limit_commit,
-                                       volatile_channel_priv_limit_diff,
-                                       privilege_level_number_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Volatile_Channel_Privilege_Limit",
+                              "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+                              0,
+                              privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Non_Volatile_Access_Mode",
-                                       "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
-                                       0,
-                                       non_volatile_access_mode_checkout,
-                                       non_volatile_access_mode_commit,
-                                       non_volatile_access_mode_diff,
-                                       channel_access_mode_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Non_Volatile_Access_Mode",
+                              "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
+                              0,
+                              channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Non_Volatile_Enable_User_Level_Auth",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       non_volatile_enable_user_level_auth_checkout,
-                                       non_volatile_enable_user_level_auth_commit,
-                                       non_volatile_enable_user_level_auth_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Non_Volatile_Enable_User_Level_Auth",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Non_Volatile_Enable_Per_Message_Auth",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       non_volatile_enable_per_msg_auth_checkout,
-                                       non_volatile_enable_per_msg_auth_commit,
-                                       non_volatile_enable_per_msg_auth_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Non_Volatile_Enable_Per_Message_Auth",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Non_Volatile_Enable_Pef_Alerting",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       non_volatile_enable_pef_alerting_checkout,
-                                       non_volatile_enable_pef_alerting_commit,
-                                       non_volatile_enable_pef_alerting_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Non_Volatile_Enable_Pef_Alerting",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
-                                       "Non_Volatile_Channel_Privilege_Limit",
-                                       "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                                       0,
-                                       non_volatile_channel_priv_limit_checkout,
-                                       non_volatile_channel_priv_limit_commit,
-                                       non_volatile_channel_priv_limit_diff,
-                                       privilege_level_number_validate) < 0)
+  if (config_section_add_key (serial_channel_section,
+                              "Non_Volatile_Channel_Privilege_Limit",
+                              "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+                              0,
+                              privilege_level_number_validate) < 0)
     goto cleanup;
 
   return serial_channel_section;
 
  cleanup:
   if (serial_channel_section)
-    bmc_config_section_destroy(state_data, serial_channel_section);
+    config_section_destroy(serial_channel_section);
   return NULL;
 }
 

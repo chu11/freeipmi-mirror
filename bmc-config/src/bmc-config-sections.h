@@ -1,7 +1,8 @@
 /* 
-   $Id: bmc-config-common.h,v 1.8.2.2 2007-09-21 00:45:20 chu11 Exp $ 
 
-   Copyright (C) 2005 FreeIPMI Core Team
+   bmc-config-sections.h
+
+   Copyright (C) 2006 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,15 +19,15 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-#ifndef _BMC_CONFIG_COMMON_H
-#define _BMC_CONFIG_COMMON_H
 
-#define SET_SELECTOR      0x0
-#define BLOCK_SELECTOR    0x0
+#ifndef _BMC_CONFIG_SECTIONS_H_
+#define _BMC_CONFIG_SECTIONS_H_
 
-#define same(a,b) (strcasecmp(a,b) == 0)
+#include "bmc-config.h"
+#include "bmc-config-common.h"
 
-/* XXX */
-#define report_diff(a,b,c,d)
+#include "config-common.h"
 
-#endif
+struct config_section *bmc_config_config_sections_create(bmc_config_state_data_t *state_data);
+
+#endif /* _BMC_CONFIG_SECTIONS_H_ */

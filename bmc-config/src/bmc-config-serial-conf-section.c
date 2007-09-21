@@ -11,12 +11,11 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
-#include "bmc-config-diff.h"
 #include "bmc-config-map.h"
-#include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
 #include "config-common.h"
+#include "config-section.h"
 #include "config-validate.h"
 
 static config_err_t
@@ -96,8 +95,8 @@ serial_conf_commit (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
-			    const struct section *sect,
-			    struct keyvalue *kv)
+			    const struct config_section *sect,
+			    struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -109,12 +108,9 @@ enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -122,7 +118,7 @@ enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -134,11 +130,11 @@ enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_basic_mode_commit (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+			  const struct config_section *sect,
+			  const struct config_keyvalue *kv)
 {
   uint8_t value;
-  value = (same (kv->value, "yes") ? 1 : 0);
+  value = (same (kv->value_input, "yes") ? 1 : 0);
 
   return serial_conf_commit (state_data,
 			     &value, NULL, NULL, NULL);
@@ -146,8 +142,8 @@ enable_basic_mode_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 enable_basic_mode_diff (bmc_config_state_data_t *state_data,
-			const struct section *sect,
-			const struct keyvalue *kv)
+			const struct config_section *sect,
+			const struct config_keyvalue *kv)
 {
   uint8_t get_value;
   uint8_t passed_value;
@@ -165,7 +161,7 @@ enable_basic_mode_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
 
   if (passed_value == get_value)
     ret = BMC_DIFF_SAME;
@@ -174,7 +170,7 @@ enable_basic_mode_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_value ? "Yes" : "No");
     }
   return ret;
@@ -184,8 +180,8 @@ enable_basic_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  struct keyvalue *kv)
+			  const struct config_section *sect,
+			  struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -197,12 +193,9 @@ enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -210,7 +203,7 @@ enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -222,11 +215,11 @@ enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_ppp_mode_commit (bmc_config_state_data_t *state_data,
-			const struct section *sect,
-			const struct keyvalue *kv)
+			const struct config_section *sect,
+			const struct config_keyvalue *kv)
 {
   uint8_t value;
-  value = (same (kv->value, "yes") ? 1 : 0);
+  value = (same (kv->value_input, "yes") ? 1 : 0);
 
   return serial_conf_commit (state_data,
 			     NULL, &value, NULL, NULL);
@@ -234,8 +227,8 @@ enable_ppp_mode_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
-		      const struct section *sect,
-		      const struct keyvalue *kv)
+		      const struct config_section *sect,
+		      const struct config_keyvalue *kv)
 {
   uint8_t get_value;
   uint8_t passed_value;
@@ -253,7 +246,7 @@ enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
 
   if (passed_value == get_value)
     ret = BMC_DIFF_SAME;
@@ -262,7 +255,7 @@ enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_value ? "Yes" : "No");
     }
   return ret;
@@ -272,8 +265,8 @@ enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+			       const struct config_section *sect,
+			       struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -285,12 +278,9 @@ enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -298,7 +288,7 @@ enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -310,11 +300,11 @@ enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_terminal_mode_commit (bmc_config_state_data_t *state_data,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+			     const struct config_section *sect,
+			     const struct config_keyvalue *kv)
 {
   uint8_t value;
-  value = (same (kv->value, "yes") ? 1 : 0);
+  value = (same (kv->value_input, "yes") ? 1 : 0);
 
   return serial_conf_commit (state_data,
 			     NULL, NULL, &value, NULL);
@@ -322,8 +312,8 @@ enable_terminal_mode_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+			   const struct config_section *sect,
+			   const struct config_keyvalue *kv)
 {
   uint8_t get_value;
   uint8_t passed_value;
@@ -341,7 +331,7 @@ enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
 
   if (passed_value == get_value)
     ret = BMC_DIFF_SAME;
@@ -350,7 +340,7 @@ enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_value ? "Yes" : "No");
     }
   return ret;
@@ -358,8 +348,8 @@ enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 connect_mode_checkout (bmc_config_state_data_t *state_data,
-		       const struct section *sect,
-		       struct keyvalue *kv)
+		       const struct config_section *sect,
+		       struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -371,10 +361,7 @@ connect_mode_checkout (bmc_config_state_data_t *state_data,
                                    &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup (connect_mode_string (value))))
+  if (!(kv->value_output = strdup (connect_mode_string (value))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -385,11 +372,11 @@ connect_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 connect_mode_commit (bmc_config_state_data_t *state_data,
-		     const struct section *sect,
-		     const struct keyvalue *kv)
+		     const struct config_section *sect,
+		     const struct config_keyvalue *kv)
 {
   uint8_t value;
-  value = connect_mode_number (kv->value);
+  value = connect_mode_number (kv->value_input);
 
   return serial_conf_commit (state_data,
 			     NULL, NULL, NULL, &value);
@@ -397,8 +384,8 @@ connect_mode_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 connect_mode_diff (bmc_config_state_data_t *state_data,
-		   const struct section *sect,
-		   const struct keyvalue *kv)
+		   const struct config_section *sect,
+		   const struct config_keyvalue *kv)
 {
   uint8_t get_value;
   uint8_t passed_value;
@@ -416,7 +403,7 @@ connect_mode_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_value = connect_mode_number (kv->value);
+  passed_value = connect_mode_number (kv->value_input);
   if (passed_value == get_value)
     ret = BMC_DIFF_SAME;
   else 
@@ -424,7 +411,7 @@ connect_mode_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    connect_mode_string (get_value));
     }
   return ret;
@@ -432,8 +419,8 @@ connect_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
-				 const struct section *sect,
-				 struct keyvalue *kv)
+				 const struct config_section *sect,
+				 struct config_keyvalue *kv)
 {
   uint8_t interval;
   config_err_t ret;
@@ -442,10 +429,7 @@ page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
                                                          &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-
-  if (asprintf (&kv->value, "%d", interval) < 0)
+  if (asprintf (&kv->value_output, "%d", interval) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -456,17 +440,17 @@ page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 page_blackout_interval_commit (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       const struct keyvalue *kv)
+			       const struct config_section *sect,
+			       const struct config_keyvalue *kv)
 {
   return set_bmc_serial_conf_page_blackout_interval (state_data,
-						     atoi (kv->value));
+						     atoi (kv->value_input));
 }
 
 static bmc_diff_t
 page_blackout_interval_diff (bmc_config_state_data_t *state_data,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+			     const struct config_section *sect,
+			     const struct config_keyvalue *kv)
 {
   uint8_t interval;
   int passed_interval;
@@ -481,7 +465,7 @@ page_blackout_interval_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_interval = atoi (kv->value);
+  passed_interval = atoi (kv->value_input);
 
   if (passed_interval == interval)
     ret = BMC_DIFF_SAME;
@@ -492,7 +476,7 @@ page_blackout_interval_diff (bmc_config_state_data_t *state_data,
       sprintf (num, "%d", interval);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -502,8 +486,8 @@ page_blackout_interval_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 call_retry_interval_checkout (bmc_config_state_data_t *state_data,
-			      const struct section *sect,
-			      struct keyvalue *kv)
+			      const struct config_section *sect,
+			      struct config_keyvalue *kv)
 {
   uint8_t interval;
   config_err_t ret;
@@ -512,10 +496,7 @@ call_retry_interval_checkout (bmc_config_state_data_t *state_data,
                                                       &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
        
-  if (kv->value)
-    free (kv->value);
-
-  if (asprintf (&kv->value, "%d", interval) < 0)
+  if (asprintf (&kv->value_output, "%d", interval) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -526,17 +507,17 @@ call_retry_interval_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 call_retry_interval_commit (bmc_config_state_data_t *state_data,
-			    const struct section *sect,
-			    const struct keyvalue *kv)
+			    const struct config_section *sect,
+			    const struct config_keyvalue *kv)
 {
   return set_bmc_serial_conf_call_retry_interval (state_data,
-                                                  atoi (kv->value));
+                                                  atoi (kv->value_input));
 }
 
 static bmc_diff_t
 call_retry_interval_diff (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+			  const struct config_section *sect,
+			  const struct config_keyvalue *kv)
 {
   uint8_t interval;
   int passed_interval;
@@ -551,7 +532,7 @@ call_retry_interval_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_interval = atoi (kv->value);
+  passed_interval = atoi (kv->value_input);
 
   if (passed_interval == interval)
     ret = BMC_DIFF_SAME;
@@ -562,7 +543,7 @@ call_retry_interval_diff (bmc_config_state_data_t *state_data,
       sprintf (num, "%d", interval);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -629,8 +610,8 @@ serial_conf_comm_commit (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
-			    const struct section *sect,
-			    struct keyvalue *kv)
+			    const struct config_section *sect,
+			    struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -641,12 +622,9 @@ enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
                                         NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -654,7 +632,7 @@ enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -666,10 +644,10 @@ enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_dtr_hangup_commit (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+			  const struct config_section *sect,
+			  const struct config_keyvalue *kv)
 {
-  uint8_t value = same (kv->value, "yes");
+  uint8_t value = same (kv->value_input, "yes");
 
   return serial_conf_comm_commit (state_data,
 				  &value,
@@ -679,8 +657,8 @@ enable_dtr_hangup_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
-			const struct section *sect,
-			const struct keyvalue *kv)
+			const struct config_section *sect,
+			const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -697,7 +675,7 @@ enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes") ? 1 : 0;
+  passed_value = same (kv->value_input, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
     ret = BMC_DIFF_SAME;
@@ -706,7 +684,7 @@ enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -714,8 +692,8 @@ enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 flow_control_checkout (bmc_config_state_data_t *state_data,
-		       const struct section *sect,
-		       struct keyvalue *kv)
+		       const struct config_section *sect,
+		       struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -726,10 +704,7 @@ flow_control_checkout (bmc_config_state_data_t *state_data,
                                         NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup (flow_control_string (value))))
+  if (!(kv->value_output = strdup (flow_control_string (value))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -740,10 +715,10 @@ flow_control_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 flow_control_commit (bmc_config_state_data_t *state_data,
-		     const struct section *sect,
-		     const struct keyvalue *kv)
+		     const struct config_section *sect,
+		     const struct config_keyvalue *kv)
 {
-  uint8_t value = flow_control_number (kv->value);
+  uint8_t value = flow_control_number (kv->value_input);
   return serial_conf_comm_commit (state_data,
 				  NULL,
 				  &value,
@@ -752,8 +727,8 @@ flow_control_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 flow_control_diff (bmc_config_state_data_t *state_data,
-		   const struct section *sect,
-		   const struct keyvalue *kv)
+		   const struct config_section *sect,
+		   const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -770,7 +745,7 @@ flow_control_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_value = flow_control_number (kv->value);
+  passed_value = flow_control_number (kv->value_input);
 
   if (passed_value == got_value)
     ret = BMC_DIFF_SAME;
@@ -779,7 +754,7 @@ flow_control_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    flow_control_string (got_value));
     }
   return ret;
@@ -787,8 +762,8 @@ flow_control_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 bit_rate_checkout (bmc_config_state_data_t *state_data,
-		   const struct section *sect,
-		   struct keyvalue *kv)
+		   const struct config_section *sect,
+		   struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -799,10 +774,7 @@ bit_rate_checkout (bmc_config_state_data_t *state_data,
                                         &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup (bit_rate_string (value))))
+  if (!(kv->value_output = strdup (bit_rate_string (value))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -813,10 +785,10 @@ bit_rate_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 bit_rate_commit (bmc_config_state_data_t *state_data,
-		 const struct section *sect,
-		 const struct keyvalue *kv)
+		 const struct config_section *sect,
+		 const struct config_keyvalue *kv)
 {
-  uint8_t value = bit_rate_number (kv->value);
+  uint8_t value = bit_rate_number (kv->value_input);
   return serial_conf_comm_commit (state_data,
 				  NULL,
 				  NULL,
@@ -825,8 +797,8 @@ bit_rate_commit (bmc_config_state_data_t *state_data,
 
 static bmc_diff_t
 bit_rate_diff (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       const struct keyvalue *kv)
+	       const struct config_section *sect,
+	       const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -843,7 +815,7 @@ bit_rate_diff (bmc_config_state_data_t *state_data,
       return BMC_DIFF_FATAL_ERROR;
     }
 
-  passed_value = bit_rate_number (kv->value);
+  passed_value = bit_rate_number (kv->value_input);
 
   if (passed_value == got_value)
     ret = BMC_DIFF_SAME;
@@ -852,143 +824,104 @@ bit_rate_diff (bmc_config_state_data_t *state_data,
       ret = BMC_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    bit_rate_string (got_value));
     }
   return ret;
 }
 
-struct section *
+struct config_section *
 bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *bmc_serial_conf_section = NULL;
+  struct config_section *bmc_serial_conf_section = NULL;
   char *section_comment = 
     "In the Serial_Conf section, typical serial communication configuration "
     "is setup.  Most users will only be interested in IPMI over LAN, "
     "therefore this section can generally be ignored.";
 
-  if (!(bmc_serial_conf_section = bmc_config_section_create(state_data, 
-                                                            "Serial_Conf", 
-                                                            "Serial_Conf", 
-                                                            section_comment,
-                                                            0)))
+  if (!(bmc_serial_conf_section = config_section_create("Serial_Conf", 
+                                                        "Serial_Conf", 
+                                                        section_comment,
+                                                        0,
+                                                        NULL, /* XXX */
+                                                        NULL)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Enable_Basic_Mode",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       enable_basic_mode_checkout,
-                                       enable_basic_mode_commit,
-                                       enable_basic_mode_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Enable_Basic_Mode",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Enable_PPP_Mode",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       enable_ppp_mode_checkout,
-                                       enable_ppp_mode_commit,
-                                       enable_ppp_mode_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Enable_PPP_Mode",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Enable_Terminal_Mode",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       enable_terminal_mode_checkout,
-                                       enable_terminal_mode_commit,
-                                       enable_terminal_mode_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Enable_Terminal_Mode",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Connect_Mode",
-                                       "Possible values: Modem_Connect/Direct_Mode",
-                                       0,
-                                       connect_mode_checkout,
-                                       connect_mode_commit,
-                                       connect_mode_diff,
-                                       connect_mode_number_validate) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Connect_Mode",
+                              "Possible values: Modem_Connect/Direct_Mode",
+                              0,
+                              connect_mode_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Page_Blackout_Interval",
-                                       "Give a valid number",
-                                       0,
-                                       page_blackout_interval_checkout,
-                                       page_blackout_interval_commit,
-                                       page_blackout_interval_diff,
-                                       config_number_range_one_byte) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Page_Blackout_Interval",
+                              "Give a valid number",
+                              0,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Call_Retry_Interval",
-                                       "Give a valid number",
-                                       0,
-                                       call_retry_interval_checkout,
-                                       call_retry_interval_commit,
-                                       call_retry_interval_diff,
-                                       config_number_range_one_byte) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Call_Retry_Interval",
+                              "Give a valid number",
+                              0,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Call_Retry_Time",
-                                       "Give a valid number",
-                                       CONFIG_DO_NOT_CHECKOUT,
-                                       call_retry_interval_checkout,
-                                       call_retry_interval_commit,
-                                       call_retry_interval_diff,
-                                       config_number_range_one_byte) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Call_Retry_Time",
+                              "Give a valid number",
+                              CONFIG_DO_NOT_CHECKOUT,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Enable_DTR_Hangup",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       enable_dtr_hangup_checkout,
-                                       enable_dtr_hangup_commit,
-                                       enable_dtr_hangup_diff,
-                                       config_yes_no_validate) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Enable_DTR_Hangup",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Flow_Control",
-                                       "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
-                                       0,
-                                       flow_control_checkout,
-                                       flow_control_commit,
-                                       flow_control_diff,
-                                       flow_control_number_validate) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Flow_Control",
+                              "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
+                              0,
+                              flow_control_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       bmc_serial_conf_section,
-                                       "Bit_Rate",
-                                       "Possible values: 9600/19200/38400/57600/115200",
-                                       0,
-                                       bit_rate_checkout,
-                                       bit_rate_commit,
-                                       bit_rate_diff,
-                                       bit_rate_number_validate) < 0)
+  if (config_section_add_key (bmc_serial_conf_section,
+                              "Bit_Rate",
+                              "Possible values: 9600/19200/38400/57600/115200",
+                              0,
+                              bit_rate_number_validate) < 0)
     goto cleanup;
 
   return bmc_serial_conf_section;
 
  cleanup:
   if (bmc_serial_conf_section)
-    bmc_config_section_destroy(state_data, bmc_serial_conf_section);
+    config_section_destroy(bmc_serial_conf_section);
   return NULL;
 }
