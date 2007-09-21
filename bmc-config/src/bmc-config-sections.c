@@ -48,7 +48,11 @@ bmc_config_config_sections_create(bmc_config_state_data_t *state_data)
   int num_users, i;
 
   if ((num_users = _get_num_users (state_data)) < 0)
-    goto cleanup;
+    {
+      if (state_data->prog_data->args->verbose)
+        fprintf (stderr, "## FATAL: Unable to get number of users\n");
+      goto cleanup;
+    }
   
   for (i = 0; i < num_users; i++)
     {
