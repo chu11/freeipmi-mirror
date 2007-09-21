@@ -60,7 +60,9 @@ config_checkout_section(struct config_section *section,
                         arg) == CONFIG_ERR_FATAL_ERROR)
     return CONFIG_ERR_FATAL_ERROR;
 
-  /* checking out for a diff, no need to output */
+  /* no need to output if fp NULL, for example if 'diff' is calling
+   * us.
+   */
   if (!fp)
     return rv;
 
@@ -123,6 +125,8 @@ config_checkout_section(struct config_section *section,
           
           fprintf(fp, "%s\n", kv->value_output);
         }
+#if 0
+      /* XXX should I do this?  still not sure */
       else
         {
           /* Some fields you still output even though there is no retrieved value */
@@ -137,6 +141,7 @@ config_checkout_section(struct config_section *section,
               fprintf(fp, "\n");
             }
         }
+#endif
 
       kv = kv->next;
     }
