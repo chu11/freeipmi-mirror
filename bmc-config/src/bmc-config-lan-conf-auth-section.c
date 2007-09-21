@@ -13,12 +13,44 @@
 #include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
 #include "bmc-config-validate.h"
+#include "bmc-config-utils.h"
 
 #include "config-common.h"
 #include "config-section.h"
 #include "config-validate.h"
 
-struct bmc_authentication_level {
+#define KEY_NAME_CALLBACK_NONE               "Callback_Enable_Auth_Type_None"
+#define KEY_NAME_CALLBACK_MD2                "Callback_Enable_Auth_Type_MD2"
+#define KEY_NAME_CALLBACK_MD5                "Callback_Enable_Auth_Type_MD5"
+#define KEY_NAME_CALLBACK_STRAIGHT_PASSWORD  "Callback_Enable_Auth_Type_Straight_Password"
+#define KEY_NAME_CALLBACK_OEM_PROPRIETARY    "Callback_Enable_Auth_Type_OEM_Proprietary"
+
+#define KEY_NAME_USER_NONE               "User_Enable_Auth_Type_None"
+#define KEY_NAME_USER_MD2                "User_Enable_Auth_Type_MD2"
+#define KEY_NAME_USER_MD5                "User_Enable_Auth_Type_MD5"
+#define KEY_NAME_USER_STRAIGHT_PASSWORD  "User_Enable_Auth_Type_Straight_Password"
+#define KEY_NAME_USER_OEM_PROPRIETARY    "User_Enable_Auth_Type_OEM_Proprietary"
+
+#define KEY_NAME_OPERATOR_NONE               "Operator_Enable_Auth_Type_None"
+#define KEY_NAME_OPERATOR_MD2                "Operator_Enable_Auth_Type_MD2"
+#define KEY_NAME_OPERATOR_MD5                "Operator_Enable_Auth_Type_MD5"
+#define KEY_NAME_OPERATOR_STRAIGHT_PASSWORD  "Operator_Enable_Auth_Type_Straight_Password"
+#define KEY_NAME_OPERATOR_OEM_PROPRIETARY    "Operator_Enable_Auth_Type_OEM_Proprietary"
+
+#define KEY_NAME_ADMIN_NONE               "Admin_Enable_Auth_Type_None"
+#define KEY_NAME_ADMIN_MD2                "Admin_Enable_Auth_Type_MD2"
+#define KEY_NAME_ADMIN_MD5                "Admin_Enable_Auth_Type_MD5"
+#define KEY_NAME_ADMIN_STRAIGHT_PASSWORD  "Admin_Enable_Auth_Type_Straight_Password"
+#define KEY_NAME_ADMIN_OEM_PROPRIETARY    "Admin_Enable_Auth_Type_OEM_Proprietary"
+
+#define KEY_NAME_OEM_NONE               "OEM_Enable_Auth_Type_None"
+#define KEY_NAME_OEM_MD2                "OEM_Enable_Auth_Type_MD2"
+#define KEY_NAME_OEM_MD5                "OEM_Enable_Auth_Type_MD5"
+#define KEY_NAME_OEM_STRAIGHT_PASSWORD  "OEM_Enable_Auth_Type_Straight_Password"
+#define KEY_NAME_OEM_OEM_PROPRIETARY    "OEM_Enable_Auth_Type_OEM_Proprietary"
+
+/* convenience struct */
+struct authentication_type_enables {
   uint8_t callback_level_none;
   uint8_t callback_level_md2;
   uint8_t callback_level_md5;
@@ -46,1296 +78,215 @@ struct bmc_authentication_level {
   uint8_t oem_level_oem_proprietary;
 };
 
-static config_err_t
-_authentication_level_checkout (bmc_config_state_data_t *state_data,
-                                const struct config_section *sect,
-                                struct config_keyvalue *kv,
-                                struct bmc_authentication_level *al,
-                                uint8_t *desired_authentication_level)
+config_err_t 
+_get_lan_conf_authentication_type_enables (bmc_config_state_data_t *state_data, 
+                                           int debug,
+                                           struct authentication_type_enables *ate)
 {
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
   
-  if ((ret = get_bmc_lan_conf_authentication_type_enables (state_data,
-                                                           &(al->callback_level_none),
-                                                           &(al->callback_level_md2),
-                                                           &(al->callback_level_md5),
-                                                           &(al->callback_level_straight_password),
-                                                           &(al->callback_level_oem_proprietary),
-                                                           &(al->user_level_none),
-                                                           &(al->user_level_md2),
-                                                           &(al->user_level_md5),
-                                                           &(al->user_level_straight_password),
-                                                           &(al->user_level_oem_proprietary),
-                                                           &(al->operator_level_none),
-                                                           &(al->operator_level_md2),
-                                                           &(al->operator_level_md5),
-                                                           &(al->operator_level_straight_password),
-                                                           &(al->operator_level_oem_proprietary),
-                                                           &(al->admin_level_none),
-                                                           &(al->admin_level_md2),
-                                                           &(al->admin_level_md5),
-                                                           &(al->admin_level_straight_password),
-                                                           &(al->admin_level_oem_proprietary),
-                                                           &(al->oem_level_none),
-                                                           &(al->oem_level_md2),
-                                                           &(al->oem_level_md5),
-                                                           &(al->oem_level_straight_password),
-                                                           &(al->oem_level_oem_proprietary))) != CONFIG_ERR_SUCCESS)
-    return ret;
+  assert(state_data);
+  assert(ate);
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs)))
+    goto cleanup;
   
-  if (*desired_authentication_level)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
-      if (!(kv->value_output = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value_output = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      rv = ret;
+      goto cleanup;
     }
 
-  return CONFIG_ERR_SUCCESS;
+  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (state_data->dev, 
+									     channel_number, 
+									     IPMI_GET_LAN_PARAMETER, 
+									     SET_SELECTOR, 
+									     BLOCK_SELECTOR, 
+									     obj_cmd_rs) < 0)
+    {
+      if (debug)
+        fprintf(stderr, 
+                "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.none", &val) < 0)
+    goto cleanup;
+  ate->callback_level_none = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.md2", &val) < 0)
+    goto cleanup;
+  ate->callback_level_md2 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.md5", &val) < 0)
+    goto cleanup;
+  ate->callback_level_md5 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.straight_password", &val) < 0)
+    goto cleanup;
+  ate->callback_level_straight_password = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.oem_proprietary", &val) < 0)
+    goto cleanup;
+  ate->callback_level_oem_proprietary = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "user_level.none", &val) < 0)
+    goto cleanup;
+  ate->user_level_none = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "user_level.md2", &val) < 0)
+    goto cleanup;
+  ate->user_level_md2 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "user_level.md5", &val) < 0)
+    goto cleanup;
+  ate->user_level_md5 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "user_level.straight_password", &val) < 0)
+    goto cleanup;
+  ate->user_level_straight_password = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "user_level.oem_proprietary", &val) < 0)
+    goto cleanup;
+  ate->user_level_oem_proprietary = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.none", &val) < 0)
+    goto cleanup;
+  ate->operator_level_none = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.md2", &val) < 0)
+    goto cleanup;
+  ate->operator_level_md2 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.md5", &val) < 0)
+    goto cleanup;
+  ate->operator_level_md5 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.straight_password", &val) < 0)
+    goto cleanup;
+  ate->operator_level_straight_password = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.oem_proprietary", &val) < 0)
+    goto cleanup;
+  ate->operator_level_oem_proprietary = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.none", &val) < 0)
+    goto cleanup;
+  ate->admin_level_none = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.md2", &val) < 0)
+    goto cleanup;
+  ate->admin_level_md2 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.md5", &val) < 0)
+    goto cleanup;
+  ate->admin_level_md5 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.straight_password", &val) < 0)
+    goto cleanup;
+  ate->admin_level_straight_password = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.oem_proprietary", &val) < 0)
+    goto cleanup;
+  ate->admin_level_oem_proprietary = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.none", &val) < 0)
+    goto cleanup;
+  ate->oem_level_none = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.md2", &val) < 0)
+    goto cleanup;
+  ate->oem_level_md2 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.md5", &val) < 0)
+    goto cleanup;
+  ate->oem_level_md5 = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.straight_password", &val) < 0)
+    goto cleanup;
+  ate->oem_level_straight_password = val;
+  
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.oem_proprietary", &val) < 0)
+    goto cleanup;
+  ate->oem_level_oem_proprietary = val;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
-static config_err_t
-_authentication_level_commit (bmc_config_state_data_t *state_data,
-                              const struct config_section *sect,
-                              const struct config_keyvalue *kv,
-                              struct bmc_authentication_level *al,
-                              uint8_t *desired_authentication_level)
+static config_err_t 
+_set_lan_conf_authentication_type_enables (bmc_config_state_data_t *state_data, 
+                                           int debug,
+                                           struct authentication_type_enables *ate)
 {
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  
-  if ((ret = get_bmc_lan_conf_authentication_type_enables (state_data,
-                                                           &(al->callback_level_none),
-                                                           &(al->callback_level_md2),
-                                                           &(al->callback_level_md5),
-                                                           &(al->callback_level_straight_password),
-                                                           &(al->callback_level_oem_proprietary),
-                                                           &(al->user_level_none),
-                                                           &(al->user_level_md2),
-                                                           &(al->user_level_md5),
-                                                           &(al->user_level_straight_password),
-                                                           &(al->user_level_oem_proprietary),
-                                                           &(al->operator_level_none),
-                                                           &(al->operator_level_md2),
-                                                           &(al->operator_level_md5),
-                                                           &(al->operator_level_straight_password),
-                                                           &(al->operator_level_oem_proprietary),
-                                                           &(al->admin_level_none),
-                                                           &(al->admin_level_md2),
-                                                           &(al->admin_level_md5),
-                                                           &(al->admin_level_straight_password),
-                                                           &(al->admin_level_oem_proprietary),
-                                                           &(al->oem_level_none),
-                                                           &(al->oem_level_md2),
-                                                           &(al->oem_level_md5),
-                                                           &(al->oem_level_straight_password),
-                                                           &(al->oem_level_oem_proprietary))) != CONFIG_ERR_SUCCESS)
-    return ret;
-  
-  *desired_authentication_level = same (kv->value_input, "yes");
+  uint8_t channel_number;
 
-  if ((ret = set_bmc_lan_conf_authentication_type_enables (state_data,
-                                                           al->callback_level_none,
-                                                           al->callback_level_md2,
-                                                           al->callback_level_md5,
-                                                           al->callback_level_straight_password,
-                                                           al->callback_level_oem_proprietary,
-                                                           al->user_level_none,
-                                                           al->user_level_md2,
-                                                           al->user_level_md5,
-                                                           al->user_level_straight_password,
-                                                           al->user_level_oem_proprietary,
-                                                           al->operator_level_none,
-                                                           al->operator_level_md2,
-                                                           al->operator_level_md5,
-                                                           al->operator_level_straight_password,
-                                                           al->operator_level_oem_proprietary,
-                                                           al->admin_level_none,
-                                                           al->admin_level_md2,
-                                                           al->admin_level_md5,
-                                                           al->admin_level_straight_password,
-                                                           al->admin_level_oem_proprietary,
-                                                           al->oem_level_none,
-                                                           al->oem_level_md2,
-                                                           al->oem_level_md5,
-                                                           al->oem_level_straight_password,
-                                                           al->oem_level_oem_proprietary)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  assert(state_data);
+  assert(ate);
 
-  return CONFIG_ERR_SUCCESS;
-}
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
 
-static bmc_diff_t
-_authentication_level_diff (bmc_config_state_data_t *state_data,
-                            const struct config_section *sect,
-                            const struct config_keyvalue *kv,
-                            struct bmc_authentication_level *al,
-                            uint8_t *desired_authentication_level)
-{
-  config_err_t rc;
-  bmc_diff_t ret;
-
-  if ((rc = get_bmc_lan_conf_authentication_type_enables (state_data,
-                                                          &(al->callback_level_none),
-                                                          &(al->callback_level_md2),
-                                                          &(al->callback_level_md5),
-                                                          &(al->callback_level_straight_password),
-                                                          &(al->callback_level_oem_proprietary),
-                                                          &(al->user_level_none),
-                                                          &(al->user_level_md2),
-                                                          &(al->user_level_md5),
-                                                          &(al->user_level_straight_password),
-                                                          &(al->user_level_oem_proprietary),
-                                                          &(al->operator_level_none),
-                                                          &(al->operator_level_md2),
-                                                          &(al->operator_level_md5),
-                                                          &(al->operator_level_straight_password),
-                                                          &(al->operator_level_oem_proprietary),
-                                                          &(al->admin_level_none),
-                                                          &(al->admin_level_md2),
-                                                          &(al->admin_level_md5),
-                                                          &(al->admin_level_straight_password),
-                                                          &(al->admin_level_oem_proprietary),
-                                                          &(al->oem_level_none),
-                                                          &(al->oem_level_md2),
-                                                          &(al->oem_level_md5),
-                                                          &(al->oem_level_straight_password),
-                                                          &(al->oem_level_oem_proprietary))) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return BMC_DIFF_NON_FATAL_ERROR;
-      return BMC_DIFF_FATAL_ERROR;
-    }
-  
-  if (*desired_authentication_level == same (kv->value_input, "yes")) 
-    ret = BMC_DIFF_SAME;
-  else 
-    {
-      ret = BMC_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
-                   kv->key,
-                   kv->value_input,
-                   *desired_authentication_level ? "Yes" : "No");
+      rv = ret;
+      goto cleanup;
     }
 
-  return ret;
-}
-
-/* callback_none */
-
-static config_err_t
-callback_none_checkout (bmc_config_state_data_t *state_data,
-			const struct config_section *sect,
-			struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.callback_level_none));
-}
-
-static config_err_t
-callback_none_commit (bmc_config_state_data_t *state_data,
-		      const struct config_section *sect,
-		      const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.callback_level_none));
-}
-
-static bmc_diff_t
-callback_none_diff (bmc_config_state_data_t *state_data,
-		    const struct config_section *sect,
-		    const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.callback_level_none));
-}
-
-/* callback_md2 */
-
-static config_err_t
-callback_md2_checkout (bmc_config_state_data_t *state_data,
-                       const struct config_section *sect,
-                       struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.callback_level_md2));
-}
-
-static config_err_t
-callback_md2_commit (bmc_config_state_data_t *state_data,
-                     const struct config_section *sect,
-                     const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.callback_level_md2));
-}
-
-static bmc_diff_t
-callback_md2_diff (bmc_config_state_data_t *state_data,
-                   const struct config_section *sect,
-                   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.callback_level_md2));
-}
-
-/* callback_md5 */
-
-static config_err_t
-callback_md5_checkout (bmc_config_state_data_t *state_data,
-                       const struct config_section *sect,
-                       struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.callback_level_md5));
-}
-
-static config_err_t
-callback_md5_commit (bmc_config_state_data_t *state_data,
-                     const struct config_section *sect,
-                     const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.callback_level_md5));
-}
-
-static bmc_diff_t
-callback_md5_diff (bmc_config_state_data_t *state_data,
-                   const struct config_section *sect,
-                   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.callback_level_md5));
-}
-
-/* callback_straight_password */
-
-static config_err_t
-callback_straight_password_checkout (bmc_config_state_data_t *state_data,
-				     const struct config_section *sect,
-				     struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.callback_level_straight_password));
-}
-
-static config_err_t
-callback_straight_password_commit (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
-				   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.callback_level_straight_password));
-}
-
-static bmc_diff_t
-callback_straight_password_diff (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
-				 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.callback_level_straight_password));
-}
-
-/* callback_oem_proprietary */
-
-static config_err_t
-callback_oem_proprietary_checkout (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
-				   struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.callback_level_oem_proprietary));
-}
-
-static config_err_t
-callback_oem_proprietary_commit (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
-				 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.callback_level_oem_proprietary));
-}
-
-static bmc_diff_t
-callback_oem_proprietary_diff (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
-			       const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.callback_level_oem_proprietary));
-}
-
-/* user */
-
-/* user_none */
-
-static config_err_t
-user_none_checkout (bmc_config_state_data_t *state_data,
-		    const struct config_section *sect,
-		    struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.user_level_none));
-}
-
-static config_err_t
-user_none_commit (bmc_config_state_data_t *state_data,
-		  const struct config_section *sect,
-		  const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.user_level_none));
-}
-
-static bmc_diff_t
-user_none_diff (bmc_config_state_data_t *state_data,
-		const struct config_section *sect,
-		const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.user_level_none));
-}
-
-/* user_md2 */
-
-static config_err_t
-user_md2_checkout (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
-		   struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.user_level_md2));
-}
-
-static config_err_t
-user_md2_commit (bmc_config_state_data_t *state_data,
-		 const struct config_section *sect,
-		 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.user_level_md2));
-}
-
-static bmc_diff_t
-user_md2_diff (bmc_config_state_data_t *state_data,
-	       const struct config_section *sect,
-	       const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.user_level_md2));
-}
-
-/* user_md5 */
-
-static config_err_t
-user_md5_checkout (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
-		   struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.user_level_md5));
-}
-
-static config_err_t
-user_md5_commit (bmc_config_state_data_t *state_data,
-		 const struct config_section *sect,
-		 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.user_level_md5));
-}
-
-static bmc_diff_t
-user_md5_diff (bmc_config_state_data_t *state_data,
-	       const struct config_section *sect,
-	       const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.user_level_md5));
-}
-
-/* user_straight_password */
-
-static config_err_t
-user_straight_password_checkout (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
-				 struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.user_level_straight_password));
-}
-
-static config_err_t
-user_straight_password_commit (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
-			       const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.user_level_straight_password));
-}
-
-static bmc_diff_t
-user_straight_password_diff (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
-			     const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.user_level_straight_password));
-}
-
-/* user_oem_proprietary */
-
-static config_err_t
-user_oem_proprietary_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
-			       struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.user_level_oem_proprietary));
-}
-
-static config_err_t
-user_oem_proprietary_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
-			     const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.user_level_oem_proprietary));
-}
-
-static bmc_diff_t
-user_oem_proprietary_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *sect,
-			   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.user_level_oem_proprietary));
-}
-
-/* operator */
-
-/* operator_none */
-
-static config_err_t
-operator_none_checkout (bmc_config_state_data_t *state_data,
-			const struct config_section *sect,
-			struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.operator_level_none));
-}
-
-static config_err_t
-operator_none_commit (bmc_config_state_data_t *state_data,
-		      const struct config_section *sect,
-		      const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.operator_level_none));
-}
-
-static bmc_diff_t
-operator_none_diff (bmc_config_state_data_t *state_data,
-		    const struct config_section *sect,
-		    const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.operator_level_none));
-}
-
-/* operator_md2 */
-
-static config_err_t
-operator_md2_checkout (bmc_config_state_data_t *state_data,
-		       const struct config_section *sect,
-		       struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.operator_level_md2));
-}
-
-static config_err_t
-operator_md2_commit (bmc_config_state_data_t *state_data,
-		     const struct config_section *sect,
-		     const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.operator_level_md2));
-}
-
-static bmc_diff_t
-operator_md2_diff (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
-		   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.operator_level_md2));
-}
-
-/* operator_md5 */
-
-static config_err_t
-operator_md5_checkout (bmc_config_state_data_t *state_data,
-		       const struct config_section *sect,
-		       struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.operator_level_md5));
-}
-
-static config_err_t
-operator_md5_commit (bmc_config_state_data_t *state_data,
-		     const struct config_section *sect,
-		     const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.operator_level_md5));
-}
-
-static bmc_diff_t
-operator_md5_diff (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
-		   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.operator_level_md5));
-}
-
-/* operator_straight_password */
-
-static config_err_t
-operator_straight_password_checkout (bmc_config_state_data_t *state_data,
-				     const struct config_section *sect,
-				     struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.operator_level_straight_password));
-}
-
-static config_err_t
-operator_straight_password_commit (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
-				   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.operator_level_straight_password));
-}
-
-static bmc_diff_t
-operator_straight_password_diff (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
-				 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.operator_level_straight_password));
-}
-
-/* operator_oem_proprietary */
-
-static config_err_t
-operator_oem_proprietary_checkout (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
-				   struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.operator_level_oem_proprietary));
-}
-
-static config_err_t
-operator_oem_proprietary_commit (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
-				 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.operator_level_oem_proprietary));
-}
-
-static bmc_diff_t
-operator_oem_proprietary_diff (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
-			       const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.operator_level_oem_proprietary));
-}
-
-/* admin */
-
-
-/* admin_none */
-
-static config_err_t
-admin_none_checkout (bmc_config_state_data_t *state_data,
-		     const struct config_section *sect,
-		     struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.admin_level_none));
-}
-
-static config_err_t
-admin_none_commit (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
-		   const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.admin_level_none));
-}
-
-static bmc_diff_t
-admin_none_diff (bmc_config_state_data_t *state_data,
-		 const struct config_section *sect,
-		 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.admin_level_none));
-}
-
-/* admin_md2 */
-
-static config_err_t
-admin_md2_checkout (bmc_config_state_data_t *state_data,
-		    const struct config_section *sect,
-		    struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.admin_level_md2));
-}
-
-static config_err_t
-admin_md2_commit (bmc_config_state_data_t *state_data,
-		  const struct config_section *sect,
-		  const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.admin_level_md2));
-}
-
-static bmc_diff_t
-admin_md2_diff (bmc_config_state_data_t *state_data,
-		const struct config_section *sect,
-		const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.admin_level_md2));
-}
-
-/* admin_md5 */
-
-static config_err_t
-admin_md5_checkout (bmc_config_state_data_t *state_data,
-		    const struct config_section *sect,
-		    struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.admin_level_md5));
-}
-
-static config_err_t
-admin_md5_commit (bmc_config_state_data_t *state_data,
-		  const struct config_section *sect,
-		  const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.admin_level_md5));
-}
-
-static bmc_diff_t
-admin_md5_diff (bmc_config_state_data_t *state_data,
-		const struct config_section *sect,
-		const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.admin_level_md5));
-}
-
-/* admin_straight_password */
-
-static config_err_t
-admin_straight_password_checkout (bmc_config_state_data_t *state_data,
-				  const struct config_section *sect,
-				  struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.admin_level_straight_password));
-}
-
-static config_err_t
-admin_straight_password_commit (bmc_config_state_data_t *state_data,
-				const struct config_section *sect,
-				const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.admin_level_straight_password));
-}
-
-static bmc_diff_t
-admin_straight_password_diff (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
-			      const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.admin_level_straight_password));
-}
-
-/* admin_oem_proprietary */
-
-static config_err_t
-admin_oem_proprietary_checkout (bmc_config_state_data_t *state_data,
-				const struct config_section *sect,
-				struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.admin_level_oem_proprietary));
-}
-
-static config_err_t
-admin_oem_proprietary_commit (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
-			      const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.admin_level_oem_proprietary));
-}
-
-static bmc_diff_t
-admin_oem_proprietary_diff (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
-			    const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.admin_level_oem_proprietary));
-}
-
-/* oem */
-
-/* oem_none */
-
-static config_err_t
-oem_none_checkout (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
-		   struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.oem_level_none));
-}
-
-static config_err_t
-oem_none_commit (bmc_config_state_data_t *state_data,
-		 const struct config_section *sect,
-		 const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.oem_level_none));
-}
-
-static bmc_diff_t
-oem_none_diff (bmc_config_state_data_t *state_data,
-	       const struct config_section *sect,
-	       const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.oem_level_none));
-}
-
-/* oem_md2 */
-
-static config_err_t
-oem_md2_checkout (bmc_config_state_data_t *state_data,
-		  const struct config_section *sect,
-		  struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.oem_level_md2));
-}
-
-static config_err_t
-oem_md2_commit (bmc_config_state_data_t *state_data,
-		const struct config_section *sect,
-		const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.oem_level_md2));
-}
-
-static bmc_diff_t
-oem_md2_diff (bmc_config_state_data_t *state_data,
-	      const struct config_section *sect,
-	      const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.oem_level_md2));
-}
-
-/* oem_md5 */
-
-static config_err_t
-oem_md5_checkout (bmc_config_state_data_t *state_data,
-		  const struct config_section *sect,
-		  struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.oem_level_md5));
-}
-
-static config_err_t
-oem_md5_commit (bmc_config_state_data_t *state_data,
-		const struct config_section *sect,
-		const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.oem_level_md5));
-}
-
-static bmc_diff_t
-oem_md5_diff (bmc_config_state_data_t *state_data,
-	      const struct config_section *sect,
-	      const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.oem_level_md5));
-}
-
-/* oem_straight_password */
-
-static config_err_t
-oem_straight_password_checkout (bmc_config_state_data_t *state_data,
-				const struct config_section *sect,
-				struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.oem_level_straight_password));
-}
-
-static config_err_t
-oem_straight_password_commit (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
-			      const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.oem_level_straight_password));
-}
-
-static bmc_diff_t
-oem_straight_password_diff (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
-			    const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.oem_level_straight_password));
-}
-
-/* oem_oem_proprietary */
-
-static config_err_t
-oem_oem_proprietary_checkout (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
-			      struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_checkout (state_data,
-                                         sect,
-                                         kv,
-                                         &auth,
-                                         &(auth.oem_level_oem_proprietary));
-}
-
-static config_err_t
-oem_oem_proprietary_commit (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
-			    const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_commit (state_data,
-                                       sect,
-                                       kv,
-                                       &auth,
-                                       &(auth.oem_level_oem_proprietary));
-}
-
-static bmc_diff_t
-oem_oem_proprietary_diff (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
-			  const struct config_keyvalue *kv)
-{
-  struct bmc_authentication_level auth;
-
-  return _authentication_level_diff (state_data,
-                                     sect,
-                                     kv,
-                                     &auth,
-                                     &(auth.oem_level_oem_proprietary));
+  if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->dev,
+                                                                             channel_number, 
+                                                                             ate->callback_level_none,
+                                                                             ate->callback_level_md2,
+                                                                             ate->callback_level_md5,
+                                                                             ate->callback_level_straight_password,
+                                                                             ate->callback_level_oem_proprietary,
+                                                                             ate->user_level_none,
+                                                                             ate->user_level_md2,
+                                                                             ate->user_level_md5,
+                                                                             ate->user_level_straight_password,
+                                                                             ate->user_level_oem_proprietary,
+                                                                             ate->operator_level_none,
+                                                                             ate->operator_level_md2,
+                                                                             ate->operator_level_md5,
+                                                                             ate->operator_level_straight_password,
+                                                                             ate->operator_level_oem_proprietary,
+                                                                             ate->admin_level_none,
+                                                                             ate->admin_level_md2,
+                                                                             ate->admin_level_md5,
+                                                                             ate->admin_level_straight_password,
+                                                                             ate->admin_level_oem_proprietary,
+                                                                             ate->oem_level_none,
+                                                                             ate->oem_level_md2,
+                                                                             ate->oem_level_md5,
+                                                                             ate->oem_level_straight_password,
+                                                                             ate->oem_level_oem_proprietary,
+                                                                             obj_cmd_rs) < 0)
+    {
+      if (debug)
+        fprintf(stderr, 
+                "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -1345,6 +296,9 @@ _lan_conf_auth_checkout(const char *section_name,
                         void *arg)
 {
   bmc_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
+  struct authentication_type_enables ate;
+  config_err_t ret;
 
   assert(section_name);
   assert(keyvalues);
@@ -1352,7 +306,84 @@ _lan_conf_auth_checkout(const char *section_name,
 
   state_data = (bmc_config_state_data_t *)arg;
 
-  
+  memset(&ate, '\0', sizeof(struct authentication_type_enables));
+
+  if ((ret = _get_lan_conf_authentication_type_enables(state_data, 
+                                                       debug,
+                                                       &ate)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  kv = keyvalues;
+  while (kv)
+    {
+      uint8_t flag;
+
+      assert(!kv->value_output);
+
+      if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_NONE))
+        flag = ate.callback_level_none;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD2))
+        flag = ate.callback_level_md2;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD5))
+        flag = ate.callback_level_md5;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_STRAIGHT_PASSWORD))
+        flag = ate.callback_level_straight_password;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_OEM_PROPRIETARY))
+        flag = ate.callback_level_oem_proprietary;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_NONE))
+        flag = ate.user_level_none;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD2))
+        flag = ate.user_level_md2;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD5))
+        flag = ate.user_level_md5;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_STRAIGHT_PASSWORD))
+        flag = ate.user_level_straight_password;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_OEM_PROPRIETARY))
+        flag = ate.user_level_oem_proprietary;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_NONE))
+        flag = ate.operator_level_none;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD2))
+        flag = ate.operator_level_md2;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD5))
+        flag = ate.operator_level_md5;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_STRAIGHT_PASSWORD))
+        flag = ate.operator_level_straight_password;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_OEM_PROPRIETARY))
+        flag = ate.operator_level_oem_proprietary;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_NONE))
+        flag = ate.admin_level_none;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD2))
+        flag = ate.admin_level_md2;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD5))
+        flag = ate.admin_level_md5;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_STRAIGHT_PASSWORD))
+        flag = ate.admin_level_straight_password;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_OEM_PROPRIETARY))
+        flag = ate.admin_level_oem_proprietary;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_NONE))
+        flag = ate.oem_level_none;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD2))
+        flag = ate.oem_level_md2;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD5))
+        flag = ate.oem_level_md5;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_STRAIGHT_PASSWORD))
+        flag = ate.oem_level_straight_password;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
+        flag = ate.oem_level_oem_proprietary;
+
+      if (config_section_update_keyvalue(kv,
+                                         NULL,
+                                         flag ? "Yes" : "No") < 0)
+        {
+          if (debug)
+            fprintf(stderr, "config_section_update_keyvalue error\n");
+          return CONFIG_ERR_FATAL_ERROR;
+        }
+          
+      kv = kv->next;
+    }
+
+  return CONFIG_ERR_SUCCESS;
 }
 
 static config_err_t
@@ -1362,14 +393,95 @@ _lan_conf_auth_commit(const char *section_name,
                       void *arg)
 {
   bmc_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
+  struct authentication_type_enables ate;
+  config_err_t ret;
 
   assert(section_name);
   assert(keyvalues);
   assert(arg);
 
   state_data = (bmc_config_state_data_t *)arg;
+
+  memset(&ate, '\0', sizeof(struct authentication_type_enables));
+
+  if ((ret = _get_lan_conf_authentication_type_enables(state_data, 
+                                                       debug,
+                                                       &ate)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  kv = keyvalues;
+  while (kv)
+    {
+      uint8_t flag;
+
+      assert(kv->value_input);
+
+      flag = same (kv->value_input, "yes");
+
+      if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_NONE))
+        ate.callback_level_none = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD2))
+        ate.callback_level_md2 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_MD5))
+        ate.callback_level_md5 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_STRAIGHT_PASSWORD))
+        ate.callback_level_straight_password = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_CALLBACK_OEM_PROPRIETARY))
+        ate.callback_level_oem_proprietary = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_NONE))
+        ate.user_level_none = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD2))
+        ate.user_level_md2 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_MD5))
+        ate.user_level_md5 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_STRAIGHT_PASSWORD))
+        ate.user_level_straight_password = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_USER_OEM_PROPRIETARY))
+        ate.user_level_oem_proprietary = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_NONE))
+        ate.operator_level_none = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD2))
+        ate.operator_level_md2 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_MD5))
+        ate.operator_level_md5 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_STRAIGHT_PASSWORD))
+        ate.operator_level_straight_password = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OPERATOR_OEM_PROPRIETARY))
+        ate.operator_level_oem_proprietary = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_NONE))
+        ate.admin_level_none = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD2))
+        ate.admin_level_md2 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_MD5))
+        ate.admin_level_md5 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_STRAIGHT_PASSWORD))
+        ate.admin_level_straight_password = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ADMIN_OEM_PROPRIETARY))
+        ate.admin_level_oem_proprietary = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_NONE))
+        ate.oem_level_none = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD2))
+        ate.oem_level_md2 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_MD5))
+        ate.oem_level_md5 = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_STRAIGHT_PASSWORD))
+        ate.oem_level_straight_password = flag;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
+        ate.oem_level_oem_proprietary = flag;
+          
+      kv = kv->next;
+    }
+
+  if ((ret = _set_lan_conf_authentication_type_enables(state_data, 
+                                                       debug,
+                                                       &ate)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  return CONFIG_ERR_SUCCESS;
 }
 
+                 
 struct config_section *
 bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
 {
@@ -1391,175 +503,175 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_None",
+                              KEY_NAME_CALLBACK_NONE,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_MD2",
+                              KEY_NAME_CALLBACK_MD2,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_MD5",
+                              KEY_NAME_CALLBACK_MD5,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_Straight_Password",
+                              KEY_NAME_CALLBACK_STRAIGHT_PASSWORD,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Callback_Enable_Auth_Type_OEM_Proprietary",
+                              KEY_NAME_CALLBACK_OEM_PROPRIETARY,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "User_Enable_Auth_Type_None",
+                              KEY_NAME_USER_NONE,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "User_Enable_Auth_Type_MD2",
+                              KEY_NAME_USER_MD2,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "User_Enable_Auth_Type_MD5",
+                              KEY_NAME_USER_MD5,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "User_Enable_Auth_Type_Straight_Password",
+                              KEY_NAME_USER_STRAIGHT_PASSWORD,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "User_Enable_Auth_Type_OEM_Proprietary",
+                              KEY_NAME_USER_OEM_PROPRIETARY,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_None",
+                              KEY_NAME_OPERATOR_NONE,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_MD2",
+                              KEY_NAME_OPERATOR_MD2,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_MD5",
+                              KEY_NAME_OPERATOR_MD5,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_Straight_Password",
+                              KEY_NAME_OPERATOR_STRAIGHT_PASSWORD,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Operator_Enable_Auth_Type_OEM_Proprietary",
+                              KEY_NAME_OPERATOR_OEM_PROPRIETARY,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_None",
+                              KEY_NAME_ADMIN_NONE,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_MD2",
+                              KEY_NAME_ADMIN_MD2,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_MD5",
+                              KEY_NAME_ADMIN_MD5,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_Straight_Password",
+                              KEY_NAME_ADMIN_STRAIGHT_PASSWORD,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "Admin_Enable_Auth_Type_OEM_Proprietary",
+                              KEY_NAME_ADMIN_OEM_PROPRIETARY,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_None",
+                              KEY_NAME_OEM_NONE,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_MD2",
+                              KEY_NAME_OEM_MD2,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_MD5",
+                              KEY_NAME_OEM_MD5,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_Straight_Password",
+                              KEY_NAME_OEM_STRAIGHT_PASSWORD,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_key (lan_conf_auth_section,
-                              "OEM_Enable_Auth_Type_OEM_Proprietary",
+                              KEY_NAME_OEM_OEM_PROPRIETARY,
                               "Possible values: Yes/No",
                               0,
                               config_yes_no_validate) < 0)
