@@ -57,6 +57,7 @@ _get_rmcpplus_cipher_suite_id_privileges(bmc_config_state_data_t *state_data,
   uint8_t channel_number;
   int i;
 
+  assert(state_data);
   assert(cipher_suite_id_supported);
   assert(cipher_suite_id_supported_len == CIPHER_SUITE_LEN);
   assert(cipher_suite_privilege);
@@ -243,6 +244,7 @@ _set_rmcpplus_cipher_suite_id_privileges (bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
 
+  assert(state_data);
   assert(cipher_suite_privilege);
   assert(cipher_suite_privilege_len == CIPHER_SUITE_LEN);
 

@@ -43,6 +43,7 @@ enum argp_option_keys
     VERBOSE_KEY = 'v',
   };
 
+/* XXX */
 typedef enum
   {
     BMC_DIFF_FATAL_ERROR = -2,

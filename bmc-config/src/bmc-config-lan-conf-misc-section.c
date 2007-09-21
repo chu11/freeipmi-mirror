@@ -36,6 +36,10 @@ _get_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
 
+  assert(state_data);
+  assert(bmc_generated_gratuitous_arps);
+  assert(bmc_generated_arp_responses);
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs)))
     goto cleanup;
 
@@ -86,6 +90,9 @@ _get_lan_conf_gratuitous_arp_interval (bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
 
+  assert(state_data);
+  assert(gratuitous_arp_interval);
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
     goto cleanup;
 
@@ -132,6 +139,8 @@ _set_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
   config_err_t ret;
   uint8_t channel_number;
 
+  assert(state_data);
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
@@ -172,6 +181,8 @@ _set_lan_conf_gratuitous_arp_interval (bmc_config_state_data_t *state_data,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert(state_data);
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;

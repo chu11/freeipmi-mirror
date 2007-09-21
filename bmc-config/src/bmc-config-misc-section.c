@@ -30,6 +30,9 @@ _get_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
+  assert(state_data);
+  assert(power_restore_policy);
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
     goto cleanup;
 
@@ -63,6 +66,8 @@ _set_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
+  assert(state_data);
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
     goto cleanup;
   
