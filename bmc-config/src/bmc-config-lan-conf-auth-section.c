@@ -370,6 +370,15 @@ _lan_conf_auth_checkout(const char *section_name,
         flag = ate.oem_level_straight_password;
       else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
         flag = ate.oem_level_oem_proprietary;
+      else
+        {
+          if (debug)
+            fprintf(stderr, 
+                    "ERROR: Unknown key '%s' in '%s'\n",
+                    kv->key->key_name,
+                    section_name);
+          goto next_loop;
+        }
 
       if (config_section_update_keyvalue(kv,
                                          NULL,
@@ -380,6 +389,7 @@ _lan_conf_auth_checkout(const char *section_name,
           return CONFIG_ERR_FATAL_ERROR;
         }
           
+    next_loop:
       kv = kv->next;
     }
 
@@ -469,6 +479,14 @@ _lan_conf_auth_commit(const char *section_name,
         ate.oem_level_straight_password = flag;
       else if (!strcasecmp(kv->key->key_name, KEY_NAME_OEM_OEM_PROPRIETARY))
         ate.oem_level_oem_proprietary = flag;
+      else
+        {
+          if (debug)
+            fprintf(stderr, 
+                    "ERROR: Unknown key '%s' in '%s'\n",
+                    kv->key->key_name,
+                    section_name);
+        }
           
       kv = kv->next;
     }

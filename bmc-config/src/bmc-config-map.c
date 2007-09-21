@@ -121,7 +121,7 @@ privilege_level_string (uint8_t value)
 }
 
 int
-rmcpplus_priv_number (const char *value)
+rmcpplus_privilege_number (const char *value)
 {
   if (same (value, "unused"))
     return 0;
@@ -139,7 +139,7 @@ rmcpplus_priv_number (const char *value)
 }
 
 char *
-rmcpplus_priv_string (int value)
+rmcpplus_privilege_string (int value)
 {
   switch (value)
     {

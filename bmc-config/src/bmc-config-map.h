@@ -35,9 +35,9 @@ int privilege_level_number (const char *string);
 
 char *privilege_level_string (uint8_t value);
 
-int rmcpplus_priv_number (const char *value);
+int rmcpplus_privilege_number (const char *value);
 
-char *rmcpplus_priv_string (int value);
+char *rmcpplus_privilege_string (int value);
 
 int ip_address_source_number (const char *source);
 

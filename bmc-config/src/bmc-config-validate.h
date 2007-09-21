@@ -37,9 +37,9 @@ config_validate_t privilege_level_number_validate (const char *section_name,
                                                    const char *key_name, 
                                                    const char *value);
 
-config_validate_t rmcpplus_priv_number_validate (const char *section_name, 
-                                                 const char *key_name, 
-                                                 const char *value);
+config_validate_t rmcpplus_privilege_number_validate (const char *section_name, 
+                                                      const char *key_name, 
+                                                      const char *value);
 
 config_validate_t ip_address_source_number_validate (const char *section_name, 
                                                      const char *key_name, 

@@ -49,11 +49,11 @@ privilege_level_number_validate (const char *section_name,
 }
 
 config_validate_t 
-rmcpplus_priv_number_validate (const char *section_name,
-                               const char *key_name,
-                               const char *value)
+rmcpplus_privilege_number_validate (const char *section_name,
+                                    const char *key_name,
+                                    const char *value)
 {
-  if (rmcpplus_priv_number (value) >= 0)
+  if (rmcpplus_privilege_number (value) >= 0)
     return CONFIG_VALIDATE_VALID_VALUE;
   return CONFIG_VALIDATE_INVALID_VALUE;
 }

@@ -31,8 +31,6 @@
 
 #include "config-common.h"
 
-#define CIPHER_SUITE_LEN 16
-
 enum argp_option_keys
   { 
     CHECKOUT_KEY = 'o', 
@@ -76,13 +74,6 @@ typedef struct bmc_config_state_data
   bmc_config_prog_data_t *prog_data;
   ipmi_device_t dev;
   struct config_section *sections;
-
-  /* achu: caching to make rmcpplus priv go faster */
-  int cipher_suite_entry_count;
-  int cipher_suite_id_supported[CIPHER_SUITE_LEN];
-  int cipher_suite_id_supported_set;
-  uint8_t cipher_suite_priv[CIPHER_SUITE_LEN];
-  int cipher_suite_priv_set;
 
   /* achu: caching to make bmc-config work more quickly */
   int lan_channel_number_initialized;

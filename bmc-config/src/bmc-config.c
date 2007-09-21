@@ -83,10 +83,6 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
   state_data->dev = NULL;
   state_data->sections = NULL;
 
-  state_data->cipher_suite_entry_count = 0;
-  state_data->cipher_suite_id_supported_set = 0;
-  state_data->cipher_suite_priv_set = 0;
-
   state_data->lan_channel_number_initialized = 0;
   state_data->serial_channel_number_initialized = 0;
   state_data->sol_channel_number_initialized = 0;
