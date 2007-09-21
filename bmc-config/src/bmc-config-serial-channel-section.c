@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
@@ -999,6 +1000,38 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
+static config_err_t
+_serial_channel_checkout(const char *section_name,
+                         struct config_keyvalue *keyvalues,
+                         int debug,
+                         void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+
+}
+
+static config_err_t
+_serial_channel_commit(const char *section_name,
+                       struct config_keyvalue *keyvalues,
+                       int debug,
+                       void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+}
+
 struct config_section *
 bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
 {
@@ -1020,8 +1053,8 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                                         "Serial_Channel",
                                                         section_comment,
                                                         0,
-                                                        NULL, /* XXX */
-                                                        NULL)))
+                                                        _serial_channel_checkout,
+                                                        _serial_channel_commit)))
     goto cleanup;
 
   if (config_section_add_key (serial_channel_section,

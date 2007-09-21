@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
@@ -192,6 +193,39 @@ k_g_validate (const char *section_name,
   return CONFIG_VALIDATE_VALID_VALUE;
 }
 
+static config_err_t
+_lan_conf_security_keys_checkout(const char *section_name,
+                                 struct config_keyvalue *keyvalues,
+                                 int debug,
+                                 void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+
+}
+
+static config_err_t
+_lan_conf_security_keys_commit(const char *section_name,
+                               struct config_keyvalue *keyvalues,
+                               int debug,
+                               void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+}
+
+
 struct config_section *
 bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
@@ -206,8 +240,8 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
                                                                 "Lan_Conf_Security_Keys",
                                                                 section_comment,
                                                                 0,
-                                                                NULL, /* XXX */
-                                                                NULL)))
+                                                                _lan_conf_security_keys_checkout,
+                                                                _lan_conf_security_keys_commit)))
     goto cleanup;
 
   if (config_section_add_key (lan_conf_security_keys_section,

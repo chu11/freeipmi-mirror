@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
@@ -1597,6 +1598,38 @@ serial_session_limit_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
+static config_err_t
+_user_section_checkout(const char *section_name,
+                       struct config_keyvalue *keyvalues,
+                       int debug,
+                       void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+
+}
+
+static config_err_t
+_user_section_commit(const char *section_name,
+                     struct config_keyvalue *keyvalues,
+                     int debug,
+                     void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+}
+
 struct config_section *
 bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 {
@@ -1642,8 +1675,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                                  "UserX",
                                                  section_comment,
                                                  0,
-                                                 NULL, /* XXX */
-                                                 NULL)))
+                                                 _user_section_checkout,
+                                                 _user_section_commit)))
         goto cleanup;
     }
   else
@@ -1652,8 +1685,8 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
                                                  NULL,
                                                  NULL,
                                                  0,
-                                                 NULL, /* XXX */
-                                                 NULL)))
+                                                 _user_section_checkout,
+                                                 _user_section_commit)))
         goto cleanup;
     }
 

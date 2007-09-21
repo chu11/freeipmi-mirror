@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
@@ -450,6 +451,39 @@ id_14_diff (bmc_config_state_data_t *state_data,
   return id_diff (state_data, sect, kv, 14);
 }
 
+static config_err_t
+_rmcpplus_conf_privilege_checkout(const char *section_name,
+                                  struct config_keyvalue *keyvalues,
+                                  int debug,
+                                  void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+
+
+}
+
+static config_err_t
+_rmcpplus_conf_privilege_commit(const char *section_name,
+                                struct config_keyvalue *keyvalues,
+                                int debug,
+                                void *arg)
+{
+  bmc_config_state_data_t *state_data;
+
+  assert(section_name);
+  assert(keyvalues);
+  assert(arg);
+
+  state_data = (bmc_config_state_data_t *)arg;
+}
+
+
 struct config_section *
 bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
@@ -469,8 +503,9 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                                                  "Rmcpplus_Conf_Privilege",
                                                                  section_comment,
                                                                  0,
-                                                                 NULL, /* XXX */
-                                                                 NULL)))
+                                                                 _rmcpplus_conf_privilege_checkout,
+                                                                 _rmcpplus_conf_privilege_commit)))
+
     goto cleanup;
 
   if (config_section_add_key (rmcpplus_conf_privilege_section,
