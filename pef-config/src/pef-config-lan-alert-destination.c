@@ -10,9 +10,7 @@
 
 #include "pef-config.h"
 #include "pef-config-common.h"
-#include "pef-config-diff.h"
 #include "pef-config-map.h"
-#include "pef-config-sections.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
@@ -20,6 +18,7 @@
 #include "freeipmi-portability.h"
 
 #include "config-common.h"
+#include "config-section.h"
 #include "config-validate.h"
 
 #define PEF_CONFIG_MAXIPADDRLEN 16
@@ -107,8 +106,8 @@ destination_type_set (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_destination_type_checkout (pef_config_state_data_t *state_data,
-                                 const struct section *sect,
-                                 struct keyvalue *kv)
+                                 const struct config_section *sect,
+                                 struct config_keyvalue *kv)
 {
   uint8_t destination_type;
   config_err_t ret;
@@ -132,10 +131,7 @@ alert_destination_type_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
-  if (!(kv->value = strdup (alert_destination_type_string (destination_type))))
+  if (!(kv->value_output = strdup (alert_destination_type_string (destination_type))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -146,8 +142,8 @@ alert_destination_type_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_destination_type_commit (pef_config_state_data_t *state_data,
-                               const struct section *sect,
-                               const struct keyvalue *kv)
+                               const struct config_section *sect,
+                               const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -164,7 +160,7 @@ alert_destination_type_commit (pef_config_state_data_t *state_data,
 
   return destination_type_set (state_data,
                                destination_selector,
-                               alert_destination_type_number (kv->value), 1,
+                               alert_destination_type_number (kv->value_input), 1,
                                0, 0,
                                0, 0,
                                0, 0);
@@ -172,8 +168,8 @@ alert_destination_type_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 alert_destination_type_diff (pef_config_state_data_t *state_data,
-                             const struct section *sect,
-                             const struct keyvalue *kv)
+                             const struct config_section *sect,
+                             const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -203,7 +199,7 @@ alert_destination_type_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = alert_destination_type_number (kv->value);
+  passed_val = alert_destination_type_number (kv->value_input);
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
   else 
@@ -211,7 +207,7 @@ alert_destination_type_diff (pef_config_state_data_t *state_data,
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    alert_destination_type_string (get_val));
     }
   return ret;
@@ -219,8 +215,8 @@ alert_destination_type_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_checkout (pef_config_state_data_t *state_data,
-                            const struct section *sect,
-                            struct keyvalue *kv)
+                            const struct config_section *sect,
+                            struct config_keyvalue *kv)
 {
   uint8_t alert_acknowledge;
   config_err_t ret;
@@ -244,12 +240,9 @@ alert_acknowledge_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (alert_acknowledge)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -257,7 +250,7 @@ alert_acknowledge_checkout (pef_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -269,8 +262,8 @@ alert_acknowledge_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_commit (pef_config_state_data_t *state_data,
-                          const struct section *sect,
-                          const struct keyvalue *kv)
+                          const struct config_section *sect,
+                          const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -288,15 +281,15 @@ alert_acknowledge_commit (pef_config_state_data_t *state_data,
   return destination_type_set (state_data,
                                destination_selector,
                                0, 0,
-                               same (kv->value, "yes"), 1,
+                               same (kv->value_input, "yes"), 1,
                                0, 0,
                                0, 0);
 }
 
 static pef_diff_t
 alert_acknowledge_diff (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        const struct keyvalue *kv)
+                        const struct config_section *sect,
+                        const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -326,7 +319,7 @@ alert_acknowledge_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -335,7 +328,7 @@ alert_acknowledge_diff (pef_config_state_data_t *state_data,
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -343,8 +336,8 @@ alert_acknowledge_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_timeout_checkout (pef_config_state_data_t *state_data,
-                                    const struct section *sect,
-                                    struct keyvalue *kv)
+                                    const struct config_section *sect,
+                                    struct config_keyvalue *kv)
 {
   uint8_t alert_acknowledge_timeout;
   config_err_t ret;
@@ -368,10 +361,7 @@ alert_acknowledge_timeout_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (asprintf (&kv->value, "%u", alert_acknowledge_timeout) < 0)
+  if (asprintf (&kv->value_output, "%u", alert_acknowledge_timeout) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -382,8 +372,8 @@ alert_acknowledge_timeout_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_timeout_commit (pef_config_state_data_t *state_data,
-                                  const struct section *sect,
-                                  const struct keyvalue *kv)
+                                  const struct config_section *sect,
+                                  const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -399,7 +389,7 @@ alert_acknowledge_timeout_commit (pef_config_state_data_t *state_data,
   if (destination_selector > number_of_lan_alert_destinations)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  alert_acknowledge_timeout = atoi (kv->value);
+  alert_acknowledge_timeout = atoi (kv->value_input);
 
   return destination_type_set (state_data,
                                destination_selector,
@@ -411,8 +401,8 @@ alert_acknowledge_timeout_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 alert_acknowledge_timeout_diff (pef_config_state_data_t *state_data,
-                                const struct section *sect,
-                                const struct keyvalue *kv)
+                                const struct config_section *sect,
+                                const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -442,7 +432,7 @@ alert_acknowledge_timeout_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -453,7 +443,7 @@ alert_acknowledge_timeout_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -461,8 +451,8 @@ alert_acknowledge_timeout_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_retries_checkout (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        struct keyvalue *kv)
+                        const struct config_section *sect,
+                        struct config_keyvalue *kv)
 {
   uint8_t alert_retries;
   config_err_t ret;
@@ -486,10 +476,7 @@ alert_retries_checkout (pef_config_state_data_t *state_data,
                                    &alert_retries)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-  
-  if (asprintf (&kv->value, "%u", alert_retries) < 0)
+  if (asprintf (&kv->value_output, "%u", alert_retries) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -500,8 +487,8 @@ alert_retries_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_retries_commit (pef_config_state_data_t *state_data,
-                      const struct section *sect,
-                      const struct keyvalue *kv)
+                      const struct config_section *sect,
+                      const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -517,7 +504,7 @@ alert_retries_commit (pef_config_state_data_t *state_data,
   if (destination_selector > number_of_lan_alert_destinations)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  alert_retries = atoi (kv->value);
+  alert_retries = atoi (kv->value_input);
 
   return destination_type_set (state_data,
                                destination_selector,
@@ -529,8 +516,8 @@ alert_retries_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 alert_retries_diff (pef_config_state_data_t *state_data,
-                    const struct section *sect,
-                    const struct keyvalue *kv)
+                    const struct config_section *sect,
+                    const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -560,7 +547,7 @@ alert_retries_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -571,7 +558,7 @@ alert_retries_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -682,8 +669,8 @@ destination_addresses_set (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_gateway_checkout (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        struct keyvalue *kv)
+                        const struct config_section *sect,
+                        struct config_keyvalue *kv)
 {
   uint8_t gateway;
   config_err_t ret;
@@ -708,10 +695,7 @@ alert_gateway_checkout (pef_config_state_data_t *state_data,
                                         0)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-  
-  if (!(kv->value = strdup (alert_gateway_string (gateway))))
+  if (!(kv->value_output = strdup (alert_gateway_string (gateway))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -722,8 +706,8 @@ alert_gateway_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_gateway_commit (pef_config_state_data_t *state_data,
-                      const struct section *sect,
-                      const struct keyvalue *kv)
+                      const struct config_section *sect,
+                      const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -740,15 +724,15 @@ alert_gateway_commit (pef_config_state_data_t *state_data,
 
   return destination_addresses_set (state_data,
                                     destination_selector,
-                                    alert_gateway_number (kv->value), 1,
+                                    alert_gateway_number (kv->value_input), 1,
                                     NULL, 0,
                                     NULL, 0);
 }
 
 static pef_diff_t
 alert_gateway_diff (pef_config_state_data_t *state_data,
-                    const struct section *sect,
-                    const struct keyvalue *kv)
+                    const struct config_section *sect,
+                    const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -779,7 +763,7 @@ alert_gateway_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = alert_gateway_number (kv->value);
+  passed_val = alert_gateway_number (kv->value_input);
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
   else 
@@ -787,7 +771,7 @@ alert_gateway_diff (pef_config_state_data_t *state_data,
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    alert_gateway_string (get_val));
     }
   return ret;
@@ -795,8 +779,8 @@ alert_gateway_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_ip_address_checkout (pef_config_state_data_t *state_data,
-                           const struct section *sect,
-                           struct keyvalue *kv)
+                           const struct config_section *sect,
+                           struct config_keyvalue *kv)
 {
   config_err_t ret;
   char alert_ip[PEF_CONFIG_MAXIPADDRLEN + 1];
@@ -821,10 +805,7 @@ alert_ip_address_checkout (pef_config_state_data_t *state_data,
                                         0)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-  
-  if (!(kv->value = strdup (alert_ip)))
+  if (!(kv->value_output = strdup (alert_ip)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -835,8 +816,8 @@ alert_ip_address_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_ip_address_commit (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const struct keyvalue *kv)
+                         const struct config_section *sect,
+                         const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -854,14 +835,14 @@ alert_ip_address_commit (pef_config_state_data_t *state_data,
   return destination_addresses_set (state_data,
                                     destination_selector,
                                     0, 0,
-                                    kv->value, 1,
+                                    kv->value_input, 1,
                                     NULL, 0);
 }
 
 static pef_diff_t
 alert_ip_address_diff (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                       const struct config_section *sect,
+                       const struct config_keyvalue *kv)
 {
   char alert_ip[PEF_CONFIG_MAXIPADDRLEN + 1];
   config_err_t rc;
@@ -891,14 +872,14 @@ alert_ip_address_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  if (same (alert_ip, kv->value))
+  if (same (alert_ip, kv->value_input))
     ret = PEF_DIFF_SAME;
   else 
     {
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    alert_ip);
     }
   return ret;
@@ -906,8 +887,8 @@ alert_ip_address_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_mac_address_checkout (pef_config_state_data_t *state_data,
-                            const struct section *sect,
-                            struct keyvalue *kv)
+                            const struct config_section *sect,
+                            struct config_keyvalue *kv)
 {
   config_err_t ret;
   char alert_mac[PEF_CONFIG_MAXMACADDRLEN + 1];
@@ -932,10 +913,7 @@ alert_mac_address_checkout (pef_config_state_data_t *state_data,
                                         PEF_CONFIG_MAXMACADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-  
-  if (!(kv->value = strdup (alert_mac)))
+  if (!(kv->value_output = strdup (alert_mac)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -946,8 +924,8 @@ alert_mac_address_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_mac_address_commit (pef_config_state_data_t *state_data,
-                          const struct section *sect,
-                          const struct keyvalue *kv)
+                          const struct config_section *sect,
+                          const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -966,13 +944,13 @@ alert_mac_address_commit (pef_config_state_data_t *state_data,
                                     destination_selector,
                                     0, 0,
                                     NULL, 0,
-                                    kv->value, 1);
+                                    kv->value_input, 1);
 }
 
 static pef_diff_t
 alert_mac_address_diff (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        const struct keyvalue *kv)
+                        const struct config_section *sect,
+                        const struct config_keyvalue *kv)
 {
   char alert_mac[PEF_CONFIG_MAXMACADDRLEN + 1];
   config_err_t rc;
@@ -1002,23 +980,23 @@ alert_mac_address_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  if (same (alert_mac, kv->value))
+  if (same (alert_mac, kv->value_input))
     ret = PEF_DIFF_SAME;
   else 
     {
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    alert_mac);
     }
   return ret;
 }
 
-struct section *
+struct config_section *
 pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_data, int num)
 {
-  struct section *sect = NULL;
+  struct config_section *sect = NULL;
   char buf[64];
 
   if (num <= 0)
@@ -1029,95 +1007,68 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
 
   snprintf(buf, 64, "Lan_Alert_Destination_%d", num);
 
-  if (!(sect = pef_config_section_create (state_data, 
-                                          buf, 
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(sect = config_section_create (buf, 
+                                      NULL, 
+                                      NULL, 
+                                      0,
+                                      NULL, /* XXX */
+                                      NULL)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_Destination_Type",
-                                       "Possible values: PET_Trap/OEM1/OEM2",
-                                       0,
-                                       alert_destination_type_checkout,
-                                       alert_destination_type_commit,
-                                       alert_destination_type_diff,
-                                       alert_destination_type_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_Destination_Type",
+                              "Possible values: PET_Trap/OEM1/OEM2",
+                              0,
+                              alert_destination_type_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_Acknowledge",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       alert_acknowledge_checkout,
-                                       alert_acknowledge_commit,
-                                       alert_acknowledge_diff,
-                                       config_yes_no_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_Acknowledge",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_Acknowledge_Timeout",
-                                       "Give valid unsigned number in seconds",
-                                       0,
-                                       alert_acknowledge_timeout_checkout,
-                                       alert_acknowledge_timeout_commit,
-                                       alert_acknowledge_timeout_diff,
-                                       config_number_range_one_byte) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_Acknowledge_Timeout",
+                              "Give valid unsigned number in seconds",
+                              0,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_Retries",
-                                       "Give valid unsigned number",
-                                       0,
-                                       alert_retries_checkout,
-                                       alert_retries_commit,
-                                       alert_retries_diff,
-                                       alert_retries_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_Retries",
+                              "Give valid unsigned number",
+                              0,
+                              alert_retries_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_Gateway",
-                                       "Possible values: Default/Backup",
-                                       0,
-                                       alert_gateway_checkout,
-                                       alert_gateway_commit,
-                                       alert_gateway_diff,
-                                       alert_gateway_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_Gateway",
+                              "Possible values: Default/Backup",
+                              0,
+                              alert_gateway_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_IP_Address",
-                                       "Give valid IP address",
-                                       0,
-                                       alert_ip_address_checkout,
-                                       alert_ip_address_commit,
-                                       alert_ip_address_diff,
-                                       config_ip_address_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_IP_Address",
+                              "Give valid IP address",
+                              0,
+                              config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_MAC_Address",
-                                       "Give valid MAC address",
-                                       0,
-                                       alert_mac_address_checkout,
-                                       alert_mac_address_commit,
-                                       alert_mac_address_diff,
-                                       config_mac_address_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_MAC_Address",
+                              "Give valid MAC address",
+                              0,
+                              config_mac_address_validate) < 0) 
     goto cleanup;
 
   return sect;
 
  cleanup:
   if (sect)
-    pef_config_section_destroy(state_data, sect);
+    config_section_destroy(sect);
   return NULL;
 }
 

@@ -3,18 +3,14 @@ sbin_PROGRAMS = pef-config
 pef_config_SOURCES = \
 	pef-config.c \
 	pef-config-argp.c \
-	pef-config-checkout.c \
-	pef-config-commit.c \
 	pef-config-pef-conf-section.c \
 	pef-config-community-string.c \
 	pef-config-lan-alert-destination.c \
 	pef-config-alert-string.c \
 	pef-config-alert-policy-table.c \
 	pef-config-event-filter-table.c \
-	pef-config-diff.c \
 	pef-config-info.c \
 	pef-config-map.c \
-	pef-config-parser.c \
 	pef-config-sections.c \
 	pef-config-utils.c \
 	pef-config-validate.c \
@@ -31,8 +27,6 @@ pef_config_LDADD = ../../common/src/libcmdlineparsecommon.la \
 noinst_HEADERS = \
 	pef-config.h \
 	pef-config-argp.h \
-	pef-config-checkout.h \
-	pef-config-commit.h \
 	pef-config-common.h \
 	pef-config-pef-conf-section.h \
 	pef-config-community-string.h \
@@ -40,10 +34,8 @@ noinst_HEADERS = \
 	pef-config-alert-string.h \
 	pef-config-alert-policy-table.h \
 	pef-config-event-filter-table.h \
-	pef-config-diff.h \
 	pef-config-info.h \
 	pef-config-map.h \
-	pef-config-parser.h \
 	pef-config-sections.h \
 	pef-config-utils.h \
 	pef-config-validate.h \

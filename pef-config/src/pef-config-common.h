@@ -6,4 +6,7 @@
 
 #define same(a,b) (strcasecmp(a,b) == 0)
 
+/* XXX */
+#define report_diff(a,b,c,d)
+
 #endif

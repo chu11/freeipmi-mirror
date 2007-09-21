@@ -10,14 +10,13 @@
 
 #include "pef-config.h"
 #include "pef-config-common.h"
-#include "pef-config-diff.h"
 #include "pef-config-map.h"
-#include "pef-config-sections.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
 #include "config-common.h"
+#include "config-section.h"
 #include "config-validate.h"
 
 static config_err_t
@@ -138,8 +137,8 @@ alert_policy_set (pef_config_state_data_t *state_data,
 
 static config_err_t
 policy_type_checkout (pef_config_state_data_t *state_data,
-                      const struct section *sect,
-                      struct keyvalue *kv)
+                      const struct config_section *sect,
+                      struct config_keyvalue *kv)
 {
   uint8_t policy_type;
   config_err_t ret;
@@ -166,10 +165,7 @@ policy_type_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
-  if (!(kv->value = strdup (policy_type_string (policy_type))))
+  if (!(kv->value_output = strdup (policy_type_string (policy_type))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -180,8 +176,8 @@ policy_type_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 policy_type_commit (pef_config_state_data_t *state_data,
-                    const struct section *sect,
-                    const struct keyvalue *kv)
+                    const struct config_section *sect,
+                    const struct config_keyvalue *kv)
 {
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
@@ -198,7 +194,7 @@ policy_type_commit (pef_config_state_data_t *state_data,
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
-                           policy_type_number (kv->value), 1,
+                           policy_type_number (kv->value_input), 1,
                            0, 0,
                            0, 0,
                            0, 0,
@@ -209,8 +205,8 @@ policy_type_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 policy_type_diff (pef_config_state_data_t *state_data,
-                  const struct section *sect,
-                  const struct keyvalue *kv)
+                  const struct config_section *sect,
+                  const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -243,7 +239,7 @@ policy_type_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = policy_type_number (kv->value);
+  passed_val = policy_type_number (kv->value_input);
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
   else
@@ -251,7 +247,7 @@ policy_type_diff (pef_config_state_data_t *state_data,
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    policy_type_string (get_val));
     }
   return ret;
@@ -259,8 +255,8 @@ policy_type_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 policy_enabled_checkout (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         struct keyvalue *kv)
+                         const struct config_section *sect,
+                         struct config_keyvalue *kv)
 {
   uint8_t policy_enabled;
   config_err_t ret;
@@ -287,12 +283,9 @@ policy_enabled_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (policy_enabled)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -300,7 +293,7 @@ policy_enabled_checkout (pef_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -312,8 +305,8 @@ policy_enabled_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 policy_enabled_commit (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                       const struct config_section *sect,
+                       const struct config_keyvalue *kv)
 {
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
@@ -331,7 +324,7 @@ policy_enabled_commit (pef_config_state_data_t *state_data,
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
                            0, 0,
-                           same (kv->value, "yes"), 1,
+                           same (kv->value_input, "yes"), 1,
                            0, 0,
                            0, 0,
                            0, 0,
@@ -341,8 +334,8 @@ policy_enabled_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 policy_enabled_diff (pef_config_state_data_t *state_data,
-                     const struct section *sect,
-                     const struct keyvalue *kv)
+                     const struct config_section *sect,
+                     const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -375,7 +368,7 @@ policy_enabled_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -384,7 +377,7 @@ policy_enabled_diff (pef_config_state_data_t *state_data,
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -392,8 +385,8 @@ policy_enabled_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 policy_number_checkout (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        struct keyvalue *kv)
+                        const struct config_section *sect,
+                        struct config_keyvalue *kv)
 {
   uint8_t policy_number;
   config_err_t ret;
@@ -420,10 +413,7 @@ policy_number_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
-  if (asprintf (&kv->value, "%u", policy_number) < 0)
+  if (asprintf (&kv->value_output, "%u", policy_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -434,8 +424,8 @@ policy_number_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 policy_number_commit (pef_config_state_data_t *state_data,
-                      const struct section *sect,
-                      const struct keyvalue *kv)
+                      const struct config_section *sect,
+                      const struct config_keyvalue *kv)
 {
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
@@ -451,7 +441,7 @@ policy_number_commit (pef_config_state_data_t *state_data,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  policy_number = atoi (kv->value);
+  policy_number = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -466,8 +456,8 @@ policy_number_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 policy_number_diff (pef_config_state_data_t *state_data,
-                    const struct section *sect,
-                    const struct keyvalue *kv)
+                    const struct config_section *sect,
+                    const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -500,7 +490,7 @@ policy_number_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -511,7 +501,7 @@ policy_number_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -519,8 +509,8 @@ policy_number_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 destination_selector_checkout (pef_config_state_data_t *state_data,
-                               const struct section *sect,
-                               struct keyvalue *kv)
+                               const struct config_section *sect,
+                               struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   config_err_t ret;
@@ -547,10 +537,7 @@ destination_selector_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
-  if (asprintf (&kv->value, "%u", destination_selector) < 0)
+  if (asprintf (&kv->value_output, "%u", destination_selector) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -561,8 +548,8 @@ destination_selector_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 destination_selector_commit (pef_config_state_data_t *state_data,
-                             const struct section *sect,
-                             const struct keyvalue *kv)
+                             const struct config_section *sect,
+                             const struct config_keyvalue *kv)
 {
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
@@ -578,7 +565,7 @@ destination_selector_commit (pef_config_state_data_t *state_data,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  destination_selector = atoi (kv->value);
+  destination_selector = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -593,8 +580,8 @@ destination_selector_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 destination_selector_diff (pef_config_state_data_t *state_data,
-                           const struct section *sect,
-                           const struct keyvalue *kv)
+                           const struct config_section *sect,
+                           const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -627,7 +614,7 @@ destination_selector_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -638,7 +625,7 @@ destination_selector_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -646,8 +633,8 @@ destination_selector_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 channel_number_checkout (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         struct keyvalue *kv)
+                         const struct config_section *sect,
+                         struct config_keyvalue *kv)
 {
   uint8_t channel_number;
   config_err_t ret;
@@ -674,10 +661,7 @@ channel_number_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
-  if (asprintf (&kv->value, "%u", channel_number) < 0)
+  if (asprintf (&kv->value_output, "%u", channel_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -688,8 +672,8 @@ channel_number_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 channel_number_commit (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                       const struct config_section *sect,
+                       const struct config_keyvalue *kv)
 {
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
@@ -705,7 +689,7 @@ channel_number_commit (pef_config_state_data_t *state_data,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  channel_number = atoi (kv->value);
+  channel_number = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -720,8 +704,8 @@ channel_number_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 channel_number_diff (pef_config_state_data_t *state_data,
-                     const struct section *sect,
-                     const struct keyvalue *kv)
+                     const struct config_section *sect,
+                     const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -754,7 +738,7 @@ channel_number_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -765,7 +749,7 @@ channel_number_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -773,8 +757,8 @@ channel_number_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_string_set_selector_checkout (pef_config_state_data_t *state_data,
-                                    const struct section *sect,
-                                    struct keyvalue *kv)
+                                    const struct config_section *sect,
+                                    struct config_keyvalue *kv)
 {
   uint8_t alert_string_set_selector;
   config_err_t ret;
@@ -801,10 +785,7 @@ alert_string_set_selector_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
-  if (asprintf (&kv->value, "%u", alert_string_set_selector) < 0)
+  if (asprintf (&kv->value_output, "%u", alert_string_set_selector) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -815,8 +796,8 @@ alert_string_set_selector_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_string_set_selector_commit (pef_config_state_data_t *state_data,
-                                  const struct section *sect,
-                                  const struct keyvalue *kv)
+                                  const struct config_section *sect,
+                                  const struct config_keyvalue *kv)
 {
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
@@ -832,7 +813,7 @@ alert_string_set_selector_commit (pef_config_state_data_t *state_data,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  alert_string_set_selector = atoi (kv->value);
+  alert_string_set_selector = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -847,8 +828,8 @@ alert_string_set_selector_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 alert_string_set_selector_diff (pef_config_state_data_t *state_data,
-                                const struct section *sect,
-                                const struct keyvalue *kv)
+                                const struct config_section *sect,
+                                const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -881,7 +862,7 @@ alert_string_set_selector_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -892,7 +873,7 @@ alert_string_set_selector_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -900,8 +881,8 @@ alert_string_set_selector_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_specific_alert_string_checkout (pef_config_state_data_t *state_data,
-                                      const struct section *sect,
-                                      struct keyvalue *kv)
+                                      const struct config_section *sect,
+                                      struct config_keyvalue *kv)
 {
   uint8_t event_specific_alert_string;
   config_err_t ret;
@@ -928,12 +909,9 @@ event_specific_alert_string_checkout (pef_config_state_data_t *state_data,
                                &event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (event_specific_alert_string)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -941,7 +919,7 @@ event_specific_alert_string_checkout (pef_config_state_data_t *state_data,
     }
   else
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -953,8 +931,8 @@ event_specific_alert_string_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_specific_alert_string_commit (pef_config_state_data_t *state_data,
-                                    const struct section *sect,
-                                    const struct keyvalue *kv)
+                                    const struct config_section *sect,
+                                    const struct config_keyvalue *kv)
 {
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
@@ -977,13 +955,13 @@ event_specific_alert_string_commit (pef_config_state_data_t *state_data,
                            0, 0,
                            0, 0,
                            0, 0,
-                           same (kv->value, "yes"), 1);
+                           same (kv->value_input, "yes"), 1);
 }
 
 static pef_diff_t
 event_specific_alert_string_diff (pef_config_state_data_t *state_data,
-                                  const struct section *sect,
-                                  const struct keyvalue *kv)
+                                  const struct config_section *sect,
+                                  const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -1016,7 +994,7 @@ event_specific_alert_string_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -1025,16 +1003,16 @@ event_specific_alert_string_diff (pef_config_state_data_t *state_data,
       ret = PEF_DIFF_DIFFERENT;
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
 }
 
-struct section *
+struct config_section *
 pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, int num)
 {
-  struct section *sect = NULL;
+  struct config_section *sect = NULL;
   uint8_t lan_channel_number;
   char *strp = NULL;
   config_err_t ret;
@@ -1048,104 +1026,83 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
 
   snprintf(buf, 64, "Alert_Policy_%d", num);
 
-  if (!(sect = pef_config_section_create (state_data, 
-                                          buf, 
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(sect = config_section_create (buf, 
+                                      NULL, 
+                                      NULL, 
+                                      0,
+                                      NULL, /* XXX */
+                                      NULL)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Policy_Type",
-                                       "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
-                                       0,
-                                       policy_type_checkout,
-                                       policy_type_commit,
-                                       policy_type_diff,
-                                       policy_type_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Policy_Type",
+                              "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
+                              0,
+                              policy_type_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Policy_Enabled",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       policy_enabled_checkout,
-                                       policy_enabled_commit,
-                                       policy_enabled_diff,
-                                       config_yes_no_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Policy_Enabled",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Policy_Number",
-                                       "Give a valid number",
-                                       0,
-                                       policy_number_checkout,
-                                       policy_number_commit,
-                                       policy_number_diff,
-                                       config_number_range_four_bits) < 0) 
+  if (config_section_add_key (sect,
+                              "Policy_Number",
+                              "Give a valid number",
+                              0,
+                              config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Destination_Selector",
-                                       "Give a valid number",
-                                       0,
-                                       destination_selector_checkout,
-                                       destination_selector_commit,
-                                       destination_selector_diff,
-                                       config_number_range_four_bits) < 0) 
+  if (config_section_add_key (sect,
+                              "Destination_Selector",
+                              "Give a valid number",
+                              0,
+                              config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  /* XXX: This will mem-leak.  Deal with this when
-   * bmc-config/pef-config are re-designed with a new architecture
-   */
+  /* special case */
   ret = get_lan_channel_number (state_data, &lan_channel_number);
   if (ret == CONFIG_ERR_SUCCESS)
     asprintf(&strp, "Give a valid number (LAN = %u)", lan_channel_number);
   if (!strp)
-    strp = "Give a valid number\n";
+    {
+      if (!(strp = strdup("Give a valid number")))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+    }
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Channel_Number",
-                                       strp,
-                                       0,
-                                       channel_number_checkout,
-                                       channel_number_commit,
-                                       channel_number_diff,
-                                       config_number_range_four_bits) < 0) 
+  if (config_section_add_key (sect,
+                              "Channel_Number",
+                              strp,
+                              0,
+                              config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_String_Set_Selector",
-                                       "Give a valid number",
-                                       0,
-                                       alert_string_set_selector_checkout,
-                                       alert_string_set_selector_commit,
-                                       alert_string_set_selector_diff,
-                                       config_number_range_seven_bits) < 0) 
+  free(strp);
+
+  if (config_section_add_key (sect,
+                              "Alert_String_Set_Selector",
+                              "Give a valid number",
+                              0,
+                              config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Event_Specific_Alert_String",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_specific_alert_string_checkout,
-                                       event_specific_alert_string_commit,
-                                       event_specific_alert_string_diff,
-                                       config_yes_no_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Event_Specific_Alert_String",
+                              "Possible values: Yes/No",
+                              0,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
   return sect;
 
  cleanup:
   if (sect)
-    pef_config_section_destroy(state_data, sect);
+    config_section_destroy(sect);
   return NULL;
 }
 

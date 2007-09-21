@@ -37,9 +37,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "tool-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
-#include "pef-config-checkout.h"
-#include "pef-config-commit.h"
-#include "pef-config-diff.h"
 #include "pef-config-info.h"
 #include "pef-config-sections.h"
 
@@ -68,7 +65,7 @@ _pef_config (void *arg)
   pef_config_prog_data_t *prog_data;
   ipmi_device_t dev = NULL;
   char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
-  struct section *sections = NULL;
+  struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
 
@@ -89,12 +86,11 @@ _pef_config (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
-  if (!(sections = pef_config_sections_list_create (&state_data)))
+  if (!(sections = pef_config_config_sections_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
-
   state_data.sections = sections;
 
   switch (prog_data->args->action) {
@@ -102,16 +98,23 @@ _pef_config (void *arg)
     ret = pef_info (&state_data);
     break;
   case CONFIG_ACTION_CHECKOUT:
+    /* XXX */
+#if 0
     ret = pef_checkout (&state_data);
+#endif
     break;
   case CONFIG_ACTION_COMMIT:
+#if 0
     ret = pef_commit (&state_data);
+#endif
     break;
   case CONFIG_ACTION_DIFF:
+#if 0
     ret = pef_diff (&state_data);
+#endif
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
-    ret = pef_config_sections_list (&state_data);
+    ret = config_sections_output_list (sections);
     break;
   }
 
@@ -129,7 +132,7 @@ _pef_config (void *arg)
       ipmi_device_destroy (dev);
     }
   if (sections)
-    pef_config_sections_list_destroy(&state_data, sections);
+    config_sections_destroy(sections);
   return exit_code;
 }
 

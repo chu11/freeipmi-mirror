@@ -10,14 +10,13 @@
 
 #include "pef-config.h"
 #include "pef-config-common.h"
-#include "pef-config-diff.h"
 #include "pef-config-map.h"
-#include "pef-config-sections.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
 #include "config-common.h"
+#include "config-section.h"
 #include "config-validate.h"
 
 /* achu: presumably there is no maximum.  We could read/write blocks
@@ -84,8 +83,8 @@ string_keys_set (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_number_checkout (pef_config_state_data_t *state_data,
-                              const struct section *sect,
-                              struct keyvalue *kv)
+                              const struct config_section *sect,
+                              struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
   config_err_t ret;
@@ -107,10 +106,7 @@ event_filter_number_checkout (pef_config_state_data_t *state_data,
                               NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (asprintf (&kv->value, "%u", event_filter_number) < 0)
+  if (asprintf (&kv->value_output, "%u", event_filter_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -121,8 +117,8 @@ event_filter_number_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_number_commit (pef_config_state_data_t *state_data,
-                            const struct section *sect,
-                            const struct keyvalue *kv)
+                            const struct config_section *sect,
+                            const struct config_keyvalue *kv)
 {
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
@@ -138,7 +134,7 @@ event_filter_number_commit (pef_config_state_data_t *state_data,
   if (string_selector > number_of_alert_strings)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  event_filter_number = atoi (kv->value);
+  event_filter_number = atoi (kv->value_input);
 
   return string_keys_set (state_data,
                           string_selector,
@@ -148,8 +144,8 @@ event_filter_number_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 event_filter_number_diff (pef_config_state_data_t *state_data,
-                          const struct section *sect,
-                          const struct keyvalue *kv)
+                          const struct config_section *sect,
+                          const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -177,7 +173,7 @@ event_filter_number_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -188,7 +184,7 @@ event_filter_number_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -196,8 +192,8 @@ event_filter_number_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_string_set_checkout (pef_config_state_data_t *state_data,
-                           const struct section *sect,
-                           struct keyvalue *kv)
+                           const struct config_section *sect,
+                           struct config_keyvalue *kv)
 {
   uint8_t alert_string_set;
   config_err_t ret;
@@ -219,10 +215,7 @@ alert_string_set_checkout (pef_config_state_data_t *state_data,
                               &alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-  if (asprintf (&kv->value, "%u", alert_string_set) < 0)
+  if (asprintf (&kv->value_output, "%u", alert_string_set) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -233,8 +226,8 @@ alert_string_set_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_string_set_commit (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const struct keyvalue *kv)
+                         const struct config_section *sect,
+                         const struct config_keyvalue *kv)
 {
   uint8_t string_selector;
   uint8_t number_of_alert_strings;
@@ -250,7 +243,7 @@ alert_string_set_commit (pef_config_state_data_t *state_data,
   if (string_selector > number_of_alert_strings)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  alert_string_set = atoi (kv->value);
+  alert_string_set = atoi (kv->value_input);
 
   return string_keys_set (state_data,
                           string_selector,
@@ -260,8 +253,8 @@ alert_string_set_commit (pef_config_state_data_t *state_data,
 
 static pef_diff_t
 alert_string_set_diff (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                       const struct config_section *sect,
+                       const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -289,7 +282,7 @@ alert_string_set_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = PEF_DIFF_SAME;
@@ -300,7 +293,7 @@ alert_string_set_diff (pef_config_state_data_t *state_data,
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
                    kv->key,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -308,8 +301,8 @@ alert_string_set_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_string_checkout (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       struct keyvalue *kv)
+                       const struct config_section *sect,
+                       struct config_keyvalue *kv)
 {
   uint8_t alert_string[PEF_ALERT_STRING_MAX_LEN+1] = { 0, };
   config_err_t ret;
@@ -331,10 +324,7 @@ alert_string_checkout (pef_config_state_data_t *state_data,
                                    PEF_ALERT_STRING_MAX_LEN+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup ((char *)alert_string)))
+  if (!(kv->value_output = strdup ((char *)alert_string)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -345,8 +335,8 @@ alert_string_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_string_commit (pef_config_state_data_t *state_data,
-                     const struct section *sect,
-                     const struct keyvalue *kv)
+                     const struct config_section *sect,
+                     const struct config_keyvalue *kv)
 { 
   config_err_t ret;
   uint8_t string_selector;
@@ -361,18 +351,18 @@ alert_string_commit (pef_config_state_data_t *state_data,
   if (string_selector > number_of_alert_strings)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  if (!kv->value)
+  if (!kv->value_input)
     return CONFIG_ERR_FATAL_ERROR;
 
   return set_pef_alert_string (state_data,
                                string_selector,
-                               (uint8_t *)kv->value);
+                               (uint8_t *)kv->value_input);
 }
 
 static pef_diff_t
 alert_string_diff (pef_config_state_data_t *state_data,
-                   const struct section *sect,
-                   const struct keyvalue *kv)
+                   const struct config_section *sect,
+                   const struct config_keyvalue *kv)
 {
   uint8_t alert_string[PEF_ALERT_STRING_MAX_LEN+1] = { 0, };
   config_err_t rc;
@@ -399,7 +389,7 @@ alert_string_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
   
-  if (!kv->value || !same (kv->value, (char *)alert_string))
+  if (!kv->value_input || !same (kv->value_input, (char *)alert_string))
     ret = PEF_DIFF_DIFFERENT;
   else
     ret = PEF_DIFF_SAME;
@@ -407,7 +397,7 @@ alert_string_diff (pef_config_state_data_t *state_data,
   if (ret == PEF_DIFF_DIFFERENT)
     report_diff (sect->section_name,
 		 kv->key,
-		 kv->value,
+		 kv->value_input,
 		 (char *)alert_string);
   return ret;
 }
@@ -422,10 +412,10 @@ alert_string_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-struct section *
+struct config_section *
 pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int num)
 {
-  struct section *sect = NULL;
+  struct config_section *sect = NULL;
   char buf[64];
 
   if (num <= 0)
@@ -436,51 +426,40 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
 
   snprintf(buf, 64, "Alert_String_%d", num);
 
-  if (!(sect = pef_config_section_create (state_data, 
-                                          buf, 
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(sect = config_section_create (buf, 
+                                      NULL, 
+                                      NULL, 
+                                      0,
+                                      NULL, /* XXX */
+                                      NULL)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Event_Filter_Number",
-                                       "Give valid number",
-                                       0,
-                                       event_filter_number_checkout,
-                                       event_filter_number_commit,
-                                       event_filter_number_diff,
-                                       config_number_range_seven_bits) < 0) 
+  if (config_section_add_key (sect,
+                              "Event_Filter_Number",
+                              "Give valid number",
+                              0,
+                              config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_String_Set",
-                                       "Give valid number",
-                                       0,
-                                       alert_string_set_checkout,
-                                       alert_string_set_commit,
-                                       alert_string_set_diff,
-                                       config_number_range_seven_bits) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_String_Set",
+                              "Give valid number",
+                              0,
+                              config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Alert_String",
-                                       "Give string. Max 64 chars.",
-                                       0,
-                                       alert_string_checkout,
-                                       alert_string_commit,
-                                       alert_string_diff,
-                                       alert_string_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Alert_String",
+                              "Give string. Max 64 chars.",
+                              0,
+                              alert_string_validate) < 0) 
     goto cleanup;
 
   return sect;
 
  cleanup:
   if (sect)
-    pef_config_section_destroy(state_data, sect);
+    config_section_destroy(sect);
   return NULL;
 }
 

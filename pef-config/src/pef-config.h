@@ -71,7 +71,7 @@ typedef struct pef_config_state_data
 { 
   pef_config_prog_data_t *prog_data;
   ipmi_device_t dev;
-  struct section *sections;
+  struct config_section *sections;
 
   /* achu: caching to make pef-config work more quickly */
   int lan_channel_number_initialized;

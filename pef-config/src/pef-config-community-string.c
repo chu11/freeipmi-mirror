@@ -10,15 +10,17 @@
 
 #include "pef-config.h"
 #include "pef-config-common.h"
-#include "pef-config-diff.h"
 #include "pef-config-map.h"
-#include "pef-config-sections.h"
 #include "pef-config-wrapper.h"
+
+#include "config-common.h"
+#include "config-section.h"
+#include "config-validate.h"
 
 static config_err_t
 community_string_checkout (pef_config_state_data_t *state_data,
-                           const struct section *sect,
-                           struct keyvalue *kv)
+                           const struct config_section *sect,
+                           struct config_keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   config_err_t ret;
@@ -28,10 +30,7 @@ community_string_checkout (pef_config_state_data_t *state_data,
                                        IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (kv->value)
-    free (kv->value);
-
-  if (!(kv->value = strdup ((char *)community_string)))
+  if (!(kv->value_output = strdup ((char *)community_string)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -42,20 +41,20 @@ community_string_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 community_string_commit (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const struct keyvalue *kv)
+                         const struct config_section *sect,
+                         const struct config_keyvalue *kv)
 {
-  if (!kv->value)
+  if (!kv->value_input)
     return CONFIG_ERR_FATAL_ERROR;
 
   return set_bmc_community_string (state_data,
-                                   kv->value);
+                                   kv->value_input);
 }
 
 static pef_diff_t
 community_string_diff (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                       const struct config_section *sect,
+                       const struct config_keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   config_err_t rc;
@@ -70,7 +69,7 @@ community_string_diff (pef_config_state_data_t *state_data,
       return PEF_DIFF_FATAL_ERROR;
     }
 
-  if (!kv->value || !same (kv->value, (char *)community_string))
+  if (!kv->value_input || !same (kv->value_input, (char *)community_string))
     ret = PEF_DIFF_DIFFERENT;
   else
     ret = PEF_DIFF_SAME;
@@ -78,7 +77,7 @@ community_string_diff (pef_config_state_data_t *state_data,
   if (ret == PEF_DIFF_DIFFERENT)
     report_diff (sect->section_name,
 		 kv->key,
-		 kv->value,
+		 kv->value_input,
 		 (char *)community_string);
   return ret;
 }
@@ -93,34 +92,31 @@ community_string_validate (const char *section_name,
   return CONFIG_VALIDATE_VALID_VALUE;
 }
 
-struct section *
+struct config_section *
 pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 {
-  struct section *sect = NULL;
+  struct config_section *sect = NULL;
 
-  if (!(sect = pef_config_section_create (state_data,
-                                          "Community_String",
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(sect = config_section_create ("Community_String",
+                                      NULL, 
+                                      NULL, 
+                                      0,
+                                      NULL, /* XXX */
+                                      NULL)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
-                                       "Community_String",
-                                       "Give valid string",
-                                       0,
-                                       community_string_checkout,
-                                       community_string_commit,
-                                       community_string_diff,
-                                       community_string_validate) < 0) 
+  if (config_section_add_key (sect,
+                              "Community_String",
+                              "Give valid string",
+                              0,
+                              community_string_validate) < 0) 
     goto cleanup;
 
   return sect;
 
  cleanup:
   if (sect)
-    pef_config_section_destroy(state_data, sect);
+    config_section_destroy(sect);
   return NULL;
 }
 
