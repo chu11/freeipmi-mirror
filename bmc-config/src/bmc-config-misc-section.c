@@ -19,67 +19,70 @@
 #include "config-section.h"
 #include "config-validate.h"
 
-static config_err_t
-power_restore_policy_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
-			       struct config_keyvalue *kv)
-{
-  uint8_t policy;
-  config_err_t ret;
-
-  if ((ret = get_bmc_power_restore_policy (state_data,
-                                           &policy)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (!(kv->value_output = strdup (power_restore_policy_string (policy))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
-  return CONFIG_ERR_SUCCESS;
-}
+#define KEY_NAME_POWER_RESTORE_POLICY "Power_Restore_Policy"
 
 static config_err_t
-power_restore_policy_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
-			     const struct config_keyvalue *kv)
+_get_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
+                               int debug,
+                               uint8_t *power_restore_policy)
 {
-  return set_bmc_power_restore_policy (state_data,
-				       power_restore_policy_number (kv->value_input));
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_chassis_status (state_data->dev, obj_cmd_rs) < 0)
+    {
+      if (debug)
+        fprintf(stderr,
+                "ipmi_cmd_get_chassis_status: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (fiid_obj_get (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
+    goto cleanup;
+  *power_restore_policy = val;
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
-static bmc_diff_t
-power_restore_policy_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *sect,
-			   const struct config_keyvalue *kv)
+
+static config_err_t
+_set_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
+                               int debug,
+                               uint8_t power_restore_policy)
 {
-  uint8_t got_value;
-  uint8_t passed_value;
-  config_err_t rc;
-  bmc_diff_t ret;
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
-  if ((rc = get_bmc_power_restore_policy (state_data,
-                                          &got_value)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return BMC_DIFF_NON_FATAL_ERROR;
-      return BMC_DIFF_FATAL_ERROR;
-    }
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
+    goto cleanup;
   
-  passed_value = power_restore_policy_number (kv->value_input);
-
-  if (passed_value == got_value)
-    ret = BMC_DIFF_SAME;
-  else 
+  if (ipmi_cmd_set_power_restore_policy (state_data->dev,
+                                         power_restore_policy,
+                                         obj_cmd_rs) < 0)
     {
-      ret = BMC_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
-                   kv->key,
-                   kv->value_input,
-                   power_restore_policy_string (got_value));
+      if (debug)
+        fprintf(stderr,
+                "ipmi_cmd_set_power_restore_policy: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
     }
 
-  return ret;
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -89,14 +92,50 @@ _misc_section_checkout(const char *section_name,
                        void *arg)
 {
   bmc_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
+  config_err_t ret;
+  uint8_t power_restore_policy;
 
   assert(section_name);
   assert(keyvalues);
   assert(arg);
 
   state_data = (bmc_config_state_data_t *)arg;
+  
+  kv = keyvalues;
+  while (kv)
+    {
+      assert(!kv->value_output);
 
+      if (!strcasecmp(kv->key->key_name, KEY_NAME_POWER_RESTORE_POLICY))
+        {
+          if ((ret = _get_bmc_power_restore_policy (state_data,
+                                                    debug,
+                                                    &power_restore_policy)) != CONFIG_ERR_SUCCESS)
+            return ret;
 
+          if (config_section_update_keyvalue(kv,
+                                             NULL,
+                                             power_restore_policy_string(power_restore_policy)) < 0)
+            {
+              if (debug)
+                fprintf(stderr, "config_section_update_keyvalue error\n");
+              return CONFIG_ERR_FATAL_ERROR;
+            }
+        }
+      else
+        {
+          if (debug)
+            fprintf(stderr,
+                    "ERROR: Unknown key '%s' in '%s'\n",
+                    kv->key->key_name,
+                    section_name);
+        }
+      
+      kv = kv->next;
+    }
+
+  return CONFIG_ERR_SUCCESS;
 }
 
 static config_err_t
@@ -106,12 +145,43 @@ _misc_section_commit(const char *section_name,
                      void *arg)
 {
   bmc_config_state_data_t *state_data;
+  struct config_keyvalue *kv;
+  config_err_t ret;
+  uint8_t power_restore_policy;
 
   assert(section_name);
   assert(keyvalues);
   assert(arg);
 
   state_data = (bmc_config_state_data_t *)arg;
+  
+  kv = keyvalues;
+  while (kv)
+    {
+      assert(kv->value_input);
+
+      if (!strcasecmp(kv->key->key_name, KEY_NAME_POWER_RESTORE_POLICY))
+        {
+          power_restore_policy = power_restore_policy_number (kv->value_input);
+
+          if ((ret = _set_bmc_power_restore_policy (state_data,
+                                                    debug,
+                                                    power_restore_policy)) != CONFIG_ERR_SUCCESS)
+            return ret;
+        }
+      else
+        {
+          if (debug)
+            fprintf(stderr,
+                    "ERROR: Unknown key '%s' in '%s'\n",
+                    kv->key->key_name,
+                    section_name);
+        }
+      
+      kv = kv->next;
+    }
+
+  return CONFIG_ERR_SUCCESS;
 }
 
 struct config_section *
@@ -138,7 +208,7 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   if (config_section_add_key (misc_section,
-                              "Power_Restore_Policy",
+                              KEY_NAME_POWER_RESTORE_POLICY,
                               "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
                               CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               power_restore_policy_number_validate) < 0)

@@ -133,8 +133,6 @@ config_err_t set_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_
                                                                uint8_t dtr_hangup, 
                                                                uint8_t flow_control, 
                                                                uint8_t bit_rate);
-config_err_t set_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
-                                           uint8_t power_restore_policy);
 config_err_t set_pef_control (bmc_config_state_data_t *state_data,
                               uint8_t pef,
                               uint8_t pef_event_messages,
@@ -283,8 +281,6 @@ config_err_t get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_
                                                                uint8_t *flow_control, 
                                                                uint8_t *bit_rate);
 
-config_err_t get_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
-                                           uint8_t *power_restore_policy);
 config_err_t get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
                                        uint32_t *vlan_id,
                                        uint8_t *vlan_id_enable);

@@ -344,9 +344,12 @@ _rmcpplus_conf_privilege_checkout(const char *section_name,
 
           if (id_found)
             {
-              if (!(kv->value_output = strdup (rmcpplus_privilege_string (privilege))))
+              if (config_section_update_keyvalue(kv,
+                                                 NULL,
+                                                 rmcpplus_privilege_string(privilege)) < 0)
                 {
-                  perror("strdup");
+                  if (debug)
+                    fprintf(stderr, "config_section_update_keyvalue error\n");
                   return CONFIG_ERR_FATAL_ERROR;
                 }
             }
