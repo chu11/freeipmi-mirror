@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.h,v 1.3 2007-09-05 20:13:46 chu11 Exp $ 
+   $Id: pef-config-argp.h,v 1.4 2007-09-22 17:31:18 chu11 Exp $ 
    
    pef-config-argp.h - Platform Event Filtering utility.
    
@@ -25,7 +25,7 @@
 
 #include "pef-config.h"
 
-void pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args);
-int pef_config_args_validate (struct pef_config_arguments *args);
+void pef_config_argp_parse (int argc, char **argv, struct config_arguments *cmd_args);
+int pef_config_args_validate (struct config_arguments *args);
 
 #endif

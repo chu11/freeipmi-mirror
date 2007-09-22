@@ -20,7 +20,7 @@
 
 static config_err_t
 pef_commit_keypair (pef_config_state_data_t *state_data,
-                    struct keypair *kp)
+                    struct config_keypair *kp)
 {
   char *keypair = NULL;
   char *section_name;
@@ -62,8 +62,8 @@ pef_commit_keypair (pef_config_state_data_t *state_data,
 static config_err_t
 pef_commit_keypairs (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
-  struct keypair *kp;
+  struct config_arguments *args;
+  struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
@@ -91,8 +91,8 @@ pef_commit_keypairs (pef_config_state_data_t *state_data)
 static config_err_t
 pef_keypair_feed (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
-  struct keypair *kp;
+  struct config_arguments *args;
+  struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
@@ -198,7 +198,7 @@ pef_keypair_feed (pef_config_state_data_t *state_data)
 static config_err_t
 pef_commit_file (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
   int file_opened = 0;
   FILE *fp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -278,7 +278,7 @@ pef_commit_file (pef_config_state_data_t *state_data)
 config_err_t
 pef_commit (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
   config_err_t ret;
 
   args = state_data->prog_data->args;

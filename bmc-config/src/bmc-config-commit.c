@@ -18,7 +18,7 @@
 
 static config_err_t
 bmc_commit_keypair (bmc_config_state_data_t *state_data,
-                    struct keypair *kp)
+                    struct config_keypair *kp)
 {
   char *keypair = NULL;
   char *section_name;
@@ -60,8 +60,8 @@ bmc_commit_keypair (bmc_config_state_data_t *state_data,
 static config_err_t
 bmc_commit_keypairs (bmc_config_state_data_t *state_data)
 {
-  struct bmc_config_arguments *args;
-  struct keypair *kp;
+  struct config_arguments *args;
+  struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
@@ -89,8 +89,8 @@ bmc_commit_keypairs (bmc_config_state_data_t *state_data)
 static config_err_t
 bmc_keypair_feed (bmc_config_state_data_t *state_data)
 {
-  struct bmc_config_arguments *args;
-  struct keypair *kp;
+  struct config_arguments *args;
+  struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
@@ -195,7 +195,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
 static config_err_t
 bmc_commit_file (bmc_config_state_data_t *state_data)
 {
-  struct bmc_config_arguments *args;
+  struct config_arguments *args;
   int file_opened = 0;
   FILE *fp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -274,7 +274,7 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
 config_err_t
 bmc_commit (bmc_config_state_data_t *state_data)
 {
-  struct bmc_config_arguments *args;
+  struct config_arguments *args;
   config_err_t ret;
 
   args = state_data->prog_data->args;

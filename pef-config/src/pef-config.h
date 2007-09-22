@@ -43,34 +43,10 @@ enum argp_option_keys
     VERBOSE_KEY = 'v',
   };
 
-struct keypair
-{
-  char *keypair;
-  struct keypair *next;
-};
-
-struct sectionstr
-{
-  char *sectionstr;
-  struct sectionstr *next;
-};
-
-struct pef_config_arguments
-{
-  struct common_cmd_args common;
-  
-  config_action_t action;
-
-  int verbose;
-  char *filename;
-  struct keypair *keypairs;
-  struct sectionstr *sectionstrs;
-};
-
 typedef struct pef_config_prog_data
 { 
   char *progname;
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
 } pef_config_prog_data_t;
 
 typedef struct pef_config_state_data

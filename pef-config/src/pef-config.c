@@ -135,7 +135,7 @@ int
 main (int argc, char **argv)
 {
   pef_config_prog_data_t prog_data;
-  struct pef_config_arguments cmd_args;
+  struct config_arguments cmd_args;
   int exit_code;
   
   ipmi_disable_coredump();

@@ -25,7 +25,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
   char *value = NULL;
   char *tok;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  struct bmc_config_arguments *args;
+  struct config_arguments *args;
 
   args = state_data->prog_data->args;
 

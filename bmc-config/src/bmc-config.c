@@ -163,7 +163,7 @@ int
 main (int argc, char *argv[])
 {
   bmc_config_prog_data_t prog_data;
-  struct bmc_config_arguments cmd_args;
+  struct config_arguments cmd_args;
   int exit_code;
 
   ipmi_disable_coredump();

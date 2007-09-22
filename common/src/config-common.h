@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#include "cmdline-parse-common.h"
+
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT                  0x01
 #define CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY   0x02
 #define CONFIG_DO_NOT_CHECKOUT                             0x04
@@ -40,13 +42,32 @@ typedef enum
     CONFIG_VALIDATE_VALID_VALUE = 0,
   } config_validate_t;
 
-#if 0
-/* XXX */
+struct config_keypair
+{
+  char *keypair;
+  struct config_keypair *next;
+};
+
 struct config_section_str
 {
   char *section_name;
   struct config_section_str *next;
 };
+
+struct config_arguments
+{
+  struct common_cmd_args common;
+
+  config_action_t action;
+
+  int verbose;
+  char *filename;
+  struct config_keypair *keypairs;
+  struct config_section_str *section_strs;
+};
+
+#if 0
+/* XXX */
 
 struct config_section_str *config_section_str_create(char *section_name);
 

@@ -16,7 +16,7 @@
 
 static config_diff_t
 config_diff_keypair (pef_config_state_data_t *state_data,
-                  struct keypair *kp)
+                  struct config_keypair *kp)
 {
   char *keypair = NULL;
   char *section_name;
@@ -58,8 +58,8 @@ config_diff_keypair (pef_config_state_data_t *state_data,
 static config_diff_t
 config_diff_keypairs (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
-  struct keypair *kp;
+  struct config_arguments *args;
+  struct config_keypair *kp;
   config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
   config_diff_t ret = CONFIG_DIFF_SAME;
 
@@ -88,7 +88,7 @@ config_diff_keypairs (pef_config_state_data_t *state_data)
 static config_diff_t
 config_diff_file (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
   FILE *fp;
   int file_opened = 0;
   config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
@@ -149,7 +149,7 @@ config_diff_file (pef_config_state_data_t *state_data)
 config_err_t
 config_diff (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
   config_diff_t ret;
 
   args = state_data->prog_data->args;

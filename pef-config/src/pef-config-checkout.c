@@ -20,7 +20,7 @@
 
 static config_err_t
 pef_checkout_keypair (pef_config_state_data_t *state_data,
-                      struct keypair *kp)
+                      struct config_keypair *kp)
 {
   char *keypair = NULL;
   char *section_name;
@@ -99,8 +99,8 @@ pef_checkout_keypair (pef_config_state_data_t *state_data,
 static config_err_t
 pef_checkout_keypairs (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
-  struct keypair *kp;
+  struct config_arguments *args;
+  struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
@@ -131,7 +131,7 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
                              struct section *sect,
                              FILE *fp)
 {
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
   struct keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
@@ -236,8 +236,8 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
 static config_err_t
 pef_checkout_section (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
-  struct sectionstr *sstr;
+  struct config_arguments *args;
+  struct config_section_str *sstr;
   FILE *fp;
   int file_opened = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -257,7 +257,7 @@ pef_checkout_section (pef_config_state_data_t *state_data)
   else
     fp = stdout;
 
-  sstr = args->sectionstrs;
+  sstr = args->section_strs;
   while (sstr)
     {
       struct section *sect = state_data->sections;
@@ -265,7 +265,7 @@ pef_checkout_section (pef_config_state_data_t *state_data)
 
       while (sect)
         {
-          if (!strcasecmp(sect->section_name, sstr->sectionstr))
+          if (!strcasecmp(sect->section_name, sstr->section_name))
             {
               config_err_t this_ret;
 
@@ -287,7 +287,7 @@ pef_checkout_section (pef_config_state_data_t *state_data)
 
       if (!found)
         {
-          fprintf(stderr, "Invalid section `%s'\n", sstr->sectionstr);
+          fprintf(stderr, "Invalid section `%s'\n", sstr->section_name);
           ret = 0;
         }
 
@@ -304,7 +304,7 @@ pef_checkout_section (pef_config_state_data_t *state_data)
 static config_err_t
 pef_checkout_file (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
   struct section *sect;
   FILE *fp;
   int file_opened = 0;
@@ -355,14 +355,14 @@ pef_checkout_file (pef_config_state_data_t *state_data)
 config_err_t
 pef_checkout (pef_config_state_data_t *state_data)
 {
-  struct pef_config_arguments *args;
+  struct config_arguments *args;
   config_err_t ret;
 
   args = state_data->prog_data->args;
 
   if (args->keypairs)
     ret = pef_checkout_keypairs (state_data);
-  else if (args->sectionstrs)
+  else if (args->section_strs)
     ret = pef_checkout_section (state_data);
   else
     ret = pef_checkout_file (state_data);

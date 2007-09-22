@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.11 2007-09-22 16:28:32 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.12 2007-09-22 17:31:18 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -91,12 +91,12 @@ static struct argp_option options[] =
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
-static struct keypair *
-_create_keypair(char *arg)
+static struct config_keypair *
+_create_config_keypair(char *arg)
 {
-  struct keypair *kp;
+  struct config_keypair *kp;
 
-  if (!(kp = (struct keypair *)malloc(sizeof(struct keypair))))
+  if (!(kp = (struct config_keypair *)malloc(sizeof(struct config_keypair))))
     {
       perror("malloc");
       exit(1);
@@ -111,17 +111,17 @@ _create_keypair(char *arg)
   return kp;
 }
 
-static struct sectionstr *
-_create_sectionstr(char *arg)
+static struct config_section_str *
+_create_config_section_str(char *arg)
 {
-  struct sectionstr *s;
+  struct config_section_str *s;
 
-  if (!(s = (struct sectionstr *)malloc(sizeof(struct sectionstr))))
+  if (!(s = (struct config_section_str *)malloc(sizeof(struct config_section_str))))
     {
       perror("malloc");
       exit(1);
     }
-  if (!(s->sectionstr = strdup(arg)))
+  if (!(s->section_name = strdup(arg)))
     {
       perror("strdup");
       exit(1);
@@ -134,9 +134,9 @@ _create_sectionstr(char *arg)
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct pef_config_arguments *cmd_args = state->input;
-  struct keypair *kp;
-  struct sectionstr *sstr;
+  struct config_arguments *cmd_args = state->input;
+  struct config_keypair *kp;
+  struct config_section_str *sstr;
   
   switch (key)
     {
@@ -174,10 +174,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       break;
     case KEYPAIR_KEY:
-      kp = _create_keypair(arg);
+      kp = _create_config_keypair(arg);
       if (cmd_args->keypairs)
         {
-          struct keypair *p = NULL;
+          struct config_keypair *p = NULL;
 
           p = cmd_args->keypairs;
           while (p->next)
@@ -189,19 +189,19 @@ parse_opt (int key, char *arg, struct argp_state *state)
         cmd_args->keypairs = kp;
       break;
     case SECTIONS_KEY:
-      sstr = _create_sectionstr(arg);
-      if (cmd_args->sectionstrs)
+      sstr = _create_config_section_str(arg);
+      if (cmd_args->section_strs)
         {
-          struct sectionstr *p = NULL;
+          struct config_section_str *p = NULL;
 
-          p = cmd_args->sectionstrs;
+          p = cmd_args->section_strs;
           while (p->next)
             p = p->next;
 
           p->next = sstr;
         }
       else
-        cmd_args->sectionstrs = sstr;
+        cmd_args->section_strs = sstr;
       break;
     case LIST_SECTIONS_KEY:
       if (!cmd_args->action)
@@ -227,14 +227,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
 }
 
 void 
-pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_args)
+pef_config_argp_parse (int argc, char **argv, struct config_arguments *cmd_args)
 {
   init_common_cmd_args (&(cmd_args->common));
   cmd_args->action = 0;
   cmd_args->verbose = 0;
   cmd_args->filename = NULL;
   cmd_args->keypairs = NULL;
-  cmd_args->sectionstrs = NULL;
+  cmd_args->section_strs = NULL;
 
   /* ADMIN is minimum for pef-config b/c its needed for many of the
    * ipmi cmds used
@@ -245,7 +245,7 @@ pef_config_argp_parse (int argc, char **argv, struct pef_config_arguments *cmd_a
 }
 
 int
-pef_config_args_validate (struct pef_config_arguments *cmd_args)
+pef_config_args_validate (struct config_arguments *cmd_args)
 {
   int ret = 0;
 
@@ -256,7 +256,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
                "Exactly one of --info, --checkout, --commit, --diff, or --listsections MUST be given\n");
       return -1;
     }
-
+  
   // filename and keypair both given for checkout or diff
   if (cmd_args->filename && cmd_args->keypairs
       && (cmd_args->action == CONFIG_ACTION_CHECKOUT
@@ -269,7 +269,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
 
   // only one of keypairs or section can be given for checkout
   if (cmd_args->action == CONFIG_ACTION_CHECKOUT
-      && (cmd_args->keypairs && cmd_args->sectionstrs))
+      && (cmd_args->keypairs && cmd_args->section_strs))
     {
       fprintf (stderr,
                "Only one of --filename, --keypair, and --section can be used\n");
