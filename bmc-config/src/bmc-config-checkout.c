@@ -22,8 +22,8 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
   char *keypair = NULL;
   char *section_name;
   char *key_name;
-  struct section *sect;
-  struct keyvalue *kv;
+  struct config_section *sect;
+  struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
@@ -65,7 +65,7 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
 
   while (kv) 
     {
-      if (same (key_name, kv->key))
+      if (same (key_name, kv->key_name))
         break;
       kv = kv->next;
     }
@@ -125,11 +125,11 @@ bmc_checkout_keypairs (bmc_config_state_data_t *state_data)
 
 static config_err_t
 bmc_checkout_section_common (bmc_config_state_data_t *state_data,
-                             struct section *sect, 
+                             struct config_section *sect, 
                              FILE *fp)
 {
   struct config_arguments *args;
-  struct keyvalue *kv;
+  struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
   config_err_t this_ret;
@@ -178,14 +178,14 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
           if (args->verbose)
             fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
                      sect->section_name,
-                     kv->key);
+                     kv->key_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         } 
       else 
         {
           int key_len = 0;
                   
-          fprintf (fp, "\t## %s\n", kv->desc);
+          fprintf (fp, "\t## %s\n", kv->description);
                   
           /* beauty comes at a cost */
           
@@ -200,16 +200,16 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
            * the IPMI version or the implementation.
            */
           if (kv->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT)
-            key_len = fprintf(fp, "\t## %s", kv->key);
+            key_len = fprintf(fp, "\t## %s", kv->key_name);
           else if (kv->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
             {
               if (kv->value && strlen(kv->value))
-                key_len = fprintf (fp, "\t%s", kv->key);
+                key_len = fprintf (fp, "\t%s", kv->key_name);
               else
-                key_len = fprintf(fp, "\t## %s", kv->key);
+                key_len = fprintf(fp, "\t## %s", kv->key_name);
             }
           else
-            key_len = fprintf (fp, "\t%s", kv->key);
+            key_len = fprintf (fp, "\t%s", kv->key_name);
           
           while (key_len <= CONFIG_CHECKOUT_LINE_LEN) 
             {
@@ -257,7 +257,7 @@ bmc_checkout_section (bmc_config_state_data_t *state_data)
   sstr = args->section_strs;
   while (sstr)
     {
-      struct section *sect = state_data->sections;
+      struct config_section *sect = state_data->sections;
       int found = 0;
       
       while (sect) 
@@ -302,7 +302,7 @@ static config_err_t
 bmc_checkout_file (bmc_config_state_data_t *state_data)
 {
   struct config_arguments *args;
-  struct section *sect;
+  struct config_section *sect;
   FILE *fp;
   int file_opened = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;

@@ -17,8 +17,8 @@
 
 static config_err_t
 community_string_checkout (pef_config_state_data_t *state_data,
-                           const struct section *sect,
-                           struct keyvalue *kv)
+                           const struct config_section *sect,
+                           struct config_keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   config_err_t ret;
@@ -42,8 +42,8 @@ community_string_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 community_string_commit (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const struct keyvalue *kv)
+                         const struct config_section *sect,
+                         const struct config_keyvalue *kv)
 {
   if (!kv->value)
     return CONFIG_ERR_FATAL_ERROR;
@@ -54,8 +54,8 @@ community_string_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 community_string_diff (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                       const struct config_section *sect,
+                       const struct config_keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   config_err_t rc;
@@ -77,7 +77,7 @@ community_string_diff (pef_config_state_data_t *state_data,
 
   if (ret == CONFIG_DIFF_DIFFERENT)
     report_diff (sect->section_name,
-		 kv->key,
+		 kv->key_name,
 		 kv->value,
 		 (char *)community_string);
   return ret;
@@ -93,10 +93,10 @@ community_string_validate (const char *section_name,
   return CONFIG_VALIDATE_VALID_VALUE;
 }
 
-struct section *
+struct config_section *
 pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 {
-  struct section *sect = NULL;
+  struct config_section *sect = NULL;
 
   if (!(sect = pef_config_section_create (state_data,
                                           "Community_String",

@@ -18,8 +18,8 @@
 
 static config_err_t
 id_checkout (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     struct keyvalue *kv,
+	     const struct config_section *sect,
+	     struct config_keyvalue *kv,
 	     int id)
 {
   uint8_t priv;
@@ -44,8 +44,8 @@ id_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 id_commit (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv,
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv,
 	   int id)
 {
   return set_rmcpplus_cipher_suite_id_privilege (state_data,
@@ -55,8 +55,8 @@ id_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 id_diff (bmc_config_state_data_t *state_data,
-	 const struct section *sect,
-	 const struct keyvalue *kv,
+	 const struct config_section *sect,
+	 const struct config_keyvalue *kv,
 	 int id)
 {
   uint8_t priv;
@@ -78,7 +78,7 @@ id_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    rmcpplus_priv_string (priv));
     }
@@ -87,48 +87,48 @@ id_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 id_0_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 0);
 }
 
 static config_err_t
 id_0_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 0);
 }
 
 static config_diff_t
 id_0_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 0);
 }
 
 static config_err_t
 id_1_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 1);
 }
 
 static config_err_t
 id_1_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 1);
 }
 
 static config_diff_t
 id_1_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 1);
 }
@@ -136,24 +136,24 @@ id_1_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 id_2_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 2);
 }
 
 static config_err_t
 id_2_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 2);
 }
 
 static config_diff_t
 id_2_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 2);
 }
@@ -162,48 +162,48 @@ id_2_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 id_3_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 3);
 }
 
 static config_err_t
 id_3_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 3);
 }
 
 static config_diff_t
 id_3_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 3);
 }
 
 static config_err_t
 id_4_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 4);
 }
 
 static config_err_t
 id_4_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 4);
 }
 
 static config_diff_t
 id_4_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 4);
 }
@@ -212,72 +212,72 @@ id_4_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 id_5_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 5);
 }
 
 static config_err_t
 id_5_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 5);
 }
 
 static config_diff_t
 id_5_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 5);
 }
 
 static config_err_t
 id_6_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 6);
 }
 
 static config_err_t
 id_6_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 6);
 }
 
 static config_diff_t
 id_6_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 6);
 }
 
 static config_err_t
 id_7_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 7);
 }
 
 static config_err_t
 id_7_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 7);
 }
 
 static config_diff_t
 id_7_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 7);
 }
@@ -285,176 +285,176 @@ id_7_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 id_8_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 8);
 }
 
 static config_err_t
 id_8_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 8);
 }
 
 static config_diff_t
 id_8_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 8);
 }
 
 static config_err_t
 id_9_checkout (bmc_config_state_data_t *state_data,
-	       const struct section *sect,
-	       struct keyvalue *kv)
+	       const struct config_section *sect,
+	       struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 9);
 }
 
 static config_err_t
 id_9_commit (bmc_config_state_data_t *state_data,
-	     const struct section *sect,
-	     const struct keyvalue *kv)
+	     const struct config_section *sect,
+	     const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 9);
 }
 
 static config_diff_t
 id_9_diff (bmc_config_state_data_t *state_data,
-	   const struct section *sect,
-	   const struct keyvalue *kv)
+	   const struct config_section *sect,
+	   const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 9);
 }
 
 static config_err_t
 id_10_checkout (bmc_config_state_data_t *state_data,
-		const struct section *sect,
-		struct keyvalue *kv)
+		const struct config_section *sect,
+		struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 10);
 }
 
 static config_err_t
 id_10_commit (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      const struct keyvalue *kv)
+	      const struct config_section *sect,
+	      const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 10);
 }
 
 static config_diff_t
 id_10_diff (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 10);
 }
 
 static config_err_t
 id_11_checkout (bmc_config_state_data_t *state_data,
-		const struct section *sect,
-		struct keyvalue *kv)
+		const struct config_section *sect,
+		struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 11);
 }
 
 static config_err_t
 id_11_commit (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      const struct keyvalue *kv)
+	      const struct config_section *sect,
+	      const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 11);
 }
 
 static config_diff_t
 id_11_diff (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 11);
 }
 
 static config_err_t
 id_12_checkout (bmc_config_state_data_t *state_data,
-		const struct section *sect,
-		struct keyvalue *kv)
+		const struct config_section *sect,
+		struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 12);
 }
 
 static config_err_t
 id_12_commit (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      const struct keyvalue *kv)
+	      const struct config_section *sect,
+	      const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 12);
 }
 
 static config_diff_t
 id_12_diff (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 12);
 }
 
 static config_err_t
 id_13_checkout (bmc_config_state_data_t *state_data,
-		const struct section *sect,
-		struct keyvalue *kv)
+		const struct config_section *sect,
+		struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 13);
 }
 
 static config_err_t
 id_13_commit (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      const struct keyvalue *kv)
+	      const struct config_section *sect,
+	      const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 13);
 }
 
 static config_diff_t
 id_13_diff (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 13);
 }
 
 static config_err_t
 id_14_checkout (bmc_config_state_data_t *state_data,
-		const struct section *sect,
-		struct keyvalue *kv)
+		const struct config_section *sect,
+		struct config_keyvalue *kv)
 {
   return id_checkout (state_data, sect, kv, 14);
 }
 
 static config_err_t
 id_14_commit (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      const struct keyvalue *kv)
+	      const struct config_section *sect,
+	      const struct config_keyvalue *kv)
 {
   return id_commit (state_data, sect, kv, 14);
 }
 
 static config_diff_t
 id_14_diff (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   return id_diff (state_data, sect, kv, 14);
 }
 
-struct section *
+struct config_section *
 bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *rmcpplus_conf_privilege_section = NULL;
+  struct config_section *rmcpplus_conf_privilege_section = NULL;
   char *section_comment = 
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL),"
     "cipher suite IDs may be configurable below.  In the "

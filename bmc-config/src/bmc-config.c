@@ -95,7 +95,7 @@ _bmc_config (void *arg)
   bmc_config_prog_data_t *prog_data;
   ipmi_device_t dev = NULL;
   char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
-  struct section *sections = NULL;
+  struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
 

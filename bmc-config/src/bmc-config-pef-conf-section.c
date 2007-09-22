@@ -92,8 +92,8 @@ pef_control_commit (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_checkout (bmc_config_state_data_t *state_data,
-		     const struct section *sect,
-		     struct keyvalue *kv)
+		     const struct config_section *sect,
+		     struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -130,8 +130,8 @@ enable_pef_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_commit (bmc_config_state_data_t *state_data,
-		   const struct section *sect,
-		   const struct keyvalue *kv)
+		   const struct config_section *sect,
+		   const struct config_keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
@@ -143,8 +143,8 @@ enable_pef_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_pef_diff (bmc_config_state_data_t *state_data,
-		 const struct section *sect,
-		 const struct keyvalue *kv)
+		 const struct config_section *sect,
+		 const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -170,7 +170,7 @@ enable_pef_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -181,8 +181,8 @@ enable_pef_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_event_messages_checkout (bmc_config_state_data_t *state_data,
-				    const struct section *sect,
-				    struct keyvalue *kv)
+				    const struct config_section *sect,
+				    struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -219,8 +219,8 @@ enable_pef_event_messages_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_event_messages_commit (bmc_config_state_data_t *state_data,
-				  const struct section *sect,
-				  const struct keyvalue *kv)
+				  const struct config_section *sect,
+				  const struct config_keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
@@ -232,8 +232,8 @@ enable_pef_event_messages_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_pef_event_messages_diff (bmc_config_state_data_t *state_data,
-				const struct section *sect,
-				const struct keyvalue *kv)
+				const struct config_section *sect,
+				const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -259,7 +259,7 @@ enable_pef_event_messages_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -270,8 +270,8 @@ enable_pef_event_messages_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_startup_delay_checkout (bmc_config_state_data_t *state_data,
-				   const struct section *sect,
-				   struct keyvalue *kv)
+				   const struct config_section *sect,
+				   struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -307,8 +307,8 @@ enable_pef_startup_delay_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_startup_delay_commit (bmc_config_state_data_t *state_data,
-				 const struct section *sect,
-				 const struct keyvalue *kv)
+				 const struct config_section *sect,
+				 const struct config_keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
@@ -320,8 +320,8 @@ enable_pef_startup_delay_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_pef_startup_delay_diff (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       const struct keyvalue *kv)
+			       const struct config_section *sect,
+			       const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -347,7 +347,7 @@ enable_pef_startup_delay_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -358,8 +358,8 @@ enable_pef_startup_delay_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_alert_startup_delay_checkout (bmc_config_state_data_t *state_data,
-					 const struct section *sect,
-					 struct keyvalue *kv)
+					 const struct config_section *sect,
+					 struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -396,8 +396,8 @@ enable_pef_alert_startup_delay_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_pef_alert_startup_delay_commit (bmc_config_state_data_t *state_data,
-				       const struct section *sect,
-				       const struct keyvalue *kv)
+				       const struct config_section *sect,
+				       const struct config_keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
@@ -409,8 +409,8 @@ enable_pef_alert_startup_delay_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_pef_alert_startup_delay_diff (bmc_config_state_data_t *state_data,
-				     const struct section *sect,
-				     const struct keyvalue *kv)
+				     const struct config_section *sect,
+				     const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -436,7 +436,7 @@ enable_pef_alert_startup_delay_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -538,8 +538,8 @@ pef_global_control_commit (bmc_config_state_data_t *state_data,
 			   
 static config_err_t
 enable_alert_action_checkout (bmc_config_state_data_t *state_data,
-			      const struct section *sect,
-			      struct keyvalue *kv)
+			      const struct config_section *sect,
+			      struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -577,8 +577,8 @@ enable_alert_action_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_alert_action_commit (bmc_config_state_data_t *state_data,
-			    const struct section *sect,
-			    const struct keyvalue *kv)
+			    const struct config_section *sect,
+			    const struct config_keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
@@ -592,8 +592,8 @@ enable_alert_action_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_alert_action_diff (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+			  const struct config_section *sect,
+			  const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -621,7 +621,7 @@ enable_alert_action_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -632,8 +632,8 @@ enable_alert_action_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_power_down_action_checkout (bmc_config_state_data_t *state_data,
-				   const struct section *sect,
-				   struct keyvalue *kv)
+				   const struct config_section *sect,
+				   struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -671,8 +671,8 @@ enable_power_down_action_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_power_down_action_commit (bmc_config_state_data_t *state_data,
-				 const struct section *sect,
-				 const struct keyvalue *kv)
+				 const struct config_section *sect,
+				 const struct config_keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
@@ -686,8 +686,8 @@ enable_power_down_action_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_power_down_action_diff (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       const struct keyvalue *kv)
+			       const struct config_section *sect,
+			       const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -714,7 +714,7 @@ enable_power_down_action_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -725,8 +725,8 @@ enable_power_down_action_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_reset_action_checkout (bmc_config_state_data_t *state_data,
-			      const struct section *sect,
-			      struct keyvalue *kv)
+			      const struct config_section *sect,
+			      struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -764,8 +764,8 @@ enable_reset_action_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_reset_action_commit (bmc_config_state_data_t *state_data,
-			    const struct section *sect,
-			    const struct keyvalue *kv)
+			    const struct config_section *sect,
+			    const struct config_keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
@@ -779,8 +779,8 @@ enable_reset_action_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_reset_action_diff (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+			  const struct config_section *sect,
+			  const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -807,7 +807,7 @@ enable_reset_action_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -818,8 +818,8 @@ enable_reset_action_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_power_cycle_action_checkout (bmc_config_state_data_t *state_data,
-				    const struct section *sect,
-				    struct keyvalue *kv)
+				    const struct config_section *sect,
+				    struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -857,8 +857,8 @@ enable_power_cycle_action_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_power_cycle_action_commit (bmc_config_state_data_t *state_data,
-				  const struct section *sect,
-				  const struct keyvalue *kv)
+				  const struct config_section *sect,
+				  const struct config_keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
@@ -872,8 +872,8 @@ enable_power_cycle_action_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_power_cycle_action_diff (bmc_config_state_data_t *state_data,
-				const struct section *sect,
-				const struct keyvalue *kv)
+				const struct config_section *sect,
+				const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -900,7 +900,7 @@ enable_power_cycle_action_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -911,8 +911,8 @@ enable_power_cycle_action_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_oem_action_checkout (bmc_config_state_data_t *state_data,
-			    const struct section *sect,
-			    struct keyvalue *kv)
+			    const struct config_section *sect,
+			    struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -950,8 +950,8 @@ enable_oem_action_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_oem_action_commit (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+			  const struct config_section *sect,
+			  const struct config_keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
@@ -965,8 +965,8 @@ enable_oem_action_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_oem_action_diff (bmc_config_state_data_t *state_data,
-			const struct section *sect,
-			const struct keyvalue *kv)
+			const struct config_section *sect,
+			const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -994,7 +994,7 @@ enable_oem_action_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -1005,8 +1005,8 @@ enable_oem_action_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_diagnostic_interrupt_checkout (bmc_config_state_data_t *state_data,
-                                      const struct section *sect,
-                                      struct keyvalue *kv)
+                                      const struct config_section *sect,
+                                      struct config_keyvalue *kv)
 {
   uint8_t value;
   config_err_t ret;
@@ -1044,8 +1044,8 @@ enable_diagnostic_interrupt_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_diagnostic_interrupt_commit (bmc_config_state_data_t *state_data,
-				    const struct section *sect,
-				    const struct keyvalue *kv)
+				    const struct config_section *sect,
+				    const struct config_keyvalue *kv)
 {
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
@@ -1059,8 +1059,8 @@ enable_diagnostic_interrupt_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_diagnostic_interrupt_diff (bmc_config_state_data_t *state_data,
-				  const struct section *sect,
-				  const struct keyvalue *kv)
+				  const struct config_section *sect,
+				  const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
   uint8_t got_value;
@@ -1088,7 +1088,7 @@ enable_diagnostic_interrupt_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
     }
@@ -1100,8 +1100,8 @@ enable_diagnostic_interrupt_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 pef_startup_delay_checkout (bmc_config_state_data_t *state_data,
-			    const struct section *sect,
-			    struct keyvalue *kv)
+			    const struct config_section *sect,
+			    struct config_keyvalue *kv)
 {
   uint8_t delay;
   config_err_t ret;
@@ -1123,8 +1123,8 @@ pef_startup_delay_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 pef_startup_delay_commit (bmc_config_state_data_t *state_data,
-			  const struct section *sect,
-			  const struct keyvalue *kv)
+			  const struct config_section *sect,
+			  const struct config_keyvalue *kv)
 {
   uint8_t value = atoi (kv->value);
   return set_pef_startup_delay (state_data,
@@ -1133,8 +1133,8 @@ pef_startup_delay_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 pef_startup_delay_diff (bmc_config_state_data_t *state_data,
-			const struct section *sect,
-			const struct keyvalue *kv)
+			const struct config_section *sect,
+			const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -1159,7 +1159,7 @@ pef_startup_delay_diff (bmc_config_state_data_t *state_data,
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    num);
     }
@@ -1170,8 +1170,8 @@ pef_startup_delay_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 pef_alert_startup_delay_checkout (bmc_config_state_data_t *state_data,
-				  const struct section *sect,
-				  struct keyvalue *kv)
+				  const struct config_section *sect,
+				  struct config_keyvalue *kv)
 {
   uint8_t delay;
   config_err_t ret;
@@ -1193,8 +1193,8 @@ pef_alert_startup_delay_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 pef_alert_startup_delay_commit (bmc_config_state_data_t *state_data,
-				const struct section *sect,
-				const struct keyvalue *kv)
+				const struct config_section *sect,
+				const struct config_keyvalue *kv)
 {
   uint8_t value = atoi (kv->value);
   return set_pef_alert_startup_delay (state_data,
@@ -1203,8 +1203,8 @@ pef_alert_startup_delay_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 pef_alert_startup_delay_diff (bmc_config_state_data_t *state_data,
-			      const struct section *sect,
-			      const struct keyvalue *kv)
+			      const struct config_section *sect,
+			      const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -1229,17 +1229,17 @@ pef_alert_startup_delay_diff (bmc_config_state_data_t *state_data,
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    num);
     }
   return ret;
 }
 
-struct section *
+struct config_section *
 bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *pef_section;
+  struct config_section *pef_section;
 
   if (!(pef_section = bmc_config_section_create (state_data, 
                                                  "PEF_Conf",

@@ -119,10 +119,10 @@ config_diff_file (pef_config_state_data_t *state_data)
   if (ret == CONFIG_DIFF_SAME) 
     {
       /* 2nd pass if 1st pass was successful */
-      struct section *sect = state_data->sections;
+      struct config_section *sect = state_data->sections;
       while (sect) 
         {
-          struct keyvalue *kv = sect->keyvalues;
+          struct config_keyvalue *kv = sect->keyvalues;
           while (kv) 
             {
               if (kv->value) 

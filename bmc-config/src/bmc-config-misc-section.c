@@ -18,8 +18,8 @@
 
 static config_err_t
 power_restore_policy_checkout (bmc_config_state_data_t *state_data,
-			       const struct section *sect,
-			       struct keyvalue *kv)
+			       const struct config_section *sect,
+			       struct config_keyvalue *kv)
 {
   uint8_t policy;
   config_err_t ret;
@@ -41,8 +41,8 @@ power_restore_policy_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 power_restore_policy_commit (bmc_config_state_data_t *state_data,
-			     const struct section *sect,
-			     const struct keyvalue *kv)
+			     const struct config_section *sect,
+			     const struct config_keyvalue *kv)
 {
   return set_bmc_power_restore_policy (state_data,
 				       power_restore_policy_number (kv->value));
@@ -50,8 +50,8 @@ power_restore_policy_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 power_restore_policy_diff (bmc_config_state_data_t *state_data,
-			   const struct section *sect,
-			   const struct keyvalue *kv)
+			   const struct config_section *sect,
+			   const struct config_keyvalue *kv)
 {
   uint8_t got_value;
   uint8_t passed_value;
@@ -74,7 +74,7 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    power_restore_policy_string (got_value));
     }
@@ -82,10 +82,10 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-struct section *
+struct config_section *
 bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *misc_section = NULL;
+  struct config_section *misc_section = NULL;
   char *section_comment = 
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "

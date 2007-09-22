@@ -104,8 +104,8 @@ destination_type_set (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_destination_type_checkout (pef_config_state_data_t *state_data,
-                                 const struct section *sect,
-                                 struct keyvalue *kv)
+                                 const struct config_section *sect,
+                                 struct config_keyvalue *kv)
 {
   uint8_t destination_type;
   config_err_t ret;
@@ -143,8 +143,8 @@ alert_destination_type_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_destination_type_commit (pef_config_state_data_t *state_data,
-                               const struct section *sect,
-                               const struct keyvalue *kv)
+                               const struct config_section *sect,
+                               const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -169,8 +169,8 @@ alert_destination_type_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_destination_type_diff (pef_config_state_data_t *state_data,
-                             const struct section *sect,
-                             const struct keyvalue *kv)
+                             const struct config_section *sect,
+                             const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -207,7 +207,7 @@ alert_destination_type_diff (pef_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    alert_destination_type_string (get_val));
     }
@@ -216,8 +216,8 @@ alert_destination_type_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_checkout (pef_config_state_data_t *state_data,
-                            const struct section *sect,
-                            struct keyvalue *kv)
+                            const struct config_section *sect,
+                            struct config_keyvalue *kv)
 {
   uint8_t alert_acknowledge;
   config_err_t ret;
@@ -266,8 +266,8 @@ alert_acknowledge_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_commit (pef_config_state_data_t *state_data,
-                          const struct section *sect,
-                          const struct keyvalue *kv)
+                          const struct config_section *sect,
+                          const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -292,8 +292,8 @@ alert_acknowledge_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_acknowledge_diff (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        const struct keyvalue *kv)
+                        const struct config_section *sect,
+                        const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -331,7 +331,7 @@ alert_acknowledge_diff (pef_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
     }
@@ -340,8 +340,8 @@ alert_acknowledge_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_timeout_checkout (pef_config_state_data_t *state_data,
-                                    const struct section *sect,
-                                    struct keyvalue *kv)
+                                    const struct config_section *sect,
+                                    struct config_keyvalue *kv)
 {
   uint8_t alert_acknowledge_timeout;
   config_err_t ret;
@@ -379,8 +379,8 @@ alert_acknowledge_timeout_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_acknowledge_timeout_commit (pef_config_state_data_t *state_data,
-                                  const struct section *sect,
-                                  const struct keyvalue *kv)
+                                  const struct config_section *sect,
+                                  const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -408,8 +408,8 @@ alert_acknowledge_timeout_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_acknowledge_timeout_diff (pef_config_state_data_t *state_data,
-                                const struct section *sect,
-                                const struct keyvalue *kv)
+                                const struct config_section *sect,
+                                const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -449,7 +449,7 @@ alert_acknowledge_timeout_diff (pef_config_state_data_t *state_data,
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    num);
     }
@@ -458,8 +458,8 @@ alert_acknowledge_timeout_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_retries_checkout (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        struct keyvalue *kv)
+                        const struct config_section *sect,
+                        struct config_keyvalue *kv)
 {
   uint8_t alert_retries;
   config_err_t ret;
@@ -497,8 +497,8 @@ alert_retries_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_retries_commit (pef_config_state_data_t *state_data,
-                      const struct section *sect,
-                      const struct keyvalue *kv)
+                      const struct config_section *sect,
+                      const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -526,8 +526,8 @@ alert_retries_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_retries_diff (pef_config_state_data_t *state_data,
-                    const struct section *sect,
-                    const struct keyvalue *kv)
+                    const struct config_section *sect,
+                    const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -567,7 +567,7 @@ alert_retries_diff (pef_config_state_data_t *state_data,
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    num);
     }
@@ -679,8 +679,8 @@ destination_addresses_set (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_gateway_checkout (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        struct keyvalue *kv)
+                        const struct config_section *sect,
+                        struct config_keyvalue *kv)
 {
   uint8_t gateway;
   config_err_t ret;
@@ -719,8 +719,8 @@ alert_gateway_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_gateway_commit (pef_config_state_data_t *state_data,
-                      const struct section *sect,
-                      const struct keyvalue *kv)
+                      const struct config_section *sect,
+                      const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -744,8 +744,8 @@ alert_gateway_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_gateway_diff (pef_config_state_data_t *state_data,
-                    const struct section *sect,
-                    const struct keyvalue *kv)
+                    const struct config_section *sect,
+                    const struct config_keyvalue *kv)
 {
   uint8_t get_val;
   uint8_t passed_val;
@@ -783,7 +783,7 @@ alert_gateway_diff (pef_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    alert_gateway_string (get_val));
     }
@@ -792,8 +792,8 @@ alert_gateway_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_ip_address_checkout (pef_config_state_data_t *state_data,
-                           const struct section *sect,
-                           struct keyvalue *kv)
+                           const struct config_section *sect,
+                           struct config_keyvalue *kv)
 {
   config_err_t ret;
   char alert_ip[PEF_CONFIG_MAXIPADDRLEN + 1];
@@ -832,8 +832,8 @@ alert_ip_address_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_ip_address_commit (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const struct keyvalue *kv)
+                         const struct config_section *sect,
+                         const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -857,8 +857,8 @@ alert_ip_address_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_ip_address_diff (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const struct keyvalue *kv)
+                       const struct config_section *sect,
+                       const struct config_keyvalue *kv)
 {
   char alert_ip[PEF_CONFIG_MAXIPADDRLEN + 1];
   config_err_t rc;
@@ -894,7 +894,7 @@ alert_ip_address_diff (pef_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    alert_ip);
     }
@@ -903,8 +903,8 @@ alert_ip_address_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_mac_address_checkout (pef_config_state_data_t *state_data,
-                            const struct section *sect,
-                            struct keyvalue *kv)
+                            const struct config_section *sect,
+                            struct config_keyvalue *kv)
 {
   config_err_t ret;
   char alert_mac[PEF_CONFIG_MAXMACADDRLEN + 1];
@@ -943,8 +943,8 @@ alert_mac_address_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_mac_address_commit (pef_config_state_data_t *state_data,
-                          const struct section *sect,
-                          const struct keyvalue *kv)
+                          const struct config_section *sect,
+                          const struct config_keyvalue *kv)
 {
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
@@ -968,8 +968,8 @@ alert_mac_address_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_mac_address_diff (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        const struct keyvalue *kv)
+                        const struct config_section *sect,
+                        const struct config_keyvalue *kv)
 {
   char alert_mac[PEF_CONFIG_MAXMACADDRLEN + 1];
   config_err_t rc;
@@ -1005,17 +1005,17 @@ alert_mac_address_diff (pef_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    alert_mac);
     }
   return ret;
 }
 
-struct section *
+struct config_section *
 pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_data, int num)
 {
-  struct section *sect = NULL;
+  struct config_section *sect = NULL;
   char buf[64];
 
   if (num <= 0)

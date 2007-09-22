@@ -20,8 +20,8 @@
 
 static config_err_t
 k_r_checkout (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      struct keyvalue *kv)
+	      const struct config_section *sect,
+	      struct config_keyvalue *kv)
 {
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   config_err_t ret;
@@ -48,8 +48,8 @@ k_r_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 k_r_commit (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   return set_k_r (state_data,
 		  (uint8_t *)kv->value, 
@@ -58,8 +58,8 @@ k_r_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 k_r_diff (bmc_config_state_data_t *state_data,
-	  const struct section *sect,
-	  const struct keyvalue *kv)
+	  const struct config_section *sect,
+	  const struct config_keyvalue *kv)
 {
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   config_err_t ret;
@@ -74,7 +74,7 @@ k_r_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    (char *)k_r);
     } 
@@ -98,8 +98,8 @@ k_r_validate (const char *section_name,
 
 static config_err_t
 k_g_checkout (bmc_config_state_data_t *state_data,
-	      const struct section *sect,
-	      struct keyvalue *kv)
+	      const struct config_section *sect,
+	      struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   config_err_t ret;
@@ -132,8 +132,8 @@ k_g_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 k_g_commit (bmc_config_state_data_t *state_data,
-	    const struct section *sect,
-	    const struct keyvalue *kv)
+	    const struct config_section *sect,
+	    const struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   int k_g_len;
@@ -148,8 +148,8 @@ k_g_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 k_g_diff (bmc_config_state_data_t *state_data,
-	  const struct section *sect,
-	  const struct keyvalue *kv)
+	  const struct config_section *sect,
+	  const struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   uint8_t kv_k_g[IPMI_MAX_K_G_LENGTH+1];
@@ -174,7 +174,7 @@ k_g_diff (bmc_config_state_data_t *state_data,
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (sect->section_name,
-                   kv->key,
+                   kv->key_name,
                    kv->value,
                    k_g_str);
     }
@@ -196,10 +196,10 @@ k_g_validate (const char *section_name,
   return CONFIG_VALIDATE_VALID_VALUE;
 }
 
-struct section *
+struct config_section *
 bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data)
 {
-  struct section *lan_conf_security_keys_section = NULL;
+  struct config_section *lan_conf_security_keys_section = NULL;
   char *section_comment = 
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
     "K_g BMC key may be configurable.  The K_g key is an optional key that "

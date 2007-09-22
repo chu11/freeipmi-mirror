@@ -99,7 +99,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
   kp = args->keypairs;
   while (kp)
     {
-      struct section *sect;
+      struct config_section *sect;
       char *keypair;
       char *section_name;
       char *key_name;
@@ -134,7 +134,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
         {
           if (!strcasecmp(sect->section_name, section_name))
             {
-              struct keyvalue *kv = sect->keyvalues;
+              struct config_keyvalue *kv = sect->keyvalues;
 
               int found_key = 0;
 
@@ -142,7 +142,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
 
               while (kv) 
                 {
-                  if (!strcasecmp(kv->key, key_name))
+                  if (!strcasecmp(kv->key_name, key_name))
                     {
                       found_key++;
 
@@ -236,10 +236,10 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
   if (ret == CONFIG_ERR_SUCCESS) 
     {
       /* 3rd pass */
-      struct section *sect = state_data->sections;
+      struct config_section *sect = state_data->sections;
       while (sect) 
         {
-          struct keyvalue *kv = sect->keyvalues;
+          struct config_keyvalue *kv = sect->keyvalues;
           while (kv) 
             {
               if (kv->value) 
@@ -249,7 +249,7 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
 
                   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
                     {
-                      fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key);
+                      fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key_name);
                       ret = CONFIG_ERR_NON_FATAL_ERROR;
                     }
                 }

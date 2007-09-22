@@ -4,6 +4,6 @@
 #include "pef-config.h"
 #include "pef-config-sections.h"
 
-struct section * pef_config_pef_conf_section_get (pef_config_state_data_t *state_data);
+struct config_section * pef_config_pef_conf_section_get (pef_config_state_data_t *state_data);
 
 #endif /* _BMC_PEF_CONF_SECTION_H_ */

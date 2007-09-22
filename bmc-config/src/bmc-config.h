@@ -57,7 +57,7 @@ typedef struct bmc_config_state_data
 {
   bmc_config_prog_data_t *prog_data;
   ipmi_device_t dev;
-  struct section *sections;
+  struct config_section *sections;
 
   /* achu: caching to make rmcpplus priv go faster */
   int cipher_suite_entry_count;
