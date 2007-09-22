@@ -28,9 +28,6 @@ community_string_checkout (pef_config_state_data_t *state_data,
                                        IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup ((char *)community_string)))
     {
       perror("strdup");

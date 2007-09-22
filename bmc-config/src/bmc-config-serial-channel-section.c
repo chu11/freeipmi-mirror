@@ -89,8 +89,6 @@ volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
@@ -171,8 +169,6 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -265,8 +261,6 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -359,8 +353,6 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -451,9 +443,6 @@ volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
                                                      &foo,
                                                      &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (!(kv->value = strdup (privilege_level_string (get_val))))
     {
@@ -590,8 +579,6 @@ non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
@@ -673,8 +660,6 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -767,8 +752,6 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -861,8 +844,6 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -953,9 +934,6 @@ non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
                                                          &foo,
                                                          &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (!(kv->value = strdup (privilege_level_string (get_val))))
     {

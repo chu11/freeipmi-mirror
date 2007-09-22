@@ -30,9 +30,6 @@ id_checkout (bmc_config_state_data_t *state_data,
                                                      &priv)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (rmcpplus_priv_string (priv))))
     {
       perror("strdup");

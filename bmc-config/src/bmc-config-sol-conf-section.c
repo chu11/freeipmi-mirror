@@ -90,9 +90,6 @@ enable_sol_checkout (bmc_config_state_data_t *state_data,
                                  &enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (enable)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -169,9 +166,6 @@ sol_privilege_level_checkout (bmc_config_state_data_t *state_data,
                                 NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (privilege_level_string (value))))
     {
       perror("strdup");
@@ -242,9 +236,6 @@ force_sol_payload_authentication_checkout (bmc_config_state_data_t *state_data,
                                 &value,
                                 NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (value)
     {
@@ -329,9 +320,6 @@ force_sol_payload_encryption_checkout (bmc_config_state_data_t *state_data,
                                 &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -414,9 +402,6 @@ character_accumulate_interval_checkout (bmc_config_state_data_t *state_data,
                                                                        &interval,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", interval) < 0)
     {
@@ -502,9 +487,6 @@ character_send_threshold_checkout (bmc_config_state_data_t *state_data,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%d", threshold) < 0)
     {
       perror("asprintf");
@@ -588,9 +570,6 @@ sol_retry_count_checkout (bmc_config_state_data_t *state_data,
                                 &count,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", count) < 0)
     {
@@ -677,9 +656,6 @@ sol_retry_interval_checkout (bmc_config_state_data_t *state_data,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%d", interval) < 0)
     {
       perror("asprintf");
@@ -761,9 +737,6 @@ non_volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
                                                 &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
@@ -828,9 +801,6 @@ volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
                                             &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
@@ -893,9 +863,6 @@ port_checkout (bmc_config_state_data_t *state_data,
   if ((ret = get_sol_sol_payload_port_number (state_data,
                                               &port)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", port) < 0)
     {

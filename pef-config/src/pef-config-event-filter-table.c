@@ -153,9 +153,6 @@ filter_type_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (filter_type_string (eft.filter_type))))
     {
       perror("strdup");
@@ -266,9 +263,6 @@ enable_filter_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (eft.enable_filter)
     {
@@ -393,9 +387,6 @@ event_filter_action_alert_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (eft.event_filter_action_alert)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -519,9 +510,6 @@ event_filter_action_power_off_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (eft.event_filter_action_power_off)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -644,9 +632,6 @@ event_filter_action_reset_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (eft.event_filter_action_reset)
     {
@@ -772,9 +757,6 @@ event_filter_action_power_cycle_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (eft.event_filter_action_power_cycle)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -897,9 +879,6 @@ event_filter_action_oem_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (eft.event_filter_action_oem)
     {
@@ -1024,9 +1003,6 @@ event_filter_action_diagnostic_interrupt_checkout (pef_config_state_data_t *stat
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (eft.event_filter_action_diagnostic_interrupt)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -1149,9 +1125,6 @@ event_filter_action_group_control_operation_checkout (pef_config_state_data_t *s
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (eft.event_filter_action_group_control_operation)
     {
@@ -1276,9 +1249,6 @@ alert_policy_number_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%u", eft.alert_policy_number) < 0)
     {
       perror("asprintf");
@@ -1392,9 +1362,6 @@ group_control_selector_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%u", eft.group_control_selector) < 0)
     {
@@ -1510,9 +1477,6 @@ event_severity_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (event_severity_string (eft.event_severity))))
     {
       perror("strdup");
@@ -1623,9 +1587,6 @@ generator_id_byte_1_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "0x%02X", eft.generator_id_byte_1) < 0)
     {
@@ -1742,9 +1703,6 @@ generator_id_byte_2_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "0x%02X", eft.generator_id_byte_2) < 0)
     {
       perror("asprintf");
@@ -1859,10 +1817,6 @@ sensor_type_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
-
   if (!(kv->value = strdup (sensor_type_string (eft.sensor_type))))
     {
       perror("strdup");
@@ -1975,9 +1929,6 @@ sensor_number_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "0x%02X", eft.sensor_number) < 0)
     {
@@ -2093,9 +2044,6 @@ event_trigger_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "0x%02X", eft.event_trigger) < 0)
     {
       perror("asprintf");
@@ -2209,9 +2157,6 @@ event_data1_offset_mask_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "0x%02X", eft.event_data1_offset_mask) < 0)
     {
@@ -2327,9 +2272,6 @@ event_data1_and_mask_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "0x%02X", eft.event_data1_and_mask) < 0)
     {
       perror("asprintf");
@@ -2443,9 +2385,6 @@ event_data1_compare1_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "0x%02X", eft.event_data1_compare1) < 0)
     {
@@ -2561,9 +2500,6 @@ event_data1_compare2_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "0x%02X", eft.event_data1_compare2) < 0)
     {
       perror("asprintf");
@@ -2677,9 +2613,6 @@ event_data2_and_mask_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "0x%02X", eft.event_data2_and_mask) < 0)
     {
@@ -2795,9 +2728,6 @@ event_data2_compare1_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "0x%02X", eft.event_data2_compare1) < 0)
     {
       perror("asprintf");
@@ -2911,9 +2841,6 @@ event_data2_compare2_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "0x%02X", eft.event_data2_compare2) < 0)
     {
@@ -3029,9 +2956,6 @@ event_data3_and_mask_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "0x%02X", eft.event_data3_and_mask) < 0)
     {
       perror("asprintf");
@@ -3146,9 +3070,6 @@ event_data3_compare1_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "0x%02X", eft.event_data3_compare1) < 0)
     {
       perror("asprintf");
@@ -3262,9 +3183,6 @@ event_data3_compare2_checkout (pef_config_state_data_t *state_data,
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "0x%02X", eft.event_data3_compare2) < 0)
     {

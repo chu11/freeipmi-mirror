@@ -106,9 +106,6 @@ enable_pef_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -194,9 +191,6 @@ enable_pef_event_messages_checkout (pef_config_state_data_t *state_data,
                                    NULL,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (value)
     {
@@ -284,9 +278,6 @@ enable_pef_startup_delay_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -371,9 +362,6 @@ enable_pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
                                    NULL,
                                    &value)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (value)
     {
@@ -554,9 +542,6 @@ enable_alert_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -648,9 +633,6 @@ enable_power_down_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -740,9 +722,6 @@ enable_reset_action_checkout (pef_config_state_data_t *state_data,
                                           NULL,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (value)
     {
@@ -834,9 +813,6 @@ enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -926,9 +902,6 @@ enable_oem_action_checkout (pef_config_state_data_t *state_data,
                                           &value,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (value)
     {
@@ -1021,9 +994,6 @@ enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
                                           &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -1111,9 +1081,6 @@ pef_startup_delay_checkout (pef_config_state_data_t *state_data,
                                     &delay)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%d", delay) < 0)
     {
       perror("asprintf");
@@ -1180,9 +1147,6 @@ pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
   if ((ret = get_pef_alert_startup_delay (state_data,
                                           &delay)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", delay) < 0)
     {

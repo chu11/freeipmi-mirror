@@ -80,9 +80,6 @@ _authentication_level_checkout (bmc_config_state_data_t *state_data,
                                                            &(al->oem_level_oem_proprietary))) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-  
   if (*desired_authentication_level)
     {
       if (!(kv->value = strdup ("Yes")))

@@ -129,9 +129,6 @@ alert_destination_type_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (!(kv->value = strdup (alert_destination_type_string (destination_type))))
     {
       perror("strdup");
@@ -241,9 +238,6 @@ alert_acknowledge_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (alert_acknowledge)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -365,9 +359,6 @@ alert_acknowledge_timeout_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%u", alert_acknowledge_timeout) < 0)
     {
       perror("asprintf");
@@ -482,9 +473,6 @@ alert_retries_checkout (pef_config_state_data_t *state_data,
                                    NULL,
                                    &alert_retries)) != CONFIG_ERR_SUCCESS)
     return ret;
-  
-  if (kv->value)
-    free (kv->value);
   
   if (asprintf (&kv->value, "%u", alert_retries) < 0)
     {
@@ -705,9 +693,6 @@ alert_gateway_checkout (pef_config_state_data_t *state_data,
                                         0)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-  
   if (!(kv->value = strdup (alert_gateway_string (gateway))))
     {
       perror("strdup");
@@ -818,9 +803,6 @@ alert_ip_address_checkout (pef_config_state_data_t *state_data,
                                         0)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-  
   if (!(kv->value = strdup (alert_ip)))
     {
       perror("strdup");
@@ -928,9 +910,6 @@ alert_mac_address_checkout (pef_config_state_data_t *state_data,
                                         alert_mac,
                                         PEF_CONFIG_MAXMACADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
-  
-  if (kv->value)
-    free (kv->value);
   
   if (!(kv->value = strdup (alert_mac)))
     {

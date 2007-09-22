@@ -32,9 +32,6 @@ ip_address_source_checkout (bmc_config_state_data_t *state_data,
                                                  &source)) != CONFIG_ERR_SUCCESS) 
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (ip_address_source_string (source))))
     {
       perror("strdup");
@@ -98,8 +95,6 @@ ip_address_checkout (bmc_config_state_data_t *state_data,
                                           BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (ip)))
     {
       perror("strdup");
@@ -162,8 +157,6 @@ mac_address_checkout (bmc_config_state_data_t *state_data,
                                            BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (mac)))
     {
       perror("strdup");
@@ -225,8 +218,6 @@ subnet_mask_checkout (bmc_config_state_data_t *state_data,
                                            BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (mask)))
     {
       perror("strdup");
@@ -289,8 +280,6 @@ default_gateway_address_checkout (bmc_config_state_data_t *state_data,
                                                        BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (ip)))
     {
       perror("strdup");
@@ -353,8 +342,6 @@ default_gateway_mac_address_checkout (bmc_config_state_data_t *state_data,
                                                            BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (mac)))
     {
       perror("strdup");
@@ -418,8 +405,6 @@ backup_gateway_address_checkout (bmc_config_state_data_t *state_data,
                                                       BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (ip)))
     {
       perror("strdup");
@@ -482,8 +467,6 @@ backup_gateway_mac_address_checkout (bmc_config_state_data_t *state_data,
                                                           BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
   if (!(kv->value = strdup (mac)))
     {
       perror("strdup");
@@ -545,9 +528,6 @@ vlan_id_checkout (bmc_config_state_data_t *state_data,
                                        &vlan_id,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", vlan_id) < 0)
     {
@@ -636,9 +616,6 @@ vlan_id_enable_checkout (bmc_config_state_data_t *state_data,
                                        &vlan_id,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (vlan_id_enable)
     {
@@ -729,9 +706,6 @@ vlan_priority_checkout (bmc_config_state_data_t *state_data,
   if ((ret = get_bmc_lan_conf_vlan_priority (state_data,
                                              &priority)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", priority) < 0)
     {

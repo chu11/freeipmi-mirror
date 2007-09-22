@@ -31,9 +31,6 @@ enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
   if (ret != 0)
     return -1;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (enable_arp)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -122,9 +119,6 @@ enable_arp_response_checkout (bmc_config_state_data_t *state_data,
                                                          &reply_arp)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (reply_arp)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -209,9 +203,6 @@ gratuitous_arp_interval_checkout (bmc_config_state_data_t *state_data,
   if ((ret = get_bmc_lan_conf_gratuitous_arp_interval (state_data,
                                                        &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", interval) < 0)
     {

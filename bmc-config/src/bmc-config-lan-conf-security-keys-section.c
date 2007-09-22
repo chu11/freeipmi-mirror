@@ -33,9 +33,6 @@ k_r_checkout (bmc_config_state_data_t *state_data,
                       IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
   if (!(kv->value = strdup ((char *)k_r)))
     {
@@ -111,9 +108,6 @@ k_g_checkout (bmc_config_state_data_t *state_data,
                       IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = (char *)malloc(IPMI_MAX_K_G_LENGTH*2+3)))
     {
       perror("malloc");
@@ -122,7 +116,7 @@ k_g_checkout (bmc_config_state_data_t *state_data,
 
   if (!format_kg(kv->value, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
     {
-      free (kv->value);
+      free(kv->value);
       kv->value = NULL;
       return CONFIG_ERR_FATAL_ERROR;
     }

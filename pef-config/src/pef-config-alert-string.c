@@ -104,9 +104,6 @@ event_filter_number_checkout (pef_config_state_data_t *state_data,
                               NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%u", event_filter_number) < 0)
     {
       perror("asprintf");
@@ -215,9 +212,6 @@ alert_string_set_checkout (pef_config_state_data_t *state_data,
                               NULL,
                               &alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%u", alert_string_set) < 0)
     {
@@ -328,9 +322,6 @@ alert_string_checkout (pef_config_state_data_t *state_data,
                                    PEF_ALERT_STRING_MAX_LEN+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup ((char *)alert_string)))
     {
       perror("strdup");

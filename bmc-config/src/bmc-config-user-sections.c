@@ -34,9 +34,6 @@ username_checkout (bmc_config_state_data_t *state_data,
                                IPMI_MAX_USER_NAME_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup ((char *)username)))
     {
       perror("strdup");
@@ -153,9 +150,6 @@ enable_user_checkout (bmc_config_state_data_t *state_data,
                                               &tmp_user_id_enable_status)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   /* 
    * Older IPMI implementations cannot get the value, but new ones
    * can.  If it cannot be checked out, the line will be commented out
@@ -258,9 +252,6 @@ password_checkout (bmc_config_state_data_t *state_data,
 		   const struct config_section *section,
 		   struct config_keyvalue *kv)
 {
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup ("")))
     {
       perror("strdup");
@@ -326,9 +317,6 @@ password20_checkout (bmc_config_state_data_t *state_data,
   /* achu: password can't be checked out, but we should make sure IPMI
    * 2.0 exists on the system.
    */
-  if (kv->value)
-    free (kv->value);
-
   if ((ret = check_bmc_user_password20 (state_data,
                                         userid,
                                         (uint8_t *)"foobar")) == CONFIG_DIFF_FATAL_ERROR)
@@ -509,9 +497,6 @@ lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -605,9 +590,6 @@ lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
                               0,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (get_val)
     {
@@ -703,9 +685,6 @@ lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -800,9 +779,6 @@ lan_privilege_limit_checkout (bmc_config_state_data_t *state_data,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
@@ -886,9 +862,6 @@ lan_session_limit_checkout (bmc_config_state_data_t *state_data,
                               0,
                               &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (asprintf (&kv->value, "%d", get_val) < 0)
     {
@@ -984,9 +957,6 @@ sol_payload_access_checkout (bmc_config_state_data_t *state_data,
                                           NULL,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (have_access)
     {
@@ -1194,9 +1164,6 @@ serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -1290,9 +1257,6 @@ serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
                                  0,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (get_val)
     {
@@ -1388,9 +1352,6 @@ serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_da
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (get_val)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -1485,9 +1446,6 @@ serial_privilege_limit_checkout (bmc_config_state_data_t *state_data,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
@@ -1571,9 +1529,6 @@ serial_session_limit_checkout (bmc_config_state_data_t *state_data,
                                  0,
                                  &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
-  
-  if (kv->value)
-    free (kv->value);
   
   if (asprintf (&kv->value, "%d", get_val) < 0)
     {

@@ -106,9 +106,6 @@ enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -193,9 +190,6 @@ enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (value)
     {
@@ -282,9 +276,6 @@ enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -368,9 +359,6 @@ connect_mode_checkout (bmc_config_state_data_t *state_data,
                                    &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (connect_mode_string (value))))
     {
       perror("strdup");
@@ -439,9 +427,6 @@ page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
                                                          &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%d", interval) < 0)
     {
       perror("asprintf");
@@ -509,9 +494,6 @@ call_retry_interval_checkout (bmc_config_state_data_t *state_data,
                                                       &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
        
-  if (kv->value)
-    free (kv->value);
-
   if (asprintf (&kv->value, "%d", interval) < 0)
     {
       perror("asprintf");
@@ -638,9 +620,6 @@ enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
                                         NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (value)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -723,9 +702,6 @@ flow_control_checkout (bmc_config_state_data_t *state_data,
                                         NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (flow_control_string (value))))
     {
       perror("strdup");
@@ -795,9 +771,6 @@ bit_rate_checkout (bmc_config_state_data_t *state_data,
                                         NULL,
                                         &value)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (kv->value)
-    free (kv->value);
 
   if (!(kv->value = strdup (bit_rate_string (value))))
     {

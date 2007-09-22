@@ -28,9 +28,6 @@ power_restore_policy_checkout (bmc_config_state_data_t *state_data,
                                            &policy)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-
   if (!(kv->value = strdup (power_restore_policy_string (policy))))
     {
       perror("strdup");

@@ -163,9 +163,6 @@ policy_type_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (!(kv->value = strdup (policy_type_string (policy_type))))
     {
       perror("strdup");
@@ -284,9 +281,6 @@ policy_enabled_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (policy_enabled)
     {
       if (!(kv->value = strdup ("Yes")))
@@ -417,9 +411,6 @@ policy_number_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (asprintf (&kv->value, "%u", policy_number) < 0)
     {
       perror("asprintf");
@@ -544,9 +535,6 @@ destination_selector_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (asprintf (&kv->value, "%u", destination_selector) < 0)
     {
       perror("asprintf");
@@ -671,9 +659,6 @@ channel_number_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (asprintf (&kv->value, "%u", channel_number) < 0)
     {
       perror("asprintf");
@@ -798,9 +783,6 @@ alert_string_set_selector_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (asprintf (&kv->value, "%u", alert_string_set_selector) < 0)
     {
       perror("asprintf");
@@ -925,9 +907,6 @@ event_specific_alert_string_checkout (pef_config_state_data_t *state_data,
                                &event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (kv->value)
-    free (kv->value);
-  
   if (event_specific_alert_string)
     {
       if (!(kv->value = strdup ("Yes")))
