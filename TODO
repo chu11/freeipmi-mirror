@@ -33,22 +33,10 @@ pef-config
 
 bmc-config/pef-config
 ---------------------
-section header comments
-bmc/pef-config - parsing bad, re-design, output error info
+bmc/pef-config - output error info
 installed template
----
-load entire file into mem in list/array of sections
-- each section has list of key=value pairs
-pass "section" to each appropriate section handler for invalid-value checks/key-checks
-if that passes, pass "section" to each appropriate checkout/commit/etc. area
-each area can do whatever they want
-should do everything in chunks when it is possible, do individually if there were errors
----
 common stuff for parsing in bmc-config and pef-config
-fix poor use of atoi/strtoul
 common pef config junk in bmc-config & pef-config
-remove bmc-autoconfig?
-- or needs to be fixed/updated before 0.5.0 release
 
 general
 -------
