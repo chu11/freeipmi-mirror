@@ -71,22 +71,3 @@ config_find_keyvalue(struct config_section *section,
 
   return kv;
 }
-
-struct config_key *
-config_find_section_key(struct config_section *sections,
-                        const char *section_name, 
-                        const char *key_name)
-{
-  struct config_section *s;
-  struct config_key *k;
-
-  assert(sections);
-  assert(section_name);
-  assert(key_name);
-
-  if (!(s = config_find_section(sections, section_name)))
-    return NULL;
-  if (!(k = config_find_key(s, key_name)))
-    return NULL;
-  return k;
-}
