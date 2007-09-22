@@ -41,20 +41,20 @@ struct section {
 
 /* checkout procedure fills the value into kv->value as printable string */
 typedef config_err_t (*Keyvalue_Checkout) (bmc_config_state_data_t *state_data,
-                                        const struct section *sect,
-                                        struct keyvalue *kv);
+                                           const struct section *sect,
+                                           struct keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
 typedef config_err_t (*Keyvalue_Commit) (bmc_config_state_data_t *state_data,
-                                      const struct section *sect,
-                                      const struct keyvalue *kv);
+                                         const struct section *sect,
+                                         const struct keyvalue *kv);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
 typedef config_diff_t (*Keyvalue_Diff) (bmc_config_state_data_t *state_data,
-                                     const struct section *sect,
-                                     const struct keyvalue *kv);
+                                        const struct section *sect,
+                                        const struct keyvalue *kv);
 
 /* validate procedure finds if value is suitable to be set as kv->value */
 typedef config_validate_t (*Keyvalue_Validate) (const char *section_name,
@@ -107,9 +107,9 @@ int bmc_config_section_set_value (bmc_config_state_data_t *state_data,
                                   const char *value);
 
 config_err_t bmc_config_section_commit_value (bmc_config_state_data_t *state_data,
-                                           const char *section_name,
-                                           const char *key_name,
-                                           const char *value);
+                                              const char *section_name,
+                                              const char *key_name,
+                                              const char *value);
 
 int bmc_config_section_diff_value (bmc_config_state_data_t *state_data,
                                    const char *section_name,
