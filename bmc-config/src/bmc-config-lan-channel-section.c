@@ -11,14 +11,9 @@
 
 #include "bmc-config.h"
 #include "bmc-config-channel-common.h"
-#include "bmc-config-common.h"
-#include "bmc-config-wrapper.h"
-#include "bmc-config-map.h"
-#include "bmc-config-validate.h"
 
 #include "config-common.h"
 #include "config-section.h"
-#include "config-validate.h"
 
 struct config_section *
 bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)

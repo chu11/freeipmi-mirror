@@ -11,7 +11,6 @@
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
-#include "bmc-config-wrapper.h"
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 

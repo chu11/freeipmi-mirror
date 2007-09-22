@@ -11,9 +11,9 @@
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
-#include "bmc-config-wrapper.h"
 #include "bmc-config-map.h"
 #include "bmc-config-validate.h"
+#include "bmc-config-utils.h"
 
 #include "tool-common.h"
 
@@ -227,7 +227,7 @@ _lan_conf_security_keys_checkout(const char *section_name,
             {
               if (state_data->prog_data->args->action == CONFIG_ACTION_DIFF)
                 {
-                  char kv_k_g[IPMI_MAX_K_G_LENGTH+1];
+                  uint8_t kv_k_g[IPMI_MAX_K_G_LENGTH+1];
 
                   /* There is an exception on a diff here, since the input from
                    * the user may come in two different forms.

@@ -154,7 +154,6 @@ _set_channel_access(bmc_config_state_data_t *state_data,
   return (rv);
 }
 
-
 config_err_t
 channel_checkout(const char *section_name,
                  struct config_keyvalue *keyvalues,
