@@ -26,6 +26,6 @@
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-bmc_err_t bmc_checkout (bmc_config_state_data_t *state_data);
+config_err_t bmc_checkout (bmc_config_state_data_t *state_data);
 
 #endif /* _BMC_CONFIG_CHECKOUT_H_ */

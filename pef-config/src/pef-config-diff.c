@@ -14,15 +14,15 @@
 #include "pef-config-parser.h"
 #include "pef-config-sections.h"
 
-static pef_diff_t
-pef_diff_keypair (pef_config_state_data_t *state_data,
+static config_diff_t
+config_diff_keypair (pef_config_state_data_t *state_data,
                   struct keypair *kp)
 {
   char *keypair = NULL;
   char *section_name;
   char *key_name;
   char *value;
-  pef_diff_t rv = PEF_DIFF_FATAL_ERROR;
+  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
 
   if (!(keypair = strdup (kp->keypair)))
     {
@@ -37,7 +37,7 @@ pef_diff_keypair (pef_config_state_data_t *state_data,
   if (!(section_name && key_name && value))
     {
       fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = PEF_DIFF_NON_FATAL_ERROR;
+      rv = CONFIG_DIFF_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -55,27 +55,27 @@ pef_diff_keypair (pef_config_state_data_t *state_data,
   return rv;
 }
 
-static pef_diff_t
-pef_diff_keypairs (pef_config_state_data_t *state_data)
+static config_diff_t
+config_diff_keypairs (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
   struct keypair *kp;
-  pef_diff_t rv = PEF_DIFF_FATAL_ERROR;
-  pef_diff_t ret = PEF_DIFF_SAME;
+  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
+  config_diff_t ret = CONFIG_DIFF_SAME;
 
   args = state_data->prog_data->args;
 
   kp = args->keypairs;
   while (kp)
     {
-      pef_diff_t this_ret;
+      config_diff_t this_ret;
 
-      if ((this_ret = pef_diff_keypair (state_data,
-                                        kp)) == PEF_DIFF_FATAL_ERROR)
+      if ((this_ret = config_diff_keypair (state_data,
+                                        kp)) == CONFIG_DIFF_FATAL_ERROR)
         goto cleanup;
 
-      if (this_ret == PEF_DIFF_NON_FATAL_ERROR)
-        ret = PEF_DIFF_NON_FATAL_ERROR;
+      if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
+        ret = CONFIG_DIFF_NON_FATAL_ERROR;
 
       kp = kp->next;
     }
@@ -85,15 +85,15 @@ pef_diff_keypairs (pef_config_state_data_t *state_data)
   return rv;
 }
 
-static pef_diff_t
-pef_diff_file (pef_config_state_data_t *state_data)
+static config_diff_t
+config_diff_file (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
   FILE *fp;
   int file_opened = 0;
-  pef_diff_t rv = PEF_DIFF_FATAL_ERROR;
-  pef_diff_t ret = PEF_DIFF_SAME;
-  pef_diff_t this_ret;
+  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
+  config_diff_t ret = CONFIG_DIFF_SAME;
+  config_diff_t this_ret;
 
   args = state_data->prog_data->args;
 
@@ -110,13 +110,13 @@ pef_diff_file (pef_config_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass */
-  if ((this_ret = pef_config_parser (state_data, fp)) == PEF_DIFF_FATAL_ERROR)
+  if ((this_ret = pef_config_parser (state_data, fp)) == CONFIG_DIFF_FATAL_ERROR)
     goto cleanup;
 
-  if (this_ret == PEF_DIFF_NON_FATAL_ERROR)
-    ret = PEF_DIFF_NON_FATAL_ERROR;
+  if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
+    ret = CONFIG_DIFF_NON_FATAL_ERROR;
 
-  if (ret == PEF_DIFF_SAME) 
+  if (ret == CONFIG_DIFF_SAME) 
     {
       /* 2nd pass if 1st pass was successful */
       struct section *sect = state_data->sections;
@@ -127,11 +127,11 @@ pef_diff_file (pef_config_state_data_t *state_data)
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->diff (state_data, sect, kv)) == PEF_DIFF_FATAL_ERROR)
+                  if ((this_ret = kv->diff (state_data, sect, kv)) == CONFIG_DIFF_FATAL_ERROR)
                     goto cleanup;
 
-                  if (this_ret == PEF_DIFF_NON_FATAL_ERROR)
-                    ret = PEF_DIFF_NON_FATAL_ERROR;
+                  if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
+                    ret = CONFIG_DIFF_NON_FATAL_ERROR;
                 }
               kv = kv->next;
             }
@@ -146,24 +146,24 @@ pef_diff_file (pef_config_state_data_t *state_data)
   return rv;
 }
 
-pef_err_t
-pef_diff (pef_config_state_data_t *state_data)
+config_err_t
+config_diff (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
-  pef_diff_t ret;
+  config_diff_t ret;
 
   args = state_data->prog_data->args;
 
   if (args->keypairs)
-    ret = pef_diff_keypairs (state_data);
+    ret = config_diff_keypairs (state_data);
   else
-    ret = pef_diff_file (state_data);
+    ret = config_diff_file (state_data);
 
-  if (ret == PEF_DIFF_SAME)
-    return PEF_ERR_SUCCESS;
-  if (ret == PEF_DIFF_DIFFERENT || ret == PEF_DIFF_NON_FATAL_ERROR)
-    return PEF_ERR_NON_FATAL_ERROR;
-  return PEF_ERR_FATAL_ERROR;
+  if (ret == CONFIG_DIFF_SAME)
+    return CONFIG_ERR_SUCCESS;
+  if (ret == CONFIG_DIFF_DIFFERENT || ret == CONFIG_DIFF_NON_FATAL_ERROR)
+    return CONFIG_ERR_NON_FATAL_ERROR;
+  return CONFIG_ERR_FATAL_ERROR;
 }
 
 void 

@@ -158,19 +158,19 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case CHECKOUT_KEY:
       if (!cmd_args->action)
-	cmd_args->action = BMC_ACTION_CHECKOUT;
+	cmd_args->action = CONFIG_ACTION_CHECKOUT;
       else
 	cmd_args->action = -1;
       break;
     case COMMIT_KEY:
       if (!cmd_args->action)
-	cmd_args->action = BMC_ACTION_COMMIT;
+	cmd_args->action = CONFIG_ACTION_COMMIT;
       else
 	cmd_args->action = -1;
       break;
     case DIFF_KEY:
       if (!cmd_args->action)
-	cmd_args->action = BMC_ACTION_DIFF;
+	cmd_args->action = CONFIG_ACTION_DIFF;
       else
 	cmd_args->action = -1;
       break;
@@ -215,7 +215,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case LIST_SECTIONS_KEY:
       if (!cmd_args->action)
-	cmd_args->action = BMC_ACTION_LIST_SECTIONS;
+	cmd_args->action = CONFIG_ACTION_LIST_SECTIONS;
       else
 	cmd_args->action = -1;
       break;
@@ -265,8 +265,8 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
 
   // filename and keypair both given for checkout or diff
   if (cmd_args->filename && cmd_args->keypairs 
-      && (cmd_args->action == BMC_ACTION_CHECKOUT
-          || cmd_args->action == BMC_ACTION_DIFF))
+      && (cmd_args->action == CONFIG_ACTION_CHECKOUT
+          || cmd_args->action == CONFIG_ACTION_DIFF))
     {
       fprintf (stderr, 
                "Both --filename or --keypair cannot be used\n");
@@ -274,7 +274,7 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
     }
 
   // only one of keypairs or section can be given for checkout
-  if (cmd_args->action == BMC_ACTION_CHECKOUT
+  if (cmd_args->action == CONFIG_ACTION_CHECKOUT
       && (cmd_args->keypairs && cmd_args->sectionstrs))
     {
       fprintf (stderr, 
@@ -288,14 +288,14 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
     {
       switch (cmd_args->action) 
         {
-        case BMC_ACTION_COMMIT: case BMC_ACTION_DIFF:
+        case CONFIG_ACTION_COMMIT: case CONFIG_ACTION_DIFF:
           if (access (cmd_args->filename, R_OK) != 0) 
             {
               perror (cmd_args->filename);
               return -1;
             }
           break;
-        case BMC_ACTION_CHECKOUT:
+        case CONFIG_ACTION_CHECKOUT:
           if (access (cmd_args->filename, F_OK) == 0) 
             {
               if (access (cmd_args->filename, W_OK) != 0) 
@@ -320,7 +320,8 @@ bmc_config_args_validate (struct bmc_config_arguments *cmd_args)
                 }
             }
           break;
-        case BMC_ACTION_LIST_SECTIONS:
+        case CONFIG_ACTION_LIST_SECTIONS:
+        case CONFIG_ACTION_INFO:
           /* do nothing - here to remove compile warning */
           break;
         }

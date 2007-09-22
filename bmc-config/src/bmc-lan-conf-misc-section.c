@@ -16,14 +16,14 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
-static bmc_err_t
+static config_err_t
 enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
 				 const struct section *sect,
 				 struct keyvalue *kv)
 {
   uint8_t enable_arp;
   uint8_t reply_arp;
-  bmc_err_t ret;
+  config_err_t ret;
 
   ret = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
 						    &enable_arp,
@@ -50,10 +50,10 @@ enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
           return -1;
         }
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 enable_gratuitous_arps_commit (bmc_config_state_data_t *state_data,
 			       const struct section *sect,
 			       const struct keyvalue *kv)
@@ -74,30 +74,30 @@ enable_gratuitous_arps_commit (bmc_config_state_data_t *state_data,
 						     reply_arp);
 }
 
-static bmc_diff_t
+static config_diff_t
 enable_gratuitous_arps_diff (bmc_config_state_data_t *state_data,
 			     const struct section *sect,
 			     const struct keyvalue *kv)
 {
   uint8_t enable_arp;
   uint8_t reply_arp;
-  bmc_err_t rc;
-  bmc_diff_t ret;
+  config_err_t rc;
+  config_diff_t ret;
 
   if ((rc = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
                                                         &enable_arp,
-                                                        &reply_arp)) != BMC_ERR_SUCCESS)
+                                                        &reply_arp)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
-        return BMC_DIFF_NON_FATAL_ERROR;
-      return BMC_DIFF_FATAL_ERROR;
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
+        return CONFIG_DIFF_NON_FATAL_ERROR;
+      return CONFIG_DIFF_FATAL_ERROR;
     }
 
   if (enable_arp == same (kv->value, "yes"))
-    ret = BMC_DIFF_SAME;
+    ret = CONFIG_DIFF_SAME;
   else
     {
-      ret = BMC_DIFF_DIFFERENT; 
+      ret = CONFIG_DIFF_DIFFERENT; 
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -108,18 +108,18 @@ enable_gratuitous_arps_diff (bmc_config_state_data_t *state_data,
 
 /* reply */
 
-static bmc_err_t
+static config_err_t
 enable_arp_response_checkout (bmc_config_state_data_t *state_data,
 			      const struct section *sect,
 			      struct keyvalue *kv)
 {
   uint8_t enable_arp;
   uint8_t reply_arp;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
                                                          &enable_arp,
-                                                         &reply_arp)) != BMC_ERR_SUCCESS)
+                                                         &reply_arp)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -130,7 +130,7 @@ enable_arp_response_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("Yes")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
   else
@@ -138,24 +138,24 @@ enable_arp_response_checkout (bmc_config_state_data_t *state_data,
       if (!(kv->value = strdup ("No")))
         {
           perror("strdup");
-          return BMC_ERR_FATAL_ERROR;
+          return CONFIG_ERR_FATAL_ERROR;
         }
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 enable_arp_response_commit (bmc_config_state_data_t *state_data,
 			    const struct section *sect,
 			    const struct keyvalue *kv)
 {
   uint8_t enable_arp;
   uint8_t reply_arp;
-  bmc_err_t ret;
+  config_err_t ret;
   
   if ((ret = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
                                                          &enable_arp,
-                                                         &reply_arp)) != BMC_ERR_SUCCESS)
+                                                         &reply_arp)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   reply_arp = same (kv->value, "yes");
@@ -165,30 +165,30 @@ enable_arp_response_commit (bmc_config_state_data_t *state_data,
 						     reply_arp);
 }
 
-static bmc_diff_t
+static config_diff_t
 enable_arp_response_diff (bmc_config_state_data_t *state_data,
 			  const struct section *sect,
 			  const struct keyvalue *kv)
 {
   uint8_t enable_arp;
   uint8_t reply_arp;
-  bmc_err_t rc;
-  bmc_diff_t ret;
+  config_err_t rc;
+  config_diff_t ret;
 
   if ((rc = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
                                                         &enable_arp,
-                                                        &reply_arp)) != BMC_ERR_SUCCESS)
+                                                        &reply_arp)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
-        return BMC_DIFF_NON_FATAL_ERROR;
-      return BMC_DIFF_FATAL_ERROR;
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
+        return CONFIG_DIFF_NON_FATAL_ERROR;
+      return CONFIG_DIFF_FATAL_ERROR;
     }
 
   if (reply_arp == same (kv->value, "yes"))
-    ret = BMC_DIFF_SAME;
+    ret = CONFIG_DIFF_SAME;
   else
     {
-      ret = BMC_DIFF_DIFFERENT; 
+      ret = CONFIG_DIFF_DIFFERENT; 
       report_diff (sect->section_name,
                    kv->key,
                    kv->value,
@@ -198,16 +198,16 @@ enable_arp_response_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-static bmc_err_t
+static config_err_t
 gratuitous_arp_interval_checkout (bmc_config_state_data_t *state_data,
 				  const struct section *sect,
 				  struct keyvalue *kv)
 {
   uint8_t interval;
-  bmc_err_t ret;
+  config_err_t ret;
 
   if ((ret = get_bmc_lan_conf_gratuitous_arp_interval (state_data,
-                                                       &interval)) != BMC_ERR_SUCCESS)
+                                                       &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (kv->value)
@@ -216,12 +216,12 @@ gratuitous_arp_interval_checkout (bmc_config_state_data_t *state_data,
   if (asprintf (&kv->value, "%d", interval) < 0)
     {
       perror("asprintf");
-      return BMC_ERR_FATAL_ERROR;
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  return BMC_ERR_SUCCESS;
+  return CONFIG_ERR_SUCCESS;
 }
 
-static bmc_err_t
+static config_err_t
 gratuitous_arp_interval_commit (bmc_config_state_data_t *state_data,
 				const struct section *sect,
 				const struct keyvalue *kv)
@@ -230,29 +230,29 @@ gratuitous_arp_interval_commit (bmc_config_state_data_t *state_data,
                                                    atoi (kv->value));
 }
 
-static bmc_diff_t
+static config_diff_t
 gratuitous_arp_interval_diff (bmc_config_state_data_t *state_data,
 			      const struct section *sect,
 			      const struct keyvalue *kv)
 {
   uint8_t interval;
-  bmc_err_t rc;
-  bmc_diff_t ret;
+  config_err_t rc;
+  config_diff_t ret;
   
   if ((rc = get_bmc_lan_conf_gratuitous_arp_interval (state_data,
-                                                       &interval)) != BMC_ERR_SUCCESS)
+                                                       &interval)) != CONFIG_ERR_SUCCESS)
     {
-      if (rc == BMC_ERR_NON_FATAL_ERROR)
-        return BMC_DIFF_NON_FATAL_ERROR;
-      return BMC_DIFF_FATAL_ERROR;
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
+        return CONFIG_DIFF_NON_FATAL_ERROR;
+      return CONFIG_DIFF_FATAL_ERROR;
     }
 
   if (interval == atoi (kv->value))
-    ret = BMC_DIFF_SAME;
+    ret = CONFIG_DIFF_SAME;
   else
     {
       char num[32];
-      ret = BMC_DIFF_DIFFERENT; 
+      ret = CONFIG_DIFF_DIFFERENT; 
       sprintf (num, "%d", interval);
       report_diff (sect->section_name,
                    kv->key,
@@ -297,7 +297,7 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                                        enable_gratuitous_arps_checkout,
                                        enable_gratuitous_arps_commit,
                                        enable_gratuitous_arps_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -308,7 +308,7 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                                        enable_arp_response_checkout,
                                        enable_arp_response_commit,
                                        enable_arp_response_diff,
-                                       yes_no_validate) < 0)
+                                       config_yes_no_validate) < 0)
     goto cleanup;
 
   if (bmc_config_section_add_keyvalue (state_data,
@@ -319,7 +319,7 @@ bmc_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                                        gratuitous_arp_interval_checkout,
                                        gratuitous_arp_interval_commit,
                                        gratuitous_arp_interval_diff,
-                                       number_range_one_byte) < 0)
+                                       config_number_range_one_byte) < 0)
     goto cleanup;
   return lan_conf_misc_section;
 

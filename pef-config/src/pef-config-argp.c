@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.10 2007-09-20 16:25:48 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.11 2007-09-22 16:28:32 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -142,25 +142,25 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case INFO_KEY:
       if (!cmd_args->action)
-        cmd_args->action = PEF_ACTION_INFO;
+        cmd_args->action = CONFIG_ACTION_INFO;
       else
         cmd_args->action = -1;
       break;
     case CHECKOUT_KEY:
       if (!cmd_args->action)
-        cmd_args->action = PEF_ACTION_CHECKOUT;
+        cmd_args->action = CONFIG_ACTION_CHECKOUT;
       else
         cmd_args->action = -1;
       break;
     case COMMIT_KEY:
       if (!cmd_args->action)
-        cmd_args->action = PEF_ACTION_COMMIT;
+        cmd_args->action = CONFIG_ACTION_COMMIT;
       else
         cmd_args->action = -1;
       break;
     case DIFF_KEY:
       if (!cmd_args->action)
-        cmd_args->action = PEF_ACTION_DIFF;
+        cmd_args->action = CONFIG_ACTION_DIFF;
       else
         cmd_args->action = -1;
       break;
@@ -205,7 +205,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case LIST_SECTIONS_KEY:
       if (!cmd_args->action)
-        cmd_args->action = PEF_ACTION_LIST_SECTIONS;
+        cmd_args->action = CONFIG_ACTION_LIST_SECTIONS;
       else
         cmd_args->action = -1;
       break;
@@ -259,8 +259,8 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
 
   // filename and keypair both given for checkout or diff
   if (cmd_args->filename && cmd_args->keypairs
-      && (cmd_args->action == PEF_ACTION_CHECKOUT
-          || cmd_args->action == PEF_ACTION_DIFF))
+      && (cmd_args->action == CONFIG_ACTION_CHECKOUT
+          || cmd_args->action == CONFIG_ACTION_DIFF))
     {
       fprintf (stderr,
                "Both --filename or --keypair cannot be used\n");
@@ -268,7 +268,7 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
     }
 
   // only one of keypairs or section can be given for checkout
-  if (cmd_args->action == PEF_ACTION_CHECKOUT
+  if (cmd_args->action == CONFIG_ACTION_CHECKOUT
       && (cmd_args->keypairs && cmd_args->sectionstrs))
     {
       fprintf (stderr,
@@ -280,14 +280,14 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
     {
       switch (cmd_args->action)
         {
-        case PEF_ACTION_COMMIT: case PEF_ACTION_DIFF:
+        case CONFIG_ACTION_COMMIT: case CONFIG_ACTION_DIFF:
           if (access (cmd_args->filename, R_OK) != 0)
             {
               perror (cmd_args->filename);
               return -1;
             }
           break;
-        case PEF_ACTION_CHECKOUT:
+        case CONFIG_ACTION_CHECKOUT:
           if (access (cmd_args->filename, F_OK) == 0)
             {
               if (access (cmd_args->filename, W_OK) != 0)
@@ -312,8 +312,8 @@ pef_config_args_validate (struct pef_config_arguments *cmd_args)
                 }
             }
           break;
-        case PEF_ACTION_INFO:
-        case PEF_ACTION_LIST_SECTIONS:
+        case CONFIG_ACTION_INFO:
+        case CONFIG_ACTION_LIST_SECTIONS:
           /* do nothing - here to remove compile warning */
           break;
         }

@@ -18,26 +18,26 @@ struct section {
 };
 
 /* checkout procedure fills the value into kv->value as printable string */
-typedef pef_err_t (*Keyvalue_Checkout) (pef_config_state_data_t *state_data,
+typedef config_err_t (*Keyvalue_Checkout) (pef_config_state_data_t *state_data,
                                         const struct section *sect,
                                         struct keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
-typedef pef_err_t (*Keyvalue_Commit) (pef_config_state_data_t *state_data,
+typedef config_err_t (*Keyvalue_Commit) (pef_config_state_data_t *state_data,
                                       const struct section *sect,
                                       const struct keyvalue *kv);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
-typedef pef_diff_t (*Keyvalue_Diff) (pef_config_state_data_t *state_data,
+typedef config_diff_t (*Keyvalue_Diff) (pef_config_state_data_t *state_data,
                                      const struct section *sect,
                                      const struct keyvalue *kv);
 
 /* validate procedure finds if value is suitable to be set as kv->value */
-typedef pef_validate_t (*Keyvalue_Validate) (pef_config_state_data_t *state_data,
-                                             const struct section *sect,
-                                             const char *value);
+typedef config_validate_t (*Keyvalue_Validate) (const char *section_name,
+                                                const char *key_name,
+                                                const char *value);
 
 struct keyvalue {
   struct keyvalue *next;
@@ -84,7 +84,7 @@ int pef_config_section_set_value (pef_config_state_data_t *state_data,
                                   const char *key_name,
                                   const char *value);
 
-pef_err_t pef_config_section_commit_value (pef_config_state_data_t *state_data,
+config_err_t pef_config_section_commit_value (pef_config_state_data_t *state_data,
                                            const char *section_name,
                                            const char *key_name,
                                            const char *value);
@@ -94,6 +94,6 @@ int pef_config_section_diff_value (pef_config_state_data_t *state_data,
                                    const char *key_name,
                                    const char *value);
 
-pef_err_t pef_config_sections_list (pef_config_state_data_t *state_data);
+config_err_t pef_config_sections_list (pef_config_state_data_t *state_data);
 
 #endif /* _PEF_CONFIG_SECTIONS */

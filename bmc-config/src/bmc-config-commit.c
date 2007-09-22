@@ -16,7 +16,7 @@
 #include "bmc-config-parser.h"
 #include "bmc-config-sections.h"
 
-static bmc_err_t
+static config_err_t
 bmc_commit_keypair (bmc_config_state_data_t *state_data,
                     struct keypair *kp)
 {
@@ -24,7 +24,7 @@ bmc_commit_keypair (bmc_config_state_data_t *state_data,
   char *section_name;
   char *key_name;
   char *value;
-  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(keypair = strdup (kp->keypair)))
     {
@@ -39,7 +39,7 @@ bmc_commit_keypair (bmc_config_state_data_t *state_data,
   if (!(section_name && key_name && value)) 
     {
       fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = BMC_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
      
@@ -57,26 +57,26 @@ bmc_commit_keypair (bmc_config_state_data_t *state_data,
   return rv;
 }
 
-static bmc_err_t
+static config_err_t
 bmc_commit_keypairs (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
   struct keypair *kp;
-  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  bmc_err_t ret = BMC_ERR_SUCCESS;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret = CONFIG_ERR_SUCCESS;
 
   args = state_data->prog_data->args;
 
   kp = args->keypairs;
   while (kp)
     {
-      bmc_err_t this_ret;
+      config_err_t this_ret;
 
-      if ((this_ret = bmc_commit_keypair(state_data, kp)) == BMC_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_commit_keypair(state_data, kp)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
-      if (this_ret == BMC_ERR_NON_FATAL_ERROR)
-        ret = BMC_ERR_NON_FATAL_ERROR;
+      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+        ret = CONFIG_ERR_NON_FATAL_ERROR;
 
       kp = kp->next;
     }
@@ -86,13 +86,13 @@ bmc_commit_keypairs (bmc_config_state_data_t *state_data)
   return rv;
 }
 
-static bmc_err_t
+static config_err_t
 bmc_keypair_feed (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
   struct keypair *kp;
-  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  bmc_err_t ret = BMC_ERR_SUCCESS;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret = CONFIG_ERR_SUCCESS;
 
   args = state_data->prog_data->args;
 
@@ -120,7 +120,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
         {
           fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
           free (keypair);
-          rv = BMC_ERR_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
      
@@ -165,7 +165,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
                 {
                   fprintf (stderr, "Invalid KEY in `%s'\n", kp->keypair);
                   free (keypair);
-                  rv = BMC_ERR_NON_FATAL_ERROR;
+                  rv = CONFIG_ERR_NON_FATAL_ERROR;
                   goto cleanup;
                 }
 
@@ -178,7 +178,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
         {
           fprintf (stderr, "Invalid SECTION in `%s'\n", kp->keypair);
           free (keypair);
-          rv = BMC_ERR_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -192,15 +192,15 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
   return rv;
 }
 
-static bmc_err_t
+static config_err_t
 bmc_commit_file (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
   int file_opened = 0;
   FILE *fp;
-  bmc_err_t rv = BMC_ERR_FATAL_ERROR;
-  bmc_err_t ret = BMC_ERR_SUCCESS;
-  bmc_err_t this_ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret = CONFIG_ERR_SUCCESS;
+  config_err_t this_ret;
 
   args = state_data->prog_data->args;
 
@@ -217,23 +217,23 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass - read in input from file */
-  if ((this_ret = bmc_config_parser (state_data, fp)) == BMC_ERR_FATAL_ERROR)
+  if ((this_ret = bmc_config_parser (state_data, fp)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
-  if (this_ret == BMC_ERR_NON_FATAL_ERROR)
-    ret = BMC_ERR_NON_FATAL_ERROR;
+  if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+    ret = CONFIG_ERR_NON_FATAL_ERROR;
 
   /* 2nd pass - feed in keypair elements from the command line to override file keypairs */
   if (args->keypairs)
     {
-      if ((this_ret = bmc_keypair_feed (state_data)) == BMC_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_keypair_feed (state_data)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
-      if (this_ret == BMC_ERR_NON_FATAL_ERROR)
-        ret = BMC_ERR_NON_FATAL_ERROR;
+      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+        ret = CONFIG_ERR_NON_FATAL_ERROR;
     }
 
-  if (ret == BMC_ERR_SUCCESS) 
+  if (ret == CONFIG_ERR_SUCCESS) 
     {
       /* 3rd pass */
       struct section *sect = state_data->sections;
@@ -244,13 +244,13 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->commit (state_data, sect, kv)) == BMC_ERR_FATAL_ERROR)
+                  if ((this_ret = kv->commit (state_data, sect, kv)) == CONFIG_ERR_FATAL_ERROR)
                     goto cleanup;
 
-                  if (this_ret == BMC_ERR_NON_FATAL_ERROR)
+                  if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
                     {
                       fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key);
-                      ret = BMC_ERR_NON_FATAL_ERROR;
+                      ret = CONFIG_ERR_NON_FATAL_ERROR;
                     }
                 }
               kv = kv->next;
@@ -271,11 +271,11 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
   return rv;
 }
 
-bmc_err_t
+config_err_t
 bmc_commit (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
-  bmc_err_t ret;
+  config_err_t ret;
 
   args = state_data->prog_data->args;
   if (args->filename)

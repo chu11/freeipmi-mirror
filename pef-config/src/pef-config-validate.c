@@ -18,198 +18,62 @@
 #include "pef-config-map.h"
 #include "pef-config-validate.h"
 
-pef_validate_t 
-yes_no_validate (pef_config_state_data_t *state_data,
-                 const struct section *sect,
-                 const char *value)
-{
-  if (value && (same (value, "yes") || same (value, "no")))
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
-}
-
-pef_validate_t 
-number_range_three_bits (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const char *value)
-{
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > 7)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  return PEF_VALIDATE_VALID_VALUE;
-}
-
-pef_validate_t 
-number_range_four_bits (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        const char *value)
-{
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > 15)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  return PEF_VALIDATE_VALID_VALUE;
-}
-
-pef_validate_t 
-number_range_seven_bits (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const char *value)
-{
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > 127)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  return PEF_VALIDATE_VALID_VALUE;
-}
-
-pef_validate_t 
-number_range_one_byte (pef_config_state_data_t *state_data,
-                       const struct section *sect,
-                       const char *value)
-{
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > 255)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  return PEF_VALIDATE_VALID_VALUE;
-}
-
-pef_validate_t
-number_range_two_bytes (pef_config_state_data_t *state_data,
-                        const struct section *sect,
-                        const char *value)
-{
-  long int conv;
-  char *endptr;
-
-  conv = strtol (value, &endptr, 0);
-
-  if (*endptr)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  if (conv < 0 || conv > 65535)
-    return PEF_VALIDATE_INVALID_VALUE;
-
-  return PEF_VALIDATE_VALID_VALUE;
-}
-
-pef_validate_t
-ip_address_validate (pef_config_state_data_t *state_data,
-                     const struct section *sect,
-                     const char *value)
-{
-  struct in_addr a;
-
-  if (inet_aton (value, &a))
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
-}
-
-pef_validate_t
-mac_address_validate (pef_config_state_data_t *state_data,
-                      const struct section *sect,
-                      const char *value)
-{
-  unsigned int foo;
-
-  if (sscanf (value,
-              "%02x:%02x:%02x:%02x:%02x:%02x",
-              &foo,
-              &foo,
-              &foo,
-              &foo,
-              &foo,
-              &foo) == 6)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
-}
-
-pef_validate_t 
-alert_destination_type_validate (pef_config_state_data_t *state_data,
-                                 const struct section *sect,
+config_validate_t 
+alert_destination_type_validate (const char *section_name,
+                                 const char *key_name,
                                  const char *value)
 {
   if (alert_destination_type_number (value) != -1)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-pef_validate_t 
-alert_gateway_validate (pef_config_state_data_t *state_data,
-                        const struct section *sect,
+config_validate_t 
+alert_gateway_validate (const char *section_name,
+                        const char *key_name,
                         const char *value)
 {
   if (alert_gateway_number (value) != -1)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-pef_validate_t
-policy_type_validate (pef_config_state_data_t *state_data,
-                      const struct section *sect,
+config_validate_t
+policy_type_validate (const char *section_name,
+                      const char *key_name,
                       const char *value)
 {
   if (policy_type_number (value) != -1)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-pef_validate_t 
-filter_type_validate (pef_config_state_data_t *state_data,
-                      const struct section *sect,
+config_validate_t 
+filter_type_validate (const char *section_name,
+                      const char *key_name,
                       const char *value)
 {
   if (filter_type_number (value) != -1)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-pef_validate_t 
-event_severity_validate (pef_config_state_data_t *state_data,
-                         const struct section *sect,
+config_validate_t 
+event_severity_validate (const char *section_name,
+                         const char *key_name,
                          const char *value)
 {
   if (event_severity_number (value) != -1)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-pef_validate_t 
-sensor_type_validate (pef_config_state_data_t *state_data,
-                         const struct section *sect,
-                         const char *value)
+config_validate_t 
+sensor_type_validate (const char *section_name,
+                      const char *key_name,
+                      const char *value) 
 {
   if (sensor_type_number (value) != -1)
-    return PEF_VALIDATE_VALID_VALUE;
-  return PEF_VALIDATE_INVALID_VALUE;
+    return CONFIG_VALIDATE_VALID_VALUE;
+  return CONFIG_VALIDATE_INVALID_VALUE;
 }

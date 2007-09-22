@@ -1,3 +1,14 @@
+2007-09-22  Albert Chu <chu11@llnl.gov>
+
+	* common/src/config-common.h, common/src/config-comment.h,
+	common/src/config-comment.c, common/src/config-validate.h,
+	common/src/config-validate.c: New files.
+
+	* common/src/format-text.h, common/src/format-text.c: Remove
+	files.
+
+	* bmc-config/, pef-config/: Use new common code.
+	
 2007-09-20  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/, pef-config/: Change -k keypair option to -e due to

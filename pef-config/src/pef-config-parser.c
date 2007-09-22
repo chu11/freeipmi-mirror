@@ -13,7 +13,7 @@
 #include "pef-config-parser.h"
 #include "pef-config-sections.h"
 
-pef_err_t
+config_err_t
 pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
 { 
   char buf[4096];
@@ -22,7 +22,7 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
   char *key_name = NULL;
   char *value = NULL;
   char *tok;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   struct pef_config_arguments *args;
 
   args = state_data->prog_data->args;
@@ -147,7 +147,7 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
         goto cleanup;
     }
 
-  rv = PEF_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (section_name)
     free(section_name);

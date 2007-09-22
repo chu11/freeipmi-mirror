@@ -4,7 +4,7 @@
 #include "pef-config.h"
 #include "pef-config-sections.h"
 
-pef_err_t pef_diff (pef_config_state_data_t *state_data);
+config_err_t config_diff (pef_config_state_data_t *state_data);
 
 void report_diff (const char *section,
                   const char *key,

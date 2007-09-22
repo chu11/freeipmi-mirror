@@ -26,6 +26,10 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "cmdline-parse-common.h"
 
+#include "config-common.h"
+#include "config-comment.h"
+#include "config-validate.h"
+
 enum argp_option_keys
   { 
     INFO_KEY = 'i', 
@@ -38,37 +42,6 @@ enum argp_option_keys
     LIST_SECTIONS_KEY = 'L',
     VERBOSE_KEY = 'v',
   };
-
-typedef enum
-  {
-    PEF_ACTION_INFO = 1,
-    PEF_ACTION_CHECKOUT,
-    PEF_ACTION_COMMIT,
-    PEF_ACTION_DIFF,
-    PEF_ACTION_LIST_SECTIONS,
-  } pef_action_t;
-
-typedef enum
-  {
-    PEF_ERR_FATAL_ERROR = -2,
-    PEF_ERR_NON_FATAL_ERROR = -1,
-    PEF_ERR_SUCCESS = 0,
-  } pef_err_t;
-
-typedef enum
-  {
-    PEF_DIFF_FATAL_ERROR = -2,
-    PEF_DIFF_NON_FATAL_ERROR = -1,
-    PEF_DIFF_SAME = 0,
-    PEF_DIFF_DIFFERENT = 1,
-  } pef_diff_t;
-
-typedef enum
-  {
-    PEF_VALIDATE_FATAL_ERROR = -2,
-    PEF_VALIDATE_INVALID_VALUE = -1,
-    PEF_VALIDATE_VALID_VALUE = 0,
-  } pef_validate_t;
 
 struct keypair
 {
@@ -86,7 +59,7 @@ struct pef_config_arguments
 {
   struct common_cmd_args common;
   
-  pef_action_t action;
+  config_action_t action;
 
   int verbose;
   char *filename;

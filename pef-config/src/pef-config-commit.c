@@ -18,7 +18,7 @@
 #include "pef-config-sections.h"
 #include "pef-config-wrapper.h"
 
-static pef_err_t
+static config_err_t
 pef_commit_keypair (pef_config_state_data_t *state_data,
                     struct keypair *kp)
 {
@@ -26,7 +26,7 @@ pef_commit_keypair (pef_config_state_data_t *state_data,
   char *section_name;
   char *key_name;
   char *value;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   if (!(keypair = strdup (kp->keypair)))
     {
@@ -41,7 +41,7 @@ pef_commit_keypair (pef_config_state_data_t *state_data,
   if (!(section_name && key_name && value))
     {
       fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = PEF_ERR_NON_FATAL_ERROR;
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
@@ -59,26 +59,26 @@ pef_commit_keypair (pef_config_state_data_t *state_data,
   return rv;
 }
 
-static pef_err_t
+static config_err_t
 pef_commit_keypairs (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
   struct keypair *kp;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret = PEF_ERR_SUCCESS;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret = CONFIG_ERR_SUCCESS;
 
   args = state_data->prog_data->args;
 
   kp = args->keypairs;
   while (kp)
     {
-      pef_err_t this_ret;
+      config_err_t this_ret;
 
-      if ((this_ret = pef_commit_keypair(state_data, kp)) == PEF_ERR_FATAL_ERROR)
+      if ((this_ret = pef_commit_keypair(state_data, kp)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
-      if (this_ret == PEF_ERR_NON_FATAL_ERROR)
-        ret = PEF_ERR_NON_FATAL_ERROR;
+      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+        ret = CONFIG_ERR_NON_FATAL_ERROR;
 
       kp = kp->next;
     }
@@ -88,13 +88,13 @@ pef_commit_keypairs (pef_config_state_data_t *state_data)
   return rv;
 }
 
-static pef_err_t
+static config_err_t
 pef_keypair_feed (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
   struct keypair *kp;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret = PEF_ERR_SUCCESS;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret = CONFIG_ERR_SUCCESS;
 
   args = state_data->prog_data->args;
 
@@ -122,7 +122,7 @@ pef_keypair_feed (pef_config_state_data_t *state_data)
         {
           fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
           free (keypair);
-          rv = PEF_ERR_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -167,7 +167,7 @@ pef_keypair_feed (pef_config_state_data_t *state_data)
                 {
                   fprintf (stderr, "Invalid KEY in `%s'\n", kp->keypair);
                   free (keypair);
-                  rv = PEF_ERR_NON_FATAL_ERROR;
+                  rv = CONFIG_ERR_NON_FATAL_ERROR;
                   goto cleanup;
                 }
 
@@ -180,7 +180,7 @@ pef_keypair_feed (pef_config_state_data_t *state_data)
         {
           fprintf (stderr, "Invalid SECTION in `%s'\n", kp->keypair);
           free (keypair);
-          rv = PEF_ERR_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
@@ -195,15 +195,15 @@ pef_keypair_feed (pef_config_state_data_t *state_data)
 }
 
 
-static pef_err_t
+static config_err_t
 pef_commit_file (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
   int file_opened = 0;
   FILE *fp;
-  pef_err_t rv = PEF_ERR_FATAL_ERROR;
-  pef_err_t ret = PEF_ERR_SUCCESS;
-  pef_err_t this_ret;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret = CONFIG_ERR_SUCCESS;
+  config_err_t this_ret;
 
   args = state_data->prog_data->args;
 
@@ -220,23 +220,23 @@ pef_commit_file (pef_config_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass - read in input from file */
-  if ((this_ret = pef_config_parser (state_data, fp)) == PEF_ERR_FATAL_ERROR)
+  if ((this_ret = pef_config_parser (state_data, fp)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
-  if (this_ret == PEF_ERR_NON_FATAL_ERROR)
-    ret = PEF_ERR_NON_FATAL_ERROR;
+  if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+    ret = CONFIG_ERR_NON_FATAL_ERROR;
 
   /* 2nd pass - feed in keypair elements from the command line to override file keypairs */
   if (args->keypairs)
     {
-      if ((this_ret = pef_keypair_feed (state_data)) == PEF_ERR_FATAL_ERROR)
+      if ((this_ret = pef_keypair_feed (state_data)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
-      if (this_ret == PEF_ERR_NON_FATAL_ERROR)
-        ret = PEF_ERR_NON_FATAL_ERROR;
+      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
+        ret = CONFIG_ERR_NON_FATAL_ERROR;
     }
 
-  if (ret == PEF_ERR_SUCCESS)
+  if (ret == CONFIG_ERR_SUCCESS)
     {
       /* 3rd pass */
       struct section *sect = state_data->sections;
@@ -247,14 +247,14 @@ pef_commit_file (pef_config_state_data_t *state_data)
             {
               if (kv->value)
                 {
-                  if ((this_ret = kv->commit (state_data, sect, kv)) == PEF_ERR_FATAL_ERROR)
+                  if ((this_ret = kv->commit (state_data, sect, kv)) == CONFIG_ERR_FATAL_ERROR)
                     goto cleanup;
 
-                  if (this_ret == PEF_ERR_NON_FATAL_ERROR)
+                  if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
                     {
                       if (args->verbose)
                         fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key);
-                      ret = PEF_ERR_NON_FATAL_ERROR;
+                      ret = CONFIG_ERR_NON_FATAL_ERROR;
                     }
                 }
               kv = kv->next;
@@ -275,11 +275,11 @@ pef_commit_file (pef_config_state_data_t *state_data)
   return rv;
 }
 
-pef_err_t
+config_err_t
 pef_commit (pef_config_state_data_t *state_data)
 {
   struct pef_config_arguments *args;
-  pef_err_t ret;
+  config_err_t ret;
 
   args = state_data->prog_data->args;
   if (args->filename)

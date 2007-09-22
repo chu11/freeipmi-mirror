@@ -68,7 +68,7 @@ _pef_config (void *arg)
   char errmsg[IPMI_DEVICE_OPEN_ERRMSGLEN];
   struct section *sections = NULL;
   int exit_code = -1;
-  pef_err_t ret = 0;
+  config_err_t ret = 0;
 
   prog_data = (pef_config_prog_data_t *) arg;
   
@@ -96,24 +96,24 @@ _pef_config (void *arg)
   state_data.sections = sections;
 
   switch (prog_data->args->action) {
-  case PEF_ACTION_INFO:
+  case CONFIG_ACTION_INFO:
     ret = pef_info (&state_data);
     break;
-  case PEF_ACTION_CHECKOUT:
+  case CONFIG_ACTION_CHECKOUT:
     ret = pef_checkout (&state_data);
     break;
-  case PEF_ACTION_COMMIT:
+  case CONFIG_ACTION_COMMIT:
     ret = pef_commit (&state_data);
     break;
-  case PEF_ACTION_DIFF:
-    ret = pef_diff (&state_data);
+  case CONFIG_ACTION_DIFF:
+    ret = config_diff (&state_data);
     break;
-  case PEF_ACTION_LIST_SECTIONS:
+  case CONFIG_ACTION_LIST_SECTIONS:
     ret = pef_config_sections_list (&state_data);
     break;
   }
 
-  if (ret == PEF_ERR_FATAL_ERROR || ret == PEF_ERR_NON_FATAL_ERROR)
+  if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;

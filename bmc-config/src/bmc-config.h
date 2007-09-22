@@ -29,6 +29,10 @@
 
 #include "cmdline-parse-common.h"
 
+#include "config-common.h"
+#include "config-comment.h"
+#include "config-validate.h"
+
 #define CIPHER_SUITE_LEN 16
 
 enum argp_option_keys
@@ -42,36 +46,6 @@ enum argp_option_keys
     LIST_SECTIONS_KEY = 'L',
     VERBOSE_KEY = 'v',
   };
-
-typedef enum
-  {
-    BMC_ACTION_CHECKOUT = 1,
-    BMC_ACTION_COMMIT,
-    BMC_ACTION_DIFF,
-    BMC_ACTION_LIST_SECTIONS,
-  } bmc_action_t;
-
-typedef enum
-  {
-    BMC_ERR_FATAL_ERROR = -2,
-    BMC_ERR_NON_FATAL_ERROR = -1,
-    BMC_ERR_SUCCESS = 0,
-  } bmc_err_t;
-
-typedef enum
-  {
-    BMC_DIFF_FATAL_ERROR = -2,
-    BMC_DIFF_NON_FATAL_ERROR = -1,
-    BMC_DIFF_SAME = 0,
-    BMC_DIFF_DIFFERENT = 1,
-  } bmc_diff_t;
-
-typedef enum
-  {
-    BMC_VALIDATE_FATAL_ERROR = -2,
-    BMC_VALIDATE_INVALID_VALUE = -1,
-    BMC_VALIDATE_VALID_VALUE = 0,
-  } bmc_validate_t;
 
 struct keypair
 {
@@ -89,7 +63,7 @@ struct bmc_config_arguments
 {
   struct common_cmd_args common;
 
-  bmc_action_t action;
+  config_action_t action;
 
   int verbose;
   char *filename;

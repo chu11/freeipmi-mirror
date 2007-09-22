@@ -14,15 +14,15 @@
 #include "bmc-config-parser.h"
 #include "bmc-config-sections.h"
 
-static bmc_diff_t
-bmc_diff_keypair (bmc_config_state_data_t *state_data,
+static config_diff_t
+config_diff_keypair (bmc_config_state_data_t *state_data,
                   struct keypair *kp)
 {
   char *keypair = NULL;
   char *section_name;
   char *key_name;
   char *value;
-  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
+  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
   
   if (!(keypair = strdup (kp->keypair)))
     {
@@ -37,7 +37,7 @@ bmc_diff_keypair (bmc_config_state_data_t *state_data,
   if (!(section_name && key_name && value)) 
     {
       fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = BMC_DIFF_NON_FATAL_ERROR; 
+      rv = CONFIG_DIFF_NON_FATAL_ERROR; 
       goto cleanup;
     }
      
@@ -55,27 +55,27 @@ bmc_diff_keypair (bmc_config_state_data_t *state_data,
   return rv;
 }
 
-static bmc_diff_t
-bmc_diff_keypairs (bmc_config_state_data_t *state_data)
+static config_diff_t
+config_diff_keypairs (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
   struct keypair *kp;
-  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
-  bmc_diff_t ret = BMC_DIFF_SAME;
+  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
+  config_diff_t ret = CONFIG_DIFF_SAME;
 
   args = state_data->prog_data->args;
 
   kp = args->keypairs;
   while (kp)
     {
-      bmc_diff_t this_ret;
+      config_diff_t this_ret;
 
-      if ((this_ret = bmc_diff_keypair (state_data, 
-                                        kp)) == BMC_DIFF_FATAL_ERROR)
+      if ((this_ret = config_diff_keypair (state_data, 
+                                        kp)) == CONFIG_DIFF_FATAL_ERROR)
         goto cleanup;
 
-      if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
-        ret = BMC_DIFF_NON_FATAL_ERROR;
+      if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
+        ret = CONFIG_DIFF_NON_FATAL_ERROR;
 
       kp = kp->next;
     }
@@ -85,15 +85,15 @@ bmc_diff_keypairs (bmc_config_state_data_t *state_data)
   return rv;
 }
 
-static bmc_diff_t
-bmc_diff_file (bmc_config_state_data_t *state_data)
+static config_diff_t
+config_diff_file (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
   FILE *fp;
   int file_opened = 0;
-  bmc_diff_t rv = BMC_DIFF_FATAL_ERROR;
-  bmc_diff_t ret = BMC_DIFF_SAME;
-  bmc_diff_t this_ret;
+  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
+  config_diff_t ret = CONFIG_DIFF_SAME;
+  config_diff_t this_ret;
 
   args = state_data->prog_data->args;
 
@@ -110,13 +110,13 @@ bmc_diff_file (bmc_config_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass */
-  if ((this_ret = bmc_config_parser (state_data, fp)) == BMC_DIFF_FATAL_ERROR)
+  if ((this_ret = bmc_config_parser (state_data, fp)) == CONFIG_DIFF_FATAL_ERROR)
     goto cleanup;
 
-  if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
-    ret = BMC_DIFF_NON_FATAL_ERROR;
+  if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
+    ret = CONFIG_DIFF_NON_FATAL_ERROR;
 
-  if (ret == BMC_DIFF_SAME) 
+  if (ret == CONFIG_DIFF_SAME) 
     {
       /* 2nd pass if 1st pass was successful */
       struct section *sect = state_data->sections;
@@ -127,11 +127,11 @@ bmc_diff_file (bmc_config_state_data_t *state_data)
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->diff (state_data, sect, kv)) == BMC_DIFF_FATAL_ERROR)
+                  if ((this_ret = kv->diff (state_data, sect, kv)) == CONFIG_DIFF_FATAL_ERROR)
                     goto cleanup;
 
-                  if (this_ret == BMC_DIFF_NON_FATAL_ERROR)
-                    ret = BMC_DIFF_NON_FATAL_ERROR;
+                  if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
+                    ret = CONFIG_DIFF_NON_FATAL_ERROR;
                 }
               kv = kv->next;
             }
@@ -146,24 +146,24 @@ bmc_diff_file (bmc_config_state_data_t *state_data)
   return rv;
 }
 
-bmc_err_t
-bmc_diff (bmc_config_state_data_t *state_data)
+config_err_t
+config_diff (bmc_config_state_data_t *state_data)
 {
   struct bmc_config_arguments *args;
-  bmc_diff_t ret;
+  config_diff_t ret;
 
   args = state_data->prog_data->args;
 
   if (args->keypairs)
-    ret = bmc_diff_keypairs (state_data);
+    ret = config_diff_keypairs (state_data);
   else
-    ret = bmc_diff_file (state_data);
+    ret = config_diff_file (state_data);
 
-  if (ret == BMC_DIFF_SAME)
-    return BMC_ERR_SUCCESS;
-  if (ret == BMC_DIFF_DIFFERENT || ret == BMC_DIFF_NON_FATAL_ERROR)
-    return BMC_ERR_NON_FATAL_ERROR;
-  return BMC_ERR_FATAL_ERROR;
+  if (ret == CONFIG_DIFF_SAME)
+    return CONFIG_ERR_SUCCESS;
+  if (ret == CONFIG_DIFF_DIFFERENT || ret == CONFIG_DIFF_NON_FATAL_ERROR)
+    return CONFIG_ERR_NON_FATAL_ERROR;
+  return CONFIG_ERR_FATAL_ERROR;
 }
 
 void 
