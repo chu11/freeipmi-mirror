@@ -1,22 +1,22 @@
 /* 
 
-   bmc-config-sections.h
+bmc-config-sections.h
 
-   Copyright (C) 2006 FreeIPMI Core Team
+Copyright (C) 2006 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
 
@@ -37,25 +37,25 @@ struct config_section {
 
 /* checkout procedure fills the value into kv->value as printable string */
 typedef config_err_t (*Key_Checkout) (bmc_config_state_data_t *state_data,
-                                           const struct config_section *section,
-                                           struct config_keyvalue *kv);
+                                      const struct config_section *section,
+                                      struct config_keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
 typedef config_err_t (*Key_Commit) (bmc_config_state_data_t *state_data,
-                                         const struct config_section *section,
-                                         const struct config_keyvalue *kv);
+                                    const struct config_section *section,
+                                    const struct config_keyvalue *kv);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
 typedef config_diff_t (*Key_Diff) (bmc_config_state_data_t *state_data,
-                                        const struct config_section *section,
-                                        const struct config_keyvalue *kv);
+                                   const struct config_section *section,
+                                   const struct config_keyvalue *kv);
 
 /* validate procedure finds if value is suitable to be set as kv->value */
 typedef config_validate_t (*Key_Validate) (const char *section_name,
-                                                const char *key_name,
-                                                const char *value);
+                                           const char *key_name,
+                                           const char *value);
 
 struct config_keyvalue {
   const char *key_name;
@@ -75,10 +75,10 @@ void bmc_config_sections_list_destroy (bmc_config_state_data_t *state_data,
                                        struct config_section *sections);
 
 struct config_section * bmc_config_section_create (bmc_config_state_data_t *state_data, 
-                                            char *section_name,
-                                            char *section_comment_section_name,
-                                            char *section_comment,
-					    unsigned int flags);
+                                                   char *section_name,
+                                                   char *section_comment_section_name,
+                                                   char *section_comment,
+                                                   unsigned int flags);
 
 void bmc_config_section_destroy (bmc_config_state_data_t *state_data, 
                                  struct config_section *section);
@@ -94,8 +94,8 @@ int bmc_config_section_add_keyvalue (bmc_config_state_data_t *state_data,
                                      Key_Validate validate);
 
 struct config_keyvalue * bmc_config_section_find_keyvalue (bmc_config_state_data_t *state_data,
-                                                    const char *section_name,
-                                                    const char *key_name);
+                                                           const char *section_name,
+                                                           const char *key_name);
 
 int bmc_config_section_set_value (bmc_config_state_data_t *state_data,
                                   const char *section_name,

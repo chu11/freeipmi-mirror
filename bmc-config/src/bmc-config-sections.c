@@ -318,7 +318,7 @@ bmc_config_section_find_keyvalue (bmc_config_state_data_t *state_data,
   struct config_keyvalue *kv = NULL;
 
   if (!(section = bmc_config_section_find_section (state_data,
-                                                section_name)))
+                                                   section_name)))
     {
       fprintf (stderr, "Unknown section `%s'\n", section_name);
       return NULL;
