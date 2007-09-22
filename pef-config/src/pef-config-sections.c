@@ -465,7 +465,7 @@ pef_config_sections_list (pef_config_state_data_t *state_data)
 
   while (sect)
     {
-      if (!(sect->flags & PEF_DO_NOT_CHECKOUT))
+      if (!(sect->flags & CONFIG_DO_NOT_CHECKOUT))
         printf("%s\n", sect->section_name);
       printf("%s\n", sect->section_name); 
       sect = sect->next;

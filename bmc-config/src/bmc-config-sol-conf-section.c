@@ -1091,7 +1091,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        sol_conf_section,
                                        "SOL_Payload_Port_Number",
                                        "Give a valid port number",
-                                       BMC_CHECKOUT_KEY_COMMENTED_OUT,
+                                       CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                        port_checkout,
                                        port_commit,
                                        port_diff,

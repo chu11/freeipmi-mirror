@@ -942,7 +942,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        bmc_serial_conf_section,
                                        "Call_Retry_Time",
                                        "Give a valid number",
-                                       BMC_DO_NOT_CHECKOUT,
+                                       CONFIG_DO_NOT_CHECKOUT,
                                        call_retry_interval_checkout,
                                        call_retry_interval_commit,
                                        call_retry_interval_diff,
