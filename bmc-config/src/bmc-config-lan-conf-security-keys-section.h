@@ -1,6 +1,6 @@
 /* 
 
-   bmc-rmcpplus-conf-privilege-section.h
+   bmc-config-lan-conf-security-keys-section.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,12 +20,12 @@
 */
 
 
-#ifndef _BMC_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_
-#define _BMC_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_
+#ifndef _BMC_CONFIG_LAN_CONF_SECURITY_KEYS_SECTION_H_
+#define _BMC_CONFIG_LAN_CONF_SECURITY_KEYS_SECTION_H_
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-struct section * bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data);
+struct section * bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_data);
 
-#endif /* _BMC_RMCPPLUS_CONF_PRIVILEGE_SECTION_H_ */
+#endif /* _BMC_CONFIG_LAN_CONF_SECURITY_KEYS_SECTION_H_ */

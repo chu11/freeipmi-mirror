@@ -1652,7 +1652,7 @@ serial_session_limit_diff (bmc_config_state_data_t *state_data,
 }
 
 struct section *
-bmc_user_section_get (bmc_config_state_data_t *state_data, int userid)
+bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
 {
   struct section *user_section = NULL;
   char section_name[64];

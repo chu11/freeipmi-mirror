@@ -8,6 +8,9 @@
 	files.
 
 	* bmc-config/, pef-config/: Use new common code.
+
+	* bmc-config/: Rename numerous files for code consistency to other
+	projects.
 	
 2007-09-20  Albert Chu <chu11@llnl.gov>
 

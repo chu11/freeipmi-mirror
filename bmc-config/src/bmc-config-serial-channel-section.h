@@ -1,6 +1,6 @@
 /* 
 
-   bmc-user-sections.h
+   bmc-config-serial-channel-section.h
 
    Copyright (C) 2006 FreeIPMI Core Team
 
@@ -20,14 +20,12 @@
 */
 
 
-#ifndef _BMC_USER_SECTIONS_H_
-#define _BMC_USER_SECTIONS_H_
+#ifndef _BMC_CONFIG_SERIAL_CHANNEL_SECTION_H_
+#define _BMC_CONFIG_SERIAL_CHANNEL_SECTION_H_
 
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-int bmc_get_num_users (bmc_config_state_data_t *state_data);
+struct section * bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data);
 
-struct section * bmc_user_section_get (bmc_config_state_data_t *state_data, int userid);
-
-#endif /* _BMC_USER_SECTIONS_H_ */
+#endif /* _BMC_CONFIG_SERIAL_CHANNEL_SECTION_H_ */

@@ -452,7 +452,7 @@ id_14_diff (bmc_config_state_data_t *state_data,
 }
 
 struct section *
-bmc_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
+bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *rmcpplus_conf_privilege_section = NULL;
   char *section_comment = 

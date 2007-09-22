@@ -1237,7 +1237,7 @@ pef_alert_startup_delay_diff (bmc_config_state_data_t *state_data,
 }
 
 struct section *
-bmc_pef_conf_section_get (bmc_config_state_data_t *state_data)
+bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct section *pef_section;
 

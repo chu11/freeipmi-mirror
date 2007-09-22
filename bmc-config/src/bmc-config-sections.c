@@ -13,18 +13,18 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-sections.h"
-#include "bmc-user-sections.h"
-#include "bmc-lan-channel-section.h"
-#include "bmc-lan-conf-section.h"
-#include "bmc-lan-conf-auth-section.h"
-#include "bmc-lan-conf-security-keys-section.h"
-#include "bmc-lan-conf-misc-section.h"
-#include "bmc-pef-conf-section.h"
-#include "bmc-rmcpplus-conf-privilege-section.h"
-#include "bmc-serial-channel-section.h"
-#include "bmc-serial-conf-section.h"
-#include "bmc-sol-conf-section.h"
-#include "bmc-misc-section.h"
+#include "bmc-config-user-sections.h"
+#include "bmc-config-lan-channel-section.h"
+#include "bmc-config-lan-conf-section.h"
+#include "bmc-config-lan-conf-auth-section.h"
+#include "bmc-config-lan-conf-security-keys-section.h"
+#include "bmc-config-lan-conf-misc-section.h"
+#include "bmc-config-pef-conf-section.h"
+#include "bmc-config-rmcpplus-conf-privilege-section.h"
+#include "bmc-config-serial-channel-section.h"
+#include "bmc-config-serial-conf-section.h"
+#include "bmc-config-sol-conf-section.h"
+#include "bmc-config-misc-section.h"
 
 static int
 _add_section(struct section **sections, struct section *sect)
@@ -57,63 +57,63 @@ bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
 
   for (i = 0; i < num_users; i++)
     {
-      if (!(sect = bmc_user_section_get(state_data, i+1)))
+      if (!(sect = bmc_config_user_section_get(state_data, i+1)))
 	goto cleanup;
       if (_add_section (&sections, sect) < 0)
 	goto cleanup;
     }
   
-  if (!(sect = bmc_lan_channel_section_get (state_data)))
+  if (!(sect = bmc_config_lan_channel_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_lan_conf_section_get (state_data)))
+  if (!(sect = bmc_config_lan_conf_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_lan_conf_auth_section_get (state_data)))
+  if (!(sect = bmc_config_lan_conf_auth_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_lan_conf_security_keys_section_get (state_data)))
+  if (!(sect = bmc_config_lan_conf_security_keys_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_lan_conf_misc_section_get (state_data)))
+  if (!(sect = bmc_config_lan_conf_misc_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_rmcpplus_conf_privilege_section_get (state_data)))
+  if (!(sect = bmc_config_rmcpplus_conf_privilege_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_serial_channel_section_get (state_data)))
+  if (!(sect = bmc_config_serial_channel_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_serial_conf_section_get (state_data)))
+  if (!(sect = bmc_config_serial_conf_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_pef_conf_section_get (state_data)))
+  if (!(sect = bmc_config_pef_conf_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_sol_conf_section_get (state_data)))
+  if (!(sect = bmc_config_sol_conf_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_misc_section_get (state_data)))
+  if (!(sect = bmc_config_misc_section_get (state_data)))
     goto cleanup;
   if (_add_section (&sections, sect) < 0)
     goto cleanup;
