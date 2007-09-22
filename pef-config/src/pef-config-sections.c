@@ -230,10 +230,10 @@ pef_config_section_add_keyvalue (pef_config_state_data_t *state_data,
                                  const char *key_name,
                                  const char *description,
                                  unsigned int flags,
-                                 Keyvalue_Checkout checkout,
-                                 Keyvalue_Commit commit,
-                                 Keyvalue_Diff diff,
-                                 Keyvalue_Validate validate)
+                                 Key_Checkout checkout,
+                                 Key_Commit commit,
+                                 Key_Diff diff,
+                                 Key_Validate validate)
 {
   struct config_keyvalue *kv;
 

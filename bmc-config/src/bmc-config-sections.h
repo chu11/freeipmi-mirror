@@ -36,24 +36,24 @@ struct config_section {
 };
 
 /* checkout procedure fills the value into kv->value as printable string */
-typedef config_err_t (*Keyvalue_Checkout) (bmc_config_state_data_t *state_data,
+typedef config_err_t (*Key_Checkout) (bmc_config_state_data_t *state_data,
                                            const struct config_section *section,
                                            struct config_keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
-typedef config_err_t (*Keyvalue_Commit) (bmc_config_state_data_t *state_data,
+typedef config_err_t (*Key_Commit) (bmc_config_state_data_t *state_data,
                                          const struct config_section *section,
                                          const struct config_keyvalue *kv);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
-typedef config_diff_t (*Keyvalue_Diff) (bmc_config_state_data_t *state_data,
+typedef config_diff_t (*Key_Diff) (bmc_config_state_data_t *state_data,
                                         const struct config_section *section,
                                         const struct config_keyvalue *kv);
 
 /* validate procedure finds if value is suitable to be set as kv->value */
-typedef config_validate_t (*Keyvalue_Validate) (const char *section_name,
+typedef config_validate_t (*Key_Validate) (const char *section_name,
                                                 const char *key_name,
                                                 const char *value);
 
@@ -62,10 +62,10 @@ struct config_keyvalue {
   const char *description;
   unsigned int flags;
   char *value;
-  Keyvalue_Checkout checkout;
-  Keyvalue_Commit commit;
-  Keyvalue_Diff diff;
-  Keyvalue_Validate validate;
+  Key_Checkout checkout;
+  Key_Commit commit;
+  Key_Diff diff;
+  Key_Validate validate;
   struct config_keyvalue *next;
 };
 
@@ -88,10 +88,10 @@ int bmc_config_section_add_keyvalue (bmc_config_state_data_t *state_data,
                                      const char *key_name,
                                      const char *description,
                                      unsigned int flags,
-                                     Keyvalue_Checkout checkout,
-                                     Keyvalue_Commit commit,
-                                     Keyvalue_Diff diff,
-                                     Keyvalue_Validate validate);
+                                     Key_Checkout checkout,
+                                     Key_Commit commit,
+                                     Key_Diff diff,
+                                     Key_Validate validate);
 
 struct config_keyvalue * bmc_config_section_find_keyvalue (bmc_config_state_data_t *state_data,
                                                     const char *section_name,
