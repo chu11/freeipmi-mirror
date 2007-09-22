@@ -91,19 +91,6 @@ config_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data,
                                        uint8_t vlan_id_enable);
 config_err_t set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
                                              uint8_t vlan_priority);
-config_err_t set_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
-                                                  uint8_t basic_mode, 
-                                                  uint8_t ppp_mode, 
-                                                  uint8_t terminal_mode, 
-                                                  uint8_t connect_mode);
-config_err_t set_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data, 
-                                                         uint8_t page_blackout_interval);
-config_err_t set_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data, 
-                                                      uint8_t call_retry_interval);
-config_err_t set_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
-                                                               uint8_t dtr_hangup, 
-                                                               uint8_t flow_control, 
-                                                               uint8_t bit_rate);
 config_err_t set_pef_control (bmc_config_state_data_t *state_data,
                               uint8_t pef,
                               uint8_t pef_event_messages,
@@ -200,20 +187,6 @@ config_err_t get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *s
 config_err_t get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
                                                           char *backup_gateway_mac_address,
                                                           unsigned int backup_gateway_mac_address_len);
-config_err_t get_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
-                                                  uint8_t *basic_mode, 
-                                                  uint8_t *ppp_mode, 
-                                                  uint8_t *terminal_mode, 
-                                                  uint8_t *connect_mode);
-config_err_t get_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data, 
-                                                         uint8_t *page_blackout_interval);
-config_err_t get_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data, 
-                                                      uint8_t *call_retry_interval);
-config_err_t get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
-                                                               uint8_t *dtr_hangup, 
-                                                               uint8_t *flow_control, 
-                                                               uint8_t *bit_rate);
-
 config_err_t get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
                                        uint32_t *vlan_id,
                                        uint8_t *vlan_id_enable);

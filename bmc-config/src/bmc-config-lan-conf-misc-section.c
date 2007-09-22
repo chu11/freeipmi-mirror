@@ -346,6 +346,7 @@ _lan_conf_misc_commit(const char *section_name,
   uint8_t generated_arp_control_checkout = 0;
   uint8_t generated_arp_control_checkout_success = 0;
   uint8_t generated_arp_control_commit = 0;
+  uint8_t gratuitous_arp_interval_commit = 0;
 
   assert(section_name);
   assert(keyvalues);
@@ -359,11 +360,14 @@ _lan_conf_misc_commit(const char *section_name,
   kv = keyvalues;
   while (kv)
     {
-      assert(!kv->value_output);
+      assert(kv->value_input);
 
       if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_GRATUITOUS_ARPS)
           || !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_ARP_RESPONSE))
         generated_arp_control_checkout++;
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_GRATUITOUS_ARP_INTERVAL))
+        /* no group checkout */
+        ;
       else
         {
           if (debug)
@@ -392,7 +396,7 @@ _lan_conf_misc_commit(const char *section_name,
   kv = keyvalues;
   while (kv)
     {
-      assert(!kv->value_output);
+      assert(kv->value_input);
 
       if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_GRATUITOUS_ARPS)
           && generated_arp_control_checkout_success)
@@ -410,13 +414,7 @@ _lan_conf_misc_commit(const char *section_name,
         {
           /* checked earlier for validity */
           gratuitous_arp_interval = atoi(kv->value_input);
-          
-          if ((ret = _set_lan_conf_gratuitous_arp_interval(state_data,
-                                                           debug,
-                                                           gratuitous_arp_interval)) == CONFIG_ERR_FATAL_ERROR)
-            return CONFIG_ERR_FATAL_ERROR;
-          if (ret != CONFIG_ERR_SUCCESS)
-            rv = ret;
+          gratuitous_arp_interval_commit++;
         }
       else
         {
@@ -436,6 +434,16 @@ _lan_conf_misc_commit(const char *section_name,
                                                          debug,
                                                          bmc_generated_gratuitous_arps,
                                                          bmc_generated_arp_responses)) == CONFIG_ERR_FATAL_ERROR)
+        return CONFIG_ERR_FATAL_ERROR;
+      if (ret != CONFIG_ERR_SUCCESS)
+        rv = ret;
+    }
+
+  if (gratuitous_arp_interval_commit)
+    {
+      if ((ret = _set_lan_conf_gratuitous_arp_interval(state_data,
+                                                       debug,
+                                                       gratuitous_arp_interval)) == CONFIG_ERR_FATAL_ERROR)
         return CONFIG_ERR_FATAL_ERROR;
       if (ret != CONFIG_ERR_SUCCESS)
         rv = ret;
