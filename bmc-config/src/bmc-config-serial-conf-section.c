@@ -451,9 +451,9 @@ _serial_conf_checkout(const char *section_name,
       assert(!kv->value_output);
       
       if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_BASIC_MODE)
-          && !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_PPP_MODE)
-          && !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_TERMINAL_MODE)
-          && !strcasecmp(kv->key->key_name, KEY_NAME_CONNECT_MODE))
+          || !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_PPP_MODE)
+          || !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_TERMINAL_MODE)
+          || !strcasecmp(kv->key->key_name, KEY_NAME_CONNECT_MODE))
         connection_mode_checkout++;
       else if (!strcasecmp(kv->key->key_name, KEY_NAME_PAGE_BLACKOUT_INTERVAL))
         page_blackout_interval_checkout++;
@@ -463,8 +463,8 @@ _serial_conf_checkout(const char *section_name,
         /* legacy */
         ;
       else if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_DTR_HANGUP)
-               && !strcasecmp(kv->key->key_name, KEY_NAME_FLOW_CONTROL)
-               && !strcasecmp(kv->key->key_name, KEY_NAME_BIT_RATE))
+               || !strcasecmp(kv->key->key_name, KEY_NAME_FLOW_CONTROL)
+               || !strcasecmp(kv->key->key_name, KEY_NAME_BIT_RATE))
         ipmi_messaging_comm_settings_checkout++;
       else
         {
@@ -658,9 +658,9 @@ _serial_conf_commit(const char *section_name,
       assert(kv->value_input);
 
       if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_BASIC_MODE)
-          && !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_PPP_MODE)
-          && !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_TERMINAL_MODE)
-          && !strcasecmp(kv->key->key_name, KEY_NAME_CONNECT_MODE))
+          || !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_PPP_MODE)
+          || !strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_TERMINAL_MODE)
+          || !strcasecmp(kv->key->key_name, KEY_NAME_CONNECT_MODE))
         connection_mode_checkout++;
       else if (!strcasecmp(kv->key->key_name, KEY_NAME_PAGE_BLACKOUT_INTERVAL))
         /* no group checkout */
@@ -672,8 +672,8 @@ _serial_conf_commit(const char *section_name,
         /* legacy */
         ;
       else if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_DTR_HANGUP)
-               && !strcasecmp(kv->key->key_name, KEY_NAME_FLOW_CONTROL)
-               && !strcasecmp(kv->key->key_name, KEY_NAME_BIT_RATE))
+               || !strcasecmp(kv->key->key_name, KEY_NAME_FLOW_CONTROL)
+               || !strcasecmp(kv->key->key_name, KEY_NAME_BIT_RATE))
         ipmi_messaging_comm_settings_checkout++;
       else
         {
