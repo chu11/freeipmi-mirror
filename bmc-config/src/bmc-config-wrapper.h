@@ -70,18 +70,6 @@ config_err_t set_bmc_user_serial_channel_access (bmc_config_state_data_t *state_
                                                  uint8_t serial_user_restricted_to_callback, 
                                                  uint8_t serial_privilege_limit, 
                                                  uint8_t serial_session_limit);
-config_err_t set_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                                  uint8_t access_mode, 
-                                                  uint8_t user_level_authentication, 
-                                                  uint8_t per_message_authentication, 
-                                                  uint8_t pef_alerting, 
-                                                  uint8_t channel_privilege_limit);
-config_err_t set_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                      uint8_t access_mode, 
-                                                      uint8_t user_level_authentication, 
-                                                      uint8_t per_message_authentication, 
-                                                      uint8_t pef_alerting, 
-                                                      uint8_t channel_privilege_limit);
 config_err_t set_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
                                                  uint8_t ip_address_source);
 config_err_t set_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
@@ -103,18 +91,6 @@ config_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data,
                                        uint8_t vlan_id_enable);
 config_err_t set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
                                              uint8_t vlan_priority);
-config_err_t set_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                                     uint8_t access_mode, 
-                                                     uint8_t user_level_authentication, 
-                                                     uint8_t per_message_authentication, 
-                                                     uint8_t pef_alerting, 
-                                                     uint8_t channel_privilege_limit);
-config_err_t set_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                         uint8_t access_mode, 
-                                                         uint8_t user_level_authentication, 
-                                                         uint8_t per_message_authentication, 
-                                                         uint8_t pef_alerting, 
-                                                         uint8_t channel_privilege_limit);
 config_err_t set_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
                                                   uint8_t basic_mode, 
                                                   uint8_t ppp_mode, 
@@ -201,18 +177,6 @@ config_err_t get_bmc_user_serial_channel_access (bmc_config_state_data_t *state_
                                                  uint8_t *privilege_limit, 
                                                  uint8_t *session_limit,
                                                  uint8_t *user_id_enable_status);
-config_err_t get_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                                  uint8_t *access_mode, 
-                                                  uint8_t *user_level_authentication, 
-                                                  uint8_t *per_message_authentication, 
-                                                  uint8_t *pef_alerting, 
-                                                  uint8_t *privilege_limit);
-config_err_t get_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                      uint8_t *access_mode, 
-                                                      uint8_t *user_level_authentication, 
-                                                      uint8_t *per_message_authentication, 
-                                                      uint8_t *pef_alerting, 
-                                                      uint8_t *privilege_limit);
 config_err_t get_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
                                                  uint8_t *ip_address_source);
 config_err_t get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
@@ -236,18 +200,6 @@ config_err_t get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *s
 config_err_t get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
                                                           char *backup_gateway_mac_address,
                                                           unsigned int backup_gateway_mac_address_len);
-config_err_t get_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                                     uint8_t *access_mode, 
-                                                     uint8_t *user_level_authentication, 
-                                                     uint8_t *per_message_authentication, 
-                                                     uint8_t *pef_alerting, 
-                                                     uint8_t *privilege_limit);
-config_err_t get_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                         uint8_t *access_mode, 
-                                                         uint8_t *user_level_authentication, 
-                                                         uint8_t *per_message_authentication, 
-                                                         uint8_t *pef_alerting, 
-                                                         uint8_t *privilege_limit);
 config_err_t get_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
                                                   uint8_t *basic_mode, 
                                                   uint8_t *ppp_mode, 

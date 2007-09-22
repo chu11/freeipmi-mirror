@@ -58,46 +58,6 @@ set_bmc_user_access (bmc_config_state_data_t *state_data,
   return (rv);
 }
 
-static config_err_t 
-set_bmc_channel_access (bmc_config_state_data_t *state_data, 
-			uint8_t channel_number, 
-			uint8_t set_option, 
-			uint8_t access_mode, 
-			uint8_t user_level_authentication, 
-			uint8_t per_message_authentication, 
-			uint8_t pef_alerting, 
-			uint8_t channel_privilege_limit)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_channel_access_rs)))
-    goto cleanup;
-
-  if (ipmi_cmd_set_channel_access (state_data->dev, 
-				   channel_number, 
-				   access_mode, 
-				   user_level_authentication, 
-				   per_message_authentication, 
-				   pef_alerting, 
-				   (set_option ? IPMI_CHANNEL_ACCESS_SET_VOLATILE : 
-				    IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE), 
-				   channel_privilege_limit, 
-				   (set_option ? IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VOLATILE : 
-				    IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE), 
-				   obj_cmd_rs) < 0)
-    {
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-      
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
-  return (rv);
-}
-
 config_err_t 
 set_bmc_username (bmc_config_state_data_t *state_data, 
 		  uint8_t userid, 
@@ -389,56 +349,6 @@ set_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data,
 			      userid, 
 			      serial_privilege_limit, 
 			      serial_session_limit);
-}
-
-config_err_t 
-set_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
-				     uint8_t access_mode, 
-				     uint8_t user_level_authentication, 
-				     uint8_t per_message_authentication, 
-				     uint8_t pef_alerting, 
-				     uint8_t channel_privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_lan_channel_number (state_data, 
-                                     &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return set_bmc_channel_access (state_data, 
-				 channel_number, 
-				 1, 
-				 access_mode, 
-				 (user_level_authentication ? 0 : 1), 
-				 (per_message_authentication ? 0 : 1), 
-				 (pef_alerting ? 0 : 1), 
-				 channel_privilege_limit);
-}
-
-config_err_t 
-set_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-					 uint8_t access_mode, 
-					 uint8_t user_level_authentication, 
-					 uint8_t per_message_authentication, 
-					 uint8_t pef_alerting, 
-					 uint8_t channel_privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_lan_channel_number (state_data, 
-                                     &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return set_bmc_channel_access (state_data, 
-				 channel_number, 
-				 0, 
-				 access_mode, 
-				 (user_level_authentication ? 0 : 1), 
-				 (per_message_authentication ? 0 : 1), 
-				 (pef_alerting ? 0 : 1), 
-				 channel_privilege_limit);
 }
 
 config_err_t 
@@ -809,56 +719,6 @@ set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data,
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
-}
-
-config_err_t 
-set_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
-					uint8_t access_mode, 
-					uint8_t user_level_authentication, 
-					uint8_t per_message_authentication, 
-					uint8_t pef_alerting, 
-					uint8_t channel_privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_serial_channel_number (state_data, 
-                                        &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return set_bmc_channel_access (state_data, 
-				 channel_number, 
-				 1, 
-				 access_mode, 
-				 (user_level_authentication ? 0 : 1), 
-				 (per_message_authentication ? 0 : 1), 
-				 (pef_alerting ? 0 : 1), 
-				 channel_privilege_limit);
-}
-
-config_err_t 
-set_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-					    uint8_t access_mode, 
-					    uint8_t user_level_authentication, 
-					    uint8_t per_message_authentication, 
-					    uint8_t pef_alerting, 
-					    uint8_t channel_privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_serial_channel_number (state_data, 
-                                        &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return set_bmc_channel_access (state_data, 
-				 channel_number, 
-				 0, 
-				 access_mode, 
-				 (user_level_authentication ? 0 : 1), 
-				 (per_message_authentication ? 0 : 1), 
-				 (pef_alerting ? 0 : 1), 
-				 channel_privilege_limit);
 }
 
 config_err_t 
@@ -1465,60 +1325,6 @@ get_bmc_user_access (bmc_config_state_data_t *state_data,
   return (rv);
 }
 
-static config_err_t 
-get_bmc_channel_access (bmc_config_state_data_t *state_data, 
-			uint8_t channel_number, 
-			uint8_t access_type, 
-			uint8_t *access_mode, 
-			uint8_t *user_level_authentication, 
-			uint8_t *per_message_authentication, 
-			uint8_t *pef_alerting, 
-			uint8_t *privilege_limit)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_access_rs)))
-    goto cleanup;
-
-  if (ipmi_cmd_get_channel_access (state_data->dev, 
-				   channel_number, 
-				   (access_type ? IPMI_CHANNEL_ACCESS_GET_VOLATILE :
-				    IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE), 
-				   obj_cmd_rs) < 0)
-    {
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-  
-  if (fiid_obj_get (obj_cmd_rs, "ipmi_messaging_access_mode", &val) < 0)
-    goto cleanup;
-  *access_mode = val;
-  
-  if (fiid_obj_get (obj_cmd_rs, "user_level_authentication", &val) < 0)
-    goto cleanup;
-  *user_level_authentication = (val ? 0 : 1);
-  
-  if (fiid_obj_get (obj_cmd_rs, "per_message_authentication", &val) < 0)
-    goto cleanup;
-  *per_message_authentication = (val ? 0 : 1);
-  
-  if (fiid_obj_get (obj_cmd_rs, "pef_alerting", &val) < 0)
-    goto cleanup;
-  *pef_alerting = (val ? 0 : 1);
-  
-  if (fiid_obj_get (obj_cmd_rs, "channel_privilege_level_limit", &val) < 0)
-    goto cleanup;
-  *privilege_limit = val;
-  
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
-  return (rv);
-}
-
 config_err_t 
 get_bmc_username (bmc_config_state_data_t *state_data, 
 		  uint8_t userid, 
@@ -1767,56 +1573,6 @@ get_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data,
 			      privilege_limit, 
 			      session_limit,
                               user_id_enable_status);
-}
-
-config_err_t 
-get_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
-				     uint8_t *access_mode, 
-				     uint8_t *user_level_authentication, 
-				     uint8_t *per_message_authentication, 
-				     uint8_t *pef_alerting, 
-				     uint8_t *privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_lan_channel_number (state_data, 
-                                     &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return get_bmc_channel_access (state_data, 
-				 channel_number, 
-				 1, 
-				 access_mode, 
-				 user_level_authentication, 
-				 per_message_authentication, 
-				 pef_alerting, 
-				 privilege_limit);
-}
-
-config_err_t 
-get_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-					 uint8_t *access_mode, 
-					 uint8_t *user_level_authentication, 
-					 uint8_t *per_message_authentication, 
-					 uint8_t *pef_alerting, 
-					 uint8_t *privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_lan_channel_number (state_data, 
-                                     &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return get_bmc_channel_access (state_data, 
-				 channel_number, 
-				 0, 
-				 access_mode, 
-				 user_level_authentication, 
-				 per_message_authentication, 
-				 pef_alerting, 
-				 privilege_limit);
 }
 
 config_err_t 
@@ -2357,56 +2113,6 @@ get_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data,
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
-}
-
-config_err_t 
-get_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
-					uint8_t *access_mode, 
-					uint8_t *user_level_authentication, 
-					uint8_t *per_message_authentication, 
-					uint8_t *pef_alerting, 
-					uint8_t *privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_serial_channel_number (state_data, 
-                                        &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return get_bmc_channel_access (state_data, 
-				 channel_number, 
-				 1, 
-				 access_mode, 
-				 user_level_authentication, 
-				 per_message_authentication, 
-				 pef_alerting, 
-				 privilege_limit);
-}
-
-config_err_t 
-get_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-					    uint8_t *access_mode, 
-					    uint8_t *user_level_authentication, 
-					    uint8_t *per_message_authentication, 
-					    uint8_t *pef_alerting, 
-					    uint8_t *privilege_limit)
-{
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if ((ret = get_serial_channel_number (state_data, 
-                                        &channel_number)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return get_bmc_channel_access (state_data, 
-				 channel_number, 
-				 0, 
-				 access_mode, 
-				 user_level_authentication, 
-				 per_message_authentication, 
-				 pef_alerting, 
-				 privilege_limit);
 }
 
 config_err_t 

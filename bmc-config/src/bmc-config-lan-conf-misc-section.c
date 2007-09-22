@@ -240,6 +240,7 @@ _lan_conf_misc_checkout(const char *section_name,
   /* two passes through the list is minimally slower but makes the
    * code far simpler
    */
+
   kv = keyvalues;
   while (kv)
     {
@@ -289,51 +290,25 @@ _lan_conf_misc_checkout(const char *section_name,
   kv = keyvalues;
   while (kv)
     {
+      int temp = 0;
+
       assert(!kv->value_output);
       
-      if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_GRATUITOUS_ARPS))
+      if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_GRATUITOUS_ARPS)
+          && generated_arp_control_checkout_success)
+        temp = config_section_update_keyvalue(kv,
+                                              NULL,
+                                              bmc_generated_gratuitous_arps ? "Yes" : "No");
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_ARP_RESPONSE)
+               && generated_arp_control_checkout_success)
+        temp = config_section_update_keyvalue(kv,
+                                              NULL,
+                                              bmc_generated_arp_responses ? "Yes" : "No");
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_GRATUITOUS_ARP_INTERVAL)
+               && gratuitous_arp_interval_checkout_success)
         {
-          if (generated_arp_control_checkout_success)
-            {
-              if (config_section_update_keyvalue(kv,
-                                                 NULL,
-                                                 bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
-                {
-                  if (debug)
-                    fprintf(stderr, "config_section_update_keyvalue error\n");
-                  return CONFIG_ERR_FATAL_ERROR;
-                }
-            }
-        }
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_ARP_RESPONSE))
-        {
-          if (generated_arp_control_checkout_success)
-            {
-              if (config_section_update_keyvalue(kv,
-                                                 NULL,
-                                                 bmc_generated_arp_responses ? "Yes" : "No") < 0)
-                {
-                  if (debug)
-                    fprintf(stderr, "config_section_update_keyvalue error\n");
-                  return CONFIG_ERR_FATAL_ERROR;
-                }
-            }
-        }
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_GRATUITOUS_ARP_INTERVAL))
-        {
-          if (gratuitous_arp_interval_checkout_success)
-            {
-              snprintf(buf, BMC_CONFIG_BUFLEN, "%d", gratuitous_arp_interval);
-              
-              if (config_section_update_keyvalue(kv, 
-                                                 NULL,
-                                                 buf) < 0)
-                {
-                  if (debug)
-                    fprintf(stderr, "config_section_update_keyvalue error\n");
-                  return CONFIG_ERR_FATAL_ERROR;
-                }
-            }
+          snprintf(buf, BMC_CONFIG_BUFLEN, "%d", gratuitous_arp_interval);
+          temp = config_section_update_keyvalue(kv, NULL, buf);
         }
       else
         {
@@ -342,6 +317,13 @@ _lan_conf_misc_checkout(const char *section_name,
                     "ERROR: Unknown key '%s' in '%s'\n",
                     kv->key->key_name,
                     section_name);
+        }
+
+      if (temp < 0)
+        {
+          if (debug)
+            fprintf(stderr, "config_section_update_keyvalue error\n");
+          return CONFIG_ERR_FATAL_ERROR;
         }
       
       kv = kv->next;
@@ -413,21 +395,17 @@ _lan_conf_misc_commit(const char *section_name,
     {
       assert(!kv->value_output);
 
-      if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_GRATUITOUS_ARPS))
+      if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_GRATUITOUS_ARPS)
+          && generated_arp_control_checkout_success)
         {
-          if (generated_arp_control_checkout_success)
-            {
-              bmc_generated_gratuitous_arps = same (kv->value_input, "yes");
-              generated_arp_control_commit++;
-            }
+          bmc_generated_gratuitous_arps = same (kv->value_input, "yes");
+          generated_arp_control_commit++;
         }
-      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_ARP_RESPONSE))
+      else if (!strcasecmp(kv->key->key_name, KEY_NAME_ENABLE_ARP_RESPONSE)
+               && generated_arp_control_checkout_success)
         {
-          if (generated_arp_control_checkout_success)
-            {
-              bmc_generated_arp_responses = same (kv->value_input, "yes");
-              generated_arp_control_commit++;
-            }
+          bmc_generated_arp_responses = same (kv->value_input, "yes");
+          generated_arp_control_commit++;
         }
       else if (!strcasecmp(kv->key->key_name, KEY_NAME_GRATUITOUS_ARP_INTERVAL))
         {

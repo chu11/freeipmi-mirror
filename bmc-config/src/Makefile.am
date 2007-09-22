@@ -8,6 +8,7 @@ bmc_config_SOURCES = \
 	bmc-config-sections.c \
 	bmc-config-wrapper.c \
 	bmc-config-utils.c \
+	bmc-config-channel-common.c \
 	bmc-config-user-sections.c \
 	bmc-config-lan-channel-section.c \
 	bmc-config-serial-channel-section.c \
@@ -37,6 +38,7 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-config-sections.h \
 		 bmc-config-wrapper.h \
 		 bmc-config-utils.h \
+		 bmc-config-channel-common.h \
 		 bmc-config-user-sections.h \
 		 bmc-config-lan-channel-section.h \
 		 bmc-config-lan-conf-auth-section.h \

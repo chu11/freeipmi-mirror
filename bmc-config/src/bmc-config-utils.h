@@ -1,5 +1,5 @@
-#ifndef _BMC_IPMI_WRAPPER_H
-#define _BMC_IPMI_WRAPPER_H
+#ifndef _BMC_CONFIG_UTILS_H
+#define _BMC_CONFIG_UTILS_H
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
