@@ -6,5 +6,3 @@ libfreeipmi
 - re-work UDM for advanced IPMI lan connection detection?
 - split off and install sdr parsing/caching lib?
 
-bmc-config/pef-config
-- re-work for faster checkout/commit

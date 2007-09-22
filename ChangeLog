@@ -7,7 +7,8 @@
 	* common/src/format-text.h, common/src/format-text.c: Remove
 	files.
 
-	* bmc-config/, pef-config/: Use new common code.
+	* bmc-config/, pef-config/: Use new common code.  Various code
+	cleanup.
 
 	* bmc-config/: Rename numerous files for code consistency to other
 	projects.
