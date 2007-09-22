@@ -22,8 +22,6 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 
-config_err_t get_bmc_max_users (bmc_config_state_data_t *state_data,
-                             uint8_t *max_users);
 config_err_t set_bmc_username (bmc_config_state_data_t *state_data, 
                             uint8_t userid, 
                             uint8_t *username);

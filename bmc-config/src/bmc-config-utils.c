@@ -101,7 +101,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 }
 
 config_err_t 
-get_number_of_lan_destinations (bmc_config_state_data_t *state_data, uint8_t *number_of_lan_destinations)
+get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_users)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -109,13 +109,13 @@ get_number_of_lan_destinations (bmc_config_state_data_t *state_data, uint8_t *nu
   uint64_t val;
   uint8_t channel_number;
 
-  if (state_data->number_of_lan_destinations_initialized)
+  if (state_data->number_of_users_initialized)
     {
-      *number_of_lan_destinations = state_data->number_of_lan_destinations;
+      *number_of_users = state_data->number_of_users;
       return CONFIG_ERR_SUCCESS;
     }
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_access_rs)))
     goto cleanup;
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -124,29 +124,27 @@ get_number_of_lan_destinations (bmc_config_state_data_t *state_data, uint8_t *nu
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev,
-                                                                        channel_number,
-                                                                        IPMI_GET_LAN_PARAMETER,
-                                                                        SET_SELECTOR,
-                                                                        BLOCK_SELECTOR,
-                                                                        obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_user_access (state_data->dev,
+                                channel_number,
+                                1, /* user_id number */
+                                obj_cmd_rs) < 0)
     {
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
   
   if (fiid_obj_get(obj_cmd_rs,
-		   "number_of_lan_destinations",
-		   &val) < 0)
+                   "max_channel_user_ids",
+                   &val) < 0)
     {
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  state_data->number_of_lan_destinations_initialized = 1;
-  state_data->number_of_lan_destinations = val;
+  state_data->number_of_users_initialized = 1;
+  state_data->number_of_users = val;
 
-  *number_of_lan_destinations = state_data->number_of_lan_destinations;
+  *number_of_users = state_data->number_of_users;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)

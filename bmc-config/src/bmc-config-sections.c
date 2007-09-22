@@ -13,6 +13,8 @@
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 #include "bmc-config-sections.h"
+#include "bmc-config-utils.h"
+
 #include "bmc-config-user-sections.h"
 #include "bmc-config-lan-channel-section.h"
 #include "bmc-config-lan-conf-section.h"
@@ -50,12 +52,17 @@ bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
 {
   struct section *sections = NULL;
   struct section *sect = NULL;
-  int num_users, i;
+  uint8_t number_of_users;
+  int i;
 
-  if ((num_users = bmc_get_num_users (state_data)) < 0)
-    return NULL;
+  if (get_number_of_users(state_data, &number_of_users) != CONFIG_ERR_SUCCESS)
+    {
+      if (state_data->prog_data->args->verbose)
+        fprintf (stderr, "## FATAL: Unable to get Number of Users\n");
+      return NULL;
+    }
 
-  for (i = 0; i < num_users; i++)
+  for (i = 0; i < number_of_users; i++)
     {
       if (!(sect = bmc_config_user_section_get(state_data, i+1)))
 	goto cleanup;

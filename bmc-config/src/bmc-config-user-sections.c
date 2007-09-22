@@ -16,17 +16,6 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
-int
-bmc_get_num_users (bmc_config_state_data_t *state_data)
-{
-  uint8_t users = 0;
-  config_err_t ret;
-
-  if ((ret = get_bmc_max_users (state_data, &users)) != CONFIG_ERR_SUCCESS)
-    return (-1);
-  return (int)users;
-}
-
 /* username */
 
 static config_err_t

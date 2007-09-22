@@ -1878,45 +1878,6 @@ set_k_g(bmc_config_state_data_t *state_data,
   return (rv);
 }
 
-
-config_err_t
-get_bmc_max_users (bmc_config_state_data_t *state_data, uint8_t *max_users)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
-  uint8_t channel_number;
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs)))
-    goto cleanup;
-
-  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_get_user_access (state_data->dev, 
-				channel_number, 
-				1, 
-				obj_cmd_rs) < 0) 
-    {
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  if (fiid_obj_get (obj_cmd_rs, "max_channel_user_ids", &val) < 0) 
-    goto cleanup;
-
-  *max_users = (uint8_t) val;
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy (obj_cmd_rs);
-  return rv;
-}
-			      
 /* get_XXXX functions */
 static config_err_t 
 get_bmc_user_access (bmc_config_state_data_t *state_data, 

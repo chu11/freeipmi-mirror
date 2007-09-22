@@ -85,7 +85,7 @@ _bmc_config_state_data_init(bmc_config_state_data_t *state_data)
   state_data->lan_channel_number_initialized = 0;
   state_data->serial_channel_number_initialized = 0;
   state_data->sol_channel_number_initialized = 0;
-  state_data->number_of_lan_destinations_initialized = 0;
+  state_data->number_of_users_initialized = 0;
 }
 
 static int
