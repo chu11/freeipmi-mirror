@@ -44,7 +44,9 @@ typedef enum
 
 struct config_keypair
 {
-  char *keypair;
+  char *section_name;
+  char *key_name;
+  char *value_input;
   struct config_keypair *next;
 };
 

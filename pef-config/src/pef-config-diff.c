@@ -15,47 +15,6 @@
 #include "pef-config-sections.h"
 
 static config_diff_t
-config_diff_keypair (pef_config_state_data_t *state_data,
-                  struct config_keypair *kp)
-{
-  char *keypair = NULL;
-  char *section_name;
-  char *key_name;
-  char *value;
-  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
-
-  if (!(keypair = strdup (kp->keypair)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  section_name = strtok (keypair, ":");
-  key_name = strtok (NULL, "=");
-  value = strtok (NULL, "");
-
-  if (!(section_name && key_name && value))
-    {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = CONFIG_DIFF_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-
-  section_name = strtok (section_name, " \t");
-  key_name = strtok (key_name, " \t");
-  value = strtok (value, " \t");
-
-  rv = pef_config_section_diff_value (state_data,
-                                      section_name,
-                                      key_name,
-                                      value);
- cleanup:
-  if (keypair)
-    free (keypair);
-  return rv;
-}
-
-static config_diff_t
 config_diff_keypairs (pef_config_state_data_t *state_data)
 {
   struct config_arguments *args;
@@ -70,9 +29,10 @@ config_diff_keypairs (pef_config_state_data_t *state_data)
     {
       config_diff_t this_ret;
 
-      if ((this_ret = config_diff_keypair (state_data,
-                                        kp)) == CONFIG_DIFF_FATAL_ERROR)
-        goto cleanup;
+      if ((this_ret = pef_config_section_diff_value (state_data,
+                                                     kp->section_name,
+                                                     kp->key_name,
+                                                     kp->value_input)) == CONFIG_DIFF_FATAL_ERROR)
 
       if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
         ret = CONFIG_DIFF_NON_FATAL_ERROR;

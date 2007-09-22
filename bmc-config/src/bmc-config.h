@@ -31,6 +31,7 @@
 
 #include "config-common.h"
 #include "config-comment.h"
+#include "config-util.h"
 #include "config-validate.h"
 
 #define CIPHER_SUITE_LEN 16

@@ -28,6 +28,7 @@ noinst_HEADERS = \
 	hostrange.h \
 	config-common.h \
 	config-comment.h \
+	config-util.h \
 	config-validate.h
 
 noinst_LTLIBRARIES = \
@@ -100,6 +101,7 @@ libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
 
 libconfigcommon_la_SOURCES = \
 	config-comment.c \
+	config-util.c \
 	config-validate.c
 
 ../../ipmidetect/src/libipmidetect/libipmidetect.la: force-dependency-check

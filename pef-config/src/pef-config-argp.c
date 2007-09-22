@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.12 2007-09-22 17:31:18 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.13 2007-09-22 22:32:32 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -91,52 +91,15 @@ static struct argp_option options[] =
 
 static struct argp argp = { options, parse_opt, args_doc, doc };
 
-static struct config_keypair *
-_create_config_keypair(char *arg)
-{
-  struct config_keypair *kp;
-
-  if (!(kp = (struct config_keypair *)malloc(sizeof(struct config_keypair))))
-    {
-      perror("malloc");
-      exit(1);
-    }
-  if (!(kp->keypair = strdup(arg)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  kp->next = NULL;
-
-  return kp;
-}
-
-static struct config_section_str *
-_create_config_section_str(char *arg)
-{
-  struct config_section_str *s;
-
-  if (!(s = (struct config_section_str *)malloc(sizeof(struct config_section_str))))
-    {
-      perror("malloc");
-      exit(1);
-    }
-  if (!(s->section_name = strdup(arg)))
-    {
-      perror("strdup");
-      exit(1);
-    }
-  s->next = NULL;
-
-  return s;
-}
-
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   struct config_arguments *cmd_args = state->input;
-  struct config_keypair *kp;
-  struct config_section_str *sstr;
+  struct config_keypair *kp = NULL;
+  struct config_section_str *sstr = NULL;
+  char *section_name = NULL;
+  char *key_name = NULL;
+  char *value = NULL;
   
   switch (key)
     {
@@ -174,34 +137,53 @@ parse_opt (int key, char *arg, struct argp_state *state)
         }
       break;
     case KEYPAIR_KEY:
-      kp = _create_config_keypair(arg);
-      if (cmd_args->keypairs)
+      if (config_keypair_parse_string(arg,
+                                      &section_name,
+                                      &key_name,
+                                      &value) < 0)
         {
-          struct config_keypair *p = NULL;
-
-          p = cmd_args->keypairs;
-          while (p->next)
-            p = p->next;
-
-          p->next = kp;
+          /* error printed in function call */
+          exit(1);
         }
-      else
-        cmd_args->keypairs = kp;
+      if (!(kp = config_keypair_create(section_name,
+                                       key_name,
+                                       value)))
+        {
+          fprintf(stderr,
+                  "config_keypair_create error\n");
+          exit(1);
+        }
+      if (config_keypair_append(&(cmd_args->keypairs),
+                                kp) < 0)
+        {
+          /* error printed in function call */
+          exit(1);
+        }
+      if (section_name)
+        free(section_name);
+      section_name = NULL;
+      if (key_name)
+        free(key_name);
+      key_name = NULL;
+      if (value)
+        free(value);
+      value = NULL;
+      kp = NULL;
       break;
     case SECTIONS_KEY:
-      sstr = _create_config_section_str(arg);
-      if (cmd_args->section_strs)
+      if (!(sstr = config_section_str_create(arg)))
         {
-          struct config_section_str *p = NULL;
-
-          p = cmd_args->section_strs;
-          while (p->next)
-            p = p->next;
-
-          p->next = sstr;
+          fprintf(stderr,
+                  "config_section_str_create error\n");
+          exit(1);
         }
-      else
-        cmd_args->section_strs = sstr;
+      if (config_section_str_append(&(cmd_args->section_strs),
+                                    sstr) < 0)
+        {
+          /* error printed in function call */
+          exit(1);
+        }
+      sstr = NULL;
       break;
     case LIST_SECTIONS_KEY:
       if (!cmd_args->action)

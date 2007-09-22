@@ -19,53 +19,32 @@ static config_err_t
 bmc_checkout_keypair (bmc_config_state_data_t *state_data,
                       struct config_keypair *kp)
 {
-  char *keypair = NULL;
-  char *section_name;
-  char *key_name;
   struct config_section *section;
   struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
-  if (!(keypair = strdup (kp->keypair)))
-    {
-      perror("strdup");
-      goto cleanup;
-    }
-
-  section_name = strtok (keypair, ":");
-  key_name = strtok (NULL, "");
-
-  if (!(section_name && key_name)) 
-    {
-      fprintf (stderr, "Invalid KEY-PAIR spec `%s'\n", kp->keypair);
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-     
-  section_name = strtok (section_name, " \t");
-  key_name = strtok (key_name, " \t");
-
+  /* XXX - use common func later */
   section = state_data->sections;
   while (section) 
     {
-      if (same (section_name, section->section_name)) 
+      if (same (kp->section_name, section->section_name)) 
         break;
       section = section->next;
     }
   
+  /* XXX check earlier */
   if (!section) 
     {
-      fprintf (stderr, "Unknown section `%s'\n", section_name);
+      fprintf (stderr, "Unknown section `%s'\n", kp->section_name);
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-
+  
   kv = section->keyvalues;
-
   while (kv) 
     {
-      if (same (key_name, kv->key_name))
+      if (same (kp->key_name, kv->key_name))
         break;
       kv = kv->next;
     }
@@ -73,7 +52,7 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
   if (!kv) 
     {
       fprintf (stderr, "Unknown key `%s' in section `%s'\n",
-               key_name, section_name);
+               kp->key_name, kp->section_name);
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -82,14 +61,13 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
     goto cleanup;
 
   if (ret == CONFIG_ERR_SUCCESS) 
-    printf ("%s:%s=%s\n", key_name, section_name, kv->value);
+    printf ("%s:%s=%s\n", kp->section_name, kp->key_name, kv->value);
   else
-    printf ("Error fetching value for %s in %s\n", key_name, section_name);
+    printf ("Error fetching value for %s in %s\n",
+            kp->key_name, kp->section_name);
 
   rv = ret;
  cleanup:
-  if (keypair)
-    free(keypair);
   return rv;
 }
 

@@ -28,6 +28,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "config-common.h"
 #include "config-comment.h"
+#include "config-util.h"
 #include "config-validate.h"
 
 enum argp_option_keys
