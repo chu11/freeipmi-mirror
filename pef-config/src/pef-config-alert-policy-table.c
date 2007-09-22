@@ -1096,14 +1096,17 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  /* XXX: This will mem-leak.  Deal with this when
-   * bmc-config/pef-config are re-designed with a new architecture
-   */
   ret = get_lan_channel_number (state_data, &lan_channel_number);
   if (ret == CONFIG_ERR_SUCCESS)
     asprintf(&strp, "Give a valid number (LAN = %u)", lan_channel_number);
   if (!strp)
-    strp = "Give a valid number\n";
+    {
+      if (!(strp = "Give a valid number\n"))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
+    }
 
   if (pef_config_section_add_keyvalue (state_data,
                                        sect,
@@ -1138,9 +1141,13 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
+  if (strp)
+    free(strp);
   return sect;
 
  cleanup:
+  if (strp)
+    free(strp);
   if (sect)
     pef_config_section_destroy(state_data, sect);
   return NULL;

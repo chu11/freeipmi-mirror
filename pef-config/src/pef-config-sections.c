@@ -160,11 +160,12 @@ pef_config_section_create (pef_config_state_data_t *state_data,
   if (!section_name)
     return NULL;
 
-  if (!(section = (struct config_section *) calloc (1, sizeof(*section))))
+  if (!(section = (struct config_section *)malloc(sizeof(struct config_section))))
     {
-      perror("calloc");
+      perror("malloc");
       goto cleanup;
     }
+  memset(section, '\0', sizeof(struct config_section));
 
   if (!(section->section_name = strdup(section_name)))
     {
@@ -236,24 +237,31 @@ pef_config_section_add_keyvalue (pef_config_state_data_t *state_data,
 {
   struct config_keyvalue *kv;
 
-  if (!state_data
-      || !section
-      || !key_name
-      || !description
-      || !checkout
-      || !commit
-      || !diff
-      || !validate)
-    return -1;
+  assert(state_data);
+  assert(section);
+  assert(key_name);
+  assert(description);
+  assert(checkout);
+  assert(commit);
+  assert(validate);
 
-  if (!(kv = (struct config_keyvalue *) calloc (1, sizeof(*kv))))
+  if (!(kv = (struct config_keyvalue *)malloc(sizeof(struct config_keyvalue))))
     {
-      perror ("calloc");
+      perror("malloc");
       goto cleanup;
     }
+  memset(kv, '\0', sizeof(struct config_keyvalue));
 
-  kv->key_name = key_name;
-  kv->description = description;
+  if (!(kv->key_name = strdup(key_name)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+  if (!(kv->description = strdup(description)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
   kv->flags = flags;
   kv->checkout = checkout;
   kv->commit = commit;
