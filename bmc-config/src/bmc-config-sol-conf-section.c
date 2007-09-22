@@ -80,7 +80,7 @@ sol_auth_commit (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_sol_checkout (bmc_config_state_data_t *state_data,
-		     const struct config_section *sect,
+		     const struct config_section *section,
 		     struct config_keyvalue *kv)
 {
   uint8_t enable;
@@ -115,7 +115,7 @@ enable_sol_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_sol_commit (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
+		   const struct config_section *section,
 		   const struct config_keyvalue *kv)
 {
   return set_sol_sol_enable (state_data,
@@ -124,7 +124,7 @@ enable_sol_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_sol_diff (bmc_config_state_data_t *state_data,
-		 const struct config_section *sect,
+		 const struct config_section *section,
 		 const struct config_keyvalue *kv)
 {
   uint8_t got_value;
@@ -147,7 +147,7 @@ enable_sol_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -157,7 +157,7 @@ enable_sol_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 sol_privilege_level_checkout (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
+			      const struct config_section *section,
 			      struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -182,7 +182,7 @@ sol_privilege_level_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 sol_privilege_level_commit (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
+			    const struct config_section *section,
 			    const struct config_keyvalue *kv)
 {
   uint8_t value = privilege_level_number (kv->value);
@@ -194,7 +194,7 @@ sol_privilege_level_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 sol_privilege_level_diff (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -219,7 +219,7 @@ sol_privilege_level_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    privilege_level_string (got_value));
@@ -231,7 +231,7 @@ sol_privilege_level_diff (bmc_config_state_data_t *state_data,
 /* force_sol_payload_authentication */
 static config_err_t
 force_sol_payload_authentication_checkout (bmc_config_state_data_t *state_data,
-					   const struct config_section *sect,
+					   const struct config_section *section,
 					   struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -268,7 +268,7 @@ force_sol_payload_authentication_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 force_sol_payload_authentication_commit (bmc_config_state_data_t *state_data,
-					 const struct config_section *sect,
+					 const struct config_section *section,
 					 const struct config_keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes") ? 1 : 0;
@@ -280,7 +280,7 @@ force_sol_payload_authentication_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 force_sol_payload_authentication_diff (bmc_config_state_data_t *state_data,
-				       const struct config_section *sect,
+				       const struct config_section *section,
 				       const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -305,7 +305,7 @@ force_sol_payload_authentication_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -317,7 +317,7 @@ force_sol_payload_authentication_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 force_sol_payload_encryption_checkout (bmc_config_state_data_t *state_data,
-					   const struct config_section *sect,
+					   const struct config_section *section,
 					   struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -354,7 +354,7 @@ force_sol_payload_encryption_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 force_sol_payload_encryption_commit (bmc_config_state_data_t *state_data,
-				     const struct config_section *sect,
+				     const struct config_section *section,
 				     const struct config_keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes") ? 1 : 0;
@@ -366,7 +366,7 @@ force_sol_payload_encryption_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 force_sol_payload_encryption_diff (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
+				   const struct config_section *section,
 				   const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -391,7 +391,7 @@ force_sol_payload_encryption_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -403,7 +403,7 @@ force_sol_payload_encryption_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 character_accumulate_interval_checkout (bmc_config_state_data_t *state_data,
-					const struct config_section *sect,
+					const struct config_section *section,
 					struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -428,7 +428,7 @@ character_accumulate_interval_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 character_accumulate_interval_commit (bmc_config_state_data_t *state_data,
-				      const struct config_section *sect,
+				      const struct config_section *section,
 				      const struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -449,7 +449,7 @@ character_accumulate_interval_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 character_accumulate_interval_diff (bmc_config_state_data_t *state_data,
-				    const struct config_section *sect,
+				    const struct config_section *section,
 				    const struct config_keyvalue *kv)
 {
   uint8_t got_value;
@@ -478,7 +478,7 @@ character_accumulate_interval_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -490,7 +490,7 @@ character_accumulate_interval_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 character_send_threshold_checkout (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
+				   const struct config_section *section,
 				   struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -515,7 +515,7 @@ character_send_threshold_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 character_send_threshold_commit (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
+				 const struct config_section *section,
 				 const struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -536,7 +536,7 @@ character_send_threshold_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 character_send_threshold_diff (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
+			       const struct config_section *section,
 			       const struct config_keyvalue *kv)
 {
   uint8_t got_value;
@@ -565,7 +565,7 @@ character_send_threshold_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -577,7 +577,7 @@ character_send_threshold_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 sol_retry_count_checkout (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  struct config_keyvalue *kv)
 {
   uint8_t count;
@@ -603,7 +603,7 @@ sol_retry_count_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 sol_retry_count_commit (bmc_config_state_data_t *state_data,
-			const struct config_section *sect,
+			const struct config_section *section,
 			const struct config_keyvalue *kv)
 {
   uint8_t count;
@@ -624,7 +624,7 @@ sol_retry_count_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 sol_retry_count_diff (bmc_config_state_data_t *state_data,
-		      const struct config_section *sect,
+		      const struct config_section *section,
 		      const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -653,7 +653,7 @@ sol_retry_count_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -665,7 +665,7 @@ sol_retry_count_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 sol_retry_interval_checkout (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
+			     const struct config_section *section,
 			     struct config_keyvalue *kv)
 {
   uint8_t count;
@@ -691,7 +691,7 @@ sol_retry_interval_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 sol_retry_interval_commit (bmc_config_state_data_t *state_data,
-			   const struct config_section *sect,
+			   const struct config_section *section,
 			   const struct config_keyvalue *kv)
 {
   uint8_t count;
@@ -712,7 +712,7 @@ sol_retry_interval_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 sol_retry_interval_diff (bmc_config_state_data_t *state_data,
-			 const struct config_section *sect,
+			 const struct config_section *section,
 			 const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -741,7 +741,7 @@ sol_retry_interval_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -751,7 +751,7 @@ sol_retry_interval_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
-				const struct config_section *sect,
+				const struct config_section *section,
 				struct config_keyvalue *kv)
 {
   uint8_t bitrate;
@@ -774,7 +774,7 @@ non_volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_bit_rate_commit (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
+			      const struct config_section *section,
 			      const struct config_keyvalue *kv)
 {
   return set_sol_sol_non_volatile_bit_rate (state_data,
@@ -783,7 +783,7 @@ non_volatile_bit_rate_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 non_volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
+			    const struct config_section *section,
 			    const struct config_keyvalue *kv)
 {
   uint8_t got_value;
@@ -806,7 +806,7 @@ non_volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    sol_bit_rate_string (got_value));
@@ -818,7 +818,7 @@ non_volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
+			    const struct config_section *section,
 			    struct config_keyvalue *kv)
 {
   uint8_t bitrate;
@@ -841,7 +841,7 @@ volatile_bit_rate_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_bit_rate_commit (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  const struct config_keyvalue *kv)
 {
   return set_sol_sol_volatile_bit_rate (state_data,
@@ -850,7 +850,7 @@ volatile_bit_rate_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
-			const struct config_section *sect,
+			const struct config_section *section,
 			const struct config_keyvalue *kv)
 {
   uint8_t got_value;
@@ -874,7 +874,7 @@ volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    sol_bit_rate_string (got_value));
@@ -884,7 +884,7 @@ volatile_bit_rate_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 port_checkout (bmc_config_state_data_t *state_data,
-	       const struct config_section *sect,
+	       const struct config_section *section,
 	       struct config_keyvalue *kv)
 {
   uint16_t port;
@@ -908,7 +908,7 @@ port_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 port_commit (bmc_config_state_data_t *state_data,
-	     const struct config_section *sect,
+	     const struct config_section *section,
 	     const struct config_keyvalue *kv)
 {
   return set_sol_sol_payload_port_number (state_data,
@@ -917,7 +917,7 @@ port_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 port_diff (bmc_config_state_data_t *state_data,
-	   const struct config_section *sect,
+	   const struct config_section *section,
 	   const struct config_keyvalue *kv)
 {
   uint16_t got_value;
@@ -942,7 +942,7 @@ port_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);

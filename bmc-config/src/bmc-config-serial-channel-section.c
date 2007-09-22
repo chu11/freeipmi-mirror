@@ -74,7 +74,7 @@ serial_channel_volatile_access_set (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
+			       const struct config_section *section,
 			       struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -101,7 +101,7 @@ volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_access_mode_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
+			     const struct config_section *section,
 			     const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -117,7 +117,7 @@ volatile_access_mode_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 volatile_access_mode_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *sect,
+			   const struct config_section *section,
 			   const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -144,7 +144,7 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    channel_access_mode_string (get_val));
@@ -156,7 +156,7 @@ volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
-					  const struct config_section *sect,
+					  const struct config_section *section,
 					  struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -194,7 +194,7 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
-					const struct config_section *sect,
+					const struct config_section *section,
 					const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -210,7 +210,7 @@ volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
-				      const struct config_section *sect,
+				      const struct config_section *section,
 				      const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -238,7 +238,7 @@ volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -250,7 +250,7 @@ volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
-				       const struct config_section *sect,
+				       const struct config_section *section,
 				       struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -288,7 +288,7 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
-				     const struct config_section *sect,
+				     const struct config_section *section,
 				     const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -304,7 +304,7 @@ volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
+				   const struct config_section *section,
 				   const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -332,7 +332,7 @@ volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -344,7 +344,7 @@ volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
-				       const struct config_section *sect,
+				       const struct config_section *section,
 				       struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -382,7 +382,7 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
-				     const struct config_section *sect,
+				     const struct config_section *section,
 				     const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -398,7 +398,7 @@ volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
-				   const struct config_section *sect,
+				   const struct config_section *section,
 				   const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -425,7 +425,7 @@ volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -437,7 +437,7 @@ volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
-				      const struct config_section *sect,
+				      const struct config_section *section,
 				      struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -466,7 +466,7 @@ volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
-				    const struct config_section *sect,
+				    const struct config_section *section,
 				    const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -482,7 +482,7 @@ volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
-				  const struct config_section *sect,
+				  const struct config_section *section,
 				  const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -510,7 +510,7 @@ volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    privilege_level_string (get_val));
@@ -575,7 +575,7 @@ serial_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
-                                   const struct config_section *sect,
+                                   const struct config_section *section,
                                    struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -602,7 +602,7 @@ non_volatile_access_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_access_mode_commit (bmc_config_state_data_t *state_data,
-                                 const struct config_section *sect,
+                                 const struct config_section *section,
                                  const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -618,7 +618,7 @@ non_volatile_access_mode_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -646,7 +646,7 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    channel_access_mode_string (get_val));
@@ -658,7 +658,7 @@ non_volatile_access_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
-                                              const struct config_section *sect,
+                                              const struct config_section *section,
                                               struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -696,7 +696,7 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
 
 static config_err_t
 non_volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
-                                            const struct config_section *sect,
+                                            const struct config_section *section,
                                             const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -712,7 +712,7 @@ non_volatile_enable_user_level_auth_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
-                                          const struct config_section *sect,
+                                          const struct config_section *section,
                                           const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -740,7 +740,7 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -752,7 +752,7 @@ non_volatile_enable_user_level_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
-                                           const struct config_section *sect,
+                                           const struct config_section *section,
                                            struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -790,7 +790,7 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
-                                         const struct config_section *sect,
+                                         const struct config_section *section,
                                          const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -806,7 +806,7 @@ non_volatile_enable_per_msg_auth_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
-                                       const struct config_section *sect,
+                                       const struct config_section *section,
                                        const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -834,7 +834,7 @@ non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -846,7 +846,7 @@ non_volatile_enable_per_msg_auth_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
-					   const struct config_section *sect,
+					   const struct config_section *section,
 					   struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -884,7 +884,7 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
-					 const struct config_section *sect,
+					 const struct config_section *section,
 					 const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -900,7 +900,7 @@ non_volatile_enable_pef_alerting_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
-				       const struct config_section *sect,
+				       const struct config_section *section,
 				       const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -927,7 +927,7 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -939,7 +939,7 @@ non_volatile_enable_pef_alerting_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
-					  const struct config_section *sect,
+					  const struct config_section *section,
 					  struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -968,7 +968,7 @@ non_volatile_channel_priv_limit_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 non_volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
-					const struct config_section *sect,
+					const struct config_section *section,
 					const struct config_keyvalue *kv)
 {
   uint8_t commit_val;
@@ -984,7 +984,7 @@ non_volatile_channel_priv_limit_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
-				      const struct config_section *sect,
+				      const struct config_section *section,
 				      const struct config_keyvalue *kv)
 {
   uint8_t get_val;
@@ -1011,7 +1011,7 @@ non_volatile_channel_priv_limit_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    privilege_level_string (get_val));

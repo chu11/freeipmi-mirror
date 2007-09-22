@@ -131,7 +131,7 @@ event_filter_set (pef_config_state_data_t *state_data,
 
 static config_err_t
 filter_type_checkout (pef_config_state_data_t *state_data,
-                      const struct config_section *sect,
+                      const struct config_section *section,
                       struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -139,7 +139,7 @@ filter_type_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -167,7 +167,7 @@ filter_type_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 filter_type_commit (pef_config_state_data_t *state_data,
-                    const struct config_section *sect,
+                    const struct config_section *section,
                     const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -175,7 +175,7 @@ filter_type_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -201,7 +201,7 @@ filter_type_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 filter_type_diff (pef_config_state_data_t *state_data,
-                  const struct config_section *sect,
+                  const struct config_section *section,
                   const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -211,7 +211,7 @@ filter_type_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -235,7 +235,7 @@ filter_type_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    filter_type_string (eft.filter_type));
@@ -245,7 +245,7 @@ filter_type_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 enable_filter_checkout (pef_config_state_data_t *state_data,
-                        const struct config_section *sect,
+                        const struct config_section *section,
                         struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -253,7 +253,7 @@ enable_filter_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -292,7 +292,7 @@ enable_filter_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 enable_filter_commit (pef_config_state_data_t *state_data,
-                      const struct config_section *sect,
+                      const struct config_section *section,
                       const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -300,7 +300,7 @@ enable_filter_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -326,7 +326,7 @@ enable_filter_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 enable_filter_diff (pef_config_state_data_t *state_data,
-                    const struct config_section *sect,
+                    const struct config_section *section,
                     const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -336,7 +336,7 @@ enable_filter_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -361,7 +361,7 @@ enable_filter_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.enable_filter ? "Yes" : "No");
@@ -371,7 +371,7 @@ enable_filter_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_alert_checkout (pef_config_state_data_t *state_data,
-                                    const struct config_section *sect,
+                                    const struct config_section *section,
                                     struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -379,7 +379,7 @@ event_filter_action_alert_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -418,7 +418,7 @@ event_filter_action_alert_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_alert_commit (pef_config_state_data_t *state_data,
-                                  const struct config_section *sect,
+                                  const struct config_section *section,
                                   const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -426,7 +426,7 @@ event_filter_action_alert_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -452,7 +452,7 @@ event_filter_action_alert_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_filter_action_alert_diff (pef_config_state_data_t *state_data,
-                                const struct config_section *sect,
+                                const struct config_section *section,
                                 const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -462,7 +462,7 @@ event_filter_action_alert_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -487,7 +487,7 @@ event_filter_action_alert_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_alert ? "Yes" : "No");
@@ -497,7 +497,7 @@ event_filter_action_alert_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_power_off_checkout (pef_config_state_data_t *state_data,
-                                        const struct config_section *sect,
+                                        const struct config_section *section,
                                         struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -505,7 +505,7 @@ event_filter_action_power_off_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -544,7 +544,7 @@ event_filter_action_power_off_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_power_off_commit (pef_config_state_data_t *state_data,
-                                      const struct config_section *sect,
+                                      const struct config_section *section,
                                       const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -552,7 +552,7 @@ event_filter_action_power_off_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -578,7 +578,7 @@ event_filter_action_power_off_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_filter_action_power_off_diff (pef_config_state_data_t *state_data,
-                                    const struct config_section *sect,
+                                    const struct config_section *section,
                                     const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -588,7 +588,7 @@ event_filter_action_power_off_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -613,7 +613,7 @@ event_filter_action_power_off_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_power_off ? "Yes" : "No");
@@ -623,7 +623,7 @@ event_filter_action_power_off_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_reset_checkout (pef_config_state_data_t *state_data,
-                                    const struct config_section *sect,
+                                    const struct config_section *section,
                                     struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -631,7 +631,7 @@ event_filter_action_reset_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -670,7 +670,7 @@ event_filter_action_reset_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_reset_commit (pef_config_state_data_t *state_data,
-                                  const struct config_section *sect,
+                                  const struct config_section *section,
                                   const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -678,7 +678,7 @@ event_filter_action_reset_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -704,7 +704,7 @@ event_filter_action_reset_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_filter_action_reset_diff (pef_config_state_data_t *state_data,
-                                const struct config_section *sect,
+                                const struct config_section *section,
                                 const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -714,7 +714,7 @@ event_filter_action_reset_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -739,7 +739,7 @@ event_filter_action_reset_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_reset ? "Yes" : "No");
@@ -750,7 +750,7 @@ event_filter_action_reset_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_power_cycle_checkout (pef_config_state_data_t *state_data,
-                                          const struct config_section *sect,
+                                          const struct config_section *section,
                                           struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -758,7 +758,7 @@ event_filter_action_power_cycle_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -797,7 +797,7 @@ event_filter_action_power_cycle_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_power_cycle_commit (pef_config_state_data_t *state_data,
-                                        const struct config_section *sect,
+                                        const struct config_section *section,
                                         const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -805,7 +805,7 @@ event_filter_action_power_cycle_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -831,7 +831,7 @@ event_filter_action_power_cycle_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_filter_action_power_cycle_diff (pef_config_state_data_t *state_data,
-                                      const struct config_section *sect,
+                                      const struct config_section *section,
                                       const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -841,7 +841,7 @@ event_filter_action_power_cycle_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -866,7 +866,7 @@ event_filter_action_power_cycle_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_power_cycle ? "Yes" : "No");
@@ -876,7 +876,7 @@ event_filter_action_power_cycle_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_oem_checkout (pef_config_state_data_t *state_data,
-                                  const struct config_section *sect,
+                                  const struct config_section *section,
                                   struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -884,7 +884,7 @@ event_filter_action_oem_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -923,7 +923,7 @@ event_filter_action_oem_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_oem_commit (pef_config_state_data_t *state_data,
-                                const struct config_section *sect,
+                                const struct config_section *section,
                                 const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -931,7 +931,7 @@ event_filter_action_oem_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -957,7 +957,7 @@ event_filter_action_oem_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_filter_action_oem_diff (pef_config_state_data_t *state_data,
-                              const struct config_section *sect,
+                              const struct config_section *section,
                               const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -967,7 +967,7 @@ event_filter_action_oem_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -992,7 +992,7 @@ event_filter_action_oem_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_oem ? "Yes" : "No");
@@ -1002,7 +1002,7 @@ event_filter_action_oem_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_filter_action_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
-                                                   const struct config_section *sect,
+                                                   const struct config_section *section,
                                                    struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1010,7 +1010,7 @@ event_filter_action_diagnostic_interrupt_checkout (pef_config_state_data_t *stat
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1049,7 +1049,7 @@ event_filter_action_diagnostic_interrupt_checkout (pef_config_state_data_t *stat
 
 static config_err_t
 event_filter_action_diagnostic_interrupt_commit (pef_config_state_data_t *state_data,
-                                                 const struct config_section *sect,
+                                                 const struct config_section *section,
                                                  const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1057,7 +1057,7 @@ event_filter_action_diagnostic_interrupt_commit (pef_config_state_data_t *state_
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1083,7 +1083,7 @@ event_filter_action_diagnostic_interrupt_commit (pef_config_state_data_t *state_
 
 static config_diff_t
 event_filter_action_diagnostic_interrupt_diff (pef_config_state_data_t *state_data,
-                                               const struct config_section *sect,
+                                               const struct config_section *section,
                                                const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1093,7 +1093,7 @@ event_filter_action_diagnostic_interrupt_diff (pef_config_state_data_t *state_da
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1118,7 +1118,7 @@ event_filter_action_diagnostic_interrupt_diff (pef_config_state_data_t *state_da
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No");
@@ -1128,7 +1128,7 @@ event_filter_action_diagnostic_interrupt_diff (pef_config_state_data_t *state_da
 
 static config_err_t
 event_filter_action_group_control_operation_checkout (pef_config_state_data_t *state_data,
-                                                      const struct config_section *sect,
+                                                      const struct config_section *section,
                                                       struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1136,7 +1136,7 @@ event_filter_action_group_control_operation_checkout (pef_config_state_data_t *s
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1175,7 +1175,7 @@ event_filter_action_group_control_operation_checkout (pef_config_state_data_t *s
 
 static config_err_t
 event_filter_action_group_control_operation_commit (pef_config_state_data_t *state_data,
-                                                    const struct config_section *sect,
+                                                    const struct config_section *section,
                                                     const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1183,7 +1183,7 @@ event_filter_action_group_control_operation_commit (pef_config_state_data_t *sta
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1209,7 +1209,7 @@ event_filter_action_group_control_operation_commit (pef_config_state_data_t *sta
 
 static config_diff_t
 event_filter_action_group_control_operation_diff (pef_config_state_data_t *state_data,
-                                                  const struct config_section *sect,
+                                                  const struct config_section *section,
                                                   const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1219,7 +1219,7 @@ event_filter_action_group_control_operation_diff (pef_config_state_data_t *state
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1244,7 +1244,7 @@ event_filter_action_group_control_operation_diff (pef_config_state_data_t *state
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_group_control_operation ? "Yes" : "No");
@@ -1254,7 +1254,7 @@ event_filter_action_group_control_operation_diff (pef_config_state_data_t *state
 
 static config_err_t
 alert_policy_number_checkout (pef_config_state_data_t *state_data,
-                              const struct config_section *sect,
+                              const struct config_section *section,
                               struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1262,7 +1262,7 @@ alert_policy_number_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1290,7 +1290,7 @@ alert_policy_number_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 alert_policy_number_commit (pef_config_state_data_t *state_data,
-                            const struct config_section *sect,
+                            const struct config_section *section,
                             const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1298,7 +1298,7 @@ alert_policy_number_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1324,7 +1324,7 @@ alert_policy_number_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 alert_policy_number_diff (pef_config_state_data_t *state_data,
-                          const struct config_section *sect,
+                          const struct config_section *section,
                           const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1334,7 +1334,7 @@ alert_policy_number_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1361,7 +1361,7 @@ alert_policy_number_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", eft.alert_policy_number);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1371,7 +1371,7 @@ alert_policy_number_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 group_control_selector_checkout (pef_config_state_data_t *state_data,
-                                 const struct config_section *sect,
+                                 const struct config_section *section,
                                  struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1379,7 +1379,7 @@ group_control_selector_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1407,7 +1407,7 @@ group_control_selector_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 group_control_selector_commit (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1415,7 +1415,7 @@ group_control_selector_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1441,7 +1441,7 @@ group_control_selector_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 group_control_selector_diff (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1451,7 +1451,7 @@ group_control_selector_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1478,7 +1478,7 @@ group_control_selector_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", eft.group_control_selector);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1488,7 +1488,7 @@ group_control_selector_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_severity_checkout (pef_config_state_data_t *state_data,
-                         const struct config_section *sect,
+                         const struct config_section *section,
                          struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1496,7 +1496,7 @@ event_severity_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1524,7 +1524,7 @@ event_severity_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_severity_commit (pef_config_state_data_t *state_data,
-                       const struct config_section *sect,
+                       const struct config_section *section,
                        const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1532,7 +1532,7 @@ event_severity_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1558,7 +1558,7 @@ event_severity_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_severity_diff (pef_config_state_data_t *state_data,
-                     const struct config_section *sect,
+                     const struct config_section *section,
                      const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1568,7 +1568,7 @@ event_severity_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1592,7 +1592,7 @@ event_severity_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    event_severity_string (eft.event_severity));
@@ -1602,7 +1602,7 @@ event_severity_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 generator_id_byte_1_checkout (pef_config_state_data_t *state_data,
-                              const struct config_section *sect,
+                              const struct config_section *section,
                               struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1610,7 +1610,7 @@ generator_id_byte_1_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1638,7 +1638,7 @@ generator_id_byte_1_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 generator_id_byte_1_commit (pef_config_state_data_t *state_data,
-                            const struct config_section *sect,
+                            const struct config_section *section,
                             const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1646,7 +1646,7 @@ generator_id_byte_1_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1673,7 +1673,7 @@ generator_id_byte_1_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 generator_id_byte_1_diff (pef_config_state_data_t *state_data,
-                          const struct config_section *sect,
+                          const struct config_section *section,
                           const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1683,7 +1683,7 @@ generator_id_byte_1_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1710,7 +1710,7 @@ generator_id_byte_1_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.generator_id_byte_1);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1720,7 +1720,7 @@ generator_id_byte_1_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 generator_id_byte_2_checkout (pef_config_state_data_t *state_data,
-                              const struct config_section *sect,
+                              const struct config_section *section,
                               struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1728,7 +1728,7 @@ generator_id_byte_2_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1756,7 +1756,7 @@ generator_id_byte_2_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 generator_id_byte_2_commit (pef_config_state_data_t *state_data,
-                            const struct config_section *sect,
+                            const struct config_section *section,
                             const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1764,7 +1764,7 @@ generator_id_byte_2_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1790,7 +1790,7 @@ generator_id_byte_2_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 generator_id_byte_2_diff (pef_config_state_data_t *state_data,
-                          const struct config_section *sect,
+                          const struct config_section *section,
                           const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1800,7 +1800,7 @@ generator_id_byte_2_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1827,7 +1827,7 @@ generator_id_byte_2_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.generator_id_byte_2);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1837,7 +1837,7 @@ generator_id_byte_2_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 sensor_type_checkout (pef_config_state_data_t *state_data,
-                      const struct config_section *sect,
+                      const struct config_section *section,
                       struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1845,7 +1845,7 @@ sensor_type_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1874,7 +1874,7 @@ sensor_type_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 sensor_type_commit (pef_config_state_data_t *state_data,
-                    const struct config_section *sect,
+                    const struct config_section *section,
                     const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1882,7 +1882,7 @@ sensor_type_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1908,7 +1908,7 @@ sensor_type_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 sensor_type_diff (pef_config_state_data_t *state_data,
-                  const struct config_section *sect,
+                  const struct config_section *section,
                   const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -1918,7 +1918,7 @@ sensor_type_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1943,7 +1943,7 @@ sensor_type_diff (pef_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
 		   sensor_type_string (eft.sensor_type));
@@ -1954,7 +1954,7 @@ sensor_type_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 sensor_number_checkout (pef_config_state_data_t *state_data,
-                        const struct config_section *sect,
+                        const struct config_section *section,
                         struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -1962,7 +1962,7 @@ sensor_number_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1990,7 +1990,7 @@ sensor_number_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 sensor_number_commit (pef_config_state_data_t *state_data,
-                      const struct config_section *sect,
+                      const struct config_section *section,
                       const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -1998,7 +1998,7 @@ sensor_number_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2024,7 +2024,7 @@ sensor_number_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 sensor_number_diff (pef_config_state_data_t *state_data,
-                    const struct config_section *sect,
+                    const struct config_section *section,
                     const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2034,7 +2034,7 @@ sensor_number_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2061,7 +2061,7 @@ sensor_number_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.sensor_number);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2071,7 +2071,7 @@ sensor_number_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_trigger_checkout (pef_config_state_data_t *state_data,
-                        const struct config_section *sect,
+                        const struct config_section *section,
                         struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2079,7 +2079,7 @@ event_trigger_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2107,7 +2107,7 @@ event_trigger_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_trigger_commit (pef_config_state_data_t *state_data,
-                      const struct config_section *sect,
+                      const struct config_section *section,
                       const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2115,7 +2115,7 @@ event_trigger_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2141,7 +2141,7 @@ event_trigger_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_trigger_diff (pef_config_state_data_t *state_data,
-                    const struct config_section *sect,
+                    const struct config_section *section,
                     const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2151,7 +2151,7 @@ event_trigger_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2178,7 +2178,7 @@ event_trigger_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_trigger);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2188,7 +2188,7 @@ event_trigger_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_offset_mask_checkout (pef_config_state_data_t *state_data,
-                                  const struct config_section *sect,
+                                  const struct config_section *section,
                                   struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2196,7 +2196,7 @@ event_data1_offset_mask_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2224,7 +2224,7 @@ event_data1_offset_mask_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_offset_mask_commit (pef_config_state_data_t *state_data,
-                                const struct config_section *sect,
+                                const struct config_section *section,
                                 const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2232,7 +2232,7 @@ event_data1_offset_mask_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2258,7 +2258,7 @@ event_data1_offset_mask_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data1_offset_mask_diff (pef_config_state_data_t *state_data,
-                              const struct config_section *sect,
+                              const struct config_section *section,
                               const struct config_keyvalue *kv)
 {
   uint16_t passed_val;
@@ -2268,7 +2268,7 @@ event_data1_offset_mask_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2295,7 +2295,7 @@ event_data1_offset_mask_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_offset_mask);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2305,7 +2305,7 @@ event_data1_offset_mask_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_and_mask_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2313,7 +2313,7 @@ event_data1_and_mask_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2341,7 +2341,7 @@ event_data1_and_mask_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_and_mask_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2349,7 +2349,7 @@ event_data1_and_mask_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2375,7 +2375,7 @@ event_data1_and_mask_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data1_and_mask_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2385,7 +2385,7 @@ event_data1_and_mask_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2412,7 +2412,7 @@ event_data1_and_mask_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_and_mask);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2422,7 +2422,7 @@ event_data1_and_mask_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_compare1_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2430,7 +2430,7 @@ event_data1_compare1_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2458,7 +2458,7 @@ event_data1_compare1_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_compare1_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2466,7 +2466,7 @@ event_data1_compare1_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2492,7 +2492,7 @@ event_data1_compare1_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data1_compare1_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2502,7 +2502,7 @@ event_data1_compare1_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2529,7 +2529,7 @@ event_data1_compare1_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_compare1);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2539,7 +2539,7 @@ event_data1_compare1_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_compare2_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2547,7 +2547,7 @@ event_data1_compare2_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2575,7 +2575,7 @@ event_data1_compare2_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data1_compare2_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2583,7 +2583,7 @@ event_data1_compare2_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2609,7 +2609,7 @@ event_data1_compare2_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data1_compare2_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2619,7 +2619,7 @@ event_data1_compare2_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2646,7 +2646,7 @@ event_data1_compare2_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_compare2);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2656,7 +2656,7 @@ event_data1_compare2_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data2_and_mask_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2664,7 +2664,7 @@ event_data2_and_mask_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2692,7 +2692,7 @@ event_data2_and_mask_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data2_and_mask_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2700,7 +2700,7 @@ event_data2_and_mask_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2726,7 +2726,7 @@ event_data2_and_mask_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data2_and_mask_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2736,7 +2736,7 @@ event_data2_and_mask_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2763,7 +2763,7 @@ event_data2_and_mask_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data2_and_mask);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2773,7 +2773,7 @@ event_data2_and_mask_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data2_compare1_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2781,7 +2781,7 @@ event_data2_compare1_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2809,7 +2809,7 @@ event_data2_compare1_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data2_compare1_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2817,7 +2817,7 @@ event_data2_compare1_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2843,7 +2843,7 @@ event_data2_compare1_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data2_compare1_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2853,7 +2853,7 @@ event_data2_compare1_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2880,7 +2880,7 @@ event_data2_compare1_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data2_compare1);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2890,7 +2890,7 @@ event_data2_compare1_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data2_compare2_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -2898,7 +2898,7 @@ event_data2_compare2_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2926,7 +2926,7 @@ event_data2_compare2_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data2_compare2_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -2934,7 +2934,7 @@ event_data2_compare2_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2960,7 +2960,7 @@ event_data2_compare2_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data2_compare2_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -2970,7 +2970,7 @@ event_data2_compare2_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2997,7 +2997,7 @@ event_data2_compare2_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data2_compare2);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -3007,7 +3007,7 @@ event_data2_compare2_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data3_and_mask_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -3015,7 +3015,7 @@ event_data3_and_mask_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3043,7 +3043,7 @@ event_data3_and_mask_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data3_and_mask_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -3051,7 +3051,7 @@ event_data3_and_mask_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3077,7 +3077,7 @@ event_data3_and_mask_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data3_and_mask_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -3087,7 +3087,7 @@ event_data3_and_mask_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3114,7 +3114,7 @@ event_data3_and_mask_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data3_and_mask);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -3124,7 +3124,7 @@ event_data3_and_mask_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data3_compare1_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -3132,7 +3132,7 @@ event_data3_compare1_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3160,7 +3160,7 @@ event_data3_compare1_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data3_compare1_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -3168,7 +3168,7 @@ event_data3_compare1_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3194,7 +3194,7 @@ event_data3_compare1_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data3_compare1_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -3204,7 +3204,7 @@ event_data3_compare1_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3231,7 +3231,7 @@ event_data3_compare1_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data3_compare1);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -3241,7 +3241,7 @@ event_data3_compare1_diff (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data3_compare2_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *sect,
+                               const struct config_section *section,
                                struct config_keyvalue *kv)
 {
   config_err_t ret;
@@ -3249,7 +3249,7 @@ event_data3_compare2_checkout (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3277,7 +3277,7 @@ event_data3_compare2_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 event_data3_compare2_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *sect,
+                             const struct config_section *section,
                              const struct config_keyvalue *kv)
 {
   uint8_t event_filter_number;
@@ -3285,7 +3285,7 @@ event_data3_compare2_commit (pef_config_state_data_t *state_data,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3311,7 +3311,7 @@ event_data3_compare2_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 event_data3_compare2_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            const struct config_keyvalue *kv)
 {
   uint8_t passed_val;
@@ -3321,7 +3321,7 @@ event_data3_compare2_diff (pef_config_state_data_t *state_data,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (sect->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3348,7 +3348,7 @@ event_data3_compare2_diff (pef_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data3_compare2);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -3359,7 +3359,7 @@ event_data3_compare2_diff (pef_config_state_data_t *state_data,
 struct config_section *
 pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, int num)
 {
-  struct config_section *sect = NULL;
+  struct config_section *section = NULL;
   char buf[64];
 
   if (num <= 0)
@@ -3370,7 +3370,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
 
   snprintf(buf, 64, "Event_Filter_%d", num);
 
-  if (!(sect = pef_config_section_create (state_data, 
+  if (!(section = pef_config_section_create (state_data, 
                                           buf, 
                                           NULL, 
                                           NULL, 
@@ -3378,7 +3378,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Filter_Type",
                                        "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
                                        0,
@@ -3389,7 +3389,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Enable_Filter",
                                        "Possible values: Yes/No",
                                        0,
@@ -3400,7 +3400,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Filter_Action_Alert",
                                        "Possible values: Yes/No",
                                        0,
@@ -3411,7 +3411,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Filter_Action_Power_Off",
                                        "Possible values: Yes/No",
                                        0,
@@ -3422,7 +3422,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Filter_Action_Reset",
                                        "Possible values: Yes/No",
                                        0,
@@ -3433,7 +3433,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Filter_Action_Power_Cycle",
                                        "Possible values: Yes/No",
                                        0,
@@ -3444,7 +3444,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Filter_Action_Oem",
                                        "Possible values: Yes/No",
                                        0,
@@ -3455,7 +3455,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Filter_Action_Diagnostic_Interrupt",
                                        "Possible values: Yes/No",
                                        0,
@@ -3466,7 +3466,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Filter_Action_Group_Control_Operation",
                                        "Possible values: Yes/No",
                                        0,
@@ -3477,7 +3477,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Alert_Policy_Number",
                                        "Give a valid number",
                                        0,
@@ -3488,7 +3488,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Group_Control_Selector",
                                        "Give a valid number",
                                        0,
@@ -3499,7 +3499,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Severity",
                                        "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
                                        0,
@@ -3510,7 +3510,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Generator_Id_Byte_1",
                                        "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
                                        0,
@@ -3521,7 +3521,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Generator_Id_Byte_1",
                                        "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
                                        0,
@@ -3532,7 +3532,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Sensor_Type",
                                        "Specify a Sensor Type, For options see the MAN page",
                                        0,
@@ -3543,7 +3543,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
   
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Sensor_Number",
                                        "Specify a Sensor Number or 0xFF to Match Any",
                                        0,
@@ -3554,7 +3554,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Trigger",
                                        "Specify a Event/Reading Type Number or 0xFF to Match Any",
                                        0,
@@ -3565,7 +3565,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data1_Offset_Mask",
                                        "Give a valid number",
                                        0,
@@ -3576,7 +3576,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data1_AND_Mask",
                                        "Give a valid number",
                                        0,
@@ -3587,7 +3587,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data1_Compare1",
                                        "Give a valid number",
                                        0,
@@ -3598,7 +3598,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data1_Compare2",
                                        "Give a valid number",
                                        0,
@@ -3609,7 +3609,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
   
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data2_AND_Mask",
                                        "Give a valid number",
                                        0,
@@ -3620,7 +3620,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data2_Compare1",
                                        "Give a valid number",
                                        0,
@@ -3631,7 +3631,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data2_Compare2",
                                        "Give a valid number",
                                        0,
@@ -3642,7 +3642,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data3_AND_Mask",
                                        "Give a valid number",
                                        0,
@@ -3653,7 +3653,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data3_Compare1",
                                        "Give a valid number",
                                        0,
@@ -3664,7 +3664,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Event_Data3_Compare2",
                                        "Give a valid number",
                                        0,
@@ -3674,10 +3674,10 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  return sect;
+  return section;
 
  cleanup:
-  if (sect)
-    pef_config_section_destroy(state_data, sect);
+  if (section)
+    pef_config_section_destroy(state_data, section);
   return NULL;
 }

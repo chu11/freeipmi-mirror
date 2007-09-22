@@ -17,7 +17,7 @@
 
 static config_err_t
 community_string_checkout (pef_config_state_data_t *state_data,
-                           const struct config_section *sect,
+                           const struct config_section *section,
                            struct config_keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
@@ -42,7 +42,7 @@ community_string_checkout (pef_config_state_data_t *state_data,
 
 static config_err_t
 community_string_commit (pef_config_state_data_t *state_data,
-                         const struct config_section *sect,
+                         const struct config_section *section,
                          const struct config_keyvalue *kv)
 {
   if (!kv->value)
@@ -54,7 +54,7 @@ community_string_commit (pef_config_state_data_t *state_data,
 
 static config_diff_t
 community_string_diff (pef_config_state_data_t *state_data,
-                       const struct config_section *sect,
+                       const struct config_section *section,
                        const struct config_keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
@@ -76,7 +76,7 @@ community_string_diff (pef_config_state_data_t *state_data,
     ret = CONFIG_DIFF_SAME;
 
   if (ret == CONFIG_DIFF_DIFFERENT)
-    report_diff (sect->section_name,
+    report_diff (section->section_name,
 		 kv->key_name,
 		 kv->value,
 		 (char *)community_string);
@@ -96,9 +96,9 @@ community_string_validate (const char *section_name,
 struct config_section *
 pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 {
-  struct config_section *sect = NULL;
+  struct config_section *section = NULL;
 
-  if (!(sect = pef_config_section_create (state_data,
+  if (!(section = pef_config_section_create (state_data,
                                           "Community_String",
                                           NULL, 
                                           NULL, 
@@ -106,7 +106,7 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
     goto cleanup;
 
   if (pef_config_section_add_keyvalue (state_data,
-                                       sect,
+                                       section,
                                        "Community_String",
                                        "Give valid string",
                                        0,
@@ -116,11 +116,11 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
                                        community_string_validate) < 0) 
     goto cleanup;
 
-  return sect;
+  return section;
 
  cleanup:
-  if (sect)
-    pef_config_section_destroy(state_data, sect);
+  if (section)
+    pef_config_section_destroy(state_data, section);
   return NULL;
 }
 

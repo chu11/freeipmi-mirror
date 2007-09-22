@@ -93,7 +93,7 @@ serial_conf_commit (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
+			    const struct config_section *section,
 			    struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -131,7 +131,7 @@ enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_basic_mode_commit (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  const struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -143,7 +143,7 @@ enable_basic_mode_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_basic_mode_diff (bmc_config_state_data_t *state_data,
-			const struct config_section *sect,
+			const struct config_section *section,
 			const struct config_keyvalue *kv)
 {
   uint8_t get_value;
@@ -169,7 +169,7 @@ enable_basic_mode_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_value ? "Yes" : "No");
@@ -181,7 +181,7 @@ enable_basic_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -219,7 +219,7 @@ enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_ppp_mode_commit (bmc_config_state_data_t *state_data,
-			const struct config_section *sect,
+			const struct config_section *section,
 			const struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -231,7 +231,7 @@ enable_ppp_mode_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
-		      const struct config_section *sect,
+		      const struct config_section *section,
 		      const struct config_keyvalue *kv)
 {
   uint8_t get_value;
@@ -257,7 +257,7 @@ enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_value ? "Yes" : "No");
@@ -269,7 +269,7 @@ enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
+			       const struct config_section *section,
 			       struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -307,7 +307,7 @@ enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_terminal_mode_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
+			     const struct config_section *section,
 			     const struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -319,7 +319,7 @@ enable_terminal_mode_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *sect,
+			   const struct config_section *section,
 			   const struct config_keyvalue *kv)
 {
   uint8_t get_value;
@@ -345,7 +345,7 @@ enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    get_value ? "Yes" : "No");
@@ -355,7 +355,7 @@ enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 connect_mode_checkout (bmc_config_state_data_t *state_data,
-		       const struct config_section *sect,
+		       const struct config_section *section,
 		       struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -382,7 +382,7 @@ connect_mode_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 connect_mode_commit (bmc_config_state_data_t *state_data,
-		     const struct config_section *sect,
+		     const struct config_section *section,
 		     const struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -394,7 +394,7 @@ connect_mode_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 connect_mode_diff (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
+		   const struct config_section *section,
 		   const struct config_keyvalue *kv)
 {
   uint8_t get_value;
@@ -419,7 +419,7 @@ connect_mode_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    connect_mode_string (get_value));
@@ -429,7 +429,7 @@ connect_mode_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
+				 const struct config_section *section,
 				 struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -453,7 +453,7 @@ page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 page_blackout_interval_commit (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
+			       const struct config_section *section,
 			       const struct config_keyvalue *kv)
 {
   return set_bmc_serial_conf_page_blackout_interval (state_data,
@@ -462,7 +462,7 @@ page_blackout_interval_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 page_blackout_interval_diff (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
+			     const struct config_section *section,
 			     const struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -487,7 +487,7 @@ page_blackout_interval_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", interval);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -499,7 +499,7 @@ page_blackout_interval_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 call_retry_interval_checkout (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
+			      const struct config_section *section,
 			      struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -523,7 +523,7 @@ call_retry_interval_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 call_retry_interval_commit (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
+			    const struct config_section *section,
 			    const struct config_keyvalue *kv)
 {
   return set_bmc_serial_conf_call_retry_interval (state_data,
@@ -532,7 +532,7 @@ call_retry_interval_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 call_retry_interval_diff (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  const struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -557,7 +557,7 @@ call_retry_interval_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", interval);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -626,7 +626,7 @@ serial_conf_comm_commit (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
+			    const struct config_section *section,
 			    struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -663,7 +663,7 @@ enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_dtr_hangup_commit (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  const struct config_keyvalue *kv)
 {
   uint8_t value = same (kv->value, "yes");
@@ -676,7 +676,7 @@ enable_dtr_hangup_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
-			const struct config_section *sect,
+			const struct config_section *section,
 			const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -701,7 +701,7 @@ enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -711,7 +711,7 @@ enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 flow_control_checkout (bmc_config_state_data_t *state_data,
-		       const struct config_section *sect,
+		       const struct config_section *section,
 		       struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -737,7 +737,7 @@ flow_control_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 flow_control_commit (bmc_config_state_data_t *state_data,
-		     const struct config_section *sect,
+		     const struct config_section *section,
 		     const struct config_keyvalue *kv)
 {
   uint8_t value = flow_control_number (kv->value);
@@ -749,7 +749,7 @@ flow_control_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 flow_control_diff (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
+		   const struct config_section *section,
 		   const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -774,7 +774,7 @@ flow_control_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    flow_control_string (got_value));
@@ -784,7 +784,7 @@ flow_control_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 bit_rate_checkout (bmc_config_state_data_t *state_data,
-		   const struct config_section *sect,
+		   const struct config_section *section,
 		   struct config_keyvalue *kv)
 {
   uint8_t value;
@@ -810,7 +810,7 @@ bit_rate_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 bit_rate_commit (bmc_config_state_data_t *state_data,
-		 const struct config_section *sect,
+		 const struct config_section *section,
 		 const struct config_keyvalue *kv)
 {
   uint8_t value = bit_rate_number (kv->value);
@@ -822,7 +822,7 @@ bit_rate_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 bit_rate_diff (bmc_config_state_data_t *state_data,
-	       const struct config_section *sect,
+	       const struct config_section *section,
 	       const struct config_keyvalue *kv)
 {
   uint8_t passed_value;
@@ -847,7 +847,7 @@ bit_rate_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    bit_rate_string (got_value));

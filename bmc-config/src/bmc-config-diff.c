@@ -119,15 +119,15 @@ config_diff_file (bmc_config_state_data_t *state_data)
   if (ret == CONFIG_DIFF_SAME) 
     {
       /* 2nd pass if 1st pass was successful */
-      struct config_section *sect = state_data->sections;
-      while (sect) 
+      struct config_section *section = state_data->sections;
+      while (section) 
         {
-          struct config_keyvalue *kv = sect->keyvalues;
+          struct config_keyvalue *kv = section->keyvalues;
           while (kv) 
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->diff (state_data, sect, kv)) == CONFIG_DIFF_FATAL_ERROR)
+                  if ((this_ret = kv->diff (state_data, section, kv)) == CONFIG_DIFF_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
@@ -135,7 +135,7 @@ config_diff_file (bmc_config_state_data_t *state_data)
                 }
               kv = kv->next;
             }
-          sect = sect->next;
+          section = section->next;
         }
     }
 

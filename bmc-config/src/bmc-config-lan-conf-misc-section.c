@@ -18,7 +18,7 @@
 
 static config_err_t
 enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
-				 const struct config_section *sect,
+				 const struct config_section *section,
 				 struct config_keyvalue *kv)
 {
   uint8_t enable_arp;
@@ -55,7 +55,7 @@ enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_gratuitous_arps_commit (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
+			       const struct config_section *section,
 			       const struct config_keyvalue *kv)
 {
   int ret;
@@ -76,7 +76,7 @@ enable_gratuitous_arps_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_gratuitous_arps_diff (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
+			     const struct config_section *section,
 			     const struct config_keyvalue *kv)
 {
   uint8_t enable_arp;
@@ -98,7 +98,7 @@ enable_gratuitous_arps_diff (bmc_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT; 
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    (enable_arp) ? "Yes" : "No");
@@ -110,7 +110,7 @@ enable_gratuitous_arps_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_arp_response_checkout (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
+			      const struct config_section *section,
 			      struct config_keyvalue *kv)
 {
   uint8_t enable_arp;
@@ -146,7 +146,7 @@ enable_arp_response_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 enable_arp_response_commit (bmc_config_state_data_t *state_data,
-			    const struct config_section *sect,
+			    const struct config_section *section,
 			    const struct config_keyvalue *kv)
 {
   uint8_t enable_arp;
@@ -167,7 +167,7 @@ enable_arp_response_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 enable_arp_response_diff (bmc_config_state_data_t *state_data,
-			  const struct config_section *sect,
+			  const struct config_section *section,
 			  const struct config_keyvalue *kv)
 {
   uint8_t enable_arp;
@@ -189,7 +189,7 @@ enable_arp_response_diff (bmc_config_state_data_t *state_data,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT; 
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    (reply_arp) ? "Yes" : "No");
@@ -200,7 +200,7 @@ enable_arp_response_diff (bmc_config_state_data_t *state_data,
 
 static config_err_t
 gratuitous_arp_interval_checkout (bmc_config_state_data_t *state_data,
-				  const struct config_section *sect,
+				  const struct config_section *section,
 				  struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -223,7 +223,7 @@ gratuitous_arp_interval_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 gratuitous_arp_interval_commit (bmc_config_state_data_t *state_data,
-				const struct config_section *sect,
+				const struct config_section *section,
 				const struct config_keyvalue *kv)
 {
   return set_bmc_lan_conf_gratuitous_arp_interval (state_data,
@@ -232,7 +232,7 @@ gratuitous_arp_interval_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 gratuitous_arp_interval_diff (bmc_config_state_data_t *state_data,
-			      const struct config_section *sect,
+			      const struct config_section *section,
 			      const struct config_keyvalue *kv)
 {
   uint8_t interval;
@@ -254,7 +254,7 @@ gratuitous_arp_interval_diff (bmc_config_state_data_t *state_data,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT; 
       sprintf (num, "%d", interval);
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    num);

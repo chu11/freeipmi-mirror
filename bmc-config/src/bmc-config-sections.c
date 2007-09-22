@@ -29,9 +29,9 @@
 #include "bmc-config-misc-section.h"
 
 static int
-_add_section(struct config_section **sections, struct config_section *sect)
+_add_section(struct config_section **sections, struct config_section *section)
 {
-  if (!sections || !sect)
+  if (!sections || !section)
     return -1;
   
   if (*sections)
@@ -39,10 +39,10 @@ _add_section(struct config_section **sections, struct config_section *sect)
       struct config_section *trav = *sections;
       while (trav->next)
 	trav = trav->next;
-      trav->next = sect;
+      trav->next = section;
     }
   else
-    *sections = sect;
+    *sections = section;
 
   return 0;
 }
@@ -51,7 +51,7 @@ struct config_section *
 bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
 {
   struct config_section *sections = NULL;
-  struct config_section *sect = NULL;
+  struct config_section *section = NULL;
   uint8_t number_of_users;
   int i;
 
@@ -64,65 +64,65 @@ bmc_config_sections_list_create (bmc_config_state_data_t *state_data)
 
   for (i = 0; i < number_of_users; i++)
     {
-      if (!(sect = bmc_config_user_section_get(state_data, i+1)))
+      if (!(section = bmc_config_user_section_get(state_data, i+1)))
 	goto cleanup;
-      if (_add_section (&sections, sect) < 0)
+      if (_add_section (&sections, section) < 0)
 	goto cleanup;
     }
   
-  if (!(sect = bmc_config_lan_channel_section_get (state_data)))
+  if (!(section = bmc_config_lan_channel_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
-  if (!(sect = bmc_config_lan_conf_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
+  if (_add_section (&sections, section) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_config_lan_conf_auth_section_get (state_data)))
+  if (!(section = bmc_config_lan_conf_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
-  if (!(sect = bmc_config_lan_conf_security_keys_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
+  if (_add_section (&sections, section) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_config_lan_conf_misc_section_get (state_data)))
+  if (!(section = bmc_config_lan_conf_auth_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
-  if (!(sect = bmc_config_rmcpplus_conf_privilege_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
+  if (_add_section (&sections, section) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_config_serial_channel_section_get (state_data)))
+  if (!(section = bmc_config_lan_conf_security_keys_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
-  if (!(sect = bmc_config_serial_conf_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
+  if (_add_section (&sections, section) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_config_pef_conf_section_get (state_data)))
+  if (!(section = bmc_config_lan_conf_misc_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, sect) < 0)
-    goto cleanup;
-
-  if (!(sect = bmc_config_sol_conf_section_get (state_data)))
-    goto cleanup;
-  if (_add_section (&sections, sect) < 0)
+  if (_add_section (&sections, section) < 0)
     goto cleanup;
 
-  if (!(sect = bmc_config_misc_section_get (state_data)))
+  if (!(section = bmc_config_rmcpplus_conf_privilege_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, sect) < 0)
+  if (_add_section (&sections, section) < 0)
+    goto cleanup;
+
+  if (!(section = bmc_config_serial_channel_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, section) < 0)
+    goto cleanup;
+
+  if (!(section = bmc_config_serial_conf_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, section) < 0)
+    goto cleanup;
+
+  if (!(section = bmc_config_pef_conf_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, section) < 0)
+    goto cleanup;
+
+  if (!(section = bmc_config_sol_conf_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, section) < 0)
+    goto cleanup;
+
+  if (!(section = bmc_config_misc_section_get (state_data)))
+    goto cleanup;
+  if (_add_section (&sections, section) < 0)
     goto cleanup;
 
   return sections;
@@ -294,18 +294,18 @@ static struct config_section *
 bmc_config_section_find_section (bmc_config_state_data_t *state_data,
                                  const char *section_name)
 {
-  const struct config_section *sect;
+  const struct config_section *section;
 
-  sect = state_data->sections;
+  section = state_data->sections;
 
-  while (sect) 
+  while (section) 
     {
-      if (same (section_name, sect->section_name))
+      if (same (section_name, section->section_name))
         break;
-      sect = sect->next;
+      section = section->next;
     }
 
-  return (struct config_section *)sect;
+  return (struct config_section *)section;
 }
 
 struct config_keyvalue *
@@ -314,17 +314,17 @@ bmc_config_section_find_keyvalue (bmc_config_state_data_t *state_data,
                                   const char *key_name)
 {
 
-  const struct config_section *sect;
+  const struct config_section *section;
   struct config_keyvalue *kv = NULL;
 
-  if (!(sect = bmc_config_section_find_section (state_data,
+  if (!(section = bmc_config_section_find_section (state_data,
                                                 section_name)))
     {
       fprintf (stderr, "Unknown section `%s'\n", section_name);
       return NULL;
     }
 
-  kv = sect->keyvalues;
+  kv = section->keyvalues;
 
   while (kv) 
     {
@@ -349,10 +349,10 @@ bmc_config_section_set_value (bmc_config_state_data_t *state_data,
                               const char *key_name,
                               const char *value)
 {
-  struct config_section *sect;
+  struct config_section *section;
   struct config_keyvalue *kv;
 
-  if (!(sect = bmc_config_section_find_section (state_data, section_name)))
+  if (!(section = bmc_config_section_find_section (state_data, section_name)))
     {
       fprintf (stderr, "Unknown section `%s'\n", section_name);
       return -1;
@@ -397,10 +397,10 @@ bmc_config_section_commit_value (bmc_config_state_data_t *state_data,
                                  const char *key_name,
                                  const char *value)
 {
-  struct config_section *sect;
+  struct config_section *section;
   struct config_keyvalue *kv;
 
-  if (!(sect = bmc_config_section_find_section (state_data, section_name)))
+  if (!(section = bmc_config_section_find_section (state_data, section_name)))
     return CONFIG_ERR_FATAL_ERROR;
 
   if (!(kv = bmc_config_section_find_keyvalue (state_data, section_name, key_name)))
@@ -430,7 +430,7 @@ bmc_config_section_commit_value (bmc_config_state_data_t *state_data,
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return kv->commit (state_data, sect, kv);
+  return kv->commit (state_data, section, kv);
 }
 
 int
@@ -439,10 +439,10 @@ bmc_config_section_diff_value (bmc_config_state_data_t *state_data,
                                const char *key_name,
                                const char *value)
 {
-  struct config_section *sect;
+  struct config_section *section;
   struct config_keyvalue *kv;
 
-  if (!(sect = bmc_config_section_find_section (state_data, section_name)))
+  if (!(section = bmc_config_section_find_section (state_data, section_name)))
     return CONFIG_ERR_FATAL_ERROR;
 
   if (!(kv = bmc_config_section_find_keyvalue (state_data, section_name, key_name)))
@@ -472,21 +472,21 @@ bmc_config_section_diff_value (bmc_config_state_data_t *state_data,
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return kv->diff (state_data, sect, kv);
+  return kv->diff (state_data, section, kv);
 }
 
 config_err_t 
 bmc_config_sections_list (bmc_config_state_data_t *state_data)
 {
-  struct config_section *sect;
+  struct config_section *section;
 
-  sect = state_data->sections;
+  section = state_data->sections;
 
-  while (sect)
+  while (section)
     {
-      if (!(sect->flags & CONFIG_DO_NOT_CHECKOUT))
-	printf("%s\n", sect->section_name); 
-      sect = sect->next;
+      if (!(section->flags & CONFIG_DO_NOT_CHECKOUT))
+	printf("%s\n", section->section_name); 
+      section = section->next;
     }
 
   return CONFIG_ERR_SUCCESS;

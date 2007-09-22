@@ -20,7 +20,7 @@
 
 static config_err_t
 k_r_checkout (bmc_config_state_data_t *state_data,
-	      const struct config_section *sect,
+	      const struct config_section *section,
 	      struct config_keyvalue *kv)
 {
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
@@ -48,7 +48,7 @@ k_r_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 k_r_commit (bmc_config_state_data_t *state_data,
-	    const struct config_section *sect,
+	    const struct config_section *section,
 	    const struct config_keyvalue *kv)
 {
   return set_k_r (state_data,
@@ -58,7 +58,7 @@ k_r_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 k_r_diff (bmc_config_state_data_t *state_data,
-	  const struct config_section *sect,
+	  const struct config_section *section,
 	  const struct config_keyvalue *kv)
 {
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
@@ -73,7 +73,7 @@ k_r_diff (bmc_config_state_data_t *state_data,
   if (strcmp (kv->value?kv->value:"", (char *)k_r)) 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    (char *)k_r);
@@ -98,7 +98,7 @@ k_r_validate (const char *section_name,
 
 static config_err_t
 k_g_checkout (bmc_config_state_data_t *state_data,
-	      const struct config_section *sect,
+	      const struct config_section *section,
 	      struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
@@ -132,7 +132,7 @@ k_g_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 k_g_commit (bmc_config_state_data_t *state_data,
-	    const struct config_section *sect,
+	    const struct config_section *section,
 	    const struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
@@ -148,7 +148,7 @@ k_g_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 k_g_diff (bmc_config_state_data_t *state_data,
-	  const struct config_section *sect,
+	  const struct config_section *section,
 	  const struct config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
@@ -173,7 +173,7 @@ k_g_diff (bmc_config_state_data_t *state_data,
   if (memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH)) 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    k_g_str);

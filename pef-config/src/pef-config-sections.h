@@ -15,19 +15,19 @@ struct config_section {
 
 /* checkout procedure fills the value into kv->value as printable string */
 typedef config_err_t (*Keyvalue_Checkout) (pef_config_state_data_t *state_data,
-                                        const struct config_section *sect,
+                                        const struct config_section *section,
                                         struct config_keyvalue *kv);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
 typedef config_err_t (*Keyvalue_Commit) (pef_config_state_data_t *state_data,
-                                      const struct config_section *sect,
+                                      const struct config_section *section,
                                       const struct config_keyvalue *kv);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
 typedef config_diff_t (*Keyvalue_Diff) (pef_config_state_data_t *state_data,
-                                     const struct config_section *sect,
+                                     const struct config_section *section,
                                      const struct config_keyvalue *kv);
 
 /* validate procedure finds if value is suitable to be set as kv->value */

@@ -18,7 +18,7 @@
 
 static config_err_t
 power_restore_policy_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *sect,
+			       const struct config_section *section,
 			       struct config_keyvalue *kv)
 {
   uint8_t policy;
@@ -41,7 +41,7 @@ power_restore_policy_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 power_restore_policy_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *sect,
+			     const struct config_section *section,
 			     const struct config_keyvalue *kv)
 {
   return set_bmc_power_restore_policy (state_data,
@@ -50,7 +50,7 @@ power_restore_policy_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 power_restore_policy_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *sect,
+			   const struct config_section *section,
 			   const struct config_keyvalue *kv)
 {
   uint8_t got_value;
@@ -73,7 +73,7 @@ power_restore_policy_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (sect->section_name,
+      report_diff (section->section_name,
                    kv->key_name,
                    kv->value,
                    power_restore_policy_string (got_value));

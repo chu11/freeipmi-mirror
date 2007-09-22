@@ -99,7 +99,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
   kp = args->keypairs;
   while (kp)
     {
-      struct config_section *sect;
+      struct config_section *section;
       char *keypair;
       char *section_name;
       char *key_name;
@@ -128,13 +128,13 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
       key_name = strtok (key_name, " \t");
       value = strtok (value, " \t");
       
-      sect = state_data->sections;
+      section = state_data->sections;
       found_section = 0;
-      while (sect) 
+      while (section) 
         {
-          if (!strcasecmp(sect->section_name, section_name))
+          if (!strcasecmp(section->section_name, section_name))
             {
-              struct config_keyvalue *kv = sect->keyvalues;
+              struct config_keyvalue *kv = section->keyvalues;
 
               int found_key = 0;
 
@@ -171,7 +171,7 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
 
               break;            /* break out of 'sect' loop */
             }
-          sect = sect->next;
+          section = section->next;
         }
       
       if (!found_section)
@@ -236,20 +236,20 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
   if (ret == CONFIG_ERR_SUCCESS) 
     {
       /* 3rd pass */
-      struct config_section *sect = state_data->sections;
-      while (sect) 
+      struct config_section *section = state_data->sections;
+      while (section) 
         {
-          struct config_keyvalue *kv = sect->keyvalues;
+          struct config_keyvalue *kv = section->keyvalues;
           while (kv) 
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->commit (state_data, sect, kv)) == CONFIG_ERR_FATAL_ERROR)
+                  if ((this_ret = kv->commit (state_data, section, kv)) == CONFIG_ERR_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
                     {
-                      fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", sect->section_name, kv->key_name);
+                      fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", section->section_name, kv->key_name);
                       ret = CONFIG_ERR_NON_FATAL_ERROR;
                     }
                 }
@@ -258,9 +258,9 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
 
           if (args->verbose)
             fprintf (stderr, "Completed commit of Section: %s\n",
-                     sect->section_name);
+                     section->section_name);
 
-          sect = sect->next;
+          section = section->next;
         }
     }
 

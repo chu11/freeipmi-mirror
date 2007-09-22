@@ -25,7 +25,7 @@ pef_checkout_keypair (pef_config_state_data_t *state_data,
   char *keypair = NULL;
   char *section_name;
   char *key_name;
-  struct config_section *sect;
+  struct config_section *section;
   struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
@@ -49,22 +49,22 @@ pef_checkout_keypair (pef_config_state_data_t *state_data,
   section_name = strtok (section_name, " \t");
   key_name = strtok (key_name, " \t");
 
-  sect = state_data->sections;
-  while (sect)
+  section = state_data->sections;
+  while (section)
     {
-      if (same (section_name, sect->section_name))
+      if (same (section_name, section->section_name))
         break;
-      sect = sect->next;
+      section = section->next;
     }
 
-  if (!sect)
+  if (!section)
     {
       fprintf (stderr, "Unknown section `%s'\n", section_name);
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
 
-  kv = sect->keyvalues;
+  kv = section->keyvalues;
 
   while (kv)
     {
@@ -81,7 +81,7 @@ pef_checkout_keypair (pef_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = kv->checkout (state_data, sect, kv)) == CONFIG_ERR_FATAL_ERROR)
+  if ((ret = kv->checkout (state_data, section, kv)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (ret == CONFIG_ERR_SUCCESS)
@@ -128,7 +128,7 @@ pef_checkout_keypairs (pef_config_state_data_t *state_data)
 
 static config_err_t
 pef_checkout_section_common (pef_config_state_data_t *state_data,
-                             struct config_section *sect,
+                             struct config_section *section,
                              FILE *fp)
 {
   struct config_arguments *args;
@@ -137,14 +137,14 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
   config_err_t ret = CONFIG_ERR_SUCCESS;
   config_err_t this_ret;
 
-  if (sect->flags & CONFIG_DO_NOT_CHECKOUT)
+  if (section->flags & CONFIG_DO_NOT_CHECKOUT)
     return ret;
 
-  if (sect->section_comment_section_name
-      && sect->section_comment)
+  if (section->section_comment_section_name
+      && section->section_comment)
     {
-      if (config_section_comments(sect->section_comment_section_name,
-                                  sect->section_comment,
+      if (config_section_comments(section->section_comment_section_name,
+                                  section->section_comment,
                                   fp) < 0)
         {
           if (args->verbose)
@@ -153,10 +153,10 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
         }
     }
 
-  fprintf (fp, "Section %s\n", sect->section_name);
+  fprintf (fp, "Section %s\n", section->section_name);
 
   args = state_data->prog_data->args;
-  kv = sect->keyvalues;
+  kv = section->keyvalues;
 
   while (kv)
     {
@@ -172,7 +172,7 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
         }
 
       if ((this_ret = kv->checkout (state_data,
-                                    sect,
+                                    section,
                                     kv)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
@@ -180,7 +180,7 @@ pef_checkout_section_common (pef_config_state_data_t *state_data,
         {
           if (args->verbose)
             fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
-                     sect->section_name,
+                     section->section_name,
                      kv->key_name);
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
@@ -260,19 +260,19 @@ pef_checkout_section (pef_config_state_data_t *state_data)
   sstr = args->section_strs;
   while (sstr)
     {
-      struct config_section *sect = state_data->sections;
+      struct config_section *section = state_data->sections;
       int found = 0;
 
-      while (sect)
+      while (section)
         {
-          if (!strcasecmp(sect->section_name, sstr->section_name))
+          if (!strcasecmp(section->section_name, sstr->section_name))
             {
               config_err_t this_ret;
 
               found++;
 
               if ((this_ret = pef_checkout_section_common (state_data,
-                                                           sect,
+                                                           section,
                                                            fp)) == CONFIG_ERR_FATAL_ERROR)
                 goto cleanup;
 
@@ -282,7 +282,7 @@ pef_checkout_section (pef_config_state_data_t *state_data)
               break;
             }
 
-          sect = sect->next;
+          section = section->next;
         }
 
       if (!found)
@@ -305,7 +305,7 @@ static config_err_t
 pef_checkout_file (pef_config_state_data_t *state_data)
 {
   struct config_arguments *args;
-  struct config_section *sect;
+  struct config_section *section;
   FILE *fp;
   int file_opened = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -325,13 +325,13 @@ pef_checkout_file (pef_config_state_data_t *state_data)
   else
     fp = stdout;
 
-  sect = state_data->sections;
-  while (sect)
+  section = state_data->sections;
+  while (section)
     {
       config_err_t this_ret;
 
       if ((this_ret = pef_checkout_section_common (state_data,
-                                                   sect,
+                                                   section,
                                                    fp)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
@@ -340,9 +340,9 @@ pef_checkout_file (pef_config_state_data_t *state_data)
 
       if (args->verbose)
         fprintf (stderr, "Completed checkout of Section: %s\n",
-                 sect->section_name);
+                 section->section_name);
 
-      sect = sect->next;
+      section = section->next;
     }
 
   rv = ret;
