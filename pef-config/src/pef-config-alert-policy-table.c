@@ -281,21 +281,10 @@ policy_enabled_checkout (pef_config_state_data_t *state_data,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (policy_enabled)
+  if (!(kv->value = strdup (policy_enabled ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -907,21 +896,10 @@ event_specific_alert_string_checkout (pef_config_state_data_t *state_data,
                                &event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (event_specific_alert_string)
+  if (!(kv->value = strdup (event_specific_alert_string ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;

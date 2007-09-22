@@ -106,21 +106,10 @@ enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -191,21 +180,10 @@ enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -276,21 +254,10 @@ enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -620,21 +587,10 @@ enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
                                         NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;

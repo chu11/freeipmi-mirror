@@ -106,21 +106,10 @@ enable_pef_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -192,21 +181,10 @@ enable_pef_event_messages_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -278,22 +256,12 @@ enable_pef_startup_delay_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+  
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -363,21 +331,10 @@ enable_pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
                                    &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -542,22 +499,12 @@ enable_alert_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -633,22 +580,12 @@ enable_power_down_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -723,22 +660,12 @@ enable_reset_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -813,22 +740,12 @@ enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -903,22 +820,12 @@ enable_oem_action_checkout (pef_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -994,22 +901,12 @@ enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
                                           &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 

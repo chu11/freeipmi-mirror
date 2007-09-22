@@ -90,21 +90,10 @@ enable_sol_checkout (bmc_config_state_data_t *state_data,
                                  &enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (enable)
+  if (!(kv->value = strdup (enable ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -237,21 +226,10 @@ force_sol_payload_authentication_checkout (bmc_config_state_data_t *state_data,
                                 NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
   
   return CONFIG_ERR_SUCCESS;
@@ -320,21 +298,10 @@ force_sol_payload_encryption_checkout (bmc_config_state_data_t *state_data,
                                 &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (value)
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
   
   return CONFIG_ERR_SUCCESS;

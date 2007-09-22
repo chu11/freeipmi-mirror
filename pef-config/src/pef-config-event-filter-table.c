@@ -264,21 +264,10 @@ enable_filter_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (eft.enable_filter)
+  if (!(kv->value = strdup (eft.enable_filter ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -387,21 +376,10 @@ event_filter_action_alert_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (eft.event_filter_action_alert)
+  if (!(kv->value = strdup (eft.event_filter_action_alert ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -510,21 +488,10 @@ event_filter_action_power_off_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (eft.event_filter_action_power_off)
+  if (!(kv->value = strdup (eft.event_filter_action_power_off ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -633,21 +600,10 @@ event_filter_action_reset_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (eft.event_filter_action_reset)
+  if (!(kv->value = strdup (eft.event_filter_action_reset ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -757,21 +713,10 @@ event_filter_action_power_cycle_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (eft.event_filter_action_power_cycle)
+  if (!(kv->value = strdup (eft.event_filter_action_power_cycle ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -880,21 +825,10 @@ event_filter_action_oem_checkout (pef_config_state_data_t *state_data,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (eft.event_filter_action_oem)
+  if (!(kv->value = strdup (eft.event_filter_action_oem ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -1003,21 +937,10 @@ event_filter_action_diagnostic_interrupt_checkout (pef_config_state_data_t *stat
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (eft.event_filter_action_diagnostic_interrupt)
+  if (!(kv->value = strdup (eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -1125,22 +1048,11 @@ event_filter_action_group_control_operation_checkout (pef_config_state_data_t *s
                                event_filter_number,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (eft.event_filter_action_group_control_operation)
+  
+  if (!(kv->value = strdup (eft.event_filter_action_group_control_operation ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;

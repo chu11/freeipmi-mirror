@@ -497,21 +497,10 @@ lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -591,21 +580,10 @@ lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
   
   return CONFIG_ERR_SUCCESS;
@@ -685,21 +663,10 @@ lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -958,22 +925,12 @@ sol_payload_access_checkout (bmc_config_state_data_t *state_data,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (have_access)
+  if (!(kv->value = strdup (have_access ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -1164,21 +1121,10 @@ serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -1258,21 +1204,10 @@ serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -1352,21 +1287,10 @@ serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_da
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;

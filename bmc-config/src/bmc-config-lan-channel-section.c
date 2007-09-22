@@ -171,22 +171,12 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
     return ret;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR ;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -265,22 +255,12 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
     return ret;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR ;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -360,22 +340,12 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
     return ret;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR ;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -671,22 +641,12 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
                                                       &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR ;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -763,22 +723,12 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
                                                       &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR ;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -856,22 +806,12 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
                                                       &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR ;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR ;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 

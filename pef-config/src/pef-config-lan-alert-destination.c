@@ -238,21 +238,10 @@ alert_acknowledge_checkout (pef_config_state_data_t *state_data,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (alert_acknowledge)
+  if (!(kv->value = strdup (alert_acknowledge ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
   
   return CONFIG_ERR_SUCCESS;

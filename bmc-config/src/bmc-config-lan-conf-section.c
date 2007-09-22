@@ -617,22 +617,12 @@ vlan_id_enable_checkout (bmc_config_state_data_t *state_data,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (vlan_id_enable)
+  if (!(kv->value = strdup (vlan_id_enable ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 

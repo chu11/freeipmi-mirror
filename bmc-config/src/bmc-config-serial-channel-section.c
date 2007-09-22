@@ -169,22 +169,12 @@ volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return -1;
-        }
+      perror("strdup");
+      return -1;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return -1;
-        }
-    }
+
   return 0;
 }
 
@@ -261,22 +251,12 @@ volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return -1;
-        }
+      perror("strdup");
+      return -1;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return -1;
-        }
-    }
+
   return 0;
 }
 
@@ -353,22 +333,12 @@ volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return -1;
-        }
+      perror("strdup");
+      return -1;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return -1;
-        }
-    }
+
   return 0;
 }
 
@@ -660,22 +630,12 @@ non_volatile_enable_user_level_auth_checkout (bmc_config_state_data_t *state_dat
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return -1;
-        }
+      perror("strdup");
+      return -1;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return -1;
-        }
-    }
+
   return 0;
 }
 
@@ -752,22 +712,12 @@ non_volatile_enable_per_msg_auth_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return -1;
-        }
+      perror("strdup");
+      return -1;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return -1;
-        }
-    }
+
   return 0;
 }
 
@@ -844,22 +794,12 @@ non_volatile_enable_pef_alerting_checkout (bmc_config_state_data_t *state_data,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (get_val)
+  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return -1;
-        }
+      perror("strdup");
+      return -1;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return -1;
-        }
-    }
+
   return 0;
 }
 

@@ -31,22 +31,12 @@ enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
   if (ret != 0)
     return -1;
 
-  if (enable_arp)
+  if (!(kv->value = strdup (enable_arp ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return -1;
-        }
+      perror("strdup");
+      return -1;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return -1;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -119,22 +109,12 @@ enable_arp_response_checkout (bmc_config_state_data_t *state_data,
                                                          &reply_arp)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (reply_arp)
+  if (!(kv->value = strdup (reply_arp ? "Yes" : "No")))
     {
-      if (!(kv->value = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
     }
-  else
-    {
-      if (!(kv->value = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
-    }
+
   return CONFIG_ERR_SUCCESS;
 }
 
