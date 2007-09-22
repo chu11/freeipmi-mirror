@@ -550,3 +550,67 @@ malicious user information on the username/password of the remote BMC.
 In the end, the authors have felt the overall benefits provided by the
 checking of these values provides more than the cost.  Changes in the
 overall industry implementation could change this viewpoint later.
+
+9) Bmc-Config/Ipmi-Pef callback design
+--------------------------------------
+
+Bmc-config and Pef-config (henceforce together just called Bmc-config)
+are coded with a archicture that reads/writes each configurable field
+in the BMC separately.  
+
+As an example, suppose we have the following BMC configuration file
+we'd like to commit.
+
+FieldA       Value1
+FieldB.1     Value2
+FieldB.2     Value3
+FieldB.3     Value4
+FieldB.4     Value5
+
+Suppose FieldA is read/written using a single IPMI packet and fields
+FieldB.1-FieldB.4 can be read/written using a single IPMI packet.
+
+In the architecture that Bmc-config is currently based on, the above
+would require 5 read requests to read all 5 values.  It would require
+4 read requests (for FieldB.1-FieldB.4) and 5 write requests to write
+the values.
+
+Obviously, this sounds like (and is!) very inefficient.  In addition,
+coding wise, it leads to a very large amount of code duplication.
+There are large amounts of very similar "get the old values, change
+1 specific value, write all the values back" code in Bmc-config.
+
+The authors acknowledge that the code is very inefficient.  However, here
+are some of the major reasons why this was done and is still kept.
+
+A) (This is the primary reason this architecture is still kept.)  Due
+to widely varying hardware and implementations, this handles the write
+configuration case best.  Suppose FieldB.2 is only configurable on
+IPMI 2.0 systems but not IPMI 1.5 systems.  Suppose (perhaps b/c it is
+optional in the IPMI specification) FieldB.3 is suppored by some
+vendors but not other vendors.  Suppose FieldB.4 is simply not
+implemented correctly by the vendor (which has been a common problem
+that has to be dealt in the open-source community).
+
+This architecture allows the majority of the configuration to succeed
+on a specific platform, and allows the end user to know exactly what
+may or may not be configurable.  If all 4 fields of FieldB.1-FieldB.4
+were written at the same time, there is currently no method in the
+IPMI protocol to know what field was configured incorrectly and why.
+
+B) There are several (and possibly more future) vendor compliance
+problems that can be (or will need to be) worked around.  By using
+this architecture each specific field can be worked around
+independetly depending on the vendor.
+
+C) Admittedly, much is this is still done for legacy reasons.
+'FieldA' type fields were a more common case in the beginning of
+Bmc-config's implementation, which (to some extent) is why this
+architecture was initially selected.
+
+The major deficiencies that we see are:
+
+D) Slow reads/writes due to an excess of IPMI traffic.  The read case
+can be sped up since it is not affected by problem 'A' above.
+However, at this point in time, the inefficiencies of 'A' will likely
+be kept in favor of its ability to handle the generic write case.
