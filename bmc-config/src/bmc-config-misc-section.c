@@ -17,10 +17,11 @@
 #include "bmc-config-validate.h"
 
 static config_err_t
-power_restore_policy_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       struct config_keyvalue *kv)
+power_restore_policy_checkout (const struct config_section *section,
+			       struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t policy;
   config_err_t ret;
 
@@ -37,19 +38,21 @@ power_restore_policy_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-power_restore_policy_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *section,
-			     const struct config_keyvalue *kv)
+power_restore_policy_commit (const struct config_section *section,
+			     const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_power_restore_policy (state_data,
 				       power_restore_policy_number (kv->value));
 }
 
 static config_diff_t
-power_restore_policy_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *section,
-			   const struct config_keyvalue *kv)
+power_restore_policy_diff (const struct config_section *section,
+			   const struct config_keyvalue *kv,
+                           void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t got_value;
   uint8_t passed_value;
   config_err_t rc;

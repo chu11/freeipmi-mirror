@@ -92,10 +92,11 @@ serial_conf_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    struct config_keyvalue *kv)
+enable_basic_mode_checkout (const struct config_section *section,
+			    struct config_keyvalue *kv,
+                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -116,10 +117,11 @@ enable_basic_mode_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_basic_mode_commit (bmc_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+enable_basic_mode_commit (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   value = (same (kv->value, "yes") ? 1 : 0);
 
@@ -128,10 +130,11 @@ enable_basic_mode_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_basic_mode_diff (bmc_config_state_data_t *state_data,
-			const struct config_section *section,
-			const struct config_keyvalue *kv)
+enable_basic_mode_diff (const struct config_section *section,
+			const struct config_keyvalue *kv,
+                        void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t get_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -163,13 +166,12 @@ enable_basic_mode_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* ppp */
-
 static config_err_t
-enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  struct config_keyvalue *kv)
+enable_ppp_mode_checkout (const struct config_section *section,
+			  struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -190,10 +192,11 @@ enable_ppp_mode_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_ppp_mode_commit (bmc_config_state_data_t *state_data,
-			const struct config_section *section,
-			const struct config_keyvalue *kv)
+enable_ppp_mode_commit (const struct config_section *section,
+			const struct config_keyvalue *kv,
+                        void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   value = (same (kv->value, "yes") ? 1 : 0);
 
@@ -202,10 +205,11 @@ enable_ppp_mode_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
-		      const struct config_section *section,
-		      const struct config_keyvalue *kv)
+enable_ppp_mode_diff (const struct config_section *section,
+		      const struct config_keyvalue *kv,
+                      void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t get_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -237,13 +241,12 @@ enable_ppp_mode_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* terminal */
-
 static config_err_t
-enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       struct config_keyvalue *kv)
+enable_terminal_mode_checkout (const struct config_section *section,
+			       struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -264,10 +267,11 @@ enable_terminal_mode_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_terminal_mode_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *section,
-			     const struct config_keyvalue *kv)
+enable_terminal_mode_commit (const struct config_section *section,
+			     const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   value = (same (kv->value, "yes") ? 1 : 0);
 
@@ -276,10 +280,11 @@ enable_terminal_mode_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *section,
-			   const struct config_keyvalue *kv)
+enable_terminal_mode_diff (const struct config_section *section,
+			   const struct config_keyvalue *kv,
+                           void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t get_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -312,10 +317,11 @@ enable_terminal_mode_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-connect_mode_checkout (bmc_config_state_data_t *state_data,
-		       const struct config_section *section,
-		       struct config_keyvalue *kv)
+connect_mode_checkout (const struct config_section *section,
+		       struct config_keyvalue *kv,
+                       void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -336,10 +342,11 @@ connect_mode_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-connect_mode_commit (bmc_config_state_data_t *state_data,
-		     const struct config_section *section,
-		     const struct config_keyvalue *kv)
+connect_mode_commit (const struct config_section *section,
+		     const struct config_keyvalue *kv,
+                     void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   value = connect_mode_number (kv->value);
 
@@ -348,10 +355,11 @@ connect_mode_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-connect_mode_diff (bmc_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   const struct config_keyvalue *kv)
+connect_mode_diff (const struct config_section *section,
+		   const struct config_keyvalue *kv,
+                   void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t get_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -383,10 +391,11 @@ connect_mode_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
-				 const struct config_section *section,
-				 struct config_keyvalue *kv)
+page_blackout_interval_checkout (const struct config_section *section,
+				 struct config_keyvalue *kv,
+                                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t interval;
   config_err_t ret;
 
@@ -404,19 +413,21 @@ page_blackout_interval_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-page_blackout_interval_commit (bmc_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       const struct config_keyvalue *kv)
+page_blackout_interval_commit (const struct config_section *section,
+			       const struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_serial_conf_page_blackout_interval (state_data,
 						     atoi (kv->value));
 }
 
 static config_diff_t
-page_blackout_interval_diff (bmc_config_state_data_t *state_data,
-			     const struct config_section *section,
-			     const struct config_keyvalue *kv)
+page_blackout_interval_diff (const struct config_section *section,
+			     const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t interval;
   int passed_interval;
   config_err_t rc;
@@ -447,13 +458,12 @@ page_blackout_interval_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* retry time */
-
 static config_err_t
-call_retry_interval_checkout (bmc_config_state_data_t *state_data,
-			      const struct config_section *section,
-			      struct config_keyvalue *kv)
+call_retry_interval_checkout (const struct config_section *section,
+			      struct config_keyvalue *kv,
+                              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t interval;
   config_err_t ret;
 
@@ -471,19 +481,21 @@ call_retry_interval_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-call_retry_interval_commit (bmc_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    const struct config_keyvalue *kv)
+call_retry_interval_commit (const struct config_section *section,
+			    const struct config_keyvalue *kv,
+                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_serial_conf_call_retry_interval (state_data,
                                                   atoi (kv->value));
 }
 
 static config_diff_t
-call_retry_interval_diff (bmc_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+call_retry_interval_diff (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t interval;
   int passed_interval;
   config_err_t rc;
@@ -574,10 +586,11 @@ serial_conf_comm_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    struct config_keyvalue *kv)
+enable_dtr_hangup_checkout (const struct config_section *section,
+			    struct config_keyvalue *kv,
+                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
   
@@ -597,10 +610,11 @@ enable_dtr_hangup_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_dtr_hangup_commit (bmc_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+enable_dtr_hangup_commit (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value = same (kv->value, "yes");
 
   return serial_conf_comm_commit (state_data,
@@ -610,10 +624,11 @@ enable_dtr_hangup_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
-			const struct config_section *section,
-			const struct config_keyvalue *kv)
+enable_dtr_hangup_diff (const struct config_section *section,
+			const struct config_keyvalue *kv,
+                        void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;
@@ -645,10 +660,11 @@ enable_dtr_hangup_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-flow_control_checkout (bmc_config_state_data_t *state_data,
-		       const struct config_section *section,
-		       struct config_keyvalue *kv)
+flow_control_checkout (const struct config_section *section,
+		       struct config_keyvalue *kv,
+                       void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
   
@@ -668,10 +684,11 @@ flow_control_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-flow_control_commit (bmc_config_state_data_t *state_data,
-		     const struct config_section *section,
-		     const struct config_keyvalue *kv)
+flow_control_commit (const struct config_section *section,
+		     const struct config_keyvalue *kv,
+                     void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value = flow_control_number (kv->value);
   return serial_conf_comm_commit (state_data,
 				  NULL,
@@ -680,10 +697,11 @@ flow_control_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-flow_control_diff (bmc_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   const struct config_keyvalue *kv)
+flow_control_diff (const struct config_section *section,
+		   const struct config_keyvalue *kv,
+                   void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;
@@ -715,10 +733,11 @@ flow_control_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-bit_rate_checkout (bmc_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   struct config_keyvalue *kv)
+bit_rate_checkout (const struct config_section *section,
+		   struct config_keyvalue *kv,
+                   void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
   
@@ -738,10 +757,11 @@ bit_rate_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-bit_rate_commit (bmc_config_state_data_t *state_data,
-		 const struct config_section *section,
-		 const struct config_keyvalue *kv)
+bit_rate_commit (const struct config_section *section,
+		 const struct config_keyvalue *kv,
+                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t value = bit_rate_number (kv->value);
   return serial_conf_comm_commit (state_data,
 				  NULL,
@@ -750,10 +770,11 @@ bit_rate_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-bit_rate_diff (bmc_config_state_data_t *state_data,
-	       const struct config_section *section,
-	       const struct config_keyvalue *kv)
+bit_rate_diff (const struct config_section *section,
+	       const struct config_keyvalue *kv,
+               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;

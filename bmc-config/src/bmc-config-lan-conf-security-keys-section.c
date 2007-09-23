@@ -19,10 +19,11 @@
 #include "tool-common.h"
 
 static config_err_t
-k_r_checkout (bmc_config_state_data_t *state_data,
-	      const struct config_section *section,
-	      struct config_keyvalue *kv)
+k_r_checkout (const struct config_section *section,
+	      struct config_keyvalue *kv,
+              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   config_err_t ret;
 
@@ -44,20 +45,22 @@ k_r_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-k_r_commit (bmc_config_state_data_t *state_data,
-	    const struct config_section *section,
-	    const struct config_keyvalue *kv)
+k_r_commit (const struct config_section *section,
+	    const struct config_keyvalue *kv,
+            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_k_r (state_data,
 		  (uint8_t *)kv->value, 
 		  kv->value ? strlen (kv->value): 0);
 }
 
 static config_diff_t
-k_r_diff (bmc_config_state_data_t *state_data,
-	  const struct config_section *section,
-	  const struct config_keyvalue *kv)
+k_r_diff (const struct config_section *section,
+	  const struct config_keyvalue *kv,
+          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   config_err_t ret;
 
@@ -94,10 +97,11 @@ k_r_validate (const char *section_name,
 /* k_g */
 
 static config_err_t
-k_g_checkout (bmc_config_state_data_t *state_data,
-	      const struct config_section *section,
-	      struct config_keyvalue *kv)
+k_g_checkout (const struct config_section *section,
+	      struct config_keyvalue *kv,
+              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   config_err_t ret;
 
@@ -125,10 +129,11 @@ k_g_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-k_g_commit (bmc_config_state_data_t *state_data,
-	    const struct config_section *section,
-	    const struct config_keyvalue *kv)
+k_g_commit (const struct config_section *section,
+	    const struct config_keyvalue *kv,
+            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   int k_g_len;
   
@@ -141,10 +146,11 @@ k_g_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-k_g_diff (bmc_config_state_data_t *state_data,
-	  const struct config_section *section,
-	  const struct config_keyvalue *kv)
+k_g_diff (const struct config_section *section,
+	  const struct config_keyvalue *kv,
+          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   uint8_t kv_k_g[IPMI_MAX_K_G_LENGTH+1];
   char k_g_str[IPMI_MAX_K_G_LENGTH*2+3];

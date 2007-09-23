@@ -21,10 +21,11 @@
 #define BMC_MAXMACADDRLEN 24
 
 static config_err_t
-ip_address_source_checkout (bmc_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    struct config_keyvalue *kv)
+ip_address_source_checkout (const struct config_section *section,
+			    struct config_keyvalue *kv,
+                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t source;
   config_err_t ret;
 
@@ -42,19 +43,21 @@ ip_address_source_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-ip_address_source_commit (bmc_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+ip_address_source_commit (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_ip_address_source (state_data,
 					     ip_address_source_number (kv->value));
 }
 
 static config_diff_t
-ip_address_source_diff (bmc_config_state_data_t *state_data,
-			const struct config_section *section,
-			const struct config_keyvalue *kv)
+ip_address_source_diff (const struct config_section *section,
+			const struct config_keyvalue *kv,
+                        void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t get_val;
   uint8_t passed_val;
   config_err_t rc;
@@ -83,10 +86,11 @@ ip_address_source_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-ip_address_checkout (bmc_config_state_data_t *state_data,
-		     const struct config_section *section,
-		     struct config_keyvalue *kv)
+ip_address_checkout (const struct config_section *section,
+		     struct config_keyvalue *kv,
+                     void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   config_err_t ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
@@ -105,19 +109,21 @@ ip_address_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-ip_address_commit (bmc_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   const struct config_keyvalue *kv)
+ip_address_commit (const struct config_section *section,
+		   const struct config_keyvalue *kv,
+                   void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_ip_address (state_data,
                                       kv->value);
 }
 
 static config_diff_t
-ip_address_diff (bmc_config_state_data_t *state_data,
-		 const struct config_section *section,
-		 const struct config_keyvalue *kv)
+ip_address_diff (const struct config_section *section,
+		 const struct config_keyvalue *kv,
+                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char ip[BMC_MAXIPADDRLEN + 1];
   config_err_t rc;
   config_diff_t ret;
@@ -145,10 +151,11 @@ ip_address_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-mac_address_checkout (bmc_config_state_data_t *state_data,
-		      const struct config_section *section,
-		      struct config_keyvalue *kv)
+mac_address_checkout (const struct config_section *section,
+		      struct config_keyvalue *kv,
+                      void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   config_err_t ret;
   char mac[BMC_MAXMACADDRLEN+1];
 
@@ -166,19 +173,21 @@ mac_address_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-mac_address_commit (bmc_config_state_data_t *state_data,
-		    const struct config_section *section,
-		    const struct config_keyvalue *kv)
+mac_address_commit (const struct config_section *section,
+		    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_mac_address (state_data,
 				       kv->value);
 }
 
 static config_diff_t
-mac_address_diff (bmc_config_state_data_t *state_data,
-		  const struct config_section *section,
-		  const struct config_keyvalue *kv)
+mac_address_diff (const struct config_section *section,
+		  const struct config_keyvalue *kv,
+                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char mac[BMC_MAXMACADDRLEN+1];
   config_err_t rc;
   config_diff_t ret;
@@ -206,10 +215,11 @@ mac_address_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-subnet_mask_checkout (bmc_config_state_data_t *state_data,
-		      const struct config_section *section,
-		      struct config_keyvalue *kv)
+subnet_mask_checkout (const struct config_section *section,
+		      struct config_keyvalue *kv,
+                      void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   config_err_t ret;
   char mask[BMC_MAXIPADDRLEN + 1];
 
@@ -228,19 +238,21 @@ subnet_mask_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-subnet_mask_commit (bmc_config_state_data_t *state_data,
-		    const struct config_section *section,
-		    const struct config_keyvalue *kv)
+subnet_mask_commit (const struct config_section *section,
+		    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_subnet_mask (state_data,
                                        kv->value);
 }
 
 static config_diff_t
-subnet_mask_diff (bmc_config_state_data_t *state_data,
-		  const struct config_section *section,
-		  const struct config_keyvalue *kv)
+subnet_mask_diff (const struct config_section *section,
+		  const struct config_keyvalue *kv,
+                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char mask[BMC_MAXIPADDRLEN + 1];
   config_err_t rc;
   config_diff_t ret;
@@ -268,10 +280,11 @@ subnet_mask_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-default_gateway_address_checkout (bmc_config_state_data_t *state_data,
-				  const struct config_section *section,
-				  struct config_keyvalue *kv)
+default_gateway_address_checkout (const struct config_section *section,
+				  struct config_keyvalue *kv,
+                                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   config_err_t ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
@@ -290,19 +303,21 @@ default_gateway_address_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-default_gateway_address_commit (bmc_config_state_data_t *state_data,
-				const struct config_section *section,
-				const struct config_keyvalue *kv)
+default_gateway_address_commit (const struct config_section *section,
+				const struct config_keyvalue *kv,
+                                void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_default_gateway_address (state_data,
                                                    kv->value);
 }
 
 static config_diff_t
-default_gateway_address_diff (bmc_config_state_data_t *state_data,
-			      const struct config_section *section,
-			      const struct config_keyvalue *kv)
+default_gateway_address_diff (const struct config_section *section,
+			      const struct config_keyvalue *kv,
+                              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char ip[BMC_MAXIPADDRLEN + 1];
   config_err_t rc;
   config_diff_t ret;
@@ -330,10 +345,11 @@ default_gateway_address_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-default_gateway_mac_address_checkout (bmc_config_state_data_t *state_data,
-				      const struct config_section *section,
-				      struct config_keyvalue *kv)
+default_gateway_mac_address_checkout (const struct config_section *section,
+				      struct config_keyvalue *kv,
+                                      void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   config_err_t ret;
   char mac[BMC_MAXMACADDRLEN+1];
 
@@ -351,19 +367,21 @@ default_gateway_mac_address_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-default_gateway_mac_address_commit (bmc_config_state_data_t *state_data,
-				    const struct config_section *section,
-				    const struct config_keyvalue *kv)
+default_gateway_mac_address_commit (const struct config_section *section,
+				    const struct config_keyvalue *kv,
+                                    void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_default_gateway_mac_address (state_data,
 						       kv->value);
 }
 
 static config_diff_t
-default_gateway_mac_address_diff (bmc_config_state_data_t *state_data,
-				  const struct config_section *section,
-				  const struct config_keyvalue *kv)
+default_gateway_mac_address_diff (const struct config_section *section,
+				  const struct config_keyvalue *kv,
+                                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char mac[BMC_MAXMACADDRLEN+1];
   config_err_t rc;
   config_diff_t ret;
@@ -393,10 +411,11 @@ default_gateway_mac_address_diff (bmc_config_state_data_t *state_data,
 /* backup */
 
 static config_err_t
-backup_gateway_address_checkout (bmc_config_state_data_t *state_data,
-				 const struct config_section *section,
-				 struct config_keyvalue *kv)
+backup_gateway_address_checkout (const struct config_section *section,
+				 struct config_keyvalue *kv,
+                                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   config_err_t ret;
   char ip[BMC_MAXIPADDRLEN + 1];
 
@@ -415,19 +434,21 @@ backup_gateway_address_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-backup_gateway_address_commit (bmc_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       const struct config_keyvalue *kv)
+backup_gateway_address_commit (const struct config_section *section,
+			       const struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_backup_gateway_address (state_data,
                                                   kv->value);
 }
 
 static config_diff_t
-backup_gateway_address_diff (bmc_config_state_data_t *state_data,
-			     const struct config_section *section,
-			     const struct config_keyvalue *kv)
+backup_gateway_address_diff (const struct config_section *section,
+			     const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char ip[BMC_MAXIPADDRLEN + 1];
   config_err_t rc;
   config_diff_t ret;
@@ -455,10 +476,11 @@ backup_gateway_address_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-backup_gateway_mac_address_checkout (bmc_config_state_data_t *state_data,
-				     const struct config_section *section,
-				     struct config_keyvalue *kv)
+backup_gateway_mac_address_checkout (const struct config_section *section,
+				     struct config_keyvalue *kv,
+                                     void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   config_err_t ret;
   char mac[BMC_MAXMACADDRLEN+1];
 
@@ -476,19 +498,21 @@ backup_gateway_mac_address_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-backup_gateway_mac_address_commit (bmc_config_state_data_t *state_data,
-				    const struct config_section *section,
-				    const struct config_keyvalue *kv)
+backup_gateway_mac_address_commit (const struct config_section *section,
+                                   const struct config_keyvalue *kv,
+                                   void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_backup_gateway_mac_address (state_data,
 						      kv->value);
 }
 
 static config_diff_t
-backup_gateway_mac_address_diff (bmc_config_state_data_t *state_data,
-				 const struct config_section *section,
-				 const struct config_keyvalue *kv)
+backup_gateway_mac_address_diff (const struct config_section *section,
+				 const struct config_keyvalue *kv,
+                                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   char mac[BMC_MAXMACADDRLEN+1];
   config_err_t rc;
   config_diff_t ret;
@@ -516,10 +540,11 @@ backup_gateway_mac_address_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-vlan_id_checkout (bmc_config_state_data_t *state_data,
-		  const struct config_section *section,
-		  struct config_keyvalue *kv)
+vlan_id_checkout (const struct config_section *section,
+		  struct config_keyvalue *kv,
+                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
   config_err_t ret;
@@ -538,10 +563,11 @@ vlan_id_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-vlan_id_commit (bmc_config_state_data_t *state_data,
-		const struct config_section *section,
-		const struct config_keyvalue *kv)
+vlan_id_commit (const struct config_section *section,
+		const struct config_keyvalue *kv,
+                void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
   config_err_t ret;
@@ -562,10 +588,11 @@ vlan_id_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-vlan_id_diff (bmc_config_state_data_t *state_data,
-	      const struct config_section *section,
-	      const struct config_keyvalue *kv)
+vlan_id_diff (const struct config_section *section,
+	      const struct config_keyvalue *kv,
+              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
   config_err_t rc;
@@ -604,10 +631,11 @@ vlan_id_validate (const char *section_name,
 }
 
 static config_err_t
-vlan_id_enable_checkout (bmc_config_state_data_t *state_data,
-			 const struct config_section *section,
-			 struct config_keyvalue *kv)
+vlan_id_enable_checkout (const struct config_section *section,
+			 struct config_keyvalue *kv,
+                         void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
   config_err_t ret;
@@ -627,10 +655,11 @@ vlan_id_enable_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-vlan_id_enable_commit (bmc_config_state_data_t *state_data,
-		       const struct config_section *section,
-		       const struct config_keyvalue *kv)
+vlan_id_enable_commit (const struct config_section *section,
+		       const struct config_keyvalue *kv,
+                       void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
   config_err_t ret;
@@ -654,10 +683,11 @@ vlan_id_enable_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-vlan_id_enable_diff (bmc_config_state_data_t *state_data,
-		     const struct config_section *section,
-		     const struct config_keyvalue *kv)
+vlan_id_enable_diff (const struct config_section *section,
+		     const struct config_keyvalue *kv,
+                     void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint32_t vlan_id;
   uint8_t vlan_id_enable;
   config_err_t rc;
@@ -686,10 +716,11 @@ vlan_id_enable_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-vlan_priority_checkout (bmc_config_state_data_t *state_data,
-			const struct config_section *section,
-			struct config_keyvalue *kv)
+vlan_priority_checkout (const struct config_section *section,
+			struct config_keyvalue *kv,
+                        void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t priority;
   config_err_t ret;
 
@@ -706,19 +737,21 @@ vlan_priority_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-vlan_priority_commit (bmc_config_state_data_t *state_data,
-		      const struct config_section *section,
-		      const struct config_keyvalue *kv)
+vlan_priority_commit (const struct config_section *section,
+		      const struct config_keyvalue *kv,
+                      void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_vlan_priority (state_data,
 					 atoi (kv->value));
 }
 
 static config_diff_t
-vlan_priority_diff (bmc_config_state_data_t *state_data,
-		    const struct config_section *section,
-		    const struct config_keyvalue *kv)
+vlan_priority_diff (const struct config_section *section,
+		    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t priority;
   config_err_t rc;
   config_diff_t ret;

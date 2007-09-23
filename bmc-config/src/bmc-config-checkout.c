@@ -57,7 +57,7 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = kv->checkout (state_data, section, kv)) == CONFIG_ERR_FATAL_ERROR)
+  if ((ret = kv->checkout (section, kv, state_data)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (ret == CONFIG_ERR_SUCCESS) 
@@ -146,9 +146,9 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
           continue;
         }
 
-      if ((this_ret = kv->checkout (state_data, 
-                                    section,
-                                    kv)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = kv->checkout (section,
+                                    kv,
+                                    state_data)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)

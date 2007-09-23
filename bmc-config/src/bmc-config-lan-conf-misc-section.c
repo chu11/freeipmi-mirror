@@ -17,10 +17,11 @@
 #include "bmc-config-validate.h"
 
 static config_err_t
-enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
-				 const struct config_section *section,
-				 struct config_keyvalue *kv)
+enable_gratuitous_arps_checkout (const struct config_section *section,
+				 struct config_keyvalue *kv,
+                                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t enable_arp;
   uint8_t reply_arp;
   config_err_t ret;
@@ -41,10 +42,11 @@ enable_gratuitous_arps_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_gratuitous_arps_commit (bmc_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       const struct config_keyvalue *kv)
+enable_gratuitous_arps_commit (const struct config_section *section,
+			       const struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int ret;
   uint8_t enable_arp;
   uint8_t reply_arp;
@@ -62,10 +64,11 @@ enable_gratuitous_arps_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_gratuitous_arps_diff (bmc_config_state_data_t *state_data,
-			     const struct config_section *section,
-			     const struct config_keyvalue *kv)
+enable_gratuitous_arps_diff (const struct config_section *section,
+			     const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t enable_arp;
   uint8_t reply_arp;
   config_err_t rc;
@@ -96,10 +99,11 @@ enable_gratuitous_arps_diff (bmc_config_state_data_t *state_data,
 /* reply */
 
 static config_err_t
-enable_arp_response_checkout (bmc_config_state_data_t *state_data,
-			      const struct config_section *section,
-			      struct config_keyvalue *kv)
+enable_arp_response_checkout (const struct config_section *section,
+			      struct config_keyvalue *kv,
+                              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t enable_arp;
   uint8_t reply_arp;
   config_err_t ret;
@@ -119,10 +123,11 @@ enable_arp_response_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_arp_response_commit (bmc_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    const struct config_keyvalue *kv)
+enable_arp_response_commit (const struct config_section *section,
+			    const struct config_keyvalue *kv,
+                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t enable_arp;
   uint8_t reply_arp;
   config_err_t ret;
@@ -140,10 +145,11 @@ enable_arp_response_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_arp_response_diff (bmc_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+enable_arp_response_diff (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t enable_arp;
   uint8_t reply_arp;
   config_err_t rc;
@@ -173,10 +179,11 @@ enable_arp_response_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-gratuitous_arp_interval_checkout (bmc_config_state_data_t *state_data,
-				  const struct config_section *section,
-				  struct config_keyvalue *kv)
+gratuitous_arp_interval_checkout (const struct config_section *section,
+				  struct config_keyvalue *kv,
+                                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t interval;
   config_err_t ret;
 
@@ -193,19 +200,21 @@ gratuitous_arp_interval_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-gratuitous_arp_interval_commit (bmc_config_state_data_t *state_data,
-				const struct config_section *section,
-				const struct config_keyvalue *kv)
+gratuitous_arp_interval_commit (const struct config_section *section,
+				const struct config_keyvalue *kv,
+                                void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_gratuitous_arp_interval (state_data,
                                                    atoi (kv->value));
 }
 
 static config_diff_t
-gratuitous_arp_interval_diff (bmc_config_state_data_t *state_data,
-			      const struct config_section *section,
-			      const struct config_keyvalue *kv)
+gratuitous_arp_interval_diff (const struct config_section *section,
+			      const struct config_keyvalue *kv,
+                              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t interval;
   config_err_t rc;
   config_diff_t ret;

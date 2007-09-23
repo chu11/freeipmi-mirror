@@ -16,13 +16,12 @@
 #include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
-/* username */
-
 static config_err_t
-username_checkout (bmc_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   struct config_keyvalue *kv)
+username_checkout (const struct config_section *section,
+		   struct config_keyvalue *kv,
+                   void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid;
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
   config_err_t ret;
@@ -44,10 +43,11 @@ username_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-username_commit (bmc_config_state_data_t *state_data,
-		 const struct config_section *section,
-		 const struct config_keyvalue *kv)
+username_commit (const struct config_section *section,
+		 const struct config_keyvalue *kv,
+                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid;
   userid = atoi (section->section_name + strlen ("User"));
 
@@ -60,10 +60,11 @@ username_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-username_diff (bmc_config_state_data_t *state_data,
-	       const struct config_section *section,
-	       const struct config_keyvalue *kv)
+username_diff (const struct config_section *section,
+	       const struct config_keyvalue *kv,
+               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid;
   uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1] = { 0, };
   config_err_t rc;
@@ -124,13 +125,12 @@ username_validate (const char *section_name,
   return CONFIG_VALIDATE_VALID_VALUE;
 }
 
-/* enable_user */
-
 static config_err_t
-enable_user_checkout (bmc_config_state_data_t *state_data,
-		      const struct config_section *section,
-		      struct config_keyvalue *kv)
+enable_user_checkout (const struct config_section *section,
+		      struct config_keyvalue *kv,
+                      void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section->section_name + strlen ("User"));
   uint8_t tmp_user_ipmi_messaging;
   uint8_t tmp_user_link_authentication;
@@ -184,10 +184,11 @@ enable_user_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_user_commit (bmc_config_state_data_t *state_data,
-		    const struct config_section *section,
-		    const struct config_keyvalue *kv)
+enable_user_commit (const struct config_section *section,
+		    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section->section_name + strlen ("User"));
   return set_bmc_enable_user (state_data,
 			      userid,
@@ -195,10 +196,11 @@ enable_user_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_user_diff (bmc_config_state_data_t *state_data,
-		  const struct config_section *section,
-		  const struct config_keyvalue *kv)
+enable_user_diff (const struct config_section *section,
+		  const struct config_keyvalue *kv,
+                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section->section_name + strlen ("User"));
   uint8_t tmp_user_ipmi_messaging;
   uint8_t tmp_user_link_authentication;
@@ -248,10 +250,11 @@ enable_user_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-password_checkout (bmc_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   struct config_keyvalue *kv)
+password_checkout (const struct config_section *section,
+		   struct config_keyvalue *kv,
+                   void *arg)
 {
+  /* bmc_config_state_t *state_data = (bmc_config_state_data_t *)arg; */
   if (!(kv->value = strdup ("")))
     {
       perror("strdup");
@@ -262,20 +265,22 @@ password_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-password_commit (bmc_config_state_data_t *state_data,
-		 const struct config_section *section,
-		 const struct config_keyvalue *kv)
+password_commit (const struct config_section *section,
+		 const struct config_keyvalue *kv,
+                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return set_bmc_user_password (state_data,
 				userid, (uint8_t *)kv->value);
 }
 
 static config_diff_t
-password_diff (bmc_config_state_data_t *state_data,
-	       const struct config_section *section,
-	       const struct config_keyvalue *kv)
+password_diff (const struct config_section *section,
+	       const struct config_keyvalue *kv,
+               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   config_diff_t ret;
 
@@ -304,13 +309,12 @@ password_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-/* password20 */
-
 static config_err_t
-password20_checkout (bmc_config_state_data_t *state_data,
-		     const struct config_section *section,
-		     struct config_keyvalue *kv)
+password20_checkout (const struct config_section *section,
+		     struct config_keyvalue *kv,
+                     void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   config_diff_t ret;
 
@@ -335,10 +339,11 @@ password20_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-password20_commit (bmc_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   const struct config_keyvalue *kv)
+password20_commit (const struct config_section *section,
+		   const struct config_keyvalue *kv,
+                   void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return set_bmc_user_password20 (state_data,
 				  userid,
@@ -346,10 +351,11 @@ password20_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-password20_diff (bmc_config_state_data_t *state_data,
-		 const struct config_section *section,
-		 const struct config_keyvalue *kv)
+password20_diff (const struct config_section *section,
+		 const struct config_keyvalue *kv,
+                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   config_diff_t ret;
 
@@ -377,8 +383,6 @@ password20_validate (const char *section_name,
     return CONFIG_VALIDATE_VALID_VALUE;
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
-
-/* lan_enable_ipmi_msgs */
 
 static config_err_t
 lan_channel_get (bmc_config_state_data_t *state_data,
@@ -476,14 +480,12 @@ lan_channel_set (bmc_config_state_data_t *state_data,
   return CONFIG_ERR_SUCCESS;
 }
 
-
-/* lan_enable_ipmi_msgs */
-
 static config_err_t
-lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       struct config_keyvalue *kv)
+lan_enable_ipmi_msgs_checkout (const struct config_section *section,
+			       struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -507,10 +509,11 @@ lan_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-lan_enable_ipmi_msgs_commit (bmc_config_state_data_t *state_data,
-			     const struct config_section *section,
-			     const struct config_keyvalue *kv)
+lan_enable_ipmi_msgs_commit (const struct config_section *section,
+			     const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return lan_channel_set (state_data,
 			  userid,
@@ -522,10 +525,11 @@ lan_enable_ipmi_msgs_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-lan_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
-			   const struct config_section *section,
-			   const struct config_keyvalue *kv)
+lan_enable_ipmi_msgs_diff (const struct config_section *section,
+			   const struct config_keyvalue *kv,
+                           void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -560,13 +564,12 @@ lan_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
   
-/* lan_enable_link_auth */
-
 static config_err_t
-lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       struct config_keyvalue *kv)
+lan_enable_link_auth_checkout (const struct config_section *section,
+			       struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -590,10 +593,11 @@ lan_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-lan_enable_link_auth_commit (bmc_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+lan_enable_link_auth_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return lan_channel_set (state_data,
                           userid,
@@ -605,10 +609,11 @@ lan_enable_link_auth_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-lan_enable_link_auth_diff (bmc_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+lan_enable_link_auth_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -643,13 +648,12 @@ lan_enable_link_auth_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* LAN_enable_restricted_to_callback */
-
 static config_err_t
-lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
-                                            const struct config_section *section,
-                                            struct config_keyvalue *kv)
+lan_enable_restricted_to_callback_checkout (const struct config_section *section,
+                                            struct config_keyvalue *kv,
+                                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -673,10 +677,11 @@ lan_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-lan_enable_restricted_to_callback_commit (bmc_config_state_data_t *state_data,
-                                          const struct config_section *section,
-                                          const struct config_keyvalue *kv)
+lan_enable_restricted_to_callback_commit (const struct config_section *section,
+                                          const struct config_keyvalue *kv,
+                                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return lan_channel_set (state_data,
                           userid,
@@ -688,10 +693,11 @@ lan_enable_restricted_to_callback_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-lan_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
-                                        const struct config_section *section,
-                                        const struct config_keyvalue *kv)
+lan_enable_restricted_to_callback_diff (const struct config_section *section,
+                                        const struct config_keyvalue *kv,
+                                        void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -726,13 +732,12 @@ lan_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* privilege_limit */
-
 static config_err_t
-lan_privilege_limit_checkout (bmc_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              struct config_keyvalue *kv)
+lan_privilege_limit_checkout (const struct config_section *section,
+                              struct config_keyvalue *kv,
+                              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -756,10 +761,11 @@ lan_privilege_limit_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-lan_privilege_limit_commit (bmc_config_state_data_t *state_data,
-                            const struct config_section *section,
-                            const struct config_keyvalue *kv)
+lan_privilege_limit_commit (const struct config_section *section,
+                            const struct config_keyvalue *kv,
+                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return lan_channel_set (state_data,
                           userid,
@@ -771,10 +777,11 @@ lan_privilege_limit_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-lan_privilege_limit_diff (bmc_config_state_data_t *state_data,
-                          const struct config_section *section,
-                          const struct config_keyvalue *kv)
+lan_privilege_limit_diff (const struct config_section *section,
+                          const struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -808,15 +815,13 @@ lan_privilege_limit_diff (bmc_config_state_data_t *state_data,
     }
   return ret;
 }
-
   
-/* lan_session_limit */
-
 static config_err_t
-lan_session_limit_checkout (bmc_config_state_data_t *state_data,
-                            const struct config_section *section,
-                            struct config_keyvalue *kv)
+lan_session_limit_checkout (const struct config_section *section,
+                            struct config_keyvalue *kv,
+                            void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   int ret;
@@ -840,10 +845,11 @@ lan_session_limit_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-lan_session_limit_commit (bmc_config_state_data_t *state_data,
-                          const struct config_section *section,
-                          const struct config_keyvalue *kv)
+lan_session_limit_commit (const struct config_section *section,
+                          const struct config_keyvalue *kv,
+                          void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return lan_channel_set (state_data,
                           userid,
@@ -855,10 +861,11 @@ lan_session_limit_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-lan_session_limit_diff (bmc_config_state_data_t *state_data,
-                        const struct config_section *section,
-                        const struct config_keyvalue *kv)
+lan_session_limit_diff (const struct config_section *section,
+                        const struct config_keyvalue *kv,
+                        void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -895,13 +902,12 @@ lan_session_limit_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* sol_payload_access */
-
 static config_err_t
-sol_payload_access_checkout (bmc_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             struct config_keyvalue *kv)
+sol_payload_access_checkout (const struct config_section *section,
+                             struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section->section_name + strlen ("User"));
   uint8_t have_access;
   config_err_t ret;
@@ -935,10 +941,11 @@ sol_payload_access_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-sol_payload_access_commit (bmc_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+sol_payload_access_commit (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section->section_name + strlen ("User"));
   uint8_t operation;
 
@@ -955,10 +962,11 @@ sol_payload_access_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-sol_payload_access_diff (bmc_config_state_data_t *state_data,
-                         const struct config_section *section,
-                         const struct config_keyvalue *kv)
+sol_payload_access_diff (const struct config_section *section,
+                         const struct config_keyvalue *kv,
+                         void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   int userid = atoi (section->section_name + strlen ("User"));
   uint8_t have_access;
   uint8_t passed_value;
@@ -1002,8 +1010,6 @@ sol_payload_access_diff (bmc_config_state_data_t *state_data,
     }
   return ret;
 }
-
-/* serial_enable_ipmi_msgs */
 
 static config_err_t
 serial_channel_get (bmc_config_state_data_t *state_data,
@@ -1100,14 +1106,12 @@ serial_channel_set (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-
-/* serial_enable_ipmi_msgs */
-
 static config_err_t
-serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
-                                  const struct config_section *section,
-                                  struct config_keyvalue *kv)
+serial_enable_ipmi_msgs_checkout (const struct config_section *section,
+                                  struct config_keyvalue *kv,
+                                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -1131,10 +1135,11 @@ serial_enable_ipmi_msgs_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-serial_enable_ipmi_msgs_commit (bmc_config_state_data_t *state_data,
-                                const struct config_section *section,
-                                const struct config_keyvalue *kv)
+serial_enable_ipmi_msgs_commit (const struct config_section *section,
+                                const struct config_keyvalue *kv,
+                                void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return serial_channel_set (state_data,
                              userid,
@@ -1146,10 +1151,11 @@ serial_enable_ipmi_msgs_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-serial_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              const struct config_keyvalue *kv)
+serial_enable_ipmi_msgs_diff (const struct config_section *section,
+                              const struct config_keyvalue *kv,
+                              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -1184,13 +1190,12 @@ serial_enable_ipmi_msgs_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
   
-/* serial_enable_link_auth */
-
 static config_err_t
-serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
-                                  const struct config_section *section,
-                                  struct config_keyvalue *kv)
+serial_enable_link_auth_checkout (const struct config_section *section,
+                                  struct config_keyvalue *kv,
+                                  void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -1214,10 +1219,11 @@ serial_enable_link_auth_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-serial_enable_link_auth_commit (bmc_config_state_data_t *state_data,
-                                const struct config_section *section,
-                                const struct config_keyvalue *kv)
+serial_enable_link_auth_commit (const struct config_section *section,
+                                const struct config_keyvalue *kv,
+                                void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return serial_channel_set (state_data,
                              userid,
@@ -1229,10 +1235,11 @@ serial_enable_link_auth_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-serial_enable_link_auth_diff (bmc_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              const struct config_keyvalue *kv)
+serial_enable_link_auth_diff (const struct config_section *section,
+                              const struct config_keyvalue *kv,
+                              void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -1267,13 +1274,12 @@ serial_enable_link_auth_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* serial_enable_restricted_to_callback */
-
 static config_err_t
-serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_data,
-                                               const struct config_section *section,
-                                               struct config_keyvalue *kv)
+serial_enable_restricted_to_callback_checkout (const struct config_section *section,
+                                               struct config_keyvalue *kv,
+                                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -1297,10 +1303,11 @@ serial_enable_restricted_to_callback_checkout (bmc_config_state_data_t *state_da
 }
 
 static config_err_t
-serial_enable_restricted_to_callback_commit (bmc_config_state_data_t *state_data,
-                                             const struct config_section *section,
-                                             const struct config_keyvalue *kv)
+serial_enable_restricted_to_callback_commit (const struct config_section *section,
+                                             const struct config_keyvalue *kv,
+                                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return serial_channel_set (state_data,
                              userid,
@@ -1312,10 +1319,11 @@ serial_enable_restricted_to_callback_commit (bmc_config_state_data_t *state_data
 }
 
 static config_diff_t
-serial_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
-                                           const struct config_section *section,
-                                           const struct config_keyvalue *kv)
+serial_enable_restricted_to_callback_diff (const struct config_section *section,
+                                           const struct config_keyvalue *kv,
+                                           void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -1350,13 +1358,12 @@ serial_enable_restricted_to_callback_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-/* privilege_limit */
-
 static config_err_t
-serial_privilege_limit_checkout (bmc_config_state_data_t *state_data,
-                                 const struct config_section *section,
-                                 struct config_keyvalue *kv)
+serial_privilege_limit_checkout (const struct config_section *section,
+                                 struct config_keyvalue *kv,
+                                 void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -1380,10 +1387,11 @@ serial_privilege_limit_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-serial_privilege_limit_commit (bmc_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               const struct config_keyvalue *kv)
+serial_privilege_limit_commit (const struct config_section *section,
+                               const struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return serial_channel_set (state_data,
                              userid,
@@ -1395,10 +1403,11 @@ serial_privilege_limit_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-serial_privilege_limit_diff (bmc_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+serial_privilege_limit_diff (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   uint8_t passed_val;
@@ -1433,14 +1442,12 @@ serial_privilege_limit_diff (bmc_config_state_data_t *state_data,
   return ret;
 }
 
-  
-/* serial_session_limit */
-
 static config_err_t
-serial_session_limit_checkout (bmc_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+serial_session_limit_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   config_err_t ret;
@@ -1464,10 +1471,11 @@ serial_session_limit_checkout (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-serial_session_limit_commit (bmc_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+serial_session_limit_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   return serial_channel_set (state_data,
                              userid,
@@ -1479,10 +1487,11 @@ serial_session_limit_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_diff_t
-serial_session_limit_diff (bmc_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+serial_session_limit_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section->section_name + strlen ("User"));
   uint8_t get_val;
   unsigned long int passed_val;
