@@ -1127,7 +1127,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
   if (strp)
     free(strp);
   if (section)
-    pef_config_section_destroy(state_data, section);
+    pef_config_section_destroy(section);
   return NULL;
 }
 

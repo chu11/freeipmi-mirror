@@ -1080,7 +1080,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (serial_channel_section)
-    bmc_config_section_destroy(state_data, serial_channel_section);
+    bmc_config_section_destroy(serial_channel_section);
   return NULL;
 }
 

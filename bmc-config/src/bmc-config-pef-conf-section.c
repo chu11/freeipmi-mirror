@@ -1259,7 +1259,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (pef_section)
-    bmc_config_section_destroy(state_data, pef_section);
+    bmc_config_section_destroy(pef_section);
   return NULL;
 }
 

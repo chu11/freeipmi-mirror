@@ -119,6 +119,6 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (misc_section)
-    bmc_config_section_destroy(state_data, misc_section);
+    bmc_config_section_destroy(misc_section);
   return NULL;
 }

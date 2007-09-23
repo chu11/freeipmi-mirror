@@ -936,6 +936,6 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (bmc_serial_conf_section)
-    bmc_config_section_destroy(state_data, bmc_serial_conf_section);
+    bmc_config_section_destroy(bmc_serial_conf_section);
   return NULL;
 }

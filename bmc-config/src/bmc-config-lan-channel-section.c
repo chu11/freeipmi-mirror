@@ -1099,7 +1099,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (lan_channel_section)
-    bmc_config_section_destroy(state_data, lan_channel_section);
+    bmc_config_section_destroy(lan_channel_section);
   return NULL;
 }
 

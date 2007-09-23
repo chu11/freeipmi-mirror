@@ -1103,7 +1103,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
 
  cleanup:
   if (section)
-    pef_config_section_destroy(state_data, section);
+    pef_config_section_destroy(section);
   return NULL;
 }
 

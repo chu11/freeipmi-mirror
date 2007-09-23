@@ -239,6 +239,6 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
 
  cleanup:
   if (lan_conf_security_keys_section)
-    bmc_config_section_destroy(state_data, lan_conf_security_keys_section);
+    bmc_config_section_destroy(lan_conf_security_keys_section);
   return NULL;
 }

@@ -100,8 +100,8 @@ typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *value);
 
 struct config_keyvalue {
-  const char *key_name;
-  const char *description;
+  char *key_name;
+  char *description;
   unsigned int flags;
   char *value;
   Key_Checkout checkout;

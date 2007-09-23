@@ -303,7 +303,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
 
  cleanup:
   if (rmcpplus_conf_privilege_section)
-    bmc_config_section_destroy (state_data, rmcpplus_conf_privilege_section);
+    bmc_config_section_destroy(rmcpplus_conf_privilege_section);
   return NULL;
 }
 

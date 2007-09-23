@@ -22,27 +22,8 @@
 #include "pef-config-alert-policy-table.h"
 #include "pef-config-event-filter-table.h"
 
-static int
-_add_section(struct config_section **sections, struct config_section *section)
-{
-  if (!sections || !section)
-    return -1;
-  
-  if (*sections)
-    {
-      struct config_section *trav = *sections;
-      while (trav->next)
-	trav = trav->next;
-      trav->next = section;
-    }
-  else
-    *sections = section;
-
-  return 0;
-}
-
 struct config_section *
-pef_config_sections_list_create (pef_config_state_data_t *state_data)
+pef_config_sections_create (pef_config_state_data_t *state_data)
 {
   struct config_section *sections = NULL;
   struct config_section *section = NULL;
@@ -86,19 +67,19 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
 
   if (!(section = pef_config_pef_conf_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, section) < 0)
+  if (pef_config_section_append (&sections, section) < 0)
     goto cleanup;
 
   if (!(section = pef_config_community_string_section_get (state_data)))
     goto cleanup;
-  if (_add_section (&sections, section) < 0)
+  if (pef_config_section_append (&sections, section) < 0)
     goto cleanup;
 
   for (i = 0; i < number_of_lan_alert_destinations; i++)
     {
       if (!(section = pef_config_lan_alert_destination_section_get(state_data, i+1)))
 	goto cleanup;
-      if (_add_section (&sections, section) < 0)
+      if (pef_config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
 
@@ -106,7 +87,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_alert_string_section_get(state_data, i+1)))
 	goto cleanup;
-      if (_add_section (&sections, section) < 0)
+      if (pef_config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
 
@@ -114,7 +95,7 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_alert_policy_table_section_get(state_data, i+1)))
 	goto cleanup;
-      if (_add_section (&sections, section) < 0)
+      if (pef_config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
 
@@ -122,27 +103,46 @@ pef_config_sections_list_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_event_filter_table_section_get(state_data, i+1)))
 	goto cleanup;
-      if (_add_section (&sections, section) < 0)
+      if (pef_config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
   
   return sections;
 
  cleanup:
-  pef_config_sections_list_destroy(state_data, sections);
+  pef_config_sections_destroy(sections);
   return NULL;
 }
 
+int
+pef_config_section_append(struct config_section **sections,
+                          struct config_section *section)
+{
+  assert(sections);
+  assert(section);
+  
+  if (*sections)
+    {
+      struct config_section *s = *sections;
+      while (s->next)
+        s = s->next;
+      s->next = section;
+    }
+  else
+    *sections = section;
+  
+  return 0;
+}
+
 void 
-pef_config_sections_list_destroy(pef_config_state_data_t *state_data,
-                                 struct config_section *sections)
+pef_config_sections_destroy(struct config_section *sections)
 {
   if (sections)
     {
       while (sections)
 	{
 	  struct config_section *sections_next = sections->next;
-	  pef_config_section_destroy(state_data, sections);
+	  pef_config_section_destroy(sections);
 	  sections = sections_next;
 	}
     }
@@ -196,13 +196,27 @@ pef_config_section_create (pef_config_state_data_t *state_data,
   return section;
  cleanup:
   if (section)
-    pef_config_section_destroy (state_data, section);
+    pef_config_section_destroy(section);
   return NULL;
 }
 
+static void
+_pef_config_keyvalue_destroy(struct config_keyvalue *keyvalue)
+{
+  if (keyvalue)
+    {
+      if (keyvalue->key_name)
+        free(keyvalue->key_name);
+      if (keyvalue->description)
+        free(keyvalue->description);
+      if (keyvalue->value)
+        free(keyvalue->value);
+      free(keyvalue);
+    }
+}
+
 void 
-pef_config_section_destroy (pef_config_state_data_t *state_data,
-                            struct config_section *section)
+pef_config_section_destroy(struct config_section *section)
 {
   if (section)
     {
@@ -212,11 +226,7 @@ pef_config_section_destroy (pef_config_state_data_t *state_data,
       while (section->keyvalues)
 	{
 	  struct config_keyvalue *keyvalue_next = section->keyvalues->next;
-
-	  if (section->keyvalues->value)
-	    free(section->keyvalues->value);
-
-	  free(section->keyvalues);
+          _pef_config_keyvalue_destroy(section->keyvalues);
 	  section->keyvalues = keyvalue_next;
 	}
 
@@ -235,7 +245,7 @@ pef_config_section_add_keyvalue (pef_config_state_data_t *state_data,
                                  Key_Diff diff,
                                  Key_Validate validate)
 {
-  struct config_keyvalue *kv;
+  struct config_keyvalue *kv = NULL;
 
   assert(state_data);
   assert(section);
@@ -280,8 +290,7 @@ pef_config_section_add_keyvalue (pef_config_state_data_t *state_data,
 
   return 0;
  cleanup:
-  if (kv)
-    free(kv);
+  _pef_config_keyvalue_destroy(kv);
   return -1;
 }
 
@@ -465,18 +474,16 @@ pef_config_section_diff_value (pef_config_state_data_t *state_data,
 }
 
 config_err_t
-pef_config_sections_list (pef_config_state_data_t *state_data)
+pef_config_output_sections_list (struct config_section *sections)
 {
-  struct config_section *section;
-
-  section = state_data->sections;
-
-  while (section)
+  struct config_section *s;
+  s = sections;
+  while (s)
     {
-      if (!(section->flags & CONFIG_DO_NOT_CHECKOUT))
-        printf("%s\n", section->section_name);
-      printf("%s\n", section->section_name); 
-      section = section->next;
+      if (!(s->flags & CONFIG_DO_NOT_CHECKOUT))
+        printf("%s\n", s->section_name);
+      printf("%s\n", s->section_name); 
+      s = s->next;
     }
 
   return CONFIG_ERR_SUCCESS;

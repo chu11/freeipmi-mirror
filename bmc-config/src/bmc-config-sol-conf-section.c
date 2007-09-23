@@ -1055,6 +1055,6 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (sol_conf_section)
-    bmc_config_section_destroy(state_data, sol_conf_section);
+    bmc_config_section_destroy(sol_conf_section);
   return NULL;
 }

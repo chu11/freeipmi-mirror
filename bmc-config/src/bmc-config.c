@@ -116,7 +116,7 @@ _bmc_config (void *arg)
   state_data.dev = dev;
   state_data.prog_data = prog_data;
 
-  if (!(sections = bmc_config_sections_list_create (&state_data)))
+  if (!(sections = bmc_config_sections_create (&state_data)))
     {
       exit_code = EXIT_FAILURE;
       goto cleanup;
@@ -134,7 +134,7 @@ _bmc_config (void *arg)
     ret = config_diff (&state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
-    ret = bmc_config_sections_list (&state_data);
+    ret = bmc_config_output_sections_list (sections);
     break;
   case CONFIG_ACTION_INFO:
     /* shutup gcc warning */
@@ -155,7 +155,7 @@ _bmc_config (void *arg)
       ipmi_device_destroy (dev);
     }
   if (sections)
-    bmc_config_sections_list_destroy(&state_data, sections);
+    bmc_config_sections_destroy(sections);
   return exit_code;
 }
 

@@ -19,17 +19,20 @@ along with this program; if not, write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.  
 */
 
-
 #ifndef _BMC_CONFIG_SECTIONS_H_
 #define _BMC_CONFIG_SECTIONS_H_
 
 #include "bmc-config.h"
 #include "bmc-config-common.h"
 
-struct config_section * bmc_config_sections_list_create (bmc_config_state_data_t *state_data);
+struct config_section * bmc_config_sections_create (bmc_config_state_data_t *state_data);
 
-void bmc_config_sections_list_destroy (bmc_config_state_data_t *state_data,
-                                       struct config_section *sections);
+/* no config_sections_create, responsibility of config tool to create list */
+
+int bmc_config_section_append(struct config_section **sections,
+                              struct config_section *section);
+
+void bmc_config_sections_destroy (struct config_section *sections);
 
 struct config_section * bmc_config_section_create (bmc_config_state_data_t *state_data, 
                                                    char *section_name,
@@ -37,8 +40,7 @@ struct config_section * bmc_config_section_create (bmc_config_state_data_t *stat
                                                    char *section_comment,
                                                    unsigned int flags);
 
-void bmc_config_section_destroy (bmc_config_state_data_t *state_data, 
-                                 struct config_section *section);
+void bmc_config_section_destroy (struct config_section *section);
 
 int bmc_config_section_add_keyvalue (bmc_config_state_data_t *state_data,
                                      struct config_section *section,
@@ -69,6 +71,6 @@ int bmc_config_section_diff_value (bmc_config_state_data_t *state_data,
                                    const char *key_name,
                                    const char *value);
 
-config_err_t bmc_config_sections_list (bmc_config_state_data_t *state_data);
+config_err_t bmc_config_output_sections_list (struct config_section *sections);
 
 #endif /* _BMC_CONFIG_SECTIONS_H_ */
