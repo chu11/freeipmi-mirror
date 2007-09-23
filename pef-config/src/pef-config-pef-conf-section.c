@@ -92,10 +92,11 @@ pef_control_commit (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_pef_checkout (pef_config_state_data_t *state_data,
-		     const struct config_section *section,
-		     struct config_keyvalue *kv)
+enable_pef_checkout (const struct config_section *section,
+		     struct config_keyvalue *kv,
+                     void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
   
@@ -116,10 +117,11 @@ enable_pef_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_pef_commit (pef_config_state_data_t *state_data,
-		   const struct config_section *section,
-		   const struct config_keyvalue *kv)
+enable_pef_commit (const struct config_section *section,
+		   const struct config_keyvalue *kv,
+                   void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
 			     &value,
@@ -129,10 +131,11 @@ enable_pef_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_config_diff (pef_config_state_data_t *state_data,
-		 const struct config_section *section,
-		 const struct config_keyvalue *kv)
+enable_config_diff (const struct config_section *section,
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t got_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -164,13 +167,12 @@ enable_config_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* event_messages */
-
 static config_err_t
-enable_pef_event_messages_checkout (pef_config_state_data_t *state_data,
-				    const struct config_section *section,
-				    struct config_keyvalue *kv)
+enable_pef_event_messages_checkout (const struct config_section *section,
+				    struct config_keyvalue *kv,
+                                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
   
@@ -191,10 +193,11 @@ enable_pef_event_messages_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_pef_event_messages_commit (pef_config_state_data_t *state_data,
-				  const struct config_section *section,
-				  const struct config_keyvalue *kv)
+enable_pef_event_messages_commit (const struct config_section *section,
+				  const struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
 			     NULL,
@@ -204,10 +207,11 @@ enable_pef_event_messages_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_pef_event_messages_diff (pef_config_state_data_t *state_data,
-				const struct config_section *section,
-				const struct config_keyvalue *kv)
+enable_pef_event_messages_diff (const struct config_section *section,
+				const struct config_keyvalue *kv,
+                                void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t got_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -239,13 +243,12 @@ enable_pef_event_messages_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* startup_delay */
-
 static config_err_t
-enable_pef_startup_delay_checkout (pef_config_state_data_t *state_data,
-				   const struct config_section *section,
-				   struct config_keyvalue *kv)
+enable_pef_startup_delay_checkout (const struct config_section *section,
+				   struct config_keyvalue *kv,
+                                   void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
   
@@ -266,10 +269,11 @@ enable_pef_startup_delay_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_pef_startup_delay_commit (pef_config_state_data_t *state_data,
-				 const struct config_section *section,
-				 const struct config_keyvalue *kv)
+enable_pef_startup_delay_commit (const struct config_section *section,
+				 const struct config_keyvalue *kv,
+                                 void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
 			     NULL,
@@ -279,10 +283,11 @@ enable_pef_startup_delay_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_pef_startup_delay_diff (pef_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       const struct config_keyvalue *kv)
+enable_pef_startup_delay_diff (const struct config_section *section,
+			       const struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t got_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -314,13 +319,12 @@ enable_pef_startup_delay_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* alert_startup_delay */
-
 static config_err_t
-enable_pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
-					 const struct config_section *section,
-					 struct config_keyvalue *kv)
+enable_pef_alert_startup_delay_checkout (const struct config_section *section,
+					 struct config_keyvalue *kv,
+                                         void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
   
@@ -341,10 +345,11 @@ enable_pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_pef_alert_startup_delay_commit (pef_config_state_data_t *state_data,
-				       const struct config_section *section,
-				       const struct config_keyvalue *kv)
+enable_pef_alert_startup_delay_commit (const struct config_section *section,
+				       const struct config_keyvalue *kv,
+                                       void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = same (kv->value, "yes");
   return pef_control_commit (state_data,
 			     NULL,
@@ -354,10 +359,11 @@ enable_pef_alert_startup_delay_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_pef_alert_startup_delay_diff (pef_config_state_data_t *state_data,
-				     const struct config_section *section,
-				     const struct config_keyvalue *kv)
+enable_pef_alert_startup_delay_diff (const struct config_section *section,
+				     const struct config_keyvalue *kv,
+                                     void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t got_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -480,13 +486,12 @@ pef_global_control_commit (pef_config_state_data_t *state_data,
 					tmp_diagnostic_interrupt);
 }
 
-/* alert_action */
-			   
 static config_err_t
-enable_alert_action_checkout (pef_config_state_data_t *state_data,
-			      const struct config_section *section,
-			      struct config_keyvalue *kv)
+enable_alert_action_checkout (const struct config_section *section,
+			      struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -509,10 +514,11 @@ enable_alert_action_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_alert_action_commit (pef_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    const struct config_keyvalue *kv)
+enable_alert_action_commit (const struct config_section *section,
+			    const struct config_keyvalue *kv,
+                            void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    &value,
@@ -524,10 +530,11 @@ enable_alert_action_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_alert_action_diff (pef_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+enable_alert_action_diff (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;
@@ -561,13 +568,12 @@ enable_alert_action_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* power_down_action */
-
 static config_err_t
-enable_power_down_action_checkout (pef_config_state_data_t *state_data,
-				   const struct config_section *section,
-				   struct config_keyvalue *kv)
+enable_power_down_action_checkout (const struct config_section *section,
+				   struct config_keyvalue *kv,
+                                   void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -590,10 +596,11 @@ enable_power_down_action_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_power_down_action_commit (pef_config_state_data_t *state_data,
-				 const struct config_section *section,
-				 const struct config_keyvalue *kv)
+enable_power_down_action_commit (const struct config_section *section,
+				 const struct config_keyvalue *kv,
+                                 void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
@@ -605,90 +612,11 @@ enable_power_down_action_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_power_down_action_diff (pef_config_state_data_t *state_data,
-			       const struct config_section *section,
-			       const struct config_keyvalue *kv)
+enable_power_down_action_diff (const struct config_section *section,
+			       const struct config_keyvalue *kv,
+                               void *arg)
 {
-  uint8_t passed_value;
-  uint8_t got_value;
-  config_err_t rc;
-  config_diff_t ret;
-  
-  if ((rc = pef_global_control_checkout (state_data,
-                                         NULL,
-                                         &got_value,
-                                         NULL,
-                                         NULL,
-                                         NULL,
-                                         NULL)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_value = (same (kv->value, "yes") ? 1 : 0);
-  if (passed_value == got_value)
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
-                   kv->key_name,
-                   kv->value,
-                   got_value ? "Yes" : "No");
-    }
-  return ret;
-}
-
-/* reset_action */
-
-static config_err_t
-enable_reset_action_checkout (pef_config_state_data_t *state_data,
-			      const struct config_section *section,
-			      struct config_keyvalue *kv)
-{
-  uint8_t value;
-  config_err_t ret;
-
-  if ((ret = pef_global_control_checkout (state_data,
-                                          NULL,
-                                          NULL,
-                                          &value,
-                                          NULL,
-                                          NULL,
-                                          NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-enable_reset_action_commit (pef_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    const struct config_keyvalue *kv)
-{
-  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
-  return pef_global_control_commit (state_data,
-				    NULL,
-				    NULL,
-				    &value,
-				    NULL,
-				    NULL,
-				    NULL);
-}
-
-static config_diff_t
-enable_reset_action_diff (pef_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
-{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;
@@ -696,8 +624,8 @@ enable_reset_action_diff (pef_config_state_data_t *state_data,
   
   if ((rc = pef_global_control_checkout (state_data,
                                          NULL,
-                                         NULL,
                                          &got_value,
+                                         NULL,
                                          NULL,
                                          NULL,
                                          NULL)) != CONFIG_ERR_SUCCESS)
@@ -721,21 +649,20 @@ enable_reset_action_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* power_cycle_action */
-
 static config_err_t
-enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
-				    const struct config_section *section,
-				    struct config_keyvalue *kv)
+enable_reset_action_checkout (const struct config_section *section,
+			      struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
   if ((ret = pef_global_control_checkout (state_data,
                                           NULL,
                                           NULL,
-                                          NULL,
                                           &value,
+                                          NULL,
                                           NULL,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
@@ -750,25 +677,27 @@ enable_power_cycle_action_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_power_cycle_action_commit (pef_config_state_data_t *state_data,
-				  const struct config_section *section,
-				  const struct config_keyvalue *kv)
+enable_reset_action_commit (const struct config_section *section,
+			    const struct config_keyvalue *kv,
+                            void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
 				    NULL,
-				    NULL,
 				    &value,
+				    NULL,
 				    NULL,
 				    NULL);
 }
 
 static config_diff_t
-enable_power_cycle_action_diff (pef_config_state_data_t *state_data,
-				const struct config_section *section,
-				const struct config_keyvalue *kv)
+enable_reset_action_diff (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;
@@ -777,8 +706,8 @@ enable_power_cycle_action_diff (pef_config_state_data_t *state_data,
   if ((rc = pef_global_control_checkout (state_data,
                                          NULL,
                                          NULL,
-                                         NULL,
                                          &got_value,
+                                         NULL,
                                          NULL,
                                          NULL)) != CONFIG_ERR_SUCCESS)
     {
@@ -801,13 +730,12 @@ enable_power_cycle_action_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* OEM_action */
-
 static config_err_t
-enable_oem_action_checkout (pef_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    struct config_keyvalue *kv)
+enable_power_cycle_action_checkout (const struct config_section *section,
+				    struct config_keyvalue *kv,
+                                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -815,8 +743,8 @@ enable_oem_action_checkout (pef_config_state_data_t *state_data,
                                           NULL,
                                           NULL,
                                           NULL,
-                                          NULL,
                                           &value,
+                                          NULL,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
@@ -830,25 +758,27 @@ enable_oem_action_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_oem_action_commit (pef_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+enable_power_cycle_action_commit (const struct config_section *section,
+				  const struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
 				    NULL,
 				    NULL,
-				    NULL,
 				    &value,
+				    NULL,
 				    NULL);
 }
 
 static config_diff_t
-enable_oem_action_diff (pef_config_state_data_t *state_data,
-			const struct config_section *section,
-			const struct config_keyvalue *kv)
+enable_power_cycle_action_diff (const struct config_section *section,
+				const struct config_keyvalue *kv,
+                                void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;
@@ -858,6 +788,87 @@ enable_oem_action_diff (pef_config_state_data_t *state_data,
                                          NULL,
                                          NULL,
                                          NULL,
+                                         &got_value,
+                                         NULL,
+                                         NULL)) != CONFIG_ERR_SUCCESS)
+    {
+      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
+        return CONFIG_DIFF_NON_FATAL_ERROR;
+      return CONFIG_DIFF_FATAL_ERROR;
+    }
+
+  passed_value = (same (kv->value, "yes") ? 1 : 0);
+  if (passed_value == got_value)
+    ret = CONFIG_DIFF_SAME;
+  else 
+    {
+      ret = CONFIG_DIFF_DIFFERENT;
+      report_diff (section->section_name,
+                   kv->key_name,
+                   kv->value,
+                   got_value ? "Yes" : "No");
+    }
+  return ret;
+}
+
+static config_err_t
+enable_oem_action_checkout (const struct config_section *section,
+			    struct config_keyvalue *kv,
+                            void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  uint8_t value;
+  config_err_t ret;
+
+  if ((ret = pef_global_control_checkout (state_data,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          &value,
+                                          NULL)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  if (!(kv->value = strdup (value ? "Yes" : "No")))
+    {
+      perror("strdup");
+      return CONFIG_ERR_FATAL_ERROR;
+    }
+
+  return CONFIG_ERR_SUCCESS;
+}
+
+static config_err_t
+enable_oem_action_commit (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
+  return pef_global_control_commit (state_data,
+				    NULL,
+				    NULL,
+				    NULL,
+				    NULL,
+				    &value,
+				    NULL);
+}
+
+static config_diff_t
+enable_oem_action_diff (const struct config_section *section,
+			const struct config_keyvalue *kv,
+                        void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  uint8_t passed_value;
+  uint8_t got_value;
+  config_err_t rc;
+  config_diff_t ret;
+  
+  if ((rc = pef_global_control_checkout (state_data,
+                                         NULL,
+                                         NULL,
+                                         NULL,
                                          NULL,
                                          &got_value,
                                          NULL)) != CONFIG_ERR_SUCCESS)
@@ -882,13 +893,12 @@ enable_oem_action_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* diagnostic_interrupt */
-
 static config_err_t
-enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
-                                      const struct config_section *section,
-                                      struct config_keyvalue *kv)
+enable_diagnostic_interrupt_checkout (const struct config_section *section,
+                                      struct config_keyvalue *kv,
+                                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value;
   config_err_t ret;
 
@@ -911,10 +921,11 @@ enable_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_diagnostic_interrupt_commit (pef_config_state_data_t *state_data,
-				    const struct config_section *section,
-				    const struct config_keyvalue *kv)
+enable_diagnostic_interrupt_commit (const struct config_section *section,
+				    const struct config_keyvalue *kv,
+                                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = (same (kv->value, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
@@ -926,10 +937,11 @@ enable_diagnostic_interrupt_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_diagnostic_interrupt_diff (pef_config_state_data_t *state_data,
-				  const struct config_section *section,
-				  const struct config_keyvalue *kv)
+enable_diagnostic_interrupt_diff (const struct config_section *section,
+				  const struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_value;
   uint8_t got_value;
   config_err_t rc;
@@ -964,13 +976,12 @@ enable_diagnostic_interrupt_diff (pef_config_state_data_t *state_data,
 }
 
 
-/* pef_startup_delay */
-
 static config_err_t
-pef_startup_delay_checkout (pef_config_state_data_t *state_data,
-			    const struct config_section *section,
-			    struct config_keyvalue *kv)
+pef_startup_delay_checkout (const struct config_section *section,
+			    struct config_keyvalue *kv,
+                            void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t delay;
   config_err_t ret;
   
@@ -987,20 +998,22 @@ pef_startup_delay_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-pef_startup_delay_commit (pef_config_state_data_t *state_data,
-			  const struct config_section *section,
-			  const struct config_keyvalue *kv)
+pef_startup_delay_commit (const struct config_section *section,
+			  const struct config_keyvalue *kv,
+                          void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = atoi (kv->value);
   return set_pef_startup_delay (state_data,
 				value);
 }
 
 static config_diff_t
-pef_startup_delay_diff (pef_config_state_data_t *state_data,
-			const struct config_section *section,
-			const struct config_keyvalue *kv)
+pef_startup_delay_diff (const struct config_section *section,
+			const struct config_keyvalue *kv,
+                        void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t got_value;
   uint8_t passed_value;
   config_err_t rc;
@@ -1031,13 +1044,12 @@ pef_startup_delay_diff (pef_config_state_data_t *state_data,
   return ret;
 }
 
-/* alert_startup_delay */
-
 static config_err_t
-pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
-				  const struct config_section *section,
-				  struct config_keyvalue *kv)
+pef_alert_startup_delay_checkout (const struct config_section *section,
+				  struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t delay;
   config_err_t ret;
   
@@ -1054,20 +1066,22 @@ pef_alert_startup_delay_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-pef_alert_startup_delay_commit (pef_config_state_data_t *state_data,
-				const struct config_section *section,
-				const struct config_keyvalue *kv)
+pef_alert_startup_delay_commit (const struct config_section *section,
+				const struct config_keyvalue *kv,
+                                void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t value = atoi (kv->value);
   return set_pef_alert_startup_delay (state_data,
 				      value);
 }
 
 static config_diff_t
-pef_alert_startup_delay_diff (pef_config_state_data_t *state_data,
-			      const struct config_section *section,
-			      const struct config_keyvalue *kv)
+pef_alert_startup_delay_diff (const struct config_section *section,
+			      const struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t got_value;
   uint8_t passed_value;
   config_err_t rc;

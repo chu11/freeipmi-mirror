@@ -130,10 +130,11 @@ event_filter_set (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-filter_type_checkout (pef_config_state_data_t *state_data,
-                      const struct config_section *section,
-                      struct config_keyvalue *kv)
+filter_type_checkout (const struct config_section *section,
+                      struct config_keyvalue *kv,
+                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -163,10 +164,11 @@ filter_type_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-filter_type_commit (pef_config_state_data_t *state_data,
-                    const struct config_section *section,
-                    const struct config_keyvalue *kv)
+filter_type_commit (const struct config_section *section,
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -197,10 +199,11 @@ filter_type_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-filter_type_diff (pef_config_state_data_t *state_data,
-                  const struct config_section *section,
-                  const struct config_keyvalue *kv)
+filter_type_diff (const struct config_section *section,
+                  const struct config_keyvalue *kv,
+                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -241,10 +244,11 @@ filter_type_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_filter_checkout (pef_config_state_data_t *state_data,
-                        const struct config_section *section,
-                        struct config_keyvalue *kv)
+enable_filter_checkout (const struct config_section *section,
+                        struct config_keyvalue *kv,
+                        void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -274,10 +278,11 @@ enable_filter_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_filter_commit (pef_config_state_data_t *state_data,
-                      const struct config_section *section,
-                      const struct config_keyvalue *kv)
+enable_filter_commit (const struct config_section *section,
+                      const struct config_keyvalue *kv,
+                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -308,10 +313,11 @@ enable_filter_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-enable_filter_diff (pef_config_state_data_t *state_data,
-                    const struct config_section *section,
-                    const struct config_keyvalue *kv)
+enable_filter_diff (const struct config_section *section,
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -353,10 +359,11 @@ enable_filter_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_alert_checkout (pef_config_state_data_t *state_data,
-                                    const struct config_section *section,
-                                    struct config_keyvalue *kv)
+event_filter_action_alert_checkout (const struct config_section *section,
+                                    struct config_keyvalue *kv,
+                                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -386,10 +393,11 @@ event_filter_action_alert_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_alert_commit (pef_config_state_data_t *state_data,
-                                  const struct config_section *section,
-                                  const struct config_keyvalue *kv)
+event_filter_action_alert_commit (const struct config_section *section,
+                                  const struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -420,10 +428,11 @@ event_filter_action_alert_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_filter_action_alert_diff (pef_config_state_data_t *state_data,
-                                const struct config_section *section,
-                                const struct config_keyvalue *kv)
+event_filter_action_alert_diff (const struct config_section *section,
+                                const struct config_keyvalue *kv,
+                                void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -465,10 +474,11 @@ event_filter_action_alert_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_power_off_checkout (pef_config_state_data_t *state_data,
-                                        const struct config_section *section,
-                                        struct config_keyvalue *kv)
+event_filter_action_power_off_checkout (const struct config_section *section,
+                                        struct config_keyvalue *kv,
+                                        void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -498,10 +508,11 @@ event_filter_action_power_off_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_power_off_commit (pef_config_state_data_t *state_data,
-                                      const struct config_section *section,
-                                      const struct config_keyvalue *kv)
+event_filter_action_power_off_commit (const struct config_section *section,
+                                      const struct config_keyvalue *kv,
+                                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -532,10 +543,11 @@ event_filter_action_power_off_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_filter_action_power_off_diff (pef_config_state_data_t *state_data,
-                                    const struct config_section *section,
-                                    const struct config_keyvalue *kv)
+event_filter_action_power_off_diff (const struct config_section *section,
+                                    const struct config_keyvalue *kv,
+                                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -577,10 +589,11 @@ event_filter_action_power_off_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_reset_checkout (pef_config_state_data_t *state_data,
-                                    const struct config_section *section,
-                                    struct config_keyvalue *kv)
+event_filter_action_reset_checkout (const struct config_section *section,
+                                    struct config_keyvalue *kv,
+                                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -610,10 +623,11 @@ event_filter_action_reset_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_reset_commit (pef_config_state_data_t *state_data,
-                                  const struct config_section *section,
-                                  const struct config_keyvalue *kv)
+event_filter_action_reset_commit (const struct config_section *section,
+                                  const struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -644,10 +658,11 @@ event_filter_action_reset_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_filter_action_reset_diff (pef_config_state_data_t *state_data,
-                                const struct config_section *section,
-                                const struct config_keyvalue *kv)
+event_filter_action_reset_diff (const struct config_section *section,
+                                const struct config_keyvalue *kv,
+                                void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -690,10 +705,11 @@ event_filter_action_reset_diff (pef_config_state_data_t *state_data,
 
 
 static config_err_t
-event_filter_action_power_cycle_checkout (pef_config_state_data_t *state_data,
-                                          const struct config_section *section,
-                                          struct config_keyvalue *kv)
+event_filter_action_power_cycle_checkout (const struct config_section *section,
+                                          struct config_keyvalue *kv,
+                                          void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -723,10 +739,11 @@ event_filter_action_power_cycle_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_power_cycle_commit (pef_config_state_data_t *state_data,
-                                        const struct config_section *section,
-                                        const struct config_keyvalue *kv)
+event_filter_action_power_cycle_commit (const struct config_section *section,
+                                        const struct config_keyvalue *kv,
+                                        void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -757,10 +774,11 @@ event_filter_action_power_cycle_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_filter_action_power_cycle_diff (pef_config_state_data_t *state_data,
-                                      const struct config_section *section,
-                                      const struct config_keyvalue *kv)
+event_filter_action_power_cycle_diff (const struct config_section *section,
+                                      const struct config_keyvalue *kv,
+                                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -802,10 +820,11 @@ event_filter_action_power_cycle_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_oem_checkout (pef_config_state_data_t *state_data,
-                                  const struct config_section *section,
-                                  struct config_keyvalue *kv)
+event_filter_action_oem_checkout (const struct config_section *section,
+                                  struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -835,10 +854,11 @@ event_filter_action_oem_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_oem_commit (pef_config_state_data_t *state_data,
-                                const struct config_section *section,
-                                const struct config_keyvalue *kv)
+event_filter_action_oem_commit (const struct config_section *section,
+                                const struct config_keyvalue *kv,
+                                void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -869,10 +889,11 @@ event_filter_action_oem_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_filter_action_oem_diff (pef_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              const struct config_keyvalue *kv)
+event_filter_action_oem_diff (const struct config_section *section,
+                              const struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -914,10 +935,11 @@ event_filter_action_oem_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_filter_action_diagnostic_interrupt_checkout (pef_config_state_data_t *state_data,
-                                                   const struct config_section *section,
-                                                   struct config_keyvalue *kv)
+event_filter_action_diagnostic_interrupt_checkout (const struct config_section *section,
+                                                   struct config_keyvalue *kv,
+                                                   void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -947,10 +969,11 @@ event_filter_action_diagnostic_interrupt_checkout (pef_config_state_data_t *stat
 }
 
 static config_err_t
-event_filter_action_diagnostic_interrupt_commit (pef_config_state_data_t *state_data,
-                                                 const struct config_section *section,
-                                                 const struct config_keyvalue *kv)
+event_filter_action_diagnostic_interrupt_commit (const struct config_section *section,
+                                                 const struct config_keyvalue *kv,
+                                                 void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -981,10 +1004,11 @@ event_filter_action_diagnostic_interrupt_commit (pef_config_state_data_t *state_
 }
 
 static config_diff_t
-event_filter_action_diagnostic_interrupt_diff (pef_config_state_data_t *state_data,
-                                               const struct config_section *section,
-                                               const struct config_keyvalue *kv)
+event_filter_action_diagnostic_interrupt_diff (const struct config_section *section,
+                                               const struct config_keyvalue *kv,
+                                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1026,10 +1050,11 @@ event_filter_action_diagnostic_interrupt_diff (pef_config_state_data_t *state_da
 }
 
 static config_err_t
-event_filter_action_group_control_operation_checkout (pef_config_state_data_t *state_data,
-                                                      const struct config_section *section,
-                                                      struct config_keyvalue *kv)
+event_filter_action_group_control_operation_checkout (const struct config_section *section,
+                                                      struct config_keyvalue *kv,
+                                                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1059,10 +1084,11 @@ event_filter_action_group_control_operation_checkout (pef_config_state_data_t *s
 }
 
 static config_err_t
-event_filter_action_group_control_operation_commit (pef_config_state_data_t *state_data,
-                                                    const struct config_section *section,
-                                                    const struct config_keyvalue *kv)
+event_filter_action_group_control_operation_commit (const struct config_section *section,
+                                                    const struct config_keyvalue *kv,
+                                                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1093,10 +1119,11 @@ event_filter_action_group_control_operation_commit (pef_config_state_data_t *sta
 }
 
 static config_diff_t
-event_filter_action_group_control_operation_diff (pef_config_state_data_t *state_data,
-                                                  const struct config_section *section,
-                                                  const struct config_keyvalue *kv)
+event_filter_action_group_control_operation_diff (const struct config_section *section,
+                                                  const struct config_keyvalue *kv,
+                                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1138,10 +1165,11 @@ event_filter_action_group_control_operation_diff (pef_config_state_data_t *state
 }
 
 static config_err_t
-alert_policy_number_checkout (pef_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              struct config_keyvalue *kv)
+alert_policy_number_checkout (const struct config_section *section,
+                              struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1171,10 +1199,11 @@ alert_policy_number_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-alert_policy_number_commit (pef_config_state_data_t *state_data,
-                            const struct config_section *section,
-                            const struct config_keyvalue *kv)
+alert_policy_number_commit (const struct config_section *section,
+                            const struct config_keyvalue *kv,
+                            void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1205,10 +1234,11 @@ alert_policy_number_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-alert_policy_number_diff (pef_config_state_data_t *state_data,
-                          const struct config_section *section,
-                          const struct config_keyvalue *kv)
+alert_policy_number_diff (const struct config_section *section,
+                          const struct config_keyvalue *kv,
+                          void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1252,10 +1282,11 @@ alert_policy_number_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-group_control_selector_checkout (pef_config_state_data_t *state_data,
-                                 const struct config_section *section,
-                                 struct config_keyvalue *kv)
+group_control_selector_checkout (const struct config_section *section,
+                                 struct config_keyvalue *kv,
+                                 void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1285,10 +1316,11 @@ group_control_selector_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-group_control_selector_commit (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               const struct config_keyvalue *kv)
+group_control_selector_commit (const struct config_section *section,
+                               const struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1319,10 +1351,11 @@ group_control_selector_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-group_control_selector_diff (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+group_control_selector_diff (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1366,10 +1399,11 @@ group_control_selector_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_severity_checkout (pef_config_state_data_t *state_data,
-                         const struct config_section *section,
-                         struct config_keyvalue *kv)
+event_severity_checkout (const struct config_section *section,
+                         struct config_keyvalue *kv,
+                         void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1399,10 +1433,11 @@ event_severity_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_severity_commit (pef_config_state_data_t *state_data,
-                       const struct config_section *section,
-                       const struct config_keyvalue *kv)
+event_severity_commit (const struct config_section *section,
+                       const struct config_keyvalue *kv,
+                       void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1433,10 +1468,11 @@ event_severity_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_severity_diff (pef_config_state_data_t *state_data,
-                     const struct config_section *section,
-                     const struct config_keyvalue *kv)
+event_severity_diff (const struct config_section *section,
+                     const struct config_keyvalue *kv,
+                     void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1477,10 +1513,11 @@ event_severity_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-generator_id_byte_1_checkout (pef_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              struct config_keyvalue *kv)
+generator_id_byte_1_checkout (const struct config_section *section,
+                              struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1510,10 +1547,11 @@ generator_id_byte_1_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-generator_id_byte_1_commit (pef_config_state_data_t *state_data,
-                            const struct config_section *section,
-                            const struct config_keyvalue *kv)
+generator_id_byte_1_commit (const struct config_section *section,
+                            const struct config_keyvalue *kv,
+                            void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1545,10 +1583,11 @@ generator_id_byte_1_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-generator_id_byte_1_diff (pef_config_state_data_t *state_data,
-                          const struct config_section *section,
-                          const struct config_keyvalue *kv)
+generator_id_byte_1_diff (const struct config_section *section,
+                          const struct config_keyvalue *kv,
+                          void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1592,10 +1631,11 @@ generator_id_byte_1_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-generator_id_byte_2_checkout (pef_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              struct config_keyvalue *kv)
+generator_id_byte_2_checkout (const struct config_section *section,
+                              struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1625,10 +1665,11 @@ generator_id_byte_2_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-generator_id_byte_2_commit (pef_config_state_data_t *state_data,
-                            const struct config_section *section,
-                            const struct config_keyvalue *kv)
+generator_id_byte_2_commit (const struct config_section *section,
+                            const struct config_keyvalue *kv,
+                            void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1659,10 +1700,11 @@ generator_id_byte_2_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-generator_id_byte_2_diff (pef_config_state_data_t *state_data,
-                          const struct config_section *section,
-                          const struct config_keyvalue *kv)
+generator_id_byte_2_diff (const struct config_section *section,
+                          const struct config_keyvalue *kv,
+                          void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1706,10 +1748,11 @@ generator_id_byte_2_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-sensor_type_checkout (pef_config_state_data_t *state_data,
-                      const struct config_section *section,
-                      struct config_keyvalue *kv)
+sensor_type_checkout (const struct config_section *section,
+                      struct config_keyvalue *kv,
+                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1739,10 +1782,11 @@ sensor_type_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-sensor_type_commit (pef_config_state_data_t *state_data,
-                    const struct config_section *section,
-                    const struct config_keyvalue *kv)
+sensor_type_commit (const struct config_section *section,
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1773,10 +1817,11 @@ sensor_type_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-sensor_type_diff (pef_config_state_data_t *state_data,
-                  const struct config_section *section,
-                  const struct config_keyvalue *kv)
+sensor_type_diff (const struct config_section *section,
+                  const struct config_keyvalue *kv,
+                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1819,10 +1864,11 @@ sensor_type_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-sensor_number_checkout (pef_config_state_data_t *state_data,
-                        const struct config_section *section,
-                        struct config_keyvalue *kv)
+sensor_number_checkout (const struct config_section *section,
+                        struct config_keyvalue *kv,
+                        void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1852,10 +1898,11 @@ sensor_number_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-sensor_number_commit (pef_config_state_data_t *state_data,
-                      const struct config_section *section,
-                      const struct config_keyvalue *kv)
+sensor_number_commit (const struct config_section *section,
+                      const struct config_keyvalue *kv,
+                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -1886,10 +1933,11 @@ sensor_number_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-sensor_number_diff (pef_config_state_data_t *state_data,
-                    const struct config_section *section,
-                    const struct config_keyvalue *kv)
+sensor_number_diff (const struct config_section *section,
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -1933,10 +1981,11 @@ sensor_number_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_trigger_checkout (pef_config_state_data_t *state_data,
-                        const struct config_section *section,
-                        struct config_keyvalue *kv)
+event_trigger_checkout (const struct config_section *section,
+                        struct config_keyvalue *kv,
+                        void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -1966,10 +2015,11 @@ event_trigger_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_trigger_commit (pef_config_state_data_t *state_data,
-                      const struct config_section *section,
-                      const struct config_keyvalue *kv)
+event_trigger_commit (const struct config_section *section,
+                      const struct config_keyvalue *kv,
+                      void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2000,10 +2050,11 @@ event_trigger_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_trigger_diff (pef_config_state_data_t *state_data,
-                    const struct config_section *section,
-                    const struct config_keyvalue *kv)
+event_trigger_diff (const struct config_section *section,
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2047,10 +2098,11 @@ event_trigger_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_offset_mask_checkout (pef_config_state_data_t *state_data,
-                                  const struct config_section *section,
-                                  struct config_keyvalue *kv)
+event_data1_offset_mask_checkout (const struct config_section *section,
+                                  struct config_keyvalue *kv,
+                                  void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2080,10 +2132,11 @@ event_data1_offset_mask_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_offset_mask_commit (pef_config_state_data_t *state_data,
-                                const struct config_section *section,
-                                const struct config_keyvalue *kv)
+event_data1_offset_mask_commit (const struct config_section *section,
+                                const struct config_keyvalue *kv,
+                                void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2114,10 +2167,11 @@ event_data1_offset_mask_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data1_offset_mask_diff (pef_config_state_data_t *state_data,
-                              const struct config_section *section,
-                              const struct config_keyvalue *kv)
+event_data1_offset_mask_diff (const struct config_section *section,
+                              const struct config_keyvalue *kv,
+                              void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint16_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2161,10 +2215,11 @@ event_data1_offset_mask_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_and_mask_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data1_and_mask_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2194,10 +2249,11 @@ event_data1_and_mask_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_and_mask_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data1_and_mask_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2228,10 +2284,11 @@ event_data1_and_mask_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data1_and_mask_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data1_and_mask_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2275,10 +2332,11 @@ event_data1_and_mask_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_compare1_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data1_compare1_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2308,10 +2366,11 @@ event_data1_compare1_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_compare1_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data1_compare1_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2342,10 +2401,11 @@ event_data1_compare1_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data1_compare1_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data1_compare1_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2389,10 +2449,11 @@ event_data1_compare1_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_compare2_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data1_compare2_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2422,10 +2483,11 @@ event_data1_compare2_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data1_compare2_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data1_compare2_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2456,10 +2518,11 @@ event_data1_compare2_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data1_compare2_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data1_compare2_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2503,10 +2566,11 @@ event_data1_compare2_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data2_and_mask_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data2_and_mask_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2536,10 +2600,11 @@ event_data2_and_mask_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data2_and_mask_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data2_and_mask_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2570,10 +2635,11 @@ event_data2_and_mask_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data2_and_mask_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data2_and_mask_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2617,10 +2683,11 @@ event_data2_and_mask_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data2_compare1_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data2_compare1_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2650,10 +2717,11 @@ event_data2_compare1_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data2_compare1_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data2_compare1_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2684,10 +2752,11 @@ event_data2_compare1_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data2_compare1_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data2_compare1_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2731,10 +2800,11 @@ event_data2_compare1_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data2_compare2_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data2_compare2_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2764,10 +2834,11 @@ event_data2_compare2_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data2_compare2_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data2_compare2_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2798,10 +2869,11 @@ event_data2_compare2_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data2_compare2_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data2_compare2_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2845,10 +2917,11 @@ event_data2_compare2_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data3_and_mask_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data3_and_mask_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2878,10 +2951,11 @@ event_data3_and_mask_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data3_and_mask_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data3_and_mask_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -2912,10 +2986,11 @@ event_data3_and_mask_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data3_and_mask_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data3_and_mask_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -2959,10 +3034,11 @@ event_data3_and_mask_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data3_compare1_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data3_compare1_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -2992,10 +3068,11 @@ event_data3_compare1_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data3_compare1_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data3_compare1_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -3026,10 +3103,11 @@ event_data3_compare1_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data3_compare1_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data3_compare1_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;
@@ -3073,10 +3151,11 @@ event_data3_compare1_diff (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data3_compare2_checkout (pef_config_state_data_t *state_data,
-                               const struct config_section *section,
-                               struct config_keyvalue *kv)
+event_data3_compare2_checkout (const struct config_section *section,
+                               struct config_keyvalue *kv,
+                               void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   config_err_t ret;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
@@ -3106,10 +3185,11 @@ event_data3_compare2_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-event_data3_compare2_commit (pef_config_state_data_t *state_data,
-                             const struct config_section *section,
-                             const struct config_keyvalue *kv)
+event_data3_compare2_commit (const struct config_section *section,
+                             const struct config_keyvalue *kv,
+                             void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t event_filter_number;
   uint8_t number_of_event_filters;
   config_err_t ret;
@@ -3140,10 +3220,11 @@ event_data3_compare2_commit (pef_config_state_data_t *state_data,
 }
 
 static config_diff_t
-event_data3_compare2_diff (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           const struct config_keyvalue *kv)
+event_data3_compare2_diff (const struct config_section *section,
+                           const struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t passed_val;
   config_err_t rc;
   config_diff_t ret;

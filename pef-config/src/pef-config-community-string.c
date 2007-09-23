@@ -16,10 +16,11 @@
 #include "pef-config-wrapper.h"
 
 static config_err_t
-community_string_checkout (pef_config_state_data_t *state_data,
-                           const struct config_section *section,
-                           struct config_keyvalue *kv)
+community_string_checkout (const struct config_section *section,
+                           struct config_keyvalue *kv,
+                           void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   config_err_t ret;
 
@@ -38,22 +39,21 @@ community_string_checkout (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-community_string_commit (pef_config_state_data_t *state_data,
-                         const struct config_section *section,
-                         const struct config_keyvalue *kv)
+community_string_commit (const struct config_section *section,
+                         const struct config_keyvalue *kv,
+                         void *arg)
 {
-  if (!kv->value)
-    return CONFIG_ERR_FATAL_ERROR;
-
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   return set_bmc_community_string (state_data,
                                    kv->value);
 }
 
 static config_diff_t
-community_string_diff (pef_config_state_data_t *state_data,
-                       const struct config_section *section,
-                       const struct config_keyvalue *kv)
+community_string_diff (const struct config_section *section,
+                       const struct config_keyvalue *kv,
+                       void *arg)
 {
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
   config_err_t rc;
   config_diff_t ret;

@@ -419,7 +419,7 @@ pef_config_section_commit_value (pef_config_state_data_t *state_data,
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return kv->commit (state_data, section, kv);
+  return kv->commit (section, kv, state_data);
 }
 
 int
@@ -461,7 +461,7 @@ pef_config_section_diff_value (pef_config_state_data_t *state_data,
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return kv->diff (state_data, section, kv);
+  return kv->diff (section, kv, state_data);
 }
 
 config_err_t

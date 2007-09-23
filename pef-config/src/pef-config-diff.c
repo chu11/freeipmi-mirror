@@ -33,6 +33,7 @@ config_diff_keypairs (pef_config_state_data_t *state_data)
                                                      kp->section_name,
                                                      kp->key_name,
                                                      kp->value_input)) == CONFIG_DIFF_FATAL_ERROR)
+        goto cleanup;
 
       if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
         ret = CONFIG_DIFF_NON_FATAL_ERROR;
@@ -87,7 +88,7 @@ config_diff_file (pef_config_state_data_t *state_data)
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->diff (state_data, section, kv)) == CONFIG_DIFF_FATAL_ERROR)
+                  if ((this_ret = kv->diff (section, kv, state_data)) == CONFIG_DIFF_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)

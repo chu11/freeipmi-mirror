@@ -178,7 +178,7 @@ pef_commit_file (pef_config_state_data_t *state_data)
             {
               if (kv->value)
                 {
-                  if ((this_ret = kv->commit (state_data, section, kv)) == CONFIG_ERR_FATAL_ERROR)
+                  if ((this_ret = kv->commit (section, kv, state_data)) == CONFIG_ERR_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
