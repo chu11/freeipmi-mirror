@@ -1,3 +1,8 @@
+2007-09-23  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/, pef-config/: Continued common code re-architecture
+	and subsequent code cleanup.
+	
 2007-09-22  Albert Chu <chu11@llnl.gov>
 
 	* common/src/config-common.h, common/src/config-comment.h,
