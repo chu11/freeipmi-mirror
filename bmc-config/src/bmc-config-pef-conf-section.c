@@ -1116,13 +1116,13 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
 {
   struct config_section *pef_section;
 
-  if (!(pef_section = bmc_config_section_create ("PEF_Conf",
+  if (!(pef_section = config_section_create ("PEF_Conf",
                                                  NULL,
                                                  NULL,
                                                  CONFIG_DO_NOT_CHECKOUT)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_PEF",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1132,7 +1132,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_PEF_Event_Messages",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1142,7 +1142,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_PEF_Startup_Delay",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1152,7 +1152,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_PEF_Alert_Startup_Delay",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1162,7 +1162,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
   
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_Alert_Action",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1172,7 +1172,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_Power_Down_Action",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1182,7 +1182,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_Reset_Action",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1192,7 +1192,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_Power_Cycle_Action",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1202,7 +1202,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_OEM_Action",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1212,7 +1212,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "Enable_Diagnostic_Interrupt",
                                        "Possible values: Yes/No",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1222,7 +1222,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "PEF_Startup_Delay",
                                        "Give value in seconds",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1232,7 +1232,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (pef_section,
+  if (config_section_add_keyvalue (pef_section,
                                        "PEF_Alert_Startup_Delay",
                                        "Give value in seconds",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -1246,7 +1246,7 @@ bmc_config_pef_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (pef_section)
-    bmc_config_section_destroy(pef_section);
+    config_section_destroy(pef_section);
   return NULL;
 }
 

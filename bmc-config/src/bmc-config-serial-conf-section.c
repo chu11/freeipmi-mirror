@@ -814,13 +814,13 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     "is setup.  Most users will only be interested in IPMI over LAN, "
     "therefore this section can generally be ignored.";
 
-  if (!(bmc_serial_conf_section = bmc_config_section_create("Serial_Conf", 
+  if (!(bmc_serial_conf_section = config_section_create("Serial_Conf", 
                                                             "Serial_Conf", 
                                                             section_comment,
                                                             0)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Enable_Basic_Mode",
                                        "Possible values: Yes/No",
                                        0,
@@ -830,7 +830,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Enable_PPP_Mode",
                                        "Possible values: Yes/No",
                                        0,
@@ -840,7 +840,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Enable_Terminal_Mode",
                                        "Possible values: Yes/No",
                                        0,
@@ -850,7 +850,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Connect_Mode",
                                        "Possible values: Modem_Connect/Direct_Mode",
                                        0,
@@ -860,7 +860,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        connect_mode_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Page_Blackout_Interval",
                                        "Give a valid number",
                                        0,
@@ -870,7 +870,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Call_Retry_Interval",
                                        "Give a valid number",
                                        0,
@@ -881,7 +881,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Call_Retry_Time",
                                        "Give a valid number",
                                        CONFIG_DO_NOT_CHECKOUT,
@@ -891,7 +891,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Enable_DTR_Hangup",
                                        "Possible values: Yes/No",
                                        0,
@@ -901,7 +901,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Flow_Control",
                                        "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
                                        0,
@@ -911,7 +911,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
                                        flow_control_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (bmc_serial_conf_section,
+  if (config_section_add_keyvalue (bmc_serial_conf_section,
                                        "Bit_Rate",
                                        "Possible values: 9600/19200/38400/57600/115200",
                                        0,
@@ -925,6 +925,6 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (bmc_serial_conf_section)
-    bmc_config_section_destroy(bmc_serial_conf_section);
+    config_section_destroy(bmc_serial_conf_section);
   return NULL;
 }

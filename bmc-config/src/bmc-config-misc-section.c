@@ -97,13 +97,13 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
     "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
     "existed before the power loss (\"Restore_State_AC_Apply\").";
 
-  if (!(misc_section = bmc_config_section_create ("Misc",
+  if (!(misc_section = config_section_create ("Misc",
                                                   "Misc",
                                                   section_comment,
                                                   0)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (misc_section,
+  if (config_section_add_keyvalue (misc_section,
                                        "Power_Restore_Policy",
                                        "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
                                        CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
@@ -117,6 +117,6 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (misc_section)
-    bmc_config_section_destroy(misc_section);
+    config_section_destroy(misc_section);
   return NULL;
 }

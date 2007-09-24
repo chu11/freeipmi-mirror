@@ -206,13 +206,13 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will may to set this to zero (or blank).";
 
-  if (!(lan_conf_security_keys_section = bmc_config_section_create ("Lan_Conf_Security_Keys",
+  if (!(lan_conf_security_keys_section = config_section_create ("Lan_Conf_Security_Keys",
                                                                     "Lan_Conf_Security_Keys",
                                                                     section_comment,
                                                                     0)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_security_keys_section,
+  if (config_section_add_keyvalue (lan_conf_security_keys_section,
                                        "K_R",
                                        "Give string or blank to clear. Max 20 chars",
                                        0,
@@ -222,7 +222,7 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
                                        k_r_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_security_keys_section,
+  if (config_section_add_keyvalue (lan_conf_security_keys_section,
                                        "K_G",
                                        "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
                                        0,
@@ -236,6 +236,6 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
 
  cleanup:
   if (lan_conf_security_keys_section)
-    bmc_config_section_destroy(lan_conf_security_keys_section);
+    config_section_destroy(lan_conf_security_keys_section);
   return NULL;
 }

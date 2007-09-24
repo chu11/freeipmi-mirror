@@ -67,19 +67,19 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
 
   if (!(section = pef_config_pef_conf_section_get (state_data)))
     goto cleanup;
-  if (pef_config_section_append (&sections, section) < 0)
+  if (config_section_append (&sections, section) < 0)
     goto cleanup;
 
   if (!(section = pef_config_community_string_section_get (state_data)))
     goto cleanup;
-  if (pef_config_section_append (&sections, section) < 0)
+  if (config_section_append (&sections, section) < 0)
     goto cleanup;
 
   for (i = 0; i < number_of_lan_alert_destinations; i++)
     {
       if (!(section = pef_config_lan_alert_destination_section_get(state_data, i+1)))
 	goto cleanup;
-      if (pef_config_section_append (&sections, section) < 0)
+      if (config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
 
@@ -87,7 +87,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_alert_string_section_get(state_data, i+1)))
 	goto cleanup;
-      if (pef_config_section_append (&sections, section) < 0)
+      if (config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
 
@@ -95,7 +95,7 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_alert_policy_table_section_get(state_data, i+1)))
 	goto cleanup;
-      if (pef_config_section_append (&sections, section) < 0)
+      if (config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
 
@@ -103,20 +103,20 @@ pef_config_sections_create (pef_config_state_data_t *state_data)
     {
       if (!(section = pef_config_event_filter_table_section_get(state_data, i+1)))
 	goto cleanup;
-      if (pef_config_section_append (&sections, section) < 0)
+      if (config_section_append (&sections, section) < 0)
 	goto cleanup;
     }
   
   return sections;
 
  cleanup:
-  pef_config_sections_destroy(sections);
+  config_sections_destroy(sections);
   return NULL;
 }
 
 int
-pef_config_section_append(struct config_section **sections,
-                          struct config_section *section)
+config_section_append(struct config_section **sections,
+                      struct config_section *section)
 {
   assert(sections);
   assert(section);
@@ -135,24 +135,24 @@ pef_config_section_append(struct config_section **sections,
 }
 
 void 
-pef_config_sections_destroy(struct config_section *sections)
+config_sections_destroy(struct config_section *sections)
 {
   if (sections)
     {
       while (sections)
 	{
 	  struct config_section *sections_next = sections->next;
-	  pef_config_section_destroy(sections);
+	  config_section_destroy(sections);
 	  sections = sections_next;
 	}
     }
 }
 
 struct config_section * 
-pef_config_section_create (char *section_name,
-                           char *section_comment_section_name,
-                           char *section_comment,
-                           unsigned int flags)
+config_section_create (char *section_name,
+                       char *section_comment_section_name,
+                       char *section_comment,
+                       unsigned int flags)
 {
   struct config_section *section = NULL;
 
@@ -194,12 +194,12 @@ pef_config_section_create (char *section_name,
   return section;
  cleanup:
   if (section)
-    pef_config_section_destroy(section);
+    config_section_destroy(section);
   return NULL;
 }
 
 static void
-_pef_config_keyvalue_destroy(struct config_keyvalue *keyvalue)
+_config_keyvalue_destroy(struct config_keyvalue *keyvalue)
 {
   if (keyvalue)
     {
@@ -214,7 +214,7 @@ _pef_config_keyvalue_destroy(struct config_keyvalue *keyvalue)
 }
 
 void 
-pef_config_section_destroy(struct config_section *section)
+config_section_destroy(struct config_section *section)
 {
   if (section)
     {
@@ -224,7 +224,7 @@ pef_config_section_destroy(struct config_section *section)
       while (section->keyvalues)
 	{
 	  struct config_keyvalue *keyvalue_next = section->keyvalues->next;
-          _pef_config_keyvalue_destroy(section->keyvalues);
+          _config_keyvalue_destroy(section->keyvalues);
 	  section->keyvalues = keyvalue_next;
 	}
 
@@ -233,14 +233,14 @@ pef_config_section_destroy(struct config_section *section)
 }
 
 int 
-pef_config_section_add_keyvalue (struct config_section *section,
-                                 const char *key_name,
-                                 const char *description,
-                                 unsigned int flags,
-                                 Key_Checkout checkout,
-                                 Key_Commit commit,
-                                 Key_Diff diff,
-                                 Key_Validate validate)
+config_section_add_keyvalue (struct config_section *section,
+                             const char *key_name,
+                             const char *description,
+                             unsigned int flags,
+                             Key_Checkout checkout,
+                             Key_Commit commit,
+                             Key_Diff diff,
+                             Key_Validate validate)
 {
   struct config_keyvalue *kv = NULL;
 
@@ -286,13 +286,13 @@ pef_config_section_add_keyvalue (struct config_section *section,
 
   return 0;
  cleanup:
-  _pef_config_keyvalue_destroy(kv);
+  _config_keyvalue_destroy(kv);
   return -1;
 }
 
 static struct config_section *
-pef_config_section_find_section (struct config_section *sections,
-                                 const char *section_name)
+config_section_find_section (struct config_section *sections,
+                             const char *section_name)
 {
   const struct config_section *section;
 
@@ -309,15 +309,15 @@ pef_config_section_find_section (struct config_section *sections,
 }
 
 struct config_keyvalue *
-pef_config_section_find_keyvalue (struct config_section *sections,
-                                  const char *section_name,
-                                  const char *key_name)
+config_section_find_keyvalue (struct config_section *sections,
+                              const char *section_name,
+                              const char *key_name)
 {
   const struct config_section *section;
   struct config_keyvalue *kv = NULL;
 
-  if (!(section = pef_config_section_find_section (sections,
-                                                   section_name)))
+  if (!(section = config_section_find_section (sections,
+                                               section_name)))
     {
       fprintf (stderr, "Unknown section `%s'\n", section_name);
       return NULL;
@@ -343,18 +343,18 @@ pef_config_section_find_keyvalue (struct config_section *sections,
 }
 
 int
-pef_config_section_set_value (struct config_section *sections,
-                              const char *section_name,
-                              const char *key_name,
-                              const char *value)
+config_section_set_value (struct config_section *sections,
+                          const char *section_name,
+                          const char *key_name,
+                          const char *value)
 {
   struct config_section *section;
   struct config_keyvalue *kv;
 
-  if (!(section = pef_config_section_find_section (sections, section_name)))
+  if (!(section = config_section_find_section (sections, section_name)))
     return -1;
 
-  if (!(kv = pef_config_section_find_keyvalue (sections, section_name, key_name)))
+  if (!(kv = config_section_find_keyvalue (sections, section_name, key_name)))
     return -1;
 
   if (kv->validate)
@@ -385,19 +385,19 @@ pef_config_section_set_value (struct config_section *sections,
 }
 
 config_err_t
-pef_config_section_commit_value (struct config_section *sections,
-                                 const char *section_name,
-                                 const char *key_name,
-                                 const char *value,
-                                 void *arg)
+config_section_commit_value (struct config_section *sections,
+                             const char *section_name,
+                             const char *key_name,
+                             const char *value,
+                             void *arg)
 {
   struct config_section *section;
   struct config_keyvalue *kv;
 
-  if (!(section = pef_config_section_find_section (sections, section_name)))
+  if (!(section = config_section_find_section (sections, section_name)))
     return CONFIG_ERR_FATAL_ERROR;
 
-  if (!(kv = pef_config_section_find_keyvalue (sections, section_name, key_name)))
+  if (!(kv = config_section_find_keyvalue (sections, section_name, key_name)))
     return CONFIG_ERR_FATAL_ERROR;
 
   if (kv->validate)
@@ -428,19 +428,19 @@ pef_config_section_commit_value (struct config_section *sections,
 }
 
 int
-pef_config_section_diff_value (struct config_section *sections,
-                               const char *section_name,
-                               const char *key_name,
-                               const char *value,
-                               void *arg)
+config_section_diff_value (struct config_section *sections,
+                           const char *section_name,
+                           const char *key_name,
+                           const char *value,
+                           void *arg)
 {
   struct config_section *section;
   struct config_keyvalue *kv;
 
-  if (!(section = pef_config_section_find_section (sections, section_name)))
+  if (!(section = config_section_find_section (sections, section_name)))
     return CONFIG_ERR_FATAL_ERROR;
 
-  if (!(kv = pef_config_section_find_keyvalue (sections, section_name, key_name)))
+  if (!(kv = config_section_find_keyvalue (sections, section_name, key_name)))
     return CONFIG_ERR_FATAL_ERROR;
 
   if (kv->validate)
@@ -471,7 +471,7 @@ pef_config_section_diff_value (struct config_section *sections,
 }
 
 config_err_t
-pef_config_output_sections_list (struct config_section *sections)
+config_output_sections_list (struct config_section *sections)
 {
   struct config_section *s;
   s = sections;

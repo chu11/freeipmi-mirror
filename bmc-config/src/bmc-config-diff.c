@@ -28,7 +28,7 @@ config_diff_keypairs (struct config_section *sections,
     {
       config_diff_t this_ret;
 
-      if ((this_ret = bmc_config_section_diff_value (sections,
+      if ((this_ret = config_section_diff_value (sections,
                                                      kp->section_name, 
                                                      kp->key_name,
                                                      kp->value_input,

@@ -978,13 +978,13 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
     "\"User_Level_Auth\" and \"Per_Message_Auth\" are typically set to "
     "\"Yes\" for additional security.";
 
-  if (!(lan_channel_section = bmc_config_section_create ("Lan_Channel",
+  if (!(lan_channel_section = config_section_create ("Lan_Channel",
                                                          "Lan_Channel",
                                                          section_comment,
                                                          0)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Volatile_Access_Mode",
                                        "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                                        0,
@@ -994,7 +994,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Volatile_Enable_User_Level_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1004,7 +1004,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Volatile_Enable_Per_Message_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1014,7 +1014,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Volatile_Enable_Pef_Alerting",
                                        "Possible values: Yes/No",
                                        0,
@@ -1024,7 +1024,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Volatile_Channel_Privilege_Limit",
                                        "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -1034,7 +1034,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Non_Volatile_Access_Mode",
                                        "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                                        0,
@@ -1044,7 +1044,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Non_Volatile_Enable_User_Level_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1054,7 +1054,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Non_Volatile_Enable_Per_Message_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1064,7 +1064,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Non_Volatile_Enable_Pef_Alerting",
                                        "Possible values: Yes/No",
                                        0,
@@ -1074,7 +1074,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_channel_section,
+  if (config_section_add_keyvalue (lan_channel_section,
                                        "Non_Volatile_Channel_Privilege_Limit",
                                        "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -1088,7 +1088,7 @@ bmc_config_lan_channel_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (lan_channel_section)
-    bmc_config_section_destroy(lan_channel_section);
+    config_section_destroy(lan_channel_section);
   return NULL;
 }
 

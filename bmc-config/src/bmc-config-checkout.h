@@ -26,8 +26,8 @@
 #include "bmc-config.h"
 #include "bmc-config-sections.h"
 
-config_err_t bmc_checkout (struct config_section *sections,
-                           struct config_arguments *cmd_args,
-                           void *arg);
+config_err_t config_checkout (struct config_section *sections,
+                              struct config_arguments *cmd_args,
+                              void *arg);
 
 #endif /* _BMC_CONFIG_CHECKOUT_H_ */

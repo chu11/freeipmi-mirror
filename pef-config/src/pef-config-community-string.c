@@ -95,13 +95,13 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 {
   struct config_section *section = NULL;
 
-  if (!(section = pef_config_section_create ("Community_String",
+  if (!(section = config_section_create ("Community_String",
                                              NULL, 
                                              NULL, 
                                              0)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (section,
+  if (config_section_add_keyvalue (section,
                                        "Community_String",
                                        "Give valid string",
                                        0,
@@ -115,7 +115,7 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
 
  cleanup:
   if (section)
-    pef_config_section_destroy(section);
+    config_section_destroy(section);
   return NULL;
 }
 

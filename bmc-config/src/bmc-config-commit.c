@@ -17,9 +17,9 @@
 #include "bmc-config-sections.h"
 
 static config_err_t
-bmc_commit_keypairs (struct config_section *sections,
-                     struct config_arguments *cmd_args,
-                     void *arg)
+config_commit_keypairs (struct config_section *sections,
+                        struct config_arguments *cmd_args,
+                        void *arg)
 {
   struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -30,7 +30,7 @@ bmc_commit_keypairs (struct config_section *sections,
     {
       config_err_t this_ret;
 
-      if ((this_ret = bmc_config_section_commit_value (sections,
+      if ((this_ret = config_section_commit_value (sections,
                                                        kp->section_name,
                                                        kp->key_name, 
                                                        kp->value_input,
@@ -122,9 +122,9 @@ bmc_keypair_feed (struct config_section *sections,
 }
 
 static config_err_t
-bmc_commit_file (struct config_section *sections,
-                 struct config_arguments *cmd_args,
-                 void *arg)
+config_commit_file (struct config_section *sections,
+                    struct config_arguments *cmd_args,
+                    void *arg)
 {
   int file_opened = 0;
   FILE *fp;
@@ -200,16 +200,16 @@ bmc_commit_file (struct config_section *sections,
 }
 
 config_err_t
-bmc_commit (struct config_section *sections,
-            struct config_arguments *cmd_args,
-            void *arg)
+config_commit (struct config_section *sections,
+               struct config_arguments *cmd_args,
+               void *arg)
 {
   config_err_t ret;
 
   if (cmd_args->filename)
-    ret = bmc_commit_file (sections, cmd_args, arg);
+    ret = config_commit_file (sections, cmd_args, arg);
   else
-    ret = bmc_commit_keypairs (sections, cmd_args, arg);
+    ret = config_commit_keypairs (sections, cmd_args, arg);
 
   return ret;
 }

@@ -29,48 +29,48 @@ struct config_section *bmc_config_sections_create (bmc_config_state_data_t *stat
 
 /* no config_sections_create, responsibility of config tool to create list */
 
-int bmc_config_section_append(struct config_section **sections,
-                              struct config_section *section);
+int config_section_append(struct config_section **sections,
+                          struct config_section *section);
 
-void bmc_config_sections_destroy (struct config_section *sections);
+void config_sections_destroy (struct config_section *sections);
 
-struct config_section *bmc_config_section_create (char *section_name,
-                                                  char *section_comment_section_name,
-                                                  char *section_comment,
-                                                  unsigned int flags);
+struct config_section *config_section_create (char *section_name,
+                                              char *section_comment_section_name,
+                                              char *section_comment,
+                                              unsigned int flags);
 
-void bmc_config_section_destroy (struct config_section *section);
+void config_section_destroy (struct config_section *section);
 
-int bmc_config_section_add_keyvalue (struct config_section *section,
-                                     const char *key_name,
-                                     const char *description,
-                                     unsigned int flags,
-                                     Key_Checkout checkout,
-                                     Key_Commit commit,
-                                     Key_Diff diff,
-                                     Key_Validate validate);
+int config_section_add_keyvalue (struct config_section *section,
+                                 const char *key_name,
+                                 const char *description,
+                                 unsigned int flags,
+                                 Key_Checkout checkout,
+                                 Key_Commit commit,
+                                 Key_Diff diff,
+                                 Key_Validate validate);
 
-struct config_keyvalue *bmc_config_section_find_keyvalue (struct config_section *sections,
-                                                          const char *section_name,
-                                                          const char *key_name);
+struct config_keyvalue *config_section_find_keyvalue (struct config_section *sections,
+                                                      const char *section_name,
+                                                      const char *key_name);
 
-int bmc_config_section_set_value (struct config_section *sections,
-                                  const char *section_name,
-                                  const char *key_name,
-                                  const char *value);
+int config_section_set_value (struct config_section *sections,
+                              const char *section_name,
+                              const char *key_name,
+                              const char *value);
 
-config_err_t bmc_config_section_commit_value (struct config_section *sections,
-                                              const char *section_name,
-                                              const char *key_name,
-                                              const char *value,
-                                              void *arg);
+config_err_t config_section_commit_value (struct config_section *sections,
+                                          const char *section_name,
+                                          const char *key_name,
+                                          const char *value,
+                                          void *arg);
 
-int bmc_config_section_diff_value (struct config_section *sections,
-                                   const char *section_name,
-                                   const char *key_name,
-                                   const char *value,
-                                   void *arg);
+int config_section_diff_value (struct config_section *sections,
+                               const char *section_name,
+                               const char *key_name,
+                               const char *value,
+                               void *arg);
 
-config_err_t bmc_config_output_sections_list (struct config_section *sections);
+config_err_t config_output_sections_list (struct config_section *sections);
 
 #endif /* _BMC_CONFIG_SECTIONS_H_ */

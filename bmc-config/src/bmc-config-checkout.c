@@ -16,9 +16,9 @@
 #include "bmc-config-sections.h"
 
 static config_err_t
-bmc_checkout_keypair (struct config_section *sections,
-                      struct config_keypair *kp,
-                      void *arg)
+config_checkout_keypair (struct config_section *sections,
+                         struct config_keypair *kp,
+                         void *arg)
 {
   struct config_section *section;
   struct config_keyvalue *kv;
@@ -73,9 +73,9 @@ bmc_checkout_keypair (struct config_section *sections,
 }
 
 static config_err_t
-bmc_checkout_keypairs (struct config_section *sections,
-                       struct config_arguments *cmd_args,
-                       void *arg)
+config_checkout_keypairs (struct config_section *sections,
+                          struct config_arguments *cmd_args,
+                          void *arg)
 {
   struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -86,9 +86,9 @@ bmc_checkout_keypairs (struct config_section *sections,
     {
       config_err_t this_ret;
 
-      if ((this_ret = bmc_checkout_keypair(sections,
-                                           kp,
-                                           arg)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = config_checkout_keypair(sections,
+                                              kp,
+                                              arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -103,10 +103,10 @@ bmc_checkout_keypairs (struct config_section *sections,
 }
 
 static config_err_t
-bmc_checkout_section_common (struct config_section *section, 
-                             struct config_arguments *cmd_args,
-                             FILE *fp,
-                             void *arg)
+config_checkout_section_common (struct config_section *section, 
+                                struct config_arguments *cmd_args,
+                                FILE *fp,
+                                void *arg)
 {
   struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -209,9 +209,9 @@ bmc_checkout_section_common (struct config_section *section,
 }
 
 static config_err_t
-bmc_checkout_section (struct config_section *sections,
-                      struct config_arguments *cmd_args,
-                      void *arg)
+config_checkout_section (struct config_section *sections,
+                         struct config_arguments *cmd_args,
+                         void *arg)
 {
   struct config_section_str *sstr;
   FILE *fp;
@@ -245,10 +245,10 @@ bmc_checkout_section (struct config_section *sections,
               
               found++;
 
-              if ((this_ret = bmc_checkout_section_common (section, 
-                                                           cmd_args,
-                                                           fp,
-                                                           arg)) == CONFIG_ERR_FATAL_ERROR)
+              if ((this_ret = config_checkout_section_common (section, 
+                                                              cmd_args,
+                                                              fp,
+                                                              arg)) == CONFIG_ERR_FATAL_ERROR)
                 goto cleanup;
               
               if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -277,9 +277,9 @@ bmc_checkout_section (struct config_section *sections,
 }
 
 static config_err_t
-bmc_checkout_file (struct config_section *sections,
-                   struct config_arguments *cmd_args,
-                   void *arg)
+config_checkout_file (struct config_section *sections,
+                      struct config_arguments *cmd_args,
+                      void *arg)
 {
   struct config_section *section;
   FILE *fp;
@@ -304,10 +304,10 @@ bmc_checkout_file (struct config_section *sections,
     {
       config_err_t this_ret;
       
-      if ((this_ret = bmc_checkout_section_common (section,
-                                                   cmd_args,
-                                                   fp,
-                                                   arg)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = config_checkout_section_common (section,
+                                                      cmd_args,
+                                                      fp,
+                                                      arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -328,18 +328,18 @@ bmc_checkout_file (struct config_section *sections,
 }
 
 config_err_t
-bmc_checkout (struct config_section *sections,
-              struct config_arguments *cmd_args,
-              void *arg)
+config_checkout (struct config_section *sections,
+                 struct config_arguments *cmd_args,
+                 void *arg)
 {
   config_err_t ret;
 
   if (cmd_args->keypairs) 
-    ret = bmc_checkout_keypairs (sections, cmd_args, arg);
+    ret = config_checkout_keypairs (sections, cmd_args, arg);
   else if (cmd_args->section_strs)
-    ret = bmc_checkout_section (sections, cmd_args, arg);
+    ret = config_checkout_section (sections, cmd_args, arg);
   else
-    ret = bmc_checkout_file (sections, cmd_args, arg);
+    ret = config_checkout_file (sections, cmd_args, arg);
 
   return ret;
 }

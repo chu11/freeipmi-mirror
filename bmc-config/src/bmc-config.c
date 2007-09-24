@@ -125,14 +125,14 @@ _bmc_config (void *arg)
 
   switch (prog_data->args->action) {
   case CONFIG_ACTION_CHECKOUT:
-    ret = bmc_checkout (sections,
-                        prog_data->args,
-                        &state_data);
+    ret = config_checkout (sections,
+                           prog_data->args,
+                           &state_data);
     break;
   case CONFIG_ACTION_COMMIT:
-    ret = bmc_commit (sections,
-                      prog_data->args,
-                      &state_data);
+    ret = config_commit (sections,
+                         prog_data->args,
+                         &state_data);
     break;
   case CONFIG_ACTION_DIFF:
     ret = config_diff (sections,
@@ -140,7 +140,7 @@ _bmc_config (void *arg)
                        &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
-    ret = bmc_config_output_sections_list (sections);
+    ret = config_output_sections_list (sections);
     break;
   case CONFIG_ACTION_INFO:
     /* shutup gcc warning */
@@ -161,7 +161,7 @@ _bmc_config (void *arg)
       ipmi_device_destroy (dev);
     }
   if (sections)
-    bmc_config_sections_destroy(sections);
+    config_sections_destroy(sections);
   return exit_code;
 }
 

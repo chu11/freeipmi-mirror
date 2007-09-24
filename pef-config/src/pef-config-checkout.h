@@ -3,8 +3,8 @@
 
 #include "pef-config.h"
 
-config_err_t pef_checkout (struct config_section *sections,
-                           struct config_arguments *cmd_args,
-                           void *arg);
+config_err_t config_checkout (struct config_section *sections,
+                              struct config_arguments *cmd_args,
+                              void *arg);
 
 #endif

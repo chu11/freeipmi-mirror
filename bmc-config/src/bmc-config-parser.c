@@ -141,7 +141,7 @@ bmc_config_parser (struct config_section *sections,
         fprintf (stderr, "Trying to set `%s:%s=%s'\n",
                  section_name, key_name, value);
       
-      if (bmc_config_section_set_value (sections,
+      if (config_section_set_value (sections,
                                         section_name,
                                         key_name,
                                         value) < 0) 

@@ -789,13 +789,13 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
 
-  if (!(lan_conf_section = bmc_config_section_create ("Lan_Conf",
+  if (!(lan_conf_section = config_section_create ("Lan_Conf",
                                                       "Lan_Conf",
                                                       section_comment,
                                                       0)))
     goto cleanup;
   
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "IP_Address_Source",
                                        "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
                                        0,
@@ -805,7 +805,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        ip_address_source_number_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "IP_Address",
                                        "Give valid IP address",
                                        0,
@@ -815,7 +815,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "MAC_Address",
                                        "Give valid MAC address",
                                        0,
@@ -826,7 +826,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
     goto cleanup;
 
   /* TODO: checking valid netmask is not same as checking valid IP */
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Subnet_Mask",
                                        "Give valid Subnet Mask",
                                        0,
@@ -836,7 +836,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Default_Gateway_IP_Address",
                                        "Give valid IP address",
                                        0,
@@ -846,7 +846,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Default_Gateway_MAC_Address",
                                        "Give valid MAC address",
                                        0,
@@ -856,7 +856,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Backup_Gateway_IP_Address",
                                        "Give valid IP address",
                                        0,
@@ -866,7 +866,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Backup_Gateway_MAC_Address",
                                        "Give valid MAC address",
                                        0,
@@ -876,7 +876,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Vlan_id",
                                        "Give valid unsigned number",
                                        0,
@@ -886,7 +886,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        vlan_id_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Vlan_Id_Enable",
                                        "Possible values: Yes/No",
                                        0,
@@ -896,7 +896,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (lan_conf_section,
+  if (config_section_add_keyvalue (lan_conf_section,
                                        "Vlan_Priority",
                                        "Give valid unsigned number",
                                        0,
@@ -910,7 +910,7 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (lan_conf_section)
-    bmc_config_section_destroy(lan_conf_section);
+    config_section_destroy(lan_conf_section);
   return NULL;
 }
 

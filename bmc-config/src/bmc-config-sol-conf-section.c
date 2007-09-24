@@ -923,13 +923,13 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
     "rate for your system.  This is typically the same baud rate configured "
     "in the BIOS and/or operating system.";
 
-  if (!(sol_conf_section = bmc_config_section_create("SOL_Conf",
+  if (!(sol_conf_section = config_section_create("SOL_Conf",
                                                      "SOL_Conf",
                                                      section_comment,
                                                      0)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "Enable_SOL",
                                        "Possible values: Yes/No",
                                        0,
@@ -939,7 +939,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "SOL_Privilege_Level",
                                        "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -949,7 +949,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "Force_SOL_Payload_Authentication",
                                        "Possible values: Yes/No",
                                        0,
@@ -959,7 +959,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "Force_SOL_Payload_Encryption",
                                        "Possible values: Yes/No",
                                        0,
@@ -969,7 +969,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "Character_Accumulate_Interval",
                                        "Give a non-zero valid integer. Each unit is 5ms",
                                        0,
@@ -979,7 +979,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "Character_Send_Threshold",
                                        "Give a valid number",
                                        0,
@@ -989,7 +989,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "SOL_Retry_Count",
                                        "Give a valid integer",
                                        0,
@@ -999,7 +999,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "SOL_Retry_Interval",
                                        "Give a valid integer. Interval unit is 10ms",
                                        0,
@@ -1009,7 +1009,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "Non_Volatile_Bit_Rate",
                                        "Possible values: Serial/9600/19200/38400/57600/115200",
                                        0,
@@ -1019,7 +1019,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "Volatile_Bit_Rate",
                                        "Possible values: Serial/9600/19200/38400/57600/115200",
                                        0,
@@ -1029,7 +1029,7 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                        sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (sol_conf_section,
+  if (config_section_add_keyvalue (sol_conf_section,
                                        "SOL_Payload_Port_Number",
                                        "Give a valid port number",
                                        CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
@@ -1043,6 +1043,6 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
 
  cleanup:
   if (sol_conf_section)
-    bmc_config_section_destroy(sol_conf_section);
+    config_section_destroy(sol_conf_section);
   return NULL;
 }
