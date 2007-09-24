@@ -23,48 +23,19 @@
 #include "config.h"
 #endif
 
-#include <argp.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif
-#ifdef HAVE_SYS_IO_H
-#include <sys/io.h>
-#endif
-#include <syslog.h>
 #include <assert.h>
-#include <stdarg.h>
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
-#if HAVE_FCNTL_H
-#include <fcntl.h>
-#endif /* HAVE_FCNTL_H */
 #include <errno.h>
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif
-#include <stdint.h>
-#include <sys/stat.h>
-#include <sys/select.h>
-#include <assert.h>
-
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-
-#include <string.h>
-#include <sys/types.h>
 
 #include "bmc-config.h"
 #include "bmc-config-argp.h"
-#include "bmc-config-commit.h"
-#include "bmc-config-checkout.h"
-#include "bmc-config-diff.h"
 #include "bmc-config-sections.h"
 
+#include "cmdline-parse-common.h"
 #include "tool-common.h"
 #include "freeipmi-portability.h"
 

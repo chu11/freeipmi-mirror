@@ -28,6 +28,11 @@ noinst_HEADERS = \
 	hostrange.h \
 	config-common.h \
 	config-comment.h \
+	config-checkout.h \
+	config-commit.h \
+	config-diff.h \
+	config-parse.h \
+	config-section.h \
 	config-util.h \
 	config-validate.h
 
@@ -101,6 +106,11 @@ libhostrange_la_CPPFLAGS = -I$(srcdir)/../../ipmidetect/src/libipmidetect/
 
 libconfigcommon_la_SOURCES = \
 	config-comment.c \
+	config-checkout.c \
+	config-commit.c \
+	config-diff.c \
+	config-parse.c \
+	config-section.c \
 	config-util.c \
 	config-validate.c
 

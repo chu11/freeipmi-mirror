@@ -37,9 +37,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "tool-common.h"
 #include "pef-config.h"
 #include "pef-config-argp.h"
-#include "pef-config-checkout.h"
-#include "pef-config-commit.h"
-#include "pef-config-diff.h"
 #include "pef-config-info.h"
 #include "pef-config-sections.h"
 

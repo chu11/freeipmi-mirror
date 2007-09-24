@@ -10,11 +10,8 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "bmc-config.h"
-#include "bmc-config-commit.h"
-#include "bmc-config-common.h"
-#include "bmc-config-parser.h"
-#include "bmc-config-sections.h"
+#include "config-commit.h"
+#include "config-parse.h"
 
 static config_err_t
 config_commit_keypairs (struct config_section *sections,
@@ -145,7 +142,7 @@ config_commit_file (struct config_section *sections,
     fp = stdin;
 
   /* 1st pass - read in input from file */
-  if ((this_ret = bmc_config_parser (sections, cmd_args, fp)) == CONFIG_ERR_FATAL_ERROR)
+  if ((this_ret = config_parse (sections, cmd_args, fp)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)

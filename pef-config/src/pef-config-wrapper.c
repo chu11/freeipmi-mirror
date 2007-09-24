@@ -34,7 +34,6 @@
 #include "freeipmi-portability.h"
 
 #include "pef-config.h"
-#include "pef-config-common.h"
 #include "pef-config-map.h"
 #include "pef-config-utils.h"
 #include "pef-config-wrapper.h"

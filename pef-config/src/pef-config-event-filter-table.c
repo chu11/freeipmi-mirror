@@ -9,10 +9,7 @@
 #endif /* STDC_HEADERS */
 
 #include "pef-config.h"
-#include "pef-config-common.h"
-#include "pef-config-diff.h"
 #include "pef-config-map.h"
-#include "pef-config-sections.h"
 #include "pef-config-utils.h"
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"

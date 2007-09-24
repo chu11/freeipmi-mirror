@@ -2,8 +2,16 @@
 
 	* doc/freeipmi-coding.txt: Update.
 
+	* common/src/config-checkout.h, common/src/config-checkout.c,
+	common/src/config-commit.h, common/src/config-commit.c,
+	common/src/config-diff.h, common/src/config-diff.c,
+	common/src/config-parse.h, common/src/config-parse.c,
+	common/src/config-section.h, common/src/config-section.c: New
+	files.
+
 	* bmc-config/, pef-config/: Continued common code re-architecture
-	and subsequent code cleanup.
+	and subsequent code cleanup.  Remove files obsoleted by new common
+	code.
 	
 2007-09-23  Albert Chu <chu11@llnl.gov>
 

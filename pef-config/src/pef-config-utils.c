@@ -19,7 +19,6 @@
 #include "common-utils.h"
 
 #include "pef-config.h"
-#include "pef-config-common.h"
 #include "pef-config-utils.h"
 
 config_err_t

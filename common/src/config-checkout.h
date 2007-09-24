@@ -1,10 +1,10 @@
-#ifndef _PEF_CONFIG_CHECKOUT_H
-#define _PEF_CONFIG_CHECKOUT_H
+#ifndef _CONFIG_CHECKOUT_H_
+#define _CONFIG_CHECKOUT_H_
 
-#include "pef-config.h"
+#include "config-common.h"
 
 config_err_t config_checkout (struct config_section *sections,
                               struct config_arguments *cmd_args,
                               void *arg);
 
-#endif
+#endif /* _CONFIG_CHECKOUT_H_ */

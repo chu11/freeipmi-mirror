@@ -20,8 +20,6 @@
 #define _BMC_CONFIG_MAP_H
 
 #include "bmc-config.h"
-#include "bmc-config-common.h"
-#include "bmc-config-sections.h"
 
 int channel_access_mode (const char *string);
 

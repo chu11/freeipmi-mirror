@@ -20,7 +20,6 @@
 #define _BMC_CONFIG_VALIDATE_H
 
 #include "bmc-config.h"
-#include "bmc-config-common.h"
 #include "bmc-config-sections.h"
 
 config_validate_t channel_access_mode_validate (const char *section_name, 

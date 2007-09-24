@@ -8,15 +8,12 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "pef-config.h"
-#include "pef-config-common.h"
-#include "pef-config-parser.h"
-#include "pef-config-sections.h"
+#include "config-parse.h"
 
 config_err_t
-pef_config_parser (struct config_section *sections,
-                   struct config_arguments *cmd_args,
-                   FILE *fp)
+config_parse (struct config_section *sections, 
+              struct config_arguments *cmd_args,
+              FILE *fp)
 { 
   char buf[4096];
   int line_num = 0;
@@ -96,7 +93,7 @@ pef_config_parser (struct config_section *sections,
       if (!section_name) 
         {
           fprintf (stderr, "FATAL: Key `%s' not inside any Section\n",
-                   first_word);
+                 first_word);
           goto cleanup;
         }
       

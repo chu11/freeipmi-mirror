@@ -12,7 +12,6 @@
 #include "ipmi-sensor-api.h"
 
 #include "pef-config.h"
-#include "pef-config-common.h"
 #include "pef-config-map.h"
 
 int

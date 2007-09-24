@@ -14,7 +14,6 @@
 
 #include "pef-config.h"
 #include "pef-config-info.h"
-#include "pef-config-common.h"
 
 config_err_t
 pef_info (pef_config_state_data_t *state_data)

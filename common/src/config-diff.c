@@ -8,11 +8,8 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 
-#include "bmc-config.h"
-#include "bmc-config-common.h"
-#include "bmc-config-diff.h"
-#include "bmc-config-parser.h"
-#include "bmc-config-sections.h"
+#include "config-diff.h"
+#include "config-parse.h"
 
 static config_diff_t
 config_diff_keypairs (struct config_section *sections,
@@ -70,7 +67,7 @@ config_diff_file (struct config_section *sections,
     fp = stdin;
 
   /* 1st pass */
-  if ((this_ret = bmc_config_parser (sections, cmd_args, fp)) == CONFIG_DIFF_FATAL_ERROR)
+  if ((this_ret = config_parse (sections, cmd_args, fp)) == CONFIG_DIFF_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)

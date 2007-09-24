@@ -9,12 +9,9 @@
 #endif /* STDC_HEADERS */
 
 #include "bmc-config.h"
-#include "bmc-config-common.h"
 #include "bmc-config-wrapper.h"
-#include "bmc-config-diff.h"
 #include "bmc-config-utils.h"
 #include "bmc-config-map.h"
-#include "bmc-config-sections.h"
 #include "bmc-config-validate.h"
 
 #define BMC_MAXIPADDRLEN 16

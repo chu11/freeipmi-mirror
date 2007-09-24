@@ -5,12 +5,8 @@ bmc_config_SOURCES = \
 	bmc-config-argp.c \
 	bmc-config-map.c \
 	bmc-config-sections.c \
-	bmc-config-parser.c \
 	bmc-config-wrapper.c \
 	bmc-config-utils.c \
-	bmc-config-checkout.c \
-	bmc-config-commit.c \
-	bmc-config-diff.c \
 	bmc-config-user-sections.c \
 	bmc-config-lan-channel-section.c \
 	bmc-config-serial-channel-section.c \
@@ -36,11 +32,7 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 
 noinst_HEADERS = bmc-config.h \
 		 bmc-config-argp.h \
-		 bmc-config-checkout.h \
-		 bmc-config-commit.h \
-		 bmc-config-common.h \
 		 bmc-config-wrapper.h \
-		 bmc-config-diff.h \
 		 bmc-config-utils.h \
 		 bmc-config-user-sections.h \
 		 bmc-config-lan-channel-section.h \
@@ -55,7 +47,6 @@ noinst_HEADERS = bmc-config.h \
 		 bmc-config-sol-conf-section.h \
 		 bmc-config-misc-section.h \
 		 bmc-config-map.h \
-		 bmc-config-parser.h \
 		 bmc-config-sections.h \
 		 bmc-config-validate.h
 

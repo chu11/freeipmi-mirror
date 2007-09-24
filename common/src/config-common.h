@@ -11,6 +11,11 @@
 
 #define CONFIG_CHECKOUT_LINE_LEN                           45
 
+#define SET_SELECTOR      0x0
+#define BLOCK_SELECTOR    0x0
+
+#define same(a,b) (strcasecmp(a,b) == 0)
+
 typedef enum
   {
     CONFIG_ACTION_INFO = 1,

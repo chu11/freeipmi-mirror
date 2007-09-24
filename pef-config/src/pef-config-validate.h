@@ -2,8 +2,6 @@
 #define _PEF_CONFIG_VALIDATE_H
 
 #include "pef-config.h"
-#include "pef-config-common.h"
-#include "pef-config-sections.h"
 
 config_validate_t alert_destination_type_validate (const char *section_name, 
                                                    const char *key_name, 

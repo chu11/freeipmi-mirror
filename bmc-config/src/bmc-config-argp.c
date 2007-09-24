@@ -61,10 +61,8 @@
 
 #include "cmdline-parse-common.h"
 
-#include "bmc-config-argp.h"
-
 #include "bmc-config.h"
-#include "bmc-config-sections.h"
+#include "bmc-config-argp.h"
 
 const char *argp_program_version = PACKAGE_VERSION;
 const char *argp_program_bug_address = "<" PACKAGE_BUGREPORT ">";
