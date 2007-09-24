@@ -130,10 +130,14 @@ _bmc_config (void *arg)
                         &state_data);
     break;
   case CONFIG_ACTION_COMMIT:
-    ret = bmc_commit (&state_data);
+    ret = bmc_commit (sections,
+                      prog_data->args,
+                      &state_data);
     break;
   case CONFIG_ACTION_DIFF:
-    ret = config_diff (&state_data);
+    ret = config_diff (sections,
+                       prog_data->args,
+                       &state_data);
     break;
   case CONFIG_ACTION_LIST_SECTIONS:
     ret = bmc_config_output_sections_list (sections);

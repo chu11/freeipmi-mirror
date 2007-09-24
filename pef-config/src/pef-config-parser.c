@@ -14,7 +14,9 @@
 #include "pef-config-sections.h"
 
 config_err_t
-pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
+pef_config_parser (struct config_section *sections,
+                   struct config_arguments *cmd_args,
+                   FILE *fp)
 { 
   char buf[4096];
   int line_num = 0;
@@ -23,9 +25,6 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
   char *value = NULL;
   char *tok;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  struct config_arguments *args;
-
-  args = state_data->prog_data->args;
 
   while (fgets (buf, 4096, fp)) 
     {
@@ -35,14 +34,14 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
       
       if (!first_word) 
         {
-          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "%d: empty line\n", line_num);
           continue;
         }
     
       if (first_word[0] == '#') 
         {
-          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "Comment on line %d\n", line_num);
           continue;
         }
@@ -68,7 +67,7 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
               goto cleanup;
             }
 
-          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
+          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
             fprintf (stderr, "Entering section `%s'\n", section_name);
 
           continue;
@@ -84,7 +83,7 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
               goto cleanup;
             }
 
-          if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+          if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "Leaving section `%s'\n", section_name);
 
           free (section_name);
@@ -136,11 +135,11 @@ pef_config_parser (pef_config_state_data_t *state_data, FILE *fp)
             }
         }
       
-      if (args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
+      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
         fprintf (stderr, "Trying to set `%s:%s=%s'\n",
                  section_name, key_name, value);
       
-      if (pef_config_section_set_value (state_data->sections,
+      if (pef_config_section_set_value (sections,
                                         section_name,
                                         key_name,
                                         value) < 0) 

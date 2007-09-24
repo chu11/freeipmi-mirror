@@ -3,6 +3,8 @@
 
 #include "pef-config.h"
 
-config_err_t pef_commit (pef_config_state_data_t *state_data);
+config_err_t pef_commit (struct config_section *sections,
+                         struct config_arguments *cmd_args,
+                         void *arg);
 
 #endif

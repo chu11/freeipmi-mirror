@@ -17,25 +17,24 @@
 #include "bmc-config-sections.h"
 
 static config_err_t
-bmc_commit_keypairs (bmc_config_state_data_t *state_data)
+bmc_commit_keypairs (struct config_section *sections,
+                     struct config_arguments *cmd_args,
+                     void *arg)
 {
-  struct config_arguments *args;
   struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
-  args = state_data->prog_data->args;
-
-  kp = args->keypairs;
+  kp = cmd_args->keypairs;
   while (kp)
     {
       config_err_t this_ret;
 
-      if ((this_ret = bmc_config_section_commit_value (state_data->sections,
+      if ((this_ret = bmc_config_section_commit_value (sections,
                                                        kp->section_name,
                                                        kp->key_name, 
                                                        kp->value_input,
-                                                       state_data)) == CONFIG_ERR_FATAL_ERROR)
+                                                       arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -50,22 +49,20 @@ bmc_commit_keypairs (bmc_config_state_data_t *state_data)
 }
 
 static config_err_t
-bmc_keypair_feed (bmc_config_state_data_t *state_data)
+bmc_keypair_feed (struct config_section *sections,
+                  struct config_arguments *cmd_args)
 {
-  struct config_arguments *args;
   struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
-  args = state_data->prog_data->args;
-
-  kp = args->keypairs;
+  kp = cmd_args->keypairs;
   while (kp)
     {
       struct config_section *section;
       int found_section;
 
-      section = state_data->sections;
+      section = sections;
       found_section = 0;
       while (section) 
         {
@@ -125,20 +122,19 @@ bmc_keypair_feed (bmc_config_state_data_t *state_data)
 }
 
 static config_err_t
-bmc_commit_file (bmc_config_state_data_t *state_data)
+bmc_commit_file (struct config_section *sections,
+                 struct config_arguments *cmd_args,
+                 void *arg)
 {
-  struct config_arguments *args;
   int file_opened = 0;
   FILE *fp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
   config_err_t this_ret;
 
-  args = state_data->prog_data->args;
-
-  if (args->filename && strcmp (args->filename, "-"))
+  if (cmd_args->filename && strcmp (cmd_args->filename, "-"))
     {
-      if (!(fp = fopen (args->filename, "r")))
+      if (!(fp = fopen (cmd_args->filename, "r")))
         {
           perror("fopen");
           goto cleanup;
@@ -149,16 +145,16 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
     fp = stdin;
 
   /* 1st pass - read in input from file */
-  if ((this_ret = bmc_config_parser (state_data, fp)) == CONFIG_ERR_FATAL_ERROR)
+  if ((this_ret = bmc_config_parser (sections, cmd_args, fp)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
     ret = CONFIG_ERR_NON_FATAL_ERROR;
 
   /* 2nd pass - feed in keypair elements from the command line to override file keypairs */
-  if (args->keypairs)
+  if (cmd_args->keypairs)
     {
-      if ((this_ret = bmc_keypair_feed (state_data)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_keypair_feed (sections, cmd_args)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -168,7 +164,7 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
   if (ret == CONFIG_ERR_SUCCESS) 
     {
       /* 3rd pass */
-      struct config_section *section = state_data->sections;
+      struct config_section *section = sections;
       while (section) 
         {
           struct config_keyvalue *kv = section->keyvalues;
@@ -176,7 +172,7 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->commit (section, kv, state_data)) == CONFIG_ERR_FATAL_ERROR)
+                  if ((this_ret = kv->commit (section, kv, arg)) == CONFIG_ERR_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -188,7 +184,7 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
               kv = kv->next;
             }
 
-          if (args->verbose)
+          if (cmd_args->verbose)
             fprintf (stderr, "Completed commit of Section: %s\n",
                      section->section_name);
 
@@ -204,16 +200,16 @@ bmc_commit_file (bmc_config_state_data_t *state_data)
 }
 
 config_err_t
-bmc_commit (bmc_config_state_data_t *state_data)
+bmc_commit (struct config_section *sections,
+            struct config_arguments *cmd_args,
+            void *arg)
 {
-  struct config_arguments *args;
   config_err_t ret;
 
-  args = state_data->prog_data->args;
-  if (args->filename)
-    ret = bmc_commit_file (state_data);
+  if (cmd_args->filename)
+    ret = bmc_commit_file (sections, cmd_args, arg);
   else
-    ret = bmc_commit_keypairs (state_data);
+    ret = bmc_commit_keypairs (sections, cmd_args, arg);
 
   return ret;
 }
