@@ -125,7 +125,9 @@ _bmc_config (void *arg)
 
   switch (prog_data->args->action) {
   case CONFIG_ACTION_CHECKOUT:
-    ret = bmc_checkout (&state_data);
+    ret = bmc_checkout (sections,
+                        prog_data->args,
+                        &state_data);
     break;
   case CONFIG_ACTION_COMMIT:
     ret = bmc_commit (&state_data);

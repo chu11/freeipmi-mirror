@@ -16,8 +16,9 @@
 #include "bmc-config-sections.h"
 
 static config_err_t
-bmc_checkout_keypair (bmc_config_state_data_t *state_data,
-                      struct config_keypair *kp)
+bmc_checkout_keypair (struct config_section *sections,
+                      struct config_keypair *kp,
+                      void *arg)
 {
   struct config_section *section;
   struct config_keyvalue *kv;
@@ -25,7 +26,7 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
   /* XXX - use common func later */
-  section = state_data->sections;
+  section = sections;
   while (section) 
     {
       if (same (kp->section_name, section->section_name)) 
@@ -57,7 +58,7 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = kv->checkout (section, kv, state_data)) == CONFIG_ERR_FATAL_ERROR)
+  if ((ret = kv->checkout (section, kv, arg)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (ret == CONFIG_ERR_SUCCESS) 
@@ -72,22 +73,22 @@ bmc_checkout_keypair (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-bmc_checkout_keypairs (bmc_config_state_data_t *state_data)
+bmc_checkout_keypairs (struct config_section *sections,
+                       struct config_arguments *cmd_args,
+                       void *arg)
 {
-  struct config_arguments *args;
   struct config_keypair *kp;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
-  args = state_data->prog_data->args;
-
-  kp = args->keypairs;
+  kp = cmd_args->keypairs;
   while (kp)
     {
       config_err_t this_ret;
 
-      if ((this_ret = bmc_checkout_keypair(state_data,
-                                           kp)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_checkout_keypair(sections,
+                                           kp,
+                                           arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -102,11 +103,11 @@ bmc_checkout_keypairs (bmc_config_state_data_t *state_data)
 }
 
 static config_err_t
-bmc_checkout_section_common (bmc_config_state_data_t *state_data,
-                             struct config_section *section, 
-                             FILE *fp)
+bmc_checkout_section_common (struct config_section *section, 
+                             struct config_arguments *cmd_args,
+                             FILE *fp,
+                             void *arg)
 {
-  struct config_arguments *args;
   struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
@@ -122,7 +123,7 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
                                   section->section_comment,
                                   fp) < 0)
         {
-          if (args->verbose)
+          if (cmd_args->verbose)
             fprintf (fp, "\t## FATAL: Comment output error\n");
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
@@ -130,7 +131,6 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
 
   fprintf (fp, "Section %s\n", section->section_name);
 
-  args = state_data->prog_data->args;
   kv = section->keyvalues;
   
   while (kv) 
@@ -148,12 +148,12 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
 
       if ((this_ret = kv->checkout (section,
                                     kv,
-                                    state_data)) == CONFIG_ERR_FATAL_ERROR)
+                                    arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         {
-          if (args->verbose)
+          if (cmd_args->verbose)
             fprintf (fp, "\t## FATAL: Unable to checkout %s:%s\n",
                      section->section_name,
                      kv->key_name);
@@ -209,20 +209,19 @@ bmc_checkout_section_common (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-bmc_checkout_section (bmc_config_state_data_t *state_data)
+bmc_checkout_section (struct config_section *sections,
+                      struct config_arguments *cmd_args,
+                      void *arg)
 {
-  struct config_arguments *args;
   struct config_section_str *sstr;
   FILE *fp;
   int file_opened = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
-  args = state_data->prog_data->args;
-
-  if (args->filename && strcmp (args->filename, "-"))
+  if (cmd_args->filename && strcmp (cmd_args->filename, "-"))
     {
-      if (!(fp = fopen (args->filename, "w")))
+      if (!(fp = fopen (cmd_args->filename, "w")))
         {
           perror("fopen");
           goto cleanup;
@@ -232,10 +231,10 @@ bmc_checkout_section (bmc_config_state_data_t *state_data)
   else
     fp = stdout;
 
-  sstr = args->section_strs;
+  sstr = cmd_args->section_strs;
   while (sstr)
     {
-      struct config_section *section = state_data->sections;
+      struct config_section *section = sections;
       int found = 0;
       
       while (section) 
@@ -246,9 +245,10 @@ bmc_checkout_section (bmc_config_state_data_t *state_data)
               
               found++;
 
-              if ((this_ret = bmc_checkout_section_common (state_data, 
-                                                           section, 
-                                                           fp)) == CONFIG_ERR_FATAL_ERROR)
+              if ((this_ret = bmc_checkout_section_common (section, 
+                                                           cmd_args,
+                                                           fp,
+                                                           arg)) == CONFIG_ERR_FATAL_ERROR)
                 goto cleanup;
               
               if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -277,20 +277,19 @@ bmc_checkout_section (bmc_config_state_data_t *state_data)
 }
 
 static config_err_t
-bmc_checkout_file (bmc_config_state_data_t *state_data)
+bmc_checkout_file (struct config_section *sections,
+                   struct config_arguments *cmd_args,
+                   void *arg)
 {
-  struct config_arguments *args;
   struct config_section *section;
   FILE *fp;
   int file_opened = 0;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret = CONFIG_ERR_SUCCESS;
 
-  args = state_data->prog_data->args;
-
-  if (args->filename && strcmp (args->filename, "-"))
+  if (cmd_args->filename && strcmp (cmd_args->filename, "-"))
     {
-      if (!(fp = fopen (args->filename, "w")))
+      if (!(fp = fopen (cmd_args->filename, "w")))
         {
           perror("fopen");
           goto cleanup;
@@ -300,20 +299,21 @@ bmc_checkout_file (bmc_config_state_data_t *state_data)
   else
     fp = stdout;
 
-  section = state_data->sections;
+  section = sections;
   while (section) 
     {
       config_err_t this_ret;
       
-      if ((this_ret = bmc_checkout_section_common (state_data,
-                                                   section,
-                                                   fp)) == CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = bmc_checkout_section_common (section,
+                                                   cmd_args,
+                                                   fp,
+                                                   arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
         ret = CONFIG_ERR_NON_FATAL_ERROR;
 
-      if (args->verbose)
+      if (cmd_args->verbose)
         fprintf (stderr, "Completed checkout of Section: %s\n",
                  section->section_name);
 
@@ -328,19 +328,18 @@ bmc_checkout_file (bmc_config_state_data_t *state_data)
 }
 
 config_err_t
-bmc_checkout (bmc_config_state_data_t *state_data)
+bmc_checkout (struct config_section *sections,
+              struct config_arguments *cmd_args,
+              void *arg)
 {
-  struct config_arguments *args;
   config_err_t ret;
 
-  args = state_data->prog_data->args;
-
-  if (args->keypairs) 
-    ret = bmc_checkout_keypairs (state_data);
-  else if (args->section_strs)
-    ret = bmc_checkout_section (state_data);
+  if (cmd_args->keypairs) 
+    ret = bmc_checkout_keypairs (sections, cmd_args, arg);
+  else if (cmd_args->section_strs)
+    ret = bmc_checkout_section (sections, cmd_args, arg);
   else
-    ret = bmc_checkout_file (state_data);
+    ret = bmc_checkout_file (sections, cmd_args, arg);
 
   return ret;
 }

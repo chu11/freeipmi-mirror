@@ -100,7 +100,9 @@ _pef_config (void *arg)
     ret = pef_info (&state_data);
     break;
   case CONFIG_ACTION_CHECKOUT:
-    ret = pef_checkout (&state_data);
+    ret = pef_checkout (sections,
+                        prog_data->args,
+                        &state_data);
     break;
   case CONFIG_ACTION_COMMIT:
     ret = pef_commit (&state_data);
