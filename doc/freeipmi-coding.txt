@@ -253,12 +253,12 @@ The macros are located in header files in common/src.
 6) Fiid vs. other Marshalling/Unmarshalling Styles
 --------------------------------------------------
 
-To most that look at the FreeIPMI code, they may be surprised by the
-method by which we marshall/unmarshall IPMI packets and generally
-build packets.
+Several programmers have asked us why we have chosen a relatively
+unpopular method to marshall/unmarshall IPMI packets and build network
+packets.
 
-There are several classic methods for marshalling/unmarshalling data when
-using structs to represent a packet.
+First, there are several classic methods for marshalling/unmarshalling
+data when using structs to represent a packet.
 
 Method A: Marshall/Unmarshall "manually":
 -----------------------------------------
@@ -271,17 +271,18 @@ struct packet
   int field_4; /* 16 bits */
 };
 
-char my_packet_buffer[1024];
-
+char packet_buffer[1024];
 struct packet pkt;
 
-pkt.field_1 = my_packet_buffer[0] & 0x01;
-pkt.field_2 = my_packet_buffer[0] & 0x0E >> 1;
-pkt.field_3 = my_packet_buffer[0] & 0xF0 >> 4;
+/* receive data from the network into packet_buffer */
+
+pkt.field_1 = packet_buffer[0] & 0x01;
+pkt.field_2 = packet_buffer[0] & 0x0E >> 1;
+pkt.field_3 = packet_buffer[0] & 0xF0 >> 4;
 #if LITTLE_ENDIAN_HOST
-pkt.field_4 = my_packet_buffer[2] | my_packet_buffer[1] << 8;;
+pkt.field_4 = packet_buffer[2] | packet_buffer[1] << 8;;
 #else
-pkt.field_4 = my_packet_buffer[1] | my_packet_buffer[2] << 8;;
+pkt.field_4 = packet_buffer[1] | packet_buffer[2] << 8;;
 #endif
 
 Pros:
@@ -342,10 +343,10 @@ E) Difficult to do large packet dumps (you only get hex, or you have
 to create a separate debug function for each struct or packet type if
 you want nicer output).
 
-Our Method C: Fiid:
--------------------
+Our Method C: string_name -> bitmask mapping
+--------------------------------------------
 
-The "FreeIPMI Interface Definition" or 'fiid' API in libfreeipmi using
+The "FreeIPMI Interface Definition" or 'fiid' API in libfreeipmi uses
 a string_name/bit_count template and an API to get and set values in a
 packet to handle marshalling/unmarshalling.  The following is an
 example of this template:
@@ -446,11 +447,12 @@ pwopr2: [              1Fh] = checksum2[ 8b]
 
 C) There are a relatively large number of optional fields and variable
 length fields in the IPMI specification.  The traditional struct based
-marshalling/unmarshalling has problems with handling these.
+marshalling/unmarshalling would have problems with handling these.
 
 It should be noted that in IPMI, many of the optional and/or variable
-length fields may not be in the "trailer" of a packet.  Therefore, a 
-traditional struct method of dealing with a variable length packet:
+length fields may not be in the "trailer" of a packet.  Therefore, a
+traditional struct method of dealing with a variable length packet
+like the below:
 
 struct packet
 {
@@ -575,13 +577,12 @@ would require 5 read requests to read all 5 values.  It would require
 4 read requests (for FieldB.1-FieldB.4) and 5 write requests to write
 the values.
 
-Obviously, this sounds like (and is!) very inefficient.  In addition,
-coding wise, it leads to a very large amount of code duplication.
-There are large amounts of very similar "get the old values, change
-1 specific value, write all the values back" code in Bmc-config.
+Obviously, this sounds like (and is!) very inefficient. 
 
-The authors acknowledge that the code is very inefficient.  However, here
-are some of the major reasons why this was done and is still kept.
+The authors acknowledge that the code is very inefficient b/c it will
+cause an excess number of request/response packets to be generated.
+However, here are some of the major reasons why this was done and is
+still kept.
 
 A) (This is the primary reason this architecture is still kept.)  Due
 to widely varying hardware and implementations, this handles the write
@@ -598,19 +599,16 @@ may or may not be configurable.  If all 4 fields of FieldB.1-FieldB.4
 were written at the same time, there is currently no method in the
 IPMI protocol to know what field was configured incorrectly and why.
 
+In the future, functionality could be added to retry each field
+separately if there was such a failure, however that would add another
+piece of complexity into the code we currently don't have time for.
+
 B) There are several (and possibly more future) vendor compliance
 problems that can be (or will need to be) worked around.  By using
 this architecture each specific field can be worked around
 independetly depending on the vendor.
 
-C) Admittedly, much is this is still done for legacy reasons.
-'FieldA' type fields were a more common case in the beginning of
-Bmc-config's implementation, which (to some extent) is why this
-architecture was initially selected.
+C) In the beginning of Bmc-config's development, 'FieldA' type fields
+were a bit more common than 'FieldB' type fields.  Currently, it's
+about 50-50.
 
-The major deficiencies that we see are:
-
-D) Slow reads/writes due to an excess of IPMI traffic.  The read case
-can be sped up since it is not affected by problem 'A' above.
-However, at this point in time, the inefficiencies of 'A' will likely
-be kept in favor of its ability to handle the generic write case.
