@@ -127,15 +127,13 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
     "username configured should set for support under a cipher suite ID. "
     "This is typically \"Administrator\".";
 
-  if (!(rmcpplus_conf_privilege_section = bmc_config_section_create (state_data, 
-                                                                     "Rmcpplus_Conf_Privilege",
+  if (!(rmcpplus_conf_privilege_section = bmc_config_section_create ("Rmcpplus_Conf_Privilege",
                                                                      "Rmcpplus_Conf_Privilege",
                                                                      section_comment,
                                                                      0)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_0",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -145,8 +143,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_1",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -156,8 +153,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_2",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -167,8 +163,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_3",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -178,8 +173,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_4",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -189,8 +183,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_5",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -200,8 +193,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_6",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -211,8 +203,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_7",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -222,8 +213,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_8",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -233,8 +223,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_9",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -244,8 +233,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_10",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -255,8 +243,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_11",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -266,8 +253,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_12",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -277,8 +263,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_13",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -288,8 +273,7 @@ bmc_config_rmcpplus_conf_privilege_section_get (bmc_config_state_data_t *state_d
                                        rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       rmcpplus_conf_privilege_section,
+  if (bmc_config_section_add_keyvalue (rmcpplus_conf_privilege_section,
                                        "Maximum_Privilege_Cipher_Suite_Id_14",
                                        "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
                                        0,

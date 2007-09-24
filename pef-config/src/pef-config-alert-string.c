@@ -433,15 +433,13 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
 
   snprintf(buf, 64, "Alert_String_%d", num);
 
-  if (!(section = pef_config_section_create (state_data, 
-                                          buf, 
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(section = pef_config_section_create (buf, 
+                                             NULL, 
+                                             NULL, 
+                                             0)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Number",
                                        "Give valid number",
                                        0,
@@ -451,8 +449,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                                        config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_String_Set",
                                        "Give valid number",
                                        0,
@@ -462,8 +459,7 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                                        config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_String",
                                        "Give string. Max 64 chars.",
                                        0,

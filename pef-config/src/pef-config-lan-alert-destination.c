@@ -1015,15 +1015,13 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
 
   snprintf(buf, 64, "Lan_Alert_Destination_%d", num);
 
-  if (!(section = pef_config_section_create (state_data, 
-                                          buf, 
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(section = pef_config_section_create (buf, 
+                                             NULL, 
+                                             NULL, 
+                                             0)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_Destination_Type",
                                        "Possible values: PET_Trap/OEM1/OEM2",
                                        0,
@@ -1033,8 +1031,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        alert_destination_type_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_Acknowledge",
                                        "Possible values: Yes/No",
                                        0,
@@ -1044,8 +1041,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_Acknowledge_Timeout",
                                        "Give valid unsigned number in seconds",
                                        0,
@@ -1055,8 +1051,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_Retries",
                                        "Give valid unsigned number",
                                        0,
@@ -1066,8 +1061,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        alert_retries_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_Gateway",
                                        "Possible values: Default/Backup",
                                        0,
@@ -1077,8 +1071,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        alert_gateway_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_IP_Address",
                                        "Give valid IP address",
                                        0,
@@ -1088,8 +1081,7 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                        config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_MAC_Address",
                                        "Give valid MAC address",
                                        0,

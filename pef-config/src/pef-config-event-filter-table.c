@@ -3281,15 +3281,13 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
 
   snprintf(buf, 64, "Event_Filter_%d", num);
 
-  if (!(section = pef_config_section_create (state_data, 
-                                          buf, 
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(section = pef_config_section_create (buf, 
+                                             NULL, 
+                                             NULL, 
+                                             0)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Filter_Type",
                                        "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
                                        0,
@@ -3299,8 +3297,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        filter_type_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Enable_Filter",
                                        "Possible values: Yes/No",
                                        0,
@@ -3310,8 +3307,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Action_Alert",
                                        "Possible values: Yes/No",
                                        0,
@@ -3321,8 +3317,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Action_Power_Off",
                                        "Possible values: Yes/No",
                                        0,
@@ -3332,8 +3327,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Action_Reset",
                                        "Possible values: Yes/No",
                                        0,
@@ -3343,8 +3337,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Action_Power_Cycle",
                                        "Possible values: Yes/No",
                                        0,
@@ -3354,8 +3347,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Action_Oem",
                                        "Possible values: Yes/No",
                                        0,
@@ -3365,8 +3357,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Action_Diagnostic_Interrupt",
                                        "Possible values: Yes/No",
                                        0,
@@ -3376,8 +3367,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Filter_Action_Group_Control_Operation",
                                        "Possible values: Yes/No",
                                        0,
@@ -3387,8 +3377,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_Policy_Number",
                                        "Give a valid number",
                                        0,
@@ -3398,8 +3387,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Group_Control_Selector",
                                        "Give a valid number",
                                        0,
@@ -3409,8 +3397,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_three_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Severity",
                                        "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
                                        0,
@@ -3420,8 +3407,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        event_severity_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Generator_Id_Byte_1",
                                        "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
                                        0,
@@ -3431,8 +3417,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Generator_Id_Byte_1",
                                        "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
                                        0,
@@ -3442,8 +3427,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Sensor_Type",
                                        "Specify a Sensor Type, For options see the MAN page",
                                        0,
@@ -3453,8 +3437,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        sensor_type_validate) < 0) 
     goto cleanup;
   
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Sensor_Number",
                                        "Specify a Sensor Number or 0xFF to Match Any",
                                        0,
@@ -3464,8 +3447,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Trigger",
                                        "Specify a Event/Reading Type Number or 0xFF to Match Any",
                                        0,
@@ -3475,8 +3457,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data1_Offset_Mask",
                                        "Give a valid number",
                                        0,
@@ -3486,8 +3467,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_two_bytes) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data1_AND_Mask",
                                        "Give a valid number",
                                        0,
@@ -3497,8 +3477,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data1_Compare1",
                                        "Give a valid number",
                                        0,
@@ -3508,8 +3487,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data1_Compare2",
                                        "Give a valid number",
                                        0,
@@ -3519,8 +3497,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
   
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data2_AND_Mask",
                                        "Give a valid number",
                                        0,
@@ -3530,8 +3507,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data2_Compare1",
                                        "Give a valid number",
                                        0,
@@ -3541,8 +3517,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data2_Compare2",
                                        "Give a valid number",
                                        0,
@@ -3552,8 +3527,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data3_AND_Mask",
                                        "Give a valid number",
                                        0,
@@ -3563,8 +3537,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data3_Compare1",
                                        "Give a valid number",
                                        0,
@@ -3574,8 +3547,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Data3_Compare2",
                                        "Give a valid number",
                                        0,

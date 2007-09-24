@@ -959,15 +959,13 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
     "communication can be disabled.  This can be done by setting "
     "\"Access_Mode\" to \"Disabled\".";
 
-  if (!(serial_channel_section = bmc_config_section_create (state_data, 
-                                                            "Serial_Channel",
+  if (!(serial_channel_section = bmc_config_section_create ("Serial_Channel",
                                                             "Serial_Channel",
                                                             section_comment,
                                                             0)))
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Volatile_Access_Mode",
                                        "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                                        0,
@@ -977,8 +975,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Volatile_Enable_User_Level_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -988,8 +985,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Volatile_Enable_Per_Message_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -999,8 +995,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Volatile_Enable_Pef_Alerting",
                                        "Possible values: Yes/No",
                                        0,
@@ -1010,8 +1005,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Volatile_Channel_Privilege_Limit",
                                        "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                                        0,
@@ -1021,8 +1015,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Non_Volatile_Access_Mode",
                                        "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
                                        0,
@@ -1032,8 +1025,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        channel_access_mode_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Non_Volatile_Enable_User_Level_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1043,8 +1035,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Non_Volatile_Enable_Per_Message_Auth",
                                        "Possible values: Yes/No",
                                        0,
@@ -1054,8 +1045,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Non_Volatile_Enable_Pef_Alerting",
                                        "Possible values: Yes/No",
                                        0,
@@ -1065,8 +1055,7 @@ bmc_config_serial_channel_section_get (bmc_config_state_data_t *state_data)
                                        config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (bmc_config_section_add_keyvalue (state_data,
-                                       serial_channel_section,
+  if (bmc_config_section_add_keyvalue (serial_channel_section,
                                        "Non_Volatile_Channel_Privilege_Limit",
                                        "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
                                        0,

@@ -4,7 +4,7 @@
 #include "pef-config.h"
 #include "pef-config-common.h"
 
-struct config_section * pef_config_sections_create (pef_config_state_data_t *state_data);
+struct config_section *pef_config_sections_create (pef_config_state_data_t *state_data);
 
 /* no config_sections_create, responsibility of config tool to create list */
 
@@ -13,16 +13,14 @@ int pef_config_section_append(struct config_section **sections,
 
 void pef_config_sections_destroy (struct config_section *sections);
 
-struct config_section * pef_config_section_create (pef_config_state_data_t *state_data, 
-                                                   char *section_name,
-                                                   char *section_comment_section_name,
-                                                   char *section_comment,
-                                                   unsigned int flags);
+struct config_section *pef_config_section_create (char *section_name,
+                                                  char *section_comment_section_name,
+                                                  char *section_comment,
+                                                  unsigned int flags);
 
 void pef_config_section_destroy (struct config_section *section);
 
-int pef_config_section_add_keyvalue (pef_config_state_data_t *state_data,
-                                     struct config_section *section,
+int pef_config_section_add_keyvalue (struct config_section *section,
                                      const char *key_name,
                                      const char *description,
                                      unsigned int flags,
@@ -31,24 +29,26 @@ int pef_config_section_add_keyvalue (pef_config_state_data_t *state_data,
                                      Key_Diff diff,
                                      Key_Validate validate);
 
-struct config_keyvalue * pef_config_section_find_keyvalue (pef_config_state_data_t *state_data,
-                                                           const char *section_name,
-                                                           const char *key_name);
+struct config_keyvalue *pef_config_section_find_keyvalue (struct config_section *sections,
+                                                          const char *section_name,
+                                                          const char *key_name);
 
-int pef_config_section_set_value (pef_config_state_data_t *state_data,
+int pef_config_section_set_value (struct config_section *sections,
                                   const char *section_name,
                                   const char *key_name,
                                   const char *value);
 
-config_err_t pef_config_section_commit_value (pef_config_state_data_t *state_data,
+config_err_t pef_config_section_commit_value (struct config_section *sections,
                                               const char *section_name,
                                               const char *key_name,
-                                              const char *value);
+                                              const char *value,
+                                              void *arg);
 
-int pef_config_section_diff_value (pef_config_state_data_t *state_data,
+int pef_config_section_diff_value (struct config_section *sections,
                                    const char *section_name,
                                    const char *key_name,
-                                   const char *value);
+                                   const char *value,
+                                   void *arg);
 
 config_err_t pef_config_output_sections_list (struct config_section *sections);
 

@@ -1023,15 +1023,13 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
 
   snprintf(buf, 64, "Alert_Policy_%d", num);
 
-  if (!(section = pef_config_section_create (state_data, 
-                                          buf, 
-                                          NULL, 
-                                          NULL, 
-                                          0)))
+  if (!(section = pef_config_section_create (buf, 
+                                             NULL, 
+                                             NULL, 
+                                             0)))
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Policy_Type",
                                        "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
                                        0,
@@ -1041,8 +1039,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        policy_type_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Policy_Enabled",
                                        "Possible values: Yes/No",
                                        0,
@@ -1052,8 +1049,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Policy_Number",
                                        "Give a valid number",
                                        0,
@@ -1063,8 +1059,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Destination_Selector",
                                        "Give a valid number",
                                        0,
@@ -1086,8 +1081,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
         }
     }
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Channel_Number",
                                        strp,
                                        0,
@@ -1097,8 +1091,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Alert_String_Set_Selector",
                                        "Give a valid number",
                                        0,
@@ -1108,8 +1101,7 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                        config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (pef_config_section_add_keyvalue (state_data,
-                                       section,
+  if (pef_config_section_add_keyvalue (section,
                                        "Event_Specific_Alert_String",
                                        "Possible values: Yes/No",
                                        0,

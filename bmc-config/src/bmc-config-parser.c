@@ -142,7 +142,7 @@ bmc_config_parser (bmc_config_state_data_t *state_data, FILE *fp)
         fprintf (stderr, "Trying to set `%s:%s=%s'\n",
                  section_name, key_name, value);
       
-      if (bmc_config_section_set_value (state_data,
+      if (bmc_config_section_set_value (state_data->sections,
                                         section_name,
                                         key_name,
                                         value) < 0) 

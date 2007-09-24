@@ -29,10 +29,11 @@ config_diff_keypairs (bmc_config_state_data_t *state_data)
     {
       config_diff_t this_ret;
 
-      if ((this_ret = bmc_config_section_diff_value (state_data,
+      if ((this_ret = bmc_config_section_diff_value (state_data->sections,
                                                      kp->section_name, 
                                                      kp->key_name,
-                                                     kp->value_input)) == CONFIG_DIFF_FATAL_ERROR)
+                                                     kp->value_input,
+                                                     state_data)) == CONFIG_DIFF_FATAL_ERROR)
         goto cleanup;
 
       if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)
