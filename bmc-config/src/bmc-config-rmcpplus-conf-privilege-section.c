@@ -28,7 +28,7 @@ id_checkout (const char *section_name,
                                                      &priv)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (rmcpplus_priv_string (priv))))
+  if (!(kv->value_output = strdup (rmcpplus_priv_string (priv))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -46,7 +46,7 @@ id_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_rmcpplus_cipher_suite_id_privilege (state_data,
 						 id,
-						 rmcpplus_priv_number (kv->value));
+						 rmcpplus_priv_number (kv->value_input));
 }
 
 static config_diff_t
@@ -69,14 +69,14 @@ id_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (kv->value, rmcpplus_priv_string (priv)))
+  if (same (kv->value_input, rmcpplus_priv_string (priv)))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    rmcpplus_priv_string (priv));
     }
   return ret;

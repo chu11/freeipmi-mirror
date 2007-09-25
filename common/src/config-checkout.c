@@ -64,7 +64,7 @@ config_checkout_keypair (struct config_section *sections,
     goto cleanup;
 
   if (ret == CONFIG_ERR_SUCCESS) 
-    printf ("%s:%s=%s\n", kp->section_name, kp->key_name, kv->value);
+    printf ("%s:%s=%s\n", kp->section_name, kp->key_name, kv->value_output);
   else
     printf ("Error fetching value for %s in %s\n",
             kp->key_name, kp->section_name);
@@ -183,7 +183,7 @@ config_checkout_section_common (struct config_section *section,
             key_len = fprintf(fp, "\t## %s", kv->key_name);
           else if (kv->flags & CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY)
             {
-              if (kv->value && strlen(kv->value))
+              if (kv->value_output && strlen(kv->value_output))
                 key_len = fprintf (fp, "\t%s", kv->key_name);
               else
                 key_len = fprintf(fp, "\t## %s", kv->key_name);
@@ -197,7 +197,7 @@ config_checkout_section_common (struct config_section *section,
               key_len++;
             }
           
-          fprintf (fp, "%s\n", kv->value);
+          fprintf (fp, "%s\n", kv->value_output);
         }
       
       kv = kv->next;

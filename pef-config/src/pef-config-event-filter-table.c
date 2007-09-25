@@ -151,7 +151,7 @@ filter_type_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value = strdup (filter_type_string (eft.filter_type))))
+  if (!(kv->value_output = strdup (filter_type_string (eft.filter_type))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -185,7 +185,7 @@ filter_type_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.filter_type = filter_type_number (kv->value);
+  eft.filter_type = filter_type_number (kv->value_input);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -226,7 +226,7 @@ filter_type_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = filter_type_number (kv->value);
+  passed_val = filter_type_number (kv->value_input);
   if (passed_val == eft.filter_type)
     ret = CONFIG_DIFF_SAME;
   else
@@ -234,7 +234,7 @@ filter_type_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    filter_type_string (eft.filter_type));
     }
   return ret;
@@ -265,7 +265,7 @@ enable_filter_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (eft.enable_filter ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.enable_filter ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -299,7 +299,7 @@ enable_filter_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.enable_filter = same (kv->value, "yes");
+  eft.enable_filter = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -340,7 +340,7 @@ enable_filter_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.enable_filter)
     ret = CONFIG_DIFF_SAME;
@@ -349,7 +349,7 @@ enable_filter_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.enable_filter ? "Yes" : "No");
     }
   return ret;
@@ -380,7 +380,7 @@ event_filter_action_alert_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (eft.event_filter_action_alert ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.event_filter_action_alert ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -414,7 +414,7 @@ event_filter_action_alert_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_filter_action_alert = same (kv->value, "yes");
+  eft.event_filter_action_alert = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -455,7 +455,7 @@ event_filter_action_alert_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.event_filter_action_alert)
     ret = CONFIG_DIFF_SAME;
@@ -464,7 +464,7 @@ event_filter_action_alert_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.event_filter_action_alert ? "Yes" : "No");
     }
   return ret;
@@ -495,7 +495,7 @@ event_filter_action_power_off_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (eft.event_filter_action_power_off ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.event_filter_action_power_off ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -529,7 +529,7 @@ event_filter_action_power_off_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_filter_action_power_off = same (kv->value, "yes");
+  eft.event_filter_action_power_off = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -570,7 +570,7 @@ event_filter_action_power_off_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.event_filter_action_power_off)
     ret = CONFIG_DIFF_SAME;
@@ -579,7 +579,7 @@ event_filter_action_power_off_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.event_filter_action_power_off ? "Yes" : "No");
     }
   return ret;
@@ -610,7 +610,7 @@ event_filter_action_reset_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (eft.event_filter_action_reset ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.event_filter_action_reset ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -644,7 +644,7 @@ event_filter_action_reset_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_filter_action_reset = same (kv->value, "yes");
+  eft.event_filter_action_reset = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -685,7 +685,7 @@ event_filter_action_reset_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.event_filter_action_reset)
     ret = CONFIG_DIFF_SAME;
@@ -694,7 +694,7 @@ event_filter_action_reset_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.event_filter_action_reset ? "Yes" : "No");
     }
   return ret;
@@ -726,7 +726,7 @@ event_filter_action_power_cycle_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (eft.event_filter_action_power_cycle ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.event_filter_action_power_cycle ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -760,7 +760,7 @@ event_filter_action_power_cycle_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_filter_action_power_cycle = same (kv->value, "yes");
+  eft.event_filter_action_power_cycle = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -801,7 +801,7 @@ event_filter_action_power_cycle_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.event_filter_action_power_cycle)
     ret = CONFIG_DIFF_SAME;
@@ -810,7 +810,7 @@ event_filter_action_power_cycle_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.event_filter_action_power_cycle ? "Yes" : "No");
     }
   return ret;
@@ -841,7 +841,7 @@ event_filter_action_oem_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (eft.event_filter_action_oem ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.event_filter_action_oem ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -875,7 +875,7 @@ event_filter_action_oem_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_filter_action_oem = same (kv->value, "yes");
+  eft.event_filter_action_oem = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -916,7 +916,7 @@ event_filter_action_oem_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.event_filter_action_oem)
     ret = CONFIG_DIFF_SAME;
@@ -925,7 +925,7 @@ event_filter_action_oem_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.event_filter_action_oem ? "Yes" : "No");
     }
   return ret;
@@ -956,7 +956,7 @@ event_filter_action_diagnostic_interrupt_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -990,7 +990,7 @@ event_filter_action_diagnostic_interrupt_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_filter_action_diagnostic_interrupt = same (kv->value, "yes");
+  eft.event_filter_action_diagnostic_interrupt = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1031,7 +1031,7 @@ event_filter_action_diagnostic_interrupt_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.event_filter_action_diagnostic_interrupt)
     ret = CONFIG_DIFF_SAME;
@@ -1040,7 +1040,7 @@ event_filter_action_diagnostic_interrupt_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No");
     }
   return ret;
@@ -1071,7 +1071,7 @@ event_filter_action_group_control_operation_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value = strdup (eft.event_filter_action_group_control_operation ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (eft.event_filter_action_group_control_operation ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1105,7 +1105,7 @@ event_filter_action_group_control_operation_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_filter_action_group_control_operation = same (kv->value, "yes");
+  eft.event_filter_action_group_control_operation = same (kv->value_input, "yes");
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1146,7 +1146,7 @@ event_filter_action_group_control_operation_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == eft.event_filter_action_group_control_operation)
     ret = CONFIG_DIFF_SAME;
@@ -1155,7 +1155,7 @@ event_filter_action_group_control_operation_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    eft.event_filter_action_group_control_operation ? "Yes" : "No");
     }
   return ret;
@@ -1186,7 +1186,7 @@ alert_policy_number_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", eft.alert_policy_number) < 0)
+  if (asprintf (&kv->value_output, "%u", eft.alert_policy_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1220,7 +1220,7 @@ alert_policy_number_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.alert_policy_number = atoi (kv->value);
+  eft.alert_policy_number = atoi (kv->value_input);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1261,7 +1261,7 @@ alert_policy_number_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == eft.alert_policy_number)
     ret = CONFIG_DIFF_SAME;
@@ -1272,7 +1272,7 @@ alert_policy_number_diff (const char *section_name,
       sprintf (num, "%u", eft.alert_policy_number);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -1303,7 +1303,7 @@ group_control_selector_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", eft.group_control_selector) < 0)
+  if (asprintf (&kv->value_output, "%u", eft.group_control_selector) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1337,7 +1337,7 @@ group_control_selector_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.group_control_selector = atoi (kv->value);
+  eft.group_control_selector = atoi (kv->value_input);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1378,7 +1378,7 @@ group_control_selector_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == eft.group_control_selector)
     ret = CONFIG_DIFF_SAME;
@@ -1389,7 +1389,7 @@ group_control_selector_diff (const char *section_name,
       sprintf (num, "%u", eft.group_control_selector);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -1420,7 +1420,7 @@ event_severity_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (event_severity_string (eft.event_severity))))
+  if (!(kv->value_output = strdup (event_severity_string (eft.event_severity))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1454,7 +1454,7 @@ event_severity_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_severity = event_severity_number (kv->value);
+  eft.event_severity = event_severity_number (kv->value_input);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1495,7 +1495,7 @@ event_severity_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = event_severity_number (kv->value);
+  passed_val = event_severity_number (kv->value_input);
   if (passed_val == eft.event_severity)
     ret = CONFIG_DIFF_SAME;
   else
@@ -1503,7 +1503,7 @@ event_severity_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    event_severity_string (eft.event_severity));
     }
   return ret;
@@ -1534,7 +1534,7 @@ generator_id_byte_1_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.generator_id_byte_1) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.generator_id_byte_1) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1568,7 +1568,7 @@ generator_id_byte_1_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.generator_id_byte_1 = strtol(kv->value, NULL, 0);
+  eft.generator_id_byte_1 = strtol(kv->value_input, NULL, 0);
   
 
   if ((ret = event_filter_set (state_data,
@@ -1610,7 +1610,7 @@ generator_id_byte_1_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.generator_id_byte_1)
     ret = CONFIG_DIFF_SAME;
@@ -1621,7 +1621,7 @@ generator_id_byte_1_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.generator_id_byte_1);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -1652,7 +1652,7 @@ generator_id_byte_2_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.generator_id_byte_2) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.generator_id_byte_2) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1686,7 +1686,7 @@ generator_id_byte_2_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.generator_id_byte_2 = strtol(kv->value, NULL, 0);
+  eft.generator_id_byte_2 = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1727,7 +1727,7 @@ generator_id_byte_2_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.generator_id_byte_2)
     ret = CONFIG_DIFF_SAME;
@@ -1738,7 +1738,7 @@ generator_id_byte_2_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.generator_id_byte_2);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -1769,7 +1769,7 @@ sensor_type_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (sensor_type_string (eft.sensor_type))))
+  if (!(kv->value_output = strdup (sensor_type_string (eft.sensor_type))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1803,7 +1803,7 @@ sensor_type_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.sensor_type = sensor_type_number(kv->value);
+  eft.sensor_type = sensor_type_number(kv->value_input);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1844,7 +1844,7 @@ sensor_type_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = sensor_type_number(kv->value);
+  passed_val = sensor_type_number(kv->value_input);
 
   if (passed_val == eft.sensor_type)
     ret = CONFIG_DIFF_SAME;
@@ -1853,7 +1853,7 @@ sensor_type_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
 		   sensor_type_string (eft.sensor_type));
     }
 
@@ -1885,7 +1885,7 @@ sensor_number_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.sensor_number) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.sensor_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1919,7 +1919,7 @@ sensor_number_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.sensor_number = strtol(kv->value, NULL, 0);
+  eft.sensor_number = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -1960,7 +1960,7 @@ sensor_number_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.sensor_number)
     ret = CONFIG_DIFF_SAME;
@@ -1971,7 +1971,7 @@ sensor_number_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.sensor_number);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2002,7 +2002,7 @@ event_trigger_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_trigger) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_trigger) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2036,7 +2036,7 @@ event_trigger_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_trigger = strtol(kv->value, NULL, 0);
+  eft.event_trigger = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2077,7 +2077,7 @@ event_trigger_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_trigger)
     ret = CONFIG_DIFF_SAME;
@@ -2088,7 +2088,7 @@ event_trigger_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_trigger);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2119,7 +2119,7 @@ event_data1_offset_mask_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data1_offset_mask) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data1_offset_mask) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2153,7 +2153,7 @@ event_data1_offset_mask_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_offset_mask = strtol(kv->value, NULL, 0);
+  eft.event_data1_offset_mask = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2194,7 +2194,7 @@ event_data1_offset_mask_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data1_offset_mask)
     ret = CONFIG_DIFF_SAME;
@@ -2205,7 +2205,7 @@ event_data1_offset_mask_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data1_offset_mask);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2236,7 +2236,7 @@ event_data1_and_mask_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data1_and_mask) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data1_and_mask) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2270,7 +2270,7 @@ event_data1_and_mask_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_and_mask = strtol(kv->value, NULL, 0);
+  eft.event_data1_and_mask = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2311,7 +2311,7 @@ event_data1_and_mask_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data1_and_mask)
     ret = CONFIG_DIFF_SAME;
@@ -2322,7 +2322,7 @@ event_data1_and_mask_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data1_and_mask);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2353,7 +2353,7 @@ event_data1_compare1_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data1_compare1) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data1_compare1) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2387,7 +2387,7 @@ event_data1_compare1_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_compare1 = strtol(kv->value, NULL, 0);
+  eft.event_data1_compare1 = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2428,7 +2428,7 @@ event_data1_compare1_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data1_compare1)
     ret = CONFIG_DIFF_SAME;
@@ -2439,7 +2439,7 @@ event_data1_compare1_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data1_compare1);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2470,7 +2470,7 @@ event_data1_compare2_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data1_compare2) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data1_compare2) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2504,7 +2504,7 @@ event_data1_compare2_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data1_compare2 = strtol(kv->value, NULL, 0);
+  eft.event_data1_compare2 = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2545,7 +2545,7 @@ event_data1_compare2_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data1_compare2)
     ret = CONFIG_DIFF_SAME;
@@ -2556,7 +2556,7 @@ event_data1_compare2_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data1_compare2);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2587,7 +2587,7 @@ event_data2_and_mask_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data2_and_mask) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data2_and_mask) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2621,7 +2621,7 @@ event_data2_and_mask_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data2_and_mask = strtol(kv->value, NULL, 0);
+  eft.event_data2_and_mask = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2662,7 +2662,7 @@ event_data2_and_mask_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data2_and_mask)
     ret = CONFIG_DIFF_SAME;
@@ -2673,7 +2673,7 @@ event_data2_and_mask_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data2_and_mask);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2704,7 +2704,7 @@ event_data2_compare1_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data2_compare1) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data2_compare1) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2738,7 +2738,7 @@ event_data2_compare1_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data2_compare1 = strtol(kv->value, NULL, 0);
+  eft.event_data2_compare1 = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2779,7 +2779,7 @@ event_data2_compare1_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data2_compare1)
     ret = CONFIG_DIFF_SAME;
@@ -2790,7 +2790,7 @@ event_data2_compare1_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data2_compare1);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2821,7 +2821,7 @@ event_data2_compare2_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data2_compare2) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data2_compare2) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2855,7 +2855,7 @@ event_data2_compare2_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data2_compare2 = strtol(kv->value, NULL, 0);
+  eft.event_data2_compare2 = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -2896,7 +2896,7 @@ event_data2_compare2_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data2_compare2)
     ret = CONFIG_DIFF_SAME;
@@ -2907,7 +2907,7 @@ event_data2_compare2_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data2_compare2);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -2938,7 +2938,7 @@ event_data3_and_mask_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data3_and_mask) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data3_and_mask) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -2972,7 +2972,7 @@ event_data3_and_mask_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data3_and_mask = strtol(kv->value, NULL, 0);
+  eft.event_data3_and_mask = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -3013,7 +3013,7 @@ event_data3_and_mask_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data3_and_mask)
     ret = CONFIG_DIFF_SAME;
@@ -3024,7 +3024,7 @@ event_data3_and_mask_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data3_and_mask);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -3055,7 +3055,7 @@ event_data3_compare1_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data3_compare1) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data3_compare1) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -3089,7 +3089,7 @@ event_data3_compare1_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data3_compare1 = strtol(kv->value, NULL, 0);
+  eft.event_data3_compare1 = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -3130,7 +3130,7 @@ event_data3_compare1_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data3_compare1)
     ret = CONFIG_DIFF_SAME;
@@ -3141,7 +3141,7 @@ event_data3_compare1_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data3_compare1);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -3172,7 +3172,7 @@ event_data3_compare2_checkout (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "0x%02X", eft.event_data3_compare2) < 0)
+  if (asprintf (&kv->value_output, "0x%02X", eft.event_data3_compare2) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -3206,7 +3206,7 @@ event_data3_compare2_commit (const char *section_name,
                                &eft)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  eft.event_data3_compare2 = strtol(kv->value, NULL, 0);
+  eft.event_data3_compare2 = strtol(kv->value_input, NULL, 0);
 
   if ((ret = event_filter_set (state_data,
                                event_filter_number,
@@ -3247,7 +3247,7 @@ event_data3_compare2_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = strtol(kv->value, NULL, 0);
+  passed_val = strtol(kv->value_input, NULL, 0);
 
   if (passed_val == eft.event_data3_compare2)
     ret = CONFIG_DIFF_SAME;
@@ -3258,7 +3258,7 @@ event_data3_compare2_diff (const char *section_name,
       sprintf (num, "0x%02X", eft.event_data3_compare2);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;

@@ -26,7 +26,7 @@ power_restore_policy_checkout (const char *section_name,
                                            &policy)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (power_restore_policy_string (policy))))
+  if (!(kv->value_output = strdup (power_restore_policy_string (policy))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -41,7 +41,7 @@ power_restore_policy_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_power_restore_policy (state_data,
-				       power_restore_policy_number (kv->value));
+				       power_restore_policy_number (kv->value_input));
 }
 
 static config_diff_t
@@ -63,7 +63,7 @@ power_restore_policy_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_value = power_restore_policy_number (kv->value);
+  passed_value = power_restore_policy_number (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -72,7 +72,7 @@ power_restore_policy_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    power_restore_policy_string (got_value));
     }
 

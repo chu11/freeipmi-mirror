@@ -88,7 +88,7 @@ enable_sol_checkout (const char *section_name,
                                  &enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (enable ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (enable ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -104,7 +104,7 @@ enable_sol_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_sol_sol_enable (state_data,
-			     same (kv->value, "yes"));
+			     same (kv->value_input, "yes"));
 }
 
 static config_diff_t
@@ -126,7 +126,7 @@ enable_sol_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes") ? 1 : 0;
+  passed_value = same (kv->value_input, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -135,7 +135,7 @@ enable_sol_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -156,7 +156,7 @@ sol_privilege_level_checkout (const char *section_name,
                                 NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (privilege_level_string (value))))
+  if (!(kv->value_output = strdup (privilege_level_string (value))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -170,7 +170,7 @@ sol_privilege_level_commit (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = privilege_level_number (kv->value);
+  uint8_t value = privilege_level_number (kv->value_input);
   return sol_auth_commit (state_data,
 			  &value,
 			  NULL,
@@ -198,7 +198,7 @@ sol_privilege_level_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = privilege_level_number (kv->value);
+  passed_value = privilege_level_number (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -207,7 +207,7 @@ sol_privilege_level_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    privilege_level_string (got_value));
     }
   return ret;
@@ -228,7 +228,7 @@ force_sol_payload_authentication_checkout (const char *section_name,
                                 NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -243,7 +243,7 @@ force_sol_payload_authentication_commit (const char *section_name,
                                          void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = same (kv->value, "yes") ? 1 : 0;
+  uint8_t value = same (kv->value_input, "yes") ? 1 : 0;
   return sol_auth_commit (state_data,
 			  NULL,
 			  &value,
@@ -271,7 +271,7 @@ force_sol_payload_authentication_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes") ? 1 : 0;
+  passed_value = same (kv->value_input, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -280,7 +280,7 @@ force_sol_payload_authentication_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -301,7 +301,7 @@ force_sol_payload_encryption_checkout (const char *section_name,
                                 &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -316,7 +316,7 @@ force_sol_payload_encryption_commit (const char *section_name,
                                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = same (kv->value, "yes") ? 1 : 0;
+  uint8_t value = same (kv->value_input, "yes") ? 1 : 0;
   return sol_auth_commit (state_data,
 			  NULL,
 			  NULL,
@@ -344,7 +344,7 @@ force_sol_payload_encryption_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes") ? 1 : 0;
+  passed_value = same (kv->value_input, "yes") ? 1 : 0;
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -353,7 +353,7 @@ force_sol_payload_encryption_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -374,7 +374,7 @@ character_accumulate_interval_checkout (const char *section_name,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", interval) < 0)
+  if (asprintf (&kv->value_output, "%d", interval) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -397,7 +397,7 @@ character_accumulate_interval_commit (const char *section_name,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  interval = atoi (kv->value);
+  interval = atoi (kv->value_input);
 
   return set_sol_character_accumulate_interval_and_send_threshold (state_data,
 								   interval,
@@ -427,7 +427,7 @@ character_accumulate_interval_diff (const char *section_name,
     }
 
   got_value = interval;
-  passed_value = atoi (kv->value);
+  passed_value = atoi (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -438,7 +438,7 @@ character_accumulate_interval_diff (const char *section_name,
       sprintf (num, "%d", got_value);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -459,7 +459,7 @@ character_send_threshold_checkout (const char *section_name,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", threshold) < 0)
+  if (asprintf (&kv->value_output, "%d", threshold) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -482,7 +482,7 @@ character_send_threshold_commit (const char *section_name,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  threshold = atoi (kv->value);
+  threshold = atoi (kv->value_input);
 
   return set_sol_character_accumulate_interval_and_send_threshold (state_data,
 								   interval,
@@ -512,7 +512,7 @@ character_send_threshold_diff (const char *section_name,
     }
 
   got_value = threshold;
-  passed_value = atoi (kv->value);
+  passed_value = atoi (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -523,7 +523,7 @@ character_send_threshold_diff (const char *section_name,
       sprintf (num, "%d", got_value);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -544,7 +544,7 @@ sol_retry_count_checkout (const char *section_name,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", count) < 0)
+  if (asprintf (&kv->value_output, "%d", count) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -568,7 +568,7 @@ sol_retry_count_commit (const char *section_name,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  count = atoi (kv->value);
+  count = atoi (kv->value_input);
 
   return set_sol_sol_retry (state_data,
 			    count,
@@ -598,7 +598,7 @@ sol_retry_count_diff (const char *section_name,
     }
 
   got_value = count;
-  passed_value = atoi (kv->value);
+  passed_value = atoi (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -609,7 +609,7 @@ sol_retry_count_diff (const char *section_name,
       sprintf (num, "%d", got_value);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -630,7 +630,7 @@ sol_retry_interval_checkout (const char *section_name,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", interval) < 0)
+  if (asprintf (&kv->value_output, "%d", interval) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -654,7 +654,7 @@ sol_retry_interval_commit (const char *section_name,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  interval = atoi (kv->value);
+  interval = atoi (kv->value_input);
 
   return set_sol_sol_retry (state_data,
 			    count,
@@ -684,7 +684,7 @@ sol_retry_interval_diff (const char *section_name,
     }
        
   got_value = interval;
-  passed_value = atoi (kv->value);
+  passed_value = atoi (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -695,7 +695,7 @@ sol_retry_interval_diff (const char *section_name,
       sprintf (num, "%d", got_value);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -714,7 +714,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
                                                 &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
+  if (!(kv->value_output = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -729,7 +729,7 @@ non_volatile_bit_rate_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_sol_sol_non_volatile_bit_rate (state_data,
-					    sol_bit_rate_number (kv->value));
+					    sol_bit_rate_number (kv->value_input));
 }
 
 static config_diff_t
@@ -751,7 +751,7 @@ non_volatile_bit_rate_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = sol_bit_rate_number (kv->value);
+  passed_value = sol_bit_rate_number (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -760,7 +760,7 @@ non_volatile_bit_rate_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    sol_bit_rate_string (got_value));
     }
   return ret;
@@ -779,7 +779,7 @@ volatile_bit_rate_checkout (const char *section_name,
                                             &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (sol_bit_rate_string (bitrate))))
+  if (!(kv->value_output = strdup (sol_bit_rate_string (bitrate))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -794,7 +794,7 @@ volatile_bit_rate_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_sol_sol_volatile_bit_rate (state_data,
-					sol_bit_rate_number (kv->value));
+					sol_bit_rate_number (kv->value_input));
 }
 
 static config_diff_t
@@ -816,8 +816,7 @@ volatile_bit_rate_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = sol_bit_rate_number (kv->value);
-
+  passed_value = sol_bit_rate_number (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -826,7 +825,7 @@ volatile_bit_rate_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    sol_bit_rate_string (got_value));
     }
   return ret;
@@ -845,7 +844,7 @@ port_checkout (const char *section_name,
                                               &port)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", port) < 0)
+  if (asprintf (&kv->value_output, "%d", port) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -861,7 +860,7 @@ port_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_sol_sol_payload_port_number (state_data,
-					  atoi (kv->value));
+					  atoi (kv->value_input));
 }
 
 static config_diff_t
@@ -883,7 +882,7 @@ port_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = atoi (kv->value);
+  passed_value = atoi (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -894,7 +893,7 @@ port_diff (const char *section_name,
       sprintf (num, "%d", got_value);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;

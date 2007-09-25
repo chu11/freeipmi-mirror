@@ -29,10 +29,10 @@ config_commit_keypairs (struct config_section *sections,
       config_err_t this_ret;
 
       if ((this_ret = config_section_commit_value (sections,
-                                                       kp->section_name,
-                                                       kp->key_name, 
-                                                       kp->value_input,
-                                                       arg)) == CONFIG_ERR_FATAL_ERROR)
+                                                   kp->section_name,
+                                                   kp->key_name, 
+                                                   kp->value_input,
+                                                   arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
       if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
@@ -78,10 +78,11 @@ bmc_keypair_feed (struct config_section *sections,
                     {
                       found_key++;
 
-                      if (kv->value)
-                        free(kv->value);
+                      /* overwrite previous value_input */
+                      if (kv->value_input)
+                        free(kv->value_input);
                       
-                      if (!(kv->value = strdup(kp->value_input)))
+                      if (!(kv->value_input = strdup(kp->value_input)))
                         {
                           perror("strdup");
                           goto cleanup;
@@ -168,7 +169,7 @@ config_commit_file (struct config_section *sections,
           struct config_keyvalue *kv = section->keyvalues;
           while (kv) 
             {
-              if (kv->value) 
+              if (kv->value_input) 
                 {
                   if ((this_ret = kv->commit (section->section_name,
                                               kv,

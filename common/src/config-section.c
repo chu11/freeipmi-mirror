@@ -105,8 +105,10 @@ _config_keyvalue_destroy(struct config_keyvalue *keyvalue)
         free(keyvalue->key_name);
       if (keyvalue->description)
         free(keyvalue->description);
-      if (keyvalue->value)
-        free(keyvalue->value);
+      if (keyvalue->value_input)
+        free(keyvalue->value_input);
+      if (keyvalue->value_output)
+        free(keyvalue->value_output);
       free(keyvalue);
     }
 }
@@ -247,10 +249,10 @@ config_section_find_keyvalue (struct config_section *sections,
 }
 
 int
-config_section_set_value (struct config_section *sections,
-                          const char *section_name,
-                          const char *key_name,
-                          const char *value)
+config_section_set_value_input (struct config_section *sections,
+                                const char *section_name,
+                                const char *key_name,
+                                const char *value)
 {
   struct config_section *section;
   struct config_keyvalue *kv;
@@ -282,10 +284,11 @@ config_section_set_value (struct config_section *sections,
         }
     }
 
-  if (kv->value)
-    free (kv->value);
+  /* XXX - duplicate inupt, needs to be handled */
+  if (kv->value_input)
+    free (kv->value_input);
   
-  if (!(kv->value = strdup (value)))
+  if (!(kv->value_input = strdup (value)))
     {
       perror("strdup");
       return -1;
@@ -331,10 +334,11 @@ config_section_commit_value (struct config_section *sections,
         }
     }
 
-  if (kv->value)
-    free (kv->value);
+  /* XXX: duplicate deal with alter */
+  if (kv->value_input)
+    free (kv->value_input);
 
-  if (!(kv->value = strdup (value)))
+  if (!(kv->value_input = strdup (value)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -380,10 +384,10 @@ config_section_diff_value (struct config_section *sections,
         }
     }
 
-  if (kv->value)
-    free (kv->value);
+  if (kv->value_input)
+    free (kv->value_input);
 
-  if (!(kv->value = strdup (value)))
+  if (!(kv->value_input = strdup (value)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;

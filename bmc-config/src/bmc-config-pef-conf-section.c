@@ -103,7 +103,7 @@ enable_pef_checkout (const char *section_name,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -118,7 +118,7 @@ enable_pef_commit (const char *section_name,
                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = same (kv->value, "yes");
+  uint8_t value = same (kv->value_input, "yes");
   return pef_control_commit (state_data,
 			     &value,
 			     NULL,
@@ -148,7 +148,7 @@ enable_pef_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -157,7 +157,7 @@ enable_pef_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -179,7 +179,7 @@ enable_pef_event_messages_checkout (const char *section_name,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -194,7 +194,7 @@ enable_pef_event_messages_commit (const char *section_name,
                                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = same (kv->value, "yes");
+  uint8_t value = same (kv->value_input, "yes");
   return pef_control_commit (state_data,
 			     NULL,
 			     &value,
@@ -224,7 +224,7 @@ enable_pef_event_messages_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -233,7 +233,7 @@ enable_pef_event_messages_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -255,7 +255,7 @@ enable_pef_startup_delay_checkout (const char *section_name,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -270,7 +270,7 @@ enable_pef_startup_delay_commit (const char *section_name,
                                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = same (kv->value, "yes");
+  uint8_t value = same (kv->value_input, "yes");
   return pef_control_commit (state_data,
 			     NULL,
 			     NULL,
@@ -300,7 +300,7 @@ enable_pef_startup_delay_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -309,7 +309,7 @@ enable_pef_startup_delay_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -331,7 +331,7 @@ enable_pef_alert_startup_delay_checkout (const char *section_name,
                                    &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -346,7 +346,7 @@ enable_pef_alert_startup_delay_commit (const char *section_name,
                                        void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = same (kv->value, "yes");
+  uint8_t value = same (kv->value_input, "yes");
   return pef_control_commit (state_data,
 			     NULL,
 			     NULL,
@@ -376,7 +376,7 @@ enable_pef_alert_startup_delay_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -385,7 +385,7 @@ enable_pef_alert_startup_delay_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -500,7 +500,7 @@ enable_alert_action_checkout (const char *section_name,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -515,7 +515,7 @@ enable_alert_action_commit (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
+  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    &value,
 				    NULL,
@@ -549,7 +549,7 @@ enable_alert_action_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = (same (kv->value, "yes") ? 1 : 0);
+  passed_value = (same (kv->value_input, "yes") ? 1 : 0);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -558,7 +558,7 @@ enable_alert_action_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -582,7 +582,7 @@ enable_power_down_action_checkout (const char *section_name,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -597,7 +597,7 @@ enable_power_down_action_commit (const char *section_name,
                                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
+  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
 				    &value,
@@ -631,7 +631,7 @@ enable_power_down_action_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = (same (kv->value, "yes") ? 1 : 0);
+  passed_value = (same (kv->value_input, "yes") ? 1 : 0);
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
   else 
@@ -639,7 +639,7 @@ enable_power_down_action_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -663,7 +663,7 @@ enable_reset_action_checkout (const char *section_name,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -678,7 +678,7 @@ enable_reset_action_commit (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
+  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
 				    NULL,
@@ -712,7 +712,7 @@ enable_reset_action_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = (same (kv->value, "yes") ? 1 : 0);
+  passed_value = (same (kv->value_input, "yes") ? 1 : 0);
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
   else 
@@ -720,7 +720,7 @@ enable_reset_action_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -744,7 +744,7 @@ enable_power_cycle_action_checkout (const char *section_name,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -759,7 +759,7 @@ enable_power_cycle_action_commit (const char *section_name,
                                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
+  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
 				    NULL,
@@ -793,7 +793,7 @@ enable_power_cycle_action_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = (same (kv->value, "yes") ? 1 : 0);
+  passed_value = (same (kv->value_input, "yes") ? 1 : 0);
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
   else 
@@ -801,7 +801,7 @@ enable_power_cycle_action_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -825,7 +825,7 @@ enable_oem_action_checkout (const char *section_name,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -840,7 +840,7 @@ enable_oem_action_commit (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
+  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
 				    NULL,
@@ -874,7 +874,7 @@ enable_oem_action_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = (same (kv->value, "yes") ? 1 : 0);
+  passed_value = (same (kv->value_input, "yes") ? 1 : 0);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -883,7 +883,7 @@ enable_oem_action_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -907,7 +907,7 @@ enable_diagnostic_interrupt_checkout (const char *section_name,
                                           &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (value ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -922,7 +922,7 @@ enable_diagnostic_interrupt_commit (const char *section_name,
                                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value, "yes") ? 1 : 0);
+  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
   return pef_global_control_commit (state_data,
 				    NULL,
 				    NULL,
@@ -956,7 +956,7 @@ enable_diagnostic_interrupt_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = (same (kv->value, "yes") ? 1 : 0);
+  passed_value = (same (kv->value_input, "yes") ? 1 : 0);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -965,7 +965,7 @@ enable_diagnostic_interrupt_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    got_value ? "Yes" : "No");
     }
   return ret;
@@ -985,7 +985,7 @@ pef_startup_delay_checkout (const char *section_name,
                                     &delay)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", delay) < 0)
+  if (asprintf (&kv->value_output, "%d", delay) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -999,7 +999,7 @@ pef_startup_delay_commit (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = atoi (kv->value);
+  uint8_t value = atoi (kv->value_input);
   return set_pef_startup_delay (state_data,
 				value);
 }
@@ -1023,7 +1023,7 @@ pef_startup_delay_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = atoi (kv->value);
+  passed_value = atoi (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -1034,7 +1034,7 @@ pef_startup_delay_diff (const char *section_name,
       sprintf (num, "%d", got_value);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -1053,7 +1053,7 @@ pef_alert_startup_delay_checkout (const char *section_name,
                                           &delay)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", delay) < 0)
+  if (asprintf (&kv->value_output, "%d", delay) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1067,7 +1067,7 @@ pef_alert_startup_delay_commit (const char *section_name,
                                 void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = atoi (kv->value);
+  uint8_t value = atoi (kv->value_input);
   return set_pef_alert_startup_delay (state_data,
 				      value);
 }
@@ -1091,7 +1091,7 @@ pef_alert_startup_delay_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = atoi (kv->value);
+  passed_value = atoi (kv->value_input);
 
   if (passed_value == got_value)
     ret = CONFIG_DIFF_SAME;
@@ -1102,7 +1102,7 @@ pef_alert_startup_delay_diff (const char *section_name,
       sprintf (num, "%d", got_value);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;

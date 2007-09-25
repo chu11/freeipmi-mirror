@@ -102,7 +102,7 @@ event_filter_number_checkout (const char *section_name,
                               NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", event_filter_number) < 0)
+  if (asprintf (&kv->value_output, "%u", event_filter_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -131,7 +131,7 @@ event_filter_number_commit (const char *section_name,
   if (string_selector > number_of_alert_strings)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  event_filter_number = atoi (kv->value);
+  event_filter_number = atoi (kv->value_input);
 
   return string_keys_set (state_data,
                           string_selector,
@@ -171,7 +171,7 @@ event_filter_number_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -182,7 +182,7 @@ event_filter_number_diff (const char *section_name,
       sprintf (num, "%u", get_val);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -214,7 +214,7 @@ alert_string_set_checkout (const char *section_name,
                               &alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", alert_string_set) < 0)
+  if (asprintf (&kv->value_output, "%u", alert_string_set) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -243,7 +243,7 @@ alert_string_set_commit (const char *section_name,
   if (string_selector > number_of_alert_strings)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  alert_string_set = atoi (kv->value);
+  alert_string_set = atoi (kv->value_input);
 
   return string_keys_set (state_data,
                           string_selector,
@@ -283,7 +283,7 @@ alert_string_set_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -294,7 +294,7 @@ alert_string_set_diff (const char *section_name,
       sprintf (num, "%u", get_val);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -326,7 +326,7 @@ alert_string_checkout (const char *section_name,
                                    PEF_ALERT_STRING_MAX_LEN+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (!(kv->value = strdup ((char *)alert_string)))
+  if (!(kv->value_output = strdup ((char *)alert_string)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -354,12 +354,12 @@ alert_string_commit (const char *section_name,
   if (string_selector > number_of_alert_strings)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  if (!kv->value)
+  if (!kv->value_input)
     return CONFIG_ERR_FATAL_ERROR;
 
   return set_pef_alert_string (state_data,
                                string_selector,
-                               (uint8_t *)kv->value);
+                               (uint8_t *)kv->value_input);
 }
 
 static config_diff_t
@@ -393,7 +393,7 @@ alert_string_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  if (!kv->value || !same (kv->value, (char *)alert_string))
+  if (!kv->value_input || !same (kv->value_input, (char *)alert_string))
     ret = CONFIG_DIFF_DIFFERENT;
   else
     ret = CONFIG_DIFF_SAME;
@@ -401,7 +401,7 @@ alert_string_diff (const char *section_name,
   if (ret == CONFIG_DIFF_DIFFERENT)
     report_diff (section_name,
 		 kv->key_name,
-		 kv->value,
+		 kv->value_input,
 		 (char *)alert_string);
   return ret;
 }

@@ -140,10 +140,10 @@ config_parse (struct config_section *sections,
         fprintf (stderr, "Trying to set `%s:%s=%s'\n",
                  section_name, key_name, value);
       
-      if (config_section_set_value (sections,
-                                        section_name,
-                                        key_name,
-                                        value) < 0) 
+      if (config_section_set_value_input (sections,
+                                          section_name,
+                                          key_name,
+                                          value) < 0) 
         goto cleanup;
     }
 

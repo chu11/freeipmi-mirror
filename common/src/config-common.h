@@ -110,7 +110,8 @@ struct config_keyvalue {
   char *key_name;
   char *description;
   unsigned int flags;
-  char *value;
+  char *value_input;
+  char *value_output;
   Key_Checkout checkout;
   Key_Commit commit;
   Key_Diff diff;

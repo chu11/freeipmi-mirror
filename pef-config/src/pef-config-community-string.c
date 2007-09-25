@@ -26,7 +26,7 @@ community_string_checkout (const char *section_name,
                                        IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (!(kv->value = strdup ((char *)community_string)))
+  if (!(kv->value_output = strdup ((char *)community_string)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -42,7 +42,7 @@ community_string_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   return set_bmc_community_string (state_data,
-                                   kv->value);
+                                   kv->value_input);
 }
 
 static config_diff_t
@@ -64,7 +64,7 @@ community_string_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (!kv->value || !same (kv->value, (char *)community_string))
+  if (!kv->value_input || !same (kv->value_input, (char *)community_string))
     ret = CONFIG_DIFF_DIFFERENT;
   else
     ret = CONFIG_DIFF_SAME;
@@ -72,7 +72,7 @@ community_string_diff (const char *section_name,
   if (ret == CONFIG_DIFF_DIFFERENT)
     report_diff (section_name,
 		 kv->key_name,
-		 kv->value,
+		 kv->value_input,
 		 (char *)community_string);
   return ret;
 }

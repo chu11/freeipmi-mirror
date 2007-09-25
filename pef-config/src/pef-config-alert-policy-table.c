@@ -161,7 +161,7 @@ policy_type_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (policy_type_string (policy_type))))
+  if (!(kv->value_output = strdup (policy_type_string (policy_type))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -191,7 +191,7 @@ policy_type_commit (const char *section_name,
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
-                           policy_type_number (kv->value), 1,
+                           policy_type_number (kv->value_input), 1,
                            0, 0,
                            0, 0,
                            0, 0,
@@ -237,7 +237,7 @@ policy_type_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_val = policy_type_number (kv->value);
+  passed_val = policy_type_number (kv->value_input);
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
   else
@@ -245,7 +245,7 @@ policy_type_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    policy_type_string (get_val));
     }
   return ret;
@@ -282,7 +282,7 @@ policy_enabled_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (policy_enabled ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (policy_enabled ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -313,7 +313,7 @@ policy_enabled_commit (const char *section_name,
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
                            0, 0,
-                           same (kv->value, "yes"), 1,
+                           same (kv->value_input, "yes"), 1,
                            0, 0,
                            0, 0,
                            0, 0,
@@ -358,7 +358,7 @@ policy_enabled_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -367,7 +367,7 @@ policy_enabled_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -404,7 +404,7 @@ policy_number_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", policy_number) < 0)
+  if (asprintf (&kv->value_output, "%u", policy_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -433,7 +433,7 @@ policy_number_commit (const char *section_name,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  policy_number = atoi (kv->value);
+  policy_number = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -483,7 +483,7 @@ policy_number_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -494,7 +494,7 @@ policy_number_diff (const char *section_name,
       sprintf (num, "%u", get_val);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -531,7 +531,7 @@ destination_selector_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", destination_selector) < 0)
+  if (asprintf (&kv->value_output, "%u", destination_selector) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -560,7 +560,7 @@ destination_selector_commit (const char *section_name,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  destination_selector = atoi (kv->value);
+  destination_selector = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -610,7 +610,7 @@ destination_selector_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -621,7 +621,7 @@ destination_selector_diff (const char *section_name,
       sprintf (num, "%u", get_val);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -658,7 +658,7 @@ channel_number_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", channel_number) < 0)
+  if (asprintf (&kv->value_output, "%u", channel_number) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -687,7 +687,7 @@ channel_number_commit (const char *section_name,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  channel_number = atoi (kv->value);
+  channel_number = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -737,7 +737,7 @@ channel_number_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -748,7 +748,7 @@ channel_number_diff (const char *section_name,
       sprintf (num, "%u", get_val);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -785,7 +785,7 @@ alert_string_set_selector_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%u", alert_string_set_selector) < 0)
+  if (asprintf (&kv->value_output, "%u", alert_string_set_selector) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -814,7 +814,7 @@ alert_string_set_selector_commit (const char *section_name,
   if (alert_policy_entry_number > number_of_alert_policy_entries)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  alert_string_set_selector = atoi (kv->value);
+  alert_string_set_selector = atoi (kv->value_input);
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -864,7 +864,7 @@ alert_string_set_selector_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -875,7 +875,7 @@ alert_string_set_selector_diff (const char *section_name,
       sprintf (num, "%u", get_val);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -912,7 +912,7 @@ event_specific_alert_string_checkout (const char *section_name,
                                &event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (event_specific_alert_string ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (event_specific_alert_string ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -948,7 +948,7 @@ event_specific_alert_string_commit (const char *section_name,
                            0, 0,
                            0, 0,
                            0, 0,
-                           same (kv->value, "yes"), 1);
+                           same (kv->value_input, "yes"), 1);
 }
 
 static config_diff_t
@@ -988,7 +988,7 @@ event_specific_alert_string_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -997,7 +997,7 @@ event_specific_alert_string_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;

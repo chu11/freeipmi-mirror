@@ -83,7 +83,7 @@ config_diff_file (struct config_section *sections,
           struct config_keyvalue *kv = section->keyvalues;
           while (kv) 
             {
-              if (kv->value) 
+              if (kv->value_input) 
                 {
                   if ((this_ret = kv->diff (section->section_name, 
                                             kv, 

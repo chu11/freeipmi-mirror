@@ -30,10 +30,10 @@ struct config_keyvalue *config_section_find_keyvalue (struct config_section *sec
                                                       const char *section_name,
                                                       const char *key_name);
 
-int config_section_set_value (struct config_section *sections,
-                              const char *section_name,
-                              const char *key_name,
-                              const char *value);
+int config_section_set_value_input (struct config_section *sections,
+                                    const char *section_name,
+                                    const char *key_name,
+                                    const char *value);
 
 config_err_t config_section_commit_value (struct config_section *sections,
                                           const char *section_name,

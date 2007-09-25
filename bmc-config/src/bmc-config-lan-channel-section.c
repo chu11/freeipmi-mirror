@@ -81,7 +81,7 @@ volatile_access_mode_checkout (const char *section_name,
                                                   &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (channel_access_mode_string (get_val))))
+  if (!(kv->value_output = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -97,7 +97,7 @@ volatile_access_mode_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t commit_val;
 
-  commit_val = channel_access_mode (kv->value);
+  commit_val = channel_access_mode (kv->value_input);
   return lan_channel_volatile_access_set (state_data,
 					  commit_val, 1,
 					  0, 0,
@@ -130,7 +130,7 @@ volatile_access_mode_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = channel_access_mode (kv->value);
+  passed_val = channel_access_mode (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME; 
@@ -139,7 +139,7 @@ volatile_access_mode_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name, 
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    channel_access_mode_string (get_val));
     }
 
@@ -165,7 +165,7 @@ volatile_enable_user_level_auth_checkout (const char *section_name,
     return ret;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -183,7 +183,7 @@ volatile_enable_user_level_auth_commit (const char *section_name,
   uint8_t commit_val;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  commit_val, 1,
@@ -217,7 +217,7 @@ volatile_enable_user_level_auth_diff (const char *section_name,
     }
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
   else
@@ -225,7 +225,7 @@ volatile_enable_user_level_auth_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -250,7 +250,7 @@ volatile_enable_per_msg_auth_checkout (const char *section_name,
     return ret;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -268,7 +268,7 @@ volatile_enable_per_msg_auth_commit (const char *section_name,
   uint8_t commit_val;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  0, 0,
@@ -302,7 +302,7 @@ volatile_enable_per_msg_auth_diff (const char *section_name,
     }
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
   else
@@ -310,7 +310,7 @@ volatile_enable_per_msg_auth_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
 
@@ -336,7 +336,7 @@ volatile_enable_pef_alerting_checkout (const char *section_name,
     return ret;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -354,7 +354,7 @@ volatile_enable_pef_alerting_commit (const char *section_name,
   uint8_t commit_val;
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  0, 0,
@@ -388,7 +388,7 @@ volatile_enable_pef_alerting_diff (const char *section_name,
     }
 
   /* achu: Backwards values in this command are handled in bmc-config-api.c */
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
   else 
@@ -396,7 +396,7 @@ volatile_enable_pef_alerting_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
 
@@ -421,7 +421,7 @@ volatile_channel_priv_limit_checkout (const char *section_name,
                                                   &get_val)) != CONFIG_ERR_SUCCESS)
     return ret; 
 
-  if (!(kv->value = strdup (privilege_level_string (get_val))))
+  if (!(kv->value_output = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -438,7 +438,7 @@ volatile_channel_priv_limit_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t commit_val;
 
-  commit_val = privilege_level_number (kv->value);
+  commit_val = privilege_level_number (kv->value_input);
   return lan_channel_volatile_access_set (state_data,
 					  0, 0,
 					  0, 0,
@@ -471,7 +471,7 @@ volatile_channel_priv_limit_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = privilege_level_number (kv->value);
+  passed_val = privilege_level_number (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -480,7 +480,7 @@ volatile_channel_priv_limit_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    privilege_level_string (get_val));
     }
 
@@ -555,7 +555,7 @@ non_volatile_access_mode_checkout (const char *section_name,
                                                       &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (channel_access_mode_string (get_val))))
+  if (!(kv->value_output = strdup (channel_access_mode_string (get_val))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -571,7 +571,7 @@ non_volatile_access_mode_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t commit_val;
 
-  commit_val = channel_access_mode (kv->value);
+  commit_val = channel_access_mode (kv->value_input);
   return lan_channel_non_volatile_access_set (state_data,
                                               commit_val, 1,
                                               0, 0,
@@ -604,7 +604,7 @@ non_volatile_access_mode_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = channel_access_mode (kv->value);
+  passed_val = channel_access_mode (kv->value_input);
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
   else
@@ -612,7 +612,7 @@ non_volatile_access_mode_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
 
@@ -637,7 +637,7 @@ non_volatile_enable_user_level_auth_checkout (const char *section_name,
                                                       &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -654,7 +654,7 @@ non_volatile_enable_user_level_auth_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t commit_val;
   
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      commit_val, 1,
@@ -687,7 +687,7 @@ non_volatile_enable_user_level_auth_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
   else 
@@ -695,7 +695,7 @@ non_volatile_enable_user_level_auth_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
 
@@ -720,7 +720,7 @@ non_volatile_enable_per_msg_auth_checkout (const char *section_name,
                                                       &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -737,7 +737,7 @@ non_volatile_enable_per_msg_auth_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      0, 0,
@@ -770,7 +770,7 @@ non_volatile_enable_per_msg_auth_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -779,7 +779,7 @@ non_volatile_enable_per_msg_auth_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
 
@@ -804,7 +804,7 @@ non_volatile_enable_pef_alerting_checkout (const char *section_name,
                                                       &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -821,7 +821,7 @@ non_volatile_enable_pef_alerting_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t commit_val;
 
-  commit_val = same (kv->value, "yes");
+  commit_val = same (kv->value_input, "yes");
   return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      0, 0,
@@ -854,7 +854,7 @@ non_volatile_enable_pef_alerting_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "yes");
+  passed_val = same (kv->value_input, "yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -863,7 +863,7 @@ non_volatile_enable_pef_alerting_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
 
@@ -888,7 +888,7 @@ non_volatile_channel_priv_limit_checkout (const char *section_name,
                                                       &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (privilege_level_string (get_val))))
+  if (!(kv->value_output = strdup (privilege_level_string (get_val))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR ;
@@ -905,7 +905,7 @@ non_volatile_channel_priv_limit_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t commit_val;
 
-  commit_val = privilege_level_number (kv->value);
+  commit_val = privilege_level_number (kv->value_input);
   return lan_channel_non_volatile_access_set (state_data,
 					      0, 0,
 					      0, 0,
@@ -938,7 +938,7 @@ non_volatile_channel_priv_limit_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = privilege_level_number (kv->value);
+  passed_val = privilege_level_number (kv->value_input);
   
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -947,7 +947,7 @@ non_volatile_channel_priv_limit_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    privilege_level_string (get_val));
     }
   

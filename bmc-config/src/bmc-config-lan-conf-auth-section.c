@@ -77,7 +77,7 @@ _authentication_level_checkout (bmc_config_state_data_t *state_data,
                                                            &(al->oem_level_oem_proprietary))) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value = strdup (*desired_authentication_level ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (*desired_authentication_level ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -123,7 +123,7 @@ _authentication_level_commit (bmc_config_state_data_t *state_data,
                                                            &(al->oem_level_oem_proprietary))) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  *desired_authentication_level = same (kv->value, "yes");
+  *desired_authentication_level = same (kv->value_input, "yes");
 
   if ((ret = set_bmc_lan_conf_authentication_type_enables (state_data,
                                                            al->callback_level_none,
@@ -198,14 +198,14 @@ _authentication_level_diff (bmc_config_state_data_t *state_data,
       return CONFIG_DIFF_FATAL_ERROR;
     }
   
-  if (*desired_authentication_level == same (kv->value, "yes")) 
+  if (*desired_authentication_level == same (kv->value_input, "yes")) 
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    *desired_authentication_level ? "Yes" : "No");
     }
 

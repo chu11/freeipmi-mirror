@@ -30,7 +30,7 @@ username_checkout (const char *section_name,
                                IPMI_MAX_USER_NAME_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (!(kv->value = strdup ((char *)username)))
+  if (!(kv->value_output = strdup ((char *)username)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -48,12 +48,12 @@ username_commit (const char *section_name,
   uint8_t userid;
   userid = atoi (section_name + strlen ("User"));
 
-  if (!kv->value)
+  if (!kv->value_input)
     return CONFIG_ERR_FATAL_ERROR;
 
   return set_bmc_username (state_data,
 			   userid,
-			   (uint8_t *)kv->value);
+			   (uint8_t *)kv->value_input);
 }
 
 static config_diff_t
@@ -80,14 +80,14 @@ username_diff (const char *section_name,
 
   if (userid == 1) 
     {
-      if (! kv->value || same (kv->value, "null") || same (kv->value, "anonymous")) 
+      if (!kv->value_input || same (kv->value_input, "null") || same (kv->value_input, "anonymous")) 
         ret = CONFIG_DIFF_SAME;
       else 
         ret = CONFIG_DIFF_DIFFERENT;
     } 
   else 
     {
-      if (!kv->value || !same (kv->value, (char *)username))
+      if (!kv->value_input || !same (kv->value_input, (char *)username))
         ret = CONFIG_DIFF_DIFFERENT;
       else
         ret = CONFIG_DIFF_SAME;
@@ -96,7 +96,7 @@ username_diff (const char *section_name,
   if (ret == CONFIG_DIFF_DIFFERENT)
     report_diff (section_name,
 		 kv->key_name,
-		 kv->value,
+		 kv->value_input,
 		 (char *)username);
   return ret;
 }
@@ -154,7 +154,7 @@ enable_user_checkout (const char *section_name,
    */
   if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
     {
-      if (!(kv->value = strdup ("Yes")))
+      if (!(kv->value_output = strdup ("Yes")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -162,7 +162,7 @@ enable_user_checkout (const char *section_name,
     }
   else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
     {
-      if (!(kv->value = strdup ("No")))
+      if (!(kv->value_output = strdup ("No")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -170,7 +170,7 @@ enable_user_checkout (const char *section_name,
     }
   else /* tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
     {
-      if (!(kv->value = strdup ("")))
+      if (!(kv->value_output = strdup ("")))
         {
           perror("strdup");
           return CONFIG_ERR_FATAL_ERROR;
@@ -189,7 +189,7 @@ enable_user_commit (const char *section_name,
   int userid = atoi (section_name + strlen ("User"));
   return set_bmc_enable_user (state_data,
 			      userid,
-			      same (kv->value, "yes"));
+			      same (kv->value_input, "yes"));
 }
 
 static config_diff_t
@@ -228,7 +228,7 @@ enable_user_diff (const char *section_name,
     ret = CONFIG_DIFF_SAME;
   else
     {
-      passed_val = same (kv->value, "Yes");
+      passed_val = same (kv->value_input, "Yes");
 
       if ((passed_val && tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
           || (!passed_val && tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED))
@@ -238,7 +238,7 @@ enable_user_diff (const char *section_name,
           ret = CONFIG_DIFF_DIFFERENT;
           report_diff (section_name,
                        kv->key_name,
-                       kv->value,
+                       kv->value_input,
                        (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED) ? "Yes" : "No");
         }
     }
@@ -252,7 +252,7 @@ password_checkout (const char *section_name,
                    void *arg)
 {
   /* bmc_config_state_t *state_data = (bmc_config_state_data_t *)arg; */
-  if (!(kv->value = strdup ("")))
+  if (!(kv->value_output = strdup ("")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -269,7 +269,7 @@ password_commit (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t userid = atoi (section_name + strlen ("User"));
   return set_bmc_user_password (state_data,
-				userid, (uint8_t *)kv->value);
+				userid, (uint8_t *)kv->value_input);
 }
 
 static config_diff_t
@@ -283,7 +283,7 @@ password_diff (const char *section_name,
 
   ret = check_bmc_user_password (state_data,
                                  userid,
-                                 (uint8_t *)kv->value);
+                                 (uint8_t *)kv->value_input);
 
   if (ret == CONFIG_DIFF_FATAL_ERROR || ret == CONFIG_DIFF_NON_FATAL_ERROR)
     return ret;
@@ -291,7 +291,7 @@ password_diff (const char *section_name,
   if (ret == CONFIG_DIFF_DIFFERENT)
     report_diff (section_name,
 		 kv->key_name,
-		 kv->value,
+		 kv->value_input,
 		 "<something else>");
   return ret;
 }
@@ -326,7 +326,7 @@ password20_checkout (const char *section_name,
   if (ret == CONFIG_DIFF_NON_FATAL_ERROR)
     return CONFIG_ERR_NON_FATAL_ERROR;
 
-  if (!(kv->value = strdup ("")))
+  if (!(kv->value_output = strdup ("")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -344,7 +344,7 @@ password20_commit (const char *section_name,
   uint8_t userid = atoi (section_name + strlen ("User"));
   return set_bmc_user_password20 (state_data,
 				  userid,
-				  (uint8_t *)kv->value);
+				  (uint8_t *)kv->value_input);
 }
 
 static config_diff_t
@@ -358,7 +358,7 @@ password20_diff (const char *section_name,
 
   ret = check_bmc_user_password20 (state_data,
                                    userid,
-                                   (uint8_t *)kv->value);
+                                   (uint8_t *)kv->value_input);
 
   if (ret == CONFIG_DIFF_FATAL_ERROR || ret == CONFIG_DIFF_NON_FATAL_ERROR)
     return ret;
@@ -366,7 +366,7 @@ password20_diff (const char *section_name,
   if (ret == CONFIG_DIFF_DIFFERENT)
     report_diff (section_name,
 		 kv->key_name,
-		 kv->value,
+		 kv->value_input,
 		 "<something else>");
   return ret;
 }
@@ -496,7 +496,7 @@ lan_enable_ipmi_msgs_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -514,7 +514,7 @@ lan_enable_ipmi_msgs_commit (const char *section_name,
   uint8_t userid = atoi (section_name + strlen ("User"));
   return lan_channel_set (state_data,
 			  userid,
-			  same (kv->value, "yes"), 1,
+			  same (kv->value_input, "yes"), 1,
 			  0, 0,
 			  0, 0,
 			  0, 0,
@@ -546,7 +546,7 @@ lan_enable_ipmi_msgs_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -555,7 +555,7 @@ lan_enable_ipmi_msgs_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -580,7 +580,7 @@ lan_enable_link_auth_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -599,7 +599,7 @@ lan_enable_link_auth_commit (const char *section_name,
   return lan_channel_set (state_data,
                           userid,
                           0, 0,
-                          same (kv->value, "yes"), 1,
+                          same (kv->value_input, "yes"), 1,
                           0, 0,
                           0, 0,
                           0, 0);
@@ -630,7 +630,7 @@ lan_enable_link_auth_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -639,7 +639,7 @@ lan_enable_link_auth_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -664,7 +664,7 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -684,7 +684,7 @@ lan_enable_restricted_to_callback_commit (const char *section_name,
                           userid,
                           0, 0,
                           0, 0,
-                          same (kv->value, "yes"), 1,
+                          same (kv->value_input, "yes"), 1,
                           0, 0,
                           0, 0);
 }
@@ -714,7 +714,7 @@ lan_enable_restricted_to_callback_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val) 
     ret = CONFIG_DIFF_SAME;
@@ -723,7 +723,7 @@ lan_enable_restricted_to_callback_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -748,7 +748,7 @@ lan_privilege_limit_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+  if (!(kv->value_output = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -769,7 +769,7 @@ lan_privilege_limit_commit (const char *section_name,
                           0, 0,
                           0, 0,
                           0, 0,
-                          get_privilege_limit_number (kv->value), 1,
+                          get_privilege_limit_number (kv->value_input), 1,
                           0, 0);
 }
 
@@ -798,7 +798,7 @@ lan_privilege_limit_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = get_privilege_limit_number (kv->value);
+  passed_val = get_privilege_limit_number (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -807,7 +807,7 @@ lan_privilege_limit_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_privilege_limit_string (get_val));
     }
   return ret;
@@ -832,7 +832,7 @@ lan_session_limit_checkout (const char *section_name,
                               &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", get_val) < 0)
+  if (asprintf (&kv->value_output, "%d", get_val) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_NON_FATAL_ERROR;
@@ -854,7 +854,7 @@ lan_session_limit_commit (const char *section_name,
                           0, 0,
                           0, 0,
                           0, 0,
-                          strtol (kv->value, NULL, 0), 1);
+                          strtol (kv->value_input, NULL, 0), 1);
 }
 
 static config_diff_t
@@ -882,7 +882,7 @@ lan_session_limit_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -893,7 +893,7 @@ lan_session_limit_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -928,7 +928,7 @@ sol_payload_access_checkout (const char *section_name,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (have_access ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (have_access ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -946,7 +946,7 @@ sol_payload_access_commit (const char *section_name,
   int userid = atoi (section_name + strlen ("User"));
   uint8_t operation;
 
-  if (same (kv->value, "yes"))
+  if (same (kv->value_input, "yes"))
     operation = IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE;
   else
     operation = IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE;
@@ -993,7 +993,7 @@ sol_payload_access_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_value = same (kv->value, "yes");
+  passed_value = same (kv->value_input, "yes");
   
   if (passed_value == have_access)
     ret = CONFIG_DIFF_SAME;
@@ -1002,7 +1002,7 @@ sol_payload_access_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    have_access ? "Yes" : "No");
     }
   return ret;
@@ -1122,7 +1122,7 @@ serial_enable_ipmi_msgs_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1140,7 +1140,7 @@ serial_enable_ipmi_msgs_commit (const char *section_name,
   uint8_t userid = atoi (section_name + strlen ("User"));
   return serial_channel_set (state_data,
                              userid,
-                             same (kv->value, "yes"), 1,
+                             same (kv->value_input, "yes"), 1,
                              0, 0,
                              0, 0,
                              0, 0,
@@ -1172,7 +1172,7 @@ serial_enable_ipmi_msgs_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -1181,7 +1181,7 @@ serial_enable_ipmi_msgs_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -1206,7 +1206,7 @@ serial_enable_link_auth_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1225,7 +1225,7 @@ serial_enable_link_auth_commit (const char *section_name,
   return serial_channel_set (state_data,
                              userid,
                              0, 0,
-                             same (kv->value, "yes"), 1,
+                             same (kv->value_input, "yes"), 1,
                              0, 0,
                              0, 0,
                              0, 0);
@@ -1256,7 +1256,7 @@ serial_enable_link_auth_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -1265,7 +1265,7 @@ serial_enable_link_auth_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -1290,7 +1290,7 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_val ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1310,7 +1310,7 @@ serial_enable_restricted_to_callback_commit (const char *section_name,
                              userid,
                              0, 0,
                              0, 0,
-                             same (kv->value, "yes"), 1,
+                             same (kv->value_input, "yes"), 1,
                              0, 0,
                              0, 0);
 }
@@ -1340,7 +1340,7 @@ serial_enable_restricted_to_callback_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = same (kv->value, "Yes");
+  passed_val = same (kv->value_input, "Yes");
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -1349,7 +1349,7 @@ serial_enable_restricted_to_callback_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_val ? "Yes" : "No");
     }
   return ret;
@@ -1374,7 +1374,7 @@ serial_privilege_limit_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (get_privilege_limit_string (get_val))))
+  if (!(kv->value_output = strdup (get_privilege_limit_string (get_val))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -1395,7 +1395,7 @@ serial_privilege_limit_commit (const char *section_name,
                              0, 0,
                              0, 0,
                              0, 0,
-                             get_privilege_limit_number (kv->value), 1,
+                             get_privilege_limit_number (kv->value_input), 1,
                              0, 0);
 }
 
@@ -1424,7 +1424,7 @@ serial_privilege_limit_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = get_privilege_limit_number (kv->value);
+  passed_val = get_privilege_limit_number (kv->value_input);
   
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -1433,7 +1433,7 @@ serial_privilege_limit_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    get_privilege_limit_string (get_val));
     }
   return ret;
@@ -1458,7 +1458,7 @@ serial_session_limit_checkout (const char *section_name,
                                  &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (asprintf (&kv->value, "%d", get_val) < 0)
+  if (asprintf (&kv->value_output, "%d", get_val) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_NON_FATAL_ERROR;
@@ -1480,7 +1480,7 @@ serial_session_limit_commit (const char *section_name,
                              0, 0,
                              0, 0,
                              0, 0,
-                             strtol (kv->value, NULL, 0), 1);
+                             strtol (kv->value_input, NULL, 0), 1);
 }
 
 static config_diff_t
@@ -1508,7 +1508,7 @@ serial_session_limit_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = atoi (kv->value);
+  passed_val = atoi (kv->value_input);
 
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
@@ -1519,7 +1519,7 @@ serial_session_limit_diff (const char *section_name,
       sprintf (num, "%d", get_val);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;

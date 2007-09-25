@@ -30,7 +30,7 @@ ip_address_source_checkout (const char *section_name,
                                                  &source)) != CONFIG_ERR_SUCCESS) 
     return ret;
 
-  if (!(kv->value = strdup (ip_address_source_string (source))))
+  if (!(kv->value_output = strdup (ip_address_source_string (source))))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -46,7 +46,7 @@ ip_address_source_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_ip_address_source (state_data,
-					     ip_address_source_number (kv->value));
+					     ip_address_source_number (kv->value_input));
 }
 
 static config_diff_t
@@ -68,7 +68,7 @@ ip_address_source_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  passed_val = ip_address_source_number (kv->value);
+  passed_val = ip_address_source_number (kv->value_input);
   if (passed_val == get_val)
     ret = CONFIG_DIFF_SAME;
   else 
@@ -76,7 +76,7 @@ ip_address_source_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    ip_address_source_string (get_val));
     }
   return ret;
@@ -96,7 +96,7 @@ ip_address_checkout (const char *section_name,
                                           BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (ip)))
+  if (!(kv->value_output = strdup (ip)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -112,7 +112,7 @@ ip_address_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_ip_address (state_data,
-                                      kv->value);
+                                      kv->value_input);
 }
 
 static config_diff_t
@@ -134,14 +134,14 @@ ip_address_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (ip, kv->value))
+  if (same (ip, kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    ip);
     }
   return ret;
@@ -161,7 +161,7 @@ mac_address_checkout (const char *section_name,
                                            BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (mac)))
+  if (!(kv->value_output = strdup (mac)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -176,7 +176,7 @@ mac_address_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_mac_address (state_data,
-				       kv->value);
+				       kv->value_input);
 }
 
 static config_diff_t
@@ -198,14 +198,14 @@ mac_address_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (mac, kv->value))
+  if (same (mac, kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    mac);
     }
   return ret;
@@ -225,7 +225,7 @@ subnet_mask_checkout (const char *section_name,
                                            BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (mask)))
+  if (!(kv->value_output = strdup (mask)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -241,7 +241,7 @@ subnet_mask_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_subnet_mask (state_data,
-                                       kv->value);
+                                       kv->value_input);
 }
 
 static config_diff_t
@@ -263,14 +263,14 @@ subnet_mask_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (mask, kv->value))
+  if (same (mask, kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    mask);
     }
   return ret;
@@ -290,7 +290,7 @@ default_gateway_address_checkout (const char *section_name,
                                                        BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value = strdup (ip)))
+  if (!(kv->value_output = strdup (ip)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -306,7 +306,7 @@ default_gateway_address_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_default_gateway_address (state_data,
-                                                   kv->value);
+                                                   kv->value_input);
 }
 
 static config_diff_t
@@ -328,14 +328,14 @@ default_gateway_address_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (ip, kv->value)) 
+  if (same (ip, kv->value_input)) 
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    ip);
     }
   return ret;
@@ -355,7 +355,7 @@ default_gateway_mac_address_checkout (const char *section_name,
                                                            BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (mac)))
+  if (!(kv->value_output = strdup (mac)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -370,7 +370,7 @@ default_gateway_mac_address_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_default_gateway_mac_address (state_data,
-						       kv->value);
+						       kv->value_input);
 }
 
 static config_diff_t
@@ -392,20 +392,18 @@ default_gateway_mac_address_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (mac, kv->value))
+  if (same (mac, kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    mac);
     }
   return ret;
 }
-
-/* backup */
 
 static config_err_t
 backup_gateway_address_checkout (const char *section_name,
@@ -421,7 +419,7 @@ backup_gateway_address_checkout (const char *section_name,
                                                       BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (ip)))
+  if (!(kv->value_output = strdup (ip)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -437,7 +435,7 @@ backup_gateway_address_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_backup_gateway_address (state_data,
-                                                  kv->value);
+                                                  kv->value_input);
 }
 
 static config_diff_t
@@ -459,14 +457,14 @@ backup_gateway_address_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (ip, kv->value))
+  if (same (ip, kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    ip);
     }
   return ret;
@@ -486,7 +484,7 @@ backup_gateway_mac_address_checkout (const char *section_name,
                                                           BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (mac)))
+  if (!(kv->value_output = strdup (mac)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -501,7 +499,7 @@ backup_gateway_mac_address_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_backup_gateway_mac_address (state_data,
-						      kv->value);
+						      kv->value_input);
 }
 
 static config_diff_t
@@ -523,14 +521,14 @@ backup_gateway_mac_address_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (same (mac, kv->value))
+  if (same (mac, kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    mac);
     }
   return ret;
@@ -551,7 +549,7 @@ vlan_id_checkout (const char *section_name,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", vlan_id) < 0)
+  if (asprintf (&kv->value_output, "%d", vlan_id) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -574,7 +572,7 @@ vlan_id_commit (const char *section_name,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  vlan_id = atoi (kv->value);
+  vlan_id = atoi (kv->value_input);
 
   if ((ret = set_bmc_lan_conf_vlan_id (state_data,
                                        vlan_id,
@@ -604,7 +602,7 @@ vlan_id_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (vlan_id == atoi (kv->value))
+  if (vlan_id == atoi (kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
@@ -613,7 +611,7 @@ vlan_id_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    num);
     }
   return ret;
@@ -642,7 +640,7 @@ vlan_id_enable_checkout (const char *section_name,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = strdup (vlan_id_enable ? "Yes" : "No")))
+  if (!(kv->value_output = strdup (vlan_id_enable ? "Yes" : "No")))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -669,7 +667,7 @@ vlan_id_enable_commit (const char *section_name,
   if (ret != 0)
     return -1;
 
-  vlan_id_enable = same (kv->value, "yes");
+  vlan_id_enable = same (kv->value_input, "yes");
 
   if ((ret = set_bmc_lan_conf_vlan_id (state_data,
                                        vlan_id,
@@ -699,14 +697,14 @@ vlan_id_enable_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (vlan_id_enable == (same (kv->value, "yes")))
+  if (vlan_id_enable == (same (kv->value_input, "yes")))
     ret = CONFIG_DIFF_SAME;
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    vlan_id_enable ? "Yes" : "No");
     }
   return ret;
@@ -725,7 +723,7 @@ vlan_priority_checkout (const char *section_name,
                                              &priority)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value, "%d", priority) < 0)
+  if (asprintf (&kv->value_output, "%d", priority) < 0)
     {
       perror("asprintf");
       return CONFIG_ERR_FATAL_ERROR;
@@ -740,7 +738,7 @@ vlan_priority_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_bmc_lan_conf_vlan_priority (state_data,
-					 atoi (kv->value));
+					 atoi (kv->value_input));
 }
 
 static config_diff_t
@@ -761,7 +759,7 @@ vlan_priority_diff (const char *section_name,
       return CONFIG_DIFF_FATAL_ERROR;
     }
 
-  if (priority == atoi (kv->value))
+  if (priority == atoi (kv->value_input))
     ret = CONFIG_DIFF_SAME;
   else 
     {
@@ -770,7 +768,7 @@ vlan_priority_diff (const char *section_name,
       sprintf (prio, "%d", priority);
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    prio);
     }
   return ret;

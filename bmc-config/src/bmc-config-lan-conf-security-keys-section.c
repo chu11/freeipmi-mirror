@@ -32,7 +32,7 @@ k_r_checkout (const char *section_name,
     return ret;
 
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
-  if (!(kv->value = strdup ((char *)k_r)))
+  if (!(kv->value_output = strdup ((char *)k_r)))
     {
       perror("strdup");
       return CONFIG_ERR_FATAL_ERROR;
@@ -48,8 +48,8 @@ k_r_commit (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   return set_k_r (state_data,
-		  (uint8_t *)kv->value, 
-		  kv->value ? strlen (kv->value): 0);
+		  (uint8_t *)kv->value_input, 
+		  kv->value_input ? strlen (kv->value_input): 0);
 }
 
 static config_diff_t
@@ -67,12 +67,12 @@ k_r_diff (const char *section_name,
                       IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (strcmp (kv->value?kv->value:"", (char *)k_r)) 
+  if (strcmp (kv->value_input?kv->value_input:"", (char *)k_r)) 
     {
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    (char *)k_r);
     } 
   else
@@ -109,16 +109,16 @@ k_g_checkout (const char *section_name,
                       IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value = (char *)malloc(IPMI_MAX_K_G_LENGTH*2+3)))
+  if (!(kv->value_output = (char *)malloc(IPMI_MAX_K_G_LENGTH*2+3)))
     {
       perror("malloc");
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  if (!format_kg(kv->value, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
+  if (!format_kg(kv->value_output, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
     {
-      free(kv->value);
-      kv->value = NULL;
+      free(kv->value_output);
+      kv->value_output = NULL;
       return CONFIG_ERR_FATAL_ERROR;
     }
 
@@ -136,7 +136,7 @@ k_g_commit (const char *section_name,
   
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
   
-  if ((k_g_len = parse_kg(k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value)) < 0)
+  if ((k_g_len = parse_kg(k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return set_k_g (state_data, k_g, k_g_len);
@@ -162,7 +162,7 @@ k_g_diff (const char *section_name,
   if (!format_kg(k_g_str, IPMI_MAX_K_G_LENGTH*2+3, k_g))
     return CONFIG_ERR_FATAL_ERROR;
 
-  if (parse_kg(kv_k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value) < 0)
+  if (parse_kg(kv_k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   /* a printable k_g key can have two representations, so compare the
@@ -172,7 +172,7 @@ k_g_diff (const char *section_name,
       ret = CONFIG_DIFF_DIFFERENT;
       report_diff (section_name,
                    kv->key_name,
-                   kv->value,
+                   kv->value_input,
                    k_g_str);
     }
   else

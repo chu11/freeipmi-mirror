@@ -1,3 +1,8 @@
+2007-09-25  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/, pef-config/: Continued common code re-architecture
+	and subsequent code cleanup.
+
 2007-09-24  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Update.
