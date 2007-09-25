@@ -11,6 +11,8 @@
 
 #define CONFIG_CHECKOUT_LINE_LEN                           45
 
+#define CONFIG_PARSE_BUFLEN                                4096
+
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0
 

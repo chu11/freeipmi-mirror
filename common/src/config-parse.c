@@ -16,7 +16,7 @@ config_parse (struct config_section *sections,
               struct config_arguments *cmd_args,
               FILE *fp)
 { 
-  char buf[4096];
+  char buf[CONFIG_PARSE_BUFLEN];
   int line_num = 0;
   char *section_name = NULL;
   char *key_name = NULL;
@@ -24,11 +24,14 @@ config_parse (struct config_section *sections,
   char *tok;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
-  while (fgets (buf, 4096, fp)) 
+  while (fgets (buf, CONFIG_PARSE_BUFLEN, fp)) 
     {
-      line_num ++;
-      buf[4095] = 0;
-      char *first_word = strtok (buf, " \t\n");
+      line_num++;
+      char *first_word;
+
+      buf[CONFIG_PARSE_BUFLEN-1] = '\0';
+
+      first_word = strtok (buf, " \t\n");
       
       if (!first_word) 
         {
