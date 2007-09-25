@@ -127,7 +127,7 @@ event_filter_set (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-filter_type_checkout (const struct config_section *section,
+filter_type_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
@@ -137,7 +137,7 @@ filter_type_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -161,7 +161,7 @@ filter_type_checkout (const struct config_section *section,
 }
 
 static config_err_t
-filter_type_commit (const struct config_section *section,
+filter_type_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -171,7 +171,7 @@ filter_type_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -196,7 +196,7 @@ filter_type_commit (const struct config_section *section,
 }
 
 static config_diff_t
-filter_type_diff (const struct config_section *section,
+filter_type_diff (const char *section_name,
                   const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -208,7 +208,7 @@ filter_type_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -232,7 +232,7 @@ filter_type_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    filter_type_string (eft.filter_type));
@@ -241,7 +241,7 @@ filter_type_diff (const struct config_section *section,
 }
 
 static config_err_t
-enable_filter_checkout (const struct config_section *section,
+enable_filter_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
@@ -251,7 +251,7 @@ enable_filter_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -275,7 +275,7 @@ enable_filter_checkout (const struct config_section *section,
 }
 
 static config_err_t
-enable_filter_commit (const struct config_section *section,
+enable_filter_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -285,7 +285,7 @@ enable_filter_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -310,7 +310,7 @@ enable_filter_commit (const struct config_section *section,
 }
 
 static config_diff_t
-enable_filter_diff (const struct config_section *section,
+enable_filter_diff (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -322,7 +322,7 @@ enable_filter_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -347,7 +347,7 @@ enable_filter_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.enable_filter ? "Yes" : "No");
@@ -356,7 +356,7 @@ enable_filter_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_alert_checkout (const struct config_section *section,
+event_filter_action_alert_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -366,7 +366,7 @@ event_filter_action_alert_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -390,7 +390,7 @@ event_filter_action_alert_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_alert_commit (const struct config_section *section,
+event_filter_action_alert_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -400,7 +400,7 @@ event_filter_action_alert_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -425,7 +425,7 @@ event_filter_action_alert_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_filter_action_alert_diff (const struct config_section *section,
+event_filter_action_alert_diff (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -437,7 +437,7 @@ event_filter_action_alert_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -462,7 +462,7 @@ event_filter_action_alert_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_alert ? "Yes" : "No");
@@ -471,7 +471,7 @@ event_filter_action_alert_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_power_off_checkout (const struct config_section *section,
+event_filter_action_power_off_checkout (const char *section_name,
                                         struct config_keyvalue *kv,
                                         void *arg)
 {
@@ -481,7 +481,7 @@ event_filter_action_power_off_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -505,7 +505,7 @@ event_filter_action_power_off_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_power_off_commit (const struct config_section *section,
+event_filter_action_power_off_commit (const char *section_name,
                                       const struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -515,7 +515,7 @@ event_filter_action_power_off_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -540,7 +540,7 @@ event_filter_action_power_off_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_filter_action_power_off_diff (const struct config_section *section,
+event_filter_action_power_off_diff (const char *section_name,
                                     const struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -552,7 +552,7 @@ event_filter_action_power_off_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -577,7 +577,7 @@ event_filter_action_power_off_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_power_off ? "Yes" : "No");
@@ -586,7 +586,7 @@ event_filter_action_power_off_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_reset_checkout (const struct config_section *section,
+event_filter_action_reset_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -596,7 +596,7 @@ event_filter_action_reset_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -620,7 +620,7 @@ event_filter_action_reset_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_reset_commit (const struct config_section *section,
+event_filter_action_reset_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -630,7 +630,7 @@ event_filter_action_reset_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -655,7 +655,7 @@ event_filter_action_reset_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_filter_action_reset_diff (const struct config_section *section,
+event_filter_action_reset_diff (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -667,7 +667,7 @@ event_filter_action_reset_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -692,7 +692,7 @@ event_filter_action_reset_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_reset ? "Yes" : "No");
@@ -702,7 +702,7 @@ event_filter_action_reset_diff (const struct config_section *section,
 
 
 static config_err_t
-event_filter_action_power_cycle_checkout (const struct config_section *section,
+event_filter_action_power_cycle_checkout (const char *section_name,
                                           struct config_keyvalue *kv,
                                           void *arg)
 {
@@ -712,7 +712,7 @@ event_filter_action_power_cycle_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -736,7 +736,7 @@ event_filter_action_power_cycle_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_power_cycle_commit (const struct config_section *section,
+event_filter_action_power_cycle_commit (const char *section_name,
                                         const struct config_keyvalue *kv,
                                         void *arg)
 {
@@ -746,7 +746,7 @@ event_filter_action_power_cycle_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -771,7 +771,7 @@ event_filter_action_power_cycle_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_filter_action_power_cycle_diff (const struct config_section *section,
+event_filter_action_power_cycle_diff (const char *section_name,
                                       const struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -783,7 +783,7 @@ event_filter_action_power_cycle_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -808,7 +808,7 @@ event_filter_action_power_cycle_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_power_cycle ? "Yes" : "No");
@@ -817,7 +817,7 @@ event_filter_action_power_cycle_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_oem_checkout (const struct config_section *section,
+event_filter_action_oem_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -827,7 +827,7 @@ event_filter_action_oem_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -851,7 +851,7 @@ event_filter_action_oem_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_oem_commit (const struct config_section *section,
+event_filter_action_oem_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -861,7 +861,7 @@ event_filter_action_oem_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -886,7 +886,7 @@ event_filter_action_oem_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_filter_action_oem_diff (const struct config_section *section,
+event_filter_action_oem_diff (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -898,7 +898,7 @@ event_filter_action_oem_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -923,7 +923,7 @@ event_filter_action_oem_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_oem ? "Yes" : "No");
@@ -932,7 +932,7 @@ event_filter_action_oem_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_filter_action_diagnostic_interrupt_checkout (const struct config_section *section,
+event_filter_action_diagnostic_interrupt_checkout (const char *section_name,
                                                    struct config_keyvalue *kv,
                                                    void *arg)
 {
@@ -942,7 +942,7 @@ event_filter_action_diagnostic_interrupt_checkout (const struct config_section *
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -966,7 +966,7 @@ event_filter_action_diagnostic_interrupt_checkout (const struct config_section *
 }
 
 static config_err_t
-event_filter_action_diagnostic_interrupt_commit (const struct config_section *section,
+event_filter_action_diagnostic_interrupt_commit (const char *section_name,
                                                  const struct config_keyvalue *kv,
                                                  void *arg)
 {
@@ -976,7 +976,7 @@ event_filter_action_diagnostic_interrupt_commit (const struct config_section *se
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1001,7 +1001,7 @@ event_filter_action_diagnostic_interrupt_commit (const struct config_section *se
 }
 
 static config_diff_t
-event_filter_action_diagnostic_interrupt_diff (const struct config_section *section,
+event_filter_action_diagnostic_interrupt_diff (const char *section_name,
                                                const struct config_keyvalue *kv,
                                                void *arg)
 {
@@ -1013,7 +1013,7 @@ event_filter_action_diagnostic_interrupt_diff (const struct config_section *sect
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1038,7 +1038,7 @@ event_filter_action_diagnostic_interrupt_diff (const struct config_section *sect
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No");
@@ -1047,7 +1047,7 @@ event_filter_action_diagnostic_interrupt_diff (const struct config_section *sect
 }
 
 static config_err_t
-event_filter_action_group_control_operation_checkout (const struct config_section *section,
+event_filter_action_group_control_operation_checkout (const char *section_name,
                                                       struct config_keyvalue *kv,
                                                       void *arg)
 {
@@ -1057,7 +1057,7 @@ event_filter_action_group_control_operation_checkout (const struct config_sectio
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1081,7 +1081,7 @@ event_filter_action_group_control_operation_checkout (const struct config_sectio
 }
 
 static config_err_t
-event_filter_action_group_control_operation_commit (const struct config_section *section,
+event_filter_action_group_control_operation_commit (const char *section_name,
                                                     const struct config_keyvalue *kv,
                                                     void *arg)
 {
@@ -1091,7 +1091,7 @@ event_filter_action_group_control_operation_commit (const struct config_section 
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1116,7 +1116,7 @@ event_filter_action_group_control_operation_commit (const struct config_section 
 }
 
 static config_diff_t
-event_filter_action_group_control_operation_diff (const struct config_section *section,
+event_filter_action_group_control_operation_diff (const char *section_name,
                                                   const struct config_keyvalue *kv,
                                                   void *arg)
 {
@@ -1128,7 +1128,7 @@ event_filter_action_group_control_operation_diff (const struct config_section *s
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1153,7 +1153,7 @@ event_filter_action_group_control_operation_diff (const struct config_section *s
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    eft.event_filter_action_group_control_operation ? "Yes" : "No");
@@ -1162,7 +1162,7 @@ event_filter_action_group_control_operation_diff (const struct config_section *s
 }
 
 static config_err_t
-alert_policy_number_checkout (const struct config_section *section,
+alert_policy_number_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
@@ -1172,7 +1172,7 @@ alert_policy_number_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1196,7 +1196,7 @@ alert_policy_number_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_policy_number_commit (const struct config_section *section,
+alert_policy_number_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -1206,7 +1206,7 @@ alert_policy_number_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1231,7 +1231,7 @@ alert_policy_number_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_policy_number_diff (const struct config_section *section,
+alert_policy_number_diff (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -1243,7 +1243,7 @@ alert_policy_number_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1270,7 +1270,7 @@ alert_policy_number_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", eft.alert_policy_number);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1279,7 +1279,7 @@ alert_policy_number_diff (const struct config_section *section,
 }
 
 static config_err_t
-group_control_selector_checkout (const struct config_section *section,
+group_control_selector_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -1289,7 +1289,7 @@ group_control_selector_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1313,7 +1313,7 @@ group_control_selector_checkout (const struct config_section *section,
 }
 
 static config_err_t
-group_control_selector_commit (const struct config_section *section,
+group_control_selector_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -1323,7 +1323,7 @@ group_control_selector_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1348,7 +1348,7 @@ group_control_selector_commit (const struct config_section *section,
 }
 
 static config_diff_t
-group_control_selector_diff (const struct config_section *section,
+group_control_selector_diff (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -1360,7 +1360,7 @@ group_control_selector_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1387,7 +1387,7 @@ group_control_selector_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", eft.group_control_selector);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1396,7 +1396,7 @@ group_control_selector_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_severity_checkout (const struct config_section *section,
+event_severity_checkout (const char *section_name,
                          struct config_keyvalue *kv,
                          void *arg)
 {
@@ -1406,7 +1406,7 @@ event_severity_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1430,7 +1430,7 @@ event_severity_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_severity_commit (const struct config_section *section,
+event_severity_commit (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
@@ -1440,7 +1440,7 @@ event_severity_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1465,7 +1465,7 @@ event_severity_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_severity_diff (const struct config_section *section,
+event_severity_diff (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -1477,7 +1477,7 @@ event_severity_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1501,7 +1501,7 @@ event_severity_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    event_severity_string (eft.event_severity));
@@ -1510,7 +1510,7 @@ event_severity_diff (const struct config_section *section,
 }
 
 static config_err_t
-generator_id_byte_1_checkout (const struct config_section *section,
+generator_id_byte_1_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
@@ -1520,7 +1520,7 @@ generator_id_byte_1_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1544,7 +1544,7 @@ generator_id_byte_1_checkout (const struct config_section *section,
 }
 
 static config_err_t
-generator_id_byte_1_commit (const struct config_section *section,
+generator_id_byte_1_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -1554,7 +1554,7 @@ generator_id_byte_1_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1580,7 +1580,7 @@ generator_id_byte_1_commit (const struct config_section *section,
 }
 
 static config_diff_t
-generator_id_byte_1_diff (const struct config_section *section,
+generator_id_byte_1_diff (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -1592,7 +1592,7 @@ generator_id_byte_1_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1619,7 +1619,7 @@ generator_id_byte_1_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.generator_id_byte_1);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1628,7 +1628,7 @@ generator_id_byte_1_diff (const struct config_section *section,
 }
 
 static config_err_t
-generator_id_byte_2_checkout (const struct config_section *section,
+generator_id_byte_2_checkout (const char *section_name,
                               struct config_keyvalue *kv,
                               void *arg)
 {
@@ -1638,7 +1638,7 @@ generator_id_byte_2_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1662,7 +1662,7 @@ generator_id_byte_2_checkout (const struct config_section *section,
 }
 
 static config_err_t
-generator_id_byte_2_commit (const struct config_section *section,
+generator_id_byte_2_commit (const char *section_name,
                             const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -1672,7 +1672,7 @@ generator_id_byte_2_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1697,7 +1697,7 @@ generator_id_byte_2_commit (const struct config_section *section,
 }
 
 static config_diff_t
-generator_id_byte_2_diff (const struct config_section *section,
+generator_id_byte_2_diff (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -1709,7 +1709,7 @@ generator_id_byte_2_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1736,7 +1736,7 @@ generator_id_byte_2_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.generator_id_byte_2);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1745,7 +1745,7 @@ generator_id_byte_2_diff (const struct config_section *section,
 }
 
 static config_err_t
-sensor_type_checkout (const struct config_section *section,
+sensor_type_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
@@ -1755,7 +1755,7 @@ sensor_type_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1779,7 +1779,7 @@ sensor_type_checkout (const struct config_section *section,
 }
 
 static config_err_t
-sensor_type_commit (const struct config_section *section,
+sensor_type_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -1789,7 +1789,7 @@ sensor_type_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1814,7 +1814,7 @@ sensor_type_commit (const struct config_section *section,
 }
 
 static config_diff_t
-sensor_type_diff (const struct config_section *section,
+sensor_type_diff (const char *section_name,
                   const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -1826,7 +1826,7 @@ sensor_type_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1851,7 +1851,7 @@ sensor_type_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
 		   sensor_type_string (eft.sensor_type));
@@ -1861,7 +1861,7 @@ sensor_type_diff (const struct config_section *section,
 }
 
 static config_err_t
-sensor_number_checkout (const struct config_section *section,
+sensor_number_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
@@ -1871,7 +1871,7 @@ sensor_number_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1895,7 +1895,7 @@ sensor_number_checkout (const struct config_section *section,
 }
 
 static config_err_t
-sensor_number_commit (const struct config_section *section,
+sensor_number_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -1905,7 +1905,7 @@ sensor_number_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1930,7 +1930,7 @@ sensor_number_commit (const struct config_section *section,
 }
 
 static config_diff_t
-sensor_number_diff (const struct config_section *section,
+sensor_number_diff (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -1942,7 +1942,7 @@ sensor_number_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -1969,7 +1969,7 @@ sensor_number_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.sensor_number);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -1978,7 +1978,7 @@ sensor_number_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_trigger_checkout (const struct config_section *section,
+event_trigger_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
@@ -1988,7 +1988,7 @@ event_trigger_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2012,7 +2012,7 @@ event_trigger_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_trigger_commit (const struct config_section *section,
+event_trigger_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -2022,7 +2022,7 @@ event_trigger_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2047,7 +2047,7 @@ event_trigger_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_trigger_diff (const struct config_section *section,
+event_trigger_diff (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -2059,7 +2059,7 @@ event_trigger_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2086,7 +2086,7 @@ event_trigger_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_trigger);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2095,7 +2095,7 @@ event_trigger_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_offset_mask_checkout (const struct config_section *section,
+event_data1_offset_mask_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -2105,7 +2105,7 @@ event_data1_offset_mask_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2129,7 +2129,7 @@ event_data1_offset_mask_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_offset_mask_commit (const struct config_section *section,
+event_data1_offset_mask_commit (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -2139,7 +2139,7 @@ event_data1_offset_mask_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2164,7 +2164,7 @@ event_data1_offset_mask_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data1_offset_mask_diff (const struct config_section *section,
+event_data1_offset_mask_diff (const char *section_name,
                               const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -2176,7 +2176,7 @@ event_data1_offset_mask_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2203,7 +2203,7 @@ event_data1_offset_mask_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_offset_mask);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2212,7 +2212,7 @@ event_data1_offset_mask_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_and_mask_checkout (const struct config_section *section,
+event_data1_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -2222,7 +2222,7 @@ event_data1_and_mask_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2246,7 +2246,7 @@ event_data1_and_mask_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_and_mask_commit (const struct config_section *section,
+event_data1_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -2256,7 +2256,7 @@ event_data1_and_mask_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2281,7 +2281,7 @@ event_data1_and_mask_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data1_and_mask_diff (const struct config_section *section,
+event_data1_and_mask_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -2293,7 +2293,7 @@ event_data1_and_mask_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2320,7 +2320,7 @@ event_data1_and_mask_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_and_mask);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2329,7 +2329,7 @@ event_data1_and_mask_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_compare1_checkout (const struct config_section *section,
+event_data1_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -2339,7 +2339,7 @@ event_data1_compare1_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2363,7 +2363,7 @@ event_data1_compare1_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_compare1_commit (const struct config_section *section,
+event_data1_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -2373,7 +2373,7 @@ event_data1_compare1_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2398,7 +2398,7 @@ event_data1_compare1_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data1_compare1_diff (const struct config_section *section,
+event_data1_compare1_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -2410,7 +2410,7 @@ event_data1_compare1_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2437,7 +2437,7 @@ event_data1_compare1_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_compare1);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2446,7 +2446,7 @@ event_data1_compare1_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_compare2_checkout (const struct config_section *section,
+event_data1_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -2456,7 +2456,7 @@ event_data1_compare2_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2480,7 +2480,7 @@ event_data1_compare2_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data1_compare2_commit (const struct config_section *section,
+event_data1_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -2490,7 +2490,7 @@ event_data1_compare2_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2515,7 +2515,7 @@ event_data1_compare2_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data1_compare2_diff (const struct config_section *section,
+event_data1_compare2_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -2527,7 +2527,7 @@ event_data1_compare2_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2554,7 +2554,7 @@ event_data1_compare2_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data1_compare2);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2563,7 +2563,7 @@ event_data1_compare2_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data2_and_mask_checkout (const struct config_section *section,
+event_data2_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -2573,7 +2573,7 @@ event_data2_and_mask_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2597,7 +2597,7 @@ event_data2_and_mask_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data2_and_mask_commit (const struct config_section *section,
+event_data2_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -2607,7 +2607,7 @@ event_data2_and_mask_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2632,7 +2632,7 @@ event_data2_and_mask_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data2_and_mask_diff (const struct config_section *section,
+event_data2_and_mask_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -2644,7 +2644,7 @@ event_data2_and_mask_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2671,7 +2671,7 @@ event_data2_and_mask_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data2_and_mask);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2680,7 +2680,7 @@ event_data2_and_mask_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data2_compare1_checkout (const struct config_section *section,
+event_data2_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -2690,7 +2690,7 @@ event_data2_compare1_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2714,7 +2714,7 @@ event_data2_compare1_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data2_compare1_commit (const struct config_section *section,
+event_data2_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -2724,7 +2724,7 @@ event_data2_compare1_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2749,7 +2749,7 @@ event_data2_compare1_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data2_compare1_diff (const struct config_section *section,
+event_data2_compare1_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -2761,7 +2761,7 @@ event_data2_compare1_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2788,7 +2788,7 @@ event_data2_compare1_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data2_compare1);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2797,7 +2797,7 @@ event_data2_compare1_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data2_compare2_checkout (const struct config_section *section,
+event_data2_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -2807,7 +2807,7 @@ event_data2_compare2_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2831,7 +2831,7 @@ event_data2_compare2_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data2_compare2_commit (const struct config_section *section,
+event_data2_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -2841,7 +2841,7 @@ event_data2_compare2_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2866,7 +2866,7 @@ event_data2_compare2_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data2_compare2_diff (const struct config_section *section,
+event_data2_compare2_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -2878,7 +2878,7 @@ event_data2_compare2_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2905,7 +2905,7 @@ event_data2_compare2_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data2_compare2);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -2914,7 +2914,7 @@ event_data2_compare2_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data3_and_mask_checkout (const struct config_section *section,
+event_data3_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -2924,7 +2924,7 @@ event_data3_and_mask_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2948,7 +2948,7 @@ event_data3_and_mask_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data3_and_mask_commit (const struct config_section *section,
+event_data3_and_mask_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -2958,7 +2958,7 @@ event_data3_and_mask_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -2983,7 +2983,7 @@ event_data3_and_mask_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data3_and_mask_diff (const struct config_section *section,
+event_data3_and_mask_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -2995,7 +2995,7 @@ event_data3_and_mask_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3022,7 +3022,7 @@ event_data3_and_mask_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data3_and_mask);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -3031,7 +3031,7 @@ event_data3_and_mask_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data3_compare1_checkout (const struct config_section *section,
+event_data3_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -3041,7 +3041,7 @@ event_data3_compare1_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3065,7 +3065,7 @@ event_data3_compare1_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data3_compare1_commit (const struct config_section *section,
+event_data3_compare1_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -3075,7 +3075,7 @@ event_data3_compare1_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3100,7 +3100,7 @@ event_data3_compare1_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data3_compare1_diff (const struct config_section *section,
+event_data3_compare1_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -3112,7 +3112,7 @@ event_data3_compare1_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3139,7 +3139,7 @@ event_data3_compare1_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data3_compare1);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -3148,7 +3148,7 @@ event_data3_compare1_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_data3_compare2_checkout (const struct config_section *section,
+event_data3_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -3158,7 +3158,7 @@ event_data3_compare2_checkout (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3182,7 +3182,7 @@ event_data3_compare2_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_data3_compare2_commit (const struct config_section *section,
+event_data3_compare2_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -3192,7 +3192,7 @@ event_data3_compare2_commit (const struct config_section *section,
   config_err_t ret;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((ret = get_number_of_event_filters (state_data,
                                           &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3217,7 +3217,7 @@ event_data3_compare2_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_data3_compare2_diff (const struct config_section *section,
+event_data3_compare2_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -3229,7 +3229,7 @@ event_data3_compare2_diff (const struct config_section *section,
   uint8_t number_of_event_filters;
   struct event_filter_table eft;
 
-  event_filter_number = atoi (section->section_name + strlen ("Event_Filter_"));
+  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
 
   if ((rc = get_number_of_event_filters (state_data,
                                          &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
@@ -3256,7 +3256,7 @@ event_data3_compare2_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "0x%02X", eft.event_data3_compare2);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);

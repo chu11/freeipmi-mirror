@@ -76,7 +76,7 @@ sol_auth_commit (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-enable_sol_checkout (const struct config_section *section,
+enable_sol_checkout (const char *section_name,
 		     struct config_keyvalue *kv,
                      void *arg)
 {
@@ -98,7 +98,7 @@ enable_sol_checkout (const struct config_section *section,
 }
 
 static config_err_t
-enable_sol_commit (const struct config_section *section,
+enable_sol_commit (const char *section_name,
 		   const struct config_keyvalue *kv,
                    void *arg)
 {
@@ -108,7 +108,7 @@ enable_sol_commit (const struct config_section *section,
 }
 
 static config_diff_t
-enable_sol_diff (const struct config_section *section,
+enable_sol_diff (const char *section_name,
 		 const struct config_keyvalue *kv,
                  void *arg)
 {
@@ -133,7 +133,7 @@ enable_sol_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -142,7 +142,7 @@ enable_sol_diff (const struct config_section *section,
 }
 
 static config_err_t
-sol_privilege_level_checkout (const struct config_section *section,
+sol_privilege_level_checkout (const char *section_name,
 			      struct config_keyvalue *kv,
                               void *arg)
 {
@@ -165,7 +165,7 @@ sol_privilege_level_checkout (const struct config_section *section,
 }
 
 static config_err_t
-sol_privilege_level_commit (const struct config_section *section,
+sol_privilege_level_commit (const char *section_name,
 			    const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -178,7 +178,7 @@ sol_privilege_level_commit (const struct config_section *section,
 }
 
 static config_diff_t
-sol_privilege_level_diff (const struct config_section *section,
+sol_privilege_level_diff (const char *section_name,
 			  const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -205,7 +205,7 @@ sol_privilege_level_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    privilege_level_string (got_value));
@@ -214,7 +214,7 @@ sol_privilege_level_diff (const struct config_section *section,
 }
 
 static config_err_t
-force_sol_payload_authentication_checkout (const struct config_section *section,
+force_sol_payload_authentication_checkout (const char *section_name,
 					   struct config_keyvalue *kv,
                                            void *arg)
 {
@@ -238,7 +238,7 @@ force_sol_payload_authentication_checkout (const struct config_section *section,
 }
 
 static config_err_t
-force_sol_payload_authentication_commit (const struct config_section *section,
+force_sol_payload_authentication_commit (const char *section_name,
 					 const struct config_keyvalue *kv,
                                          void *arg)
 {
@@ -251,7 +251,7 @@ force_sol_payload_authentication_commit (const struct config_section *section,
 }
 
 static config_diff_t
-force_sol_payload_authentication_diff (const struct config_section *section,
+force_sol_payload_authentication_diff (const char *section_name,
 				       const struct config_keyvalue *kv,
                                        void *arg)
 {
@@ -278,7 +278,7 @@ force_sol_payload_authentication_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -287,7 +287,7 @@ force_sol_payload_authentication_diff (const struct config_section *section,
 }
 
 static config_err_t
-force_sol_payload_encryption_checkout (const struct config_section *section,
+force_sol_payload_encryption_checkout (const char *section_name,
                                        struct config_keyvalue *kv,
                                        void *arg)
 {
@@ -311,7 +311,7 @@ force_sol_payload_encryption_checkout (const struct config_section *section,
 }
 
 static config_err_t
-force_sol_payload_encryption_commit (const struct config_section *section,
+force_sol_payload_encryption_commit (const char *section_name,
 				     const struct config_keyvalue *kv,
                                      void *arg)
 {
@@ -324,7 +324,7 @@ force_sol_payload_encryption_commit (const struct config_section *section,
 }
 
 static config_diff_t
-force_sol_payload_encryption_diff (const struct config_section *section,
+force_sol_payload_encryption_diff (const char *section_name,
 				   const struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -351,7 +351,7 @@ force_sol_payload_encryption_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    got_value ? "Yes" : "No");
@@ -360,7 +360,7 @@ force_sol_payload_encryption_diff (const struct config_section *section,
 }
 
 static config_err_t
-character_accumulate_interval_checkout (const struct config_section *section,
+character_accumulate_interval_checkout (const char *section_name,
 					struct config_keyvalue *kv,
                                         void *arg)
 {
@@ -383,7 +383,7 @@ character_accumulate_interval_checkout (const struct config_section *section,
 }
 
 static config_err_t
-character_accumulate_interval_commit (const struct config_section *section,
+character_accumulate_interval_commit (const char *section_name,
 				      const struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -405,7 +405,7 @@ character_accumulate_interval_commit (const struct config_section *section,
 }
 
 static config_diff_t
-character_accumulate_interval_diff (const struct config_section *section,
+character_accumulate_interval_diff (const char *section_name,
 				    const struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -436,7 +436,7 @@ character_accumulate_interval_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -445,7 +445,7 @@ character_accumulate_interval_diff (const struct config_section *section,
 }
 
 static config_err_t
-character_send_threshold_checkout (const struct config_section *section,
+character_send_threshold_checkout (const char *section_name,
 				   struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -468,7 +468,7 @@ character_send_threshold_checkout (const struct config_section *section,
 }
 
 static config_err_t
-character_send_threshold_commit (const struct config_section *section,
+character_send_threshold_commit (const char *section_name,
 				 const struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -490,7 +490,7 @@ character_send_threshold_commit (const struct config_section *section,
 }
 
 static config_diff_t
-character_send_threshold_diff (const struct config_section *section,
+character_send_threshold_diff (const char *section_name,
 			       const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -521,7 +521,7 @@ character_send_threshold_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -530,7 +530,7 @@ character_send_threshold_diff (const struct config_section *section,
 }
 
 static config_err_t
-sol_retry_count_checkout (const struct config_section *section,
+sol_retry_count_checkout (const char *section_name,
 			  struct config_keyvalue *kv,
                           void *arg)
 {
@@ -554,7 +554,7 @@ sol_retry_count_checkout (const struct config_section *section,
 
 
 static config_err_t
-sol_retry_count_commit (const struct config_section *section,
+sol_retry_count_commit (const char *section_name,
 			const struct config_keyvalue *kv,
                         void *arg)
 {
@@ -576,7 +576,7 @@ sol_retry_count_commit (const struct config_section *section,
 }
 
 static config_diff_t
-sol_retry_count_diff (const struct config_section *section,
+sol_retry_count_diff (const char *section_name,
 		      const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -607,7 +607,7 @@ sol_retry_count_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -616,7 +616,7 @@ sol_retry_count_diff (const struct config_section *section,
 }
 
 static config_err_t
-sol_retry_interval_checkout (const struct config_section *section,
+sol_retry_interval_checkout (const char *section_name,
 			     struct config_keyvalue *kv,
                              void *arg)
 {
@@ -640,7 +640,7 @@ sol_retry_interval_checkout (const struct config_section *section,
 
 
 static config_err_t
-sol_retry_interval_commit (const struct config_section *section,
+sol_retry_interval_commit (const char *section_name,
 			   const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -662,7 +662,7 @@ sol_retry_interval_commit (const struct config_section *section,
 }
 
 static config_diff_t
-sol_retry_interval_diff (const struct config_section *section,
+sol_retry_interval_diff (const char *section_name,
 			 const struct config_keyvalue *kv,
                          void *arg)
 {
@@ -693,7 +693,7 @@ sol_retry_interval_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -702,7 +702,7 @@ sol_retry_interval_diff (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_bit_rate_checkout (const struct config_section *section,
+non_volatile_bit_rate_checkout (const char *section_name,
 				struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -723,7 +723,7 @@ non_volatile_bit_rate_checkout (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_bit_rate_commit (const struct config_section *section,
+non_volatile_bit_rate_commit (const char *section_name,
 			      const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -733,7 +733,7 @@ non_volatile_bit_rate_commit (const struct config_section *section,
 }
 
 static config_diff_t
-non_volatile_bit_rate_diff (const struct config_section *section,
+non_volatile_bit_rate_diff (const char *section_name,
 			    const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -758,7 +758,7 @@ non_volatile_bit_rate_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    sol_bit_rate_string (got_value));
@@ -767,7 +767,7 @@ non_volatile_bit_rate_diff (const struct config_section *section,
 }
 
 static config_err_t
-volatile_bit_rate_checkout (const struct config_section *section,
+volatile_bit_rate_checkout (const char *section_name,
 			    struct config_keyvalue *kv,
                             void *arg)
 {
@@ -788,7 +788,7 @@ volatile_bit_rate_checkout (const struct config_section *section,
 }
 
 static config_err_t
-volatile_bit_rate_commit (const struct config_section *section,
+volatile_bit_rate_commit (const char *section_name,
 			  const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -798,7 +798,7 @@ volatile_bit_rate_commit (const struct config_section *section,
 }
 
 static config_diff_t
-volatile_bit_rate_diff (const struct config_section *section,
+volatile_bit_rate_diff (const char *section_name,
 			const struct config_keyvalue *kv,
                         void *arg)
 {
@@ -824,7 +824,7 @@ volatile_bit_rate_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    sol_bit_rate_string (got_value));
@@ -833,7 +833,7 @@ volatile_bit_rate_diff (const struct config_section *section,
 }
 
 static config_err_t
-port_checkout (const struct config_section *section,
+port_checkout (const char *section_name,
 	       struct config_keyvalue *kv,
                void *arg)
 {
@@ -855,7 +855,7 @@ port_checkout (const struct config_section *section,
 
 
 static config_err_t
-port_commit (const struct config_section *section,
+port_commit (const char *section_name,
 	     const struct config_keyvalue *kv,
              void *arg)
 {
@@ -865,7 +865,7 @@ port_commit (const struct config_section *section,
 }
 
 static config_diff_t
-port_diff (const struct config_section *section,
+port_diff (const char *section_name,
 	   const struct config_keyvalue *kv,
            void *arg)
 {
@@ -892,7 +892,7 @@ port_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%d", got_value);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);

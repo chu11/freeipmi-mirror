@@ -12,6 +12,7 @@
 
 #include "config-checkout.h"
 #include "config-parse.h"
+#include "config-section.h"
 
 static config_err_t
 config_checkout_keypair (struct config_section *sections,
@@ -56,7 +57,9 @@ config_checkout_keypair (struct config_section *sections,
       goto cleanup;
     }
 
-  if ((ret = kv->checkout (section, kv, arg)) == CONFIG_ERR_FATAL_ERROR)
+  if ((ret = kv->checkout (section->section_name, 
+                           kv,
+                           arg)) == CONFIG_ERR_FATAL_ERROR)
     goto cleanup;
 
   if (ret == CONFIG_ERR_SUCCESS) 
@@ -144,7 +147,7 @@ config_checkout_section_common (struct config_section *section,
           continue;
         }
 
-      if ((this_ret = kv->checkout (section,
+      if ((this_ret = kv->checkout (section->section_name,
                                     kv,
                                     arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;

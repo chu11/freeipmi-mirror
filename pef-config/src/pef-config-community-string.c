@@ -13,7 +13,7 @@
 #include "pef-config-wrapper.h"
 
 static config_err_t
-community_string_checkout (const struct config_section *section,
+community_string_checkout (const char *section_name,
                            struct config_keyvalue *kv,
                            void *arg)
 {
@@ -36,7 +36,7 @@ community_string_checkout (const struct config_section *section,
 }
 
 static config_err_t
-community_string_commit (const struct config_section *section,
+community_string_commit (const char *section_name,
                          const struct config_keyvalue *kv,
                          void *arg)
 {
@@ -46,7 +46,7 @@ community_string_commit (const struct config_section *section,
 }
 
 static config_diff_t
-community_string_diff (const struct config_section *section,
+community_string_diff (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
@@ -70,7 +70,7 @@ community_string_diff (const struct config_section *section,
     ret = CONFIG_DIFF_SAME;
 
   if (ret == CONFIG_DIFF_DIFFERENT)
-    report_diff (section->section_name,
+    report_diff (section_name,
 		 kv->key_name,
 		 kv->value,
 		 (char *)community_string);

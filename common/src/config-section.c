@@ -305,10 +305,16 @@ config_section_commit_value (struct config_section *sections,
   struct config_keyvalue *kv;
 
   if (!(section = config_section_find_section (sections, section_name)))
-    return CONFIG_ERR_FATAL_ERROR;
-
+    {
+      fprintf (stderr, "Unknown section `%s'\n", section_name);
+      return CONFIG_ERR_FATAL_ERROR;
+    }
+  
   if (!(kv = config_section_find_keyvalue (sections, section_name, key_name)))
-    return CONFIG_ERR_FATAL_ERROR;
+    {
+      fprintf (stderr, "Unknown key `%s' in section `%s'\n", key_name, section_name);
+      return CONFIG_ERR_FATAL_ERROR;
+    }
 
   if (kv->validate)
     {
@@ -334,7 +340,7 @@ config_section_commit_value (struct config_section *sections,
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return kv->commit (section, kv, arg);
+  return kv->commit (section->section_name, kv, arg);
 }
 
 int
@@ -348,10 +354,16 @@ config_section_diff_value (struct config_section *sections,
   struct config_keyvalue *kv;
 
   if (!(section = config_section_find_section (sections, section_name)))
-    return CONFIG_ERR_FATAL_ERROR;
+    {
+      fprintf (stderr, "Unknown section `%s'\n", section_name);
+      return CONFIG_ERR_FATAL_ERROR;
+    }
 
   if (!(kv = config_section_find_keyvalue (sections, section_name, key_name)))
-    return CONFIG_ERR_FATAL_ERROR;
+    {
+      fprintf (stderr, "Unknown key `%s' in section `%s'\n", key_name, section_name);
+      return CONFIG_ERR_FATAL_ERROR;
+    }
 
   if (kv->validate)
     {
@@ -377,7 +389,7 @@ config_section_diff_value (struct config_section *sections,
       return CONFIG_ERR_FATAL_ERROR;
     }
 
-  return kv->diff (section, kv, arg);
+  return kv->diff (section->section_name, kv, arg);
 }
 
 config_err_t 

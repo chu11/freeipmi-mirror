@@ -12,6 +12,7 @@
 
 #include "config-commit.h"
 #include "config-parse.h"
+#include "config-section.h"
 
 static config_err_t
 config_commit_keypairs (struct config_section *sections,
@@ -169,7 +170,9 @@ config_commit_file (struct config_section *sections,
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->commit (section, kv, arg)) == CONFIG_ERR_FATAL_ERROR)
+                  if ((this_ret = kv->commit (section->section_name,
+                                              kv,
+                                              arg)) == CONFIG_ERR_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)

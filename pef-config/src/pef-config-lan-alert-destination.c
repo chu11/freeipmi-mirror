@@ -100,7 +100,7 @@ destination_type_set (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-alert_destination_type_checkout (const struct config_section *section,
+alert_destination_type_checkout (const char *section_name,
                                  struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -110,7 +110,7 @@ alert_destination_type_checkout (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -137,7 +137,7 @@ alert_destination_type_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_destination_type_commit (const struct config_section *section,
+alert_destination_type_commit (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -146,7 +146,7 @@ alert_destination_type_commit (const struct config_section *section,
   uint8_t number_of_lan_alert_destinations;
   config_err_t ret;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -164,7 +164,7 @@ alert_destination_type_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_destination_type_diff (const struct config_section *section,
+alert_destination_type_diff (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -176,7 +176,7 @@ alert_destination_type_diff (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((rc = get_number_of_lan_alert_destinations (state_data, 
                                                   &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -203,7 +203,7 @@ alert_destination_type_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    alert_destination_type_string (get_val));
@@ -212,7 +212,7 @@ alert_destination_type_diff (const struct config_section *section,
 }
 
 static config_err_t
-alert_acknowledge_checkout (const struct config_section *section,
+alert_acknowledge_checkout (const char *section_name,
                             struct config_keyvalue *kv,
                             void *arg)
 {
@@ -222,7 +222,7 @@ alert_acknowledge_checkout (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -249,7 +249,7 @@ alert_acknowledge_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_acknowledge_commit (const struct config_section *section,
+alert_acknowledge_commit (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -258,7 +258,7 @@ alert_acknowledge_commit (const struct config_section *section,
   uint8_t number_of_lan_alert_destinations;
   config_err_t ret;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -276,7 +276,7 @@ alert_acknowledge_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_acknowledge_diff (const struct config_section *section,
+alert_acknowledge_diff (const char *section_name,
                         const struct config_keyvalue *kv,
                         void *arg)
 {
@@ -288,7 +288,7 @@ alert_acknowledge_diff (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
   
   if ((rc = get_number_of_lan_alert_destinations (state_data, 
                                                   &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -316,7 +316,7 @@ alert_acknowledge_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -325,7 +325,7 @@ alert_acknowledge_diff (const struct config_section *section,
 }
 
 static config_err_t
-alert_acknowledge_timeout_checkout (const struct config_section *section,
+alert_acknowledge_timeout_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -335,7 +335,7 @@ alert_acknowledge_timeout_checkout (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -362,7 +362,7 @@ alert_acknowledge_timeout_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_acknowledge_timeout_commit (const struct config_section *section,
+alert_acknowledge_timeout_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -372,7 +372,7 @@ alert_acknowledge_timeout_commit (const struct config_section *section,
   config_err_t ret;
   uint8_t alert_acknowledge_timeout;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -392,7 +392,7 @@ alert_acknowledge_timeout_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_acknowledge_timeout_diff (const struct config_section *section,
+alert_acknowledge_timeout_diff (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -404,7 +404,7 @@ alert_acknowledge_timeout_diff (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
   
   if ((rc = get_number_of_lan_alert_destinations (state_data, 
                                                   &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -434,7 +434,7 @@ alert_acknowledge_timeout_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -443,7 +443,7 @@ alert_acknowledge_timeout_diff (const struct config_section *section,
 }
 
 static config_err_t
-alert_retries_checkout (const struct config_section *section,
+alert_retries_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
@@ -453,7 +453,7 @@ alert_retries_checkout (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -480,7 +480,7 @@ alert_retries_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_retries_commit (const struct config_section *section,
+alert_retries_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -490,7 +490,7 @@ alert_retries_commit (const struct config_section *section,
   config_err_t ret;
   uint8_t alert_retries;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -510,7 +510,7 @@ alert_retries_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_retries_diff (const struct config_section *section,
+alert_retries_diff (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -522,7 +522,7 @@ alert_retries_diff (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
   
   if ((rc = get_number_of_lan_alert_destinations (state_data, 
                                                   &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -552,7 +552,7 @@ alert_retries_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -664,7 +664,7 @@ destination_addresses_set (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-alert_gateway_checkout (const struct config_section *section,
+alert_gateway_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
@@ -674,7 +674,7 @@ alert_gateway_checkout (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -702,7 +702,7 @@ alert_gateway_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_gateway_commit (const struct config_section *section,
+alert_gateway_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -711,7 +711,7 @@ alert_gateway_commit (const struct config_section *section,
   uint8_t number_of_lan_alert_destinations;
   config_err_t ret;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -728,7 +728,7 @@ alert_gateway_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_gateway_diff (const struct config_section *section,
+alert_gateway_diff (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -740,7 +740,7 @@ alert_gateway_diff (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((rc = get_number_of_lan_alert_destinations (state_data, 
                                                   &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -768,7 +768,7 @@ alert_gateway_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    alert_gateway_string (get_val));
@@ -777,7 +777,7 @@ alert_gateway_diff (const struct config_section *section,
 }
 
 static config_err_t
-alert_ip_address_checkout (const struct config_section *section,
+alert_ip_address_checkout (const char *section_name,
                            struct config_keyvalue *kv,
                            void *arg)
 {
@@ -787,7 +787,7 @@ alert_ip_address_checkout (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
   
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -815,7 +815,7 @@ alert_ip_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_ip_address_commit (const struct config_section *section,
+alert_ip_address_commit (const char *section_name,
                          const struct config_keyvalue *kv,
                          void *arg)
 {
@@ -824,7 +824,7 @@ alert_ip_address_commit (const struct config_section *section,
   uint8_t number_of_lan_alert_destinations;
   config_err_t ret;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -841,7 +841,7 @@ alert_ip_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_ip_address_diff (const struct config_section *section,
+alert_ip_address_diff (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
@@ -852,7 +852,7 @@ alert_ip_address_diff (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((rc = get_number_of_lan_alert_destinations (state_data, 
                                                   &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -879,7 +879,7 @@ alert_ip_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    alert_ip);
@@ -888,7 +888,7 @@ alert_ip_address_diff (const struct config_section *section,
 }
 
 static config_err_t
-alert_mac_address_checkout (const struct config_section *section,
+alert_mac_address_checkout (const char *section_name,
                             struct config_keyvalue *kv,
                             void *arg)
 {
@@ -898,7 +898,7 @@ alert_mac_address_checkout (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
   
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
   
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -926,7 +926,7 @@ alert_mac_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_mac_address_commit (const struct config_section *section,
+alert_mac_address_commit (const char *section_name,
                           const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -935,7 +935,7 @@ alert_mac_address_commit (const struct config_section *section,
   uint8_t number_of_lan_alert_destinations;
   config_err_t ret;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((ret = get_number_of_lan_alert_destinations (state_data, 
                                                    &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -952,7 +952,7 @@ alert_mac_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_mac_address_diff (const struct config_section *section,
+alert_mac_address_diff (const char *section_name,
                         const struct config_keyvalue *kv,
                         void *arg)
 {
@@ -963,7 +963,7 @@ alert_mac_address_diff (const struct config_section *section,
   uint8_t destination_selector;
   uint8_t number_of_lan_alert_destinations;
 
-  destination_selector = atoi (section->section_name + strlen ("Lan_Alert_Destination_"));
+  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
 
   if ((rc = get_number_of_lan_alert_destinations (state_data, 
                                                   &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
@@ -990,7 +990,7 @@ alert_mac_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    alert_mac);

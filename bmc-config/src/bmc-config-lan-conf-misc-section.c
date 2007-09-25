@@ -14,7 +14,7 @@
 #include "bmc-config-validate.h"
 
 static config_err_t
-enable_gratuitous_arps_checkout (const struct config_section *section,
+enable_gratuitous_arps_checkout (const char *section_name,
 				 struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -39,7 +39,7 @@ enable_gratuitous_arps_checkout (const struct config_section *section,
 }
 
 static config_err_t
-enable_gratuitous_arps_commit (const struct config_section *section,
+enable_gratuitous_arps_commit (const char *section_name,
 			       const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -61,7 +61,7 @@ enable_gratuitous_arps_commit (const struct config_section *section,
 }
 
 static config_diff_t
-enable_gratuitous_arps_diff (const struct config_section *section,
+enable_gratuitous_arps_diff (const char *section_name,
 			     const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -85,7 +85,7 @@ enable_gratuitous_arps_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT; 
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    (enable_arp) ? "Yes" : "No");
@@ -96,7 +96,7 @@ enable_gratuitous_arps_diff (const struct config_section *section,
 /* reply */
 
 static config_err_t
-enable_arp_response_checkout (const struct config_section *section,
+enable_arp_response_checkout (const char *section_name,
 			      struct config_keyvalue *kv,
                               void *arg)
 {
@@ -120,7 +120,7 @@ enable_arp_response_checkout (const struct config_section *section,
 }
 
 static config_err_t
-enable_arp_response_commit (const struct config_section *section,
+enable_arp_response_commit (const char *section_name,
 			    const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -142,7 +142,7 @@ enable_arp_response_commit (const struct config_section *section,
 }
 
 static config_diff_t
-enable_arp_response_diff (const struct config_section *section,
+enable_arp_response_diff (const char *section_name,
 			  const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -166,7 +166,7 @@ enable_arp_response_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT; 
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    (reply_arp) ? "Yes" : "No");
@@ -176,7 +176,7 @@ enable_arp_response_diff (const struct config_section *section,
 }
 
 static config_err_t
-gratuitous_arp_interval_checkout (const struct config_section *section,
+gratuitous_arp_interval_checkout (const char *section_name,
 				  struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -197,7 +197,7 @@ gratuitous_arp_interval_checkout (const struct config_section *section,
 }
 
 static config_err_t
-gratuitous_arp_interval_commit (const struct config_section *section,
+gratuitous_arp_interval_commit (const char *section_name,
 				const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -207,7 +207,7 @@ gratuitous_arp_interval_commit (const struct config_section *section,
 }
 
 static config_diff_t
-gratuitous_arp_interval_diff (const struct config_section *section,
+gratuitous_arp_interval_diff (const char *section_name,
 			      const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -231,7 +231,7 @@ gratuitous_arp_interval_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT; 
       sprintf (num, "%d", interval);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);

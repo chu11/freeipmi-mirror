@@ -131,7 +131,7 @@ alert_policy_set (pef_config_state_data_t *state_data,
 }
 
 static config_err_t
-policy_type_checkout (const struct config_section *section,
+policy_type_checkout (const char *section_name,
                       struct config_keyvalue *kv,
                       void *arg)
 {
@@ -141,7 +141,7 @@ policy_type_checkout (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
   
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -171,7 +171,7 @@ policy_type_checkout (const struct config_section *section,
 }
 
 static config_err_t
-policy_type_commit (const struct config_section *section,
+policy_type_commit (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -180,7 +180,7 @@ policy_type_commit (const struct config_section *section,
   uint8_t number_of_alert_policy_entries;
   config_err_t ret;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -201,7 +201,7 @@ policy_type_commit (const struct config_section *section,
 }
 
 static config_diff_t
-policy_type_diff (const struct config_section *section,
+policy_type_diff (const char *section_name,
                   const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -213,7 +213,7 @@ policy_type_diff (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((rc = get_number_of_alert_policy_entries (state_data,
                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -243,7 +243,7 @@ policy_type_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    policy_type_string (get_val));
@@ -252,7 +252,7 @@ policy_type_diff (const struct config_section *section,
 }
 
 static config_err_t
-policy_enabled_checkout (const struct config_section *section,
+policy_enabled_checkout (const char *section_name,
                          struct config_keyvalue *kv,
                          void *arg)
 {
@@ -262,7 +262,7 @@ policy_enabled_checkout (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
   
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -292,7 +292,7 @@ policy_enabled_checkout (const struct config_section *section,
 }
 
 static config_err_t
-policy_enabled_commit (const struct config_section *section,
+policy_enabled_commit (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
@@ -301,7 +301,7 @@ policy_enabled_commit (const struct config_section *section,
   uint8_t number_of_alert_policy_entries;
   config_err_t ret;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -322,7 +322,7 @@ policy_enabled_commit (const struct config_section *section,
 }
 
 static config_diff_t
-policy_enabled_diff (const struct config_section *section,
+policy_enabled_diff (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -334,7 +334,7 @@ policy_enabled_diff (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((rc = get_number_of_alert_policy_entries (state_data,
                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -365,7 +365,7 @@ policy_enabled_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -374,7 +374,7 @@ policy_enabled_diff (const struct config_section *section,
 }
 
 static config_err_t
-policy_number_checkout (const struct config_section *section,
+policy_number_checkout (const char *section_name,
                         struct config_keyvalue *kv,
                         void *arg)
 {
@@ -384,7 +384,7 @@ policy_number_checkout (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
   
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -414,7 +414,7 @@ policy_number_checkout (const struct config_section *section,
 }
 
 static config_err_t
-policy_number_commit (const struct config_section *section,
+policy_number_commit (const char *section_name,
                       const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -424,7 +424,7 @@ policy_number_commit (const struct config_section *section,
   config_err_t ret;
   uint8_t policy_number;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -447,7 +447,7 @@ policy_number_commit (const struct config_section *section,
 }
 
 static config_diff_t
-policy_number_diff (const struct config_section *section,
+policy_number_diff (const char *section_name,
                     const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -459,7 +459,7 @@ policy_number_diff (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((rc = get_number_of_alert_policy_entries (state_data,
                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -492,7 +492,7 @@ policy_number_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -501,7 +501,7 @@ policy_number_diff (const struct config_section *section,
 }
 
 static config_err_t
-destination_selector_checkout (const struct config_section *section,
+destination_selector_checkout (const char *section_name,
                                struct config_keyvalue *kv,
                                void *arg)
 {
@@ -511,7 +511,7 @@ destination_selector_checkout (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
   
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -541,7 +541,7 @@ destination_selector_checkout (const struct config_section *section,
 }
 
 static config_err_t
-destination_selector_commit (const struct config_section *section,
+destination_selector_commit (const char *section_name,
                              const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -551,7 +551,7 @@ destination_selector_commit (const struct config_section *section,
   config_err_t ret;
   uint8_t destination_selector;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -574,7 +574,7 @@ destination_selector_commit (const struct config_section *section,
 }
 
 static config_diff_t
-destination_selector_diff (const struct config_section *section,
+destination_selector_diff (const char *section_name,
                            const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -586,7 +586,7 @@ destination_selector_diff (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((rc = get_number_of_alert_policy_entries (state_data,
                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -619,7 +619,7 @@ destination_selector_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -628,7 +628,7 @@ destination_selector_diff (const struct config_section *section,
 }
 
 static config_err_t
-channel_number_checkout (const struct config_section *section,
+channel_number_checkout (const char *section_name,
                          struct config_keyvalue *kv,
                          void *arg)
 {
@@ -638,7 +638,7 @@ channel_number_checkout (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
   
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -668,7 +668,7 @@ channel_number_checkout (const struct config_section *section,
 }
 
 static config_err_t
-channel_number_commit (const struct config_section *section,
+channel_number_commit (const char *section_name,
                        const struct config_keyvalue *kv,
                        void *arg)
 {
@@ -678,7 +678,7 @@ channel_number_commit (const struct config_section *section,
   config_err_t ret;
   uint8_t channel_number;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -701,7 +701,7 @@ channel_number_commit (const struct config_section *section,
 }
 
 static config_diff_t
-channel_number_diff (const struct config_section *section,
+channel_number_diff (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -713,7 +713,7 @@ channel_number_diff (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((rc = get_number_of_alert_policy_entries (state_data,
                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -746,7 +746,7 @@ channel_number_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -755,7 +755,7 @@ channel_number_diff (const struct config_section *section,
 }
 
 static config_err_t
-alert_string_set_selector_checkout (const struct config_section *section,
+alert_string_set_selector_checkout (const char *section_name,
                                     struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -765,7 +765,7 @@ alert_string_set_selector_checkout (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
   
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -795,7 +795,7 @@ alert_string_set_selector_checkout (const struct config_section *section,
 }
 
 static config_err_t
-alert_string_set_selector_commit (const struct config_section *section,
+alert_string_set_selector_commit (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -805,7 +805,7 @@ alert_string_set_selector_commit (const struct config_section *section,
   config_err_t ret;
   uint8_t alert_string_set_selector;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -828,7 +828,7 @@ alert_string_set_selector_commit (const struct config_section *section,
 }
 
 static config_diff_t
-alert_string_set_selector_diff (const struct config_section *section,
+alert_string_set_selector_diff (const char *section_name,
                                 const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -840,7 +840,7 @@ alert_string_set_selector_diff (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((rc = get_number_of_alert_policy_entries (state_data,
                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -873,7 +873,7 @@ alert_string_set_selector_diff (const struct config_section *section,
       char num[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (num, "%u", get_val);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -882,7 +882,7 @@ alert_string_set_selector_diff (const struct config_section *section,
 }
 
 static config_err_t
-event_specific_alert_string_checkout (const struct config_section *section,
+event_specific_alert_string_checkout (const char *section_name,
                                       struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -892,7 +892,7 @@ event_specific_alert_string_checkout (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
   
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -922,7 +922,7 @@ event_specific_alert_string_checkout (const struct config_section *section,
 }
 
 static config_err_t
-event_specific_alert_string_commit (const struct config_section *section,
+event_specific_alert_string_commit (const char *section_name,
                                     const struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -931,7 +931,7 @@ event_specific_alert_string_commit (const struct config_section *section,
   uint8_t number_of_alert_policy_entries;
   config_err_t ret;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((ret = get_number_of_alert_policy_entries (state_data,
                                                  &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -952,7 +952,7 @@ event_specific_alert_string_commit (const struct config_section *section,
 }
 
 static config_diff_t
-event_specific_alert_string_diff (const struct config_section *section,
+event_specific_alert_string_diff (const char *section_name,
                                   const struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -964,7 +964,7 @@ event_specific_alert_string_diff (const struct config_section *section,
   uint8_t alert_policy_entry_number;
   uint8_t number_of_alert_policy_entries;
 
-  alert_policy_entry_number = atoi (section->section_name + strlen ("Alert_Policy_"));
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
   if ((rc = get_number_of_alert_policy_entries (state_data,
                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
@@ -995,7 +995,7 @@ event_specific_alert_string_diff (const struct config_section *section,
   else
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");

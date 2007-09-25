@@ -16,7 +16,7 @@
 #include "tool-common.h"
 
 static config_err_t
-k_r_checkout (const struct config_section *section,
+k_r_checkout (const char *section_name,
 	      struct config_keyvalue *kv,
               void *arg)
 {
@@ -42,7 +42,7 @@ k_r_checkout (const struct config_section *section,
 }
 
 static config_err_t
-k_r_commit (const struct config_section *section,
+k_r_commit (const char *section_name,
 	    const struct config_keyvalue *kv,
             void *arg)
 {
@@ -53,7 +53,7 @@ k_r_commit (const struct config_section *section,
 }
 
 static config_diff_t
-k_r_diff (const struct config_section *section,
+k_r_diff (const char *section_name,
 	  const struct config_keyvalue *kv,
           void *arg)
 {
@@ -70,7 +70,7 @@ k_r_diff (const struct config_section *section,
   if (strcmp (kv->value?kv->value:"", (char *)k_r)) 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    (char *)k_r);
@@ -94,7 +94,7 @@ k_r_validate (const char *section_name,
 /* k_g */
 
 static config_err_t
-k_g_checkout (const struct config_section *section,
+k_g_checkout (const char *section_name,
 	      struct config_keyvalue *kv,
               void *arg)
 {
@@ -126,7 +126,7 @@ k_g_checkout (const struct config_section *section,
 }
 
 static config_err_t
-k_g_commit (const struct config_section *section,
+k_g_commit (const char *section_name,
 	    const struct config_keyvalue *kv,
             void *arg)
 {
@@ -143,7 +143,7 @@ k_g_commit (const struct config_section *section,
 }
 
 static config_diff_t
-k_g_diff (const struct config_section *section,
+k_g_diff (const char *section_name,
 	  const struct config_keyvalue *kv,
           void *arg)
 {
@@ -170,7 +170,7 @@ k_g_diff (const struct config_section *section,
   if (memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH)) 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    k_g_str);

@@ -14,7 +14,7 @@
 #include "bmc-config-validate.h"
 
 static config_err_t
-id_checkout (const struct config_section *section,
+id_checkout (const char *section_name,
 	     struct config_keyvalue *kv,
              void *arg,
 	     int id)
@@ -38,7 +38,7 @@ id_checkout (const struct config_section *section,
 }
 
 static config_err_t
-id_commit (const struct config_section *section,
+id_commit (const char *section_name,
 	   const struct config_keyvalue *kv,
            void *arg,
 	   int id)
@@ -50,7 +50,7 @@ id_commit (const struct config_section *section,
 }
 
 static config_diff_t
-id_diff (const struct config_section *section,
+id_diff (const char *section_name,
 	 const struct config_keyvalue *kv,
          void *arg,
 	 int id)
@@ -74,7 +74,7 @@ id_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    rmcpplus_priv_string (priv));
@@ -83,30 +83,30 @@ id_diff (const struct config_section *section,
 }
 
 static config_err_t
-id_checkout_cb (const struct config_section *section,
+id_checkout_cb (const char *section_name,
                 struct config_keyvalue *kv,
                 void *arg)
 {
   uint8_t id = atoi (kv->key_name + strlen("Maximum_Privilege_Cipher_Suite_Id_"));
-  return id_checkout (section, kv, arg, id);
+  return id_checkout (section_name, kv, arg, id);
 }
 
 static config_err_t
-id_commit_cb (const struct config_section *section,
+id_commit_cb (const char *section_name,
               const struct config_keyvalue *kv,
               void *arg)
 {
   uint8_t id = atoi (kv->key_name + strlen("Maximum_Privilege_Cipher_Suite_Id_"));
-  return id_commit (section, kv, arg, id);
+  return id_commit (section_name, kv, arg, id);
 }
 
 static config_diff_t
-id_diff_cb (const struct config_section *section,
+id_diff_cb (const char *section_name,
             const struct config_keyvalue *kv,
             void *arg)
 { 
   uint8_t id = atoi (kv->key_name + strlen("Maximum_Privilege_Cipher_Suite_Id_"));
-  return id_diff (section, kv, arg, id);
+  return id_diff (section_name, kv, arg, id);
 }
 
 struct config_section *

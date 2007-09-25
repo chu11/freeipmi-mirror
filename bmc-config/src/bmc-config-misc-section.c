@@ -14,7 +14,7 @@
 #include "bmc-config-validate.h"
 
 static config_err_t
-power_restore_policy_checkout (const struct config_section *section,
+power_restore_policy_checkout (const char *section_name,
 			       struct config_keyvalue *kv,
                                void *arg)
 {
@@ -35,7 +35,7 @@ power_restore_policy_checkout (const struct config_section *section,
 }
 
 static config_err_t
-power_restore_policy_commit (const struct config_section *section,
+power_restore_policy_commit (const char *section_name,
 			     const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -45,7 +45,7 @@ power_restore_policy_commit (const struct config_section *section,
 }
 
 static config_diff_t
-power_restore_policy_diff (const struct config_section *section,
+power_restore_policy_diff (const char *section_name,
 			   const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -70,7 +70,7 @@ power_restore_policy_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    power_restore_policy_string (got_value));

@@ -10,6 +10,7 @@
 
 #include "config-diff.h"
 #include "config-parse.h"
+#include "config-section.h"
 
 static config_diff_t
 config_diff_keypairs (struct config_section *sections,
@@ -84,7 +85,9 @@ config_diff_file (struct config_section *sections,
             {
               if (kv->value) 
                 {
-                  if ((this_ret = kv->diff (section, kv, arg)) == CONFIG_DIFF_FATAL_ERROR)
+                  if ((this_ret = kv->diff (section->section_name, 
+                                            kv, 
+                                            arg)) == CONFIG_DIFF_FATAL_ERROR)
                     goto cleanup;
 
                   if (this_ret == CONFIG_DIFF_NON_FATAL_ERROR)

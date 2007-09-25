@@ -66,7 +66,7 @@ serial_channel_volatile_access_set (bmc_config_state_data_t *state_data,
 
 
 static config_err_t
-volatile_access_mode_checkout (const struct config_section *section,
+volatile_access_mode_checkout (const char *section_name,
 			       struct config_keyvalue *kv,
                                void *arg)
 {
@@ -92,7 +92,7 @@ volatile_access_mode_checkout (const struct config_section *section,
 }
 
 static config_err_t
-volatile_access_mode_commit (const struct config_section *section,
+volatile_access_mode_commit (const char *section_name,
 			     const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -109,7 +109,7 @@ volatile_access_mode_commit (const struct config_section *section,
 }
 
 static config_diff_t
-volatile_access_mode_diff (const struct config_section *section,
+volatile_access_mode_diff (const char *section_name,
 			   const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -138,7 +138,7 @@ volatile_access_mode_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    channel_access_mode_string (get_val));
@@ -147,7 +147,7 @@ volatile_access_mode_diff (const struct config_section *section,
 }
 
 static config_err_t
-volatile_enable_user_level_auth_checkout (const struct config_section *section,
+volatile_enable_user_level_auth_checkout (const char *section_name,
 					  struct config_keyvalue *kv,
                                           void *arg)
 {
@@ -174,7 +174,7 @@ volatile_enable_user_level_auth_checkout (const struct config_section *section,
 }
 
 static config_err_t
-volatile_enable_user_level_auth_commit (const struct config_section *section,
+volatile_enable_user_level_auth_commit (const char *section_name,
 					const struct config_keyvalue *kv,
                                         void *arg)
 {
@@ -191,7 +191,7 @@ volatile_enable_user_level_auth_commit (const struct config_section *section,
 }
 
 static config_diff_t
-volatile_enable_user_level_auth_diff (const struct config_section *section,
+volatile_enable_user_level_auth_diff (const char *section_name,
 				      const struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -221,7 +221,7 @@ volatile_enable_user_level_auth_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -230,7 +230,7 @@ volatile_enable_user_level_auth_diff (const struct config_section *section,
 }
 
 static config_err_t
-volatile_enable_per_msg_auth_checkout (const struct config_section *section,
+volatile_enable_per_msg_auth_checkout (const char *section_name,
 				       struct config_keyvalue *kv,
                                        void *arg)
 {
@@ -257,7 +257,7 @@ volatile_enable_per_msg_auth_checkout (const struct config_section *section,
 }
 
 static config_err_t
-volatile_enable_per_msg_auth_commit (const struct config_section *section,
+volatile_enable_per_msg_auth_commit (const char *section_name,
 				     const struct config_keyvalue *kv,
                                      void *arg)
 {
@@ -274,7 +274,7 @@ volatile_enable_per_msg_auth_commit (const struct config_section *section,
 }
 
 static config_diff_t
-volatile_enable_per_msg_auth_diff (const struct config_section *section,
+volatile_enable_per_msg_auth_diff (const char *section_name,
 				   const struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -304,7 +304,7 @@ volatile_enable_per_msg_auth_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -313,7 +313,7 @@ volatile_enable_per_msg_auth_diff (const struct config_section *section,
 }
 
 static config_err_t
-volatile_enable_pef_alerting_checkout (const struct config_section *section,
+volatile_enable_pef_alerting_checkout (const char *section_name,
 				       struct config_keyvalue *kv,
                                        void *arg)
 {
@@ -340,7 +340,7 @@ volatile_enable_pef_alerting_checkout (const struct config_section *section,
 }
 
 static config_err_t
-volatile_enable_pef_alerting_commit (const struct config_section *section,
+volatile_enable_pef_alerting_commit (const char *section_name,
 				     const struct config_keyvalue *kv,
                                      void *arg)
 {
@@ -357,7 +357,7 @@ volatile_enable_pef_alerting_commit (const struct config_section *section,
 }
 
 static config_diff_t
-volatile_enable_pef_alerting_diff (const struct config_section *section,
+volatile_enable_pef_alerting_diff (const char *section_name,
 				   const struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -386,7 +386,7 @@ volatile_enable_pef_alerting_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -395,7 +395,7 @@ volatile_enable_pef_alerting_diff (const struct config_section *section,
 }
 
 static config_err_t
-volatile_channel_priv_limit_checkout (const struct config_section *section,
+volatile_channel_priv_limit_checkout (const char *section_name,
 				      struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -422,7 +422,7 @@ volatile_channel_priv_limit_checkout (const struct config_section *section,
 }
 
 static config_err_t
-volatile_channel_priv_limit_commit (const struct config_section *section,
+volatile_channel_priv_limit_commit (const char *section_name,
 				    const struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -439,7 +439,7 @@ volatile_channel_priv_limit_commit (const struct config_section *section,
 }
 
 static config_diff_t
-volatile_channel_priv_limit_diff (const struct config_section *section,
+volatile_channel_priv_limit_diff (const char *section_name,
 				  const struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -469,7 +469,7 @@ volatile_channel_priv_limit_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    privilege_level_string (get_val));
@@ -528,7 +528,7 @@ serial_channel_non_volatile_access_set (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-non_volatile_access_mode_checkout (const struct config_section *section,
+non_volatile_access_mode_checkout (const char *section_name,
                                    struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -554,7 +554,7 @@ non_volatile_access_mode_checkout (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_access_mode_commit (const struct config_section *section,
+non_volatile_access_mode_commit (const char *section_name,
                                  const struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -571,7 +571,7 @@ non_volatile_access_mode_commit (const struct config_section *section,
 }
 
 static config_diff_t
-non_volatile_access_mode_diff (const struct config_section *section,
+non_volatile_access_mode_diff (const char *section_name,
                                const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -601,7 +601,7 @@ non_volatile_access_mode_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    channel_access_mode_string (get_val));
@@ -610,7 +610,7 @@ non_volatile_access_mode_diff (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_enable_user_level_auth_checkout (const struct config_section *section,
+non_volatile_enable_user_level_auth_checkout (const char *section_name,
                                               struct config_keyvalue *kv,
                                               void *arg)
 {
@@ -637,7 +637,7 @@ non_volatile_enable_user_level_auth_checkout (const struct config_section *secti
 }
 
 static config_err_t
-non_volatile_enable_user_level_auth_commit (const struct config_section *section,
+non_volatile_enable_user_level_auth_commit (const char *section_name,
                                             const struct config_keyvalue *kv,
                                             void *arg)
 {
@@ -654,7 +654,7 @@ non_volatile_enable_user_level_auth_commit (const struct config_section *section
 }
 
 static config_diff_t
-non_volatile_enable_user_level_auth_diff (const struct config_section *section,
+non_volatile_enable_user_level_auth_diff (const char *section_name,
                                           const struct config_keyvalue *kv,
                                           void *arg)
 {
@@ -684,7 +684,7 @@ non_volatile_enable_user_level_auth_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -693,7 +693,7 @@ non_volatile_enable_user_level_auth_diff (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_enable_per_msg_auth_checkout (const struct config_section *section,
+non_volatile_enable_per_msg_auth_checkout (const char *section_name,
                                            struct config_keyvalue *kv,
                                            void *arg)
 {
@@ -720,7 +720,7 @@ non_volatile_enable_per_msg_auth_checkout (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_enable_per_msg_auth_commit (const struct config_section *section,
+non_volatile_enable_per_msg_auth_commit (const char *section_name,
                                          const struct config_keyvalue *kv,
                                          void *arg)
 {
@@ -737,7 +737,7 @@ non_volatile_enable_per_msg_auth_commit (const struct config_section *section,
 }
 
 static config_diff_t
-non_volatile_enable_per_msg_auth_diff (const struct config_section *section,
+non_volatile_enable_per_msg_auth_diff (const char *section_name,
                                        const struct config_keyvalue *kv,
                                        void *arg)
 {
@@ -767,7 +767,7 @@ non_volatile_enable_per_msg_auth_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -776,7 +776,7 @@ non_volatile_enable_per_msg_auth_diff (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_enable_pef_alerting_checkout (const struct config_section *section,
+non_volatile_enable_pef_alerting_checkout (const char *section_name,
 					   struct config_keyvalue *kv,
                                            void *arg)
 {
@@ -803,7 +803,7 @@ non_volatile_enable_pef_alerting_checkout (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_enable_pef_alerting_commit (const struct config_section *section,
+non_volatile_enable_pef_alerting_commit (const char *section_name,
 					 const struct config_keyvalue *kv,
                                          void *arg)
 {
@@ -820,7 +820,7 @@ non_volatile_enable_pef_alerting_commit (const struct config_section *section,
 }
 
 static config_diff_t
-non_volatile_enable_pef_alerting_diff (const struct config_section *section,
+non_volatile_enable_pef_alerting_diff (const char *section_name,
 				       const struct config_keyvalue *kv,
                                        void *arg)
 {
@@ -849,7 +849,7 @@ non_volatile_enable_pef_alerting_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    get_val ? "Yes" : "No");
@@ -858,7 +858,7 @@ non_volatile_enable_pef_alerting_diff (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_channel_priv_limit_checkout (const struct config_section *section,
+non_volatile_channel_priv_limit_checkout (const char *section_name,
 					  struct config_keyvalue *kv,
                                           void *arg)
 {
@@ -885,7 +885,7 @@ non_volatile_channel_priv_limit_checkout (const struct config_section *section,
 }
 
 static config_err_t
-non_volatile_channel_priv_limit_commit (const struct config_section *section,
+non_volatile_channel_priv_limit_commit (const char *section_name,
 					const struct config_keyvalue *kv,
                                         void *arg)
 {
@@ -902,7 +902,7 @@ non_volatile_channel_priv_limit_commit (const struct config_section *section,
 }
 
 static config_diff_t
-non_volatile_channel_priv_limit_diff (const struct config_section *section,
+non_volatile_channel_priv_limit_diff (const char *section_name,
 				      const struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -931,7 +931,7 @@ non_volatile_channel_priv_limit_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    privilege_level_string (get_val));

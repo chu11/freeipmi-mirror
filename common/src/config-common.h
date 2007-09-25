@@ -83,19 +83,19 @@ struct config_section {
 };
 
 /* checkout procedure fills the value into kv->value as printable string */
-typedef config_err_t (*Key_Checkout) (const struct config_section *section,
+typedef config_err_t (*Key_Checkout) (const char *section_name,
                                       struct config_keyvalue *kv,
                                       void *arg);
 
 /* commit procedure takes string value from kv->value and converts and
    does ipmi calls to set it */
-typedef config_err_t (*Key_Commit) (const struct config_section *section,
+typedef config_err_t (*Key_Commit) (const char *section_name,
                                     const struct config_keyvalue *kv,
                                     void *arg);
 
 /* diff procedure finds the difference with the ipmi actual value
    and kv->value */
-typedef config_diff_t (*Key_Diff) (const struct config_section *section,
+typedef config_diff_t (*Key_Diff) (const char *section_name,
                                    const struct config_keyvalue *kv,
                                    void *arg);
 

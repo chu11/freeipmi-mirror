@@ -18,7 +18,7 @@
 #define BMC_MAXMACADDRLEN 24
 
 static config_err_t
-ip_address_source_checkout (const struct config_section *section,
+ip_address_source_checkout (const char *section_name,
 			    struct config_keyvalue *kv,
                             void *arg)
 {
@@ -40,7 +40,7 @@ ip_address_source_checkout (const struct config_section *section,
 }
 
 static config_err_t
-ip_address_source_commit (const struct config_section *section,
+ip_address_source_commit (const char *section_name,
 			  const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -50,7 +50,7 @@ ip_address_source_commit (const struct config_section *section,
 }
 
 static config_diff_t
-ip_address_source_diff (const struct config_section *section,
+ip_address_source_diff (const char *section_name,
 			const struct config_keyvalue *kv,
                         void *arg)
 {
@@ -74,7 +74,7 @@ ip_address_source_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    ip_address_source_string (get_val));
@@ -83,7 +83,7 @@ ip_address_source_diff (const struct config_section *section,
 }
 
 static config_err_t
-ip_address_checkout (const struct config_section *section,
+ip_address_checkout (const char *section_name,
 		     struct config_keyvalue *kv,
                      void *arg)
 {
@@ -106,7 +106,7 @@ ip_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-ip_address_commit (const struct config_section *section,
+ip_address_commit (const char *section_name,
 		   const struct config_keyvalue *kv,
                    void *arg)
 {
@@ -116,7 +116,7 @@ ip_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-ip_address_diff (const struct config_section *section,
+ip_address_diff (const char *section_name,
 		 const struct config_keyvalue *kv,
                  void *arg)
 {
@@ -139,7 +139,7 @@ ip_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    ip);
@@ -148,7 +148,7 @@ ip_address_diff (const struct config_section *section,
 }
 
 static config_err_t
-mac_address_checkout (const struct config_section *section,
+mac_address_checkout (const char *section_name,
 		      struct config_keyvalue *kv,
                       void *arg)
 {
@@ -170,7 +170,7 @@ mac_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-mac_address_commit (const struct config_section *section,
+mac_address_commit (const char *section_name,
 		    const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -180,7 +180,7 @@ mac_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-mac_address_diff (const struct config_section *section,
+mac_address_diff (const char *section_name,
 		  const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -203,7 +203,7 @@ mac_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    mac);
@@ -212,7 +212,7 @@ mac_address_diff (const struct config_section *section,
 }
 
 static config_err_t
-subnet_mask_checkout (const struct config_section *section,
+subnet_mask_checkout (const char *section_name,
 		      struct config_keyvalue *kv,
                       void *arg)
 {
@@ -235,7 +235,7 @@ subnet_mask_checkout (const struct config_section *section,
 }
 
 static config_err_t
-subnet_mask_commit (const struct config_section *section,
+subnet_mask_commit (const char *section_name,
 		    const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -245,7 +245,7 @@ subnet_mask_commit (const struct config_section *section,
 }
 
 static config_diff_t
-subnet_mask_diff (const struct config_section *section,
+subnet_mask_diff (const char *section_name,
 		  const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -268,7 +268,7 @@ subnet_mask_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    mask);
@@ -277,7 +277,7 @@ subnet_mask_diff (const struct config_section *section,
 }
 
 static config_err_t
-default_gateway_address_checkout (const struct config_section *section,
+default_gateway_address_checkout (const char *section_name,
 				  struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -300,7 +300,7 @@ default_gateway_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-default_gateway_address_commit (const struct config_section *section,
+default_gateway_address_commit (const char *section_name,
 				const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -310,7 +310,7 @@ default_gateway_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-default_gateway_address_diff (const struct config_section *section,
+default_gateway_address_diff (const char *section_name,
 			      const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -333,7 +333,7 @@ default_gateway_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    ip);
@@ -342,7 +342,7 @@ default_gateway_address_diff (const struct config_section *section,
 }
 
 static config_err_t
-default_gateway_mac_address_checkout (const struct config_section *section,
+default_gateway_mac_address_checkout (const char *section_name,
 				      struct config_keyvalue *kv,
                                       void *arg)
 {
@@ -364,7 +364,7 @@ default_gateway_mac_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-default_gateway_mac_address_commit (const struct config_section *section,
+default_gateway_mac_address_commit (const char *section_name,
 				    const struct config_keyvalue *kv,
                                     void *arg)
 {
@@ -374,7 +374,7 @@ default_gateway_mac_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-default_gateway_mac_address_diff (const struct config_section *section,
+default_gateway_mac_address_diff (const char *section_name,
 				  const struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -397,7 +397,7 @@ default_gateway_mac_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    mac);
@@ -408,7 +408,7 @@ default_gateway_mac_address_diff (const struct config_section *section,
 /* backup */
 
 static config_err_t
-backup_gateway_address_checkout (const struct config_section *section,
+backup_gateway_address_checkout (const char *section_name,
 				 struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -431,7 +431,7 @@ backup_gateway_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-backup_gateway_address_commit (const struct config_section *section,
+backup_gateway_address_commit (const char *section_name,
 			       const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -441,7 +441,7 @@ backup_gateway_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-backup_gateway_address_diff (const struct config_section *section,
+backup_gateway_address_diff (const char *section_name,
 			     const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -464,7 +464,7 @@ backup_gateway_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    ip);
@@ -473,7 +473,7 @@ backup_gateway_address_diff (const struct config_section *section,
 }
 
 static config_err_t
-backup_gateway_mac_address_checkout (const struct config_section *section,
+backup_gateway_mac_address_checkout (const char *section_name,
 				     struct config_keyvalue *kv,
                                      void *arg)
 {
@@ -495,7 +495,7 @@ backup_gateway_mac_address_checkout (const struct config_section *section,
 }
 
 static config_err_t
-backup_gateway_mac_address_commit (const struct config_section *section,
+backup_gateway_mac_address_commit (const char *section_name,
                                    const struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -505,7 +505,7 @@ backup_gateway_mac_address_commit (const struct config_section *section,
 }
 
 static config_diff_t
-backup_gateway_mac_address_diff (const struct config_section *section,
+backup_gateway_mac_address_diff (const char *section_name,
 				 const struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -528,7 +528,7 @@ backup_gateway_mac_address_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    mac);
@@ -537,7 +537,7 @@ backup_gateway_mac_address_diff (const struct config_section *section,
 }
 
 static config_err_t
-vlan_id_checkout (const struct config_section *section,
+vlan_id_checkout (const char *section_name,
 		  struct config_keyvalue *kv,
                   void *arg)
 {
@@ -560,7 +560,7 @@ vlan_id_checkout (const struct config_section *section,
 }
 
 static config_err_t
-vlan_id_commit (const struct config_section *section,
+vlan_id_commit (const char *section_name,
 		const struct config_keyvalue *kv,
                 void *arg)
 {
@@ -585,7 +585,7 @@ vlan_id_commit (const struct config_section *section,
 }
 
 static config_diff_t
-vlan_id_diff (const struct config_section *section,
+vlan_id_diff (const char *section_name,
 	      const struct config_keyvalue *kv,
               void *arg)
 {
@@ -611,7 +611,7 @@ vlan_id_diff (const struct config_section *section,
       char num[32];
       sprintf (num, "%d", vlan_id);
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    num);
@@ -628,7 +628,7 @@ vlan_id_validate (const char *section_name,
 }
 
 static config_err_t
-vlan_id_enable_checkout (const struct config_section *section,
+vlan_id_enable_checkout (const char *section_name,
 			 struct config_keyvalue *kv,
                          void *arg)
 {
@@ -652,7 +652,7 @@ vlan_id_enable_checkout (const struct config_section *section,
 }
 
 static config_err_t
-vlan_id_enable_commit (const struct config_section *section,
+vlan_id_enable_commit (const char *section_name,
 		       const struct config_keyvalue *kv,
                        void *arg)
 {
@@ -680,7 +680,7 @@ vlan_id_enable_commit (const struct config_section *section,
 }
 
 static config_diff_t
-vlan_id_enable_diff (const struct config_section *section,
+vlan_id_enable_diff (const char *section_name,
 		     const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -704,7 +704,7 @@ vlan_id_enable_diff (const struct config_section *section,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    vlan_id_enable ? "Yes" : "No");
@@ -713,7 +713,7 @@ vlan_id_enable_diff (const struct config_section *section,
 }
 
 static config_err_t
-vlan_priority_checkout (const struct config_section *section,
+vlan_priority_checkout (const char *section_name,
 			struct config_keyvalue *kv,
                         void *arg)
 {
@@ -734,7 +734,7 @@ vlan_priority_checkout (const struct config_section *section,
 }
 
 static config_err_t
-vlan_priority_commit (const struct config_section *section,
+vlan_priority_commit (const char *section_name,
 		      const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -744,7 +744,7 @@ vlan_priority_commit (const struct config_section *section,
 }
 
 static config_diff_t
-vlan_priority_diff (const struct config_section *section,
+vlan_priority_diff (const char *section_name,
 		    const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -768,7 +768,7 @@ vlan_priority_diff (const struct config_section *section,
       char prio[32];
       ret = CONFIG_DIFF_DIFFERENT;
       sprintf (prio, "%d", priority);
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    prio);

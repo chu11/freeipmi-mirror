@@ -42,7 +42,7 @@ struct bmc_authentication_level {
 
 static config_err_t
 _authentication_level_checkout (bmc_config_state_data_t *state_data,
-                                const struct config_section *section,
+                                const char *section_name,
                                 struct config_keyvalue *kv,
                                 struct bmc_authentication_level *al,
                                 uint8_t *desired_authentication_level)
@@ -88,7 +88,7 @@ _authentication_level_checkout (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _authentication_level_commit (bmc_config_state_data_t *state_data,
-                              const struct config_section *section,
+                              const char *section_name,
                               const struct config_keyvalue *kv,
                               struct bmc_authentication_level *al,
                               uint8_t *desired_authentication_level)
@@ -158,7 +158,7 @@ _authentication_level_commit (bmc_config_state_data_t *state_data,
 
 static config_diff_t
 _authentication_level_diff (bmc_config_state_data_t *state_data,
-                            const struct config_section *section,
+                            const char *section_name,
                             const struct config_keyvalue *kv,
                             struct bmc_authentication_level *al,
                             uint8_t *desired_authentication_level)
@@ -203,7 +203,7 @@ _authentication_level_diff (bmc_config_state_data_t *state_data,
   else 
     {
       ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section->section_name,
+      report_diff (section_name,
                    kv->key_name,
                    kv->value,
                    *desired_authentication_level ? "Yes" : "No");
@@ -213,7 +213,7 @@ _authentication_level_diff (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-callback_none_checkout (const struct config_section *section,
+callback_none_checkout (const char *section_name,
 			struct config_keyvalue *kv,
                         void *arg)
 {
@@ -221,14 +221,14 @@ callback_none_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.callback_level_none));
 }
 
 static config_err_t
-callback_none_commit (const struct config_section *section,
+callback_none_commit (const char *section_name,
 		      const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -236,14 +236,14 @@ callback_none_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.callback_level_none));
 }
 
 static config_diff_t
-callback_none_diff (const struct config_section *section,
+callback_none_diff (const char *section_name,
 		    const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -251,14 +251,14 @@ callback_none_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.callback_level_none));
 }
 
 static config_err_t
-callback_md2_checkout (const struct config_section *section,
+callback_md2_checkout (const char *section_name,
                        struct config_keyvalue *kv,
                        void *arg)
 {
@@ -266,14 +266,14 @@ callback_md2_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.callback_level_md2));
 }
 
 static config_err_t
-callback_md2_commit (const struct config_section *section,
+callback_md2_commit (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -281,14 +281,14 @@ callback_md2_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.callback_level_md2));
 }
 
 static config_diff_t
-callback_md2_diff (const struct config_section *section,
+callback_md2_diff (const char *section_name,
                    const struct config_keyvalue *kv,
                    void *arg)
 {
@@ -296,14 +296,14 @@ callback_md2_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.callback_level_md2));
 }
 
 static config_err_t
-callback_md5_checkout (const struct config_section *section,
+callback_md5_checkout (const char *section_name,
                        struct config_keyvalue *kv,
                        void *arg)
 {
@@ -311,14 +311,14 @@ callback_md5_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.callback_level_md5));
 }
 
 static config_err_t
-callback_md5_commit (const struct config_section *section,
+callback_md5_commit (const char *section_name,
                      const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -326,14 +326,14 @@ callback_md5_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.callback_level_md5));
 }
 
 static config_diff_t
-callback_md5_diff (const struct config_section *section,
+callback_md5_diff (const char *section_name,
                    const struct config_keyvalue *kv,
                    void *arg)
 {
@@ -341,14 +341,14 @@ callback_md5_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.callback_level_md5));
 }
 
 static config_err_t
-callback_straight_password_checkout (const struct config_section *section,
+callback_straight_password_checkout (const char *section_name,
 				     struct config_keyvalue *kv,
                                      void *arg)
 {
@@ -356,14 +356,14 @@ callback_straight_password_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.callback_level_straight_password));
 }
 
 static config_err_t
-callback_straight_password_commit (const struct config_section *section,
+callback_straight_password_commit (const char *section_name,
 				   const struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -371,14 +371,14 @@ callback_straight_password_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.callback_level_straight_password));
 }
 
 static config_diff_t
-callback_straight_password_diff (const struct config_section *section,
+callback_straight_password_diff (const char *section_name,
 				 const struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -386,14 +386,14 @@ callback_straight_password_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.callback_level_straight_password));
 }
 
 static config_err_t
-callback_oem_proprietary_checkout (const struct config_section *section,
+callback_oem_proprietary_checkout (const char *section_name,
 				   struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -401,14 +401,14 @@ callback_oem_proprietary_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.callback_level_oem_proprietary));
 }
 
 static config_err_t
-callback_oem_proprietary_commit (const struct config_section *section,
+callback_oem_proprietary_commit (const char *section_name,
 				 const struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -416,14 +416,14 @@ callback_oem_proprietary_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.callback_level_oem_proprietary));
 }
 
 static config_diff_t
-callback_oem_proprietary_diff (const struct config_section *section,
+callback_oem_proprietary_diff (const char *section_name,
 			       const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -431,14 +431,14 @@ callback_oem_proprietary_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.callback_level_oem_proprietary));
 }
 
 static config_err_t
-user_none_checkout (const struct config_section *section,
+user_none_checkout (const char *section_name,
 		    struct config_keyvalue *kv,
                     void *arg)
 {
@@ -446,14 +446,14 @@ user_none_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.user_level_none));
 }
 
 static config_err_t
-user_none_commit (const struct config_section *section,
+user_none_commit (const char *section_name,
 		  const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -461,14 +461,14 @@ user_none_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.user_level_none));
 }
 
 static config_diff_t
-user_none_diff (const struct config_section *section,
+user_none_diff (const char *section_name,
 		const struct config_keyvalue *kv,
                 void *arg)
 {
@@ -476,14 +476,14 @@ user_none_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.user_level_none));
 }
 
 static config_err_t
-user_md2_checkout (const struct config_section *section,
+user_md2_checkout (const char *section_name,
 		   struct config_keyvalue *kv,
                    void *arg)
 {
@@ -491,14 +491,14 @@ user_md2_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.user_level_md2));
 }
 
 static config_err_t
-user_md2_commit (const struct config_section *section,
+user_md2_commit (const char *section_name,
 		 const struct config_keyvalue *kv,
                  void *arg)
 {
@@ -506,14 +506,14 @@ user_md2_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.user_level_md2));
 }
 
 static config_diff_t
-user_md2_diff (const struct config_section *section,
+user_md2_diff (const char *section_name,
 	       const struct config_keyvalue *kv,
                void *arg)
 {
@@ -521,14 +521,14 @@ user_md2_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.user_level_md2));
 }
 
 static config_err_t
-user_md5_checkout (const struct config_section *section,
+user_md5_checkout (const char *section_name,
 		   struct config_keyvalue *kv,
                    void *arg)
 {
@@ -536,14 +536,14 @@ user_md5_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.user_level_md5));
 }
 
 static config_err_t
-user_md5_commit (const struct config_section *section,
+user_md5_commit (const char *section_name,
 		 const struct config_keyvalue *kv,
                  void *arg)
 {
@@ -551,14 +551,14 @@ user_md5_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.user_level_md5));
 }
 
 static config_diff_t
-user_md5_diff (const struct config_section *section,
+user_md5_diff (const char *section_name,
 	       const struct config_keyvalue *kv,
                void *arg)
 {
@@ -566,14 +566,14 @@ user_md5_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.user_level_md5));
 }
 
 static config_err_t
-user_straight_password_checkout (const struct config_section *section,
+user_straight_password_checkout (const char *section_name,
 				 struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -581,14 +581,14 @@ user_straight_password_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.user_level_straight_password));
 }
 
 static config_err_t
-user_straight_password_commit (const struct config_section *section,
+user_straight_password_commit (const char *section_name,
 			       const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -596,14 +596,14 @@ user_straight_password_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.user_level_straight_password));
 }
 
 static config_diff_t
-user_straight_password_diff (const struct config_section *section,
+user_straight_password_diff (const char *section_name,
 			     const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -611,14 +611,14 @@ user_straight_password_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.user_level_straight_password));
 }
 
 static config_err_t
-user_oem_proprietary_checkout (const struct config_section *section,
+user_oem_proprietary_checkout (const char *section_name,
 			       struct config_keyvalue *kv,
                                void *arg)
 {
@@ -626,14 +626,14 @@ user_oem_proprietary_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.user_level_oem_proprietary));
 }
 
 static config_err_t
-user_oem_proprietary_commit (const struct config_section *section,
+user_oem_proprietary_commit (const char *section_name,
 			     const struct config_keyvalue *kv,
                              void *arg)
 {
@@ -641,14 +641,14 @@ user_oem_proprietary_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.user_level_oem_proprietary));
 }
 
 static config_diff_t
-user_oem_proprietary_diff (const struct config_section *section,
+user_oem_proprietary_diff (const char *section_name,
 			   const struct config_keyvalue *kv,
                            void *arg)
 {
@@ -656,14 +656,14 @@ user_oem_proprietary_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.user_level_oem_proprietary));
 }
 
 static config_err_t
-operator_none_checkout (const struct config_section *section,
+operator_none_checkout (const char *section_name,
 			struct config_keyvalue *kv,
                         void *arg)
 {
@@ -671,14 +671,14 @@ operator_none_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.operator_level_none));
 }
 
 static config_err_t
-operator_none_commit (const struct config_section *section,
+operator_none_commit (const char *section_name,
 		      const struct config_keyvalue *kv,
                       void *arg)
 {
@@ -686,14 +686,14 @@ operator_none_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.operator_level_none));
 }
 
 static config_diff_t
-operator_none_diff (const struct config_section *section,
+operator_none_diff (const char *section_name,
 		    const struct config_keyvalue *kv,
                     void *arg)
 {
@@ -701,14 +701,14 @@ operator_none_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.operator_level_none));
 }
 
 static config_err_t
-operator_md2_checkout (const struct config_section *section,
+operator_md2_checkout (const char *section_name,
 		       struct config_keyvalue *kv,
                        void *arg)
 {
@@ -716,14 +716,14 @@ operator_md2_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.operator_level_md2));
 }
 
 static config_err_t
-operator_md2_commit (const struct config_section *section,
+operator_md2_commit (const char *section_name,
 		     const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -731,14 +731,14 @@ operator_md2_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.operator_level_md2));
 }
 
 static config_diff_t
-operator_md2_diff (const struct config_section *section,
+operator_md2_diff (const char *section_name,
 		   const struct config_keyvalue *kv,
                    void *arg)
 {
@@ -746,14 +746,14 @@ operator_md2_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.operator_level_md2));
 }
 
 static config_err_t
-operator_md5_checkout (const struct config_section *section,
+operator_md5_checkout (const char *section_name,
 		       struct config_keyvalue *kv,
                        void *arg)
 {
@@ -761,14 +761,14 @@ operator_md5_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.operator_level_md5));
 }
 
 static config_err_t
-operator_md5_commit (const struct config_section *section,
+operator_md5_commit (const char *section_name,
 		     const struct config_keyvalue *kv,
                      void *arg)
 {
@@ -776,14 +776,14 @@ operator_md5_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.operator_level_md5));
 }
 
 static config_diff_t
-operator_md5_diff (const struct config_section *section,
+operator_md5_diff (const char *section_name,
 		   const struct config_keyvalue *kv,
                    void *arg)
 {
@@ -791,14 +791,14 @@ operator_md5_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.operator_level_md5));
 }
 
 static config_err_t
-operator_straight_password_checkout (const struct config_section *section,
+operator_straight_password_checkout (const char *section_name,
 				     struct config_keyvalue *kv,
                                      void *arg)
 {
@@ -806,14 +806,14 @@ operator_straight_password_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.operator_level_straight_password));
 }
 
 static config_err_t
-operator_straight_password_commit (const struct config_section *section,
+operator_straight_password_commit (const char *section_name,
 				   const struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -821,14 +821,14 @@ operator_straight_password_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.operator_level_straight_password));
 }
 
 static config_diff_t
-operator_straight_password_diff (const struct config_section *section,
+operator_straight_password_diff (const char *section_name,
 				 const struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -836,14 +836,14 @@ operator_straight_password_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.operator_level_straight_password));
 }
 
 static config_err_t
-operator_oem_proprietary_checkout (const struct config_section *section,
+operator_oem_proprietary_checkout (const char *section_name,
 				   struct config_keyvalue *kv,
                                    void *arg)
 {
@@ -851,14 +851,14 @@ operator_oem_proprietary_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.operator_level_oem_proprietary));
 }
 
 static config_err_t
-operator_oem_proprietary_commit (const struct config_section *section,
+operator_oem_proprietary_commit (const char *section_name,
 				 const struct config_keyvalue *kv,
                                  void *arg)
 {
@@ -866,14 +866,14 @@ operator_oem_proprietary_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.operator_level_oem_proprietary));
 }
 
 static config_diff_t
-operator_oem_proprietary_diff (const struct config_section *section,
+operator_oem_proprietary_diff (const char *section_name,
 			       const struct config_keyvalue *kv,
                                void *arg)
 {
@@ -881,14 +881,14 @@ operator_oem_proprietary_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.operator_level_oem_proprietary));
 }
 
 static config_err_t
-admin_none_checkout (const struct config_section *section,
+admin_none_checkout (const char *section_name,
 		     struct config_keyvalue *kv,
                      void *arg)
 {
@@ -896,14 +896,14 @@ admin_none_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.admin_level_none));
 }
 
 static config_err_t
-admin_none_commit (const struct config_section *section,
+admin_none_commit (const char *section_name,
 		   const struct config_keyvalue *kv,
                    void *arg)
 {
@@ -911,14 +911,14 @@ admin_none_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.admin_level_none));
 }
 
 static config_diff_t
-admin_none_diff (const struct config_section *section,
+admin_none_diff (const char *section_name,
 		 const struct config_keyvalue *kv,
                  void *arg)
 {
@@ -926,14 +926,14 @@ admin_none_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.admin_level_none));
 }
 
 static config_err_t
-admin_md2_checkout (const struct config_section *section,
+admin_md2_checkout (const char *section_name,
 		    struct config_keyvalue *kv,
                     void *arg)
 {
@@ -941,14 +941,14 @@ admin_md2_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.admin_level_md2));
 }
 
 static config_err_t
-admin_md2_commit (const struct config_section *section,
+admin_md2_commit (const char *section_name,
 		  const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -956,14 +956,14 @@ admin_md2_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.admin_level_md2));
 }
 
 static config_diff_t
-admin_md2_diff (const struct config_section *section,
+admin_md2_diff (const char *section_name,
 		const struct config_keyvalue *kv,
                 void *arg)
 {
@@ -971,14 +971,14 @@ admin_md2_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.admin_level_md2));
 }
 
 static config_err_t
-admin_md5_checkout (const struct config_section *section,
+admin_md5_checkout (const char *section_name,
 		    struct config_keyvalue *kv,
                     void *arg)
 {
@@ -986,14 +986,14 @@ admin_md5_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.admin_level_md5));
 }
 
 static config_err_t
-admin_md5_commit (const struct config_section *section,
+admin_md5_commit (const char *section_name,
 		  const struct config_keyvalue *kv,
                   void *arg)
 {
@@ -1001,14 +1001,14 @@ admin_md5_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.admin_level_md5));
 }
 
 static config_diff_t
-admin_md5_diff (const struct config_section *section,
+admin_md5_diff (const char *section_name,
 		const struct config_keyvalue *kv,
                 void *arg)
 {
@@ -1016,14 +1016,14 @@ admin_md5_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.admin_level_md5));
 }
 
 static config_err_t
-admin_straight_password_checkout (const struct config_section *section,
+admin_straight_password_checkout (const char *section_name,
 				  struct config_keyvalue *kv,
                                   void *arg)
 {
@@ -1031,14 +1031,14 @@ admin_straight_password_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.admin_level_straight_password));
 }
 
 static config_err_t
-admin_straight_password_commit (const struct config_section *section,
+admin_straight_password_commit (const char *section_name,
 				const struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -1046,14 +1046,14 @@ admin_straight_password_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.admin_level_straight_password));
 }
 
 static config_diff_t
-admin_straight_password_diff (const struct config_section *section,
+admin_straight_password_diff (const char *section_name,
 			      const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -1061,14 +1061,14 @@ admin_straight_password_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.admin_level_straight_password));
 }
 
 static config_err_t
-admin_oem_proprietary_checkout (const struct config_section *section,
+admin_oem_proprietary_checkout (const char *section_name,
 				struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -1076,14 +1076,14 @@ admin_oem_proprietary_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.admin_level_oem_proprietary));
 }
 
 static config_err_t
-admin_oem_proprietary_commit (const struct config_section *section,
+admin_oem_proprietary_commit (const char *section_name,
 			      const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -1091,14 +1091,14 @@ admin_oem_proprietary_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.admin_level_oem_proprietary));
 }
 
 static config_diff_t
-admin_oem_proprietary_diff (const struct config_section *section,
+admin_oem_proprietary_diff (const char *section_name,
 			    const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -1106,14 +1106,14 @@ admin_oem_proprietary_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.admin_level_oem_proprietary));
 }
 
 static config_err_t
-oem_none_checkout (const struct config_section *section,
+oem_none_checkout (const char *section_name,
 		   struct config_keyvalue *kv,
                    void *arg)
 {
@@ -1121,14 +1121,14 @@ oem_none_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.oem_level_none));
 }
 
 static config_err_t
-oem_none_commit (const struct config_section *section,
+oem_none_commit (const char *section_name,
 		 const struct config_keyvalue *kv,
                  void *arg)
 {
@@ -1136,14 +1136,14 @@ oem_none_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.oem_level_none));
 }
 
 static config_diff_t
-oem_none_diff (const struct config_section *section,
+oem_none_diff (const char *section_name,
 	       const struct config_keyvalue *kv,
                void *arg)
 {
@@ -1151,14 +1151,14 @@ oem_none_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.oem_level_none));
 }
 
 static config_err_t
-oem_md2_checkout (const struct config_section *section,
+oem_md2_checkout (const char *section_name,
 		  struct config_keyvalue *kv,
                   void *arg)
 {
@@ -1166,14 +1166,14 @@ oem_md2_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.oem_level_md2));
 }
 
 static config_err_t
-oem_md2_commit (const struct config_section *section,
+oem_md2_commit (const char *section_name,
 		const struct config_keyvalue *kv,
                 void *arg)
 {
@@ -1181,14 +1181,14 @@ oem_md2_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.oem_level_md2));
 }
 
 static config_diff_t
-oem_md2_diff (const struct config_section *section,
+oem_md2_diff (const char *section_name,
 	      const struct config_keyvalue *kv,
               void *arg)
 {
@@ -1196,14 +1196,14 @@ oem_md2_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.oem_level_md2));
 }
 
 static config_err_t
-oem_md5_checkout (const struct config_section *section,
+oem_md5_checkout (const char *section_name,
 		  struct config_keyvalue *kv,
                   void *arg)
 {
@@ -1211,14 +1211,14 @@ oem_md5_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.oem_level_md5));
 }
 
 static config_err_t
-oem_md5_commit (const struct config_section *section,
+oem_md5_commit (const char *section_name,
 		const struct config_keyvalue *kv,
                 void *arg)
 {
@@ -1226,14 +1226,14 @@ oem_md5_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.oem_level_md5));
 }
 
 static config_diff_t
-oem_md5_diff (const struct config_section *section,
+oem_md5_diff (const char *section_name,
 	      const struct config_keyvalue *kv,
               void *arg)
 {
@@ -1241,14 +1241,14 @@ oem_md5_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.oem_level_md5));
 }
 
 static config_err_t
-oem_straight_password_checkout (const struct config_section *section,
+oem_straight_password_checkout (const char *section_name,
 				struct config_keyvalue *kv,
                                 void *arg)
 {
@@ -1256,14 +1256,14 @@ oem_straight_password_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.oem_level_straight_password));
 }
 
 static config_err_t
-oem_straight_password_commit (const struct config_section *section,
+oem_straight_password_commit (const char *section_name,
 			      const struct config_keyvalue *kv,
                               void *arg)
 {
@@ -1271,14 +1271,14 @@ oem_straight_password_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.oem_level_straight_password));
 }
 
 static config_diff_t
-oem_straight_password_diff (const struct config_section *section,
+oem_straight_password_diff (const char *section_name,
 			    const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -1286,14 +1286,14 @@ oem_straight_password_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.oem_level_straight_password));
 }
 
 static config_err_t
-oem_oem_proprietary_checkout (const struct config_section *section,
+oem_oem_proprietary_checkout (const char *section_name,
 			      struct config_keyvalue *kv,
                               void *arg)
 {
@@ -1301,14 +1301,14 @@ oem_oem_proprietary_checkout (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_checkout (state_data,
-                                         section,
+                                         section_name,
                                          kv,
                                          &auth,
                                          &(auth.oem_level_oem_proprietary));
 }
 
 static config_err_t
-oem_oem_proprietary_commit (const struct config_section *section,
+oem_oem_proprietary_commit (const char *section_name,
 			    const struct config_keyvalue *kv,
                             void *arg)
 {
@@ -1316,14 +1316,14 @@ oem_oem_proprietary_commit (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_commit (state_data,
-                                       section,
+                                       section_name,
                                        kv,
                                        &auth,
                                        &(auth.oem_level_oem_proprietary));
 }
 
 static config_diff_t
-oem_oem_proprietary_diff (const struct config_section *section,
+oem_oem_proprietary_diff (const char *section_name,
 			  const struct config_keyvalue *kv,
                           void *arg)
 {
@@ -1331,7 +1331,7 @@ oem_oem_proprietary_diff (const struct config_section *section,
   struct bmc_authentication_level auth;
 
   return _authentication_level_diff (state_data,
-                                     section,
+                                     section_name,
                                      kv,
                                      &auth,
                                      &(auth.oem_level_oem_proprietary));
