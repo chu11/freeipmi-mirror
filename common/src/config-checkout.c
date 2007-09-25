@@ -11,6 +11,7 @@
 #include <assert.h>
 
 #include "config-checkout.h"
+#include "config-comment.h"
 #include "config-parse.h"
 #include "config-section.h"
 

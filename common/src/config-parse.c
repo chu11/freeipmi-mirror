@@ -9,6 +9,7 @@
 #endif /* STDC_HEADERS */
 
 #include "config-parse.h"
+#include "config-section.h"
 
 config_err_t
 config_parse (struct config_section *sections, 
