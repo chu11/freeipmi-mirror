@@ -3959,14 +3959,14 @@ get_k_g(bmc_config_state_data_t *state_data,
   return (rv);
 }
 
-/***********************************************************/
-config_diff_t
+config_err_t
 check_bmc_user_password (bmc_config_state_data_t *state_data, 
 			 uint8_t userid, 
-			 uint8_t *password)
+			 uint8_t *password,
+                         int *is_same)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
@@ -3982,32 +3982,40 @@ check_bmc_user_password (bmc_config_state_data_t *state_data,
 
       if (fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
         {
-          rv = CONFIG_DIFF_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
       if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
           || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
-        rv = CONFIG_DIFF_DIFFERENT;
+        {
+          *is_same = 0;
+          goto done;
+        }
       else
-        rv = CONFIG_DIFF_NON_FATAL_ERROR;
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
-  rv = CONFIG_DIFF_SAME;
+  else
+    *is_same = 1;
+
+ done:  
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 
-config_diff_t
+config_err_t
 check_bmc_user_password20 (bmc_config_state_data_t *state_data, 
                            uint8_t userid, 
-                           uint8_t *password)
+                           uint8_t *password,
+                           int *is_same)
+                         
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_diff_t rv = CONFIG_DIFF_FATAL_ERROR;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_user_password_rs)))
     goto cleanup;
@@ -4024,19 +4032,25 @@ check_bmc_user_password20 (bmc_config_state_data_t *state_data,
 
       if (fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
         {
-          rv = CONFIG_DIFF_NON_FATAL_ERROR;
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
       if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
           || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
-	rv = CONFIG_DIFF_DIFFERENT;
+        {
+          *is_same = 0;
+          goto done;
+        }
       else
-        rv = CONFIG_DIFF_NON_FATAL_ERROR;
+        rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
-  
-  rv = CONFIG_DIFF_SAME;
+  else
+    *is_same = 1;
+
+ done:
+  rv = CONFIG_ERR_SUCCESS;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);

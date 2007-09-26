@@ -23,7 +23,6 @@ int config_section_add_keyvalue (struct config_section *section,
                                  unsigned int flags,
                                  Key_Checkout checkout,
                                  Key_Commit commit,
-                                 Key_Diff diff,
                                  Key_Validate validate);
 
 struct config_keyvalue *config_section_find_keyvalue (struct config_section *sections,
@@ -40,12 +39,6 @@ config_err_t config_section_commit_value (struct config_section *sections,
                                           const char *key_name,
                                           const char *value,
                                           void *arg);
-
-int config_section_diff_value (struct config_section *sections,
-                               const char *section_name,
-                               const char *key_name,
-                               const char *value,
-                               void *arg);
 
 config_err_t config_output_sections_list (struct config_section *sections);
 

@@ -195,51 +195,6 @@ filter_type_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-filter_type_diff (const char *section_name,
-                  const struct config_keyvalue *kv,
-                  void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = filter_type_number (kv->value_input);
-  if (passed_val == eft.filter_type)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   filter_type_string (eft.filter_type));
-    }
-  return ret;
-}
-
 static config_err_t
 enable_filter_checkout (const char *section_name,
                         struct config_keyvalue *kv,
@@ -307,52 +262,6 @@ enable_filter_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-enable_filter_diff (const char *section_name,
-                    const struct config_keyvalue *kv,
-                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.enable_filter)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.enable_filter ? "Yes" : "No");
-    }
-  return ret;
 }
 
 static config_err_t
@@ -424,52 +333,6 @@ event_filter_action_alert_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_filter_action_alert_diff (const char *section_name,
-                                const struct config_keyvalue *kv,
-                                void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.event_filter_action_alert)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.event_filter_action_alert ? "Yes" : "No");
-    }
-  return ret;
-}
-
 static config_err_t
 event_filter_action_power_off_checkout (const char *section_name,
                                         struct config_keyvalue *kv,
@@ -537,52 +400,6 @@ event_filter_action_power_off_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_filter_action_power_off_diff (const char *section_name,
-                                    const struct config_keyvalue *kv,
-                                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.event_filter_action_power_off)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.event_filter_action_power_off ? "Yes" : "No");
-    }
-  return ret;
 }
 
 static config_err_t
@@ -654,53 +471,6 @@ event_filter_action_reset_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_filter_action_reset_diff (const char *section_name,
-                                const struct config_keyvalue *kv,
-                                void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.event_filter_action_reset)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.event_filter_action_reset ? "Yes" : "No");
-    }
-  return ret;
-}
-
-
 static config_err_t
 event_filter_action_power_cycle_checkout (const char *section_name,
                                           struct config_keyvalue *kv,
@@ -768,52 +538,6 @@ event_filter_action_power_cycle_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_filter_action_power_cycle_diff (const char *section_name,
-                                      const struct config_keyvalue *kv,
-                                      void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.event_filter_action_power_cycle)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.event_filter_action_power_cycle ? "Yes" : "No");
-    }
-  return ret;
 }
 
 static config_err_t
@@ -885,52 +609,6 @@ event_filter_action_oem_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_filter_action_oem_diff (const char *section_name,
-                              const struct config_keyvalue *kv,
-                              void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.event_filter_action_oem)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.event_filter_action_oem ? "Yes" : "No");
-    }
-  return ret;
-}
-
 static config_err_t
 event_filter_action_diagnostic_interrupt_checkout (const char *section_name,
                                                    struct config_keyvalue *kv,
@@ -998,52 +676,6 @@ event_filter_action_diagnostic_interrupt_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_filter_action_diagnostic_interrupt_diff (const char *section_name,
-                                               const struct config_keyvalue *kv,
-                                               void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.event_filter_action_diagnostic_interrupt)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No");
-    }
-  return ret;
 }
 
 static config_err_t
@@ -1115,52 +747,6 @@ event_filter_action_group_control_operation_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_filter_action_group_control_operation_diff (const char *section_name,
-                                                  const struct config_keyvalue *kv,
-                                                  void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == eft.event_filter_action_group_control_operation)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   eft.event_filter_action_group_control_operation ? "Yes" : "No");
-    }
-  return ret;
-}
-
 static config_err_t
 alert_policy_number_checkout (const char *section_name,
                               struct config_keyvalue *kv,
@@ -1228,54 +814,6 @@ alert_policy_number_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-alert_policy_number_diff (const char *section_name,
-                          const struct config_keyvalue *kv,
-                          void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = atoi (kv->value_input);
-
-  if (passed_val == eft.alert_policy_number)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "%u", eft.alert_policy_number);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -1347,54 +885,6 @@ group_control_selector_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-group_control_selector_diff (const char *section_name,
-                             const struct config_keyvalue *kv,
-                             void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = atoi (kv->value_input);
-
-  if (passed_val == eft.group_control_selector)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "%u", eft.group_control_selector);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 event_severity_checkout (const char *section_name,
                          struct config_keyvalue *kv,
@@ -1462,51 +952,6 @@ event_severity_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_severity_diff (const char *section_name,
-                     const struct config_keyvalue *kv,
-                     void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = event_severity_number (kv->value_input);
-  if (passed_val == eft.event_severity)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   event_severity_string (eft.event_severity));
-    }
-  return ret;
 }
 
 static config_err_t
@@ -1579,54 +1024,6 @@ generator_id_byte_1_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-generator_id_byte_1_diff (const char *section_name,
-                          const struct config_keyvalue *kv,
-                          void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.generator_id_byte_1)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.generator_id_byte_1);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 generator_id_byte_2_checkout (const char *section_name,
                               struct config_keyvalue *kv,
@@ -1694,54 +1091,6 @@ generator_id_byte_2_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-generator_id_byte_2_diff (const char *section_name,
-                          const struct config_keyvalue *kv,
-                          void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.generator_id_byte_2)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.generator_id_byte_2);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -1813,53 +1162,6 @@ sensor_type_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-sensor_type_diff (const char *section_name,
-                  const struct config_keyvalue *kv,
-                  void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = sensor_type_number(kv->value_input);
-
-  if (passed_val == eft.sensor_type)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-		   sensor_type_string (eft.sensor_type));
-    }
-
-  return ret;
-}
-
 static config_err_t
 sensor_number_checkout (const char *section_name,
                         struct config_keyvalue *kv,
@@ -1927,54 +1229,6 @@ sensor_number_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-sensor_number_diff (const char *section_name,
-                    const struct config_keyvalue *kv,
-                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.sensor_number)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.sensor_number);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -2046,54 +1300,6 @@ event_trigger_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_trigger_diff (const char *section_name,
-                    const struct config_keyvalue *kv,
-                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_trigger)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_trigger);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 event_data1_offset_mask_checkout (const char *section_name,
                                   struct config_keyvalue *kv,
@@ -2161,54 +1367,6 @@ event_data1_offset_mask_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_data1_offset_mask_diff (const char *section_name,
-                              const struct config_keyvalue *kv,
-                              void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint16_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data1_offset_mask)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data1_offset_mask);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -2280,54 +1438,6 @@ event_data1_and_mask_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_data1_and_mask_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data1_and_mask)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data1_and_mask);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 event_data1_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
@@ -2395,54 +1505,6 @@ event_data1_compare1_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_data1_compare1_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data1_compare1)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data1_compare1);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -2514,54 +1576,6 @@ event_data1_compare2_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_data1_compare2_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data1_compare2)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data1_compare2);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 event_data2_and_mask_checkout (const char *section_name,
                                struct config_keyvalue *kv,
@@ -2629,54 +1643,6 @@ event_data2_and_mask_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_data2_and_mask_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data2_and_mask)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data2_and_mask);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -2748,54 +1714,6 @@ event_data2_compare1_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_data2_compare1_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data2_compare1)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data2_compare1);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 event_data2_compare2_checkout (const char *section_name,
                                struct config_keyvalue *kv,
@@ -2863,54 +1781,6 @@ event_data2_compare2_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_data2_compare2_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data2_compare2)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data2_compare2);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -2982,54 +1852,6 @@ event_data3_and_mask_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_data3_and_mask_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data3_and_mask)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data3_and_mask);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 event_data3_compare1_checkout (const char *section_name,
                                struct config_keyvalue *kv,
@@ -3097,54 +1919,6 @@ event_data3_compare1_commit (const char *section_name,
     return ret;
 
   return CONFIG_ERR_SUCCESS;
-}
-
-static config_diff_t
-event_data3_compare1_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data3_compare1)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data3_compare1);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -3216,54 +1990,6 @@ event_data3_compare2_commit (const char *section_name,
   return CONFIG_ERR_SUCCESS;
 }
 
-static config_diff_t
-event_data3_compare2_diff (const char *section_name,
-                           const struct config_keyvalue *kv,
-                           void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t event_filter_number;
-  uint8_t number_of_event_filters;
-  struct event_filter_table eft;
-
-  event_filter_number = atoi (section_name + strlen ("Event_Filter_"));
-
-  if ((rc = get_number_of_event_filters (state_data,
-                                         &number_of_event_filters)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (event_filter_number > number_of_event_filters)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = event_filter_get (state_data,
-                              event_filter_number,
-                              &eft)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = strtol(kv->value_input, NULL, 0);
-
-  if (passed_val == eft.event_data3_compare2)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "0x%02X", eft.event_data3_compare2);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 struct config_section *
 pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, int num)
 {
@@ -3279,279 +2005,252 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
   snprintf(buf, 64, "Event_Filter_%d", num);
 
   if (!(section = config_section_create (buf, 
-                                             NULL, 
-                                             NULL, 
-                                             0)))
+                                         NULL, 
+                                         NULL, 
+                                         0)))
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Filter_Type",
-                                       "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
-                                       0,
-                                       filter_type_checkout,
-                                       filter_type_commit,
-                                       filter_type_diff,
-                                       filter_type_validate) < 0) 
+                                   "Filter_Type",
+                                   "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
+                                   0,
+                                   filter_type_checkout,
+                                   filter_type_commit,
+                                   filter_type_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Enable_Filter",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       enable_filter_checkout,
-                                       enable_filter_commit,
-                                       enable_filter_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Enable_Filter",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_filter_checkout,
+                                   enable_filter_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Action_Alert",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_filter_action_alert_checkout,
-                                       event_filter_action_alert_commit,
-                                       event_filter_action_alert_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Event_Filter_Action_Alert",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_alert_checkout,
+                                   event_filter_action_alert_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Action_Power_Off",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_filter_action_power_off_checkout,
-                                       event_filter_action_power_off_commit,
-                                       event_filter_action_power_off_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Event_Filter_Action_Power_Off",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_power_off_checkout,
+                                   event_filter_action_power_off_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Action_Reset",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_filter_action_reset_checkout,
-                                       event_filter_action_reset_commit,
-                                       event_filter_action_reset_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Event_Filter_Action_Reset",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_reset_checkout,
+                                   event_filter_action_reset_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Action_Power_Cycle",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_filter_action_power_cycle_checkout,
-                                       event_filter_action_power_cycle_commit,
-                                       event_filter_action_power_cycle_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Event_Filter_Action_Power_Cycle",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_power_cycle_checkout,
+                                   event_filter_action_power_cycle_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Action_Oem",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_filter_action_oem_checkout,
-                                       event_filter_action_oem_commit,
-                                       event_filter_action_oem_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Event_Filter_Action_Oem",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_oem_checkout,
+                                   event_filter_action_oem_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Action_Diagnostic_Interrupt",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_filter_action_diagnostic_interrupt_checkout,
-                                       event_filter_action_diagnostic_interrupt_commit,
-                                       event_filter_action_diagnostic_interrupt_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Event_Filter_Action_Diagnostic_Interrupt",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_diagnostic_interrupt_checkout,
+                                   event_filter_action_diagnostic_interrupt_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Action_Group_Control_Operation",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       event_filter_action_group_control_operation_checkout,
-                                       event_filter_action_group_control_operation_commit,
-                                       event_filter_action_group_control_operation_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Event_Filter_Action_Group_Control_Operation",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_group_control_operation_checkout,
+                                   event_filter_action_group_control_operation_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_Policy_Number",
-                                       "Give a valid number",
-                                       0,
-                                       alert_policy_number_checkout,
-                                       alert_policy_number_commit,
-                                       alert_policy_number_diff,
-                                       config_number_range_four_bits) < 0) 
+                                   "Alert_Policy_Number",
+                                   "Give a valid number",
+                                   0,
+                                   alert_policy_number_checkout,
+                                   alert_policy_number_commit,
+                                   config_number_range_four_bits) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Group_Control_Selector",
-                                       "Give a valid number",
-                                       0,
-                                       group_control_selector_checkout,
-                                       group_control_selector_commit,
-                                       group_control_selector_diff,
-                                       config_number_range_three_bits) < 0) 
+                                   "Group_Control_Selector",
+                                   "Give a valid number",
+                                   0,
+                                   group_control_selector_checkout,
+                                   group_control_selector_commit,
+                                   config_number_range_three_bits) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Severity",
-                                       "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
-                                       0,
-                                       event_severity_checkout,
-                                       event_severity_commit,
-                                       event_severity_diff,
-                                       event_severity_validate) < 0) 
+                                   "Event_Severity",
+                                   "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
+                                   0,
+                                   event_severity_checkout,
+                                   event_severity_commit,
+                                   event_severity_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Generator_Id_Byte_1",
-                                       "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
-                                       0,
-                                       generator_id_byte_1_checkout,
-                                       generator_id_byte_1_commit,
-                                       generator_id_byte_1_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Generator_Id_Byte_1",
+                                   "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
+                                   0,
+                                   generator_id_byte_1_checkout,
+                                   generator_id_byte_1_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Generator_Id_Byte_1",
-                                       "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
-                                       0,
-                                       generator_id_byte_2_checkout,
-                                       generator_id_byte_2_commit,
-                                       generator_id_byte_2_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Generator_Id_Byte_1",
+                                   "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
+                                   0,
+                                   generator_id_byte_2_checkout,
+                                   generator_id_byte_2_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Sensor_Type",
-                                       "Specify a Sensor Type, For options see the MAN page",
-                                       0,
-                                       sensor_type_checkout,
-                                       sensor_type_commit,
-                                       sensor_type_diff,
-                                       sensor_type_validate) < 0) 
+                                   "Sensor_Type",
+                                   "Specify a Sensor Type, For options see the MAN page",
+                                   0,
+                                   sensor_type_checkout,
+                                   sensor_type_commit,
+                                   sensor_type_validate) < 0) 
     goto cleanup;
   
   if (config_section_add_keyvalue (section,
-                                       "Sensor_Number",
-                                       "Specify a Sensor Number or 0xFF to Match Any",
-                                       0,
-                                       sensor_number_checkout,
-                                       sensor_number_commit,
-                                       sensor_number_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Sensor_Number",
+                                   "Specify a Sensor Number or 0xFF to Match Any",
+                                   0,
+                                   sensor_number_checkout,
+                                   sensor_number_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Trigger",
-                                       "Specify a Event/Reading Type Number or 0xFF to Match Any",
-                                       0,
-                                       event_trigger_checkout,
-                                       event_trigger_commit,
-                                       event_trigger_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Trigger",
+                                   "Specify a Event/Reading Type Number or 0xFF to Match Any",
+                                   0,
+                                   event_trigger_checkout,
+                                   event_trigger_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data1_Offset_Mask",
-                                       "Give a valid number",
-                                       0,
-                                       event_data1_offset_mask_checkout,
-                                       event_data1_offset_mask_commit,
-                                       event_data1_offset_mask_diff,
-                                       config_number_range_two_bytes) < 0) 
+                                   "Event_Data1_Offset_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_offset_mask_checkout,
+                                   event_data1_offset_mask_commit,
+                                   config_number_range_two_bytes) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data1_AND_Mask",
-                                       "Give a valid number",
-                                       0,
-                                       event_data1_and_mask_checkout,
-                                       event_data1_and_mask_commit,
-                                       event_data1_and_mask_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data1_AND_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_and_mask_checkout,
+                                   event_data1_and_mask_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data1_Compare1",
-                                       "Give a valid number",
-                                       0,
-                                       event_data1_compare1_checkout,
-                                       event_data1_compare1_commit,
-                                       event_data1_compare1_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data1_Compare1",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_compare1_checkout,
+                                   event_data1_compare1_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data1_Compare2",
-                                       "Give a valid number",
-                                       0,
-                                       event_data1_compare2_checkout,
-                                       event_data1_compare2_commit,
-                                       event_data1_compare2_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data1_Compare2",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_compare2_checkout,
+                                   event_data1_compare2_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
   
   if (config_section_add_keyvalue (section,
-                                       "Event_Data2_AND_Mask",
-                                       "Give a valid number",
-                                       0,
-                                       event_data2_and_mask_checkout,
-                                       event_data2_and_mask_commit,
-                                       event_data2_and_mask_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data2_AND_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data2_and_mask_checkout,
+                                   event_data2_and_mask_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data2_Compare1",
-                                       "Give a valid number",
-                                       0,
-                                       event_data2_compare1_checkout,
-                                       event_data2_compare1_commit,
-                                       event_data2_compare1_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data2_Compare1",
+                                   "Give a valid number",
+                                   0,
+                                   event_data2_compare1_checkout,
+                                   event_data2_compare1_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data2_Compare2",
-                                       "Give a valid number",
-                                       0,
-                                       event_data2_compare2_checkout,
-                                       event_data2_compare2_commit,
-                                       event_data2_compare2_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data2_Compare2",
+                                   "Give a valid number",
+                                   0,
+                                   event_data2_compare2_checkout,
+                                   event_data2_compare2_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data3_AND_Mask",
-                                       "Give a valid number",
-                                       0,
-                                       event_data3_and_mask_checkout,
-                                       event_data3_and_mask_commit,
-                                       event_data3_and_mask_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data3_AND_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data3_and_mask_checkout,
+                                   event_data3_and_mask_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data3_Compare1",
-                                       "Give a valid number",
-                                       0,
-                                       event_data3_compare1_checkout,
-                                       event_data3_compare1_commit,
-                                       event_data3_compare1_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data3_Compare1",
+                                   "Give a valid number",
+                                   0,
+                                   event_data3_compare1_checkout,
+                                   event_data3_compare1_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Data3_Compare2",
-                                       "Give a valid number",
-                                       0,
-                                       event_data3_compare2_checkout,
-                                       event_data3_compare2_commit,
-                                       event_data3_compare2_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Event_Data3_Compare2",
+                                   "Give a valid number",
+                                   0,
+                                   event_data3_compare2_checkout,
+                                   event_data3_compare2_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   return section;

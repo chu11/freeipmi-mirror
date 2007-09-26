@@ -60,41 +60,6 @@ enable_gratuitous_arps_commit (const char *section_name,
 						     reply_arp);
 }
 
-static config_diff_t
-enable_gratuitous_arps_diff (const char *section_name,
-			     const struct config_keyvalue *kv,
-                             void *arg)
-{
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t enable_arp;
-  uint8_t reply_arp;
-  config_err_t rc;
-  config_diff_t ret;
-
-  if ((rc = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
-                                                        &enable_arp,
-                                                        &reply_arp)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  if (enable_arp == same (kv->value_input, "yes"))
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT; 
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   (enable_arp) ? "Yes" : "No");
-    }
-  return ret;
-}
-
-/* reply */
-
 static config_err_t
 enable_arp_response_checkout (const char *section_name,
 			      struct config_keyvalue *kv,
@@ -141,40 +106,6 @@ enable_arp_response_commit (const char *section_name,
 						     reply_arp);
 }
 
-static config_diff_t
-enable_arp_response_diff (const char *section_name,
-			  const struct config_keyvalue *kv,
-                          void *arg)
-{
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t enable_arp;
-  uint8_t reply_arp;
-  config_err_t rc;
-  config_diff_t ret;
-
-  if ((rc = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
-                                                        &enable_arp,
-                                                        &reply_arp)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  if (reply_arp == same (kv->value_input, "yes"))
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      ret = CONFIG_DIFF_DIFFERENT; 
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   (reply_arp) ? "Yes" : "No");
-    }
-
-  return ret;
-}
-
 static config_err_t
 gratuitous_arp_interval_checkout (const char *section_name,
 				  struct config_keyvalue *kv,
@@ -206,39 +137,6 @@ gratuitous_arp_interval_commit (const char *section_name,
                                                    atoi (kv->value_input));
 }
 
-static config_diff_t
-gratuitous_arp_interval_diff (const char *section_name,
-			      const struct config_keyvalue *kv,
-                              void *arg)
-{
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t interval;
-  config_err_t rc;
-  config_diff_t ret;
-  
-  if ((rc = get_bmc_lan_conf_gratuitous_arp_interval (state_data,
-                                                       &interval)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  if (interval == atoi (kv->value_input))
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT; 
-      sprintf (num, "%d", interval);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 struct config_section *
 bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
 {
@@ -260,39 +158,36 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
     "respond to ARP requests from other machines.";
 
   if (!(lan_conf_misc_section = config_section_create ("Lan_Conf_Misc",
-                                                           "Lan_Conf_Misc",
-                                                           section_comment,
-                                                           0)))
+                                                       "Lan_Conf_Misc",
+                                                       section_comment,
+                                                       0)))
     goto cleanup;
 
   if (config_section_add_keyvalue (lan_conf_misc_section,
-                                       "Enable_Gratuitous_ARPs",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       enable_gratuitous_arps_checkout,
-                                       enable_gratuitous_arps_commit,
-                                       enable_gratuitous_arps_diff,
-                                       config_yes_no_validate) < 0)
+                                   "Enable_Gratuitous_ARPs",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_gratuitous_arps_checkout,
+                                   enable_gratuitous_arps_commit,
+                                   config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_keyvalue (lan_conf_misc_section,
-                                       "Enable_ARP_Response",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       enable_arp_response_checkout,
-                                       enable_arp_response_commit,
-                                       enable_arp_response_diff,
-                                       config_yes_no_validate) < 0)
+                                   "Enable_ARP_Response",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_arp_response_checkout,
+                                   enable_arp_response_commit,
+                                   config_yes_no_validate) < 0)
     goto cleanup;
 
   if (config_section_add_keyvalue (lan_conf_misc_section,
-                                       "Gratuitous_ARP_Interval",
-                                       "Give a number (x 500ms)",
-                                       0,
-                                       gratuitous_arp_interval_checkout,
-                                       gratuitous_arp_interval_commit,
-                                       gratuitous_arp_interval_diff,
-                                       config_number_range_one_byte) < 0)
+                                   "Gratuitous_ARP_Interval",
+                                   "Give a number (x 500ms)",
+                                   0,
+                                   gratuitous_arp_interval_checkout,
+                                   gratuitous_arp_interval_commit,
+                                   config_number_range_one_byte) < 0)
     goto cleanup;
   return lan_conf_misc_section;
 

@@ -101,41 +101,14 @@ config_parse (struct config_section *sections,
           goto cleanup;
         }
       
-      if (key_name)
-        {
-          free (key_name);
-          key_name = NULL;
-        }
-
-      if (!(key_name = strdup (first_word)))
-        {
-          perror("strdup");
-          goto cleanup;
-        }
-
-      if (value)
-        {
-          free (value);
-          value = NULL;
-        }
+      key_name = first_word;
 
       if ((tok = strtok (NULL, " \t\n")))
-        {
-          if (!(value = strdup (tok)))
-            {
-              perror("strdup");
-              goto cleanup;
-            }
-        }
+        value = tok;
       else
-        {
-          if (!(value = strdup ("")))
-            {
-              perror("strdup");
-              goto cleanup;
-            }
-        }
-      
+        value = "";
+
+      /* XXX get rid of */
       if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
         fprintf (stderr, "Trying to set `%s:%s=%s'\n",
                  section_name, key_name, value);
@@ -151,9 +124,5 @@ config_parse (struct config_section *sections,
  cleanup:
   if (section_name)
     free(section_name);
-  if (key_name)
-    free(key_name);
-  if (value)
-    free(value);
   return rv;
 }

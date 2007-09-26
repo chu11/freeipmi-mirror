@@ -163,54 +163,6 @@ alert_destination_type_commit (const char *section_name,
                                0, 0);
 }
 
-static config_diff_t
-alert_destination_type_diff (const char *section_name,
-                             const struct config_keyvalue *kv,
-                             void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t get_val;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t destination_selector;
-  uint8_t number_of_lan_alert_destinations;
-
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-
-  if ((rc = get_number_of_lan_alert_destinations (state_data, 
-                                                  &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (destination_selector > number_of_lan_alert_destinations)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = destination_type_get (state_data,
-                                  destination_selector,
-                                  &get_val,
-                                  0,
-                                  0,
-                                  0)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  passed_val = alert_destination_type_number (kv->value_input);
-  if (passed_val == get_val)
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   alert_destination_type_string (get_val));
-    }
-  return ret;
-}
-
 static config_err_t
 alert_acknowledge_checkout (const char *section_name,
                             struct config_keyvalue *kv,
@@ -273,55 +225,6 @@ alert_acknowledge_commit (const char *section_name,
                                same (kv->value_input, "yes"), 1,
                                0, 0,
                                0, 0);
-}
-
-static config_diff_t
-alert_acknowledge_diff (const char *section_name,
-                        const struct config_keyvalue *kv,
-                        void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t get_val;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t destination_selector;
-  uint8_t number_of_lan_alert_destinations;
-
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-  
-  if ((rc = get_number_of_lan_alert_destinations (state_data, 
-                                                  &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
-    return rc;
-  
-  if (destination_selector > number_of_lan_alert_destinations)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-  
-  if ((rc = destination_type_get (state_data,
-                                  destination_selector,
-                                  0,
-                                  &get_val,
-                                  0,
-                                  0)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  passed_val = same (kv->value_input, "Yes");
-
-  if (passed_val == get_val)
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   get_val ? "Yes" : "No");
-    }
-  return ret;
 }
 
 static config_err_t
@@ -391,57 +294,6 @@ alert_acknowledge_timeout_commit (const char *section_name,
                                0, 0);
 }
 
-static config_diff_t
-alert_acknowledge_timeout_diff (const char *section_name,
-                                const struct config_keyvalue *kv,
-                                void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t get_val;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t destination_selector;
-  uint8_t number_of_lan_alert_destinations;
-
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-  
-  if ((rc = get_number_of_lan_alert_destinations (state_data, 
-                                                  &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
-    return rc;
-  
-  if (destination_selector > number_of_lan_alert_destinations)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-  
-  if ((rc = destination_type_get (state_data,
-                                  destination_selector,
-                                  0,
-                                  0,
-                                  &get_val,
-                                  0)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  passed_val = atoi (kv->value_input);
-
-  if (passed_val == get_val)
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "%u", get_val);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 alert_retries_checkout (const char *section_name,
                         struct config_keyvalue *kv,
@@ -507,57 +359,6 @@ alert_retries_commit (const char *section_name,
                                0, 0,
                                0, 0,
                                alert_retries, 1);
-}
-
-static config_diff_t
-alert_retries_diff (const char *section_name,
-                    const struct config_keyvalue *kv,
-                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t get_val;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t destination_selector;
-  uint8_t number_of_lan_alert_destinations;
-
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-  
-  if ((rc = get_number_of_lan_alert_destinations (state_data, 
-                                                  &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
-    return rc;
-  
-  if (destination_selector > number_of_lan_alert_destinations)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-  
-  if ((rc = destination_type_get (state_data,
-                                  destination_selector,
-                                  0,
-                                  0,
-                                  0,
-                                  &get_val)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  passed_val = atoi (kv->value_input);
-
-  if (passed_val == get_val)
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "%u", get_val);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 config_validate_t
@@ -727,55 +528,6 @@ alert_gateway_commit (const char *section_name,
                                     NULL, 0);
 }
 
-static config_diff_t
-alert_gateway_diff (const char *section_name,
-                    const struct config_keyvalue *kv,
-                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t get_val;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t destination_selector;
-  uint8_t number_of_lan_alert_destinations;
-
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-
-  if ((rc = get_number_of_lan_alert_destinations (state_data, 
-                                                  &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (destination_selector > number_of_lan_alert_destinations)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = destination_addresses_get (state_data,
-                                       destination_selector,
-                                       &get_val,
-                                       NULL,
-                                       0,
-                                       NULL,
-                                       0)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  passed_val = alert_gateway_number (kv->value_input);
-  if (passed_val == get_val)
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   alert_gateway_string (get_val));
-    }
-  return ret;
-}
-
 static config_err_t
 alert_ip_address_checkout (const char *section_name,
                            struct config_keyvalue *kv,
@@ -838,53 +590,6 @@ alert_ip_address_commit (const char *section_name,
                                     0, 0,
                                     kv->value_input, 1,
                                     NULL, 0);
-}
-
-static config_diff_t
-alert_ip_address_diff (const char *section_name,
-                       const struct config_keyvalue *kv,
-                       void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  char alert_ip[PEF_CONFIG_MAXIPADDRLEN + 1];
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t destination_selector;
-  uint8_t number_of_lan_alert_destinations;
-
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-
-  if ((rc = get_number_of_lan_alert_destinations (state_data, 
-                                                  &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (destination_selector > number_of_lan_alert_destinations)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = destination_addresses_get (state_data,
-                                       destination_selector,
-                                       NULL,
-                                       alert_ip,
-                                       PEF_CONFIG_MAXIPADDRLEN + 1,
-                                       NULL,
-                                       0)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  if (same (alert_ip, kv->value_input))
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   alert_ip);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -951,53 +656,6 @@ alert_mac_address_commit (const char *section_name,
                                     kv->value_input, 1);
 }
 
-static config_diff_t
-alert_mac_address_diff (const char *section_name,
-                        const struct config_keyvalue *kv,
-                        void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  char alert_mac[PEF_CONFIG_MAXMACADDRLEN + 1];
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t destination_selector;
-  uint8_t number_of_lan_alert_destinations;
-
-  destination_selector = atoi (section_name + strlen ("Lan_Alert_Destination_"));
-
-  if ((rc = get_number_of_lan_alert_destinations (state_data, 
-                                                  &number_of_lan_alert_destinations)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (destination_selector > number_of_lan_alert_destinations)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = destination_addresses_get (state_data,
-                                       destination_selector,
-                                       NULL,
-                                       NULL,
-                                       0,
-                                       alert_mac,
-                                       PEF_CONFIG_MAXMACADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  if (same (alert_mac, kv->value_input))
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   alert_mac);
-    }
-  return ret;
-}
-
 struct config_section *
 pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_data, int num)
 {
@@ -1013,79 +671,72 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
   snprintf(buf, 64, "Lan_Alert_Destination_%d", num);
 
   if (!(section = config_section_create (buf, 
-                                             NULL, 
-                                             NULL, 
-                                             0)))
+                                         NULL, 
+                                         NULL, 
+                                         0)))
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_Destination_Type",
-                                       "Possible values: PET_Trap/OEM1/OEM2",
-                                       0,
-                                       alert_destination_type_checkout,
-                                       alert_destination_type_commit,
-                                       alert_destination_type_diff,
-                                       alert_destination_type_validate) < 0) 
+                                   "Alert_Destination_Type",
+                                   "Possible values: PET_Trap/OEM1/OEM2",
+                                   0,
+                                   alert_destination_type_checkout,
+                                   alert_destination_type_commit,
+                                   alert_destination_type_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_Acknowledge",
-                                       "Possible values: Yes/No",
-                                       0,
-                                       alert_acknowledge_checkout,
-                                       alert_acknowledge_commit,
-                                       alert_acknowledge_diff,
-                                       config_yes_no_validate) < 0) 
+                                   "Alert_Acknowledge",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   alert_acknowledge_checkout,
+                                   alert_acknowledge_commit,
+                                   config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_Acknowledge_Timeout",
-                                       "Give valid unsigned number in seconds",
-                                       0,
-                                       alert_acknowledge_timeout_checkout,
-                                       alert_acknowledge_timeout_commit,
-                                       alert_acknowledge_timeout_diff,
-                                       config_number_range_one_byte) < 0) 
+                                   "Alert_Acknowledge_Timeout",
+                                   "Give valid unsigned number in seconds",
+                                   0,
+                                   alert_acknowledge_timeout_checkout,
+                                   alert_acknowledge_timeout_commit,
+                                   config_number_range_one_byte) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_Retries",
-                                       "Give valid unsigned number",
-                                       0,
-                                       alert_retries_checkout,
-                                       alert_retries_commit,
-                                       alert_retries_diff,
-                                       alert_retries_validate) < 0) 
+                                   "Alert_Retries",
+                                   "Give valid unsigned number",
+                                   0,
+                                   alert_retries_checkout,
+                                   alert_retries_commit,
+                                   alert_retries_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_Gateway",
-                                       "Possible values: Default/Backup",
-                                       0,
-                                       alert_gateway_checkout,
-                                       alert_gateway_commit,
-                                       alert_gateway_diff,
-                                       alert_gateway_validate) < 0) 
+                                   "Alert_Gateway",
+                                   "Possible values: Default/Backup",
+                                   0,
+                                   alert_gateway_checkout,
+                                   alert_gateway_commit,
+                                   alert_gateway_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_IP_Address",
-                                       "Give valid IP address",
-                                       0,
-                                       alert_ip_address_checkout,
-                                       alert_ip_address_commit,
-                                       alert_ip_address_diff,
-                                       config_ip_address_validate) < 0) 
+                                   "Alert_IP_Address",
+                                   "Give valid IP address",
+                                   0,
+                                   alert_ip_address_checkout,
+                                   alert_ip_address_commit,
+                                   config_ip_address_validate) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_MAC_Address",
-                                       "Give valid MAC address",
-                                       0,
-                                       alert_mac_address_checkout,
-                                       alert_mac_address_commit,
-                                       alert_mac_address_diff,
-                                       config_mac_address_validate) < 0) 
+                                   "Alert_MAC_Address",
+                                   "Give valid MAC address",
+                                   0,
+                                   alert_mac_address_checkout,
+                                   alert_mac_address_commit,
+                                   config_mac_address_validate) < 0) 
     goto cleanup;
 
   return section;

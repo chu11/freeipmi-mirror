@@ -36,14 +36,6 @@ typedef enum
 
 typedef enum
   {
-    CONFIG_DIFF_FATAL_ERROR = -2,
-    CONFIG_DIFF_NON_FATAL_ERROR = -1,
-    CONFIG_DIFF_SAME = 0,
-    CONFIG_DIFF_DIFFERENT = 1,
-  } config_diff_t;
-
-typedef enum
-  {
     CONFIG_VALIDATE_FATAL_ERROR = -2,
     CONFIG_VALIDATE_INVALID_VALUE = -1,
     CONFIG_VALIDATE_VALID_VALUE = 0,
@@ -95,12 +87,6 @@ typedef config_err_t (*Key_Commit) (const char *section_name,
                                     const struct config_keyvalue *kv,
                                     void *arg);
 
-/* diff procedure finds the difference with the ipmi actual value
-   and kv->value */
-typedef config_diff_t (*Key_Diff) (const char *section_name,
-                                   const struct config_keyvalue *kv,
-                                   void *arg);
-
 /* validate procedure finds if value is suitable to be set as kv->value */
 typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *key_name,
@@ -114,7 +100,6 @@ struct config_keyvalue {
   char *value_output;
   Key_Checkout checkout;
   Key_Commit commit;
-  Key_Diff diff;
   Key_Validate validate;
   struct config_keyvalue *next;
 };
@@ -169,9 +154,6 @@ struct config_section {
   char *section_comment_section_name;
   char *section_comment;
   unsigned int flags;
-  Section_Checkout checkout;
-  Section_Commit commit;
-  /* no need for diff callback, diff is a checkout and then comparison of values */
   /* keys in this section */
   struct config_key *keys;
   /* key and values read for checkout/commit/diff */

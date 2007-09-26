@@ -139,55 +139,6 @@ event_filter_number_commit (const char *section_name,
                           0, 0);
 }
 
-static config_diff_t
-event_filter_number_diff (const char *section_name,
-                          const struct config_keyvalue *kv,
-                          void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t get_val;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t string_selector;
-  uint8_t number_of_alert_strings;
-
-  string_selector = atoi (section_name + strlen ("Alert_String_"));
-
-  if ((rc = get_number_of_alert_strings (state_data,
-                                         &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (string_selector > number_of_alert_strings)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = string_keys_get (state_data,
-                             string_selector,
-                             &get_val,
-                             NULL)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = atoi (kv->value_input);
-
-  if (passed_val == get_val)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "%u", get_val);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
-}
-
 static config_err_t
 alert_string_set_checkout (const char *section_name,
                            struct config_keyvalue *kv,
@@ -249,55 +200,6 @@ alert_string_set_commit (const char *section_name,
                           string_selector,
                           0, 0,
                           alert_string_set, 1);
-}
-
-static config_diff_t
-alert_string_set_diff (const char *section_name,
-                       const struct config_keyvalue *kv,
-                       void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t get_val;
-  uint8_t passed_val;
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t string_selector;
-  uint8_t number_of_alert_strings;
-
-  string_selector = atoi (section_name + strlen ("Alert_String_"));
-
-  if ((rc = get_number_of_alert_strings (state_data,
-                                         &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
-    return rc;
-
-  if (string_selector > number_of_alert_strings)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
-  if ((rc = string_keys_get (state_data,
-                             string_selector,
-                             NULL,
-                             &get_val)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-
-  passed_val = atoi (kv->value_input);
-
-  if (passed_val == get_val)
-    ret = CONFIG_DIFF_SAME;
-  else
-    {
-      char num[32];
-      ret = CONFIG_DIFF_DIFFERENT;
-      sprintf (num, "%u", get_val);
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   num);
-    }
-  return ret;
 }
 
 static config_err_t
@@ -362,50 +264,6 @@ alert_string_commit (const char *section_name,
                                (uint8_t *)kv->value_input);
 }
 
-static config_diff_t
-alert_string_diff (const char *section_name,
-                   const struct config_keyvalue *kv,
-                   void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_string[PEF_ALERT_STRING_MAX_LEN+1] = { 0, };
-  config_err_t rc;
-  config_diff_t ret;
-  uint8_t string_selector;
-  uint8_t number_of_alert_strings;
-
-  string_selector = atoi (section_name + strlen ("Alert_String_"));
-
-  if ((ret = get_number_of_alert_strings (state_data,
-                                          &number_of_alert_strings)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (string_selector > number_of_alert_strings)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-  
-  if ((rc = get_pef_alert_string (state_data,
-                                  string_selector,
-                                  alert_string,
-                                  PEF_ALERT_STRING_MAX_LEN+1)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  if (!kv->value_input || !same (kv->value_input, (char *)alert_string))
-    ret = CONFIG_DIFF_DIFFERENT;
-  else
-    ret = CONFIG_DIFF_SAME;
-
-  if (ret == CONFIG_DIFF_DIFFERENT)
-    report_diff (section_name,
-		 kv->key_name,
-		 kv->value_input,
-		 (char *)alert_string);
-  return ret;
-}
-
 static config_validate_t
 alert_string_validate (const char *section_name,
                        const char *key_name,
@@ -431,39 +289,36 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
   snprintf(buf, 64, "Alert_String_%d", num);
 
   if (!(section = config_section_create (buf, 
-                                             NULL, 
-                                             NULL, 
-                                             0)))
+                                         NULL, 
+                                         NULL, 
+                                         0)))
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Event_Filter_Number",
-                                       "Give valid number",
-                                       0,
-                                       event_filter_number_checkout,
-                                       event_filter_number_commit,
-                                       event_filter_number_diff,
-                                       config_number_range_seven_bits) < 0) 
+                                   "Event_Filter_Number",
+                                   "Give valid number",
+                                   0,
+                                   event_filter_number_checkout,
+                                   event_filter_number_commit,
+                                   config_number_range_seven_bits) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_String_Set",
-                                       "Give valid number",
-                                       0,
-                                       alert_string_set_checkout,
-                                       alert_string_set_commit,
-                                       alert_string_set_diff,
-                                       config_number_range_seven_bits) < 0) 
+                                   "Alert_String_Set",
+                                   "Give valid number",
+                                   0,
+                                   alert_string_set_checkout,
+                                   alert_string_set_commit,
+                                   config_number_range_seven_bits) < 0) 
     goto cleanup;
 
   if (config_section_add_keyvalue (section,
-                                       "Alert_String",
-                                       "Give string. Max 64 chars.",
-                                       0,
-                                       alert_string_checkout,
-                                       alert_string_commit,
-                                       alert_string_diff,
-                                       alert_string_validate) < 0) 
+                                   "Alert_String",
+                                   "Give string. Max 64 chars.",
+                                   0,
+                                   alert_string_checkout,
+                                   alert_string_commit,
+                                   alert_string_validate) < 0) 
     goto cleanup;
 
   return section;

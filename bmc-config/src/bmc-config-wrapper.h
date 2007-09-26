@@ -391,10 +391,12 @@ config_err_t get_k_g(bmc_config_state_data_t *state_data,
                   uint32_t k_g_len);
 
 /***********************************************************/
-config_diff_t check_bmc_user_password (bmc_config_state_data_t *state_data, 
-                                    uint8_t userid, 
-                                    uint8_t *password);
-config_diff_t check_bmc_user_password20 (bmc_config_state_data_t *state_data, 
+config_err_t check_bmc_user_password (bmc_config_state_data_t *state_data, 
                                       uint8_t userid, 
-                                      uint8_t *password);
+                                      uint8_t *password,
+                                      int *is_same);
+config_err_t check_bmc_user_password20 (bmc_config_state_data_t *state_data, 
+                                        uint8_t userid, 
+                                        uint8_t *password,
+                                        int *is_same);
 #endif

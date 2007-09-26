@@ -44,41 +44,6 @@ power_restore_policy_commit (const char *section_name,
 				       power_restore_policy_number (kv->value_input));
 }
 
-static config_diff_t
-power_restore_policy_diff (const char *section_name,
-			   const struct config_keyvalue *kv,
-                           void *arg)
-{
-  bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t got_value;
-  uint8_t passed_value;
-  config_err_t rc;
-  config_diff_t ret;
-  
-  if ((rc = get_bmc_power_restore_policy (state_data,
-                                          &got_value)) != CONFIG_ERR_SUCCESS)
-    {
-      if (rc == CONFIG_ERR_NON_FATAL_ERROR)
-        return CONFIG_DIFF_NON_FATAL_ERROR;
-      return CONFIG_DIFF_FATAL_ERROR;
-    }
-  
-  passed_value = power_restore_policy_number (kv->value_input);
-
-  if (passed_value == got_value)
-    ret = CONFIG_DIFF_SAME;
-  else 
-    {
-      ret = CONFIG_DIFF_DIFFERENT;
-      report_diff (section_name,
-                   kv->key_name,
-                   kv->value_input,
-                   power_restore_policy_string (got_value));
-    }
-
-  return ret;
-}
-
 struct config_section *
 bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
 {
@@ -95,19 +60,18 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
     "existed before the power loss (\"Restore_State_AC_Apply\").";
 
   if (!(misc_section = config_section_create ("Misc",
-                                                  "Misc",
-                                                  section_comment,
-                                                  0)))
+                                              "Misc",
+                                              section_comment,
+                                              0)))
     goto cleanup;
 
   if (config_section_add_keyvalue (misc_section,
-                                       "Power_Restore_Policy",
-                                       "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                                       CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                                       power_restore_policy_checkout,
-                                       power_restore_policy_commit,
-                                       power_restore_policy_diff,
-                                       power_restore_policy_number_validate) < 0)
+                                   "Power_Restore_Policy",
+                                   "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+                                   CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                   power_restore_policy_checkout,
+                                   power_restore_policy_commit,
+                                   power_restore_policy_number_validate) < 0)
     goto cleanup;
 
   return misc_section;
