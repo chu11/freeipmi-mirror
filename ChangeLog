@@ -1,5 +1,7 @@
 2007-09-26  Albert Chu <chu11@llnl.gov>
 
+	* common/src/config-fiid.h, common/src/config-fiid.c: New files.
+
 	* bmc-config/, pef-config/: Continued common code re-architecture
 	and subsequent code cleanup.
 

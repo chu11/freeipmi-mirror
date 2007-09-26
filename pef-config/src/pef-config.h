@@ -31,6 +31,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include "config-checkout.h"
 #include "config-commit.h"
 #include "config-diff.h"
+#include "config-fiid.h"
 #include "config-parse.h"
 #include "config-section.h"
 #include "config-util.h"

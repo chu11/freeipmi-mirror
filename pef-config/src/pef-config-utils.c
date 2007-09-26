@@ -13,9 +13,6 @@
 #include <freeipmi/freeipmi.h>
 #include <freeipmi/udm/udm.h>
 
-#include "err-wrappers.h"
-#include "fiid-wrappers.h"
-
 #include "common-utils.h"
 
 #include "pef-config.h"
@@ -72,7 +69,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
       goto cleanup; 
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (state_data->dev, 
@@ -90,7 +87,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
       goto cleanup;
     }
   
-  if (fiid_obj_get(obj_cmd_rs,
+  if (Fiid_obj_get(obj_cmd_rs,
                    "number_of_lan_destinations",
                    &val) < 0)
     {
@@ -104,7 +101,7 @@ get_number_of_lan_alert_destinations (struct pef_config_state_data *state_data, 
   *number_of_lan_alert_destinations = state_data->number_of_lan_alert_destinations;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  Fiid_obj_destroy (obj_cmd_rs);
   return rv;
 }
 
@@ -124,7 +121,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (state_data->dev, 
@@ -141,7 +138,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
       goto cleanup;
     }
   
-  if (fiid_obj_get(obj_cmd_rs,
+  if (Fiid_obj_get(obj_cmd_rs,
                    "number_of_alert_strings",
                    &val) < 0)
     {
@@ -155,7 +152,7 @@ get_number_of_alert_strings (struct pef_config_state_data *state_data, uint8_t *
   *number_of_alert_strings = state_data->number_of_alert_strings;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  Fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -175,7 +172,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (state_data->dev, 
@@ -192,7 +189,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
       goto cleanup;
     }
   
-  if (fiid_obj_get(obj_cmd_rs,
+  if (Fiid_obj_get(obj_cmd_rs,
                    "number_of_alert_policy_entries",
                    &val) < 0)
     {
@@ -206,7 +203,7 @@ get_number_of_alert_policy_entries (struct pef_config_state_data *state_data, ui
   *number_of_alert_policy_entries = state_data->number_of_alert_policy_entries;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  Fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -226,7 +223,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
       return CONFIG_ERR_SUCCESS;
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create (tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (state_data->dev, 
@@ -243,7 +240,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
       goto cleanup;
     }
 
-  if (fiid_obj_get(obj_cmd_rs,
+  if (Fiid_obj_get(obj_cmd_rs,
                    "number_of_event_filters",
                    &val) < 0)
     {
@@ -257,7 +254,7 @@ get_number_of_event_filters (struct pef_config_state_data *state_data, uint8_t *
   *number_of_event_filters = state_data->number_of_event_filters;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  FIID_OBJ_DESTROY (obj_cmd_rs);
+  Fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 

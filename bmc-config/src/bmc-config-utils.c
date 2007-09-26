@@ -73,7 +73,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       return CONFIG_ERR_SUCCESS;
     }
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
     goto cleanup;
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -97,7 +97,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
       goto cleanup;
     }
   
-  if (fiid_obj_get(obj_cmd_rs,
+  if (Fiid_obj_get(obj_cmd_rs,
 		   "payload_channel",
 		   &val) < 0)
     {
@@ -111,8 +111,7 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   *channel_num = state_data->sol_channel_number;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(obj_cmd_rs);
   return rv;
 }
 
@@ -131,7 +130,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       return CONFIG_ERR_SUCCESS;
     }
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_user_access_rs)))
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_user_access_rs)))
     goto cleanup;
 
   if ((rc = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
@@ -153,7 +152,7 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
       goto cleanup;
     }
   
-  if (fiid_obj_get(obj_cmd_rs,
+  if (Fiid_obj_get(obj_cmd_rs,
                    "max_channel_user_ids",
                    &val) < 0)
     {
@@ -167,7 +166,6 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
   *number_of_users = state_data->number_of_users;
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
+  Fiid_obj_destroy(obj_cmd_rs);
   return rv;
 }

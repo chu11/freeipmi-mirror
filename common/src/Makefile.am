@@ -31,6 +31,7 @@ noinst_HEADERS = \
 	config-checkout.h \
 	config-commit.h \
 	config-diff.h \
+	config-fiid.h \
 	config-parse.h \
 	config-section.h \
 	config-util.h \
@@ -109,6 +110,7 @@ libconfigcommon_la_SOURCES = \
 	config-checkout.c \
 	config-commit.c \
 	config-diff.c \
+	config-fiid.c \
 	config-parse.c \
 	config-section.c \
 	config-util.c \
