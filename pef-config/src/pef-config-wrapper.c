@@ -58,6 +58,10 @@ get_pef_control (pef_config_state_data_t *state_data,
                                                              BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -105,6 +109,10 @@ set_pef_control (pef_config_state_data_t *state_data,
                                                              pef_alert_startup_delay,
                                                              obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -138,6 +146,10 @@ get_pef_action_global_control (pef_config_state_data_t *state_data,
                                                                            BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -197,6 +209,10 @@ set_pef_action_global_control (pef_config_state_data_t *state_data,
                                                                            diagnostic_interrupt,
                                                                            obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -225,6 +241,10 @@ get_pef_startup_delay (pef_config_state_data_t *state_data,
                                                                    BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -254,6 +274,10 @@ set_pef_startup_delay (pef_config_state_data_t *state_data,
                                                                    pef_startup_delay,
                                                                    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -282,6 +306,10 @@ get_pef_alert_startup_delay (pef_config_state_data_t *state_data,
                                                                          BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -311,6 +339,10 @@ set_pef_alert_startup_delay (pef_config_state_data_t *state_data,
                                                                          pef_alert_startup_delay,
                                                                          obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -341,6 +373,10 @@ get_pef_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_alert_string_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -378,6 +414,10 @@ set_pef_alert_string_keys (pef_config_state_data_t *state_data,
                                                                    alert_string_set,
                                                                    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -421,6 +461,10 @@ get_pef_alert_string (pef_config_state_data_t *state_data,
                                                                   i + 1,
                                                                   obj_cmd_rs) < 0)
         {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -504,6 +548,10 @@ set_pef_alert_string (pef_config_state_data_t *state_data,
                                                                    len_to_write,
                                                                    obj_cmd_rs) < 0)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -544,6 +592,10 @@ get_bmc_community_string (pef_config_state_data_t *state_data,
                                                                   BLOCK_SELECTOR,
                                                                   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -585,6 +637,10 @@ set_bmc_community_string (pef_config_state_data_t *state_data,
                                                                   (community_string) ? strlen((char *)community_string) : 0,
                                                                   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -629,6 +685,10 @@ get_bmc_destination_type(pef_config_state_data_t *state_data,
                                                                   BLOCK_SELECTOR,
                                                                   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -690,6 +750,10 @@ set_bmc_destination_type(pef_config_state_data_t *state_data,
                                                                   alert_retries,
                                                                   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -737,6 +801,10 @@ get_bmc_destination_addresses(pef_config_state_data_t *state_data,
                                                                        BLOCK_SELECTOR,
                                                                        obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -830,6 +898,10 @@ set_bmc_destination_addresses(pef_config_state_data_t *state_data,
                                                                        alert_mac_address_val,
                                                                        obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -868,6 +940,10 @@ get_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data,
 								    BLOCK_SELECTOR, 
 								    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -936,6 +1012,10 @@ set_bmc_pef_conf_alert_policy_table (struct pef_config_state_data *state_data,
 								    event_specific_alert_string, 
 								    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -994,6 +1074,10 @@ get_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data,
 								    BLOCK_SELECTOR,
 								    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1162,6 +1246,10 @@ set_bmc_pef_conf_event_filter_table (struct pef_config_state_data *state_data,
 								    event_data3_compare2, 
 								    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

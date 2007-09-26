@@ -21,7 +21,13 @@ get_lan_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
   
   if ((state_data->lan_channel_number = ipmi_get_channel_number (state_data->dev, 
                                                                  IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)) < 0)
-    return CONFIG_ERR_NON_FATAL_ERROR;
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr, 
+                "ipmi_get_channel_number: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      return CONFIG_ERR_NON_FATAL_ERROR;
+    }
 
   state_data->lan_channel_number_initialized = 1;
   *channel_num = state_data->lan_channel_number;
@@ -39,7 +45,13 @@ get_serial_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel
   
   if ((state_data->serial_channel_number = ipmi_get_channel_number (state_data->dev, 
                                                                     IPMI_CHANNEL_MEDIUM_TYPE_RS232)) < 0)
-    return CONFIG_ERR_NON_FATAL_ERROR;
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr, 
+                "ipmi_get_channel_number: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      return CONFIG_ERR_NON_FATAL_ERROR;
+    }
 
   state_data->serial_channel_number_initialized = 1;
   *channel_num = state_data->serial_channel_number;
@@ -77,6 +89,10 @@ get_sol_channel_number (bmc_config_state_data_t *state_data, uint8_t *channel_nu
 								     BLOCK_SELECTOR,
 								     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr, 
+                "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -129,6 +145,10 @@ get_number_of_users (bmc_config_state_data_t *state_data, uint8_t *number_of_use
                                 1, /* user_id number */
                                 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr, 
+                "ipmi_cmd_get_user_access: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }

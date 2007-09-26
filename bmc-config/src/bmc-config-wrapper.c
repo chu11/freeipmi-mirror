@@ -47,6 +47,10 @@ set_bmc_user_access (bmc_config_state_data_t *state_data,
 				session_limit, 
 				obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_user_access: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -87,6 +91,10 @@ set_bmc_channel_access (bmc_config_state_data_t *state_data,
 				    IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE), 
 				   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_channel_access: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -118,6 +126,10 @@ set_bmc_username (bmc_config_state_data_t *state_data,
 			      (username) ? strlen((char *)username) : 0,
 			      obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_user_name: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -159,12 +171,20 @@ set_bmc_enable_user (bmc_config_state_data_t *state_data,
       if ((ret = ipmi_check_completion_code (obj_cmd_rs, 
                                              IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID)) < 0)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_set_user_password: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
 
       if (!ret)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_set_user_password: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -193,6 +213,10 @@ set_bmc_enable_user (bmc_config_state_data_t *state_data,
 		    obj_cmd_rq,
 		    obj_cmd_rs) < 0)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -231,6 +255,10 @@ set_bmc_user_password (bmc_config_state_data_t *state_data,
                                   (password) ? strlen((char *)password) : 0,
                                   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_user_password: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -261,6 +289,10 @@ set_bmc_user_password20 (bmc_config_state_data_t *state_data,
                                       (password) ? strlen((char *)password) : 0,
                                       obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_user_password_v20: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -354,6 +386,10 @@ set_bmc_user_payload_access (bmc_config_state_data_t *state_data,
                                         oem_payload_7,
                                         obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_user_payload_access: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -464,6 +500,10 @@ set_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data,
 								   ip_address_source, 
 								   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_ip_address_source: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -502,6 +542,10 @@ set_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data,
 							    ip_address_val, 
 							    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -540,6 +584,10 @@ set_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data,
 							     mac_address_val, 
 							     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -578,6 +626,10 @@ set_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data,
 							     subnet_mask_val, 
 							     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_subnet_mask: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -616,6 +668,10 @@ set_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data,
 									 ip_address_val, 
 									 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_default_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -654,6 +710,10 @@ set_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_dat
 									     mac_address_val, 
 									     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -692,6 +752,10 @@ set_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data,
 									ip_address_val, 
 									obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -730,6 +794,10 @@ set_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data
 									    mac_address_val, 
 									    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -766,6 +834,10 @@ set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data,
 							 vlan_id_enable, 
 							 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_vlan_id: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -800,6 +872,10 @@ set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data,
 							       vlan_priority, 
 							       obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_vlan_priority: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -882,6 +958,10 @@ set_bmc_lan_conf_authentication_type_enables (bmc_config_state_data_t *state_dat
                                                                              oem_level_oem_proprietary,
                                                                              obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -918,6 +998,10 @@ set_bmc_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
 									   bmc_generated_arp_responses, 
 									   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1043,6 +1127,10 @@ set_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data,
 							       connect_mode,
 							       obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1077,6 +1165,10 @@ set_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data,
 								      page_blackout_interval, 
 								      obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1111,6 +1203,10 @@ set_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data,
 								   call_retry_interval, 
 								   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1149,6 +1245,10 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state
 									    bit_rate, 
 									    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1174,6 +1274,10 @@ set_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
 					 power_restore_policy, 
 					 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_power_restore_policy: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1205,6 +1309,10 @@ set_pef_control (bmc_config_state_data_t *state_data,
                                                              pef_alert_startup_delay,
                                                              obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1240,6 +1348,10 @@ set_pef_action_global_control (bmc_config_state_data_t *state_data,
                                                                            diagnostic_interrupt,
                                                                            obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1265,6 +1377,10 @@ set_pef_startup_delay (bmc_config_state_data_t *state_data,
                                                                    pef_startup_delay,
                                                                    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1290,6 +1406,10 @@ set_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
                                                                          pef_alert_startup_delay,
                                                                          obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1324,6 +1444,10 @@ set_sol_sol_enable(bmc_config_state_data_t *state_data,
 							    sol_enable, 
 							    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_sol_configuration_parameters_sol_enable: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1362,6 +1486,10 @@ set_sol_sol_authentication(bmc_config_state_data_t *state_data,
 								    force_sol_payload_encryption,
 								    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_sol_configuration_parameters_sol_authentication: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1398,6 +1526,10 @@ set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_t
 												  character_send_threshold,
 												  obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1434,6 +1566,10 @@ set_sol_sol_retry(bmc_config_state_data_t *state_data,
 							   retry_interval,
 							   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_sol_configuration_parameters_sol_retry: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1468,6 +1604,10 @@ set_sol_sol_non_volatile_bit_rate(bmc_config_state_data_t *state_data,
 									   bit_rate,
 									   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1502,6 +1642,10 @@ set_sol_sol_volatile_bit_rate(bmc_config_state_data_t *state_data,
 								       bit_rate,
 								       obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1536,6 +1680,10 @@ set_sol_sol_payload_port_number(bmc_config_state_data_t *state_data,
                                                                          port_number,
 									 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1577,6 +1725,10 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 												   BLOCK_SELECTOR, 
 												   obj_cmd_count_rs) < 0)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -1602,6 +1754,10 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 											     BLOCK_SELECTOR, 
 											     obj_cmd_id_rs) < 0)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -1664,6 +1820,10 @@ _rmcpplus_cipher_suite_id_privilege_setup(bmc_config_state_data_t *state_data)
 												      BLOCK_SELECTOR, 
 												      obj_cmd_priv_rs) < 0)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -1783,6 +1943,10 @@ set_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
 												     privs[15],
 												     obj_cmd_rs) < 0)
         {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
           rv = CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
@@ -1829,6 +1993,10 @@ set_k_r(bmc_config_state_data_t *state_data,
 					  k_r_len,
                                           obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_channel_security_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1867,6 +2035,10 @@ set_k_g(bmc_config_state_data_t *state_data,
 					  k_g_len,
                                           obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_channel_security_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1902,6 +2074,10 @@ get_bmc_user_access (bmc_config_state_data_t *state_data,
 				userid, 
 				obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_user_access: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -1959,6 +2135,10 @@ get_bmc_channel_access (bmc_config_state_data_t *state_data,
 				    IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE), 
 				   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_channel_access: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2006,6 +2186,10 @@ get_bmc_username (bmc_config_state_data_t *state_data,
 			      userid, 
 			      obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_user_name: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2096,6 +2280,10 @@ get_bmc_user_payload_access (bmc_config_state_data_t *state_data,
                                         userid, 
                                         obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_user_payload_access: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2316,6 +2504,10 @@ get_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data,
 								   BLOCK_SELECTOR, 
 								   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_ip_address_source: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2358,6 +2550,10 @@ get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data,
 							    BLOCK_SELECTOR, 
 							    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_ip_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2416,6 +2612,10 @@ get_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data,
 							     BLOCK_SELECTOR, 
 							     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2476,6 +2676,10 @@ get_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data,
 							     BLOCK_SELECTOR, 
 							     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_subnet_mask: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2534,6 +2738,10 @@ get_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data,
 									 BLOCK_SELECTOR, 
 									 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_default_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2592,6 +2800,10 @@ get_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_dat
 									     BLOCK_SELECTOR, 
 									     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2652,6 +2864,10 @@ get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data,
 									BLOCK_SELECTOR, 
 									obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2710,6 +2926,10 @@ get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data
 									    BLOCK_SELECTOR, 
 									    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2770,6 +2990,10 @@ get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data,
 							 BLOCK_SELECTOR, 
 							 obj_cmd_rs) < 0) 
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_vlan_id: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2815,6 +3039,10 @@ get_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data,
 							       BLOCK_SELECTOR, 
 							       obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_vlan_priority: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -2880,6 +3108,10 @@ get_bmc_lan_conf_authentication_type_enables (bmc_config_state_data_t *state_dat
 									     BLOCK_SELECTOR, 
 									     obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3018,6 +3250,10 @@ get_bmc_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
 									   BLOCK_SELECTOR, 
 									   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3063,6 +3299,10 @@ get_bmc_lan_conf_gratuitous_arp_interval (bmc_config_state_data_t *state_data,
 									 BLOCK_SELECTOR, 
 									 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3157,6 +3397,10 @@ get_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data,
 							       BLOCK_SELECTOR, 
 							       obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3210,6 +3454,10 @@ get_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data,
 								      BLOCK_SELECTOR, 
 								      obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3251,6 +3499,10 @@ get_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data,
 								   BLOCK_SELECTOR, 
 								   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3294,6 +3546,10 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state
 									    BLOCK_SELECTOR, 
 									    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3330,6 +3586,10 @@ get_bmc_power_restore_policy (bmc_config_state_data_t *state_data,
 
   if (ipmi_cmd_get_chassis_status (state_data->dev, obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_chassis_status: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3365,6 +3625,10 @@ get_pef_control (bmc_config_state_data_t *state_data,
                                                              BLOCK_SELECTOR,
                                                              obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3414,6 +3678,10 @@ get_pef_action_global_control (bmc_config_state_data_t *state_data,
                                                                            BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3466,6 +3734,10 @@ get_pef_startup_delay (bmc_config_state_data_t *state_data,
                                                                    BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3498,6 +3770,10 @@ get_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
                                                                          BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3539,6 +3815,10 @@ get_sol_sol_enable (bmc_config_state_data_t *state_data,
 							    BLOCK_SELECTOR, 
 							    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sol_configuration_parameters_sol_enable: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3582,6 +3862,10 @@ get_sol_sol_authentication (bmc_config_state_data_t *state_data,
 								    BLOCK_SELECTOR, 
 								    obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sol_configuration_parameters_sol_authentication: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3632,6 +3916,10 @@ get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data_
 												  BLOCK_SELECTOR, 
 												  obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3678,6 +3966,10 @@ get_sol_sol_retry (bmc_config_state_data_t *state_data,
 							   BLOCK_SELECTOR, 
 							   obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sol_configuration_parameters_sol_retry: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3717,12 +4009,16 @@ get_sol_sol_non_volatile_bit_rate (bmc_config_state_data_t *state_data,
     }
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (state_data->dev, 
-							   channel_number, 
-							   IPMI_GET_SOL_PARAMETER, 
-							   SET_SELECTOR, 
-							   BLOCK_SELECTOR, 
-							   obj_cmd_rs) < 0)
+                                                                           channel_number, 
+                                                                           IPMI_GET_SOL_PARAMETER, 
+                                                                           SET_SELECTOR, 
+                                                                           BLOCK_SELECTOR, 
+                                                                           obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3764,6 +4060,10 @@ get_sol_sol_volatile_bit_rate (bmc_config_state_data_t *state_data,
 								       BLOCK_SELECTOR, 
 								       obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3805,6 +4105,10 @@ get_sol_sol_payload_port_number (bmc_config_state_data_t *state_data,
 									 BLOCK_SELECTOR, 
 									 obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3894,6 +4198,10 @@ get_k_r(bmc_config_state_data_t *state_data,
                                           0,
                                           obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_channel_security_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3941,6 +4249,10 @@ get_k_g(bmc_config_state_data_t *state_data,
                                           0,
                                           obj_cmd_rs) < 0)
     {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_channel_security_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
       rv = CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -3993,7 +4305,13 @@ check_bmc_user_password (bmc_config_state_data_t *state_data,
           goto done;
         }
       else
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_set_user_password: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
   else
@@ -4043,7 +4361,13 @@ check_bmc_user_password20 (bmc_config_state_data_t *state_data,
           goto done;
         }
       else
-        rv = CONFIG_ERR_NON_FATAL_ERROR;
+        {
+          if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+            fprintf(stderr,
+                    "ipmi_cmd_set_user_password_v20: %s\n",
+                    ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+          rv = CONFIG_ERR_NON_FATAL_ERROR;
+        }
       goto cleanup;
     }
   else
