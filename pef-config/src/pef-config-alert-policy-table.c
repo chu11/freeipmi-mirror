@@ -139,17 +139,9 @@ policy_type_checkout (const char *section_name,
   uint8_t policy_type;
   config_err_t ret;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
   if ((ret = alert_policy_get (state_data,
                                alert_policy_entry_number,
                                &policy_type,
@@ -177,17 +169,8 @@ policy_type_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
-  config_err_t ret;
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -209,17 +192,9 @@ policy_enabled_checkout (const char *section_name,
   uint8_t policy_enabled;
   config_err_t ret;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
   if ((ret = alert_policy_get (state_data,
                                alert_policy_entry_number,
                                NULL,
@@ -247,17 +222,8 @@ policy_enabled_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
-  config_err_t ret;
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
@@ -279,17 +245,9 @@ policy_number_checkout (const char *section_name,
   uint8_t policy_number;
   config_err_t ret;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
   if ((ret = alert_policy_get (state_data,
                                alert_policy_entry_number,
                                NULL,
@@ -317,18 +275,9 @@ policy_number_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
-  config_err_t ret;
   uint8_t policy_number;
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
 
   policy_number = atoi (kv->value_input);
 
@@ -352,17 +301,9 @@ destination_selector_checkout (const char *section_name,
   uint8_t destination_selector;
   config_err_t ret;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
   if ((ret = alert_policy_get (state_data,
                                alert_policy_entry_number,
                                NULL,
@@ -390,18 +331,9 @@ destination_selector_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
-  config_err_t ret;
   uint8_t destination_selector;
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
 
   destination_selector = atoi (kv->value_input);
 
@@ -425,17 +357,9 @@ channel_number_checkout (const char *section_name,
   uint8_t channel_number;
   config_err_t ret;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
   if ((ret = alert_policy_get (state_data,
                                alert_policy_entry_number,
                                NULL,
@@ -463,18 +387,9 @@ channel_number_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
-  config_err_t ret;
   uint8_t channel_number;
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
 
   channel_number = atoi (kv->value_input);
 
@@ -498,17 +413,9 @@ alert_string_set_selector_checkout (const char *section_name,
   uint8_t alert_string_set_selector;
   config_err_t ret;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
   if ((ret = alert_policy_get (state_data,
                                alert_policy_entry_number,
                                NULL,
@@ -536,18 +443,9 @@ alert_string_set_selector_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
-  config_err_t ret;
   uint8_t alert_string_set_selector;
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
 
   alert_string_set_selector = atoi (kv->value_input);
 
@@ -571,17 +469,9 @@ event_specific_alert_string_checkout (const char *section_name,
   uint8_t event_specific_alert_string;
   config_err_t ret;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
   
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
   
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
-
   if ((ret = alert_policy_get (state_data,
                                alert_policy_entry_number,
                                NULL,
@@ -609,17 +499,8 @@ event_specific_alert_string_commit (const char *section_name,
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
   uint8_t alert_policy_entry_number;
-  uint8_t number_of_alert_policy_entries;
-  config_err_t ret;
 
   alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-
-  if ((ret = get_number_of_alert_policy_entries (state_data,
-                                                 &number_of_alert_policy_entries)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_policy_entry_number > number_of_alert_policy_entries)
-    return CONFIG_ERR_NON_FATAL_ERROR;
 
   return alert_policy_set (state_data,
                            alert_policy_entry_number,
