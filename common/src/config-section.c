@@ -263,9 +263,8 @@ config_section_add_keyvalue (struct config_section *section,
 }
 
 int
-config_section_update_keyvalue(struct config_keyvalue *keyvalue,
-                               const char *value_input,
-                               const char *value_output)
+config_section_update_keyvalue_input(struct config_keyvalue *keyvalue,
+                                     const char *value_input)
 {
   assert(keyvalue);
   
@@ -284,15 +283,44 @@ config_section_update_keyvalue(struct config_keyvalue *keyvalue,
         }
     }
 
+  return 0;
+}
+
+int
+config_section_update_keyvalue_output(struct config_keyvalue *keyvalue,
+                                      const char *value_output)
+{
+  assert(keyvalue);
+  assert(!keyvalue->value_output);
+
   if (value_output)
     {
-      assert(keyvalue->value_output);
-
+      
       if (!(keyvalue->value_output = strdup(value_output)))
         {
           perror("strdup");
           return -1;
         }
+    }
+
+  return 0;
+}
+
+int
+config_section_update_keyvalue_output_int(struct config_keyvalue *keyvalue,
+                                          unsigned int value_output)
+{
+  char buf[CONFIG_PARSE_BUFLEN];
+
+  assert(keyvalue);
+  assert(!keyvalue->value_output);
+
+  snprintf(buf, CONFIG_PARSE_BUFLEN, "%u", value_output);
+  
+  if (!(keyvalue->value_output = strdup(buf)))
+    {
+      perror("strdup");
+      return -1;
     }
 
   return 0;
@@ -392,9 +420,8 @@ config_sections_insert_keyvalues(struct config_section *sections,
 
       if ((kv = config_find_keyvalue(s, kp->key_name)))
         {
-          if (config_section_update_keyvalue(kv,
-                                             kp->value_input,
-                                             NULL) < 0)
+          if (config_section_update_keyvalue_input(kv,
+                                                   kp->value_input) < 0)
             {
               rv = -1;
               goto cleanup;

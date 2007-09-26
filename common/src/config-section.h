@@ -30,9 +30,14 @@ int config_section_add_keyvalue(struct config_section *section,
                                 const char *value_input,
                                 const char *value_output);
 
-int config_section_update_keyvalue(struct config_keyvalue *keyvalue,
-                                   const char *value_input,
-                                   const char *value_output);
+int config_section_update_keyvalue_input(struct config_keyvalue *keyvalue,
+                                         const char *value_input);
+
+int config_section_update_keyvalue_output(struct config_keyvalue *keyvalue,
+                                          const char *value_output);
+
+int config_section_update_keyvalue_output_int(struct config_keyvalue *keyvalue,
+                                              unsigned int value_output);
 
 /* returns -1 on error, number of non-valid values otherwise */
 int config_sections_validate_keyvalue_inputs(struct config_section *sections,
