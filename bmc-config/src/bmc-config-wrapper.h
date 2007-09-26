@@ -164,11 +164,6 @@ config_err_t set_sol_sol_volatile_bit_rate(bmc_config_state_data_t *state_data,
                                         uint8_t bit_rate);
 config_err_t set_sol_sol_payload_port_number(bmc_config_state_data_t *state_data,
                                           uint16_t port_number);
-
-config_err_t set_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
-                                                  uint8_t cipher_suite_id,
-                                                  uint8_t privilege);
-
 config_err_t set_k_r(bmc_config_state_data_t *state_data,
                   uint8_t *k_r,
                   uint32_t k_r_len);
@@ -323,11 +318,6 @@ config_err_t get_sol_sol_volatile_bit_rate (bmc_config_state_data_t *state_data,
                                          uint8_t *bit_rate);
 config_err_t get_sol_sol_payload_port_number (bmc_config_state_data_t *state_data,
                                            uint16_t *port_number);
-
-config_err_t get_rmcpplus_cipher_suite_id_privilege (bmc_config_state_data_t *state_data,
-                                                  uint8_t cipher_suite_id,
-                                                  uint8_t *privilege);
-
 config_err_t get_k_r(bmc_config_state_data_t *state_data,
                   uint8_t *k_r,
                   uint32_t k_r_len);
