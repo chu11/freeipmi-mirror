@@ -186,7 +186,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
   return (rv);
 }
 
-config_err_t 
+static config_err_t 
 _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                                   struct bmc_authentication_level *al)
 {

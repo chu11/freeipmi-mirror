@@ -19,17 +19,34 @@ power_restore_policy_checkout (const char *section_name,
                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t policy;
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint64_t val;
 
-  if ((ret = get_bmc_power_restore_policy (state_data,
-                                           &policy)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
+    goto cleanup;
 
-  if (config_section_update_keyvalue_output(kv, power_restore_policy_string (policy)) < 0)
+  if (ipmi_cmd_get_chassis_status (state_data->dev, obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_chassis_status: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
+    goto cleanup;
+
+  if (config_section_update_keyvalue_output(kv, power_restore_policy_string ((uint8_t)val)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
-  return CONFIG_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -38,8 +55,28 @@ power_restore_policy_commit (const char *section_name,
                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_power_restore_policy (state_data,
-				       power_restore_policy_number (kv->value_input));
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  fiid_obj_t obj_cmd_rs = NULL;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_set_power_restore_policy (state_data->dev,
+                                         power_restore_policy_number (kv->value_input),
+                                         obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_power_restore_policy: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 struct config_section *

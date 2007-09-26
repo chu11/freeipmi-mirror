@@ -1150,34 +1150,6 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state
   return (rv);	
 }
 
-config_err_t 
-set_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
-			      uint8_t power_restore_policy)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_power_restore_policy_rs)))
-    goto cleanup;
-
-  if (ipmi_cmd_set_power_restore_policy (state_data->dev, 
-					 power_restore_policy, 
-					 obj_cmd_rs) < 0)
-    {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
-        fprintf(stderr,
-                "ipmi_cmd_set_power_restore_policy: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-  
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
-  return (rv);	
-}
-
 config_err_t
 set_pef_control (bmc_config_state_data_t *state_data,
                  uint8_t pef,
@@ -2989,37 +2961,6 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state
   if (Fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
     goto cleanup;
   *bit_rate = val;
-  
-  rv = CONFIG_ERR_SUCCESS;
- cleanup:
-  Fiid_obj_destroy(obj_cmd_rs);
-  return (rv);
-}
-
-config_err_t 
-get_bmc_power_restore_policy (bmc_config_state_data_t *state_data, 
-			      uint8_t *power_restore_policy)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  
-  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
-    goto cleanup;
-
-  if (ipmi_cmd_get_chassis_status (state_data->dev, obj_cmd_rs) < 0)
-    {
-      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
-        fprintf(stderr,
-                "ipmi_cmd_get_chassis_status: %s\n",
-                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
-      rv = CONFIG_ERR_NON_FATAL_ERROR;
-      goto cleanup;
-    }
-  
-  if (Fiid_obj_get (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
-    goto cleanup;
-  *power_restore_policy = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
