@@ -21,7 +21,6 @@ power_restore_policy_checkout (const char *section_name,
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
   uint64_t val;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
