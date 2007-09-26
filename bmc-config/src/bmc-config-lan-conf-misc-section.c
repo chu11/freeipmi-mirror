@@ -23,17 +23,13 @@ enable_gratuitous_arps_checkout (const char *section_name,
   uint8_t reply_arp;
   config_err_t ret;
 
-  ret = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
-						    &enable_arp,
-						    &reply_arp);
-  if (ret != 0)
-    return -1;
+  if ((ret = get_bmc_lan_conf_bmc_generated_arp_control (state_data,
+                                                         &enable_arp,
+                                                         &reply_arp)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  if (!(kv->value_output = strdup (enable_arp ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, enable_arp ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -75,11 +71,8 @@ enable_arp_response_checkout (const char *section_name,
                                                          &reply_arp)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (reply_arp ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, reply_arp ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -119,11 +112,9 @@ gratuitous_arp_interval_checkout (const char *section_name,
                                                        &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", interval) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, interval) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 

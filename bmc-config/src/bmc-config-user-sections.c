@@ -34,19 +34,13 @@ username_checkout (const char *section_name,
   if (state_data->prog_data->args->action == CONFIG_ACTION_DIFF
       && same(kv->value_input, "anonymous"))
     {
-      if (!(kv->value_output = strdup ("anonymous")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      if (config_section_update_keyvalue_output(kv, "anonymous") < 0)
+        return CONFIG_ERR_FATAL_ERROR;
     }
   else
     {
-      if (!(kv->value_output = strdup ((char *)username)))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      if (config_section_update_keyvalue_output(kv, (char *)username) < 0)
+        return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -122,27 +116,18 @@ enable_user_checkout (const char *section_name,
    */
   if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
     {
-      if (!(kv->value_output = strdup ("Yes")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      if (config_section_update_keyvalue_output(kv, "Yes") < 0)
+        return CONFIG_ERR_FATAL_ERROR;
     }
   else if (tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
     {
-      if (!(kv->value_output = strdup ("No")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      if (config_section_update_keyvalue_output(kv, "No") < 0)
+        return CONFIG_ERR_FATAL_ERROR;
     }
   else /* tmp_user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
     {
-      if (!(kv->value_output = strdup ("")))
-        {
-          perror("strdup");
-          return CONFIG_ERR_FATAL_ERROR;
-        }
+      if (config_section_update_keyvalue_output(kv, "") < 0)
+        return CONFIG_ERR_FATAL_ERROR;
     }
 
   return CONFIG_ERR_SUCCESS;
@@ -194,11 +179,8 @@ password_checkout (const char *section_name,
         return ret;
     } 
 
-  if (!(kv->value_output = strdup (str)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, str) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -257,11 +239,8 @@ password20_checkout (const char *section_name,
         str = "<something else>";
     } 
 
-  if (!(kv->value_output = strdup (str)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, str) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -403,11 +382,8 @@ lan_enable_ipmi_msgs_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -447,11 +423,8 @@ lan_enable_link_auth_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }
@@ -491,11 +464,8 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -535,11 +505,8 @@ lan_privilege_limit_checkout (const char *section_name,
                               0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_privilege_limit_string (get_val))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_privilege_limit_string (get_val)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -579,11 +546,8 @@ lan_session_limit_checkout (const char *section_name,
                               &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", get_val) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_NON_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, get_val) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -633,11 +597,8 @@ sol_payload_access_checkout (const char *section_name,
                                           NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (have_access ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, have_access ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -777,11 +738,8 @@ serial_enable_ipmi_msgs_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -821,11 +779,8 @@ serial_enable_link_auth_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -865,11 +820,8 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -909,11 +861,8 @@ serial_privilege_limit_checkout (const char *section_name,
                                  0)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_privilege_limit_string (get_val))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, get_privilege_limit_string (get_val)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -953,11 +902,8 @@ serial_session_limit_checkout (const char *section_name,
                                  &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (asprintf (&kv->value_output, "%d", get_val) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_NON_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, get_val) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }

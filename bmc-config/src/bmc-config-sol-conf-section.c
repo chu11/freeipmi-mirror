@@ -88,11 +88,8 @@ enable_sol_checkout (const char *section_name,
                                  &enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (enable ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, enable ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -122,11 +119,9 @@ sol_privilege_level_checkout (const char *section_name,
                                 NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (privilege_level_string (value))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, privilege_level_string (value)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -158,11 +153,8 @@ force_sol_payload_authentication_checkout (const char *section_name,
                                 NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }
@@ -195,11 +187,8 @@ force_sol_payload_encryption_checkout (const char *section_name,
                                 &value)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (value ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }
@@ -232,11 +221,9 @@ character_accumulate_interval_checkout (const char *section_name,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", interval) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, interval) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -277,11 +264,9 @@ character_send_threshold_checkout (const char *section_name,
                                                                        &threshold)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", threshold) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, threshold) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -322,11 +307,9 @@ sol_retry_count_checkout (const char *section_name,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", count) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, count) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -368,11 +351,9 @@ sol_retry_interval_checkout (const char *section_name,
                                 &interval)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", interval) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, interval) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -412,11 +393,9 @@ non_volatile_bit_rate_checkout (const char *section_name,
                                                 &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (sol_bit_rate_string (bitrate))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, sol_bit_rate_string (bitrate)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -443,11 +422,9 @@ volatile_bit_rate_checkout (const char *section_name,
                                             &bitrate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (sol_bit_rate_string (bitrate))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, sol_bit_rate_string (bitrate)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -474,11 +451,9 @@ port_checkout (const char *section_name,
                                               &port)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", port) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, port) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 

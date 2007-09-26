@@ -153,11 +153,8 @@ policy_type_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (policy_type_string (policy_type))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, policy_type_string (policy_type)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -206,11 +203,8 @@ policy_enabled_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (policy_enabled ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, policy_enabled ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -259,11 +253,8 @@ policy_number_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%u", policy_number) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, policy_number) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -315,11 +306,8 @@ destination_selector_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%u", destination_selector) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, destination_selector) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -371,11 +359,8 @@ channel_number_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%u", channel_number) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, channel_number) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -427,11 +412,8 @@ alert_string_set_selector_checkout (const char *section_name,
                                NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%u", alert_string_set_selector) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, alert_string_set_selector) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -483,11 +465,8 @@ event_specific_alert_string_checkout (const char *section_name,
                                &event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (event_specific_alert_string ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, event_specific_alert_string ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }

@@ -30,11 +30,8 @@ ip_address_source_checkout (const char *section_name,
                                                  &source)) != CONFIG_ERR_SUCCESS) 
     return ret;
 
-  if (!(kv->value_output = strdup (ip_address_source_string (source))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, ip_address_source_string (source)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -63,11 +60,8 @@ ip_address_checkout (const char *section_name,
                                           BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (ip)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, ip) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -96,11 +90,9 @@ mac_address_checkout (const char *section_name,
                                            BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (mac)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, mac) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -128,11 +120,8 @@ subnet_mask_checkout (const char *section_name,
                                            BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (mask)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, mask) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -161,11 +150,8 @@ default_gateway_address_checkout (const char *section_name,
                                                        BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value_output = strdup (ip)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, ip) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -194,11 +180,9 @@ default_gateway_mac_address_checkout (const char *section_name,
                                                            BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (mac)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, mac) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -226,11 +210,8 @@ backup_gateway_address_checkout (const char *section_name,
                                                       BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (ip)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, ip) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -259,11 +240,9 @@ backup_gateway_mac_address_checkout (const char *section_name,
                                                           BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (mac)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, mac) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -292,11 +271,9 @@ vlan_id_checkout (const char *section_name,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", vlan_id) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, vlan_id) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -348,11 +325,8 @@ vlan_id_enable_checkout (const char *section_name,
                                        &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (vlan_id_enable ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, vlan_id_enable ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -398,11 +372,9 @@ vlan_priority_checkout (const char *section_name,
                                              &priority)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%d", priority) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, priority) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 

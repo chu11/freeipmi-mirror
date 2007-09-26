@@ -119,11 +119,8 @@ alert_destination_type_checkout (const char *section_name,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (alert_destination_type_string (destination_type))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, alert_destination_type_string (destination_type)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }
@@ -166,11 +163,8 @@ alert_acknowledge_checkout (const char *section_name,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (alert_acknowledge ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, alert_acknowledge ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }
@@ -213,11 +207,8 @@ alert_acknowledge_timeout_checkout (const char *section_name,
                                    NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%u", alert_acknowledge_timeout) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, alert_acknowledge_timeout) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -263,11 +254,8 @@ alert_retries_checkout (const char *section_name,
                                    &alert_retries)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (asprintf (&kv->value_output, "%u", alert_retries) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, alert_retries) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -417,11 +405,8 @@ alert_gateway_checkout (const char *section_name,
                                         0)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value_output = strdup (alert_gateway_string (gateway))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, alert_gateway_string (gateway)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }
@@ -464,11 +449,8 @@ alert_ip_address_checkout (const char *section_name,
                                         0)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value_output = strdup (alert_ip)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, alert_ip) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }
@@ -511,11 +493,8 @@ alert_mac_address_checkout (const char *section_name,
                                         PEF_CONFIG_MAXMACADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (!(kv->value_output = strdup (alert_mac)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, alert_mac) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
 }

@@ -26,11 +26,9 @@ power_restore_policy_checkout (const char *section_name,
                                            &policy)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (power_restore_policy_string (policy))))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, power_restore_policy_string (policy)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return CONFIG_ERR_SUCCESS;
 }
 

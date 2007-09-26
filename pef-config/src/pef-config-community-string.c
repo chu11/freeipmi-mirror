@@ -26,11 +26,8 @@ community_string_checkout (const char *section_name,
                                        IPMI_MAX_COMMUNITY_STRING_LENGTH+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (!(kv->value_output = strdup ((char *)community_string)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, (char *)community_string) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }

@@ -83,11 +83,9 @@ volatile_access_mode_checkout (const char *section_name,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (channel_access_mode_string (get_val))))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, channel_access_mode_string (get_val)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return 0;
 }
 
@@ -126,11 +124,9 @@ volatile_enable_user_level_auth_checkout (const char *section_name,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return -1;
-    }
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }
@@ -170,11 +166,9 @@ volatile_enable_per_msg_auth_checkout (const char *section_name,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return -1;
-    }
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }
@@ -214,11 +208,9 @@ volatile_enable_pef_alerting_checkout (const char *section_name,
                                                      &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return -1;
-    }
+  /* achu: Backwards values in this command are handled in bmc-config-api.c */
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }
@@ -258,11 +250,8 @@ volatile_channel_priv_limit_checkout (const char *section_name,
                                                      &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (privilege_level_string (get_val))))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, privilege_level_string (get_val)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }
@@ -352,11 +341,9 @@ non_volatile_access_mode_checkout (const char *section_name,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (channel_access_mode_string (get_val))))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, channel_access_mode_string (get_val)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+
   return 0;
 }
 
@@ -395,11 +382,8 @@ non_volatile_enable_user_level_auth_checkout (const char *section_name,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }
@@ -439,11 +423,8 @@ non_volatile_enable_per_msg_auth_checkout (const char *section_name,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }
@@ -483,11 +464,8 @@ non_volatile_enable_pef_alerting_checkout (const char *section_name,
                                                          &foo)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (get_val ? "Yes" : "No")))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, get_val ? "Yes" : "No") < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }
@@ -527,11 +505,8 @@ non_volatile_channel_priv_limit_checkout (const char *section_name,
                                                          &get_val)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (!(kv->value_output = strdup (privilege_level_string (get_val))))
-    {
-      perror("strdup");
-      return -1;
-    }
+  if (config_section_update_keyvalue_output(kv, privilege_level_string (get_val)) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return 0;
 }

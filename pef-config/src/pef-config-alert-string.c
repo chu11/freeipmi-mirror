@@ -94,11 +94,8 @@ event_filter_number_checkout (const char *section_name,
                               NULL)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%u", event_filter_number) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, event_filter_number) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -140,11 +137,8 @@ alert_string_set_checkout (const char *section_name,
                               &alert_string_set)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (asprintf (&kv->value_output, "%u", alert_string_set) < 0)
-    {
-      perror("asprintf");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output_int(kv, alert_string_set) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -186,11 +180,8 @@ alert_string_checkout (const char *section_name,
                                    PEF_ALERT_STRING_MAX_LEN+1)) != CONFIG_ERR_SUCCESS) 
     return ret;
 		    
-  if (!(kv->value_output = strdup ((char *)alert_string)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, (char *)alert_string) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }

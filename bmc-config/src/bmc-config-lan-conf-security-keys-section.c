@@ -32,11 +32,9 @@ k_r_checkout (const char *section_name,
     return ret;
 
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
-  if (!(kv->value_output = strdup ((char *)k_r)))
-    {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+
+  if (config_section_update_keyvalue_output(kv, (char *)k_r) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
@@ -62,8 +60,6 @@ k_r_validate (const char *section_name,
   return CONFIG_VALIDATE_INVALID_VALUE;
 }
 
-/* k_g */
-
 static config_err_t
 k_g_checkout (const char *section_name,
 	      struct config_keyvalue *kv,
@@ -71,6 +67,7 @@ k_g_checkout (const char *section_name,
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
+  char k_g_str[IPMI_MAX_K_G_LENGTH*2+3];
   config_err_t ret;
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
@@ -95,28 +92,20 @@ k_g_checkout (const char *section_name,
 
       if (!memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH)) 
         {
-          if (!(kv->value_output = strdup(kv->value_input)))
-            {
-              perror("strdup");
-              return CONFIG_ERR_FATAL_ERROR;
-            }
+          if (config_section_update_keyvalue_output(kv, kv->value_input) < 0)
+            return CONFIG_ERR_FATAL_ERROR;
+
           return CONFIG_ERR_SUCCESS;
         }
       /* else, fall through and return the default checked out value */
     }
 
-  if (!(kv->value_output = (char *)malloc(IPMI_MAX_K_G_LENGTH*2+3)))
-    {
-      perror("malloc");
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  memset(k_g_str, '\0', IPMI_MAX_K_G_LENGTH*2+3);
+  if (!format_kg(k_g_str, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
+    return CONFIG_ERR_FATAL_ERROR;
   
-  if (!format_kg(kv->value_output, IPMI_MAX_K_G_LENGTH*2+3, (unsigned char *)k_g))
-    {
-      free(kv->value_output);
-      kv->value_output = NULL;
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  if (config_section_update_keyvalue_output(kv, (char *)k_g_str) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
 }
