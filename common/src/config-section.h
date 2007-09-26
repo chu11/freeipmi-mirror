@@ -17,28 +17,30 @@ struct config_section *config_section_create (char *section_name,
 
 void config_section_destroy (struct config_section *section);
 
-int config_section_add_keyvalue (struct config_section *section,
-                                 const char *key_name,
-                                 const char *description,
-                                 unsigned int flags,
-                                 Key_Checkout checkout,
-                                 Key_Commit commit,
-                                 Key_Validate validate);
+int config_section_add_key (struct config_section *section,
+                            const char *key_name,
+                            const char *description,
+                            unsigned int flags,
+                            Key_Checkout checkout,
+                            Key_Commit commit,
+                            Key_Validate validate);
 
-struct config_keyvalue *config_section_find_keyvalue (struct config_section *sections,
-                                                      const char *section_name,
-                                                      const char *key_name);
+int config_section_add_keyvalue(struct config_section *section,
+                                struct config_key *key,
+                                const char *value_input,
+                                const char *value_output);
 
-int config_section_set_value_input (struct config_section *sections,
-                                    const char *section_name,
-                                    const char *key_name,
-                                    const char *value);
+int config_section_update_keyvalue(struct config_keyvalue *keyvalue,
+                                   const char *value_input,
+                                   const char *value_output);
 
-config_err_t config_section_commit_value (struct config_section *sections,
-                                          const char *section_name,
-                                          const char *key_name,
-                                          const char *value,
-                                          void *arg);
+/* returns -1 on error, number of non-valid values otherwise */
+int config_sections_validate_keyvalue_inputs(struct config_section *sections,
+                                             int value_input_required);
+
+/* returns -1 on error, 0 on success */
+int config_sections_insert_keyvalues(struct config_section *sections,
+                                     struct config_keypair *keypairs);
 
 config_err_t config_output_sections_list (struct config_section *sections);
 

@@ -668,112 +668,112 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                                              0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_PEF",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_pef_checkout,
-                                   enable_pef_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_PEF",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_pef_checkout,
+                              enable_pef_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_PEF_Event_Messages",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_pef_event_messages_checkout,
-                                   enable_pef_event_messages_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_PEF_Event_Messages",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_pef_event_messages_checkout,
+                              enable_pef_event_messages_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_PEF_Startup_Delay",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_pef_startup_delay_checkout,
-                                   enable_pef_startup_delay_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_PEF_Startup_Delay",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_pef_startup_delay_checkout,
+                              enable_pef_startup_delay_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_PEF_Alert_Startup_Delay",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_pef_alert_startup_delay_checkout,
-                                   enable_pef_alert_startup_delay_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_PEF_Alert_Startup_Delay",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_pef_alert_startup_delay_checkout,
+                              enable_pef_alert_startup_delay_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
   
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_Alert_Action",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_alert_action_checkout,
-                                   enable_alert_action_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_Alert_Action",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_alert_action_checkout,
+                              enable_alert_action_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_Power_Down_Action",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_power_down_action_checkout,
-                                   enable_power_down_action_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_Power_Down_Action",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_power_down_action_checkout,
+                              enable_power_down_action_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_Reset_Action",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_reset_action_checkout,
-                                   enable_reset_action_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_Reset_Action",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_reset_action_checkout,
+                              enable_reset_action_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_Power_Cycle_Action",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_power_cycle_action_checkout,
-                                   enable_power_cycle_action_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_Power_Cycle_Action",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_power_cycle_action_checkout,
+                              enable_power_cycle_action_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_OEM_Action",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_oem_action_checkout,
-                                   enable_oem_action_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_OEM_Action",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_oem_action_checkout,
+                              enable_oem_action_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Enable_Diagnostic_Interrupt",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_diagnostic_interrupt_checkout,
-                                   enable_diagnostic_interrupt_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (pef_section,
+                              "Enable_Diagnostic_Interrupt",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_diagnostic_interrupt_checkout,
+                              enable_diagnostic_interrupt_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Startup_Delay",
-                                   "Give value in seconds",
-                                   0,
-                                   pef_startup_delay_checkout,
-                                   pef_startup_delay_commit,
-                                   config_number_range_one_byte) < 0)
+  if (config_section_add_key (pef_section,
+                              "Startup_Delay",
+                              "Give value in seconds",
+                              0,
+                              pef_startup_delay_checkout,
+                              pef_startup_delay_commit,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (pef_section,
-                                   "Alert_Startup_Delay",
-                                   "Give value in seconds",
-                                   0,
-                                   pef_alert_startup_delay_checkout,
-                                   pef_alert_startup_delay_commit,
-                                   config_number_range_one_byte) < 0)
+  if (config_section_add_key (pef_section,
+                              "Alert_Startup_Delay",
+                              "Give value in seconds",
+                              0,
+                              pef_alert_startup_delay_checkout,
+                              pef_alert_startup_delay_commit,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
   return pef_section;

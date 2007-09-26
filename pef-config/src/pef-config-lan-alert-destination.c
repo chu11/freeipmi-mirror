@@ -557,67 +557,67 @@ pef_config_lan_alert_destination_section_get (pef_config_state_data_t *state_dat
                                          0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_Destination_Type",
-                                   "Possible values: PET_Trap/OEM1/OEM2",
-                                   0,
-                                   alert_destination_type_checkout,
-                                   alert_destination_type_commit,
-                                   alert_destination_type_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_Destination_Type",
+                              "Possible values: PET_Trap/OEM1/OEM2",
+                              0,
+                              alert_destination_type_checkout,
+                              alert_destination_type_commit,
+                              alert_destination_type_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_Acknowledge",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   alert_acknowledge_checkout,
-                                   alert_acknowledge_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_Acknowledge",
+                              "Possible values: Yes/No",
+                              0,
+                              alert_acknowledge_checkout,
+                              alert_acknowledge_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_Acknowledge_Timeout",
-                                   "Give valid unsigned number in seconds",
-                                   0,
-                                   alert_acknowledge_timeout_checkout,
-                                   alert_acknowledge_timeout_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_Acknowledge_Timeout",
+                              "Give valid unsigned number in seconds",
+                              0,
+                              alert_acknowledge_timeout_checkout,
+                              alert_acknowledge_timeout_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_Retries",
-                                   "Give valid unsigned number",
-                                   0,
-                                   alert_retries_checkout,
-                                   alert_retries_commit,
-                                   alert_retries_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_Retries",
+                              "Give valid unsigned number",
+                              0,
+                              alert_retries_checkout,
+                              alert_retries_commit,
+                              alert_retries_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_Gateway",
-                                   "Possible values: Default/Backup",
-                                   0,
-                                   alert_gateway_checkout,
-                                   alert_gateway_commit,
-                                   alert_gateway_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_Gateway",
+                              "Possible values: Default/Backup",
+                              0,
+                              alert_gateway_checkout,
+                              alert_gateway_commit,
+                              alert_gateway_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_IP_Address",
-                                   "Give valid IP address",
-                                   0,
-                                   alert_ip_address_checkout,
-                                   alert_ip_address_commit,
-                                   config_ip_address_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_IP_Address",
+                              "Give valid IP address",
+                              0,
+                              alert_ip_address_checkout,
+                              alert_ip_address_commit,
+                              config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_MAC_Address",
-                                   "Give valid MAC address",
-                                   0,
-                                   alert_mac_address_checkout,
-                                   alert_mac_address_commit,
-                                   config_mac_address_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_MAC_Address",
+                              "Give valid MAC address",
+                              0,
+                              alert_mac_address_checkout,
+                              alert_mac_address_commit,
+                              config_mac_address_validate) < 0) 
     goto cleanup;
 
   return section;

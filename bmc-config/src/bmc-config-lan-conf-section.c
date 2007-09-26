@@ -432,104 +432,104 @@ bmc_config_lan_conf_section_get (bmc_config_state_data_t *state_data)
                                                   0)))
     goto cleanup;
   
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "IP_Address_Source",
-                                   "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
-                                   0,
-                                   ip_address_source_checkout,
-                                   ip_address_source_commit,
-                                   ip_address_source_number_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "IP_Address_Source",
+                              "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
+                              0,
+                              ip_address_source_checkout,
+                              ip_address_source_commit,
+                              ip_address_source_number_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "IP_Address",
-                                   "Give valid IP address",
-                                   0,
-                                   ip_address_checkout,
-                                   ip_address_commit,
-                                   config_ip_address_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "IP_Address",
+                              "Give valid IP address",
+                              0,
+                              ip_address_checkout,
+                              ip_address_commit,
+                              config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "MAC_Address",
-                                   "Give valid MAC address",
-                                   0,
-                                   mac_address_checkout,
-                                   mac_address_commit,
-                                   config_mac_address_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "MAC_Address",
+                              "Give valid MAC address",
+                              0,
+                              mac_address_checkout,
+                              mac_address_commit,
+                              config_mac_address_validate) < 0) 
     goto cleanup;
 
   /* TODO: checking valid netmask is not same as checking valid IP */
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Subnet_Mask",
-                                   "Give valid Subnet Mask",
-                                   0,
-                                   subnet_mask_checkout,
-                                   subnet_mask_commit,
-                                   config_ip_address_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Subnet_Mask",
+                              "Give valid Subnet Mask",
+                              0,
+                              subnet_mask_checkout,
+                              subnet_mask_commit,
+                              config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Default_Gateway_IP_Address",
-                                   "Give valid IP address",
-                                   0,
-                                   default_gateway_address_checkout,
-                                   default_gateway_address_commit,
-                                   config_ip_address_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Default_Gateway_IP_Address",
+                              "Give valid IP address",
+                              0,
+                              default_gateway_address_checkout,
+                              default_gateway_address_commit,
+                              config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Default_Gateway_MAC_Address",
-                                   "Give valid MAC address",
-                                   0,
-                                   default_gateway_mac_address_checkout,
-                                   default_gateway_mac_address_commit,
-                                   config_mac_address_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Default_Gateway_MAC_Address",
+                              "Give valid MAC address",
+                              0,
+                              default_gateway_mac_address_checkout,
+                              default_gateway_mac_address_commit,
+                              config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Backup_Gateway_IP_Address",
-                                   "Give valid IP address",
-                                   0,
-                                   backup_gateway_address_checkout,
-                                   backup_gateway_address_commit,
-                                   config_ip_address_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Backup_Gateway_IP_Address",
+                              "Give valid IP address",
+                              0,
+                              backup_gateway_address_checkout,
+                              backup_gateway_address_commit,
+                              config_ip_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Backup_Gateway_MAC_Address",
-                                   "Give valid MAC address",
-                                   0,
-                                   backup_gateway_mac_address_checkout,
-                                   backup_gateway_mac_address_commit,
-                                   config_mac_address_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Backup_Gateway_MAC_Address",
+                              "Give valid MAC address",
+                              0,
+                              backup_gateway_mac_address_checkout,
+                              backup_gateway_mac_address_commit,
+                              config_mac_address_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Vlan_id",
-                                   "Give valid unsigned number",
-                                   0,
-                                   vlan_id_checkout,
-                                   vlan_id_commit,
-                                   vlan_id_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Vlan_id",
+                              "Give valid unsigned number",
+                              0,
+                              vlan_id_checkout,
+                              vlan_id_commit,
+                              vlan_id_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Vlan_Id_Enable",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   vlan_id_enable_checkout,
-                                   vlan_id_enable_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Vlan_Id_Enable",
+                              "Possible values: Yes/No",
+                              0,
+                              vlan_id_enable_checkout,
+                              vlan_id_enable_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_section,
-                                   "Vlan_Priority",
-                                   "Give valid unsigned number",
-                                   0,
-                                   vlan_priority_checkout,
-                                   vlan_priority_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (lan_conf_section,
+                              "Vlan_Priority",
+                              "Give valid unsigned number",
+                              0,
+                              vlan_priority_checkout,
+                              vlan_priority_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
   return lan_conf_section;

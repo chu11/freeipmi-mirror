@@ -519,103 +519,103 @@ bmc_config_sol_conf_section_get (bmc_config_state_data_t *state_data)
                                                  0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "Enable_SOL",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_sol_checkout,
-                                   enable_sol_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "Enable_SOL",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_sol_checkout,
+                              enable_sol_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "SOL_Privilege_Level",
-                                   "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                                   0,
-                                   sol_privilege_level_checkout,
-                                   sol_privilege_level_commit,
-                                   privilege_level_number_validate) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "SOL_Privilege_Level",
+                              "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+                              0,
+                              sol_privilege_level_checkout,
+                              sol_privilege_level_commit,
+                              privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "Force_SOL_Payload_Authentication",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   force_sol_payload_authentication_checkout,
-                                   force_sol_payload_authentication_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "Force_SOL_Payload_Authentication",
+                              "Possible values: Yes/No",
+                              0,
+                              force_sol_payload_authentication_checkout,
+                              force_sol_payload_authentication_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "Force_SOL_Payload_Encryption",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   force_sol_payload_encryption_checkout,
-                                   force_sol_payload_encryption_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "Force_SOL_Payload_Encryption",
+                              "Possible values: Yes/No",
+                              0,
+                              force_sol_payload_encryption_checkout,
+                              force_sol_payload_encryption_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "Character_Accumulate_Interval",
-                                   "Give a non-zero valid integer. Each unit is 5ms",
-                                   0,
-                                   character_accumulate_interval_checkout,
-                                   character_accumulate_interval_commit,
-                                   config_number_range_one_byte_non_zero) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "Character_Accumulate_Interval",
+                              "Give a non-zero valid integer. Each unit is 5ms",
+                              0,
+                              character_accumulate_interval_checkout,
+                              character_accumulate_interval_commit,
+                              config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "Character_Send_Threshold",
-                                   "Give a valid number",
-                                   0,
-                                   character_send_threshold_checkout,
-                                   character_send_threshold_commit,
-                                   config_number_range_one_byte) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "Character_Send_Threshold",
+                              "Give a valid number",
+                              0,
+                              character_send_threshold_checkout,
+                              character_send_threshold_commit,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "SOL_Retry_Count",
-                                   "Give a valid integer",
-                                   0,
-                                   sol_retry_count_checkout,
-                                   sol_retry_count_commit,
-                                   config_number_range_one_byte) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "SOL_Retry_Count",
+                              "Give a valid integer",
+                              0,
+                              sol_retry_count_checkout,
+                              sol_retry_count_commit,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "SOL_Retry_Interval",
-                                   "Give a valid integer. Interval unit is 10ms",
-                                   0,
-                                   sol_retry_interval_checkout,
-                                   sol_retry_interval_commit,
-                                   config_number_range_one_byte) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "SOL_Retry_Interval",
+                              "Give a valid integer. Interval unit is 10ms",
+                              0,
+                              sol_retry_interval_checkout,
+                              sol_retry_interval_commit,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "Non_Volatile_Bit_Rate",
-                                   "Possible values: Serial/9600/19200/38400/57600/115200",
-                                   0,
-                                   non_volatile_bit_rate_checkout,
-                                   non_volatile_bit_rate_commit,
-                                   sol_bit_rate_number_validate) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "Non_Volatile_Bit_Rate",
+                              "Possible values: Serial/9600/19200/38400/57600/115200",
+                              0,
+                              non_volatile_bit_rate_checkout,
+                              non_volatile_bit_rate_commit,
+                              sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "Volatile_Bit_Rate",
-                                   "Possible values: Serial/9600/19200/38400/57600/115200",
-                                   0,
-                                   volatile_bit_rate_checkout,
-                                   volatile_bit_rate_commit,
-                                   sol_bit_rate_number_validate) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "Volatile_Bit_Rate",
+                              "Possible values: Serial/9600/19200/38400/57600/115200",
+                              0,
+                              volatile_bit_rate_checkout,
+                              volatile_bit_rate_commit,
+                              sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (sol_conf_section,
-                                   "SOL_Payload_Port_Number",
-                                   "Give a valid port number",
-                                   CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                                   port_checkout,
-                                   port_commit,
-                                   config_number_range_two_bytes) < 0)
+  if (config_section_add_key (sol_conf_section,
+                              "SOL_Payload_Port_Number",
+                              "Give a valid port number",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                              port_checkout,
+                              port_commit,
+                              config_number_range_two_bytes) < 0)
     goto cleanup;
 
   return sol_conf_section;

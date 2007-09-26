@@ -65,13 +65,13 @@ bmc_config_misc_section_get (bmc_config_state_data_t *state_data)
                                               0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (misc_section,
-                                   "Power_Restore_Policy",
-                                   "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                                   CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                                   power_restore_policy_checkout,
-                                   power_restore_policy_commit,
-                                   power_restore_policy_number_validate) < 0)
+  if (config_section_add_key (misc_section,
+                              "Power_Restore_Policy",
+                              "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              power_restore_policy_checkout,
+                              power_restore_policy_commit,
+                              power_restore_policy_number_validate) < 0)
     goto cleanup;
 
   return misc_section;

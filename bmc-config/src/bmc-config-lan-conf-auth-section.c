@@ -924,229 +924,229 @@ bmc_config_lan_conf_auth_section_get (bmc_config_state_data_t *state_data)
                                                       0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Callback_Enable_Auth_Type_None",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   callback_none_checkout,
-                                   callback_none_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Callback_Enable_Auth_Type_None",
+                              "Possible values: Yes/No",
+                              0,
+                              callback_none_checkout,
+                              callback_none_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Callback_Enable_Auth_Type_MD2",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   callback_md2_checkout,
-                                   callback_md2_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Callback_Enable_Auth_Type_MD2",
+                              "Possible values: Yes/No",
+                              0,
+                              callback_md2_checkout,
+                              callback_md2_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Callback_Enable_Auth_Type_MD5",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   callback_md5_checkout,
-                                   callback_md5_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Callback_Enable_Auth_Type_MD5",
+                              "Possible values: Yes/No",
+                              0,
+                              callback_md5_checkout,
+                              callback_md5_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Callback_Enable_Auth_Type_Straight_Password",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   callback_straight_password_checkout,
-                                   callback_straight_password_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Callback_Enable_Auth_Type_Straight_Password",
+                              "Possible values: Yes/No",
+                              0,
+                              callback_straight_password_checkout,
+                              callback_straight_password_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Callback_Enable_Auth_Type_OEM_Proprietary",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   callback_oem_proprietary_checkout,
-                                   callback_oem_proprietary_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Callback_Enable_Auth_Type_OEM_Proprietary",
+                              "Possible values: Yes/No",
+                              0,
+                              callback_oem_proprietary_checkout,
+                              callback_oem_proprietary_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "User_Enable_Auth_Type_None",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   user_none_checkout,
-                                   user_none_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "User_Enable_Auth_Type_None",
+                              "Possible values: Yes/No",
+                              0,
+                              user_none_checkout,
+                              user_none_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "User_Enable_Auth_Type_MD2",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   user_md2_checkout,
-                                   user_md2_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "User_Enable_Auth_Type_MD2",
+                              "Possible values: Yes/No",
+                              0,
+                              user_md2_checkout,
+                              user_md2_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "User_Enable_Auth_Type_MD5",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   user_md5_checkout,
-                                   user_md5_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "User_Enable_Auth_Type_MD5",
+                              "Possible values: Yes/No",
+                              0,
+                              user_md5_checkout,
+                              user_md5_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "User_Enable_Auth_Type_Straight_Password",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   user_straight_password_checkout,
-                                   user_straight_password_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "User_Enable_Auth_Type_Straight_Password",
+                              "Possible values: Yes/No",
+                              0,
+                              user_straight_password_checkout,
+                              user_straight_password_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "User_Enable_Auth_Type_OEM_Proprietary",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   user_oem_proprietary_checkout,
-                                   user_oem_proprietary_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "User_Enable_Auth_Type_OEM_Proprietary",
+                              "Possible values: Yes/No",
+                              0,
+                              user_oem_proprietary_checkout,
+                              user_oem_proprietary_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Operator_Enable_Auth_Type_None",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   operator_none_checkout,
-                                   operator_none_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Operator_Enable_Auth_Type_None",
+                              "Possible values: Yes/No",
+                              0,
+                              operator_none_checkout,
+                              operator_none_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Operator_Enable_Auth_Type_MD2",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   operator_md2_checkout,
-                                   operator_md2_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Operator_Enable_Auth_Type_MD2",
+                              "Possible values: Yes/No",
+                              0,
+                              operator_md2_checkout,
+                              operator_md2_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Operator_Enable_Auth_Type_MD5",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   operator_md5_checkout,
-                                   operator_md5_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Operator_Enable_Auth_Type_MD5",
+                              "Possible values: Yes/No",
+                              0,
+                              operator_md5_checkout,
+                              operator_md5_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Operator_Enable_Auth_Type_Straight_Password",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   operator_straight_password_checkout,
-                                   operator_straight_password_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Operator_Enable_Auth_Type_Straight_Password",
+                              "Possible values: Yes/No",
+                              0,
+                              operator_straight_password_checkout,
+                              operator_straight_password_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Operator_Enable_Auth_Type_OEM_Proprietary",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   operator_oem_proprietary_checkout,
-                                   operator_oem_proprietary_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Operator_Enable_Auth_Type_OEM_Proprietary",
+                              "Possible values: Yes/No",
+                              0,
+                              operator_oem_proprietary_checkout,
+                              operator_oem_proprietary_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Admin_Enable_Auth_Type_None",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   admin_none_checkout,
-                                   admin_none_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Admin_Enable_Auth_Type_None",
+                              "Possible values: Yes/No",
+                              0,
+                              admin_none_checkout,
+                              admin_none_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Admin_Enable_Auth_Type_MD2",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   admin_md2_checkout,
-                                   admin_md2_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Admin_Enable_Auth_Type_MD2",
+                              "Possible values: Yes/No",
+                              0,
+                              admin_md2_checkout,
+                              admin_md2_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Admin_Enable_Auth_Type_MD5",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   admin_md5_checkout,
-                                   admin_md5_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Admin_Enable_Auth_Type_MD5",
+                              "Possible values: Yes/No",
+                              0,
+                              admin_md5_checkout,
+                              admin_md5_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Admin_Enable_Auth_Type_Straight_Password",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   admin_straight_password_checkout,
-                                   admin_straight_password_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Admin_Enable_Auth_Type_Straight_Password",
+                              "Possible values: Yes/No",
+                              0,
+                              admin_straight_password_checkout,
+                              admin_straight_password_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "Admin_Enable_Auth_Type_OEM_Proprietary",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   admin_oem_proprietary_checkout,
-                                   admin_oem_proprietary_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "Admin_Enable_Auth_Type_OEM_Proprietary",
+                              "Possible values: Yes/No",
+                              0,
+                              admin_oem_proprietary_checkout,
+                              admin_oem_proprietary_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "OEM_Enable_Auth_Type_None",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   oem_none_checkout,
-                                   oem_none_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "OEM_Enable_Auth_Type_None",
+                              "Possible values: Yes/No",
+                              0,
+                              oem_none_checkout,
+                              oem_none_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "OEM_Enable_Auth_Type_MD2",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   oem_md2_checkout,
-                                   oem_md2_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "OEM_Enable_Auth_Type_MD2",
+                              "Possible values: Yes/No",
+                              0,
+                              oem_md2_checkout,
+                              oem_md2_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "OEM_Enable_Auth_Type_MD5",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   oem_md5_checkout,
-                                   oem_md5_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "OEM_Enable_Auth_Type_MD5",
+                              "Possible values: Yes/No",
+                              0,
+                              oem_md5_checkout,
+                              oem_md5_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "OEM_Enable_Auth_Type_Straight_Password",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   oem_straight_password_checkout,
-                                   oem_straight_password_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "OEM_Enable_Auth_Type_Straight_Password",
+                              "Possible values: Yes/No",
+                              0,
+                              oem_straight_password_checkout,
+                              oem_straight_password_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_auth_section,
-                                   "OEM_Enable_Auth_Type_OEM_Proprietary",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   oem_oem_proprietary_checkout,
-                                   oem_oem_proprietary_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_auth_section,
+                              "OEM_Enable_Auth_Type_OEM_Proprietary",
+                              "Possible values: Yes/No",
+                              0,
+                              oem_oem_proprietary_checkout,
+                              oem_oem_proprietary_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
   return lan_conf_auth_section;

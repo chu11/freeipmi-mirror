@@ -66,13 +66,13 @@ pef_config_community_string_section_get (pef_config_state_data_t *state_data)
                                          0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Community_String",
-                                   "Give valid string",
-                                   0,
-                                   community_string_checkout,
-                                   community_string_commit,
-                                   community_string_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Community_String",
+                              "Give valid string",
+                              0,
+                              community_string_checkout,
+                              community_string_commit,
+                              community_string_validate) < 0) 
     goto cleanup;
 
   return section;

@@ -166,22 +166,22 @@ bmc_config_lan_conf_security_keys_section_get (bmc_config_state_data_t *state_da
                                                                 0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_security_keys_section,
-                                   "K_R",
-                                   "Give string or blank to clear. Max 20 chars",
-                                   0,
-                                   k_r_checkout,
-                                   k_r_commit,
-                                   k_r_validate) < 0)
+  if (config_section_add_key (lan_conf_security_keys_section,
+                              "K_R",
+                              "Give string or blank to clear. Max 20 chars",
+                              0,
+                              k_r_checkout,
+                              k_r_commit,
+                              k_r_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_security_keys_section,
-                                   "K_G",
-                                   "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
-                                   0,
-                                   k_g_checkout,
-                                   k_g_commit,
-                                   k_g_validate) < 0)
+  if (config_section_add_key (lan_conf_security_keys_section,
+                              "K_G",
+                              "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
+                              0,
+                              k_g_checkout,
+                              k_g_commit,
+                              k_g_validate) < 0)
     goto cleanup;
 
   return lan_conf_security_keys_section;

@@ -11,206 +11,80 @@
 #include <assert.h>
 
 #include "config-commit.h"
-#include "config-parse.h"
-#include "config-section.h"
+#include "config-util.h"
 
-static config_err_t
-config_commit_keypairs (struct config_section *sections,
-                        struct config_arguments *cmd_args,
-                        void *arg)
+config_err_t
+config_commit_section(struct config_section *section,
+                      struct config_arguments *cmd_args,
+                      FILE *fp,
+                      void *arg)
 {
-  struct config_keypair *kp;
+  struct config_keyvalue *kv;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret = CONFIG_ERR_SUCCESS;
+  config_err_t ret;
 
-  kp = cmd_args->keypairs;
-  while (kp)
+  assert(section);
+  assert(cmd_args);
+  assert(fp);
+
+  kv = section->keyvalues;
+  while (kv) 
     {
-      config_err_t this_ret;
+      assert(kv->value_input);
 
-      if ((this_ret = config_section_commit_value (sections,
-                                                   kp->section_name,
-                                                   kp->key_name, 
-                                                   kp->value_input,
-                                                   arg)) == CONFIG_ERR_FATAL_ERROR)
+      if ((ret = kv->key->commit (section->section_name,
+                                  kv,
+                                  arg)) == CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
       
-      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
-        ret = CONFIG_ERR_NON_FATAL_ERROR;
-
-      kp = kp->next;
-    }
-
-  rv = ret;
- cleanup:
-  return rv;
-}
-
-static config_err_t
-bmc_keypair_feed (struct config_section *sections,
-                  struct config_arguments *cmd_args)
-{
-  struct config_keypair *kp;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret = CONFIG_ERR_SUCCESS;
-
-  kp = cmd_args->keypairs;
-  while (kp)
-    {
-      struct config_section *section;
-      int found_section;
-
-      section = sections;
-      found_section = 0;
-      while (section) 
+      if (ret == CONFIG_ERR_NON_FATAL_ERROR)
         {
-          if (!strcasecmp(section->section_name, kp->section_name))
-            {
-              struct config_keyvalue *kv = section->keyvalues;
-
-              int found_key = 0;
-
-              found_section++;
-
-              while (kv) 
-                {
-                  if (!strcasecmp(kv->key_name, kp->key_name))
-                    {
-                      found_key++;
-
-                      /* overwrite previous value_input */
-                      if (kv->value_input)
-                        free(kv->value_input);
-                      
-                      if (!(kv->value_input = strdup(kp->value_input)))
-                        {
-                          perror("strdup");
-                          goto cleanup;
-                        }
-
-                      break;    /* break out of 'kv' loop */
-                    }
-                  kv = kv->next;
-                }
-
-              if (!found_key)
-                {
-                  fprintf (stderr, "Invalid KEY `%s'\n", kp->key_name);
-                  rv = CONFIG_ERR_NON_FATAL_ERROR;
-                  goto cleanup;
-                }
-
-              break;            /* break out of 'sect' loop */
-            }
-          section = section->next;
+          fprintf (stderr, "ERROR: Failed to commit `%s:%s'\n", 
+                   section->section_name, kv->key->key_name);
+          ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
       
-      if (!found_section)
-        {
-          fprintf (stderr, "Invalid SECTION `%s'\n", kp->section_name);
-          rv = CONFIG_ERR_NON_FATAL_ERROR;
-          goto cleanup;
-        }
-
-      kp = kp->next;
+      kv = kv->next;
     }
-
+  
+  if (cmd_args->verbose)
+    fprintf (stderr, "Completed commit of Section: %s\n",
+             section->section_name);
+  
   rv = ret;
  cleanup:
   return rv;
 }
 
-static config_err_t
-config_commit_file (struct config_section *sections,
-                    struct config_arguments *cmd_args,
-                    void *arg)
-{
-  int file_opened = 0;
-  FILE *fp;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret = CONFIG_ERR_SUCCESS;
-  config_err_t this_ret;
-
-  if (cmd_args->filename && strcmp (cmd_args->filename, "-"))
-    {
-      if (!(fp = fopen (cmd_args->filename, "r")))
-        {
-          perror("fopen");
-          goto cleanup;
-        }
-      file_opened++;
-    }
-  else
-    fp = stdin;
-
-  /* 1st pass - read in input from file */
-  if ((this_ret = config_parse (sections, cmd_args, fp)) == CONFIG_ERR_FATAL_ERROR)
-    goto cleanup;
-
-  if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
-    ret = CONFIG_ERR_NON_FATAL_ERROR;
-
-  /* 2nd pass - feed in keypair elements from the command line to override file keypairs */
-  if (cmd_args->keypairs)
-    {
-      if ((this_ret = bmc_keypair_feed (sections, cmd_args)) == CONFIG_ERR_FATAL_ERROR)
-        goto cleanup;
-
-      if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
-        ret = CONFIG_ERR_NON_FATAL_ERROR;
-    }
-
-  if (ret == CONFIG_ERR_SUCCESS) 
-    {
-      /* 3rd pass */
-      struct config_section *section = sections;
-      while (section) 
-        {
-          struct config_keyvalue *kv = section->keyvalues;
-          while (kv) 
-            {
-              if (kv->value_input) 
-                {
-                  if ((this_ret = kv->commit (section->section_name,
-                                              kv,
-                                              arg)) == CONFIG_ERR_FATAL_ERROR)
-                    goto cleanup;
-
-                  if (this_ret == CONFIG_ERR_NON_FATAL_ERROR)
-                    {
-                      fprintf (stderr, "FATAL: Error commiting `%s:%s'\n", section->section_name, kv->key_name);
-                      ret = CONFIG_ERR_NON_FATAL_ERROR;
-                    }
-                }
-              kv = kv->next;
-            }
-
-          if (cmd_args->verbose)
-            fprintf (stderr, "Completed commit of Section: %s\n",
-                     section->section_name);
-
-          section = section->next;
-        }
-    }
-
-  rv = ret;
- cleanup:
-  if (file_opened)
-    fclose(fp);
-  return rv;
-}
 
 config_err_t
 config_commit (struct config_section *sections,
                struct config_arguments *cmd_args,
+               FILE *fp,
                void *arg)
 {
+  struct config_section *s;
+  config_err_t rv = CONFIG_ERR_SUCCESS;
   config_err_t ret;
 
-  if (cmd_args->filename)
-    ret = config_commit_file (sections, cmd_args, arg);
-  else
-    ret = config_commit_keypairs (sections, cmd_args, arg);
+  assert(sections);
+  assert(cmd_args);
+  assert(fp);
 
-  return ret;
+  s = sections;
+  while (s)
+    {
+      if ((ret = config_commit_section(s, cmd_args, fp, arg)) != CONFIG_ERR_SUCCESS)
+        {
+          if (ret == CONFIG_ERR_FATAL_ERROR)
+            {
+              rv = CONFIG_ERR_FATAL_ERROR;
+              break;
+            }
+          rv = ret;
+        }
+      s = s->next;
+    }
+
+  return rv;
 }

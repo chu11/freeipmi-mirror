@@ -10,6 +10,7 @@
 
 #include "config-parse.h"
 #include "config-section.h"
+#include "config-util.h"
 
 config_err_t
 config_parse (struct config_section *sections, 
@@ -18,36 +19,35 @@ config_parse (struct config_section *sections,
 { 
   char buf[CONFIG_PARSE_BUFLEN];
   int line_num = 0;
-  char *section_name = NULL;
-  char *key_name = NULL;
-  char *value = NULL;
-  char *tok;
+  struct config_section *section;
+  struct config_key *key;
+  struct config_keyvalue *kv;
+  char *str, *tok;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   while (fgets (buf, CONFIG_PARSE_BUFLEN, fp)) 
     {
       line_num++;
-      char *first_word;
 
       buf[CONFIG_PARSE_BUFLEN-1] = '\0';
 
-      first_word = strtok (buf, " \t\n");
+      str = strtok (buf, " \t\n");
       
-      if (!first_word) 
+      if (!str) 
         {
           if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "%d: empty line\n", line_num);
           continue;
         }
     
-      if (first_word[0] == '#') 
+      if (str[0] == '#') 
         {
           if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
             fprintf (stderr, "Comment on line %d\n", line_num);
           continue;
         }
       
-      if (same (first_word, "Section")) 
+      if (same (str, "Section")) 
         {
           if (!(tok = strtok (NULL, " \t\n")))
             {
@@ -55,74 +55,81 @@ config_parse (struct config_section *sections,
                        line_num);
               goto cleanup;
             }
-          
-          if (section_name)
-            {
-              free (section_name);
-              section_name = NULL;
-            }
 
-          if (!(section_name = strdup (tok)))
+          if (!(section = config_find_section(sections, tok)))
             {
-              perror("strdup");
+              fprintf(stderr, "Unknown section `%s'\n", tok);
               goto cleanup;
             }
 
           if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
-            fprintf (stderr, "Entering section `%s'\n", section_name);
+            fprintf (stderr, "Entering section `%s'\n", section->section_name);
 
           continue;
         } 
-      /* same (first_word, "Section") */
+      /* same (str, "Section") */
       
-      if (same (first_word, "EndSection")) 
+      if (same (str, "EndSection")) 
         {
-          if (!section_name) 
+          if (!section) 
             {
               fprintf (stderr, "FATAL: encountered `%s' without a matching Section\n",
-                       first_word);
+                       str);
               goto cleanup;
             }
 
           if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
-            fprintf (stderr, "Leaving section `%s'\n", section_name);
+            fprintf (stderr, "Leaving section `%s'\n", section->section_name);
 
-          free (section_name);
-          section_name = NULL;
-          
+          section = NULL;
           continue;
         } 
-      /* same (first_word, "EndSection") */
+      /* same (str, "EndSection") */
       
-      if (!section_name) 
+      if (!section) 
         {
-          fprintf (stderr, "FATAL: Key `%s' not inside any Section\n",
-                 first_word);
+          fprintf (stderr, "FATAL: Key `%s' not inside a valid Section\n",
+                   str);
           goto cleanup;
         }
       
-      key_name = first_word;
+      if (!(key = config_find_key(section, str)))
+        {
+          fprintf(stderr,
+                  "Unknown key `%s' in section `%s'\n",
+                  str,
+                  section->section_name);
+          goto cleanup;
+        }
 
-      if ((tok = strtok (NULL, " \t\n")))
-        value = tok;
-      else
-        value = "";
-
-      /* XXX get rid of */
-      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP) 
-        fprintf (stderr, "Trying to set `%s:%s=%s'\n",
-                 section_name, key_name, value);
+      tok = strtok(NULL, " \t\n");
+      if (!tok)
+        tok = "";
       
-      if (config_section_set_value_input (sections,
-                                          section_name,
-                                          key_name,
-                                          value) < 0) 
+      if (cmd_args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "Parsed `%s:%s=%s'\n",
+                section->section_name,
+                key->key_name,
+                tok);
+
+      if ((kv = config_find_keyvalue(section, key->key_name)))
+        {
+          fprintf(stderr,
+                  "Key '%s' specified twice in section '%s'\n",
+                  key->key_name,
+                  section->section_name);
+          goto cleanup;
+        }
+
+      if (config_section_add_keyvalue (section,
+                                       key,
+                                       tok,
+                                       NULL) < 0) 
         goto cleanup;
     }
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
-  if (section_name)
-    free(section_name);
   return rv;
 }

@@ -11,6 +11,7 @@
 #include <assert.h>
 
 #include "config-section.h"
+#include "config-util.h"
 
 int
 config_section_append(struct config_section **sections, 
@@ -97,14 +98,23 @@ config_section_create (char *section_name,
 }
 
 static void
+_config_key_destroy(struct config_key *key)
+{
+  if (key)
+    {
+      if (key->key_name)
+        free(key->key_name);
+      if (key->description)
+        free(key->description);
+      free(key);
+    }
+}
+
+static void
 _config_keyvalue_destroy(struct config_keyvalue *keyvalue)
 {
   if (keyvalue)
     {
-      if (keyvalue->key_name)
-        free(keyvalue->key_name);
-      if (keyvalue->description)
-        free(keyvalue->description);
       if (keyvalue->value_input)
         free(keyvalue->value_input);
       if (keyvalue->value_output)
@@ -139,15 +149,15 @@ config_section_destroy (struct config_section *section)
 }
 
 int 
-config_section_add_keyvalue (struct config_section *section,
-                             const char *key_name,
-                             const char *description,
-                             unsigned int flags,
-                             Key_Checkout checkout,
-                             Key_Commit commit,
-                             Key_Validate validate)
+config_section_add_key (struct config_section *section,
+                        const char *key_name,
+                        const char *description,
+                        unsigned int flags,
+                        Key_Checkout checkout,
+                        Key_Commit commit,
+                        Key_Validate validate)
 {
-  struct config_keyvalue *kv = NULL;
+  struct config_key *k = NULL;
 
   assert(section);
   assert(key_name);
@@ -156,27 +166,84 @@ config_section_add_keyvalue (struct config_section *section,
   assert(commit);
   assert(validate);
 
-  if (!(kv = (struct config_keyvalue *)malloc(sizeof(struct config_keyvalue))))
+  if (!(k = (struct config_key *)malloc(sizeof(struct config_key))))
+    {
+      perror("malloc");
+      goto cleanup;
+    }
+  memset(k, '\0', sizeof(struct config_key));
+
+  if (!(k->key_name = strdup(key_name)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+  if (!(k->description = strdup(description)))
+    {
+      perror("strdup");
+      goto cleanup;
+    }
+  k->flags = flags;
+  k->checkout = checkout;
+  k->commit = commit;
+  k->validate = validate;
+
+  if (section->keys)
+    {
+      struct config_key *trav = section->keys;
+      while (trav->next)
+	trav = trav->next;
+      trav->next = k;
+    }
+  else
+    section->keys = k;
+
+  return 0;
+ cleanup:
+  _config_key_destroy(k);
+  return -1;
+}
+
+int
+config_section_add_keyvalue (struct config_section *section,
+                             struct config_key *key,
+                             const char *value_input,
+                             const char *value_output)
+{
+  struct config_keyvalue *kv = NULL;
+  
+  assert(section);
+  assert(key);
+  
+  if (!(kv = malloc(sizeof(struct config_keyvalue))))
     {
       perror("malloc");
       goto cleanup;
     }
   memset(kv, '\0', sizeof(struct config_keyvalue));
 
-  if (!(kv->key_name = strdup(key_name)))
+  /* back pointer */
+  kv->key = key;
+
+  if (value_input)
     {
-      perror("strdup");
-      goto cleanup;
+      if (!(kv->value_input = strdup(value_input)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
     }
-  if (!(kv->description = strdup(description)))
+
+  if (value_output)
     {
-      perror("strdup");
-      goto cleanup;
+      if (!(kv->value_output = strdup(value_output)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
     }
-  kv->flags = flags;
-  kv->checkout = checkout;
-  kv->commit = commit;
-  kv->validate = validate;
+
+  kv->next = NULL;
 
   if (section->keyvalues)
     {
@@ -187,162 +254,170 @@ config_section_add_keyvalue (struct config_section *section,
     }
   else
     section->keyvalues = kv;
-
+  
   return 0;
+  
  cleanup:
   _config_keyvalue_destroy(kv);
   return -1;
 }
 
-static struct config_section *
-config_section_find_section (struct config_section *sections,
-                             const char *section_name)
-{
-  const struct config_section *section;
-
-  section = sections;
-
-  while (section) 
-    {
-      if (same (section_name, section->section_name))
-        break;
-      section = section->next;
-    }
-
-  return (struct config_section *)section;
-}
-
-struct config_keyvalue *
-config_section_find_keyvalue (struct config_section *sections,
-                              const char *section_name,
-                              const char *key_name)
-{
-  const struct config_section *section;
-  struct config_keyvalue *kv = NULL;
-
-  if (!(section = config_section_find_section (sections,
-                                               section_name)))
-    {
-      fprintf (stderr, "Unknown section `%s'\n", section_name);
-      return NULL;
-    }
-
-  kv = section->keyvalues;
-
-  while (kv) 
-    {
-      if (same (key_name, kv->key_name))
-        break;
-      kv = kv->next;
-    }
-
-  if (!kv) 
-    {
-      fprintf (stderr, "Unknown key `%s' in section `%s'\n",
-               key_name, section_name);
-      return NULL;
-    }
-
-  return kv;
-}
-
 int
-config_section_set_value_input (struct config_section *sections,
-                                const char *section_name,
-                                const char *key_name,
-                                const char *value)
+config_section_update_keyvalue(struct config_keyvalue *keyvalue,
+                               const char *value_input,
+                               const char *value_output)
 {
-  struct config_section *section;
-  struct config_keyvalue *kv;
-
-  if (!(section = config_section_find_section (sections, section_name)))
+  assert(keyvalue);
+  
+  if (value_input)
     {
-      fprintf (stderr, "Unknown section `%s'\n", section_name);
-      return -1;
-    }
+      /* overwrite values, user can specify something else on the
+       * command line 
+       */
+      if (keyvalue->value_input)
+        free(keyvalue->value_input);
 
-  if (!(kv = config_section_find_keyvalue (sections, section_name, key_name)))
-    {
-      fprintf (stderr, "Unknown key `%s' in section `%s'\n", key_name, section_name);
-      return -1;
-    }
-
-  if (kv->validate)
-    {
-      config_validate_t v;
-
-      if ((v = kv->validate (section_name, key_name, value)) == CONFIG_VALIDATE_FATAL_ERROR)
-        return -1;
-      
-      if (v == CONFIG_VALIDATE_INVALID_VALUE)
+      if (!(keyvalue->value_input = strdup(value_input)))
         {
-          fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-                   value, key_name);
+          perror("strdup");
           return -1;
         }
     }
 
-  /* XXX - duplicate inupt, needs to be handled */
-  if (kv->value_input)
-    free (kv->value_input);
-  
-  if (!(kv->value_input = strdup (value)))
+  if (value_output)
     {
-      perror("strdup");
-      return -1;
+      assert(keyvalue->value_output);
+
+      if (!(keyvalue->value_output = strdup(value_output)))
+        {
+          perror("strdup");
+          return -1;
+        }
     }
 
   return 0;
 }
 
-config_err_t
-config_section_commit_value (struct config_section *sections,
-                             const char *section_name,
-                             const char *key_name,
-                             const char *value,
-                             void *arg)
+int
+config_sections_validate_keyvalue_inputs(struct config_section *sections,
+                                         int value_input_required)
 {
-  struct config_section *section;
-  struct config_keyvalue *kv;
+  struct config_section *s;
+  int nonvalid_count = 0;
+  int rv = -1;
 
-  if (!(section = config_section_find_section (sections, section_name)))
-    {
-      fprintf (stderr, "Unknown section `%s'\n", section_name);
-      return CONFIG_ERR_FATAL_ERROR;
-    }
-  
-  if (!(kv = config_section_find_keyvalue (sections, section_name, key_name)))
-    {
-      fprintf (stderr, "Unknown key `%s' in section `%s'\n", key_name, section_name);
-      return CONFIG_ERR_FATAL_ERROR;
-    }
+  assert(sections);
 
-  if (kv->validate)
+  s = sections;
+  while (s)
     {
-      config_validate_t v;
+      struct config_keyvalue *kv;
 
-      if ((v = kv->validate (section_name, key_name, value)) == CONFIG_VALIDATE_FATAL_ERROR)
-        return CONFIG_ERR_FATAL_ERROR;
-      
-      if (v == CONFIG_VALIDATE_INVALID_VALUE)
+      kv = s->keyvalues;
+      while (kv)
         {
-          fprintf (stderr, "Invalid value `%s' for key `%s'\n",
-                   value, key_name);
-          return CONFIG_ERR_NON_FATAL_ERROR;
+          if (value_input_required && !kv->value_input)
+            {
+              fprintf(stderr,
+                      "Value not specified for key '%s' in section '%s'\n",
+                      kv->key->key_name,
+                      s->section_name);
+              nonvalid_count++;
+              goto next_kv;
+            }
+
+          if (kv->value_input)
+            {
+              config_validate_t v;
+
+              if ((v = kv->key->validate(s->section_name,
+                                         kv->key->key_name,
+                                         kv->value_input)) == CONFIG_VALIDATE_FATAL_ERROR)
+                goto cleanup;
+
+              if (v == CONFIG_VALIDATE_INVALID_VALUE)
+                {
+                  fprintf(stderr,
+                          "Invalid value '%s' for key '%s' in section '%s'\n",
+                          kv->value_input,
+                          kv->key->key_name,
+                          s->section_name);
+                  nonvalid_count++;
+                }
+            }
+        next_kv:
+          kv = kv->next;
         }
+
+      s = s->next;
     }
 
-  /* XXX: duplicate deal with alter */
-  if (kv->value_input)
-    free (kv->value_input);
+  rv = nonvalid_count;
+ cleanup:
+  return rv;
+}
 
-  if (!(kv->value_input = strdup (value)))
+int
+config_sections_insert_keyvalues(struct config_section *sections,
+                                 struct config_keypair *keypairs)
+{
+  struct config_section *s;
+  struct config_key *k;
+  struct config_keyvalue *kv;
+  struct config_keypair *kp;
+  int rv = 0;
+
+  assert(sections);
+  assert(keypairs);
+
+  kp = keypairs;
+  while (kp)
     {
-      perror("strdup");
-      return CONFIG_ERR_FATAL_ERROR;
+      if (!(s = config_find_section(sections, kp->section_name)))
+        {
+          fprintf(stderr, "Unknown section `%s'\n", kp->section_name);
+          rv = -1;
+          goto next_keypair;
+        }
+
+      if (!(k = config_find_key(s, kp->key_name)))
+        {
+          fprintf(stderr,
+                  "Unknown key `%s' in section `%s'\n",
+                  kp->key_name,
+                  kp->section_name);
+          rv = -1;
+          goto next_keypair;
+        }
+
+      if ((kv = config_find_keyvalue(s, kp->key_name)))
+        {
+          if (config_section_update_keyvalue(kv,
+                                             kp->value_input,
+                                             NULL) < 0)
+            {
+              rv = -1;
+              goto cleanup;
+            }
+        }
+      else
+        {
+          if (config_section_add_keyvalue(s,
+                                          k,
+                                          kp->value_input,
+                                          NULL) < 0)
+            {
+              rv = -1;
+              goto cleanup;
+            }
+        }
+
+    next_keypair:
+      kp = kp->next;
     }
 
-  return kv->commit (section->section_name, kv, arg);
+ cleanup:
+  return rv;
 }
 
 config_err_t 

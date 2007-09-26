@@ -536,40 +536,40 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
                                          0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Policy_Type",
-                                   "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
-                                   0,
-                                   policy_type_checkout,
-                                   policy_type_commit,
-                                   policy_type_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Policy_Type",
+                              "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
+                              0,
+                              policy_type_checkout,
+                              policy_type_commit,
+                              policy_type_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Policy_Enabled",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   policy_enabled_checkout,
-                                   policy_enabled_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Policy_Enabled",
+                              "Possible values: Yes/No",
+                              0,
+                              policy_enabled_checkout,
+                              policy_enabled_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Policy_Number",
-                                   "Give a valid number",
-                                   0,
-                                   policy_number_checkout,
-                                   policy_number_commit,
-                                   config_number_range_four_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Policy_Number",
+                              "Give a valid number",
+                              0,
+                              policy_number_checkout,
+                              policy_number_commit,
+                              config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Destination_Selector",
-                                   "Give a valid number",
-                                   0,
-                                   destination_selector_checkout,
-                                   destination_selector_commit,
-                                   config_number_range_four_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Destination_Selector",
+                              "Give a valid number",
+                              0,
+                              destination_selector_checkout,
+                              destination_selector_commit,
+                              config_number_range_four_bits) < 0) 
     goto cleanup;
 
   ret = get_lan_channel_number (state_data, &lan_channel_number);
@@ -584,31 +584,31 @@ pef_config_alert_policy_table_section_get (pef_config_state_data_t *state_data, 
         }
     }
 
-  if (config_section_add_keyvalue (section,
-                                   "Channel_Number",
-                                   strp,
-                                   0,
-                                   channel_number_checkout,
-                                   channel_number_commit,
-                                   config_number_range_four_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Channel_Number",
+                              strp,
+                              0,
+                              channel_number_checkout,
+                              channel_number_commit,
+                              config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_String_Set_Selector",
-                                   "Give a valid number",
-                                   0,
-                                   alert_string_set_selector_checkout,
-                                   alert_string_set_selector_commit,
-                                   config_number_range_seven_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_String_Set_Selector",
+                              "Give a valid number",
+                              0,
+                              alert_string_set_selector_checkout,
+                              alert_string_set_selector_commit,
+                              config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Specific_Alert_String",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_specific_alert_string_checkout,
-                                   event_specific_alert_string_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Specific_Alert_String",
+                              "Possible values: Yes/No",
+                              0,
+                              event_specific_alert_string_checkout,
+                              event_specific_alert_string_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
   if (strp)

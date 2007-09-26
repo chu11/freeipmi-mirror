@@ -67,87 +67,37 @@ struct config_arguments
   struct config_section_str *section_strs;
 };
 
-struct config_section {
-  char *section_name;
-  char *section_comment_section_name;
-  char *section_comment;
-  unsigned int flags;
-  struct config_keyvalue *keyvalues;
-  struct config_section *next;
+struct config_keyvalue {
+  struct config_key *key;
+  char *value_input;
+  char *value_output;
+  struct config_keyvalue *next;
 };
 
-/* checkout procedure fills the value into kv->value as printable string */
+/* Fills in kv->value_output as a printable string  */
 typedef config_err_t (*Key_Checkout) (const char *section_name,
                                       struct config_keyvalue *kv,
                                       void *arg);
 
-/* commit procedure takes string value from kv->value and converts and
-   does ipmi calls to set it */
+/* Takes kv->value_input and commits it */
 typedef config_err_t (*Key_Commit) (const char *section_name,
                                     const struct config_keyvalue *kv,
                                     void *arg);
 
-/* validate procedure finds if value is suitable to be set as kv->value */
+/* Determines if an inputted value is valid */
 typedef config_validate_t (*Key_Validate) (const char *section_name,
                                            const char *key_name,
                                            const char *value);
 
-struct config_keyvalue {
+struct config_key {
   char *key_name;
   char *description;
   unsigned int flags;
-  char *value_input;
-  char *value_output;
   Key_Checkout checkout;
   Key_Commit commit;
   Key_Validate validate;
-  struct config_keyvalue *next;
-};
-
-#if 0
-/* XXX */
-
-struct config_section_str *config_section_str_create(char *section_name);
-
-int config_section_str_append(struct config_section_str **section_strs,
-                              struct config_section_str *section_str);
-
-struct config_keyinput
-{
-  char *section_name;
-  char *key_name;
-  char *value_input;
-  struct config_keyinput *next;
-};
-
-struct config_key
-{
-  char *key_name;
-  char *description;
-  unsigned int flags;
-  Key_Validate validate;
   struct config_key *next;
 };
-
-struct config_keyvalue {
-  struct config_key *key;
-  char *value_input;            /* value input by user for commit and diff */
-  char *value_output;           /* value read on bmc for checkout and diff */
-  struct config_keyvalue *next;
-};
-
-/* checkout procedure fills the value into kv->value as printable string */
-typedef config_err_t (*Section_Checkout) (const char *section_name,
-                                          struct config_keyvalue *keyvalues,
-                                          int debug,
-                                          void *arg);
-
-/* commit procedure takes string value from kv->value and converts and
-   does ipmi calls to set it */
-typedef config_err_t (*Section_Commit) (const char *section_name,
-                                        struct config_keyvalue *keyvalues,
-                                        int debug,
-                                        void *arg);
 
 struct config_section {
   char *section_name;
@@ -156,10 +106,9 @@ struct config_section {
   unsigned int flags;
   /* keys in this section */
   struct config_key *keys;
-  /* key and values read for checkout/commit/diff */
+  /* key and values for checkout/commit/diff */
   struct config_keyvalue *keyvalues;
   struct config_section *next;
 };
-#endif
 
 #endif /* _CONFIG_COMMON_H_ */

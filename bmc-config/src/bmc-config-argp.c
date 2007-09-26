@@ -243,10 +243,9 @@ bmc_config_args_validate (struct config_arguments *cmd_args)
       return -1;
     }
 
-  // filename and keypair both given for checkout or diff
+  // filename and keypair both given for  diff
   if (cmd_args->filename && cmd_args->keypairs 
-      && (cmd_args->action == CONFIG_ACTION_CHECKOUT
-          || cmd_args->action == CONFIG_ACTION_DIFF))
+      && cmd_args->action == CONFIG_ACTION_DIFF)
     {
       fprintf (stderr, 
                "Both --filename or --keypair cannot be used\n");

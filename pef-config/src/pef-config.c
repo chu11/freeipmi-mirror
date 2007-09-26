@@ -66,6 +66,8 @@ _pef_config (void *arg)
   struct config_section *sections = NULL;
   int exit_code = -1;
   config_err_t ret = 0;
+  int file_opened = 0;
+  FILE *fp;
 
   prog_data = (pef_config_prog_data_t *) arg;
   
@@ -89,21 +91,173 @@ _pef_config (void *arg)
       exit_code = EXIT_FAILURE;
       goto cleanup;
     }
-
   state_data.sections = sections;
+
+  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT
+      || prog_data->args->action == CONFIG_ACTION_COMMIT
+      || prog_data->args->action == CONFIG_ACTION_DIFF)
+    {
+      if (prog_data->args->filename && strcmp (prog_data->args->filename, "-"))
+        {
+          if (!(fp = fopen (prog_data->args->filename, "r")))
+            {
+              perror("fopen");
+              goto cleanup;
+            }
+          file_opened++;
+        }
+      else
+        {
+          if (prog_data->args->action == CONFIG_ACTION_CHECKOUT)
+            fp = stdout;
+          else
+            fp = stdin;
+        }
+    }
+
+  /* parse if there is an input file or no pairs at all */
+  if ((prog_data->args->action == CONFIG_ACTION_COMMIT
+       && prog_data->args->filename)
+      || (prog_data->args->action == CONFIG_ACTION_COMMIT
+          && !prog_data->args->filename
+          && !prog_data->args->keypairs)
+      || (prog_data->args->action == CONFIG_ACTION_DIFF
+          && prog_data->args->filename)
+      || (prog_data->args->action == CONFIG_ACTION_DIFF
+          && !prog_data->args->filename
+          && !prog_data->args->keypairs))
+    {
+      if (config_parse(sections,
+                       prog_data->args,
+                       fp) < 0)
+        {
+          /* errors printed in function call */
+          goto cleanup;
+        }
+    }
+
+  /* note: argp validation catches if user specified keypair and
+     filename for a diff
+  */
+  if ((prog_data->args->action == CONFIG_ACTION_CHECKOUT
+       || prog_data->args->action == CONFIG_ACTION_COMMIT
+       || prog_data->args->action == CONFIG_ACTION_DIFF)
+      && prog_data->args->keypairs)
+    {
+      if (config_sections_insert_keyvalues(sections,
+                                           prog_data->args->keypairs) < 0)
+        {
+          /* errors printed in function call */
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+
+  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT
+      || prog_data->args->action == CONFIG_ACTION_COMMIT
+      || prog_data->args->action == CONFIG_ACTION_DIFF)
+    {
+      int num;
+      int value_input_required = 0;
+
+      if (prog_data->args->action != CONFIG_ACTION_CHECKOUT)
+        value_input_required = 1;
+
+      if ((num = config_sections_validate_keyvalue_inputs(sections,
+                                                          value_input_required)) < 0)
+        {
+          /* errors printed in function call */
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+
+      /* some errors found */
+      if (num)
+        {
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
+    }
+  
+
+  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT
+      && prog_data->args->section_strs)
+    {
+      struct config_section_str *sstr;
+
+      sstr = prog_data->args->section_strs;
+      while (sstr)
+        {
+          if (!config_find_section(sections,
+                                   sstr->section_name))
+            {
+              fprintf(stderr,
+                      "Unknown section `%s'\n",
+                      sstr->section_name);
+              goto cleanup;
+            }
+          sstr = sstr->next;
+        }
+    }
+
 
   switch (prog_data->args->action) {
   case CONFIG_ACTION_INFO:
     ret = pef_info (&state_data);
     break;
   case CONFIG_ACTION_CHECKOUT:
-    ret = config_checkout (sections,
-                           prog_data->args,
-                           &state_data);
+    if (prog_data->args->section_strs)
+      {
+        struct config_section_str *sstr;
+
+        /* note: argp validation catches if user specified --section
+         * and --keypair, so all_keys_if_none_specified should be '1'.
+         */
+
+        sstr = prog_data->args->section_strs;
+        while (sstr)
+          {
+	    struct config_section *s;
+            config_err_t this_ret;
+
+	    if (!(s = config_find_section(sections, sstr->section_name)))
+              {
+                fprintf(stderr, "## FATAL: Cannot checkout section '%s'\n",
+                        sstr->section_name);
+                continue;
+              }
+
+            this_ret = config_checkout_section(s,
+                                               prog_data->args,
+                                               1,
+                                               fp,
+                                               &state_data);
+            if (this_ret != CONFIG_ERR_SUCCESS)
+              ret = this_ret;
+            if (ret == CONFIG_ERR_FATAL_ERROR)
+              break;
+
+            sstr = sstr->next;
+          }
+      }
+    else
+      {
+        int all_keys_if_none_specified = 0;
+
+        if (!prog_data->args->keypairs)
+          all_keys_if_none_specified++;
+
+        ret = config_checkout (sections,
+                               prog_data->args,
+                               all_keys_if_none_specified,
+                               fp,
+                               &state_data);
+      }
     break;
   case CONFIG_ACTION_COMMIT:
     ret = config_commit (sections,
                          prog_data->args,
+                         fp,
                          &state_data);
     break;
   case CONFIG_ACTION_DIFF:
@@ -129,6 +283,8 @@ _pef_config (void *arg)
       ipmi_close_device (dev);
       ipmi_device_destroy (dev);
     }
+  if (file_opened)
+    fclose(fp);
   if (sections)
     config_sections_destroy(sections);
   return exit_code;

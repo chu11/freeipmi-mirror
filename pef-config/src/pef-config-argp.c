@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.13 2007-09-22 22:32:32 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.14 2007-09-26 13:11:57 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -241,8 +241,7 @@ pef_config_args_validate (struct config_arguments *cmd_args)
   
   // filename and keypair both given for checkout or diff
   if (cmd_args->filename && cmd_args->keypairs
-      && (cmd_args->action == CONFIG_ACTION_CHECKOUT
-          || cmd_args->action == CONFIG_ACTION_DIFF))
+      && cmd_args->action == CONFIG_ACTION_DIFF)
     {
       fprintf (stderr,
                "Both --filename or --keypair cannot be used\n");

@@ -1035,159 +1035,159 @@ bmc_config_user_section_get (bmc_config_state_data_t *state_data, int userid)
     }
 
   /* userid 1 is the NULL username, so comment it out by default */
-  if (config_section_add_keyvalue (user_section,
-                                   "Username",
-                                   "Give Username",
-                                   (userid == 1) ? CONFIG_CHECKOUT_KEY_COMMENTED_OUT : 0,
-                                   username_checkout,
-                                   username_commit,
-                                   username_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Username",
+                              "Give Username",
+                              (userid == 1) ? CONFIG_CHECKOUT_KEY_COMMENTED_OUT : 0,
+                              username_checkout,
+                              username_commit,
+                              username_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Enable_User",
-                                   "Possible values: Yes/No or blank to not set",
-                                   CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                                   enable_user_checkout,
-                                   enable_user_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Enable_User",
+                              "Possible values: Yes/No or blank to not set",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              enable_user_checkout,
+                              enable_user_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Password",
-                                   "Give password or blank to clear. MAX 16 chars.",
-                                   CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                                   password_checkout,
-                                   password_commit,
-                                   password_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Password",
+                              "Give password or blank to clear. MAX 16 chars.",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                              password_checkout,
+                              password_commit,
+                              password_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Password20",
-                                   "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
-                                   CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                                   password20_checkout,
-                                   password20_commit,
-                                   password20_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Password20",
+                              "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
+                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                              password20_checkout,
+                              password20_commit,
+                              password20_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Lan_Enable_IPMI_Msgs",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   lan_enable_ipmi_msgs_checkout,
-                                   lan_enable_ipmi_msgs_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Lan_Enable_IPMI_Msgs",
+                              "Possible values: Yes/No",
+                              0,
+                              lan_enable_ipmi_msgs_checkout,
+                              lan_enable_ipmi_msgs_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Lan_Enable_Link_Auth",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   lan_enable_link_auth_checkout,
-                                   lan_enable_link_auth_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Lan_Enable_Link_Auth",
+                              "Possible values: Yes/No",
+                              0,
+                              lan_enable_link_auth_checkout,
+                              lan_enable_link_auth_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Lan_Enable_Restricted_to_Callback",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   lan_enable_restricted_to_callback_checkout,
-                                   lan_enable_restricted_to_callback_commit,
-                                   config_yes_no_validate) < 0)
-    goto cleanup;
-
-  /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (config_section_add_keyvalue (user_section,
-                                   "Lan_Enable_Restrict_to_Callback",
-                                   "Possible values: Yes/No",
-                                   CONFIG_DO_NOT_CHECKOUT,
-                                   lan_enable_restricted_to_callback_checkout,
-                                   lan_enable_restricted_to_callback_commit,
-                                   config_yes_no_validate) < 0)
-    goto cleanup;
-
-  if (config_section_add_keyvalue (user_section,
-                                   "Lan_Privilege_Limit",
-                                   "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-                                   0,
-                                   lan_privilege_limit_checkout,
-                                   lan_privilege_limit_commit,
-                                   get_privilege_limit_number_validate) < 0)
-    goto cleanup;
-
-  if (config_section_add_keyvalue (user_section,
-                                   "Lan_Session_Limit",
-                                   "Possible values: 0-255, 0 is unlimited",
-                                   CONFIG_DO_NOT_CHECKOUT,
-                                   lan_session_limit_checkout,
-                                   lan_session_limit_commit,
-                                   config_number_range_one_byte) < 0)
-    goto cleanup;
-
-  if (config_section_add_keyvalue (user_section,
-                                   "SOL_Payload_Access",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   sol_payload_access_checkout,
-                                   sol_payload_access_commit,
-                                   config_yes_no_validate) < 0)
-    goto cleanup;
-
-  if (config_section_add_keyvalue (user_section,
-                                   "Serial_Enable_IPMI_Msgs",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   serial_enable_ipmi_msgs_checkout,
-                                   serial_enable_ipmi_msgs_commit,
-                                   config_yes_no_validate) < 0)
-    goto cleanup;
-
-  if (config_section_add_keyvalue (user_section,
-                                   "Serial_Enable_Link_Auth",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   serial_enable_link_auth_checkout,
-                                   serial_enable_link_auth_commit,
-                                   config_yes_no_validate) < 0)
-    goto cleanup;
-
-  if (config_section_add_keyvalue (user_section,
-                                   "Serial_Enable_Restricted_to_Callback",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   serial_enable_restricted_to_callback_checkout,
-                                   serial_enable_restricted_to_callback_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Lan_Enable_Restricted_to_Callback",
+                              "Possible values: Yes/No",
+                              0,
+                              lan_enable_restricted_to_callback_checkout,
+                              lan_enable_restricted_to_callback_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to bmc-config in 0.2.0 */
-  if (config_section_add_keyvalue (user_section,
-                                   "Serial_Enable_Restrict_to_Callback",
-                                   "Possible values: Yes/No",
-                                   CONFIG_DO_NOT_CHECKOUT,
-                                   serial_enable_restricted_to_callback_checkout,
-                                   serial_enable_restricted_to_callback_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Lan_Enable_Restrict_to_Callback",
+                              "Possible values: Yes/No",
+                              CONFIG_DO_NOT_CHECKOUT,
+                              lan_enable_restricted_to_callback_checkout,
+                              lan_enable_restricted_to_callback_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Serial_Privilege_Limit",
-                                   "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-                                   0,
-                                   serial_privilege_limit_checkout,
-                                   serial_privilege_limit_commit,
-                                   get_privilege_limit_number_validate) < 0)
+  if (config_section_add_key (user_section,
+                              "Lan_Privilege_Limit",
+                              "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                              0,
+                              lan_privilege_limit_checkout,
+                              lan_privilege_limit_commit,
+                              get_privilege_limit_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (user_section,
-                                   "Serial_Session_Limit",
-                                   "Possible values: 0-255, 0 is unlimited",
-                                   CONFIG_DO_NOT_CHECKOUT,
-                                   serial_session_limit_checkout,
-                                   serial_session_limit_commit,
-                                   config_number_range_one_byte) < 0)
+  if (config_section_add_key (user_section,
+                              "Lan_Session_Limit",
+                              "Possible values: 0-255, 0 is unlimited",
+                              CONFIG_DO_NOT_CHECKOUT,
+                              lan_session_limit_checkout,
+                              lan_session_limit_commit,
+                              config_number_range_one_byte) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (user_section,
+                              "SOL_Payload_Access",
+                              "Possible values: Yes/No",
+                              0,
+                              sol_payload_access_checkout,
+                              sol_payload_access_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (user_section,
+                              "Serial_Enable_IPMI_Msgs",
+                              "Possible values: Yes/No",
+                              0,
+                              serial_enable_ipmi_msgs_checkout,
+                              serial_enable_ipmi_msgs_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (user_section,
+                              "Serial_Enable_Link_Auth",
+                              "Possible values: Yes/No",
+                              0,
+                              serial_enable_link_auth_checkout,
+                              serial_enable_link_auth_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (user_section,
+                              "Serial_Enable_Restricted_to_Callback",
+                              "Possible values: Yes/No",
+                              0,
+                              serial_enable_restricted_to_callback_checkout,
+                              serial_enable_restricted_to_callback_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  /* achu: For backwards compatability to bmc-config in 0.2.0 */
+  if (config_section_add_key (user_section,
+                              "Serial_Enable_Restrict_to_Callback",
+                              "Possible values: Yes/No",
+                              CONFIG_DO_NOT_CHECKOUT,
+                              serial_enable_restricted_to_callback_checkout,
+                              serial_enable_restricted_to_callback_commit,
+                              config_yes_no_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (user_section,
+                              "Serial_Privilege_Limit",
+                              "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+                              0,
+                              serial_privilege_limit_checkout,
+                              serial_privilege_limit_commit,
+                              get_privilege_limit_number_validate) < 0)
+    goto cleanup;
+
+  if (config_section_add_key (user_section,
+                              "Serial_Session_Limit",
+                              "Possible values: 0-255, 0 is unlimited",
+                              CONFIG_DO_NOT_CHECKOUT,
+                              serial_session_limit_checkout,
+                              serial_session_limit_commit,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
 
   return user_section;

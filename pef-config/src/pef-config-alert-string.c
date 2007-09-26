@@ -240,31 +240,31 @@ pef_config_alert_string_section_get (pef_config_state_data_t *state_data, int nu
                                          0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Number",
-                                   "Give valid number",
-                                   0,
-                                   event_filter_number_checkout,
-                                   event_filter_number_commit,
-                                   config_number_range_seven_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Number",
+                              "Give valid number",
+                              0,
+                              event_filter_number_checkout,
+                              event_filter_number_commit,
+                              config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_String_Set",
-                                   "Give valid number",
-                                   0,
-                                   alert_string_set_checkout,
-                                   alert_string_set_commit,
-                                   config_number_range_seven_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_String_Set",
+                              "Give valid number",
+                              0,
+                              alert_string_set_checkout,
+                              alert_string_set_commit,
+                              config_number_range_seven_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_String",
-                                   "Give string. Max 64 chars.",
-                                   0,
-                                   alert_string_checkout,
-                                   alert_string_commit,
-                                   alert_string_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_String",
+                              "Give string. Max 64 chars.",
+                              0,
+                              alert_string_checkout,
+                              alert_string_commit,
+                              alert_string_validate) < 0) 
     goto cleanup;
 
   return section;

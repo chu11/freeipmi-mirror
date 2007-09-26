@@ -32,8 +32,6 @@ int config_section_str_append(struct config_section_str **section_strs,
 
 void config_section_str_destroy(struct config_section_str *section_str);
 
-#if 0
-/* XXX */
 struct config_section *config_find_section(struct config_section *sections, 
                                            const char *section_name);
 
@@ -42,6 +40,5 @@ struct config_key *config_find_key(struct config_section *section,
 
 struct config_keyvalue *config_find_keyvalue(struct config_section *section, 
                                              const char *key_name);
-#endif
 
 #endif /* _CONFIG_UTIL_H_ */

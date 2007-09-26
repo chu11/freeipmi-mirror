@@ -1578,247 +1578,247 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
                                          0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Filter_Type",
-                                   "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
-                                   0,
-                                   filter_type_checkout,
-                                   filter_type_commit,
-                                   filter_type_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Filter_Type",
+                              "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
+                              0,
+                              filter_type_checkout,
+                              filter_type_commit,
+                              filter_type_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Enable_Filter",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_filter_checkout,
-                                   enable_filter_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Enable_Filter",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_filter_checkout,
+                              enable_filter_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Action_Alert",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_filter_action_alert_checkout,
-                                   event_filter_action_alert_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Action_Alert",
+                              "Possible values: Yes/No",
+                              0,
+                              event_filter_action_alert_checkout,
+                              event_filter_action_alert_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Action_Power_Off",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_filter_action_power_off_checkout,
-                                   event_filter_action_power_off_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Action_Power_Off",
+                              "Possible values: Yes/No",
+                              0,
+                              event_filter_action_power_off_checkout,
+                              event_filter_action_power_off_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Action_Reset",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_filter_action_reset_checkout,
-                                   event_filter_action_reset_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Action_Reset",
+                              "Possible values: Yes/No",
+                              0,
+                              event_filter_action_reset_checkout,
+                              event_filter_action_reset_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Action_Power_Cycle",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_filter_action_power_cycle_checkout,
-                                   event_filter_action_power_cycle_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Action_Power_Cycle",
+                              "Possible values: Yes/No",
+                              0,
+                              event_filter_action_power_cycle_checkout,
+                              event_filter_action_power_cycle_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Action_Oem",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_filter_action_oem_checkout,
-                                   event_filter_action_oem_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Action_Oem",
+                              "Possible values: Yes/No",
+                              0,
+                              event_filter_action_oem_checkout,
+                              event_filter_action_oem_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Action_Diagnostic_Interrupt",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_filter_action_diagnostic_interrupt_checkout,
-                                   event_filter_action_diagnostic_interrupt_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Action_Diagnostic_Interrupt",
+                              "Possible values: Yes/No",
+                              0,
+                              event_filter_action_diagnostic_interrupt_checkout,
+                              event_filter_action_diagnostic_interrupt_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Filter_Action_Group_Control_Operation",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   event_filter_action_group_control_operation_checkout,
-                                   event_filter_action_group_control_operation_commit,
-                                   config_yes_no_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Filter_Action_Group_Control_Operation",
+                              "Possible values: Yes/No",
+                              0,
+                              event_filter_action_group_control_operation_checkout,
+                              event_filter_action_group_control_operation_commit,
+                              config_yes_no_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Alert_Policy_Number",
-                                   "Give a valid number",
-                                   0,
-                                   alert_policy_number_checkout,
-                                   alert_policy_number_commit,
-                                   config_number_range_four_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Alert_Policy_Number",
+                              "Give a valid number",
+                              0,
+                              alert_policy_number_checkout,
+                              alert_policy_number_commit,
+                              config_number_range_four_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Group_Control_Selector",
-                                   "Give a valid number",
-                                   0,
-                                   group_control_selector_checkout,
-                                   group_control_selector_commit,
-                                   config_number_range_three_bits) < 0) 
+  if (config_section_add_key (section,
+                              "Group_Control_Selector",
+                              "Give a valid number",
+                              0,
+                              group_control_selector_checkout,
+                              group_control_selector_commit,
+                              config_number_range_three_bits) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Severity",
-                                   "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
-                                   0,
-                                   event_severity_checkout,
-                                   event_severity_commit,
-                                   event_severity_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Severity",
+                              "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
+                              0,
+                              event_severity_checkout,
+                              event_severity_commit,
+                              event_severity_validate) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Generator_Id_Byte_1",
-                                   "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
-                                   0,
-                                   generator_id_byte_1_checkout,
-                                   generator_id_byte_1_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Generator_Id_Byte_1",
+                              "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
+                              0,
+                              generator_id_byte_1_checkout,
+                              generator_id_byte_1_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Generator_Id_Byte_1",
-                                   "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
-                                   0,
-                                   generator_id_byte_2_checkout,
-                                   generator_id_byte_2_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Generator_Id_Byte_1",
+                              "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
+                              0,
+                              generator_id_byte_2_checkout,
+                              generator_id_byte_2_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Sensor_Type",
-                                   "Specify a Sensor Type, For options see the MAN page",
-                                   0,
-                                   sensor_type_checkout,
-                                   sensor_type_commit,
-                                   sensor_type_validate) < 0) 
+  if (config_section_add_key (section,
+                              "Sensor_Type",
+                              "Specify a Sensor Type, For options see the MAN page",
+                              0,
+                              sensor_type_checkout,
+                              sensor_type_commit,
+                              sensor_type_validate) < 0) 
     goto cleanup;
   
-  if (config_section_add_keyvalue (section,
-                                   "Sensor_Number",
-                                   "Specify a Sensor Number or 0xFF to Match Any",
-                                   0,
-                                   sensor_number_checkout,
-                                   sensor_number_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Sensor_Number",
+                              "Specify a Sensor Number or 0xFF to Match Any",
+                              0,
+                              sensor_number_checkout,
+                              sensor_number_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Trigger",
-                                   "Specify a Event/Reading Type Number or 0xFF to Match Any",
-                                   0,
-                                   event_trigger_checkout,
-                                   event_trigger_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Trigger",
+                              "Specify a Event/Reading Type Number or 0xFF to Match Any",
+                              0,
+                              event_trigger_checkout,
+                              event_trigger_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data1_Offset_Mask",
-                                   "Give a valid number",
-                                   0,
-                                   event_data1_offset_mask_checkout,
-                                   event_data1_offset_mask_commit,
-                                   config_number_range_two_bytes) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data1_Offset_Mask",
+                              "Give a valid number",
+                              0,
+                              event_data1_offset_mask_checkout,
+                              event_data1_offset_mask_commit,
+                              config_number_range_two_bytes) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data1_AND_Mask",
-                                   "Give a valid number",
-                                   0,
-                                   event_data1_and_mask_checkout,
-                                   event_data1_and_mask_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data1_AND_Mask",
+                              "Give a valid number",
+                              0,
+                              event_data1_and_mask_checkout,
+                              event_data1_and_mask_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data1_Compare1",
-                                   "Give a valid number",
-                                   0,
-                                   event_data1_compare1_checkout,
-                                   event_data1_compare1_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data1_Compare1",
+                              "Give a valid number",
+                              0,
+                              event_data1_compare1_checkout,
+                              event_data1_compare1_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data1_Compare2",
-                                   "Give a valid number",
-                                   0,
-                                   event_data1_compare2_checkout,
-                                   event_data1_compare2_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data1_Compare2",
+                              "Give a valid number",
+                              0,
+                              event_data1_compare2_checkout,
+                              event_data1_compare2_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
   
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data2_AND_Mask",
-                                   "Give a valid number",
-                                   0,
-                                   event_data2_and_mask_checkout,
-                                   event_data2_and_mask_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data2_AND_Mask",
+                              "Give a valid number",
+                              0,
+                              event_data2_and_mask_checkout,
+                              event_data2_and_mask_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data2_Compare1",
-                                   "Give a valid number",
-                                   0,
-                                   event_data2_compare1_checkout,
-                                   event_data2_compare1_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data2_Compare1",
+                              "Give a valid number",
+                              0,
+                              event_data2_compare1_checkout,
+                              event_data2_compare1_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data2_Compare2",
-                                   "Give a valid number",
-                                   0,
-                                   event_data2_compare2_checkout,
-                                   event_data2_compare2_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data2_Compare2",
+                              "Give a valid number",
+                              0,
+                              event_data2_compare2_checkout,
+                              event_data2_compare2_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data3_AND_Mask",
-                                   "Give a valid number",
-                                   0,
-                                   event_data3_and_mask_checkout,
-                                   event_data3_and_mask_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data3_AND_Mask",
+                              "Give a valid number",
+                              0,
+                              event_data3_and_mask_checkout,
+                              event_data3_and_mask_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data3_Compare1",
-                                   "Give a valid number",
-                                   0,
-                                   event_data3_compare1_checkout,
-                                   event_data3_compare1_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data3_Compare1",
+                              "Give a valid number",
+                              0,
+                              event_data3_compare1_checkout,
+                              event_data3_compare1_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
-  if (config_section_add_keyvalue (section,
-                                   "Event_Data3_Compare2",
-                                   "Give a valid number",
-                                   0,
-                                   event_data3_compare2_checkout,
-                                   event_data3_compare2_commit,
-                                   config_number_range_one_byte) < 0) 
+  if (config_section_add_key (section,
+                              "Event_Data3_Compare2",
+                              "Give a valid number",
+                              0,
+                              event_data3_compare2_checkout,
+                              event_data3_compare2_commit,
+                              config_number_range_one_byte) < 0) 
     goto cleanup;
 
   return section;

@@ -303,8 +303,6 @@ config_section_str_destroy(struct config_section_str *section_str)
     }
 }
 
-#if 0
-/* XXX */
 struct config_section *
 config_find_section(struct config_section *sections, 
                     const char *section_name)
@@ -364,4 +362,3 @@ config_find_keyvalue(struct config_section *section,
 
   return kv;
 }
-#endif

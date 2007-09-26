@@ -163,31 +163,31 @@ bmc_config_lan_conf_misc_section_get (bmc_config_state_data_t *state_data)
                                                        0)))
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_misc_section,
-                                   "Enable_Gratuitous_ARPs",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_gratuitous_arps_checkout,
-                                   enable_gratuitous_arps_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_misc_section,
+                              "Enable_Gratuitous_ARPs",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_gratuitous_arps_checkout,
+                              enable_gratuitous_arps_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_misc_section,
-                                   "Enable_ARP_Response",
-                                   "Possible values: Yes/No",
-                                   0,
-                                   enable_arp_response_checkout,
-                                   enable_arp_response_commit,
-                                   config_yes_no_validate) < 0)
+  if (config_section_add_key (lan_conf_misc_section,
+                              "Enable_ARP_Response",
+                              "Possible values: Yes/No",
+                              0,
+                              enable_arp_response_checkout,
+                              enable_arp_response_commit,
+                              config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_keyvalue (lan_conf_misc_section,
-                                   "Gratuitous_ARP_Interval",
-                                   "Give a number (x 500ms)",
-                                   0,
-                                   gratuitous_arp_interval_checkout,
-                                   gratuitous_arp_interval_commit,
-                                   config_number_range_one_byte) < 0)
+  if (config_section_add_key (lan_conf_misc_section,
+                              "Gratuitous_ARP_Interval",
+                              "Give a number (x 500ms)",
+                              0,
+                              gratuitous_arp_interval_checkout,
+                              gratuitous_arp_interval_commit,
+                              config_number_range_one_byte) < 0)
     goto cleanup;
   return lan_conf_misc_section;
 
