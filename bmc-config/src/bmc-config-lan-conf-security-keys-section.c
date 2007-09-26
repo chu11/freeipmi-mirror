@@ -7,13 +7,117 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-wrapper.h"
 #include "bmc-config-map.h"
 #include "bmc-config-validate.h"
+#include "bmc-config-utils.h"
 
 #include "tool-common.h"
+
+static config_err_t
+_get_key(bmc_config_state_data_t *state_data,
+         uint8_t key_type,
+         uint8_t *key,
+         uint32_t key_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t buf[CONFIG_PARSE_BUFLEN];
+  uint32_t buf_len;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
+         || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_set_channel_security_keys (state_data->dev,
+                                          channel_number,
+                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
+                                          key_type,
+                                          NULL,
+                                          0,
+                                          obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_channel_security_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if ((buf_len = Fiid_obj_get_data (obj_cmd_rs, "key_value", buf, CONFIG_PARSE_BUFLEN)) < 0)
+    goto cleanup;
+
+  if (key_len < buf_len)
+    {
+      fprintf(stderr, "ipmi_cmd_set_channel_security_keys: short buffer\n");
+      goto cleanup;
+    }
+  memcpy(key, buf, buf_len);
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+static config_err_t
+_set_key(bmc_config_state_data_t *state_data,
+         uint8_t key_type,
+         uint8_t *key,
+         uint32_t key_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  assert(key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R
+         || key_type == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G);
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_channel_security_keys_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_channel_security_keys (state_data->dev,
+                                          channel_number,
+                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
+                                          key_type,
+                                          key,
+                                          key_len,
+                                          obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_channel_security_keys: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
 
 static config_err_t
 k_r_checkout (const char *section_name,
@@ -26,16 +130,17 @@ k_r_checkout (const char *section_name,
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
 
-  if ((ret = get_k_r (state_data, 
-                      (uint8_t *)k_r, 
-                      IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_key (state_data, 
+                       IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
+                       (uint8_t *)k_r, 
+                       IPMI_MAX_K_R_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
-
+  
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
-
+  
   if (config_section_update_keyvalue_output(kv, (char *)k_r) < 0)
     return CONFIG_ERR_FATAL_ERROR;
-
+  
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -45,9 +150,11 @@ k_r_commit (const char *section_name,
             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_k_r (state_data,
-		  (uint8_t *)kv->value_input, 
-		  kv->value_input ? strlen (kv->value_input): 0);
+
+  return _set_key (state_data,
+                   IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
+                   (uint8_t *)kv->value_input, 
+                   strlen(kv->value_input));
 }
 
 static config_validate_t
@@ -72,9 +179,10 @@ k_g_checkout (const char *section_name,
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
   
-  if ((ret = get_k_g (state_data, 
-                      k_g, 
-                      IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_key (state_data, 
+                       IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
+                       k_g, 
+                       IPMI_MAX_K_G_LENGTH)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   /* a printable k_g key can have two representations, so compare the
@@ -124,7 +232,10 @@ k_g_commit (const char *section_name,
   if ((k_g_len = parse_kg(k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
-  return set_k_g (state_data, k_g, k_g_len);
+  return _set_key (state_data, 
+                   IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
+                   k_g,
+                   k_g_len);
 }
 
 static config_validate_t
