@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.66 2007-09-05 20:13:35 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.67 2007-09-27 20:27:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -533,11 +533,11 @@ int
 ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int buflen) 
 {
-  uint8_t *username = NULL;
-  uint8_t *password = NULL;
+  char *username = NULL;
+  char *password = NULL;
   uint8_t *integrity_key = NULL;
   uint8_t *confidentiality_key = NULL;
-  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   uint32_t username_len;
   uint64_t session_id, managed_system_session_id;
   uint32_t sequence_number = 0;
@@ -564,7 +564,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == RAKP_MESSAGE_3_REQ)
     {
       if (strlen(conf->username))
-        username = (uint8_t *)conf->username;
+        username = conf->username;
       else
         username = NULL;
 
@@ -582,12 +582,12 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         {
           memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
           if (username)
-            strcpy((char *)username_buf, (char *)username);
+            strcpy(username_buf, username);
           username = username_buf;
           username_len = IPMI_MAX_USER_NAME_LENGTH;
         }
       else
-        username_len = (username) ? strlen((char *)username) : 0;
+        username_len = (username) ? strlen(username) : 0;
     }
   else
     {
@@ -606,7 +606,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == CLOSE_SESSION_REQ)
     {
       if (strlen(conf->password))
-        password = (uint8_t *)conf->password;
+        password = conf->password;
       else
         password = NULL;
     }     
@@ -890,7 +890,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         name_only_lookup = ip->name_only_lookup;
 
-      password_len = (password) ? strlen((char *)password) : 0;
+      password_len = (password) ? strlen(password) : 0;
 
       /* IPMI Workaround (achu)
        *
@@ -908,7 +908,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
       
       if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code(ip->authentication_algorithm,
-                                                                                                         password,
+                                                                                                         (uint8_t *)password,
                                                                                                          password_len,
                                                                                                          managed_system_random_number,
                                                                                                          managed_system_random_number_len,
@@ -1022,8 +1022,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   authentication_type,
                                   sequence_number,
                                   (uint32_t)session_id,
-                                  password,
-                                  (password) ? strlen((char *)password) : 0,
+                                  (uint8_t *)password,
+                                  (password) ? strlen(password) : 0,
                                   net_fn,
                                   obj_cmd_req,
                                   buffer, 
@@ -1044,8 +1044,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   payload_encrypted,
                                   (uint32_t)session_id,
                                   sequence_number,
-                                  password,
-                                  (password) ? strlen((char *)password) : 0,
+                                  (uint8_t *)password,
+                                  (password) ? strlen(password) : 0,
                                   net_fn, 
                                   authentication_algorithm,
                                   integrity_algorithm,

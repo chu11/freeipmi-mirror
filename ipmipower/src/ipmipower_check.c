@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.64 2007-09-05 20:13:34 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.65 2007-09-27 20:27:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -81,7 +81,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 				    uint8_t *buffer,
 				    uint32_t buffer_len)
 {
-  uint8_t *password;
+  char *password;
   int8_t rv = -1;
 
   assert(ip != NULL);
@@ -136,7 +136,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
 	{
 	  if (strlen(conf->password))
-	    password = (uint8_t *)conf->password;
+	    password = conf->password;
 	  else
 	    password = NULL;
 	}
@@ -174,7 +174,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
 	    {
 	      if (strlen(conf->password))
-		password = (uint8_t *)conf->password;
+		password = conf->password;
 	      else
 		password = NULL;
 	    }
@@ -214,7 +214,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	integrity_algorithm = ip->integrity_algorithm;
 
       if (strlen(conf->password))
-	password = (uint8_t *)conf->password;
+	password = conf->password;
       else
 	password = NULL;
 	  
@@ -223,8 +223,8 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 								       buffer_len,
 								       ip->integrity_key_ptr,
 								       ip->integrity_key_len,
-								       password,
-								       (password) ? strlen((char *)password) : 0,
+								       (uint8_t *)password,
+								       (password) ? strlen(password) : 0,
 								       ip->obj_rmcpplus_session_trlr_res)) < 0)
 	err_exit("ipmipower_check_authentication_code(%s:%d): "
 		 "ipmi_rmcpplus_check_session_authentication_code: %s",
@@ -801,9 +801,9 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   int32_t managed_system_random_number_len;
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
-  uint8_t *username;
-  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint8_t *password;
+  char *username;
+  char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  char *password;
   uint32_t username_len, password_len;
   uint64_t managed_system_session_id;
   int8_t rv;
@@ -825,17 +825,17 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
-	strcpy((char *)username_buf, (char *)conf->username);
+	strcpy(username_buf, conf->username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
       if (strlen(conf->username))
-	username = (uint8_t *)conf->username;
+	username = conf->username;
       else
 	username = NULL;
-      username_len = (username) ? strlen((char *)username) : 0;
+      username_len = (username) ? strlen(username) : 0;
     }
   
   if (conf->workaround_flags & WORKAROUND_FLAG_SUPERMICRO_2_0_SESSION)
@@ -876,11 +876,11 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
     }
 
   if (strlen(conf->password))
-    password = (uint8_t *)conf->password;
+    password = conf->password;
   else
     password = NULL;
 
-  password_len = (password) ? strlen((char *)password) : 0;
+  password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround (achu)
    *
@@ -944,7 +944,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
     }
 
   if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(ip->authentication_algorithm,
-                                                                        password,
+                                                                        (uint8_t *)password,
                                                                         password_len,
                                                                         ip->remote_console_session_id,
                                                                         managed_system_session_id,

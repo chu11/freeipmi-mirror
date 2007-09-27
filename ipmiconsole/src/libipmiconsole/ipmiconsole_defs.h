@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_defs.h,v 1.58 2007-09-11 22:49:22 chu11 Exp $
+ *  $Id: ipmiconsole_defs.h,v 1.59 2007-09-27 20:27:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -227,8 +227,8 @@ struct ipmiconsole_ctx_config {
 
   /* ipmi config */
   char hostname[MAXHOSTNAMELEN+1];
-  uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint8_t password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
+  char username[IPMI_MAX_USER_NAME_LENGTH+1];
+  char password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   unsigned int k_g_len;
   uint8_t privilege_level;

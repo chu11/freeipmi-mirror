@@ -240,7 +240,7 @@ int8_t fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
                                            fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_session_challenge (uint8_t authentication_type, 
-				       uint8_t *user_name, 
+				       char *user_name, 
 				       uint32_t user_name_len, 
 				       fiid_obj_t obj_cmd_rq);
 
@@ -294,7 +294,7 @@ int8_t fill_cmd_get_user_access (uint8_t channel_number,
                                  fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_user_name (uint8_t user_id, 
-                               uint8_t *user_name,
+                               char *user_name,
                                unsigned int user_name_len,
                                fiid_obj_t obj_cmd_rq);
 

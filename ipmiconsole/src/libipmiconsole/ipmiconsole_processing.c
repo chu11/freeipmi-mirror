@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.c,v 1.62 2007-09-11 22:49:22 chu11 Exp $
+ *  $Id: ipmiconsole_processing.c,v 1.63 2007-09-27 20:27:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1707,12 +1707,12 @@ _check_for_authentication_support(ipmiconsole_ctx_t c)
    */
   if (!(c->config.workaround_flags & IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES))
     {
-      if ((!strlen((char *)c->config.username) && !strlen((char *)c->config.password)
+      if ((!strlen(c->config.username) && !strlen(c->config.password)
            && !authentication_status_anonymous_login)
-          || (!strlen((char *)c->config.username)
+          || (!strlen(c->config.username)
               && !authentication_status_anonymous_login
               && !authentication_status_null_username)
-          || (strlen((char *)c->config.username)
+          || (strlen(c->config.username)
               && !authentication_status_non_null_username))
         {
           ipmiconsole_ctx_set_errnum(c, IPMICONSOLE_ERR_USERNAME_INVALID);
@@ -1739,10 +1739,10 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
 {
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
   int32_t managed_system_random_number_len;
-  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint8_t *username;
+  char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  char *username;
   uint32_t username_len;
-  uint8_t *password;
+  char *password;
   uint32_t password_len;
   uint8_t *k_g;
 
@@ -1763,26 +1763,26 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen((char *)c->config.username))
-        strcpy((char *)username_buf, (char *)c->config.username);
+      if (strlen(c->config.username))
+        strcpy(username_buf, c->config.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      if (strlen((char *)c->config.username))
+      if (strlen(c->config.username))
         username = c->config.username;
       else
         username = NULL;
-      username_len = (username) ? strlen((char *)username) : 0;
+      username_len = (username) ? strlen(username) : 0;
     }
 
-  if (strlen((char *)c->config.password))
+  if (strlen(c->config.password))
     password = c->config.password;
   else
     password = NULL;
   
-  password_len = (password) ? strlen((char *)password) : 0;
+  password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround
    *
@@ -1796,7 +1796,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
   
   if (c->config.k_g_len)
-    k_g = (uint8_t *)c->config.k_g;
+    k_g = c->config.k_g;
   else
     k_g = NULL;
   
@@ -1817,7 +1817,7 @@ _calculate_cipher_keys(ipmiconsole_ctx_t c)
   if (ipmi_calculate_rmcpplus_session_keys(c->config.authentication_algorithm,
                                            c->config.integrity_algorithm,
                                            c->config.confidentiality_algorithm,
-                                           password,
+                                           (uint8_t *)password,
                                            password_len,
                                            k_g,
                                            (k_g) ? c->config.k_g_len : 0,

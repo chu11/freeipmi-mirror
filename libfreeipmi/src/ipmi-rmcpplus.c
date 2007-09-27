@@ -405,7 +405,7 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                              uint32_t remote_console_random_number_len,
                              uint8_t requested_maximum_privilege_level,
                              uint8_t name_only_lookup_flag,
-                             uint8_t *user_name,
+                             char *user_name,
                              uint32_t user_name_len,
                              fiid_obj_t obj_cmd_rq)
 {
@@ -452,7 +452,7 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
   if (user_name && user_name_len)
     FIID_OBJ_SET_DATA (obj_cmd_rq,
                        "user_name",
-                       user_name,
+                       (uint8_t *)user_name,
                        user_name_len);
 
   return (0);

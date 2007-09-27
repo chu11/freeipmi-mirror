@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_packet.c,v 1.11 2007-09-05 20:13:29 chu11 Exp $
+ *  $Id: ipmiconsole_packet.c,v 1.12 2007-09-27 20:27:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -717,10 +717,10 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 				 uint8_t *buf,
 				 uint32_t buflen)
 {
-  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint8_t *username = NULL;
+  char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  char *username = NULL;
   uint32_t username_len;
-  uint8_t *password = NULL;
+  char *password = NULL;
   uint32_t password_len;
   uint8_t authentication_type = 0;
   uint32_t session_id = 0;
@@ -757,18 +757,18 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
       && p == IPMICONSOLE_PACKET_TYPE_RAKP_MESSAGE_1)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen((char *)c->config.username))
-        strcpy((char *)username_buf, (char *)c->config.username);
+      if (strlen(c->config.username))
+        strcpy(username_buf, c->config.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      if (strlen((char *)c->config.username))
+      if (strlen(c->config.username))
         username = c->config.username;
       else
         username = NULL;
-      username_len = (username) ? strlen((char *)username) : 0;
+      username_len = (username) ? strlen(username) : 0;
     }
 
   /* Determine Password */
@@ -776,13 +776,13 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
     password = NULL;
   else
     {
-      if (strlen((char *)c->config.password))
+      if (strlen(c->config.password))
 	password = c->config.password;
       else
 	password = NULL;
     }
 
-  password_len = (password) ? strlen((char *)password) : 0;
+  password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround
    *
@@ -999,7 +999,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 	}
       
       if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code(c->config.authentication_algorithm,
-													 password,
+													 (uint8_t *)password,
                                                                                                          password_len,
 													 managed_system_random_number,
 													 managed_system_random_number_len,
@@ -1146,7 +1146,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 					       authentication_type,
 					       session_sequence_number,
 					       session_id,
-					       password,
+					       (uint8_t *)password,
 					       password_len,
 					       net_fn,
 					       obj_cmd_rq,
@@ -1163,7 +1163,7 @@ ipmiconsole_ipmi_packet_assemble(ipmiconsole_ctx_t c,
 					       payload_encrypted,
 					       session_id,
 					       session_sequence_number,
-					       password,
+					       (uint8_t *)password,
 					       password_len,
 					       net_fn,
 					       authentication_algorithm,
@@ -1193,7 +1193,7 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
 				uint8_t *buf,
 				uint32_t buflen)
 {
-  uint8_t *password = NULL;
+  char *password = NULL;
   uint32_t session_id = 0;
   uint8_t payload_authenticated = 0;
   uint8_t payload_encrypted = 0;
@@ -1219,7 +1219,7 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
   assert(buf);
   assert(buflen);
 
-  if (strlen((char *)c->config.password))
+  if (strlen(c->config.password))
     password = c->config.password;
   else
     password = NULL;
@@ -1282,8 +1282,8 @@ ipmiconsole_sol_packet_assemble(ipmiconsole_ctx_t c,
                                            payload_encrypted,
                                            session_id,
                                            c->session.session_sequence_number,
-                                           password,
-                                           (password) ? strlen((char *)password) : 0,
+                                           (uint8_t *)password,
+                                           (password) ? strlen(password) : 0,
                                            0,
                                            c->config.authentication_algorithm,
                                            c->config.integrity_algorithm,

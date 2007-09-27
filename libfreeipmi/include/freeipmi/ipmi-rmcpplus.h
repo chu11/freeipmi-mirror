@@ -195,7 +195,7 @@ int8_t fill_rmcpplus_payload(uint8_t *confidentiality_header, uint32_t confident
 
 int8_t fill_rmcpplus_open_session (uint8_t message_tag, uint8_t requested_maximum_privilege_level, uint32_t remote_console_session_id, uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, fiid_obj_t obj_cmd_rq);
 
-int8_t fill_rmcpplus_rakp_message_1(uint8_t message_tag, uint32_t managed_system_session_id, uint8_t *remote_console_random_number, uint32_t remote_console_random_number_len, uint8_t requested_maximum_privilege_level, uint8_t name_only_lookup_flag, uint8_t *username, uint32_t username_len, fiid_obj_t obj_cmd_rq);
+int8_t fill_rmcpplus_rakp_message_1(uint8_t message_tag, uint32_t managed_system_session_id, uint8_t *remote_console_random_number, uint32_t remote_console_random_number_len, uint8_t requested_maximum_privilege_level, uint8_t name_only_lookup_flag, char *username, uint32_t username_len, fiid_obj_t obj_cmd_rq);
 
 int8_t fill_rmcpplus_rakp_message_3(uint8_t message_tag, uint8_t rmcpplus_status_code, uint32_t managed_system_session_id, uint8_t *key_exchange_authentication_code, uint32_t key_exchange_authentication_code_len, fiid_obj_t obj_cmd_rq);
 

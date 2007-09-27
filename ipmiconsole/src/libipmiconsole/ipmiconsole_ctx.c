@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_ctx.c,v 1.20 2007-09-05 20:13:28 chu11 Exp $
+ *  $Id: ipmiconsole_ctx.c,v 1.21 2007-09-27 20:27:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -145,10 +145,10 @@ ipmiconsole_ctx_config_setup(ipmiconsole_ctx_t c,
   strcpy(c->config.hostname, hostname);
 
   if (ipmi_config->username)
-    strcpy((char *)c->config.username, ipmi_config->username);
+    strcpy(c->config.username, ipmi_config->username);
 
   if (ipmi_config->password)
-    strcpy((char *)c->config.password, ipmi_config->password);
+    strcpy(c->config.password, ipmi_config->password);
 
   /* k_g may contain nulls */
   if (ipmi_config->k_g && ipmi_config->k_g_len)

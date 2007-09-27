@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.c,v 1.16 2007-09-05 20:13:28 chu11 Exp $
+ *  $Id: ipmiconsole_checks.c,v 1.17 2007-09-27 20:27:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,8 +106,8 @@ ipmiconsole_check_authentication_code(ipmiconsole_ctx_t c,
   assert(buf);
   assert(buflen);
 
-  if (strlen((char *)c->config.password))
-    password = c->config.password;
+  if (strlen(c->config.password))
+    password = (uint8_t *)c->config.password;
   else
     password = NULL;
 
@@ -617,10 +617,10 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
   int32_t managed_system_random_number_len;
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
-  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
-  uint8_t *username;
+  char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  char *username;
   uint32_t username_len;
-  uint8_t *password;
+  char *password;
   uint32_t password_len;
   uint32_t managed_system_session_id;
   uint64_t val;
@@ -637,18 +637,18 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INTEL_2_0_SESSION)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (strlen((char *)c->config.username))
-        strcpy((char *)username_buf, (char *)c->config.username);
+      if (strlen(c->config.username))
+        strcpy(username_buf, c->config.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      if (strlen((char *)c->config.username))
+      if (strlen(c->config.username))
         username = c->config.username;
       else
         username = NULL;
-      username_len = (username) ? strlen((char *)username) : 0;
+      username_len = (username) ? strlen(username) : 0;
     }
 
   /* IPMI Workaround
@@ -698,11 +698,11 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
 	}
     }
 
-  if (strlen((char *)c->config.password))
+  if (strlen(c->config.password))
     password = c->config.password;
   else
     password = NULL;
-  password_len = (password) ? strlen((char *)password) : 0;
+  password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround
    *
@@ -784,7 +784,7 @@ ipmiconsole_check_rakp_2_key_exchange_authentication_code(ipmiconsole_ctx_t c, i
     }
   
   if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(c->config.authentication_algorithm,
-                                                                        password,
+                                                                        (uint8_t *)password,
                                                                         password_len,
                                                                         c->session.remote_console_session_id,
                                                                         managed_system_session_id,

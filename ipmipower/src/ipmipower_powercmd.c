@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.115 2007-09-07 16:15:53 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.116 2007-09-27 20:27:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1766,10 +1766,10 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
 {
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
   int32_t managed_system_random_number_len;
-  uint8_t *username;
-  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  char *username;
+  char username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   uint32_t username_len;
-  uint8_t *password;
+  char *password;
   uint32_t password_len;
   uint8_t *k_g;
 
@@ -1789,25 +1789,25 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
-	strcpy((char *)username_buf, (char *)conf->username);
+	strcpy(username_buf, (char *)conf->username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
       if (strlen(conf->username))
-	username = (uint8_t *)conf->username;
+	username = conf->username;
       else
 	username = NULL;
-      username_len = (username) ? strlen((char *)username) : 0;
+      username_len = (username) ? strlen(username) : 0;
     }
   
   if (strlen(conf->password))
-    password = (uint8_t *)conf->password;
+    password = conf->password;
   else
     password = NULL;
 
-  password_len = (password) ? strlen((char *)password) : 0;
+  password_len = (password) ? strlen(password) : 0;
 
   /* IPMI Workaround (achu)
    *
@@ -1825,7 +1825,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
   if (conf->k_g_len)
-    k_g = (uint8_t *)conf->k_g;
+    k_g = conf->k_g;
   else
     k_g = NULL;
   
@@ -1837,7 +1837,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
   if (ipmi_calculate_rmcpplus_session_keys(ip->authentication_algorithm,
                                            ip->integrity_algorithm,
                                            ip->confidentiality_algorithm,
-                                           password,
+                                           (uint8_t *)password,
                                            password_len,
                                            k_g,
                                            (k_g) ? conf->k_g_len : 0,
