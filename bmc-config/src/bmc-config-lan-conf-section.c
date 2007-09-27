@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-wrapper.h"
@@ -17,23 +18,59 @@
 #define BMC_MAXIPADDRLEN 16
 #define BMC_MAXMACADDRLEN 24
 
+/* convenience struct */
+struct vlan_id
+{
+  uint8_t vlan_id;
+  uint8_t vlan_id_enable;
+};
+
 static config_err_t
 ip_address_source_checkout (const char *section_name,
 			    struct config_keyvalue *kv,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t source;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_lan_conf_ip_address_source (state_data,
-                                                 &source)) != CONFIG_ERR_SUCCESS) 
-    return ret;
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output(kv, ip_address_source_string (source)) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (state_data->dev, 
+								   channel_number, 
+								   IPMI_GET_LAN_PARAMETER, 
+								   SET_SELECTOR, 
+								   BLOCK_SELECTOR, 
+								   obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_ip_address_source: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get (obj_cmd_rs, "ip_address_source", &val) < 0)
+    goto cleanup;
+
+  if (config_section_update_keyvalue_output(kv, ip_address_source_string (val)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -42,8 +79,37 @@ ip_address_source_commit (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_ip_address_source (state_data,
-					     ip_address_source_number (kv->value_input));
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (state_data->dev,
+                                                                   channel_number,
+                                                                   ip_address_source_number (kv->value_input),
+                                                                   obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_ip_address_source: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -52,18 +118,59 @@ ip_address_checkout (const char *section_name,
                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char ip_address_str[BMC_MAXIPADDRLEN + 1];
+  uint8_t ip_address_bytes[4];
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  char ip[BMC_MAXIPADDRLEN + 1];
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_ip_address_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_lan_conf_ip_address (state_data,
-                                          ip,
-                                          BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output(kv, ip) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address (state_data->dev, 
+							    channel_number, 
+							    IPMI_GET_LAN_PARAMETER, 
+							    SET_SELECTOR, 
+							    BLOCK_SELECTOR, 
+							    obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_ip_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get_data (obj_cmd_rs, 
+                         "ip_address", 
+                         ip_address_bytes,
+                         4) < 0)
+    goto cleanup;
+
+  memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
+  snprintf(ip_address_str, 
+           BMC_MAXIPADDRLEN,
+           "%u.%u.%u.%u", 
+           ip_address_bytes[0], 
+           ip_address_bytes[1], 
+           ip_address_bytes[2], 
+           ip_address_bytes[3]);
+
+  if (config_section_update_keyvalue_output(kv, ip_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -72,8 +179,41 @@ ip_address_commit (const char *section_name,
                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_ip_address (state_data,
-                                      kv->value_input);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint32_t ip_address_val = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (ipmi_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (state_data->dev,
+                                                            channel_number,
+                                                            ip_address_val,
+                                                            obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -82,18 +222,62 @@ mac_address_checkout (const char *section_name,
                       void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char mac_address_str[BMC_MAXMACADDRLEN+1];
+  uint8_t mac_address_bytes[6];
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  char mac[BMC_MAXMACADDRLEN+1];
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_mac_address_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_lan_conf_mac_address (state_data,
-                                           mac,
-                                           BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output(kv, mac) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->dev, 
+							     channel_number, 
+							     IPMI_GET_LAN_PARAMETER, 
+							     SET_SELECTOR, 
+							     BLOCK_SELECTOR, 
+							     obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get_data (obj_cmd_rs, 
+                         "mac_address", 
+                         mac_address_bytes,
+                         6) < 0)
+    goto cleanup;
+  
+  memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
+  snprintf(mac_address_str, 
+           BMC_MAXMACADDRLEN,
+           "%02X:%02X:%02X:%02X:%02X:%02X", 
+           mac_address_bytes[0], 
+           mac_address_bytes[1], 
+           mac_address_bytes[2], 
+           mac_address_bytes[3], 
+           mac_address_bytes[4], 
+           mac_address_bytes[5]);
+  
+  if (config_section_update_keyvalue_output(kv, mac_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 
-  return CONFIG_ERR_SUCCESS;
 }
 
 static config_err_t
@@ -102,8 +286,41 @@ mac_address_commit (const char *section_name,
                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_mac_address (state_data,
-				       kv->value_input);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t mac_address_val = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (ipmi_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_mac_address (state_data->dev,
+                                                             channel_number,
+                                                             mac_address_val,
+                                                             obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -112,18 +329,59 @@ subnet_mask_checkout (const char *section_name,
                       void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char subnet_mask_str[BMC_MAXIPADDRLEN + 1];
+  uint8_t subnet_mask_bytes[4];
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  char mask[BMC_MAXIPADDRLEN + 1];
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_lan_conf_subnet_mask (state_data,
-                                           mask,
-                                           BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output(kv, mask) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (state_data->dev, 
+							     channel_number, 
+							     IPMI_GET_LAN_PARAMETER, 
+							     SET_SELECTOR, 
+							     BLOCK_SELECTOR, 
+							     obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_subnet_mask: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get_data (obj_cmd_rs, 
+                         "subnet_mask", 
+                         subnet_mask_bytes,
+                         4) < 0)
+    goto cleanup;
+
+  memset(subnet_mask_str, '\0', BMC_MAXIPADDRLEN + 1);
+  snprintf (subnet_mask_str, 
+            BMC_MAXIPADDRLEN,
+            "%u.%u.%u.%u", 
+            subnet_mask_bytes[0], 
+            subnet_mask_bytes[1], 
+            subnet_mask_bytes[2], 
+            subnet_mask_bytes[3]);
+  
+  if (config_section_update_keyvalue_output(kv, subnet_mask_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
-  return CONFIG_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -132,8 +390,41 @@ subnet_mask_commit (const char *section_name,
                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_subnet_mask (state_data,
-                                       kv->value_input);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint32_t subnet_mask_val = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (ipmi_ipv4_address_string2int(kv->value_input, &subnet_mask_val) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (state_data->dev,
+                                                             channel_number,
+                                                             subnet_mask_val,
+                                                             obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_subnet_mask: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -142,18 +433,60 @@ default_gateway_address_checkout (const char *section_name,
                                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char ip_address_str[BMC_MAXIPADDRLEN + 1];
+  uint8_t ip_address_bytes[4];
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  char ip[BMC_MAXIPADDRLEN + 1];
-
-  if ((ret = get_bmc_lan_conf_default_gateway_address (state_data,
-                                                       ip,
-                                                       BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  uint8_t channel_number;
   
-  if (config_section_update_keyvalue_output(kv, ip) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs)))
+    goto cleanup;
 
-  return CONFIG_ERR_SUCCESS;
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (state_data->dev, 
+									 channel_number, 
+									 IPMI_GET_LAN_PARAMETER, 
+									 SET_SELECTOR, 
+									 BLOCK_SELECTOR, 
+									 obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_default_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get_data (obj_cmd_rs, 
+                         "ip_address", 
+                         ip_address_bytes,
+                         4) < 0)
+    goto cleanup;
+  
+  memset(ip_address_str, '\0', BMC_MAXIPADDRLEN + 1);
+  snprintf (ip_address_str, 
+            BMC_MAXIPADDRLEN,
+            "%u.%u.%u.%u", 
+            ip_address_bytes[0], 
+            ip_address_bytes[1], 
+            ip_address_bytes[2], 
+            ip_address_bytes[3]);
+  
+  if (config_section_update_keyvalue_output(kv, ip_address_str) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+
 }
 
 static config_err_t
@@ -162,8 +495,41 @@ default_gateway_address_commit (const char *section_name,
                                 void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_default_gateway_address (state_data,
-                                                   kv->value_input);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint32_t ip_address_val = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (ipmi_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (state_data->dev,
+                                                                         channel_number,
+                                                                         ip_address_val,
+                                                                         obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_default_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -172,18 +538,62 @@ default_gateway_mac_address_checkout (const char *section_name,
                                       void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char mac_address_str[BMC_MAXMACADDRLEN+1];
+  uint8_t mac_address_bytes[6];
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  char mac[BMC_MAXMACADDRLEN+1];
-
-  if ((ret = get_bmc_lan_conf_default_gateway_mac_address (state_data,
-                                                           mac,
-                                                           BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, mac) < 0)
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
+    goto cleanup;
+  
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (state_data->dev, 
+									     channel_number, 
+									     IPMI_GET_LAN_PARAMETER, 
+									     SET_SELECTOR, 
+									     BLOCK_SELECTOR, 
+									     obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get_data (obj_cmd_rs, 
+                         "mac_address", 
+                         mac_address_bytes,
+                         6) < 0)
+    goto cleanup;
+  
+  memset(mac_address_str, '\0', BMC_MAXMACADDRLEN + 1);
+  snprintf (mac_address_str, 
+            BMC_MAXMACADDRLEN,
+            "%02X:%02X:%02X:%02X:%02X:%02X", 
+            mac_address_bytes[0], 
+            mac_address_bytes[1], 
+            mac_address_bytes[2], 
+            mac_address_bytes[3], 
+            mac_address_bytes[4], 
+            mac_address_bytes[5]);
+  
+  if (config_section_update_keyvalue_output(kv, mac_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 
-  return CONFIG_ERR_SUCCESS;
 }
 
 static config_err_t
@@ -192,8 +602,41 @@ default_gateway_mac_address_commit (const char *section_name,
                                     void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_default_gateway_mac_address (state_data,
-						       kv->value_input);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t mac_address_val = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (ipmi_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (state_data->dev,
+                                                                             channel_number,
+                                                                             mac_address_val,
+                                                                             obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -202,18 +645,59 @@ backup_gateway_address_checkout (const char *section_name,
                                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char ip_address_str[BMC_MAXIPADDRLEN + 1];
+  uint8_t ip_address_bytes[4];
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  char ip[BMC_MAXIPADDRLEN + 1];
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_lan_conf_backup_gateway_address (state_data,
-                                                      ip,
-                                                      BMC_MAXIPADDRLEN + 1)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output(kv, ip) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (state_data->dev, 
+									channel_number, 
+									IPMI_GET_LAN_PARAMETER, 
+									SET_SELECTOR, 
+									BLOCK_SELECTOR, 
+									obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get_data (obj_cmd_rs, 
+                         "ip_address", 
+                         ip_address_bytes,
+                         4) < 0)
+    goto cleanup;
+  
+  memset(ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
+  snprintf (ip_address_str, 
+            BMC_MAXIPADDRLEN,
+            "%u.%u.%u.%u", 
+            ip_address_bytes[0], 
+            ip_address_bytes[1], 
+            ip_address_bytes[2], 
+            ip_address_bytes[3]);
+  
+  if (config_section_update_keyvalue_output(kv, ip_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
-  return CONFIG_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -222,8 +706,41 @@ backup_gateway_address_commit (const char *section_name,
                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_backup_gateway_address (state_data,
-                                                  kv->value_input);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint32_t ip_address_val = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (ipmi_ipv4_address_string2int(kv->value_input, &ip_address_val) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (state_data->dev,
+                                                                        channel_number,
+                                                                        ip_address_val,
+                                                                        obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -232,18 +749,61 @@ backup_gateway_mac_address_checkout (const char *section_name,
                                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
+  fiid_obj_t obj_cmd_rs = NULL;
+  char mac_address_str[BMC_MAXMACADDRLEN+1];
+  uint8_t mac_address_bytes[6];
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-  char mac[BMC_MAXMACADDRLEN+1];
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_lan_conf_backup_gateway_mac_address (state_data,
-                                                          mac,
-                                                          BMC_MAXMACADDRLEN+1)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (config_section_update_keyvalue_output(kv, mac) < 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (state_data->dev, 
+									    channel_number, 
+									    IPMI_GET_LAN_PARAMETER, 
+									    SET_SELECTOR, 
+									    BLOCK_SELECTOR, 
+									    obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get_data (obj_cmd_rs, 
+                         "mac_address", 
+                         mac_address_bytes,
+                         6) < 0)
+    goto cleanup;
+  
+  memset(mac_address_str, '\0', BMC_MAXMACADDRLEN+1);
+  snprintf (mac_address_str, 
+            BMC_MAXMACADDRLEN,
+            "%02X:%02X:%02X:%02X:%02X:%02X", 
+            mac_address_bytes[0], 
+            mac_address_bytes[1], 
+            mac_address_bytes[2], 
+            mac_address_bytes[3], 
+            mac_address_bytes[4], 
+            mac_address_bytes[5]);
+  
+  if (config_section_update_keyvalue_output(kv, mac_address_str) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
-  return CONFIG_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -252,8 +812,133 @@ backup_gateway_mac_address_commit (const char *section_name,
                                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_backup_gateway_mac_address (state_data,
-						      kv->value_input);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t mac_address_val = 0;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (ipmi_mac_address_string2int(kv->value_input, &mac_address_val) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (state_data->dev,
+                                                                            channel_number,
+                                                                            mac_address_val,
+                                                                            obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+static config_err_t
+_get_vlan_id (bmc_config_state_data_t *state_data,
+              struct vlan_id *vi)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  assert(state_data);
+  assert(vi);
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (state_data->dev,
+                                                         channel_number,
+                                                         IPMI_GET_LAN_PARAMETER,
+                                                         SET_SELECTOR,
+                                                         BLOCK_SELECTOR,
+                                                         obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_vlan_id: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get (obj_cmd_rs, "vlan_id", &val) < 0)
+    goto cleanup;
+  vi->vlan_id = val;
+  
+  if (Fiid_obj_get (obj_cmd_rs, "vlan_id_enable", &val) < 0)
+    goto cleanup;
+  vi->vlan_id_enable = val;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+static config_err_t
+_set_vlan_id (bmc_config_state_data_t *state_data,
+              struct vlan_id *vi)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  assert(state_data);
+  assert(vi);
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (state_data->dev,
+                                                         channel_number,
+                                                         vi->vlan_id,
+                                                         vi->vlan_id_enable,
+                                                         obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_vlan_id: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -262,16 +947,13 @@ vlan_id_checkout (const char *section_name,
                   void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint32_t vlan_id;
-  uint8_t vlan_id_enable;
+  struct vlan_id vi;
   config_err_t ret;
   
-  if ((ret = get_bmc_lan_conf_vlan_id (state_data,
-                                       &vlan_id,
-                                       &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
     return ret;
-
-  if (config_section_update_keyvalue_output_int(kv, vlan_id) < 0)
+  
+  if (config_section_update_keyvalue_output_int(kv, vi.vlan_id) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -283,23 +965,15 @@ vlan_id_commit (const char *section_name,
                 void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint32_t vlan_id;
-  uint8_t vlan_id_enable;
+  struct vlan_id vi;
   config_err_t ret;
   
-  if ((ret = get_bmc_lan_conf_vlan_id (state_data,
-                                       &vlan_id,
-                                       &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  vlan_id = atoi (kv->value_input);
+  vi.vlan_id = atoi (kv->value_input);
 
-  if ((ret = set_bmc_lan_conf_vlan_id (state_data,
-                                       vlan_id,
-                                       vlan_id_enable)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return CONFIG_ERR_SUCCESS;
+  return _set_vlan_id (state_data, &vi);
 }
 
 static config_validate_t
@@ -316,16 +990,13 @@ vlan_id_enable_checkout (const char *section_name,
                          void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint32_t vlan_id;
-  uint8_t vlan_id_enable;
+  struct vlan_id vi;
   config_err_t ret;
   
-  if ((ret = get_bmc_lan_conf_vlan_id (state_data,
-                                       &vlan_id,
-                                       &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, vlan_id_enable ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, vi.vlan_id_enable ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -337,26 +1008,15 @@ vlan_id_enable_commit (const char *section_name,
                        void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint32_t vlan_id;
-  uint8_t vlan_id_enable;
+  struct vlan_id vi;
   config_err_t ret;
   
-  if ((ret = get_bmc_lan_conf_vlan_id (state_data,
-                                       &vlan_id,
-                                       &vlan_id_enable)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_vlan_id (state_data, &vi)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (ret != 0)
-    return -1;
-
-  vlan_id_enable = same (kv->value_input, "yes");
-
-  if ((ret = set_bmc_lan_conf_vlan_id (state_data,
-                                       vlan_id,
-                                       vlan_id_enable)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  return CONFIG_ERR_SUCCESS;
+  vi.vlan_id_enable = same (kv->value_input, "yes");
+  
+  return _set_vlan_id (state_data, &vi);
 }
 
 static config_err_t
@@ -365,17 +1025,46 @@ vlan_priority_checkout (const char *section_name,
                         void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t priority;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
 
-  if ((ret = get_bmc_lan_conf_vlan_priority (state_data,
-                                             &priority)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs)))
+    goto cleanup;
 
-  if (config_section_update_keyvalue_output_int(kv, priority) < 0)
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (state_data->dev,
+                                                               channel_number,
+                                                               IPMI_GET_LAN_PARAMETER,
+                                                               SET_SELECTOR,
+                                                               BLOCK_SELECTOR,
+                                                               obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_lan_configuration_parameters_vlan_priority: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  if (Fiid_obj_get (obj_cmd_rs, "vlan_priority", &val) < 0)
+    goto cleanup;
+
+  if (config_section_update_keyvalue_output_int(kv, val) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
-  return CONFIG_ERR_SUCCESS;
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -384,8 +1073,37 @@ vlan_priority_commit (const char *section_name,
                       void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_lan_conf_vlan_priority (state_data,
-					 atoi (kv->value_input));
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if ((ret = get_lan_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (state_data->dev,
+                                                               channel_number,
+                                                               atoi (kv->value_input),
+                                                               obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_lan_configuration_parameters_vlan_priority: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 struct config_section *

@@ -65,29 +65,7 @@ config_err_t set_bmc_user_serial_channel_access (bmc_config_state_data_t *state_
                                                  uint8_t serial_user_restricted_to_callback, 
                                                  uint8_t serial_privilege_limit, 
                                                  uint8_t serial_session_limit);
-config_err_t set_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
-                                                 uint8_t ip_address_source);
-config_err_t set_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
-                                          char *ip_address);
-config_err_t set_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data, 
-                                           char *mac_address);
-config_err_t set_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data, 
-                                           char *subnet_mask);
-config_err_t set_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data, 
-                                                       char *default_gateway_address);
-config_err_t set_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                           char *default_gateway_mac_address);
-config_err_t set_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data, 
-                                                      char *backup_gateway_address);
-config_err_t set_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                          char *backup_gateway_mac_address);
-config_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
-                                       uint32_t vlan_id,
-                                       uint8_t vlan_id_enable);
-config_err_t set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
-                                             uint8_t vlan_priority);
 
-/***********************************************************/
 config_err_t get_bmc_username (bmc_config_state_data_t *state_data, 
                                uint8_t userid, 
                                uint8_t *username,
@@ -125,36 +103,7 @@ config_err_t get_bmc_user_serial_channel_access (bmc_config_state_data_t *state_
                                                  uint8_t *privilege_limit, 
                                                  uint8_t *session_limit,
                                                  uint8_t *user_id_enable_status);
-config_err_t get_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
-                                                 uint8_t *ip_address_source);
-config_err_t get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
-                                          char *ip_address,
-                                          unsigned int ip_address_len);
-config_err_t get_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data, 
-                                           char *mac_address,
-                                           unsigned int mac_address_len);
-config_err_t get_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data, 
-                                           char *subnet_mask,
-                                           unsigned int subnet_mask_len);
-config_err_t get_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data, 
-                                                       char *default_gateway_address,
-                                                       unsigned int default_gateway_address_len);
-config_err_t get_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                           char *default_gateway_mac_address,
-                                                           unsigned int default_gateway_mac_address_len);
-config_err_t get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data, 
-                                                      char *backup_gateway_address,
-                                                      unsigned int backup_gateway_address_len);
-config_err_t get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                          char *backup_gateway_mac_address,
-                                                          unsigned int backup_gateway_mac_address_len);
-config_err_t get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
-                                       uint32_t *vlan_id,
-                                       uint8_t *vlan_id_enable);
-config_err_t get_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
-                                             uint8_t *vlan_priority);
 
-/***********************************************************/
 config_err_t check_bmc_user_password (bmc_config_state_data_t *state_data, 
                                       uint8_t userid, 
                                       uint8_t *password,
