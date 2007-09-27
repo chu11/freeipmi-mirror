@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "pef-config.h"
 #include "pef-config-map.h"
@@ -14,120 +15,123 @@
 #include "pef-config-validate.h"
 #include "pef-config-wrapper.h"
 
+/* convenience struct */
+struct alert_policy_table {
+  uint8_t policy_type;
+  uint8_t policy_enabled;
+  uint8_t policy_number;
+  uint8_t destination_selector;
+  uint8_t channel_number;
+  uint8_t alert_string_set_selector;
+  uint8_t event_specific_alert_string;
+};
+
 static config_err_t
-alert_policy_get (pef_config_state_data_t *state_data,
-                  uint8_t alert_policy_entry_number,
-                  uint8_t *policy_type,
-                  uint8_t *policy_enabled,
-                  uint8_t *policy_number,
-                  uint8_t *destination_selector,
-                  uint8_t *channel_number,
-                  uint8_t *alert_string_set_selector,
-                  uint8_t *event_specific_alert_string)
+_get_alert_policy_table (struct pef_config_state_data *state_data, 
+                         const char *section_name,
+                         struct alert_policy_table *apt)
 {
-  uint8_t tmp_policy_type;
-  uint8_t tmp_policy_enabled;
-  uint8_t tmp_policy_number;
-  uint8_t tmp_destination_selector;
-  uint8_t tmp_channel_number;
-  uint8_t tmp_alert_string_set_selector;
-  uint8_t tmp_event_specific_alert_string;
-  config_err_t ret;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  uint8_t alert_policy_entry_number;
 
-  if ((ret = get_bmc_pef_conf_alert_policy_table (state_data,
-                                                  alert_policy_entry_number,
-                                                  &tmp_policy_type,
-                                                  &tmp_policy_enabled,
-                                                  &tmp_policy_number,
-                                                  &tmp_destination_selector,
-                                                  &tmp_channel_number,
-                                                  &tmp_alert_string_set_selector,
-                                                  &tmp_event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  assert(state_data);
+  assert(section_name);
+  assert(apt);
+  
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  if (policy_type)
-    *policy_type = tmp_policy_type;
-  if (policy_enabled)
-    *policy_enabled = tmp_policy_enabled;
-  if (policy_number)
-    *policy_number = tmp_policy_number;
-  if (destination_selector)
-    *destination_selector = tmp_destination_selector;
-  if (channel_number)
-    *channel_number = tmp_channel_number;
-  if (alert_string_set_selector)
-    *alert_string_set_selector = tmp_alert_string_set_selector;
-  if (event_specific_alert_string)
-    *event_specific_alert_string = tmp_event_specific_alert_string;
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs)))
+    goto cleanup;
 
-  return CONFIG_ERR_SUCCESS;
+  if (ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (state_data->dev, 
+								    IPMI_GET_PEF_PARAMETER,
+								    alert_policy_entry_number, 
+								    BLOCK_SELECTOR, 
+								    obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+#if 0
+  if (Fiid_obj_get (obj_cmd_rs, "alert_policy_entry_number", &val) < 0)
+    goto cleanup;
+#endif
+  if (Fiid_obj_get (obj_cmd_rs, "policy_number.policy_type", &val) < 0)
+    goto cleanup;
+  apt->policy_type = val;
+  if (Fiid_obj_get (obj_cmd_rs, "policy_number.enabled", &val) < 0)
+    goto cleanup;
+  apt->policy_enabled = val;
+  if (Fiid_obj_get (obj_cmd_rs, "policy_number.policy_number", &val) < 0)
+    goto cleanup;
+  apt->policy_number = val;
+  if (Fiid_obj_get (obj_cmd_rs, "channel_destination.destination_selector", &val) < 0)
+    goto cleanup;
+  apt->destination_selector = val;
+  if (Fiid_obj_get (obj_cmd_rs, "channel_destination.channel_number", &val) < 0)
+    goto cleanup;
+  apt->channel_number = val;
+  if (Fiid_obj_get (obj_cmd_rs, "alert_string_key.alert_string_set_selector", &val) < 0)
+    goto cleanup;
+  apt->alert_string_set_selector = val;
+  if (Fiid_obj_get (obj_cmd_rs, "alert_string_key.event_specific_alert_string", &val) < 0)
+    goto cleanup;
+  apt->event_specific_alert_string = val;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
-alert_policy_set (pef_config_state_data_t *state_data,
-                  uint8_t alert_policy_entry_number,
-                  uint8_t policy_type,
-                  uint8_t policy_type_is_set,
-                  uint8_t policy_enabled,
-                  uint8_t policy_enabled_is_set,
-                  uint8_t policy_number,
-                  uint8_t policy_number_is_set,
-                  uint8_t destination_selector,
-                  uint8_t destination_selector_is_set,
-                  uint8_t channel_number,
-                  uint8_t channel_number_is_set,
-                  uint8_t alert_string_set_selector,
-                  uint8_t alert_string_set_selector_is_set,
-                  uint8_t event_specific_alert_string,
-                  uint8_t event_specific_alert_string_is_set)
+_set_alert_policy_table (struct pef_config_state_data *state_data, 
+                         const char *section_name,
+                         struct alert_policy_table *apt)
 {
-  uint8_t tmp_policy_type;
-  uint8_t tmp_policy_enabled;
-  uint8_t tmp_policy_number;
-  uint8_t tmp_destination_selector;
-  uint8_t tmp_channel_number;
-  uint8_t tmp_alert_string_set_selector;
-  uint8_t tmp_event_specific_alert_string;
-  config_err_t ret;
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  uint8_t alert_policy_entry_number;
 
-  if ((ret = get_bmc_pef_conf_alert_policy_table (state_data,
-                                                  alert_policy_entry_number,
-                                                  &tmp_policy_type,
-                                                  &tmp_policy_enabled,
-                                                  &tmp_policy_number,
-                                                  &tmp_destination_selector,
-                                                  &tmp_channel_number,
-                                                  &tmp_alert_string_set_selector,
-                                                  &tmp_event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  assert(state_data);
+  assert(section_name);
+  assert(apt);
 
-  if (policy_type_is_set)
-    tmp_policy_type = policy_type;
-  if (policy_enabled_is_set)
-    tmp_policy_enabled = policy_enabled;
-  if (policy_number_is_set)
-    tmp_policy_number = policy_number;
-  if (destination_selector_is_set)
-    tmp_destination_selector = destination_selector;
-  if (channel_number_is_set)
-    tmp_channel_number = channel_number;
-  if (alert_string_set_selector_is_set)
-    tmp_alert_string_set_selector = alert_string_set_selector;
-  if (event_specific_alert_string_is_set)
-    tmp_event_specific_alert_string = event_specific_alert_string;
+  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
 
-  if ((ret = set_bmc_pef_conf_alert_policy_table (state_data,
-                                                  alert_policy_entry_number,
-                                                  tmp_policy_type,
-                                                  tmp_policy_enabled,
-                                                  tmp_policy_number,
-                                                  tmp_destination_selector,
-                                                  tmp_channel_number,
-                                                  tmp_alert_string_set_selector,
-                                                  tmp_event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
-    return ret;
-  
-  return CONFIG_ERR_SUCCESS;
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (state_data->dev, 
+								    alert_policy_entry_number, 
+								    apt->policy_type, 
+								    apt->policy_enabled, 
+								    apt->policy_number, 
+								    apt->destination_selector, 
+								    apt->channel_number, 
+								    apt->alert_string_set_selector, 
+								    apt->event_specific_alert_string, 
+								    obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+      
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -136,24 +140,15 @@ policy_type_checkout (const char *section_name,
                       void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t policy_type;
+  struct alert_policy_table apt;
   config_err_t ret;
-  uint8_t alert_policy_entry_number;
   
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-  
-  if ((ret = alert_policy_get (state_data,
-                               alert_policy_entry_number,
-                               &policy_type,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, policy_type_string (policy_type)) < 0)
+  if (config_section_update_keyvalue_output(kv, policy_type_string (apt.policy_type)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -165,19 +160,19 @@ policy_type_commit (const char *section_name,
                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_policy_entry_number;
+  struct alert_policy_table apt;
+  config_err_t ret;
 
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  return alert_policy_set (state_data,
-                           alert_policy_entry_number,
-                           policy_type_number (kv->value_input), 1,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0);
+  apt.policy_type = policy_type_number (kv->value_input);
+
+  return _set_alert_policy_table (state_data, 
+                                  section_name,
+                                  &apt);
 }
 
 static config_err_t
@@ -186,24 +181,15 @@ policy_enabled_checkout (const char *section_name,
                          void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t policy_enabled;
+  struct alert_policy_table apt;
   config_err_t ret;
-  uint8_t alert_policy_entry_number;
   
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-  
-  if ((ret = alert_policy_get (state_data,
-                               alert_policy_entry_number,
-                               NULL,
-                               &policy_enabled,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, policy_enabled ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, apt.policy_enabled ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -215,19 +201,19 @@ policy_enabled_commit (const char *section_name,
                        void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_policy_entry_number;
+  struct alert_policy_table apt;
+  config_err_t ret;
 
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  return alert_policy_set (state_data,
-                           alert_policy_entry_number,
-                           0, 0,
-                           same (kv->value_input, "yes"), 1,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0);
+  apt.policy_enabled = same (kv->value_input, "yes");
+
+  return _set_alert_policy_table (state_data, 
+                                  section_name,
+                                  &apt);
 }
 
 static config_err_t
@@ -236,24 +222,15 @@ policy_number_checkout (const char *section_name,
                         void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t policy_number;
+  struct alert_policy_table apt;
   config_err_t ret;
-  uint8_t alert_policy_entry_number;
   
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-  
-  if ((ret = alert_policy_get (state_data,
-                               alert_policy_entry_number,
-                               NULL,
-                               NULL,
-                               &policy_number,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, policy_number) < 0)
+  if (config_section_update_keyvalue_output_int(kv, apt.policy_number) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -265,22 +242,19 @@ policy_number_commit (const char *section_name,
                       void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_policy_entry_number;
-  uint8_t policy_number;
+  struct alert_policy_table apt;
+  config_err_t ret;
 
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  policy_number = atoi (kv->value_input);
+  apt.policy_number = atoi (kv->value_input);
 
-  return alert_policy_set (state_data,
-                           alert_policy_entry_number,
-                           0, 0,
-                           0, 0,
-                           policy_number, 1,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0);
+  return _set_alert_policy_table (state_data, 
+                                  section_name,
+                                  &apt);
 }
 
 static config_err_t
@@ -289,24 +263,15 @@ destination_selector_checkout (const char *section_name,
                                void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t destination_selector;
+  struct alert_policy_table apt;
   config_err_t ret;
-  uint8_t alert_policy_entry_number;
   
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-  
-  if ((ret = alert_policy_get (state_data,
-                               alert_policy_entry_number,
-                               NULL,
-                               NULL,
-                               NULL,
-                               &destination_selector,
-                               NULL,
-                               NULL,
-                               NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, destination_selector) < 0)
+  if (config_section_update_keyvalue_output_int(kv, apt.destination_selector) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -318,22 +283,19 @@ destination_selector_commit (const char *section_name,
                              void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_policy_entry_number;
-  uint8_t destination_selector;
+  struct alert_policy_table apt;
+  config_err_t ret;
 
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  destination_selector = atoi (kv->value_input);
+  apt.destination_selector = atoi (kv->value_input);
 
-  return alert_policy_set (state_data,
-                           alert_policy_entry_number,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           destination_selector, 1,
-                           0, 0,
-                           0, 0,
-                           0, 0);
+  return _set_alert_policy_table (state_data, 
+                                  section_name,
+                                  &apt);
 }
 
 static config_err_t
@@ -342,24 +304,15 @@ channel_number_checkout (const char *section_name,
                          void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t channel_number;
+  struct alert_policy_table apt;
   config_err_t ret;
-  uint8_t alert_policy_entry_number;
   
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-  
-  if ((ret = alert_policy_get (state_data,
-                               alert_policy_entry_number,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               &channel_number,
-                               NULL,
-                               NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, channel_number) < 0)
+  if (config_section_update_keyvalue_output_int(kv, apt.channel_number) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -371,22 +324,19 @@ channel_number_commit (const char *section_name,
                        void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_policy_entry_number;
-  uint8_t channel_number;
+  struct alert_policy_table apt;
+  config_err_t ret;
 
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  channel_number = atoi (kv->value_input);
+  apt.channel_number = atoi (kv->value_input);
 
-  return alert_policy_set (state_data,
-                           alert_policy_entry_number,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           channel_number, 1,
-                           0, 0,
-                           0, 0);
+  return _set_alert_policy_table (state_data, 
+                                  section_name,
+                                  &apt);
 }
 
 static config_err_t
@@ -395,24 +345,15 @@ alert_string_set_selector_checkout (const char *section_name,
                                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_string_set_selector;
+  struct alert_policy_table apt;
   config_err_t ret;
-  uint8_t alert_policy_entry_number;
   
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-  
-  if ((ret = alert_policy_get (state_data,
-                               alert_policy_entry_number,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               &alert_string_set_selector,
-                               NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, alert_string_set_selector) < 0)
+  if (config_section_update_keyvalue_output_int(kv, apt.alert_string_set_selector) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -424,22 +365,19 @@ alert_string_set_selector_commit (const char *section_name,
                                   void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_policy_entry_number;
-  uint8_t alert_string_set_selector;
+  struct alert_policy_table apt;
+  config_err_t ret;
 
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  alert_string_set_selector = atoi (kv->value_input);
+  apt.alert_string_set_selector = atoi (kv->value_input);
 
-  return alert_policy_set (state_data,
-                           alert_policy_entry_number,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           alert_string_set_selector, 1,
-                           0, 0);
+  return _set_alert_policy_table (state_data, 
+                                  section_name,
+                                  &apt);
 }
 
 static config_err_t
@@ -448,24 +386,15 @@ event_specific_alert_string_checkout (const char *section_name,
                                       void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t event_specific_alert_string;
+  struct alert_policy_table apt;
   config_err_t ret;
-  uint8_t alert_policy_entry_number;
   
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
-  
-  if ((ret = alert_policy_get (state_data,
-                               alert_policy_entry_number,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               NULL,
-                               &event_specific_alert_string)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, event_specific_alert_string ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, apt.event_specific_alert_string ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -477,19 +406,19 @@ event_specific_alert_string_commit (const char *section_name,
                                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t alert_policy_entry_number;
+  struct alert_policy_table apt;
+  config_err_t ret;
 
-  alert_policy_entry_number = atoi (section_name + strlen ("Alert_Policy_"));
+  if ((ret = _get_alert_policy_table (state_data, 
+                                      section_name,
+                                      &apt)) != CONFIG_ERR_SUCCESS)
+    return ret;
 
-  return alert_policy_set (state_data,
-                           alert_policy_entry_number,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           same (kv->value_input, "yes"), 1);
+  apt.event_specific_alert_string = same (kv->value_input, "yes");
+
+  return _set_alert_policy_table (state_data, 
+                                  section_name,
+                                  &apt);
 }
 
 struct config_section *
