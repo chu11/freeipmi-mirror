@@ -7,85 +7,122 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-wrapper.h"
 #include "bmc-config-map.h"
 #include "bmc-config-validate.h"
+#include "bmc-config-utils.h"
 
-static config_err_t
-serial_conf_checkout (bmc_config_state_data_t *state_data,
-		      uint8_t *basic_mode,
-		      uint8_t *ppp_mode,
-		      uint8_t *terminal_mode,
-		      uint8_t *connect_mode)
+/* convenience struct */
+struct connection_mode {
+  uint8_t basic_mode;
+  uint8_t ppp_mode;
+  uint8_t terminal_mode;
+  uint8_t connect_mode;
+};
+
+static config_err_t 
+_get_connection_mode (bmc_config_state_data_t *state_data, 
+                      struct connection_mode *cm)
 {
-  uint8_t tmp_basic_mode;
-  uint8_t tmp_ppp_mode;
-  uint8_t tmp_terminal_mode;
-  uint8_t tmp_connect_mode;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
+  
+  assert(state_data);
+  assert(cm);
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_connection_mode_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_serial_conf_connection_mode (state_data,
-                                                  &tmp_basic_mode,
-                                                  &tmp_ppp_mode,
-                                                  &tmp_terminal_mode,
-                                                  &tmp_connect_mode)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (basic_mode)
-    *basic_mode = tmp_basic_mode;
-
-  if (ppp_mode)
-    *ppp_mode = tmp_ppp_mode;
-
-  if (terminal_mode)
-    *terminal_mode = tmp_terminal_mode;
-
-  if (connect_mode)
-    *connect_mode = tmp_connect_mode;
-
-  return CONFIG_ERR_SUCCESS;
+  if (ipmi_cmd_get_serial_modem_configuration_connection_mode (state_data->dev, 
+							       channel_number, 
+							       IPMI_GET_SERIAL_MODEM_PARAMETER, 
+							       SET_SELECTOR, 
+							       BLOCK_SELECTOR, 
+							       obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get (obj_cmd_rs, "basic_mode", &val) < 0)
+    goto cleanup;
+  cm->basic_mode = val;
+  
+  if (Fiid_obj_get (obj_cmd_rs, "ppp_mode", &val) < 0)
+    goto cleanup;
+  cm->ppp_mode = val;
+  
+  if (Fiid_obj_get (obj_cmd_rs, "terminal_mode", &val) < 0)
+    goto cleanup;
+  cm->terminal_mode = val;
+  
+  if (Fiid_obj_get (obj_cmd_rs, "connect_mode", &val) < 0)
+    goto cleanup;
+  cm->connect_mode = val;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
-
-static config_err_t
-serial_conf_commit (bmc_config_state_data_t *state_data,
-		    uint8_t *basic_mode,
-		    uint8_t *ppp_mode,
-		    uint8_t *terminal_mode,
-		    uint8_t *connect_mode)
+static config_err_t 
+_set_connection_mode (bmc_config_state_data_t *state_data, 
+                      struct connection_mode *cm)
 {
-  uint8_t tmp_basic_mode;
-  uint8_t tmp_ppp_mode;
-  uint8_t tmp_terminal_mode;
-  uint8_t tmp_connect_mode;
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
+  
+  assert(state_data);
+  assert(cm);
 
-  if ((ret = get_bmc_serial_conf_connection_mode (state_data,
-                                                  &tmp_basic_mode,
-                                                  &tmp_ppp_mode,
-                                                  &tmp_terminal_mode,
-                                                  &tmp_connect_mode)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
+    goto cleanup;
+  
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (basic_mode)
-    tmp_basic_mode = *basic_mode;
-
-  if (ppp_mode)
-    tmp_ppp_mode = *ppp_mode;
-
-  if (terminal_mode)
-    tmp_terminal_mode = *terminal_mode;
-
-  if (connect_mode)
-    tmp_connect_mode = *connect_mode;
-
-  return set_bmc_serial_conf_connection_mode (state_data,
-                                              tmp_basic_mode,
-                                              tmp_ppp_mode,
-                                              tmp_terminal_mode,
-                                              tmp_connect_mode);
+  if (ipmi_cmd_set_serial_modem_configuration_connection_mode (state_data->dev, 
+							       channel_number, 
+							       cm->basic_mode,
+							       cm->ppp_mode,
+							       cm->terminal_mode,
+							       cm->connect_mode,
+							       obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+   
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -94,19 +131,16 @@ enable_basic_mode_checkout (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
+  struct connection_mode cm;
   config_err_t ret;
 
-  if ((ret = serial_conf_checkout (state_data,
-                                   &value,
-                                   NULL,
-                                   NULL,
-                                   NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, 
+                                            cm.basic_mode ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
-
+  
   return CONFIG_ERR_SUCCESS;
 }
 
@@ -116,11 +150,15 @@ enable_basic_mode_commit (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
-  value = (same (kv->value_input, "yes") ? 1 : 0);
+  struct connection_mode cm;
+  config_err_t ret;
 
-  return serial_conf_commit (state_data,
-			     &value, NULL, NULL, NULL);
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  cm.basic_mode = same (kv->value_input, "yes");
+
+  return _set_connection_mode (state_data, &cm);
 }
 
 static config_err_t
@@ -129,17 +167,14 @@ enable_ppp_mode_checkout (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
+  struct connection_mode cm;
   config_err_t ret;
 
-  if ((ret = serial_conf_checkout (state_data,
-                                   NULL,
-                                   &value,
-                                   NULL,
-                                   NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, 
+                                            cm.ppp_mode ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -151,11 +186,15 @@ enable_ppp_mode_commit (const char *section_name,
                         void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
-  value = (same (kv->value_input, "yes") ? 1 : 0);
+  struct connection_mode cm;
+  config_err_t ret;
 
-  return serial_conf_commit (state_data,
-			     NULL, &value, NULL, NULL);
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  cm.ppp_mode = same (kv->value_input, "yes");
+
+  return _set_connection_mode (state_data, &cm);
 }
 
 static config_err_t
@@ -164,17 +203,14 @@ enable_terminal_mode_checkout (const char *section_name,
                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
+  struct connection_mode cm;
   config_err_t ret;
 
-  if ((ret = serial_conf_checkout (state_data,
-                                   NULL,
-                                   NULL,
-                                   &value,
-                                   NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, 
+                                            cm.terminal_mode ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -186,11 +222,15 @@ enable_terminal_mode_commit (const char *section_name,
                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
-  value = (same (kv->value_input, "yes") ? 1 : 0);
+  struct connection_mode cm;
+  config_err_t ret;
 
-  return serial_conf_commit (state_data,
-			     NULL, NULL, &value, NULL);
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  cm.terminal_mode = same (kv->value_input, "yes");
+
+  return _set_connection_mode (state_data, &cm);
 }
 
 static config_err_t
@@ -199,17 +239,14 @@ connect_mode_checkout (const char *section_name,
                        void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
+  struct connection_mode cm;
   config_err_t ret;
 
-  if ((ret = serial_conf_checkout (state_data,
-                                   NULL,
-                                   NULL,
-                                   NULL,
-                                   &value)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, connect_mode_string (value)) < 0)
+  if (config_section_update_keyvalue_output(kv, 
+                                            connect_mode_string (cm.connect_mode)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -221,11 +258,15 @@ connect_mode_commit (const char *section_name,
                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
-  value = connect_mode_number (kv->value_input);
+  struct connection_mode cm;
+  config_err_t ret;
 
-  return serial_conf_commit (state_data,
-			     NULL, NULL, NULL, &value);
+  if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  cm.connect_mode = connect_mode_number (kv->value_input);
+  
+  return _set_connection_mode (state_data, &cm);
 }
 
 static config_err_t
@@ -234,17 +275,47 @@ page_blackout_interval_checkout (const char *section_name,
                                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t interval;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
-
-  if ((ret = get_bmc_serial_conf_page_blackout_interval (state_data,
-                                                         &interval)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  uint8_t channel_number;
   
-  if (config_section_update_keyvalue_output_int(kv, interval) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs)))
+    goto cleanup;
 
-  return CONFIG_ERR_SUCCESS;
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (state_data->dev, 
+								      channel_number, 
+								      IPMI_GET_SERIAL_MODEM_PARAMETER, 
+								      SET_SELECTOR, 
+								      BLOCK_SELECTOR, 
+								      obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get (obj_cmd_rs, "page_blackout_interval", &val) < 0)
+    goto cleanup;
+
+  if (config_section_update_keyvalue_output_int(kv, val) < 0)
+    return CONFIG_ERR_FATAL_ERROR;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+
 }
 
 static config_err_t
@@ -253,8 +324,37 @@ page_blackout_interval_commit (const char *section_name,
                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_serial_conf_page_blackout_interval (state_data,
-						     atoi (kv->value_input));
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
+    goto cleanup;
+
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (state_data->dev, 
+								      channel_number, 
+								      atoi (kv->value_input), 
+								      obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);	
 }
 
 static config_err_t
@@ -263,17 +363,46 @@ call_retry_interval_checkout (const char *section_name,
                               void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t interval;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_serial_conf_call_retry_interval (state_data,
-                                                      &interval)) != CONFIG_ERR_SUCCESS)
-    return ret;
-       
-  if (config_section_update_keyvalue_output_int(kv, interval) < 0)
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval (state_data->dev, 
+								   channel_number, 
+								   IPMI_GET_SERIAL_MODEM_PARAMETER, 
+								   SET_SELECTOR, 
+								   BLOCK_SELECTOR, 
+								   obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get (obj_cmd_rs, "call_retry_interval", &val) < 0)
+    goto cleanup;
+
+  if (config_section_update_keyvalue_output_int(kv, val) < 0)
     return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 static config_err_t
@@ -282,67 +411,132 @@ call_retry_interval_commit (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  return set_bmc_serial_conf_call_retry_interval (state_data,
-                                                  atoi (kv->value_input));
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  config_err_t ret;
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
+    goto cleanup;
+
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_serial_modem_configuration_call_retry_interval (state_data->dev, 
+								   channel_number, 
+								   atoi (kv->value_input), 
+								   obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);	
 }
 
-static config_err_t
-serial_conf_comm_checkout (bmc_config_state_data_t *state_data,
-			   uint8_t *dtr_hangup,
-			   uint8_t *flow_control,
-			   uint8_t *bit_rate)
+static config_err_t 
+_get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
+                                   uint8_t *dtr_hangup, 
+                                   uint8_t *flow_control, 
+                                   uint8_t *bit_rate)
 {
-  uint8_t tmp_dtr_hangup;
-  uint8_t tmp_flow_control;
-  uint8_t tmp_bit_rate;
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_serial_conf_ipmi_messaging_comm_settings (state_data,
-                                                               &tmp_dtr_hangup,
-                                                               &tmp_flow_control,
-                                                               &tmp_bit_rate)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (dtr_hangup)
-    *dtr_hangup = tmp_dtr_hangup;
-
-  if (flow_control)
-    *flow_control = tmp_flow_control;
-
-  if (bit_rate)
-    *bit_rate = tmp_bit_rate;
-
-  return CONFIG_ERR_SUCCESS;
+  if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (state_data->dev, 
+									    channel_number, 
+									    IPMI_GET_SERIAL_MODEM_PARAMETER, 
+									    SET_SELECTOR, 
+									    BLOCK_SELECTOR, 
+									    obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  if (Fiid_obj_get (obj_cmd_rs, "dtr_hangup", &val) < 0)
+    goto cleanup;
+  *dtr_hangup = val;
+  
+  if (Fiid_obj_get (obj_cmd_rs, "flow_control", &val) < 0)
+    goto cleanup;
+  *flow_control = val;
+  
+  if (Fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
+    goto cleanup;
+  *bit_rate = val;
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
-static config_err_t
-serial_conf_comm_commit (bmc_config_state_data_t *state_data,
-			 uint8_t *dtr_hangup,
-			 uint8_t *flow_control,
-			 uint8_t *bit_rate)
+static config_err_t 
+_set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
+                                   uint8_t dtr_hangup, 
+                                   uint8_t flow_control, 
+                                   uint8_t bit_rate)
 {
-  uint8_t tmp_dtr_hangup;
-  uint8_t tmp_flow_control;
-  uint8_t tmp_bit_rate;
+  fiid_obj_t obj_cmd_rs = NULL;
+  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
+  uint8_t channel_number;
+  
+  if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
+    goto cleanup;
 
-  if ((ret = get_bmc_serial_conf_ipmi_messaging_comm_settings (state_data,
-                                                               &tmp_dtr_hangup,
-                                                               &tmp_flow_control,
-                                                               &tmp_bit_rate)) != CONFIG_ERR_SUCCESS)
-    return ret;
+  if ((ret = get_serial_channel_number (state_data, &channel_number)) != CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
 
-  if (dtr_hangup)
-    tmp_dtr_hangup = *dtr_hangup;
-  if (flow_control)
-    tmp_flow_control = *flow_control;
-  if (bit_rate)
-    tmp_bit_rate = *bit_rate;
-
-  return set_bmc_serial_conf_ipmi_messaging_comm_settings (state_data,
-							   tmp_dtr_hangup,
-							   tmp_flow_control,
-							   tmp_bit_rate);
+  if (ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (state_data->dev, 
+									    channel_number, 
+									    dtr_hangup, 
+									    flow_control, 
+									    bit_rate, 
+									    obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
+        fprintf(stderr,
+                "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
+                ipmi_device_strerror(ipmi_device_errnum(state_data->dev)));
+      rv = CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+  
+  rv = CONFIG_ERR_SUCCESS;
+ cleanup:
+  Fiid_obj_destroy(obj_cmd_rs);
+  return (rv);	
 }
 
 static config_err_t
@@ -351,16 +545,18 @@ enable_dtr_hangup_checkout (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
+  uint8_t dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
   config_err_t ret;
   
-  if ((ret = serial_conf_comm_checkout (state_data,
-                                        &value,
-                                        NULL,
-                                        NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
+                                                &dtr_hangup,
+                                                &flow_control,
+                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, dtr_hangup ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -372,12 +568,23 @@ enable_dtr_hangup_commit (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = same (kv->value_input, "yes");
+  uint8_t dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
+  config_err_t ret;
 
-  return serial_conf_comm_commit (state_data,
-				  &value,
-				  NULL,
-				  NULL);
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
+                                                &dtr_hangup,
+                                                &flow_control,
+                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  dtr_hangup = same (kv->value_input, "yes");
+
+  return _set_ipmi_messaging_comm_settings (state_data,
+                                            dtr_hangup,
+                                            flow_control,
+                                            bit_rate);
 }
 
 static config_err_t
@@ -386,16 +593,18 @@ flow_control_checkout (const char *section_name,
                        void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
+  uint8_t dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
   config_err_t ret;
   
-  if ((ret = serial_conf_comm_checkout (state_data,
-                                        NULL,
-                                        &value,
-                                        NULL)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
+                                                &dtr_hangup,
+                                                &flow_control,
+                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, flow_control_string (value)) < 0)
+  if (config_section_update_keyvalue_output(kv, flow_control_string (flow_control)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -407,11 +616,23 @@ flow_control_commit (const char *section_name,
                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = flow_control_number (kv->value_input);
-  return serial_conf_comm_commit (state_data,
-				  NULL,
-				  &value,
-				  NULL);
+  uint8_t dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
+  config_err_t ret;
+
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
+                                                &dtr_hangup,
+                                                &flow_control,
+                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  flow_control = flow_control_number (kv->value_input);
+
+  return _set_ipmi_messaging_comm_settings (state_data,
+                                            dtr_hangup,
+                                            flow_control,
+                                            bit_rate);
 }
 
 static config_err_t
@@ -420,16 +641,18 @@ bit_rate_checkout (const char *section_name,
                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value;
+  uint8_t dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
   config_err_t ret;
   
-  if ((ret = serial_conf_comm_checkout (state_data,
-                                        NULL,
-                                        NULL,
-                                        &value)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
+                                                &dtr_hangup,
+                                                &flow_control,
+                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, bit_rate_string (value)) < 0)
+  if (config_section_update_keyvalue_output(kv, bit_rate_string (bit_rate)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -441,11 +664,23 @@ bit_rate_commit (const char *section_name,
                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t value = bit_rate_number (kv->value_input);
-  return serial_conf_comm_commit (state_data,
-				  NULL,
-				  NULL,
-				  &value);
+  uint8_t dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
+  config_err_t ret;
+
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
+                                                &dtr_hangup,
+                                                &flow_control,
+                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+    return ret;
+
+  bit_rate = bit_rate_number (kv->value_input);
+
+  return _set_ipmi_messaging_comm_settings (state_data,
+                                            dtr_hangup,
+                                            flow_control,
+                                            bit_rate);
 }
 
 struct config_section *
