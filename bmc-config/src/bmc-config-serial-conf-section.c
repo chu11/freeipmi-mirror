@@ -15,12 +15,19 @@
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 
-/* convenience struct */
+/* convenience structs */
+
 struct connection_mode {
   uint8_t basic_mode;
   uint8_t ppp_mode;
   uint8_t terminal_mode;
   uint8_t connect_mode;
+};
+
+struct ipmi_messaging_comm_settings {
+  uint8_t dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
 };
 
 static config_err_t 
@@ -446,15 +453,16 @@ call_retry_interval_commit (const char *section_name,
 
 static config_err_t 
 _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
-                                   uint8_t *dtr_hangup, 
-                                   uint8_t *flow_control, 
-                                   uint8_t *bit_rate)
+                                   struct ipmi_messaging_comm_settings *cs)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert(state_data);
+  assert(cs);
   
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs)))
     goto cleanup;
@@ -482,15 +490,15 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
   
   if (Fiid_obj_get (obj_cmd_rs, "dtr_hangup", &val) < 0)
     goto cleanup;
-  *dtr_hangup = val;
+  cs->dtr_hangup = val;
   
   if (Fiid_obj_get (obj_cmd_rs, "flow_control", &val) < 0)
     goto cleanup;
-  *flow_control = val;
+  cs->flow_control = val;
   
   if (Fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
     goto cleanup;
-  *bit_rate = val;
+  cs->bit_rate = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -500,15 +508,16 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
 
 static config_err_t 
 _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
-                                   uint8_t dtr_hangup, 
-                                   uint8_t flow_control, 
-                                   uint8_t bit_rate)
+                                   struct ipmi_messaging_comm_settings *cs)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
   
+  assert(state_data);
+  assert(cs);
+
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_serial_modem_configuration_rs)))
     goto cleanup;
 
@@ -520,9 +529,9 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (state_data->dev, 
 									    channel_number, 
-									    dtr_hangup, 
-									    flow_control, 
-									    bit_rate, 
+									    cs->dtr_hangup, 
+									    cs->flow_control, 
+									    cs->bit_rate, 
 									    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -545,18 +554,14 @@ enable_dtr_hangup_checkout (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t dtr_hangup;
-  uint8_t flow_control;
-  uint8_t bit_rate;
+  struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
   
   if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &dtr_hangup,
-                                                &flow_control,
-                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+                                                &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, dtr_hangup ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, cs.dtr_hangup ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -568,23 +573,16 @@ enable_dtr_hangup_commit (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t dtr_hangup;
-  uint8_t flow_control;
-  uint8_t bit_rate;
+  struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &dtr_hangup,
-                                                &flow_control,
-                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+                                                &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  dtr_hangup = same (kv->value_input, "yes");
+  cs.dtr_hangup = same (kv->value_input, "yes");
 
-  return _set_ipmi_messaging_comm_settings (state_data,
-                                            dtr_hangup,
-                                            flow_control,
-                                            bit_rate);
+  return _set_ipmi_messaging_comm_settings (state_data, &cs);
 }
 
 static config_err_t
@@ -593,18 +591,14 @@ flow_control_checkout (const char *section_name,
                        void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t dtr_hangup;
-  uint8_t flow_control;
-  uint8_t bit_rate;
+  struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
   
   if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &dtr_hangup,
-                                                &flow_control,
-                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+                                                &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, flow_control_string (flow_control)) < 0)
+  if (config_section_update_keyvalue_output(kv, flow_control_string (cs.flow_control)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -616,23 +610,16 @@ flow_control_commit (const char *section_name,
                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t dtr_hangup;
-  uint8_t flow_control;
-  uint8_t bit_rate;
+  struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &dtr_hangup,
-                                                &flow_control,
-                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+                                                &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  flow_control = flow_control_number (kv->value_input);
+  cs.flow_control = flow_control_number (kv->value_input);
 
-  return _set_ipmi_messaging_comm_settings (state_data,
-                                            dtr_hangup,
-                                            flow_control,
-                                            bit_rate);
+  return _set_ipmi_messaging_comm_settings (state_data, &cs);
 }
 
 static config_err_t
@@ -641,18 +628,14 @@ bit_rate_checkout (const char *section_name,
                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t dtr_hangup;
-  uint8_t flow_control;
-  uint8_t bit_rate;
+  struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
   
   if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &dtr_hangup,
-                                                &flow_control,
-                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+                                                &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, bit_rate_string (bit_rate)) < 0)
+  if (config_section_update_keyvalue_output(kv, bit_rate_string (cs.bit_rate)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -664,23 +647,16 @@ bit_rate_commit (const char *section_name,
                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t dtr_hangup;
-  uint8_t flow_control;
-  uint8_t bit_rate;
+  struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &dtr_hangup,
-                                                &flow_control,
-                                                &bit_rate)) != CONFIG_ERR_SUCCESS)
+                                                &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  bit_rate = bit_rate_number (kv->value_input);
+  cs.bit_rate = bit_rate_number (kv->value_input);
 
-  return _set_ipmi_messaging_comm_settings (state_data,
-                                            dtr_hangup,
-                                            flow_control,
-                                            bit_rate);
+  return _set_ipmi_messaging_comm_settings (state_data, &cs);
 }
 
 struct config_section *

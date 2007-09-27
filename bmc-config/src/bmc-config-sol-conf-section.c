@@ -15,6 +15,25 @@
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 
+/* convenience structs */
+
+struct sol_authentication
+{
+  uint8_t sol_privilege_level;
+  uint8_t force_sol_payload_authentication;
+  uint8_t force_sol_payload_encryption;
+};
+
+struct interval_and_threshold {
+  uint8_t character_accumulate_interval;
+  uint8_t character_send_threshold;
+};
+
+struct sol_retry {
+  uint8_t retry_count;
+  uint8_t retry_interval;
+};
+
 static config_err_t
 enable_sol_checkout (const char *section_name,
 		     struct config_keyvalue *kv,
@@ -104,15 +123,16 @@ enable_sol_commit (const char *section_name,
 
 static config_err_t 
 _get_sol_sol_authentication (bmc_config_state_data_t *state_data, 
-                             uint8_t *sol_privilege_level,
-                             uint8_t *force_sol_payload_authentication,
-                             uint8_t *force_sol_payload_encryption)
+                             struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+  
+  assert(state_data);
+  assert(sa);
   
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs)))
     goto cleanup;
@@ -140,15 +160,15 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
   
   if (Fiid_obj_get (obj_cmd_rs, "sol_privilege_level", &val) < 0)
     goto cleanup;
-  *sol_privilege_level = val;
+  sa->sol_privilege_level = val;
   
   if (Fiid_obj_get (obj_cmd_rs, "force_sol_payload_authentication", &val) < 0)
     goto cleanup;
-  *force_sol_payload_authentication = val;
+  sa->force_sol_payload_authentication = val;
 
   if (Fiid_obj_get (obj_cmd_rs, "force_sol_payload_encryption", &val) < 0)
     goto cleanup;
-  *force_sol_payload_encryption = val;
+  sa->force_sol_payload_encryption = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -158,14 +178,15 @@ _get_sol_sol_authentication (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _set_sol_sol_authentication(bmc_config_state_data_t *state_data,
-                            uint8_t sol_privilege_level,
-                            uint8_t force_sol_payload_authentication,
-                            uint8_t force_sol_payload_encryption)
+                            struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert(state_data);
+  assert(sa);
   
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
@@ -178,9 +199,9 @@ _set_sol_sol_authentication(bmc_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (state_data->dev, 
 								    channel_number,
-								    sol_privilege_level,
-								    force_sol_payload_authentication,
-								    force_sol_payload_encryption,
+								    sa->sol_privilege_level,
+								    sa->force_sol_payload_authentication,
+								    sa->force_sol_payload_encryption,
 								    obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -203,18 +224,14 @@ sol_privilege_level_checkout (const char *section_name,
                               void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t sol_privilege_level;
-  uint8_t force_sol_payload_authentication;
-  uint8_t force_sol_payload_encryption;
+  struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sol_privilege_level,
-                                          &force_sol_payload_authentication,
-                                          &force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data,
+                                          &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, privilege_level_string (sol_privilege_level)) < 0)
+  if (config_section_update_keyvalue_output(kv, privilege_level_string (sa.sol_privilege_level)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -226,23 +243,16 @@ sol_privilege_level_commit (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t sol_privilege_level;
-  uint8_t force_sol_payload_authentication;
-  uint8_t force_sol_payload_encryption;
+  struct sol_authentication sa;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sol_privilege_level,
-                                          &force_sol_payload_authentication,
-                                          &force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
+                                          &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  sol_privilege_level = privilege_level_number (kv->value_input);
+  sa.sol_privilege_level = privilege_level_number (kv->value_input);
 
-  return _set_sol_sol_authentication (state_data, 
-                                      sol_privilege_level,
-                                      force_sol_payload_authentication,
-                                      force_sol_payload_encryption);
+  return _set_sol_sol_authentication (state_data, &sa);
 }
 
 static config_err_t
@@ -251,18 +261,14 @@ force_sol_payload_authentication_checkout (const char *section_name,
                                            void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t sol_privilege_level;
-  uint8_t force_sol_payload_authentication;
-  uint8_t force_sol_payload_encryption;
+  struct sol_authentication sa;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sol_privilege_level,
-                                          &force_sol_payload_authentication,
-                                          &force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
+                                          &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, force_sol_payload_authentication ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -274,23 +280,16 @@ force_sol_payload_authentication_commit (const char *section_name,
                                          void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t sol_privilege_level;
-  uint8_t force_sol_payload_authentication;
-  uint8_t force_sol_payload_encryption;
+  struct sol_authentication sa;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sol_privilege_level,
-                                          &force_sol_payload_authentication,
-                                          &force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
+                                          &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  force_sol_payload_authentication = same (kv->value_input, "yes") ? 1 : 0;
+  sa.force_sol_payload_authentication = same (kv->value_input, "yes") ? 1 : 0;
   
-  return _set_sol_sol_authentication (state_data, 
-                                      sol_privilege_level,
-                                      force_sol_payload_authentication,
-                                      force_sol_payload_encryption);
+  return _set_sol_sol_authentication (state_data, &sa);
 }
 
 static config_err_t
@@ -299,18 +298,14 @@ force_sol_payload_encryption_checkout (const char *section_name,
                                        void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t sol_privilege_level;
-  uint8_t force_sol_payload_authentication;
-  uint8_t force_sol_payload_encryption;
+  struct sol_authentication sa;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sol_privilege_level,
-                                          &force_sol_payload_authentication,
-                                          &force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
+                                          &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, force_sol_payload_encryption ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -322,36 +317,31 @@ force_sol_payload_encryption_commit (const char *section_name,
                                      void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t sol_privilege_level;
-  uint8_t force_sol_payload_authentication;
-  uint8_t force_sol_payload_encryption;
+  struct sol_authentication sa;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sol_privilege_level,
-                                          &force_sol_payload_authentication,
-                                          &force_sol_payload_encryption)) != CONFIG_ERR_SUCCESS)
+                                          &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  force_sol_payload_encryption = same (kv->value_input, "yes") ? 1 : 0;
+  sa.force_sol_payload_encryption = same (kv->value_input, "yes") ? 1 : 0;
 
-  return _set_sol_sol_authentication (state_data, 
-                                      sol_privilege_level,
-                                      force_sol_payload_authentication,
-                                      force_sol_payload_encryption);
+  return _set_sol_sol_authentication (state_data, &sa);
 }
 
 static config_err_t 
 _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data_t *state_data, 
-                                                           uint8_t *character_accumulate_interval,
-                                                           uint8_t *character_send_threshold)
+                                                           struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
-  
+
+  assert(state_data);
+  assert(it);
+ 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
     goto cleanup;
 
@@ -378,11 +368,11 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
   
   if (Fiid_obj_get (obj_cmd_rs, "character_accumulate_interval", &val) < 0)
     goto cleanup;
-  *character_accumulate_interval = val;
+  it->character_accumulate_interval = val;
 
   if (Fiid_obj_get (obj_cmd_rs, "character_send_threshold", &val) < 0)
     goto cleanup;
-  *character_send_threshold = val;
+  it->character_send_threshold = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -392,14 +382,16 @@ _get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data
 
 static config_err_t
 _set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_t *state_data,
-                                                          uint8_t character_accumulate_interval,
-                                                          uint8_t character_send_threshold)
+                                                          struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
   
+  assert(state_data);
+  assert(it);
+
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
 
@@ -411,8 +403,8 @@ _set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_
 
   if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (state_data->dev, 
 												  channel_number,
-												  character_accumulate_interval,
-												  character_send_threshold,
+												  it->character_accumulate_interval,
+												  it->character_send_threshold,
 												  obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -435,16 +427,14 @@ character_accumulate_interval_checkout (const char *section_name,
                                         void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t character_accumulate_interval;
-  uint8_t character_send_threshold;
+  struct interval_and_threshold it;
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &character_accumulate_interval,
-                                                                        &character_send_threshold)) != CONFIG_ERR_SUCCESS)
+                                                                        &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, character_accumulate_interval) < 0)
+  if (config_section_update_keyvalue_output_int(kv, it.character_accumulate_interval) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -456,20 +446,16 @@ character_accumulate_interval_commit (const char *section_name,
                                       void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t character_accumulate_interval;
-  uint8_t character_send_threshold;
+  struct interval_and_threshold it;
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &character_accumulate_interval,
-                                                                        &character_send_threshold)) != CONFIG_ERR_SUCCESS)
+                                                                        &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  character_accumulate_interval = atoi (kv->value_input);
+  it.character_accumulate_interval = atoi (kv->value_input);
 
-  return _set_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                    character_accumulate_interval,
-                                                                    character_send_threshold);
+  return _set_sol_character_accumulate_interval_and_send_threshold (state_data, &it);
 }
 
 static config_err_t
@@ -478,16 +464,14 @@ character_send_threshold_checkout (const char *section_name,
                                    void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t character_accumulate_interval;
-  uint8_t character_send_threshold;
+  struct interval_and_threshold it;
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &character_accumulate_interval,
-                                                                        &character_send_threshold)) != CONFIG_ERR_SUCCESS)
+                                                                        &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, character_send_threshold) < 0)
+  if (config_section_update_keyvalue_output_int(kv, it.character_send_threshold) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -499,32 +483,30 @@ character_send_threshold_commit (const char *section_name,
                                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t character_accumulate_interval;
-  uint8_t character_send_threshold;
+  struct interval_and_threshold it;
   config_err_t ret;
 
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &character_accumulate_interval,
-                                                                        &character_send_threshold)) != CONFIG_ERR_SUCCESS)
+                                                                        &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  character_send_threshold = atoi (kv->value_input);
+  it.character_send_threshold = atoi (kv->value_input);
 
-  return _set_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                    character_accumulate_interval,
-                                                                    character_send_threshold);
+  return _set_sol_character_accumulate_interval_and_send_threshold (state_data, &it);
 }
 
 static config_err_t 
 _get_sol_sol_retry (bmc_config_state_data_t *state_data, 
-                    uint8_t *retry_count,
-                    uint8_t *retry_interval)
+                    struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert(state_data);
+  assert(sr);
   
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs)))
     goto cleanup;
@@ -552,11 +534,11 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
   
   if (Fiid_obj_get (obj_cmd_rs, "retry_count", &val) < 0)
     goto cleanup;
-  *retry_count = val;
+  sr->retry_count = val;
 
   if (Fiid_obj_get (obj_cmd_rs, "retry_interval", &val) < 0)
     goto cleanup;
-  *retry_interval = val;
+  sr->retry_interval = val;
   
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -566,8 +548,7 @@ _get_sol_sol_retry (bmc_config_state_data_t *state_data,
 
 static config_err_t
 _set_sol_sol_retry(bmc_config_state_data_t *state_data,
-                   uint8_t retry_count,
-                   uint8_t retry_interval)
+                   struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
@@ -585,8 +566,8 @@ _set_sol_sol_retry(bmc_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (state_data->dev, 
 							   channel_number,
-							   retry_count,
-							   retry_interval,
+							   sr->retry_count,
+							   sr->retry_interval,
 							   obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -609,16 +590,14 @@ sol_retry_count_checkout (const char *section_name,
                           void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t retry_count;
-  uint8_t retry_interval;
+  struct sol_retry sr;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_retry (state_data,
-                                 &retry_count,
-                                 &retry_interval)) != CONFIG_ERR_SUCCESS)
+                                 &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, retry_count) < 0)
+  if (config_section_update_keyvalue_output_int(kv, sr.retry_count) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -631,20 +610,16 @@ sol_retry_count_commit (const char *section_name,
                         void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t retry_count;
-  uint8_t retry_interval;
+  struct sol_retry sr;
   config_err_t ret;
   
   if ((ret = _get_sol_sol_retry (state_data,
-                                 &retry_count,
-                                 &retry_interval)) != CONFIG_ERR_SUCCESS)
+                                 &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  retry_count = atoi (kv->value_input);
+  sr.retry_count = atoi (kv->value_input);
   
-  return _set_sol_sol_retry (state_data,
-                             retry_count,
-                             retry_interval);
+  return _set_sol_sol_retry (state_data, &sr);
 }
 
 static config_err_t
@@ -653,16 +628,14 @@ sol_retry_interval_checkout (const char *section_name,
                              void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t retry_count;
-  uint8_t retry_interval;
+  struct sol_retry sr;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_retry (state_data,
-                                 &retry_count,
-                                 &retry_interval)) != CONFIG_ERR_SUCCESS)
+                                 &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output_int(kv, retry_interval) < 0)
+  if (config_section_update_keyvalue_output_int(kv, sr.retry_interval) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -674,20 +647,16 @@ sol_retry_interval_commit (const char *section_name,
                            void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t retry_count;
-  uint8_t retry_interval;
+  struct sol_retry sr;
   config_err_t ret;
 
   if ((ret = _get_sol_sol_retry (state_data,
-                                 &retry_count,
-                                 &retry_interval)) != CONFIG_ERR_SUCCESS)
+                                 &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  retry_interval = atoi (kv->value_input);
+  sr.retry_interval = atoi (kv->value_input);
   
-  return _set_sol_sol_retry (state_data,
-                             retry_count,
-                             retry_interval);
+  return _set_sol_sol_retry (state_data, &sr);
 }
 
 static config_err_t

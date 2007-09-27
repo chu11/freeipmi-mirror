@@ -7,6 +7,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "bmc-config.h"
 #include "bmc-config-wrapper.h"
@@ -14,16 +15,25 @@
 #include "bmc-config-validate.h"
 #include "bmc-config-utils.h"
 
+/* convenience struct */
+struct bmc_generated_arp_control
+{
+  uint8_t bmc_generated_gratuitous_arps;
+  uint8_t bmc_generated_arp_responses;
+};
+
 static config_err_t
-_get_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
-                                         uint8_t *bmc_generated_gratuitous_arps,
-                                         uint8_t *bmc_generated_arp_responses)
+_get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
+                                struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert(state_data);
+  assert(ac);
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs)))
     goto cleanup;
@@ -51,11 +61,11 @@ _get_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
 
   if (Fiid_obj_get (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val) < 0)
     goto cleanup;
-  *bmc_generated_gratuitous_arps = val;
+  ac->bmc_generated_gratuitous_arps = val;
 
   if (Fiid_obj_get (obj_cmd_rs, "bmc_generated_arp_responses", &val) < 0)
     goto cleanup;
-  *bmc_generated_arp_responses = val;
+  ac->bmc_generated_arp_responses = val;
 
   rv = CONFIG_ERR_SUCCESS;
  cleanup:
@@ -64,14 +74,16 @@ _get_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
 }
 
 static config_err_t
-_set_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
-                                         uint8_t bmc_generated_gratuitous_arps,
-                                         uint8_t bmc_generated_arp_responses)
+_set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
+                                struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
   config_err_t ret;
   uint8_t channel_number;
+
+  assert(state_data);
+  assert(ac);
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
@@ -84,8 +96,8 @@ _set_lan_conf_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (state_data->dev,
                                                                            channel_number,
-                                                                           bmc_generated_gratuitous_arps,
-                                                                           bmc_generated_arp_responses,
+                                                                           ac->bmc_generated_gratuitous_arps,
+                                                                           ac->bmc_generated_arp_responses,
                                                                            obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common.flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -109,16 +121,14 @@ enable_gratuitous_arps_checkout (const char *section_name,
                                  void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t enable_arp;
-  uint8_t reply_arp;
+  struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_lan_conf_bmc_generated_arp_control (state_data,
-                                                      &enable_arp,
-                                                      &reply_arp)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data,
+                                             &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (config_section_update_keyvalue_output(kv, enable_arp ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -130,19 +140,15 @@ enable_gratuitous_arps_commit (const char *section_name,
                                void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  int ret;
-  uint8_t enable_arp;
-  uint8_t reply_arp;
+  struct bmc_generated_arp_control ac;
+  config_err_t ret;
 
-  if ((ret = _get_lan_conf_bmc_generated_arp_control (state_data,
-                                                      &enable_arp,
-                                                      &reply_arp)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data,
+                                             &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  enable_arp = same (kv->value_input, "yes");
-  return _set_lan_conf_bmc_generated_arp_control (state_data,
-                                                  enable_arp,
-                                                  reply_arp);
+  ac.bmc_generated_gratuitous_arps = same (kv->value_input, "yes");
+  return _set_bmc_generated_arp_control (state_data, &ac);
 }
 
 static config_err_t
@@ -151,16 +157,14 @@ enable_arp_response_checkout (const char *section_name,
                               void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t enable_arp;
-  uint8_t reply_arp;
+  struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_lan_conf_bmc_generated_arp_control (state_data,
-                                                      &enable_arp,
-                                                      &reply_arp)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data,
+                                             &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
   
-  if (config_section_update_keyvalue_output(kv, reply_arp ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -172,19 +176,15 @@ enable_arp_response_commit (const char *section_name,
                             void *arg)
 {
   bmc_config_state_data_t *state_data = (bmc_config_state_data_t *)arg;
-  uint8_t enable_arp;
-  uint8_t reply_arp;
+  struct bmc_generated_arp_control ac;
   config_err_t ret;
   
-  if ((ret = _get_lan_conf_bmc_generated_arp_control (state_data,
-                                                      &enable_arp,
-                                                      &reply_arp)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data,
+                                             &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  reply_arp = same (kv->value_input, "yes");
-  return _set_lan_conf_bmc_generated_arp_control (state_data,
-                                                  enable_arp,
-                                                  reply_arp);
+  ac.bmc_generated_arp_responses = same (kv->value_input, "yes");
+  return _set_bmc_generated_arp_control (state_data, &ac);
 }
 
 static config_err_t
