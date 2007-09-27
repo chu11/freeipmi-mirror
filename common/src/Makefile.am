@@ -33,6 +33,7 @@ noinst_HEADERS = \
 	config-diff.h \
 	config-fiid.h \
 	config-parse.h \
+	config-pef-conf-section.h \
 	config-section.h \
 	config-util.h \
 	config-validate.h
@@ -112,6 +113,7 @@ libconfigcommon_la_SOURCES = \
 	config-diff.c \
 	config-fiid.c \
 	config-parse.c \
+	config-pef-conf-section.c \
 	config-section.c \
 	config-util.c \
 	config-validate.c

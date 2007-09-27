@@ -9,618 +9,224 @@
 #endif /* STDC_HEADERS */
 
 #include "pef-config.h"
-#include "pef-config-map.h"
-#include "pef-config-utils.h"
 #include "pef-config-validate.h"
-#include "pef-config-wrapper.h"
+
+#include "config-pef-conf-section.h"
 
 static config_err_t
-pef_control_checkout (pef_config_state_data_t *state_data,
-		      uint8_t *pef,
-		      uint8_t *pef_event_messages,
-		      uint8_t *pef_startup_delay,
-		      uint8_t *pef_alert_startup_delay)
-{
-  uint8_t tmp_pef;
-  uint8_t tmp_pef_event_messages;
-  uint8_t tmp_pef_startup_delay;
-  uint8_t tmp_pef_alert_startup_delay;
-  config_err_t ret;
-
-  if ((ret = get_pef_control (state_data,
-                              &tmp_pef,
-                              &tmp_pef_event_messages,
-                              &tmp_pef_startup_delay,
-                              &tmp_pef_alert_startup_delay)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (pef)
-    *pef = tmp_pef;
-
-  if (pef_event_messages)
-    *pef_event_messages = tmp_pef_event_messages;
-
-  if (pef_startup_delay)
-    *pef_startup_delay = tmp_pef_startup_delay;
-
-  if (pef_alert_startup_delay)
-    *pef_alert_startup_delay = tmp_pef_alert_startup_delay;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-pef_control_commit (pef_config_state_data_t *state_data,
-		    uint8_t *pef,
-		    uint8_t *pef_event_messages,
-		    uint8_t *pef_startup_delay,
-		    uint8_t *pef_alert_startup_delay)
-{
-  uint8_t tmp_pef;
-  uint8_t tmp_pef_event_messages;
-  uint8_t tmp_pef_startup_delay;
-  uint8_t tmp_pef_alert_startup_delay;
-  config_err_t ret;
-
-  if ((ret = get_pef_control (state_data,
-                              &tmp_pef,
-                              &tmp_pef_event_messages,
-                              &tmp_pef_startup_delay,
-                              &tmp_pef_alert_startup_delay)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (pef)
-    tmp_pef = *pef;
-
-  if (pef_event_messages)
-    tmp_pef_event_messages = *pef_event_messages;
-
-  if (pef_startup_delay)
-    tmp_pef_startup_delay = *pef_startup_delay;
-
-  if (pef_alert_startup_delay)
-    tmp_pef_alert_startup_delay = *pef_alert_startup_delay;
-
-  return set_pef_control (state_data,
-			  tmp_pef,
-			  tmp_pef_event_messages,
-			  tmp_pef_startup_delay,
-			  tmp_pef_alert_startup_delay);
-}
-
-static config_err_t
-enable_pef_checkout (const char *section_name,
-		     struct config_keyvalue *kv,
-                     void *arg)
+_enable_pef_checkout (const char *section_name,
+                      struct config_keyvalue *kv,
+                      void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-  
-  if ((ret = pef_control_checkout (state_data,
-                                   &value,
-                                   NULL,
-                                   NULL,
-                                   NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  return enable_pef_checkout(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_pef_commit (const char *section_name,
-		   const struct config_keyvalue *kv,
-                   void *arg)
+_enable_pef_commit (const char *section_name,
+                    const struct config_keyvalue *kv,
+                    void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = same (kv->value_input, "yes");
-  return pef_control_commit (state_data,
-			     &value,
-			     NULL,
-			     NULL,
-			     NULL);
+  return enable_pef_commit(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_pef_event_messages_checkout (const char *section_name,
-				    struct config_keyvalue *kv,
-                                    void *arg)
+_enable_pef_event_messages_checkout (const char *section_name,
+                                     struct config_keyvalue *kv,
+                                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-  
-  if ((ret = pef_control_checkout (state_data,
-                                   NULL,
-                                   &value,
-                                   NULL,
-                                   NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  return enable_pef_event_messages_checkout(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_pef_event_messages_commit (const char *section_name,
-				  const struct config_keyvalue *kv,
-                                  void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = same (kv->value_input, "yes");
-  return pef_control_commit (state_data,
-			     NULL,
-			     &value,
-			     NULL,
-			     NULL);
-}
-
-static config_err_t
-enable_pef_startup_delay_checkout (const char *section_name,
-				   struct config_keyvalue *kv,
+_enable_pef_event_messages_commit (const char *section_name,
+                                   const struct config_keyvalue *kv,
                                    void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-  
-  if ((ret = pef_control_checkout (state_data,
-                                   NULL,
-                                   NULL,
-                                   &value,
-                                   NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-  
-  return CONFIG_ERR_SUCCESS;
+  return enable_pef_event_messages_commit(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_pef_startup_delay_commit (const char *section_name,
-				 const struct config_keyvalue *kv,
-                                 void *arg)
+_enable_pef_startup_delay_checkout (const char *section_name,
+                                    struct config_keyvalue *kv,
+                                    void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = same (kv->value_input, "yes");
-  return pef_control_commit (state_data,
-			     NULL,
-			     NULL,
-			     &value,
-			     NULL);
+  return enable_pef_startup_delay_checkout(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_pef_alert_startup_delay_checkout (const char *section_name,
-					 struct config_keyvalue *kv,
-                                         void *arg)
+_enable_pef_startup_delay_commit (const char *section_name,
+                                  const struct config_keyvalue *kv,
+                                  void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-  
-  if ((ret = pef_control_checkout (state_data,
-                                   NULL,
-                                   NULL,
-                                   NULL,
-                                   &value)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  return enable_pef_startup_delay_commit(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_pef_alert_startup_delay_commit (const char *section_name,
-				       const struct config_keyvalue *kv,
+_enable_pef_alert_startup_delay_checkout (const char *section_name,
+                                          struct config_keyvalue *kv,
+                                          void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_pef_alert_startup_delay_checkout(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_pef_alert_startup_delay_commit (const char *section_name,
+                                        const struct config_keyvalue *kv,
+                                        void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_pef_alert_startup_delay_commit(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_alert_action_checkout (const char *section_name,
+                               struct config_keyvalue *kv,
+                               void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_alert_action_checkout(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_alert_action_commit (const char *section_name,
+                             const struct config_keyvalue *kv,
+                             void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_alert_action_commit(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_power_down_action_checkout (const char *section_name,
+                                    struct config_keyvalue *kv,
+                                    void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_power_down_action_checkout(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_power_down_action_commit (const char *section_name,
+                                  const struct config_keyvalue *kv,
+                                  void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_power_down_action_commit(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_reset_action_checkout (const char *section_name,
+                               struct config_keyvalue *kv,
+                               void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_reset_action_checkout(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_reset_action_commit (const char *section_name,
+                             const struct config_keyvalue *kv,
+                             void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_reset_action_commit(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_power_cycle_action_checkout (const char *section_name,
+                                     struct config_keyvalue *kv,
+                                     void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_power_cycle_action_checkout(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_power_cycle_action_commit (const char *section_name,
+                                   const struct config_keyvalue *kv,
+                                   void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_power_cycle_action_commit(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_oem_action_checkout (const char *section_name,
+                             struct config_keyvalue *kv,
+                             void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_oem_action_checkout(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_oem_action_commit (const char *section_name,
+                           const struct config_keyvalue *kv,
+                           void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return enable_oem_action_commit(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_enable_diagnostic_interrupt_checkout (const char *section_name,
+                                       struct config_keyvalue *kv,
                                        void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = same (kv->value_input, "yes");
-  return pef_control_commit (state_data,
-			     NULL,
-			     NULL,
-			     NULL,
-			     &value);
+  return enable_diagnostic_interrupt_checkout(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-pef_global_control_checkout (pef_config_state_data_t *state_data,
-			     uint8_t *alert_action,
-			     uint8_t *power_down_action,
-			     uint8_t *reset_action,
-			     uint8_t *power_cycle_action,
-			     uint8_t *oem_action,
-			     uint8_t *diagnostic_interrupt)
-{
-  uint8_t tmp_alert_action;
-  uint8_t tmp_power_down_action;
-  uint8_t tmp_reset_action;
-  uint8_t tmp_power_cycle_action;
-  uint8_t tmp_oem_action;
-  uint8_t tmp_diagnostic_interrupt;
-  config_err_t ret;
-
-  if ((ret = get_pef_action_global_control (state_data,
-                                            &tmp_alert_action,
-                                            &tmp_power_down_action,
-                                            &tmp_reset_action,
-                                            &tmp_power_cycle_action,
-                                            &tmp_oem_action,
-                                            &tmp_diagnostic_interrupt)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_action)
-    *alert_action = tmp_alert_action;
-  if (power_down_action)
-    *power_down_action = tmp_power_down_action;
-  if (reset_action)
-    *reset_action = tmp_reset_action;
-  if (power_cycle_action)
-    *power_cycle_action = tmp_power_cycle_action;
-  if (oem_action)
-    *oem_action = tmp_oem_action;
-  if (diagnostic_interrupt)
-    *diagnostic_interrupt = tmp_diagnostic_interrupt;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-
-static config_err_t
-pef_global_control_commit (pef_config_state_data_t *state_data,
-			   uint8_t *alert_action,
-			   uint8_t *power_down_action,
-			   uint8_t *reset_action,
-			   uint8_t *power_cycle_action,
-			   uint8_t *oem_action,
-			   uint8_t *diagnostic_interrupt)
-{
-  uint8_t tmp_alert_action;
-  uint8_t tmp_power_down_action;
-  uint8_t tmp_reset_action;
-  uint8_t tmp_power_cycle_action;
-  uint8_t tmp_oem_action;
-  uint8_t tmp_diagnostic_interrupt;
-  config_err_t ret;
-
-  if ((ret = get_pef_action_global_control (state_data,
-                                            &tmp_alert_action,
-                                            &tmp_power_down_action,
-                                            &tmp_reset_action,
-                                            &tmp_power_cycle_action,
-                                            &tmp_oem_action,
-                                            &tmp_diagnostic_interrupt)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (alert_action)
-    tmp_alert_action = *alert_action;
-  if (power_down_action)
-    tmp_power_down_action = *power_down_action;
-  if (reset_action)
-    tmp_reset_action = *reset_action;
-  if (power_cycle_action)
-    tmp_power_cycle_action = *power_cycle_action;
-  if (oem_action)
-    tmp_oem_action = *oem_action;
-  if (diagnostic_interrupt)
-    tmp_diagnostic_interrupt = *diagnostic_interrupt;
-
-  return set_pef_action_global_control (state_data,
-					tmp_alert_action,
-					tmp_power_down_action,
-					tmp_reset_action,
-					tmp_power_cycle_action,
-					tmp_oem_action,
-					tmp_diagnostic_interrupt);
-}
-
-static config_err_t
-enable_alert_action_checkout (const char *section_name,
-			      struct config_keyvalue *kv,
-                              void *arg)
+_enable_diagnostic_interrupt_commit (const char *section_name,
+                                     const struct config_keyvalue *kv,
+                                     void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-
-  if ((ret = pef_global_control_checkout (state_data,
-                                          &value,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  return enable_diagnostic_interrupt_commit(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_alert_action_commit (const char *section_name,
-			    const struct config_keyvalue *kv,
-                            void *arg)
+_pef_startup_delay_checkout (const char *section_name,
+                             struct config_keyvalue *kv,
+                             void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
-  return pef_global_control_commit (state_data,
-				    &value,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL);
+  return pef_startup_delay_checkout(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_power_down_action_checkout (const char *section_name,
-				   struct config_keyvalue *kv,
+_pef_startup_delay_commit (const char *section_name,
+                           const struct config_keyvalue *kv,
+                           void *arg)
+{
+  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
+  return pef_startup_delay_commit(kv, state_data->dev, state_data->prog_data->args);
+}
+
+static config_err_t
+_pef_alert_startup_delay_checkout (const char *section_name,
+                                   struct config_keyvalue *kv,
                                    void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-
-  if ((ret = pef_global_control_checkout (state_data,
-                                          NULL,
-                                          &value,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
+  return pef_alert_startup_delay_checkout(kv, state_data->dev, state_data->prog_data->args);
 }
 
 static config_err_t
-enable_power_down_action_commit (const char *section_name,
-				 const struct config_keyvalue *kv,
+_pef_alert_startup_delay_commit (const char *section_name,
+                                 const struct config_keyvalue *kv,
                                  void *arg)
 {
   pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
-  return pef_global_control_commit (state_data,
-				    NULL,
-				    &value,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL);
-}
-
-static config_err_t
-enable_reset_action_checkout (const char *section_name,
-			      struct config_keyvalue *kv,
-                              void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-
-  if ((ret = pef_global_control_checkout (state_data,
-                                          NULL,
-                                          NULL,
-                                          &value,
-                                          NULL,
-                                          NULL,
-                                          NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-enable_reset_action_commit (const char *section_name,
-			    const struct config_keyvalue *kv,
-                            void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
-  return pef_global_control_commit (state_data,
-				    NULL,
-				    NULL,
-				    &value,
-				    NULL,
-				    NULL,
-				    NULL);
-}
-
-static config_err_t
-enable_power_cycle_action_checkout (const char *section_name,
-				    struct config_keyvalue *kv,
-                                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-
-  if ((ret = pef_global_control_checkout (state_data,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          &value,
-                                          NULL,
-                                          NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-enable_power_cycle_action_commit (const char *section_name,
-				  const struct config_keyvalue *kv,
-                                  void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
-  return pef_global_control_commit (state_data,
-				    NULL,
-				    NULL,
-				    NULL,
-				    &value,
-				    NULL,
-				    NULL);
-}
-
-static config_err_t
-enable_oem_action_checkout (const char *section_name,
-			    struct config_keyvalue *kv,
-                            void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-
-  if ((ret = pef_global_control_checkout (state_data,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          &value,
-                                          NULL)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-enable_oem_action_commit (const char *section_name,
-			  const struct config_keyvalue *kv,
-                          void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
-  return pef_global_control_commit (state_data,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
-				    &value,
-				    NULL);
-}
-
-static config_err_t
-enable_diagnostic_interrupt_checkout (const char *section_name,
-                                      struct config_keyvalue *kv,
-                                      void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value;
-  config_err_t ret;
-
-  if ((ret = pef_global_control_checkout (state_data,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          NULL,
-                                          &value)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output(kv, value ? "Yes" : "No") < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-enable_diagnostic_interrupt_commit (const char *section_name,
-				    const struct config_keyvalue *kv,
-                                    void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = (same (kv->value_input, "yes") ? 1 : 0);
-  return pef_global_control_commit (state_data,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
-				    &value);
-}
-
-static config_err_t
-pef_startup_delay_checkout (const char *section_name,
-			    struct config_keyvalue *kv,
-                            void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t delay;
-  config_err_t ret;
-  
-  if ((ret = get_pef_startup_delay (state_data,
-                                    &delay)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output_int(kv, delay) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-pef_startup_delay_commit (const char *section_name,
-			  const struct config_keyvalue *kv,
-                          void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = atoi (kv->value_input);
-  return set_pef_startup_delay (state_data,
-				value);
-}
-
-static config_err_t
-pef_alert_startup_delay_checkout (const char *section_name,
-				  struct config_keyvalue *kv,
-                                  void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t delay;
-  config_err_t ret;
-  
-  if ((ret = get_pef_alert_startup_delay (state_data,
-                                          &delay)) != CONFIG_ERR_SUCCESS)
-    return ret;
-
-  if (config_section_update_keyvalue_output_int(kv, delay) < 0)
-    return CONFIG_ERR_FATAL_ERROR;
-
-  return CONFIG_ERR_SUCCESS;
-}
-
-static config_err_t
-pef_alert_startup_delay_commit (const char *section_name,
-				const struct config_keyvalue *kv,
-                                void *arg)
-{
-  pef_config_state_data_t *state_data = (pef_config_state_data_t *)arg;
-  uint8_t value = atoi (kv->value_input);
-  return set_pef_alert_startup_delay (state_data,
-				      value);
+  return pef_alert_startup_delay_commit(kv, state_data->dev, state_data->prog_data->args);
 }
 
 struct config_section *
@@ -638,8 +244,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_PEF",
                               "Possible values: Yes/No",
                               0,
-                              enable_pef_checkout,
-                              enable_pef_commit,
+                              _enable_pef_checkout,
+                              _enable_pef_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -647,8 +253,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_PEF_Event_Messages",
                               "Possible values: Yes/No",
                               0,
-                              enable_pef_event_messages_checkout,
-                              enable_pef_event_messages_commit,
+                              _enable_pef_event_messages_checkout,
+                              _enable_pef_event_messages_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -656,8 +262,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_PEF_Startup_Delay",
                               "Possible values: Yes/No",
                               0,
-                              enable_pef_startup_delay_checkout,
-                              enable_pef_startup_delay_commit,
+                              _enable_pef_startup_delay_checkout,
+                              _enable_pef_startup_delay_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -665,8 +271,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_PEF_Alert_Startup_Delay",
                               "Possible values: Yes/No",
                               0,
-                              enable_pef_alert_startup_delay_checkout,
-                              enable_pef_alert_startup_delay_commit,
+                              _enable_pef_alert_startup_delay_checkout,
+                              _enable_pef_alert_startup_delay_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
   
@@ -674,8 +280,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_Alert_Action",
                               "Possible values: Yes/No",
                               0,
-                              enable_alert_action_checkout,
-                              enable_alert_action_commit,
+                              _enable_alert_action_checkout,
+                              _enable_alert_action_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -683,8 +289,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_Power_Down_Action",
                               "Possible values: Yes/No",
                               0,
-                              enable_power_down_action_checkout,
-                              enable_power_down_action_commit,
+                              _enable_power_down_action_checkout,
+                              _enable_power_down_action_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -692,8 +298,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_Reset_Action",
                               "Possible values: Yes/No",
                               0,
-                              enable_reset_action_checkout,
-                              enable_reset_action_commit,
+                              _enable_reset_action_checkout,
+                              _enable_reset_action_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -701,8 +307,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_Power_Cycle_Action",
                               "Possible values: Yes/No",
                               0,
-                              enable_power_cycle_action_checkout,
-                              enable_power_cycle_action_commit,
+                              _enable_power_cycle_action_checkout,
+                              _enable_power_cycle_action_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -710,8 +316,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_OEM_Action",
                               "Possible values: Yes/No",
                               0,
-                              enable_oem_action_checkout,
-                              enable_oem_action_commit,
+                              _enable_oem_action_checkout,
+                              _enable_oem_action_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -719,8 +325,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Enable_Diagnostic_Interrupt",
                               "Possible values: Yes/No",
                               0,
-                              enable_diagnostic_interrupt_checkout,
-                              enable_diagnostic_interrupt_commit,
+                              _enable_diagnostic_interrupt_checkout,
+                              _enable_diagnostic_interrupt_commit,
                               config_yes_no_validate) < 0)
     goto cleanup;
 
@@ -728,8 +334,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Startup_Delay",
                               "Give value in seconds",
                               0,
-                              pef_startup_delay_checkout,
-                              pef_startup_delay_commit,
+                              _pef_startup_delay_checkout,
+                              _pef_startup_delay_commit,
                               config_number_range_one_byte) < 0)
     goto cleanup;
 
@@ -737,8 +343,8 @@ pef_config_pef_conf_section_get (pef_config_state_data_t *state_data)
                               "Alert_Startup_Delay",
                               "Give value in seconds",
                               0,
-                              pef_alert_startup_delay_checkout,
-                              pef_alert_startup_delay_commit,
+                              _pef_alert_startup_delay_checkout,
+                              _pef_alert_startup_delay_commit,
                               config_number_range_one_byte) < 0)
     goto cleanup;
 

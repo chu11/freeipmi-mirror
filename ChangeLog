@@ -1,3 +1,11 @@
+2007-09-27  Albert Chu <chu11@llnl.gov>
+
+	* common/src/config-pef-conf-section.h,
+	common/src/config-pef-conf-section.c: New files.
+
+	* bmc-config/, pef-config/: Continued common code re-architecture
+	and subsequent code cleanup.
+
 2007-09-26  Albert Chu <chu11@llnl.gov>
 
 	* common/src/config-fiid.h, common/src/config-fiid.c: New files.

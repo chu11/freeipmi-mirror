@@ -1,46 +1,6 @@
 #ifndef _PEF_CONFIG_WRAPPER_H
 #define _PEF_CONFIG_WRAPPER_H
 
-config_err_t get_pef_control (pef_config_state_data_t *state_data,
-                           uint8_t *pef,
-                           uint8_t *pef_event_messages,
-                           uint8_t *pef_startup_delay,
-                           uint8_t *pef_alert_startup_delay);
-
-config_err_t set_pef_control (pef_config_state_data_t *state_data,
-                           uint8_t pef,
-                           uint8_t pef_event_messages,
-                           uint8_t pef_startup_delay,
-                           uint8_t pef_alert_startup_delay);
-
-config_err_t get_pef_action_global_control (pef_config_state_data_t *state_data,
-                                         uint8_t *alert_action,
-                                         uint8_t *power_down_action,
-                                         uint8_t *reset_action,
-                                         uint8_t *power_cycle_action,
-                                         uint8_t *oem_action,
-                                         uint8_t *diagnostic_interrupt);
-
-config_err_t set_pef_action_global_control (pef_config_state_data_t *state_data,
-                                         uint8_t alert_action,
-                                         uint8_t power_down_action,
-                                         uint8_t reset_action,
-                                         uint8_t power_cycle_action,
-                                         uint8_t oem_action,
-                                         uint8_t diagnostic_interrupt);
-
-config_err_t get_pef_startup_delay (pef_config_state_data_t *state_data,
-                                 uint8_t *pef_startup_delay);
-
-config_err_t set_pef_startup_delay (pef_config_state_data_t *state_data,
-                                 uint8_t pef_startup_delay);
-
-config_err_t set_pef_alert_startup_delay (pef_config_state_data_t *state_data,
-                                       uint8_t pef_alert_startup_delay);
-
-config_err_t get_pef_alert_startup_delay (pef_config_state_data_t *state_data,
-                                       uint8_t *pef_alert_startup_delay);
-
 config_err_t get_pef_alert_string_keys (pef_config_state_data_t *state_data,
                                      uint8_t string_selector,
                                      uint8_t *event_filter_number,
