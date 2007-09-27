@@ -144,8 +144,7 @@ enable_basic_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, 
-                                            cm.basic_mode ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, cm.basic_mode ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
   
   return CONFIG_ERR_SUCCESS;
@@ -180,8 +179,7 @@ enable_ppp_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, 
-                                            cm.ppp_mode ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, cm.ppp_mode ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -216,8 +214,7 @@ enable_terminal_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, 
-                                            cm.terminal_mode ? "Yes" : "No") < 0)
+  if (config_section_update_keyvalue_output(kv, cm.terminal_mode ? "Yes" : "No") < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -252,8 +249,7 @@ connect_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, &cm)) != CONFIG_ERR_SUCCESS)
     return ret;
 
-  if (config_section_update_keyvalue_output(kv, 
-                                            connect_mode_string (cm.connect_mode)) < 0)
+  if (config_section_update_keyvalue_output(kv, connect_mode_string (cm.connect_mode)) < 0)
     return CONFIG_ERR_FATAL_ERROR;
 
   return CONFIG_ERR_SUCCESS;
@@ -557,8 +553,7 @@ enable_dtr_hangup_checkout (const char *section_name,
   struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
   
-  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &cs)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output(kv, cs.dtr_hangup ? "Yes" : "No") < 0)
@@ -576,8 +571,7 @@ enable_dtr_hangup_commit (const char *section_name,
   struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
 
-  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &cs)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   cs.dtr_hangup = same (kv->value_input, "yes");
@@ -594,8 +588,7 @@ flow_control_checkout (const char *section_name,
   struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
   
-  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &cs)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output(kv, flow_control_string (cs.flow_control)) < 0)
@@ -613,8 +606,7 @@ flow_control_commit (const char *section_name,
   struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
 
-  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &cs)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   cs.flow_control = flow_control_number (kv->value_input);
@@ -631,8 +623,7 @@ bit_rate_checkout (const char *section_name,
   struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
   
-  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &cs)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output(kv, bit_rate_string (cs.bit_rate)) < 0)
@@ -650,8 +641,7 @@ bit_rate_commit (const char *section_name,
   struct ipmi_messaging_comm_settings cs;
   config_err_t ret;
 
-  if ((ret = _get_ipmi_messaging_comm_settings (state_data,
-                                                &cs)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_ipmi_messaging_comm_settings (state_data, &cs)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   cs.bit_rate = bit_rate_number (kv->value_input);

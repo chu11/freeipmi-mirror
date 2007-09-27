@@ -86,22 +86,6 @@ config_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data,
                                        uint8_t vlan_id_enable);
 config_err_t set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
                                              uint8_t vlan_priority);
-config_err_t set_pef_control (bmc_config_state_data_t *state_data,
-                              uint8_t pef,
-                              uint8_t pef_event_messages,
-                              uint8_t pef_startup_delay,
-                              uint8_t pef_alert_startup_delay);
-config_err_t set_pef_action_global_control (bmc_config_state_data_t *state_data,
-                                            uint8_t alert_action,
-                                            uint8_t power_down_action,
-                                            uint8_t reset_action,
-                                            uint8_t power_cycle_action,
-                                            uint8_t oem_action,
-                                            uint8_t diagnostic_interrupt);
-config_err_t set_pef_startup_delay (bmc_config_state_data_t *state_data,
-                                    uint8_t pef_startup_delay);
-config_err_t set_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
-                                          uint8_t pef_alert_startup_delay);
 
 /***********************************************************/
 config_err_t get_bmc_username (bmc_config_state_data_t *state_data, 
@@ -169,22 +153,6 @@ config_err_t get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data,
                                        uint8_t *vlan_id_enable);
 config_err_t get_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
                                              uint8_t *vlan_priority);
-config_err_t get_pef_control (bmc_config_state_data_t *state_data,
-                              uint8_t *pef,
-                              uint8_t *pef_event_messages,
-                              uint8_t *pef_startup_delay,
-                              uint8_t *pef_alert_startup_delay);
-config_err_t get_pef_action_global_control (bmc_config_state_data_t *state_data,
-                                            uint8_t *alert_action,
-                                            uint8_t *power_down_action,
-                                            uint8_t *reset_action,
-                                            uint8_t *power_cycle_action,
-                                            uint8_t *oem_action,
-                                            uint8_t *diagnostic_interrupt);
-config_err_t get_pef_startup_delay (bmc_config_state_data_t *state_data,
-                                    uint8_t *pef_startup_delay);
-config_err_t get_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
-                                          uint8_t *pef_alert_startup_delay);
 
 /***********************************************************/
 config_err_t check_bmc_user_password (bmc_config_state_data_t *state_data, 

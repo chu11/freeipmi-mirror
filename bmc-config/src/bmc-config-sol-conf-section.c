@@ -227,8 +227,7 @@ sol_privilege_level_checkout (const char *section_name,
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data,
-                                          &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output(kv, privilege_level_string (sa.sol_privilege_level)) < 0)
@@ -246,8 +245,7 @@ sol_privilege_level_commit (const char *section_name,
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   sa.sol_privilege_level = privilege_level_number (kv->value_input);
@@ -264,8 +262,7 @@ force_sol_payload_authentication_checkout (const char *section_name,
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output(kv, sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
@@ -283,8 +280,7 @@ force_sol_payload_authentication_commit (const char *section_name,
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   sa.force_sol_payload_authentication = same (kv->value_input, "yes") ? 1 : 0;
@@ -301,8 +297,7 @@ force_sol_payload_encryption_checkout (const char *section_name,
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output(kv, sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
@@ -320,8 +315,7 @@ force_sol_payload_encryption_commit (const char *section_name,
   struct sol_authentication sa;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_authentication (state_data, 
-                                          &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, &sa)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   sa.force_sol_payload_encryption = same (kv->value_input, "yes") ? 1 : 0;
@@ -430,8 +424,7 @@ character_accumulate_interval_checkout (const char *section_name,
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output_int(kv, it.character_accumulate_interval) < 0)
@@ -449,8 +442,7 @@ character_accumulate_interval_commit (const char *section_name,
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   it.character_accumulate_interval = atoi (kv->value_input);
@@ -467,8 +459,7 @@ character_send_threshold_checkout (const char *section_name,
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output_int(kv, it.character_send_threshold) < 0)
@@ -486,8 +477,7 @@ character_send_threshold_commit (const char *section_name,
   struct interval_and_threshold it;
   config_err_t ret;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data,
-                                                                        &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, &it)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   it.character_send_threshold = atoi (kv->value_input);
@@ -593,8 +583,7 @@ sol_retry_count_checkout (const char *section_name,
   struct sol_retry sr;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_retry (state_data,
-                                 &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output_int(kv, sr.retry_count) < 0)
@@ -613,8 +602,7 @@ sol_retry_count_commit (const char *section_name,
   struct sol_retry sr;
   config_err_t ret;
   
-  if ((ret = _get_sol_sol_retry (state_data,
-                                 &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
   
   sr.retry_count = atoi (kv->value_input);
@@ -631,8 +619,7 @@ sol_retry_interval_checkout (const char *section_name,
   struct sol_retry sr;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_retry (state_data,
-                                 &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   if (config_section_update_keyvalue_output_int(kv, sr.retry_interval) < 0)
@@ -650,8 +637,7 @@ sol_retry_interval_commit (const char *section_name,
   struct sol_retry sr;
   config_err_t ret;
 
-  if ((ret = _get_sol_sol_retry (state_data,
-                                 &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, &sr)) != CONFIG_ERR_SUCCESS)
     return ret;
   
   sr.retry_interval = atoi (kv->value_input);

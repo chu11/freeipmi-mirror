@@ -124,8 +124,7 @@ enable_gratuitous_arps_checkout (const char *section_name,
   struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data,
-                                             &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
   
   if (config_section_update_keyvalue_output(kv, ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
@@ -143,8 +142,7 @@ enable_gratuitous_arps_commit (const char *section_name,
   struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data,
-                                             &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   ac.bmc_generated_gratuitous_arps = same (kv->value_input, "yes");
@@ -160,8 +158,7 @@ enable_arp_response_checkout (const char *section_name,
   struct bmc_generated_arp_control ac;
   config_err_t ret;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data,
-                                             &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
   
   if (config_section_update_keyvalue_output(kv, ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
@@ -179,8 +176,7 @@ enable_arp_response_commit (const char *section_name,
   struct bmc_generated_arp_control ac;
   config_err_t ret;
   
-  if ((ret = _get_bmc_generated_arp_control (state_data,
-                                             &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, &ac)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   ac.bmc_generated_arp_responses = same (kv->value_input, "yes");
