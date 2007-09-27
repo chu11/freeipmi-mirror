@@ -1,25 +1,6 @@
 #ifndef _PEF_CONFIG_WRAPPER_H
 #define _PEF_CONFIG_WRAPPER_H
 
-config_err_t get_pef_alert_string_keys (pef_config_state_data_t *state_data,
-                                     uint8_t string_selector,
-                                     uint8_t *event_filter_number,
-                                     uint8_t *alert_string_set);
-     
-config_err_t set_pef_alert_string_keys (pef_config_state_data_t *state_data,
-                                     uint8_t string_selector,
-                                     uint8_t event_filter_number,
-                                     uint8_t alert_string_set);
-
-config_err_t get_pef_alert_string (pef_config_state_data_t *state_data,
-                                uint8_t string_selector,
-                                uint8_t *alert_string,
-                                uint32_t alert_string_len);
-
-config_err_t set_pef_alert_string (pef_config_state_data_t *state_data,
-                                uint8_t string_selector,
-                                uint8_t *alert_string);
-     
 config_err_t get_bmc_destination_type(pef_config_state_data_t *state_data,
                                    uint8_t destination_selector,
                                    uint8_t *alert_destination_type,
