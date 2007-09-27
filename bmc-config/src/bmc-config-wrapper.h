@@ -22,173 +22,124 @@
 #include "bmc-config.h"
 
 config_err_t set_bmc_username (bmc_config_state_data_t *state_data, 
-                            uint8_t userid, 
-                            uint8_t *username);
-config_err_t set_bmc_enable_user (bmc_config_state_data_t *state_data, 
                                uint8_t userid, 
-                               int user_status);
+                               uint8_t *username);
+config_err_t set_bmc_enable_user (bmc_config_state_data_t *state_data, 
+                                  uint8_t userid, 
+                                  int user_status);
 config_err_t set_bmc_user_password (bmc_config_state_data_t *state_data, 
-                                 uint8_t userid, 
-                                 uint8_t *password);
+                                    uint8_t userid, 
+                                    uint8_t *password);
 config_err_t set_bmc_user_password20 (bmc_config_state_data_t *state_data, 
-                                   uint8_t userid, 
-                                   uint8_t *password);
+                                      uint8_t userid, 
+                                      uint8_t *password);
 config_err_t set_bmc_user_lan_channel_access (bmc_config_state_data_t *state_data, 
-                                           uint8_t userid, 
-                                           uint8_t lan_user_ipmi_messaging, 
-                                           uint8_t lan_user_link_authentication, 
-                                           uint8_t lan_user_restricted_to_callback, 
-                                           uint8_t lan_privilege_limit, 
-                                           uint8_t lan_session_limit);
-config_err_t set_bmc_user_payload_access (bmc_config_state_data_t *state_data,
-                                       uint8_t userid,
-                                       uint8_t operation,
-                                       uint8_t standard_payload_1,
-                                       uint8_t standard_payload_2,
-                                       uint8_t standard_payload_3,
-                                       uint8_t standard_payload_4,
-                                       uint8_t standard_payload_5,
-                                       uint8_t standard_payload_6,
-                                       uint8_t standard_payload_7,
-                                       uint8_t oem_payload_0,
-                                       uint8_t oem_payload_1,
-                                       uint8_t oem_payload_2,
-                                       uint8_t oem_payload_3,
-                                       uint8_t oem_payload_4,
-                                       uint8_t oem_payload_5,
-                                       uint8_t oem_payload_6,
-                                       uint8_t oem_payload_7);
-config_err_t set_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data, 
                                               uint8_t userid, 
-                                              uint8_t serial_user_ipmi_messaging, 
-                                              uint8_t serial_user_link_authentication, 
-                                              uint8_t serial_user_restricted_to_callback, 
-                                              uint8_t serial_privilege_limit, 
-                                              uint8_t serial_session_limit);
-config_err_t set_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                               uint8_t access_mode, 
-                                               uint8_t user_level_authentication, 
-                                               uint8_t per_message_authentication, 
-                                               uint8_t pef_alerting, 
-                                               uint8_t channel_privilege_limit);
-config_err_t set_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                   uint8_t access_mode, 
-                                                   uint8_t user_level_authentication, 
-                                                   uint8_t per_message_authentication, 
-                                                   uint8_t pef_alerting, 
-                                                   uint8_t channel_privilege_limit);
+                                              uint8_t lan_user_ipmi_messaging, 
+                                              uint8_t lan_user_link_authentication, 
+                                              uint8_t lan_user_restricted_to_callback, 
+                                              uint8_t lan_privilege_limit, 
+                                              uint8_t lan_session_limit);
+config_err_t set_bmc_user_payload_access (bmc_config_state_data_t *state_data,
+                                          uint8_t userid,
+                                          uint8_t operation,
+                                          uint8_t standard_payload_1,
+                                          uint8_t standard_payload_2,
+                                          uint8_t standard_payload_3,
+                                          uint8_t standard_payload_4,
+                                          uint8_t standard_payload_5,
+                                          uint8_t standard_payload_6,
+                                          uint8_t standard_payload_7,
+                                          uint8_t oem_payload_0,
+                                          uint8_t oem_payload_1,
+                                          uint8_t oem_payload_2,
+                                          uint8_t oem_payload_3,
+                                          uint8_t oem_payload_4,
+                                          uint8_t oem_payload_5,
+                                          uint8_t oem_payload_6,
+                                          uint8_t oem_payload_7);
+config_err_t set_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data, 
+                                                 uint8_t userid, 
+                                                 uint8_t serial_user_ipmi_messaging, 
+                                                 uint8_t serial_user_link_authentication, 
+                                                 uint8_t serial_user_restricted_to_callback, 
+                                                 uint8_t serial_privilege_limit, 
+                                                 uint8_t serial_session_limit);
 config_err_t set_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
-                                              uint8_t ip_address_source);
+                                                 uint8_t ip_address_source);
 config_err_t set_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
-                                       char *ip_address);
+                                          char *ip_address);
 config_err_t set_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data, 
-                                        char *mac_address);
+                                           char *mac_address);
 config_err_t set_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data, 
-                                        char *subnet_mask);
+                                           char *subnet_mask);
 config_err_t set_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data, 
-                                                    char *default_gateway_address);
+                                                       char *default_gateway_address);
 config_err_t set_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                        char *default_gateway_mac_address);
+                                                           char *default_gateway_mac_address);
 config_err_t set_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data, 
-                                                   char *backup_gateway_address);
+                                                      char *backup_gateway_address);
 config_err_t set_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                       char *backup_gateway_mac_address);
+                                                          char *backup_gateway_mac_address);
 config_err_t set_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
-                                    uint32_t vlan_id,
-                                    uint8_t vlan_id_enable);
+                                       uint32_t vlan_id,
+                                       uint8_t vlan_id_enable);
 config_err_t set_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
-                                          uint8_t vlan_priority);
-config_err_t set_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                                  uint8_t access_mode, 
-                                                  uint8_t user_level_authentication, 
-                                                  uint8_t per_message_authentication, 
-                                                  uint8_t pef_alerting, 
-                                                  uint8_t channel_privilege_limit);
-config_err_t set_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                      uint8_t access_mode, 
-                                                      uint8_t user_level_authentication, 
-                                                      uint8_t per_message_authentication, 
-                                                      uint8_t pef_alerting, 
-                                                      uint8_t channel_privilege_limit);
+                                             uint8_t vlan_priority);
 config_err_t set_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
-                                               uint8_t basic_mode, 
-                                               uint8_t ppp_mode, 
-                                               uint8_t terminal_mode, 
-                                               uint8_t connect_mode);
+                                                  uint8_t basic_mode, 
+                                                  uint8_t ppp_mode, 
+                                                  uint8_t terminal_mode, 
+                                                  uint8_t connect_mode);
 config_err_t set_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data, 
-                                                      uint8_t page_blackout_interval);
+                                                         uint8_t page_blackout_interval);
 config_err_t set_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data, 
-                                                   uint8_t call_retry_interval);
+                                                      uint8_t call_retry_interval);
 config_err_t set_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
-                                                            uint8_t dtr_hangup, 
-                                                            uint8_t flow_control, 
-                                                            uint8_t bit_rate);
+                                                               uint8_t dtr_hangup, 
+                                                               uint8_t flow_control, 
+                                                               uint8_t bit_rate);
 config_err_t set_pef_control (bmc_config_state_data_t *state_data,
-                           uint8_t pef,
-                           uint8_t pef_event_messages,
-                           uint8_t pef_startup_delay,
-                           uint8_t pef_alert_startup_delay);
+                              uint8_t pef,
+                              uint8_t pef_event_messages,
+                              uint8_t pef_startup_delay,
+                              uint8_t pef_alert_startup_delay);
 config_err_t set_pef_action_global_control (bmc_config_state_data_t *state_data,
-                                         uint8_t alert_action,
-                                         uint8_t power_down_action,
-                                         uint8_t reset_action,
-                                         uint8_t power_cycle_action,
-                                         uint8_t oem_action,
-                                         uint8_t diagnostic_interrupt);
+                                            uint8_t alert_action,
+                                            uint8_t power_down_action,
+                                            uint8_t reset_action,
+                                            uint8_t power_cycle_action,
+                                            uint8_t oem_action,
+                                            uint8_t diagnostic_interrupt);
 config_err_t set_pef_startup_delay (bmc_config_state_data_t *state_data,
-                                 uint8_t pef_startup_delay);
+                                    uint8_t pef_startup_delay);
 config_err_t set_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
-                                       uint8_t pef_alert_startup_delay);
+                                          uint8_t pef_alert_startup_delay);
 config_err_t set_sol_sol_enable(bmc_config_state_data_t *state_data,
-                             uint8_t sol_enable);
+                                uint8_t sol_enable);
 config_err_t set_sol_sol_authentication(bmc_config_state_data_t *state_data,
-                                     uint8_t sol_privilege_level,
-                                     uint8_t force_sol_payload_authentication,
-                                     uint8_t force_sol_payload_encryption);
+                                        uint8_t sol_privilege_level,
+                                        uint8_t force_sol_payload_authentication,
+                                        uint8_t force_sol_payload_encryption);
 config_err_t set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_t *state_data,
-                                                                   uint8_t character_accumulate_interval,
-                                                                   uint8_t character_send_threshold);
+                                                                      uint8_t character_accumulate_interval,
+                                                                      uint8_t character_send_threshold);
 config_err_t set_sol_sol_retry(bmc_config_state_data_t *state_data,
-                            uint8_t retry_count,
-                            uint8_t retry_interval);
+                               uint8_t retry_count,
+                               uint8_t retry_interval);
 config_err_t set_sol_sol_non_volatile_bit_rate(bmc_config_state_data_t *state_data,
-                                            uint8_t bit_rate);
+                                               uint8_t bit_rate);
 config_err_t set_sol_sol_volatile_bit_rate(bmc_config_state_data_t *state_data,
-                                        uint8_t bit_rate);
+                                           uint8_t bit_rate);
 config_err_t set_sol_sol_payload_port_number(bmc_config_state_data_t *state_data,
-                                          uint16_t port_number);
+                                             uint16_t port_number);
 
 /***********************************************************/
 config_err_t get_bmc_username (bmc_config_state_data_t *state_data, 
-                            uint8_t userid, 
-                            uint8_t *username,
-                            uint32_t username_len);
+                               uint8_t userid, 
+                               uint8_t *username,
+                               uint32_t username_len);
 config_err_t get_bmc_user_lan_channel_access (bmc_config_state_data_t *state_data, 
-                                           uint8_t userid, 
-                                           uint8_t *user_ipmi_messaging, 
-                                           uint8_t *user_link_authentication, 
-                                           uint8_t *user_restricted_to_callback, 
-                                           uint8_t *privilege_limit, 
-                                           uint8_t *session_limit,
-                                           uint8_t *user_id_enable_status);
-config_err_t get_bmc_user_payload_access (bmc_config_state_data_t *state_data,
-                                       uint8_t userid,
-                                       uint8_t *standard_payload_1,
-                                       uint8_t *standard_payload_2,
-                                       uint8_t *standard_payload_3,
-                                       uint8_t *standard_payload_4,
-                                       uint8_t *standard_payload_5,
-                                       uint8_t *standard_payload_6,
-                                       uint8_t *standard_payload_7,
-                                       uint8_t *oem_payload_0,
-                                       uint8_t *oem_payload_1,
-                                       uint8_t *oem_payload_2,
-                                       uint8_t *oem_payload_3,
-                                       uint8_t *oem_payload_4,
-                                       uint8_t *oem_payload_5,
-                                       uint8_t *oem_payload_6,
-                                       uint8_t *oem_payload_7);
-config_err_t get_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data, 
                                               uint8_t userid, 
                                               uint8_t *user_ipmi_messaging, 
                                               uint8_t *user_link_authentication, 
@@ -196,105 +147,106 @@ config_err_t get_bmc_user_serial_channel_access (bmc_config_state_data_t *state_
                                               uint8_t *privilege_limit, 
                                               uint8_t *session_limit,
                                               uint8_t *user_id_enable_status);
-config_err_t get_bmc_lan_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                               uint8_t *access_mode, 
-                                               uint8_t *user_level_authentication, 
-                                               uint8_t *per_message_authentication, 
-                                               uint8_t *pef_alerting, 
-                                               uint8_t *privilege_limit);
-config_err_t get_bmc_lan_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                   uint8_t *access_mode, 
-                                                   uint8_t *user_level_authentication, 
-                                                   uint8_t *per_message_authentication, 
-                                                   uint8_t *pef_alerting, 
-                                                   uint8_t *privilege_limit);
+config_err_t get_bmc_user_payload_access (bmc_config_state_data_t *state_data,
+                                          uint8_t userid,
+                                          uint8_t *standard_payload_1,
+                                          uint8_t *standard_payload_2,
+                                          uint8_t *standard_payload_3,
+                                          uint8_t *standard_payload_4,
+                                          uint8_t *standard_payload_5,
+                                          uint8_t *standard_payload_6,
+                                          uint8_t *standard_payload_7,
+                                          uint8_t *oem_payload_0,
+                                          uint8_t *oem_payload_1,
+                                          uint8_t *oem_payload_2,
+                                          uint8_t *oem_payload_3,
+                                          uint8_t *oem_payload_4,
+                                          uint8_t *oem_payload_5,
+                                          uint8_t *oem_payload_6,
+                                          uint8_t *oem_payload_7);
+config_err_t get_bmc_user_serial_channel_access (bmc_config_state_data_t *state_data, 
+                                                 uint8_t userid, 
+                                                 uint8_t *user_ipmi_messaging, 
+                                                 uint8_t *user_link_authentication, 
+                                                 uint8_t *user_restricted_to_callback, 
+                                                 uint8_t *privilege_limit, 
+                                                 uint8_t *session_limit,
+                                                 uint8_t *user_id_enable_status);
 config_err_t get_bmc_lan_conf_ip_address_source (bmc_config_state_data_t *state_data, 
-                                              uint8_t *ip_address_source);
+                                                 uint8_t *ip_address_source);
 config_err_t get_bmc_lan_conf_ip_address (bmc_config_state_data_t *state_data, 
-                                       char *ip_address,
-                                       unsigned int ip_address_len);
+                                          char *ip_address,
+                                          unsigned int ip_address_len);
 config_err_t get_bmc_lan_conf_mac_address (bmc_config_state_data_t *state_data, 
-                                        char *mac_address,
-                                        unsigned int mac_address_len);
+                                           char *mac_address,
+                                           unsigned int mac_address_len);
 config_err_t get_bmc_lan_conf_subnet_mask (bmc_config_state_data_t *state_data, 
-                                        char *subnet_mask,
-                                        unsigned int subnet_mask_len);
+                                           char *subnet_mask,
+                                           unsigned int subnet_mask_len);
 config_err_t get_bmc_lan_conf_default_gateway_address (bmc_config_state_data_t *state_data, 
-                                                    char *default_gateway_address,
-                                                    unsigned int default_gateway_address_len);
+                                                       char *default_gateway_address,
+                                                       unsigned int default_gateway_address_len);
 config_err_t get_bmc_lan_conf_default_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                        char *default_gateway_mac_address,
-                                                        unsigned int default_gateway_mac_address_len);
+                                                           char *default_gateway_mac_address,
+                                                           unsigned int default_gateway_mac_address_len);
 config_err_t get_bmc_lan_conf_backup_gateway_address (bmc_config_state_data_t *state_data, 
-                                                   char *backup_gateway_address,
-                                                   unsigned int backup_gateway_address_len);
+                                                      char *backup_gateway_address,
+                                                      unsigned int backup_gateway_address_len);
 config_err_t get_bmc_lan_conf_backup_gateway_mac_address (bmc_config_state_data_t *state_data, 
-                                                       char *backup_gateway_mac_address,
-                                                       unsigned int backup_gateway_mac_address_len);
-config_err_t get_bmc_serial_channel_volatile_access (bmc_config_state_data_t *state_data, 
-                                                  uint8_t *access_mode, 
-                                                  uint8_t *user_level_authentication, 
-                                                  uint8_t *per_message_authentication, 
-                                                  uint8_t *pef_alerting, 
-                                                  uint8_t *privilege_limit);
-config_err_t get_bmc_serial_channel_non_volatile_access (bmc_config_state_data_t *state_data, 
-                                                      uint8_t *access_mode, 
-                                                      uint8_t *user_level_authentication, 
-                                                      uint8_t *per_message_authentication, 
-                                                      uint8_t *pef_alerting, 
-                                                      uint8_t *privilege_limit);
+                                                          char *backup_gateway_mac_address,
+                                                          unsigned int backup_gateway_mac_address_len);
 config_err_t get_bmc_serial_conf_connection_mode (bmc_config_state_data_t *state_data, 
-                                               uint8_t *basic_mode, 
-                                               uint8_t *ppp_mode, 
-                                               uint8_t *terminal_mode, 
-                                               uint8_t *connect_mode);
+                                                  uint8_t *basic_mode, 
+                                                  uint8_t *ppp_mode, 
+                                                  uint8_t *terminal_mode, 
+                                                  uint8_t *connect_mode);
 config_err_t get_bmc_serial_conf_page_blackout_interval (bmc_config_state_data_t *state_data, 
-                                                      uint8_t *page_blackout_interval);
+                                                         uint8_t *page_blackout_interval);
 config_err_t get_bmc_serial_conf_call_retry_interval (bmc_config_state_data_t *state_data, 
-                                                   uint8_t *call_retry_interval);
+                                                      uint8_t *call_retry_interval);
 config_err_t get_bmc_serial_conf_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data, 
-                                                            uint8_t *dtr_hangup, 
-                                                            uint8_t *flow_control, 
-                                                            uint8_t *bit_rate);
+                                                               uint8_t *dtr_hangup, 
+                                                               uint8_t *flow_control, 
+                                                               uint8_t *bit_rate);
 config_err_t get_bmc_lan_conf_vlan_id (bmc_config_state_data_t *state_data, 
-                                    uint32_t *vlan_id,
-                                    uint8_t *vlan_id_enable);
+                                       uint32_t *vlan_id,
+                                       uint8_t *vlan_id_enable);
 config_err_t get_bmc_lan_conf_vlan_priority (bmc_config_state_data_t *state_data, 
-                                          uint8_t *vlan_priority);
+                                             uint8_t *vlan_priority);
 config_err_t get_pef_control (bmc_config_state_data_t *state_data,
-                           uint8_t *pef,
-                           uint8_t *pef_event_messages,
-                           uint8_t *pef_startup_delay,
-                           uint8_t *pef_alert_startup_delay);
+                              uint8_t *pef,
+                              uint8_t *pef_event_messages,
+                              uint8_t *pef_startup_delay,
+                              uint8_t *pef_alert_startup_delay);
 config_err_t get_pef_action_global_control (bmc_config_state_data_t *state_data,
-                                         uint8_t *alert_action,
-                                         uint8_t *power_down_action,
-                                         uint8_t *reset_action,
-                                         uint8_t *power_cycle_action,
-                                         uint8_t *oem_action,
-                                         uint8_t *diagnostic_interrupt);
+                                            uint8_t *alert_action,
+                                            uint8_t *power_down_action,
+                                            uint8_t *reset_action,
+                                            uint8_t *power_cycle_action,
+                                            uint8_t *oem_action,
+                                            uint8_t *diagnostic_interrupt);
 config_err_t get_pef_startup_delay (bmc_config_state_data_t *state_data,
-                                 uint8_t *pef_startup_delay);
+                                    uint8_t *pef_startup_delay);
 config_err_t get_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
-                                       uint8_t *pef_alert_startup_delay);
+                                          uint8_t *pef_alert_startup_delay);
 config_err_t get_sol_sol_enable (bmc_config_state_data_t *state_data,
-                              uint8_t *sol_enable);
+                                 uint8_t *sol_enable);
 config_err_t get_sol_sol_authentication (bmc_config_state_data_t *state_data,
-                                      uint8_t *sol_privilege_level,
-                                      uint8_t *force_sol_payload_authentication,
-                                      uint8_t *force_sol_payload_encryption);
+                                         uint8_t *sol_privilege_level,
+                                         uint8_t *force_sol_payload_authentication,
+                                         uint8_t *force_sol_payload_encryption);
 config_err_t get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data_t *state_data,
-                                                                    uint8_t *character_accumulate_interval,
-                                                                    uint8_t *character_send_threshold);
+                                                                       uint8_t *character_accumulate_interval,
+                                                                       uint8_t *character_send_threshold);
 config_err_t get_sol_sol_retry (bmc_config_state_data_t *state_data,
-                             uint8_t *retry_count,
-                             uint8_t *retry_interval);
+                                uint8_t *retry_count,
+                                uint8_t *retry_interval);
 config_err_t get_sol_sol_non_volatile_bit_rate (bmc_config_state_data_t *state_data,
-                                             uint8_t *bit_rate);
+                                                uint8_t *bit_rate);
 config_err_t get_sol_sol_volatile_bit_rate (bmc_config_state_data_t *state_data,
-                                         uint8_t *bit_rate);
+                                            uint8_t *bit_rate);
 config_err_t get_sol_sol_payload_port_number (bmc_config_state_data_t *state_data,
-                                           uint16_t *port_number);
+                                              uint16_t *port_number);
 
 /***********************************************************/
 config_err_t check_bmc_user_password (bmc_config_state_data_t *state_data, 
