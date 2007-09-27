@@ -25,7 +25,7 @@ struct channel_access
   uint8_t channel_privilege_limit;
 };
 
-config_err_t
+static config_err_t
 _channel_info(bmc_config_state_data_t *state_data,
               const char *section_name,
               uint8_t *channel_number)
@@ -52,7 +52,7 @@ _channel_info(bmc_config_state_data_t *state_data,
   return CONFIG_ERR_SUCCESS;
 }
 
-config_err_t
+static config_err_t
 _get_key_info(bmc_config_state_data_t *state_data,
               const char *section_name,
               const char *key_name,
@@ -79,7 +79,7 @@ _get_key_info(bmc_config_state_data_t *state_data,
   return CONFIG_ERR_SUCCESS;
 }
 
-config_err_t
+static config_err_t
 _set_key_info(bmc_config_state_data_t *state_data,
               const char *section_name,
               const char *key_name,

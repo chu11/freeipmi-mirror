@@ -115,24 +115,6 @@ config_err_t set_pef_startup_delay (bmc_config_state_data_t *state_data,
                                     uint8_t pef_startup_delay);
 config_err_t set_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
                                           uint8_t pef_alert_startup_delay);
-config_err_t set_sol_sol_enable(bmc_config_state_data_t *state_data,
-                                uint8_t sol_enable);
-config_err_t set_sol_sol_authentication(bmc_config_state_data_t *state_data,
-                                        uint8_t sol_privilege_level,
-                                        uint8_t force_sol_payload_authentication,
-                                        uint8_t force_sol_payload_encryption);
-config_err_t set_sol_character_accumulate_interval_and_send_threshold(bmc_config_state_data_t *state_data,
-                                                                      uint8_t character_accumulate_interval,
-                                                                      uint8_t character_send_threshold);
-config_err_t set_sol_sol_retry(bmc_config_state_data_t *state_data,
-                               uint8_t retry_count,
-                               uint8_t retry_interval);
-config_err_t set_sol_sol_non_volatile_bit_rate(bmc_config_state_data_t *state_data,
-                                               uint8_t bit_rate);
-config_err_t set_sol_sol_volatile_bit_rate(bmc_config_state_data_t *state_data,
-                                           uint8_t bit_rate);
-config_err_t set_sol_sol_payload_port_number(bmc_config_state_data_t *state_data,
-                                             uint16_t port_number);
 
 /***********************************************************/
 config_err_t get_bmc_username (bmc_config_state_data_t *state_data, 
@@ -229,24 +211,6 @@ config_err_t get_pef_startup_delay (bmc_config_state_data_t *state_data,
                                     uint8_t *pef_startup_delay);
 config_err_t get_pef_alert_startup_delay (bmc_config_state_data_t *state_data,
                                           uint8_t *pef_alert_startup_delay);
-config_err_t get_sol_sol_enable (bmc_config_state_data_t *state_data,
-                                 uint8_t *sol_enable);
-config_err_t get_sol_sol_authentication (bmc_config_state_data_t *state_data,
-                                         uint8_t *sol_privilege_level,
-                                         uint8_t *force_sol_payload_authentication,
-                                         uint8_t *force_sol_payload_encryption);
-config_err_t get_sol_character_accumulate_interval_and_send_threshold (bmc_config_state_data_t *state_data,
-                                                                       uint8_t *character_accumulate_interval,
-                                                                       uint8_t *character_send_threshold);
-config_err_t get_sol_sol_retry (bmc_config_state_data_t *state_data,
-                                uint8_t *retry_count,
-                                uint8_t *retry_interval);
-config_err_t get_sol_sol_non_volatile_bit_rate (bmc_config_state_data_t *state_data,
-                                                uint8_t *bit_rate);
-config_err_t get_sol_sol_volatile_bit_rate (bmc_config_state_data_t *state_data,
-                                            uint8_t *bit_rate);
-config_err_t get_sol_sol_payload_port_number (bmc_config_state_data_t *state_data,
-                                              uint16_t *port_number);
 
 /***********************************************************/
 config_err_t check_bmc_user_password (bmc_config_state_data_t *state_data, 
