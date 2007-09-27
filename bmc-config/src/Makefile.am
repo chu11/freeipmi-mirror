@@ -6,7 +6,6 @@ bmc_config_SOURCES = \
 	bmc-config-channel-common.c \
 	bmc-config-map.c \
 	bmc-config-sections.c \
-	bmc-config-wrapper.c \
 	bmc-config-utils.c \
 	bmc-config-user-sections.c \
 	bmc-config-lan-channel-section.c \
@@ -34,7 +33,6 @@ AM_CPPFLAGS = -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 noinst_HEADERS = bmc-config.h \
 		 bmc-config-argp.h \
 		 bmc-config-channel-common.h \
-		 bmc-config-wrapper.h \
 		 bmc-config-utils.h \
 		 bmc-config-user-sections.h \
 		 bmc-config-lan-channel-section.h \

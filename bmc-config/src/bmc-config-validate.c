@@ -15,7 +15,6 @@
 #include <assert.h>
 
 #include "bmc-config.h"
-#include "bmc-config-wrapper.h"
 #include "bmc-config-map.h"
 #include "bmc-config-validate.h"
 
