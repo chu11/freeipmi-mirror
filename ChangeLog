@@ -3,8 +3,16 @@
 	* common/src/config-pef-conf-section.h,
 	common/src/config-pef-conf-section.c: New files.
 
+	* bmc-config/src/bmc-config-wrapper.h,
+	bmc-config/src/bmc-config-wrapper.c: Remove files.
+
 	* bmc-config/, pef-config/: Continued common code re-architecture
 	and subsequent code cleanup.
+
+	* libfreeipmi/: Change user_name and password parameters to char
+	instead of uint8_t *.
+
+	* ipmipower/, ipmiconsole/: Adjust for pointer signedness changes.
 
 2007-09-26  Albert Chu <chu11@llnl.gov>
 

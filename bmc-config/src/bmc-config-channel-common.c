@@ -67,7 +67,9 @@ _get_key_info(bmc_config_state_data_t *state_data,
   assert(channel_number);
   assert(access_type);
 
-  if (_channel_info(state_data, section_name, channel_number) != CONFIG_ERR_SUCCESS)
+  if ((ret = _channel_info(state_data, 
+                           section_name, 
+                           channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
@@ -94,7 +96,9 @@ _set_key_info(bmc_config_state_data_t *state_data,
   assert(channel_number);
   assert(access_type);
 
-  if (_channel_info(state_data, section_name, channel_number) != CONFIG_ERR_SUCCESS)
+  if ((ret = _channel_info(state_data, 
+                           section_name, 
+                           channel_number)) != CONFIG_ERR_SUCCESS)
     return ret;
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
