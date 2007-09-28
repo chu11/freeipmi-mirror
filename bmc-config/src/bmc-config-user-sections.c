@@ -244,8 +244,13 @@ username_commit (const char *section_name,
   config_err_t rv = CONFIG_ERR_FATAL_ERROR;
 
   /* can't change userid 1 */
-  if (userid == 1)
+  /* anonymous for backwards compatability */
+  if (userid == 1
+      && (same (kv->value_input, "NULL")
+          || same (kv->value_input, "anonymous"))) 
     return CONFIG_ERR_SUCCESS;
+  else
+    return CONFIG_ERR_NON_FATAL_ERROR;
 
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_user_name_rs)))
     goto cleanup;
