@@ -1,3 +1,8 @@
+2007-09-28  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/, pef-config/, common/src/, libfreeipmi/srd/udm/:
+	Minor bug fixes.
+	
 2007-09-27  Albert Chu <chu11@llnl.gov>
 
 	* common/src/config-pef-conf-section.h,
