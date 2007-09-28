@@ -95,7 +95,6 @@ Fiid_obj_clear(fiid_obj_t obj)
 void
 Fiid_obj_destroy (fiid_obj_t obj)
 {
-  assert(obj);
   if (obj)
     fiid_obj_destroy(obj);
 }
