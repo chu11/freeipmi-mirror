@@ -96,9 +96,22 @@ _bmc_config (void *arg)
     }
   state_data.sections = sections;
 
-  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT
-      || prog_data->args->action == CONFIG_ACTION_COMMIT
-      || prog_data->args->action == CONFIG_ACTION_DIFF)
+  if (prog_data->args->action == CONFIG_ACTION_CHECKOUT)
+    {
+      if (prog_data->args->filename)
+        {
+          if (!(fp = fopen (prog_data->args->filename, "w")))
+            {
+              perror("fopen");
+              goto cleanup;
+            }
+          file_opened++;
+        }
+      else
+        fp = stdout;
+    }
+  else if (prog_data->args->action == CONFIG_ACTION_COMMIT
+           || prog_data->args->action == CONFIG_ACTION_DIFF)
     {
       if (prog_data->args->filename && strcmp (prog_data->args->filename, "-"))
         {
@@ -110,12 +123,7 @@ _bmc_config (void *arg)
           file_opened++;
         }
       else
-        {
-          if (prog_data->args->action == CONFIG_ACTION_CHECKOUT)
-            fp = stdout;
-          else
-            fp = stdin;
-        }
+        fp = stdin;
     }
 
   /* parse if there is an input file or no pairs at all */
