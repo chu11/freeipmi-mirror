@@ -15,6 +15,9 @@ libfreeipmi:
 * Modify system boot priority table.
 * how to support xRC4 (can we? should we?)
 * get event messages function that is passed fiids
+split udm into another lib?
+re-work UDM for advanced IPMI lan connection detection?
+split off and install sdr parsing/caching lib?
 
 Autoconf/Portability
 --------------------
@@ -31,13 +34,6 @@ pef-config
 * conf.5 manpage
 * how to specify event reading type codes
 
-bmc-config/pef-config
----------------------
-bmc/pef-config - output error info
-installed template
-common stuff for parsing in bmc-config and pef-config
-common pef config junk in bmc-config & pef-config
-
 general
 -------
 event handling
@@ -51,15 +47,10 @@ move set power cycle interval to bmc-config?
 remove set power restore policy b/c its in bmc-config?
 put boot options into bmc-config?
 
-re-architecture
----------------
-libfreeipmi re-arch for better error codes
-split udm into another lib
-
 ipmiconsole
 -----------
 retry under a different port
-- has never been tried/tested
+- has never been tested, does any manufacturer do this?
 common tests to keep in mind
 - ipmiconsole_engine_teardown() before ipmiconsole_ctx_destroy()
 - block vs. non_block
