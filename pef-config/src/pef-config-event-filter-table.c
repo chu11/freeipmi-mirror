@@ -1492,7 +1492,7 @@ pef_config_event_filter_table_section_get (pef_config_state_data_t *state_data, 
     goto cleanup;
 
   if (config_section_add_key (section,
-                              "Generator_Id_Byte_1",
+                              "Generator_Id_Byte_2",
                               "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
                               0,
                               generator_id_byte_2_checkout,
