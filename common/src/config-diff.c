@@ -56,6 +56,11 @@ config_diff (struct config_section *sections,
             }
           kv = kv->next;
         }
+
+      if (cmd_args->verbose)
+        fprintf (stderr, "Completed diff of Section: %s\n",
+                 section->section_name);
+
       s = s->next;
     }
   
