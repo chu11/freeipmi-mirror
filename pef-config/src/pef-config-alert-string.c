@@ -85,6 +85,8 @@ _set_alert_string_keys (pef_config_state_data_t *state_data,
   assert(section_name);
   assert(ask);
 
+  string_selector = atoi (section_name + strlen ("Alert_String_"));
+
   if (!(obj_cmd_rs = Fiid_obj_create(tmpl_cmd_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
