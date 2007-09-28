@@ -193,10 +193,13 @@ config_keypair_create(const char *section_name,
       goto cleanup;
     }
 
-  if (!(keypair->value_input = strdup(value_input)))
+  if (value_input)
     {
-      perror("strdup");
-      goto cleanup;
+      if (!(keypair->value_input = strdup(value_input)))
+        {
+          perror("strdup");
+          goto cleanup;
+        }
     }
 
   return keypair;
