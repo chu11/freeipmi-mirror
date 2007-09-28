@@ -692,7 +692,7 @@ bmc_config_serial_conf_section_get (bmc_config_state_data_t *state_data)
 
   if (config_section_add_key (bmc_serial_conf_section,
                               "Connect_Mode",
-                              "Possible values: Modem_Connect/Direct_Mode",
+                              "Possible values: Modem_Connect/Direct_Connect",
                               0,
                               connect_mode_checkout,
                               connect_mode_commit,
