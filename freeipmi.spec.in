@@ -135,6 +135,36 @@ if [ "$1" = 0 ]; then
     fi
 fi
 
+%post ipmidetectd
+if [ "$1" = 1 ]; then
+   if [ -x %{_initrddir}/freeipmi-ipmidetectd ]; then
+      /sbin/chkconfig --add freeipmi-ipmidetectd
+      /sbin/chkconfig freeipmi-ipmidetectd off
+   fi
+fi
+if [ $1 -ge 1 ]; then
+   if [ -x %{_initrddir}/freeipmi-ipmidetectd ]; then
+      if %{_initrddir}/freeipmi-ipmidetectd status | grep -q running; then
+         %{_initrddir}/freeipmi-ipmidetectd restart
+      else
+         %{_initrddir}/freeipmi-ipmidetectd condrestart
+      fi
+   fi
+fi
+
+%preun ipmidetectd
+#
+# Stop ipmidetectd if it is running 
+#
+if [ "$1" = 0 ]; then
+    if [ -x %{_initrddir}/freeipmi-ipmidetectd ]; then
+       if %{_initrddir}/freeipmi-ipmidetectd status | grep -q running; then
+          %{_initrddir}/freeipmi-ipmidetectd stop
+       fi
+       /sbin/chkconfig --del freeipmi-ipmidetectd
+    fi
+fi
+
 %files
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/AUTHORS

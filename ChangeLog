@@ -1,3 +1,7 @@
+2007-10-01  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Add daemon scripts for ipmidetectd.
+	
 2007-09-28  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/, pef-config/, common/src/, libfreeipmi/srd/udm/:
