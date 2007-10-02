@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.2 2007-06-27 20:22:00 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.2.2.1 2007-10-02 16:03:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -277,10 +277,10 @@ _cmdline_parse(int argc, char **argv)
               err_exit("invalid port specified");
             break;
           case 'u':
-            output_type = IPMIDETECT_DETECTED_NODES;
+            output_type = IPMIDETECT_UNDETECTED_NODES;
             break;
           case 'd':
-            output_type = IPMIDETECT_UNDETECTED_NODES;
+            output_type = IPMIDETECT_DETECTED_NODES;
             break;
           case 'q':
             output_format = 0;
