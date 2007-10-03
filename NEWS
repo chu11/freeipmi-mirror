@@ -1,3 +1,8 @@
+0.4.5
+-----
+o Fix command line parse issue in ipmidetect.
+o Fix rpm daemon install scripts for ipmidetectd.
+
 0.4.4
 -----
 o Alter userncame-capabilities workaround to authentication-capabilities workaronds
