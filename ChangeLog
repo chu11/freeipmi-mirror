@@ -1,3 +1,8 @@
+2007-10-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmidetect/src/ipmidetect/ipmidetect.c (_cmdline_parse): Fix bug
+	in command line option parsing.
+	
 2007-10-01  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Add daemon scripts for ipmidetectd.
