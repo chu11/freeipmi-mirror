@@ -1,5 +1,11 @@
 2007-10-02  Albert Chu <chu11@llnl.gov>
 
+	* configure.ac: Update version for release.
+
+        * Tagged Release-0_4_5
+
+2007-10-02  Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/src/ipmidetect/ipmidetect.c (_cmdline_parse): Fix bug
 	in command line option parsing.
 	
