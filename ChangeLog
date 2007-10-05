@@ -2,6 +2,12 @@
 
 	* common/src/ipmi-sdr-cache.c (_fread_record): Fix free corruption
 	bug.
+
+	* common/src/ipmi-sdr-cache.h, common/src/ipmi-sdr-cache.c: Add
+	SDR_CACHE_CTX_ERR_CACHE_EMPTY error code.
+
+	* common/src/ipmi-sdr-cache.c (sdr_cache_load): Fix possible
+	corner case.
 	
 2007-10-02  Albert Chu <chu11@llnl.gov>
 

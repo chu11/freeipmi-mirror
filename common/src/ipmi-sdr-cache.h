@@ -34,12 +34,13 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #define SDR_CACHE_CTX_ERR_CACHE_DOES_NOT_EXIST           8
 #define SDR_CACHE_CTX_ERR_CACHE_EXISTS                   9
 #define SDR_CACHE_CTX_ERR_CACHE_INVALID                 10
-#define SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE             11
-#define SDR_CACHE_CTX_ERR_CACHE_PERMISSION              12
-#define SDR_CACHE_CTX_ERR_OUTMEM                        13
-#define SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION            14
-#define SDR_CACHE_CTX_ERR_INTERNAL                      15
-#define SDR_CACHE_CTX_ERR_ERRNUMRANGE                   16
+#define SDR_CACHE_CTX_ERR_CACHE_EMPTY                   11
+#define SDR_CACHE_CTX_ERR_CACHE_OUT_OF_DATE             12
+#define SDR_CACHE_CTX_ERR_CACHE_PERMISSION              13
+#define SDR_CACHE_CTX_ERR_OUTMEM                        14
+#define SDR_CACHE_CTX_ERR_IPMI_COMMUNICATION            15
+#define SDR_CACHE_CTX_ERR_INTERNAL                      16
+#define SDR_CACHE_CTX_ERR_ERRNUMRANGE                   17
 
 #define IPMI_SENSOR_NAME_MAX  17
 #define IPMI_DEVICE_NAME_MAX  IPMI_SENSOR_NAME_MAX

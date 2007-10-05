@@ -105,6 +105,7 @@ static char * sdr_cache_ctx_errmsg[] =
     "cache does not exist",
     "cache already exists",
     "cache invalid",
+    "cache empty",
     "cache out of date",
     "cache permission denied",
     "out of memory",
@@ -2077,8 +2078,15 @@ sdr_cache_load (sdr_cache_ctx_t ctx,
         ctx->errnum = SDR_CACHE_CTX_ERR_INTERNAL;
         goto cleanup;
       }
+
     if (_get_record_count (ctx, fp, &l_count) < 0)
       goto cleanup;
+
+    if (!l_count)
+      {
+        ctx->errnum = SDR_CACHE_CTX_ERR_CACHE_EMPTY;
+        goto cleanup;
+      }
 
     if (fseek (fp, current_position, SEEK_SET))
       {
