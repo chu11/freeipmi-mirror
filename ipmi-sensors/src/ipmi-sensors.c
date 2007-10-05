@@ -234,8 +234,6 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
   group = state_data->prog_data->args->group;
   verbose_count = state_data->prog_data->args->verbose_count;
 
-  sensor_reading = &_sensor_reading;
-  
   for (i = 0; i < state_data->sdr_record_count; i++)
     {
       sdr_record = state_data->sdr_record_list + i;
@@ -292,8 +290,6 @@ display_sensor_list (ipmi_sensors_state_data_t *state_data)
   sensors_list_length = state_data->prog_data->args->sensors_list_length;
   verbose_count = state_data->prog_data->args->verbose_count;
 
-  sensor_reading = &_sensor_reading;
-  
   for (i = 0; i < state_data->sdr_record_count; i++)
     {
       sdr_record = state_data->sdr_record_list + i;
@@ -357,8 +353,6 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
       sdr_record_t *sdr_record;
       sensor_reading_t _sensor_reading;
       sensor_reading_t *sensor_reading;
-      
-      sensor_reading = &_sensor_reading;
       
       for (i = 0; i < state_data->sdr_record_count; i++)
 	{
