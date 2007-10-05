@@ -1868,14 +1868,12 @@ _fread_record (sdr_cache_ctx_t ctx,
         return (-1);
       else 
 	{
-	  char *lineptr = line;
 	  char *tmp_lineptr = line;
 	  if (!(line = strdupa (stripwhite (tmp_lineptr))))
             {
               ctx->errnum = SDR_CACHE_CTX_ERR_OUTMEM;
               return -1;
             }
-	  free (lineptr);
 	}
 
       if (!strlen (line))

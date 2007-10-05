@@ -1,3 +1,8 @@
+2007-10-04  Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sdr-cache.c (_fread_record): Fix free corruption
+	bug.
+	
 2007-10-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmidetect/src/ipmidetect/ipmidetect.c (_cmdline_parse): Fix bug
