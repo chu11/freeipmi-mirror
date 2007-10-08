@@ -253,17 +253,28 @@ display_group_sensors (ipmi_sensors_state_data_t *state_data)
 	    {
 	    case 0:
 	      if (sensors_display_simple (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	      break;
 	    case 1:
 	      if (sensors_display_verbose (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	      break;
 	    case 2:
 	    default:
 	      if (sensors_display_very_verbose (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	    }
+
+          sensor_reading_cleanup(sensor_reading);
 	}
     }
   
@@ -309,17 +320,28 @@ display_sensor_list (ipmi_sensors_state_data_t *state_data)
 	    {
 	    case 0:
 	      if (sensors_display_simple (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	      break;
 	    case 1:
 	      if (sensors_display_verbose (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	      break;
 	    case 2:
 	    default:
 	      if (sensors_display_very_verbose (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	    }
+
+          sensor_reading_cleanup(sensor_reading);
 	}
     }
   
@@ -371,17 +393,28 @@ display_sensors (ipmi_sensors_state_data_t *state_data)
 	    {
 	    case 0:
 	      if (sensors_display_simple (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	      break;
 	    case 1:
 	      if (sensors_display_verbose (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	      break;
 	    case 2:
 	    default:
 	      if (sensors_display_very_verbose (state_data, sdr_record, sensor_reading) < 0)
-                return (-1);
+                {
+                  sensor_reading_cleanup(sensor_reading);
+                  return (-1);
+                }
 	    }
+          
+          sensor_reading_cleanup(sensor_reading);
 	}
     }
   

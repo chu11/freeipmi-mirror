@@ -150,9 +150,11 @@ _get_threshold_message_list (uint8_t sensor_state)
                                           1024) < 0)
             continue;
 	  
-	  message_list[indx] = strdup(buf);
-	  if (!message_list[indx])
-	    goto cleanup;
+	  if (!(message_list[indx] = strdup(buf)))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
 	  else
 	    {
 	      indx++;
@@ -163,7 +165,11 @@ _get_threshold_message_list (uint8_t sensor_state)
   
   if (indx)
     {
-      event_message_list = (char **) malloc (sizeof (char *) * (indx + 1));
+      if (!(event_message_list = (char **) malloc (sizeof (char *) * (indx + 1))))
+        {
+          perror("malloc");
+          goto cleanup;
+        }
       for (offset = 0; offset < indx; offset++)
 	event_message_list[offset] = message_list[offset];
       event_message_list[indx] = NULL;
@@ -199,18 +205,23 @@ _get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t senso
 					      1024) < 0)
             continue;
 
-	  message_list[indx] = strdup(buf);
-	  if (!message_list[indx])
-	    goto cleanup;
+	  if (!(message_list[indx] = strdup(buf)))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
 	  else
-	    indx++;
-	  
+	    indx++; 
 	}
     }
   
   if (indx)
     {
-      event_message_list = (char **) malloc (sizeof (char *) * (indx + 1));
+      if (!(event_message_list = (char **) malloc (sizeof (char *) * (indx + 1))))
+        {
+          perror("malloc");
+          goto cleanup;
+        }
       for (offset = 0; offset < indx; offset++)
 	event_message_list[offset] = message_list[offset];
       event_message_list[indx] = NULL;
@@ -246,9 +257,11 @@ _get_event_message_list (int sensor_type_code, uint16_t sensor_state)
 						 1024) < 0)
             continue;
 
-	  message_list[indx] = strdup(buf);
-	  if (!message_list[indx])
-	    goto cleanup;
+	  if (!(message_list[indx] = strdup(buf)))
+            {
+              perror("strdup");
+              goto cleanup;
+            }
 	  else
 	    indx++;
 	}
@@ -256,7 +269,11 @@ _get_event_message_list (int sensor_type_code, uint16_t sensor_state)
   
   if (indx)
     {
-      event_message_list = (char **) malloc (sizeof (char *) * (indx + 1));
+      if (!(event_message_list = (char **) malloc (sizeof (char *) * (indx + 1))))
+        {
+          perror("malloc");
+          goto cleanup;
+        }
       for (offset = 0; offset < indx; offset++)
 	event_message_list[offset] = message_list[offset];
       event_message_list[indx] = NULL;
@@ -544,7 +561,11 @@ get_sensor_reading (ipmi_device_t dev,
 	asprintf (&event_message, 
 		  "OEM State = %04Xh", 
 		  (uint16_t) val);
-	sensor_reading->event_message_list = (char **) malloc (sizeof (char *) * 2);
+	if (!(sensor_reading->event_message_list = (char **) malloc (sizeof (char *) * 2)))
+          {
+            perror("malloc");
+            goto cleanup;
+          }
 	sensor_reading->event_message_list[0] = event_message;
 	sensor_reading->event_message_list[1] = NULL;
       }
@@ -559,3 +580,21 @@ get_sensor_reading (ipmi_device_t dev,
   return (rv);
 }
 
+void
+sensor_reading_cleanup(sensor_reading_t *sensor_reading)
+{
+  if (sensor_reading)
+    {
+      if (sensor_reading->event_message_list)
+        {
+          int i = 0;
+          while (sensor_reading->event_message_list[i])
+            {
+              free(sensor_reading->event_message_list[i]);
+              i++;
+            }
+          free(sensor_reading->event_message_list);
+          sensor_reading->event_message_list = NULL;
+        }
+    }
+}

@@ -55,4 +55,6 @@ int8_t get_sensor_reading (ipmi_device_t dev,
                            sdr_record_t *sdr_record, 
                            sensor_reading_t *sensor_reading);
 
+void sensor_reading_cleanup(sensor_reading_t *sensor_reading);
+
 #endif

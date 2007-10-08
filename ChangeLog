@@ -1,3 +1,16 @@
+2007-10-08  Albert Chu <chu11@llnl.gov>
+
+	* common/src/ipmi-sensor-api.c (_get_threshold_message_list,
+	_get_generic_event_message_list, _get_event_message_list): Catch
+	strdup/malloc errors appropriately.
+
+	* common/src/ipmi-sensor-api.h common/src/ipmi-sensor-api.c
+	(sensor_reading_cleanup): New function.
+
+	* ipmi-sensors/src/ipmi-sensors.c (display_group_sensors,
+	display_sensor_list, display_sensors): Appropriately free memory
+	after use.
+	
 2007-10-04  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sdr-cache.c (_fread_record): Fix free corruption
