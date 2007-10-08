@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.4 2007-09-05 20:13:24 chu11 Exp $
+ *  $Id: pstdout.c,v 1.5 2007-10-08 20:24:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -525,13 +525,17 @@ _pstdout_print(pstdout_state_t pstate,
 
   while (1)
     {
+      va_list vacpy;
+
       if (!(buf = (char *)realloc(buf, buflen)))
         {
           pstdout_errnum = PSTDOUT_ERR_OUTMEM;
           goto cleanup;
         }
       memset(buf, '\0', PSTDOUT_BUFLEN);
-      wlen = vsnprintf(buf, buflen, format, ap);
+      va_copy(vacpy, ap);
+      wlen = vsnprintf(buf, buflen, format, vacpy);
+      va_end(vacpy);
       if (wlen < buflen)
         break;
       buflen += PSTDOUT_BUFLEN;

@@ -10,6 +10,9 @@
 	* ipmi-sensors/src/ipmi-sensors.c (display_group_sensors,
 	display_sensor_list, display_sensors): Appropriately free memory
 	after use.
+
+	* common/src/pstdout.c (_pstdout_print): Fix potential vsnprintf
+	corner case.
 	
 2007-10-04  Albert Chu <chu11@llnl.gov>
 
