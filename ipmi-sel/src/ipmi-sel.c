@@ -354,18 +354,22 @@ _ipmi_sel (pstdout_state_t pstate,
   prog_data = (ipmi_sel_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(ipmi_sel_state_data_t));
 
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  /* Special case, just flush, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "%s\n",
-                      errmsg);
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      if (!(dev = ipmi_device_open(prog_data->progname,
+                                   hostname,
+                                   &(prog_data->args->common),
+                                   errmsg,
+                                   IPMI_DEVICE_OPEN_ERRMSGLEN)))
+        {
+          pstdout_fprintf(pstate,
+                          stderr,
+                          "%s\n",
+                          errmsg);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
     }
  
   state_data.dev = dev;

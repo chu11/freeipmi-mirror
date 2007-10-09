@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.c,v 1.4 2007-09-06 20:32:40 chu11 Exp $
+ *  $Id: ipmi-fru.c,v 1.5 2007-10-09 16:41:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -399,20 +399,24 @@ _ipmi_fru(pstdout_state_t pstate,
   prog_data = (ipmi_fru_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(ipmi_fru_state_data_t));
 
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  /* Special case, just flush, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "%s\n",
-                      errmsg);
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      if (!(dev = ipmi_device_open(prog_data->progname,
+                                   hostname,
+                                   &(prog_data->args->common),
+                                   errmsg,
+                                   IPMI_DEVICE_OPEN_ERRMSGLEN)))
+        {
+          pstdout_fprintf(pstate,
+                          stderr,
+                          "%s\n",
+                          errmsg);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
     }
-  
+
   state_data.dev = dev;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;

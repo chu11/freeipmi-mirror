@@ -503,25 +503,29 @@ _ipmi_sensors (pstdout_state_t pstate,
   prog_data = (ipmi_sensors_prog_data_t *)arg;
   memset(&state_data, '\0', sizeof(ipmi_sensors_state_data_t));
   
-  if (!(dev = ipmi_device_open(prog_data->progname,
-                               hostname,
-                               &(prog_data->args->common),
-                               errmsg,
-                               IPMI_DEVICE_OPEN_ERRMSGLEN)))
+  /* Special case, just flush, don't do an IPMI connection */
+  if (!prog_data->args->sdr.flush_cache_wanted)
     {
-      pstdout_fprintf(pstate,
-                      stderr,
-                      "%s\n",
-                      errmsg);
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      if (!(dev = ipmi_device_open(prog_data->progname,
+                                   hostname,
+                                   &(prog_data->args->common),
+                                   errmsg,
+                                   IPMI_DEVICE_OPEN_ERRMSGLEN)))
+        {
+          pstdout_fprintf(pstate,
+                          stderr,
+                          "%s\n",
+                          errmsg);
+          exit_code = EXIT_FAILURE;
+          goto cleanup;
+        }
     }
-
+      
   state_data.dev = dev;
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
-
+  
   if (!(state_data.sdr_cache_ctx = sdr_cache_ctx_create()))
     {
       pstdout_perror (pstate, "sdr_cache_ctx_create()");

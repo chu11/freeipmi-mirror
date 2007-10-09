@@ -1,3 +1,9 @@
+2007-10-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/, ipmi-sel/, ipmi-fru/: Fix corner case.  There is
+	no need to open an IPMI connection when the user only wants to
+	flush a cache.
+	
 2007-10-08  Albert Chu <chu11@llnl.gov>
 
 	* common/src/ipmi-sensor-api.c (_get_threshold_message_list,
