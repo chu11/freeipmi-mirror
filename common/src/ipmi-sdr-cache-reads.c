@@ -939,6 +939,10 @@ _get_oem_data_count (sdr_cache_ctx_t ctx,
       count++;
     }
 
+  /* cache has too much data, just truncate it */
+  if (count > IPMI_OEM_DATA_MAX)
+    count = IPMI_OEM_DATA_MAX;
+
   *oem_data_length = count;
   rv = 0;
  cleanup:  
@@ -948,7 +952,7 @@ _get_oem_data_count (sdr_cache_ctx_t ctx,
 static int 
 _get_oem_data (sdr_cache_ctx_t ctx,
                char *oem_data_string, 
-               unsigned int *oem_data, 
+               uint8_t *oem_data, 
                int count)
 {
   int i = 0;
@@ -974,9 +978,10 @@ _get_oem_data (sdr_cache_ctx_t ctx,
 	break;
       
       str2uint (str, 16, &value);
-      oem_data[i] = value;
-      
+      oem_data[i] = (uint8_t)value;
+
       free (str);
+
     }
   
   return 0;
@@ -1011,10 +1016,10 @@ _read_sdr_oem_record (sdr_cache_ctx_t ctx,
                            oem_data_string,
                            &(record->oem_data_length)) < 0)
      goto cleanup;
-  
+
   if (_get_oem_data (ctx,
                      oem_data_string, 
-                     (unsigned int *) record->oem_data, 
+                     record->oem_data, 
                      record->oem_data_length) < 0)
     goto cleanup;
 

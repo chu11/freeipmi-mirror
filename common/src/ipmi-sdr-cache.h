@@ -42,9 +42,14 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #define SDR_CACHE_CTX_ERR_INTERNAL                      16
 #define SDR_CACHE_CTX_ERR_ERRNUMRANGE                   17
 
-#define IPMI_SENSOR_NAME_MAX  17
+/* Max length 16 according to IPMI spec */
+#define IPMI_SENSOR_NAME_MAX  16
 #define IPMI_DEVICE_NAME_MAX  IPMI_SENSOR_NAME_MAX
-#define IPMI_OEM_DATA_MAX     55
+/* IPMI spec indicates oem records are 64 bytes total including the
+ * header.  The header is 8 bytes, thus the max oem data is 56
+ * bytes 
+ */
+#define IPMI_OEM_DATA_MAX     56
 
 struct sdr_repository_info
 {
@@ -91,7 +96,7 @@ struct sdr_full_record
   double upper_critical_threshold;
   double lower_non_critical_threshold;
   double upper_non_critical_threshold;
-  char sensor_name[IPMI_SENSOR_NAME_MAX];
+  char sensor_name[IPMI_SENSOR_NAME_MAX+1];
   /*      threshold masks      */
   uint8_t readable_threshold_lower_critical_threshold;
   uint8_t readable_threshold_upper_critical_threshold;
@@ -112,7 +117,7 @@ struct sdr_compact_record
   uint8_t sensor_unit;
   uint8_t negative_going_threshold_hysteresis;
   uint8_t positive_going_threshold_hysteresis;
-  char sensor_name[IPMI_SENSOR_NAME_MAX];
+  char sensor_name[IPMI_SENSOR_NAME_MAX+1];
 };
 typedef struct sdr_compact_record sdr_compact_record_t;
 
@@ -122,7 +127,7 @@ struct sdr_event_only_record
   uint8_t sensor_number;
   uint8_t sensor_type;
   uint8_t event_reading_type_code;
-  char sensor_name[IPMI_SENSOR_NAME_MAX];
+  char sensor_name[IPMI_SENSOR_NAME_MAX+1];
 };
 typedef struct sdr_event_only_record sdr_event_only_record_t;
 
@@ -145,7 +150,7 @@ struct sdr_generic_device_locator_record
   uint8_t device_type_modifier;
   uint8_t entity_id;
   uint8_t entity_instance;
-  char device_name[IPMI_DEVICE_NAME_MAX];
+  char device_name[IPMI_DEVICE_NAME_MAX+1];
 };
 typedef struct sdr_generic_device_locator_record sdr_generic_device_locator_record_t;
 
@@ -157,7 +162,7 @@ struct sdr_fru_device_locator_record
   uint8_t device_type_modifier;
   uint8_t fru_entity_id;
   uint8_t fru_entity_instance;
-  char device_name[IPMI_DEVICE_NAME_MAX];
+  char device_name[IPMI_DEVICE_NAME_MAX+1];
 };
 typedef struct sdr_fru_device_locator_record sdr_fru_device_locator_record_t;
 
@@ -165,7 +170,7 @@ struct sdr_management_controller_device_locator_record
 {
   uint8_t entity_id;
   uint8_t entity_instance;
-  char device_name[IPMI_DEVICE_NAME_MAX];
+  char device_name[IPMI_DEVICE_NAME_MAX+1];
 };
 typedef struct sdr_management_controller_device_locator_record sdr_management_controller_device_locator_record_t;
 
@@ -173,7 +178,7 @@ struct sdr_oem_record
 {
   uint32_t manufacturer_id;
   uint8_t oem_data_length;
-  uint8_t oem_data[IPMI_OEM_DATA_MAX];
+  uint8_t oem_data[IPMI_OEM_DATA_MAX+1];
 };
 typedef struct sdr_oem_record sdr_oem_record_t;
 

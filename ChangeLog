@@ -3,6 +3,25 @@
 	* ipmi-sensors/, ipmi-sel/, ipmi-fru/: Fix corner case.  There is
 	no need to open an IPMI connection when the user only wants to
 	flush a cache.
+
+	* libfreeipmi/src/ipmi-sdr-record-types.c,
+	common/src/ipmi-sdr-cache.h: Fix oem data length bug.  Max length
+	of OEM data in a OEM record is 56 bytes (448 bits) not 55 bytes
+	(440 bits).
+
+	* common/src/ipmi-sdr-cache-reads.c (_get_oem_data_count): Fix
+	potential corner case.
+
+	* common/src/ipmi-sdr-cache-reads.c (_get_oem_data,
+	_read_sdr_oem_record): Remove improper cast which can cause
+	corruption.
+
+	* common/src/ipmi-sdr-cache.c: Don't use hard coded buffer length
+	values, use appropriate macros.
+
+	* common/src/ipmi-sdr-cache.c, common/src/ipmi-sdr-cache.h: Do not
+	specify max length as 17 for sensor names and devices names, max
+	length is 16 and an extra +1 is used for the string nul character.
 	
 2007-10-08  Albert Chu <chu11@llnl.gov>
 

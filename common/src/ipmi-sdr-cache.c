@@ -920,12 +920,12 @@ _get_sdr_full_record (sdr_cache_ctx_t ctx,
         }
     }
 
-  memset(sdr_full_record->sensor_name, '\0', 17);
+  memset(sdr_full_record->sensor_name, '\0', IPMI_SENSOR_NAME_MAX+1);
   _SDR_FIID_OBJ_GET_DATA (len,
                           obj,
                           "id_string",
                           (uint8_t *)sdr_full_record->sensor_name,
-                          17);
+                          IPMI_SENSOR_NAME_MAX);
 
   rv = 0;
  cleanup:
@@ -991,12 +991,12 @@ _get_sdr_compact_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj, "positive_going_threshold_hysteresis", &val);
   sdr_compact_record->positive_going_threshold_hysteresis = val;
   
-  memset(sdr_compact_record->sensor_name, '\0', 17);
+  memset(sdr_compact_record->sensor_name, '\0', IPMI_SENSOR_NAME_MAX+1);
   _SDR_FIID_OBJ_GET_DATA (len,
                           obj,
                           "id_string",
                           (uint8_t *)sdr_compact_record->sensor_name,
-                          17);
+                          IPMI_SENSOR_NAME_MAX);
 
   rv = 0;
  cleanup:
@@ -1050,12 +1050,12 @@ _get_sdr_event_only_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj, "event_reading_type_code", &val);
   sdr_event_only_record->event_reading_type_code = val;
   
-  memset(sdr_event_only_record->sensor_name, '\0', 17);
+  memset(sdr_event_only_record->sensor_name, '\0', IPMI_SENSOR_NAME_MAX+1);
   _SDR_FIID_OBJ_GET_DATA (len,
                           obj,
                           "id_string",
                           (uint8_t *)sdr_event_only_record->sensor_name,
-                          17);
+                          IPMI_SENSOR_NAME_MAX);
   
   rv = 0;
  cleanup:
@@ -1178,12 +1178,12 @@ _get_sdr_generic_device_locator_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj, "entity_instance", &val);
   sdr_generic_device_locator_record->entity_instance = val;
   
-  memset(sdr_generic_device_locator_record->device_name, '\0', 17);
+  memset(sdr_generic_device_locator_record->device_name, '\0', IPMI_DEVICE_NAME_MAX+1);
   _SDR_FIID_OBJ_GET_DATA (len,
                           obj,
                           "device_id_string",
                           (uint8_t *)sdr_generic_device_locator_record->device_name,
-                          17);
+                          IPMI_DEVICE_NAME_MAX);
 
   rv = 0;
  cleanup:
@@ -1243,12 +1243,12 @@ _get_sdr_fru_device_locator_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj, "fru_entity_instance", &val);
   sdr_fru_device_locator_record->fru_entity_instance = val;
   
-  memset(sdr_fru_device_locator_record->device_name, '\0', 17);
+  memset(sdr_fru_device_locator_record->device_name, '\0', IPMI_DEVICE_NAME_MAX+1);
   _SDR_FIID_OBJ_GET_DATA (len,
                           obj,
                           "device_string",
                           (uint8_t *)sdr_fru_device_locator_record->device_name,
-                          17);
+                          IPMI_DEVICE_NAME_MAX);
  
   rv = 0;
  cleanup:
@@ -1296,12 +1296,12 @@ _get_sdr_management_controller_device_locator_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj, "entity_instance", &val);
   sdr_management_controller_device_locator_record->entity_instance = val;
   
-  memset(sdr_management_controller_device_locator_record->device_name, '\0', 17);
+  memset(sdr_management_controller_device_locator_record->device_name, '\0', IPMI_DEVICE_NAME_MAX+1);
   _SDR_FIID_OBJ_GET_DATA (len,
                           obj,
                           "device_id_string",
                           (uint8_t *)sdr_management_controller_device_locator_record->device_name,
-                          17);
+                          IPMI_DEVICE_NAME_MAX);
   
   rv = 0;
  cleanup:
@@ -1346,12 +1346,12 @@ _get_sdr_oem_record (sdr_cache_ctx_t ctx,
   _SDR_FIID_OBJ_GET (obj, "manufacturer_id", &val);
   sdr_oem_record->manufacturer_id = val;
 
-  memset(sdr_oem_record->oem_data, '\0', 55);
+  memset(sdr_oem_record->oem_data, '\0', IPMI_OEM_DATA_MAX+1);
   _SDR_FIID_OBJ_GET_DATA (len,
                           obj,
                           "oem_data",
                           sdr_oem_record->oem_data,
-                          55);
+                          IPMI_OEM_DATA_MAX);
   sdr_oem_record->oem_data_length = len;
 
   rv = 0;
