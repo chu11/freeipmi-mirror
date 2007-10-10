@@ -20,10 +20,14 @@ displays current readings of sensors chips.
 #include <@top_srcdir@/common/doc/manpage-common-misc.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
-Verbose sensor output
+Output verbose sensor output.  This option will output additional
+information such as sensor numbers, event/reading type codes, and
+other sensor types not output by default.
 .TP
 \fB\-vv\fR
-Very verbose sensor output
+Output very verbose sensor output.  This option will output more
+additional information than the verbose option such as information
+about oem sensors.
 .TP
 \fB\-q\fR, \fB\-\-quiet-readings\fR
 Do not output sensor reading values or thresholds on simple output,

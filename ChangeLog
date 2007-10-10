@@ -1,3 +1,8 @@
+2007-10-10  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors.8.pre.in: Added verbose and very
+	verbose option information.
+	
 2007-10-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/, ipmi-sel/, ipmi-fru/: Fix corner case.  There is
