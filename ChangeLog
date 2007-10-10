@@ -1,5 +1,11 @@
 2007-10-09  Albert Chu <chu11@llnl.gov>
 
+	* common/src/ipmi-sdr-cache.c (_fread_record): Fix corruption bug.
+
+	* configure.ac: Update version for test release.
+	
+2007-10-09  Albert Chu <chu11@llnl.gov>
+
 	* common/src/ipm-sdr-cache-reads.c (_get_oem_data,
 	_read_sdr_oem_record): Fix casting bug that lead to data
 	corruption.
