@@ -3,7 +3,7 @@
 	* ipmi-sensors/ipmi-sensors.8.pre.in: Added verbose and very
 	verbose option information.
 
-	* ipmi-sel/ipmi-sel.8.pre.in: Output info on SEL default output.
+	* ipmi-sel/ipmi-sel.8.pre.in: Add info on SEL default output.
 	
 2007-10-09  Albert Chu <chu11@llnl.gov>
 
