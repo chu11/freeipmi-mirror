@@ -3,7 +3,10 @@
 ipmi-sel \- manual page for ipmi-sel.  IPMI System Event Logger version @PACKAGE_VERSION@
 .SH DESCRIPTION
 .B Ipmi-sel
-is used to view and delete System Event Log (SEL) entries.
+is used to view and delete System Event Log (SEL) entries.  Although
+output may vary dependent on individual SEL events, most entries will
+display the SEL record id, date of event, time of event, sensor group,
+sensor name, and the sensor event occurrence.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
