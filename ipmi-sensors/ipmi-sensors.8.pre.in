@@ -3,7 +3,11 @@
 ipmi-sensors \- manual page for ipmi-sensors.  IPMI Sensors version @PACKAGE_VERSION@
 .SH DESCRIPTION
 .B Ipmi-sensors
-displays current readings of sensors chips.
+displays current readings of sensors chips.  The default display
+outputs each sensor's record id, sensor name, group name, sensor
+reading (if appropriate), thresholds (if appropriate), and the current
+sensor status.  Some sensors are not output by default.  More verbose
+information can be found using the verbose options specified below.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/manpage-common-driver.man>
 #include <@top_srcdir@/common/doc/manpage-common-inband.man>
