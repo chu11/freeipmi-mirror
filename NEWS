@@ -78,6 +78,10 @@ o Fix various library variable names and macros for consistency.
      has been updated consistently.
 o Various bug fixes and enhancements.
      
+0.4.6
+-----
+o Fix sdr cache corruption bug.
+
 0.4.5
 -----
 o Fix command line parse issue in ipmidetect.
