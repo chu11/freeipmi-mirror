@@ -6,7 +6,7 @@ o Added previously missing IPMI 2.0 (-D LAN_2_0) support into
   ipmi-chassis, ipmi-fru, ipmi-sensors, ipmi-sel, ipmi-raw, and
   ipmimonitoring.
 o Added more strict IPMI over LAN implementation into ipmi-chassis,
-  ipmi-fru, ipmi-sensors, ipmi-sel, ipmi-raw, and ipmimonitoring.
+  ipmi-fru, ipmi-sensors, ipmi-sel, ipmi-raw, and ipmimonitoring.  
 o OpenIPMI and KCS Inband drivers will timeout after a certain period
   of time, so tools will no longer hang if the BMC is non-functional.
 o Ported IPMI compliance workarounds from ipmipower, ipmiconsole, and
@@ -50,18 +50,19 @@ o Made many command line options, interactive prompt, and config file
     with all tools. 
   o The -T option and -I option in ipmipower have been flipped for
     consistency with other tools.
-  o The -c option in ipmiconsole is now the -I option.
-  o Short option -I changed to -D in bmc-watchdog for consistency to
+  o The -c option in ipmiconsole is now the -I option for consistency
+    with other tools.
+  o Short option -I changed to -D in bmc-watchdog for consistency with
     other tools.
   o The -i option in bmc-config is now the -c option.
   o The -k option in bmc-config and pef-config is now the -e option.
-o Various minor bug fixes and enhancements.
+o Various other minor bug fixes and enhancements.
 
 For Developers
 --------------
 o Added IPMI 2.0 into UDM.
-o Added workarounds into UDM for IPMI 1.5 and IPMI 2.0.
-o Added IPMI 2.0 into libipmimonitoring API.
+o Added workaround support into UDM for IPMI 1.5 and IPMI 2.0.
+o Added IPMI 2.0 into the libipmimonitoring API.
 o Modified libipmiconsole API for use in Conman.
 o Added scalability fixes into libipmiconsole for Conman.
 o Fix various library variable names and macros for consistency.
@@ -70,12 +71,13 @@ o Fix various library variable names and macros for consistency.
      been renamed to ipmi_version_minor and ipmi_version_major.
   2) reg_space/register_space have been renamed to register_spacing globally.
   3) privilege has been replaced to privilege_level globally.
-  4) Various library error codes have been renamed for consistency.
-     For example OUTMEM has been changed to OUT_OF_MEMORY globally.
+  4) Various library error codes have been renamed for consistency for
+     error codes in other libraries.  For example OUTMEM has been
+     changed to OUT_OF_MEMORY globally.
   5) Various error codes and messages have been renamed/redone to give
      more useful information.  For example, IPMI_ERR_PRIVILEGE is now
      IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED and the error message
-     has been updated consistently.
+     has been updated appropriately.
 o Various bug fixes and enhancements.
      
 0.4.6
