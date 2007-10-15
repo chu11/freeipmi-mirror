@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.4 2007-03-16 12:05:50 ab Exp $
+## $Id: Makefile.am,v 1.4.10.1 2007-10-15 16:07:10 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -26,13 +26,10 @@ libipmimonitoring_la_SOURCES = \
 	ipmi_monitoring_sensor_reading.c \
 	ipmi_monitoring_sensor_config.c
 
-libipmimonitoring_la_CFLAGS = \
+libipmimonitoring_la_CPPFLAGS = -D_REENTRANT \
 	-I$(srcdir)/../../../common/src \
 	-I$(srcdir)/../../../libfreeipmi/include \
 	-I$(srcdir)/../libipmisdrcache
-
-libipmimonitoring_la_CPPFLAGS = \
-	-D_REENTRANT
 
 libipmimonitoring_la_LDFLAGS = \
 	-version-info @LIBIPMIMONITORING_VERSION_INFO@ \

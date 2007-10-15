@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+## $Id: Makefile.am,v 1.1.10.1 2007-10-15 16:07:10 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -16,7 +16,7 @@ lib_LTLIBRARIES = libipmidetect.la
 libipmidetect_la_SOURCES = \
 	ipmidetect.c
 
-libipmidetect_la_CFLAGS = \
+libipmidetect_la_CPPFLAGS = \
 	-I$(srcdir)/../../../common/src
 
 libipmidetect_la_LIBADD = \

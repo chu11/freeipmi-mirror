@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.3 2007-02-14 19:36:39 chu11 Exp $
+## $Id: Makefile.am,v 1.3.10.1 2007-10-15 16:07:10 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -10,11 +10,9 @@ noinst_LTLIBRARIES = libipmisdrcache.la
 
 libipmisdrcache_la_SOURCES = ipmi_sdr_cache.c
 
-libipmisdrcache_la_CFLAGS = -I$(srcdir)/../../../common/src \
+libipmisdrcache_la_CPPFLAGS = -D_REENTRANT \
+				-I$(srcdir)/../../../common/src \
 			    -I$(srcdir)/../../../libfreeipmi/include
-
-libipmisdrcache_la_CPPFLAGS = \
-	-D_REENTRANT
 
 force-dependency-check:
 

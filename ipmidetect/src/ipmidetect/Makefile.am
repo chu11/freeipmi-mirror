@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+## $Id: Makefile.am,v 1.1.10.1 2007-10-15 16:07:10 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -10,7 +10,7 @@ noinst_HEADERS      = error.h
 
 ipmidetect_SOURCES  = ipmidetect.c error.c
 
-ipmidetect_CFLAGS   = -I $(srcdir)/../libipmidetect \
+ipmidetect_CPPFLAGS   = -I $(srcdir)/../libipmidetect \
 		      -I $(srcdir)/../../../common/src
 
 ipmidetect_LDADD    = ../../../common/src/libllnlcommon.la \
