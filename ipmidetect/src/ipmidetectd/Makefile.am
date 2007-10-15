@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+## $Id: Makefile.am,v 1.2 2007-10-15 16:07:00 chu11 Exp $
 ##*****************************************************************************
 ## Process this file with automake to produce Makefile.in.
 ##*****************************************************************************
@@ -24,7 +24,7 @@ ipmidetectd_SOURCES = \
 	ipmidetectd_config.c \
 	ipmidetectd_loop.c
 
-ipmidetectd_CFLAGS = \
+ipmidetectd_CPPFLAGS = \
 	-I$(srcdir)/../../../common/src \
 	-I$(srcdir)/../../../libfreeipmi/include
 
