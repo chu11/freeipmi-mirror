@@ -1,4 +1,4 @@
-2007-10-15  Dmitry Frolov <frolov@riss-telecom.ru>
+2007-10-15  Dmitry Frolov <frol@nov.net>
 
 	* ipmimonitoring/src/libipmimonitoring/Makefile.am,
 	ipmimonitoring/src/ipmimonitoring/Makefile.am,
