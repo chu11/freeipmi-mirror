@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.h,v 1.10 2007-09-05 20:13:36 chu11 Exp $
+ *  $Id: ipmipower_util.h,v 1.11 2007-10-17 23:13:05 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2003 The Regents of the University of California.
+ *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-155698

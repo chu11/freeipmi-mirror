@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.71 2007-09-05 20:13:22 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.72 2007-10-17 23:13:00 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2004 The Regents of the University of California.
+ *  Copyright (C) 2004-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-155913

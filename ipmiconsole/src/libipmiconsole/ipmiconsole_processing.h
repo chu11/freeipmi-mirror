@@ -1,7 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_processing.h,v 1.3 2007-09-05 20:13:29 chu11 Exp $
+ *  $Id: ipmiconsole_processing.h,v 1.4 2007-10-17 23:13:02 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2006 The Regents of the University of California.
+ *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-221226
