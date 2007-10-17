@@ -3,7 +3,43 @@ SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-fru ipmi-raw ipmi-s
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
-EXTRA = ChangeLog ChangeLog.0 AUTHORS COPYING INSTALL NEWS README TODO COPYING.bmc-watchdog DISCLAIMER.bmc-watchdog COPYING.ipmipower DISCLAIMER.ipmipower COPYING.ipmiping DISCLAIMER.ipmiping COPYING.rmcpping DISCLAIMER.rmcpping COPYING.ipmiconsole DISCLAIMER.ipmiconsole COPYING.ipmimonitoring DISCLAIMER.ipmimonitoring COPYING.pstdout DISCLAIMER.pstdout COPYING.ipmidetect DISCLAIMER.ipmidetect COPYING.ipmi-fru DISCLAIMER.ipmi-fru COPYING.ZRESEARCH
+EXTRA = \
+	ChangeLog \
+	ChangeLog.0 \
+	AUTHORS \
+	COPYING \
+	INSTALL \
+	NEWS \
+	README \
+	TODO \
+	COPYING.bmc-watchdog \
+	COPYING.ipmipower \
+	COPYING.ipmiping \
+	COPYING.rmcpping \
+	COPYING.ipmiconsole \
+	COPYING.ipmimonitoring \
+	COPYING.pstdout \
+	COPYING.ipmidetect \
+	COPYING.ipmi-fru \
+	COPYING.ZRESEARCH \
+	DISCLAIMER.bmc-watchdog \
+	DISCLAIMER.ipmipower \
+	DISCLAIMER.ipmiping \
+	DISCLAIMER.rmcpping \
+	DISCLAIMER.ipmiconsole \
+	DISCLAIMER.ipmimonitoring \
+	DISCLAIMER.pstdout \
+	DISCLAIMER.ipmidetect \
+	DISCLAIMER.ipmi-fru \
+	DISCLAIMER.bmc-watchdog.UC \
+	DISCLAIMER.ipmipower.UC \
+	DISCLAIMER.ipmiping.UC \
+	DISCLAIMER.rmcpping.UC \
+	DISCLAIMER.ipmiconsole.UC \
+	DISCLAIMER.ipmimonitoring.UC \
+	DISCLAIMER.pstdout.UC \
+	DISCLAIMER.ipmidetect.UC \
+	DISCLAIMER.ipmi-fru.UC
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 doc_DATA = $(EXTRA)

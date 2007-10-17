@@ -1,6 +1,20 @@
 2007-10-17  Albert Chu <chu11@llnl.gov>
 
 	* Fix copyright dates on LLNL created tools/projects.
+
+	* DISCLAIMER.bmc-watchdog, DISCLAIMER.ipmipower,
+        DISCLAIMER.ipmiping, DISCLAIMER.rmcpping,
+        DISCLAIMER.ipmiconsole, DISCLAIMER.ipmimonitoring,
+        DISCLAIMER.pstdout, DISCLAIMER.ipmidetect,
+        DISCLAIMER.ipmi-fru: Update with new DISCLAIMER.
+
+	* DISCLAIMER.bmc-watchdog.UC, DISCLAIMER.ipmipower.UC,
+	DISCLAIMER.ipmiping.UC, DISCLAIMER.rmcpping.UC,
+	DISCLAIMER.ipmiconsole.UC, DISCLAIMER.ipmimonitoring.UC,
+	DISCLAIMER.pstdout.UC, DISCLAIMER.ipmidetect.UC,
+	DISCLAIMER.ipmi-fru.UC: New files of old DISCLAIMERs.
+	
+	* Makefile.am, freeipmi.spec.in: Update with new DISCLAIMER files.
 	
 2007-10-15  Dmitry Frolov <frol@nov.net>
 

@@ -177,20 +177,27 @@ fi
 %doc %{_datadir}/doc/%{name}/TODO
 %doc %{_infodir}/*
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiping
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmipower
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
 %doc %{_datadir}/doc/%{name}/COPYING.rmcpping
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
 %doc %{_datadir}/doc/%{name}/COPYING.pstdout
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout
 %doc %{_datadir}/doc/%{name}/COPYING.ipmidetect
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect
 %doc %{_datadir}/doc/%{name}/COPYING.ipmi-fru
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru
 %doc %{_datadir}/doc/%{name}/COPYING.ZRESEARCH
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru.UC
 %doc %{_datadir}/doc/%{name}/freeipmi-coding.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-hostrange.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-libraries.txt
@@ -252,6 +259,7 @@ fi
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/COPYING.bmc-watchdog
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog.UC
 %config(noreplace) %{_initrddir}/freeipmi-bmc-watchdog
 %config(noreplace) %{_sysconfdir}/sysconfig/freeipmi-bmc-watchdog
 %config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
@@ -263,6 +271,7 @@ fi
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring.UC
 %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
 %{_includedir}/ipmi_monitoring.h
 %{_libdir}/libipmimonitoring*
