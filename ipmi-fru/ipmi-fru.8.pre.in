@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmi-fru.8.pre.in,v 1.7 2007-09-05 21:54:40 chu11 Exp $
+\."$Id: ipmi-fru.8.pre.in,v 1.8 2007-10-18 00:33:09 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2007 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,8 +21,7 @@
 \."  for more details.
 \."
 \."  You should have received a copy of the GNU General Public License along
-\."  with Ipmi-fru; if not, write to the Free Software Foundation, Inc.,
-\."  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+\."  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \."#############################################################################
 .TH IPMI-FRU 8 "@ISODATE@" "ipmi-fru @PACKAGE_VERSION@" "System Commands"
 .SH NAME

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmidetect.c,v 1.5 2007-10-03 16:22:41 chu11 Exp $
+ *  $Id: ipmidetect.c,v 1.6 2007-10-18 00:33:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -20,8 +20,7 @@
  *  for more details.
  *
  *  You should have received a copy of the GNU General Public License along
- *  with Ipmidetect; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H

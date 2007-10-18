@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.37 2007-10-17 23:13:03 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.38 2007-10-18 00:33:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -20,8 +20,7 @@
  *  for more details.
  *
  *  You should have received a copy of the GNU General Public License along
- *  with Ipmiping; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Ipmiping.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H

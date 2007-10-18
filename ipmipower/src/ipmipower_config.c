@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.67 2007-10-17 23:13:04 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.68 2007-10-18 00:33:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -20,8 +20,7 @@
  *  for more details.
  *  
  *  You should have received a copy of the GNU General Public License along
- *  with Ipmipower; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H

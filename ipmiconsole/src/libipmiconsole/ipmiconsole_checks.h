@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_checks.h,v 1.3 2007-10-17 23:13:01 chu11 Exp $
+ *  $Id: ipmiconsole_checks.h,v 1.4 2007-10-18 00:33:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -20,8 +20,7 @@
  *  for more details.
  *  
  *  You should have received a copy of the GNU General Public License along
- *  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #ifndef _IPMICONSOLE_CHECKS_H

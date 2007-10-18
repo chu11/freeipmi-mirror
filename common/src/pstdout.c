@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.5 2007-10-08 20:24:09 chu11 Exp $
+ *  $Id: pstdout.c,v 1.6 2007-10-18 00:33:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,8 +21,7 @@
  *  for more details.
  *
  *  You should have received a copy of the GNU General Public License along
- *  with Pstdout; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Pstdout.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 /* 
