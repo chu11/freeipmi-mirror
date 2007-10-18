@@ -1,6 +1,7 @@
 /*****************************************************************************\
- *  $Id: pstdout.c,v 1.6 2007-10-18 00:33:08 chu11 Exp $
+ *  $Id: pstdout.c,v 1.7 2007-10-18 16:18:44 chu11 Exp $
  *****************************************************************************
+ *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

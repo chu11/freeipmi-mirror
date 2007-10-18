@@ -1,6 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.23 2007-10-18 00:33:14 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.24 2007-10-18 16:18:53 chu11 Exp $
  *****************************************************************************
+ *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

@@ -1,6 +1,7 @@
 /*****************************************************************************\
- *  $Id: ipmimonitoring.c,v 1.30 2007-10-18 00:33:11 chu11 Exp $
+ *  $Id: ipmimonitoring.c,v 1.31 2007-10-18 16:18:49 chu11 Exp $
  *****************************************************************************
+ *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

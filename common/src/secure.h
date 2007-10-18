@@ -1,6 +1,7 @@
 /*****************************************************************************\
- *  $Id: secure.h,v 1.3 2007-10-17 23:13:00 chu11 Exp $
+ *  $Id: secure.h,v 1.4 2007-10-18 16:18:44 chu11 Exp $
  *****************************************************************************
+ *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
@@ -20,8 +21,7 @@
  *  for more details.
  *  
  *  You should have received a copy of the GNU General Public License along
- *  with Ipmiconsole; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+ *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
 #ifndef _SECURE_H
