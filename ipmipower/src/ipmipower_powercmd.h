@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.h,v 1.9 2007-10-18 16:18:52 chu11 Exp $
+ *  $Id: ipmipower_powercmd.h,v 1.10 2007-10-30 22:18:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -52,7 +52,7 @@ int ipmipower_powercmd_pending();
 
 /* ipmipower_powercmd_process_pending
  * - Process remaining commands still in the queue
- * - Sets timeout to max timeout of all pending requests
+ * - Sets timeout to min timeout of all pending requests
  * - Does not set timeout if no pending requests exist
  * Returns number of pending requests, 0 if none  
  */
