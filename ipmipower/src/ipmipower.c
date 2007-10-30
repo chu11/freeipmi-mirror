@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.32 2007-10-18 16:18:51 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.33 2007-10-30 22:15:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -284,7 +284,7 @@ _poll_loop(int non_interactive)
       int ping_timeout = -1;
       
       /* If there are no pending commands before this call,
-       * powercmd_timeout will not be set
+       * powercmd_timeout will not be set, leaving it at -1
        */
       num = ipmipower_powercmd_process_pending(&powercmd_timeout);
       if (non_interactive && num == 0)
