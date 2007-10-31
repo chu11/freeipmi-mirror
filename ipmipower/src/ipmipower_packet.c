@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.70 2007-10-18 16:18:52 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.71 2007-10-31 17:22:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -43,7 +43,6 @@
 
 extern struct ipmipower_config *conf;
 
-/* fiid_template_t */
 fiid_field_t *
 ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
 {

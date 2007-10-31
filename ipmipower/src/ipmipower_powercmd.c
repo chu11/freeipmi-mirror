@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.119 2007-10-18 16:18:52 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.120 2007-10-31 17:22:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -2385,9 +2385,9 @@ ipmipower_powercmd_process_pending(int *timeout)
   if ((num_pending = list_count(pending)) == 0) 
     ipmipower_output_finish();
   
-  /* The last pending power control command finished.  The timeout is
-   * 0, to get the primary poll loop to "re-init" at the start of the
-   * loop.
+  /* If the last pending power control command finished, the timeout
+   * is 0 to get the primary poll loop to "re-init" at the start of
+   * the loop.
    */
   if (num_pending)
     *timeout = min_timeout;
