@@ -180,8 +180,7 @@ largest clusters in under a second.
 
 Ipmiconsole is currently supported by Conman
 (@uref{http://home.gna.org/conman/}) for scalable console management.  Native
-support of IPMI via libipmiconsole is slated for future support in
-Conman.
+support of IPMI via libipmiconsole is being integrated into Conman.
 
 Scalable parallel execution of ipmi-sensors, ipmi-sel, ipmi-raw,
 ipmi-chassis, ipmi-fru, bmc-info, and ipmimonitoring across a cluster

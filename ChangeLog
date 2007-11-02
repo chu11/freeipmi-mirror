@@ -1,5 +1,9 @@
 2007-11-02  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.texi: Minor updates.
+	
+2007-11-02  Albert Chu <chu11@llnl.gov>
+
 	* configure.ac: Prepare for alpha release.
 
 	* NEWS: Update
