@@ -1,3 +1,11 @@
+2007-11-02  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prepare for alpha release.
+
+	* NEWS: Update
+
+	* Tagged Release-0_5_0_alpha0.
+
 2007-10-18  Albert Chu <chu11@llnl.gov>
 
 	* Fix copyright on LLNL created tools/projects.
