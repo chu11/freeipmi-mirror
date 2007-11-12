@@ -18,6 +18,12 @@ libfreeipmi:
 split udm into another lib?
 re-work UDM for advanced IPMI lan connection detection?
 split off and install sdr parsing/caching lib?
+- add ctx to locate lib
+- add errno logging to all system error related events, not just
+  ctx errnums
+- add error logging wrappers to all drivers/locate/ctx related
+  code.
+- re-org locate/drivers/udm/core into separate dirs
 
 Autoconf/Portability
 --------------------
