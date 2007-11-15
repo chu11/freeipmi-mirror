@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.34 2007-11-15 02:07:10 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.35 2007-11-15 02:09:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -319,6 +319,7 @@ _poll_loop(int non_interactive)
        * a) no iterating in powercmd_process_pending, b/c callback
        * b) no iterating in process_pings, b/c callback
        * c) iterate to create fds (== iterations)
+       *    - must add timeout calculation in loop
        * d) iterate after the poll (<= iterations b/c potentially less fds)
        *
        * So come back to this later.
