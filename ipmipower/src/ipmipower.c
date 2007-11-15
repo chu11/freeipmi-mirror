@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.39 2007-11-15 15:26:20 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.40 2007-11-15 15:38:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -306,10 +306,13 @@ _poll_loop(int non_interactive)
       
       /* achu: I always wonder if this poll() loop could be done far
        * more elegantly and efficiently without all this crazy
-       * indexing, perhaps through a callback/event mechanism.
-       * Probably, since most callback/event based models 
-       * although I don't think the O(n) (n being hosts/fds)
-       * processing is really that inefficient.  
+       * indexing, perhaps through a callback/event mechanism.  It'd
+       * probably be more efficient, since most callback/event based
+       * models have min-heap like structures inside for determining
+       * what things timed out.  Overall though, I don't think the
+       * O(n) (n being hosts/fds) processing is really that
+       * inefficient for this particular application and is not worth
+       * going back and changing.
        */
 
       /* Has the number of hosts changed? */
