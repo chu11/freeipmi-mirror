@@ -24,6 +24,7 @@ split off and install sdr parsing/caching lib?
 - add error logging wrappers to all drivers/locate/ctx related
   code.
 - re-org locate/drivers/udm/core into separate dirs
+- remove fiid-ness from udm lib, use pointers for returns?
 
 Autoconf/Portability
 --------------------
@@ -57,6 +58,14 @@ ipmiconsole
 -----------
 retry under a different port
 - has never been tested, does any manufacturer do this?
+
+ipmipower
+---------
+use 1 fd per node, not 2, make func to determine ping vs. non-ping packet
+
+ipmipower/ipmiconsole
+---------------------
+use better polling callback infrastructure
 
 ASUS issues to resolve
 ----------------------
