@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.36 2007-11-15 06:14:50 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.37 2007-11-15 14:22:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -304,18 +304,21 @@ _poll_loop(int non_interactive)
       else
         timeout = powercmd_timeout; 
       
-      /* achu: I woner if this poll() loop could be done far more
-       * elegantly and efficiently without all this crazy indexing,
-       * perhaps through a callback mechanism.  However, I think the
-       * complexity isn't worth it here and a callback mechanism would
-       * be slower.  It's also possible I'm just not seeing an elegant
-       * enough design pattern here.
+      /* achu: I always wonder if this poll() loop could be done far
+       * more elegantly and efficiently without all this crazy
+       * indexing, perhaps through a callback mechanism.  However, I
+       * think the complexity isn't worth it here and a callback
+       * mechanism could be slower.  It's also possible I'm just not
+       * seeing an elegant enough design pattern here.
        *
        * In this function, we potentially
-       * a) iterate queued commands in powercmd_process_pending
+       * a) iterate through queued commands in
+       *    powercmd_process_pending (could be all hosts).
        * b) iterate through all hosts in process_pings
        * c) iterate through all hosts to create fds
        * d) iterate through all fds after the poll to move around data.
+       *
+       * So we're at a max of 4 iterations == O(n) for this poll loop.
        *
        * if done through a callback mechanism
        *
@@ -329,17 +332,19 @@ _poll_loop(int non_interactive)
        * 
        * however we'd have to add the following in this main loop:
        *
-       * A) detection of session timeout.  This could be done
-       *    very efficiently b/c we all timeout after a period of time.
-       *    This is fortunate given ipmipower's specific user interface.
+       * A) detection of session timeout.  This could be done very
+       *    efficiently b/c all power commands timeout after the same
+       *    period of time.  So if the timeout calculated is greater than
+       *    the session timeout of queued commands, we can lower the
+       *    timeout.
        *
        * B) determine the timeout to pass to poll().  This is more
        *    difficult.  Across both active ipmi sessions and ping
-       *    processing.  This would require another iteration over all
-       *    hosts determine the minimum time to poll() for a session
-       *    timeout, or packet timeout, etc.  Although a sorted list/array
+       *    processing, this would require another iteration over all
+       *    hosts to determine the minimum time to poll() for a session
+       *    timeout, or packet timeout, etc.  A sorted list/array
        *    could be used to avoid the full iteration, given the 
-       *    common packet processing of ipmipower, it will constantly
+       *    constant packet processing in ipmipower, the list will constantly
        *    be re-sorted (using > O(n) time).
        *
        * C) determine if a specific packet within the session has timed out
