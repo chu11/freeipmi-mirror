@@ -59,14 +59,6 @@ ipmiconsole
 retry under a different port
 - has never been tested, does any manufacturer do this?
 
-ipmipower
----------
-use 1 fd per node, not 2, make func to determine ping vs. non-ping packet
-
-ipmipower/ipmiconsole
----------------------
-use better polling callback infrastructure
-
 ASUS issues to resolve
 ----------------------
 K_g status from get channel authentication capabilities incorrect (P5MT-R)

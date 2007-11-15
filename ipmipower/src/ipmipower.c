@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.35 2007-11-15 02:09:36 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.36 2007-11-15 06:14:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -304,25 +304,50 @@ _poll_loop(int non_interactive)
       else
         timeout = powercmd_timeout; 
       
-      /* XXX: This poll() loop could be done far more elegantly and
-       * efficiently without all this crazy indexing.  The best way
-       * would be through some callback mechanism that would do the
-       * callback based on POLLIN, POLLOUT, POLLERR, etc.
+      /* achu: I woner if this poll() loop could be done far more
+       * elegantly and efficiently without all this crazy indexing,
+       * perhaps through a callback mechanism.  However, I think the
+       * complexity isn't worth it here and a callback mechanism would
+       * be slower.  It's also possible I'm just not seeing an elegant
+       * enough design pattern here.
        *
        * In this function, we potentially
-       * a) iterate in powercmd_process_pending
-       * b) iterate in process_pings
-       * c) iterate to create fds
-       * d) iterate after the poll
+       * a) iterate queued commands in powercmd_process_pending
+       * b) iterate through all hosts in process_pings
+       * c) iterate through all hosts to create fds
+       * d) iterate through all fds after the poll to move around data.
        *
        * if done through a callback mechanism
-       * a) no iterating in powercmd_process_pending, b/c callback
-       * b) no iterating in process_pings, b/c callback
-       * c) iterate to create fds (== iterations)
-       *    - must add timeout calculation in loop
-       * d) iterate after the poll (<= iterations b/c potentially less fds)
        *
-       * So come back to this later.
+       * a) no iterating in powercmd_process_pending, b/c we do a
+       *    callback mechanism below
+       * b) no iterating in process_pings, b/c we do a callback
+       *    mechanism below
+       * c) we still iterate through all hosts to create fds
+       * d) we still iterate after the poll and do appropriate
+       *    callbacks.  The iteration would be over <= fds
+       * 
+       * however we'd have to add the following in this main loop:
+       *
+       * A) detection of session timeout.  This could be done
+       *    very efficiently b/c we all timeout after a period of time.
+       *    This is fortunate given ipmipower's specific user interface.
+       *
+       * B) determine the timeout to pass to poll().  This is more
+       *    difficult.  Across both active ipmi sessions and ping
+       *    processing.  This would require another iteration over all
+       *    hosts determine the minimum time to poll() for a session
+       *    timeout, or packet timeout, etc.  Although a sorted list/array
+       *    could be used to avoid the full iteration, given the 
+       *    common packet processing of ipmipower, it will constantly
+       *    be re-sorted (using > O(n) time).
+       *
+       * C) determine if a specific packet within the session has timed out
+       *    and needs to be resent.  There is no callback from a poll()
+       *    that can do this.  So we'd have to iterate again on the fds?
+       *
+       * I'll come back to this later I guess.  I'm constantly
+       * thinking about this.
        */
 
       /* Has the number of hosts changed? */
