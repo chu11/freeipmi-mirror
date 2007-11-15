@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.37 2007-11-15 14:22:28 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.38 2007-11-15 14:57:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -345,14 +345,18 @@ _poll_loop(int non_interactive)
        *    timeout, or packet timeout, etc.  A sorted list/array
        *    could be used to avoid the full iteration, given the 
        *    constant packet processing in ipmipower, the list will constantly
-       *    be re-sorted (using > O(n) time).
+       *    be re-sorted (using > O(n) time).  If we use a list/event
+       *    kind of model, it will require a number of sorted insertions into 
+       *    the list (possible max n iterations == O(n) and timed out
+       *    events need to be handled/ignored/dropped/deleted/etc.
        *
        * C) determine if a specific packet within the session has timed out
        *    and needs to be resent.  There is no callback from a poll()
        *    that can do this.  So we'd have to iterate again on the fds?
        *
        * I'll come back to this later I guess.  I'm constantly
-       * thinking about this.
+       * thinking about this.  Everytime I think about it,
+       * I get back to "this is fine, its not worth reprogramming."
        */
 
       /* Has the number of hosts changed? */
