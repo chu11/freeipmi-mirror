@@ -323,7 +323,7 @@ bmc_config_args_validate (struct bmc_config_arguments *args)
           else 
             {
               int fd;
-              fd = open (args->filename, O_CREAT);
+              fd = open (args->filename, O_CREAT, 0644);
               if (fd == -1) 
                 {
                   perror (args->filename);

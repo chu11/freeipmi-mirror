@@ -1,5 +1,5 @@
 /* 
-   $Id: pef-config-argp.c,v 1.4 2007-06-02 17:17:39 chu11 Exp $ 
+   $Id: pef-config-argp.c,v 1.4.6.1 2007-11-19 22:36:03 chu11 Exp $ 
    
    pef-config-argp.c - Platform Event Filtering utility.
    
@@ -225,7 +225,7 @@ pef_config_args_validate (struct pef_config_arguments *args)
           else
             {
               int fd;
-              fd = open (args->filename, O_CREAT);
+              fd = open (args->filename, O_CREAT, 0644);
               if (fd == -1)
                 {
                   perror (args->filename);
