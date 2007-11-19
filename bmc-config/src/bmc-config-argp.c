@@ -286,7 +286,7 @@ bmc_config_args_validate (struct config_arguments *cmd_args)
           else 
             {
               int fd;
-              fd = open (cmd_args->filename, O_CREAT);
+              fd = open (cmd_args->filename, O_CREAT, 0644);
               if (fd == -1) 
                 {
                   perror (cmd_args->filename);

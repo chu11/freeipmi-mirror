@@ -1,16 +1,16 @@
 #!/bin/sh
-# $Id: freeipmi-ipmidetectd.init,v 1.1 2007-03-02 00:56:26 chu11 Exp $
+# $Id: freeipmi-ipmidetectd.init,v 1.2 2007-11-19 22:36:23 chu11 Exp $
 #
-# chkconfig: 2345 70 40
+# chkconfig: - 70 40
 # description: ipmidetectd startup script
 #
 ### BEGIN INIT INFO
 # Provides: ipmidetectd
 # Required-Start: $network $remote_fs $syslog
 # Required-Stop:  $network $remote_fs $syslog
-# Default-Start:  3 5
 # Default-Stop:   0 1 2 6
-# Description:    Start ipmidetectd-
+# Short-Description: Start and stop ipmidetectd
+# Description: IPMI node detection monitoring daemon
 ### END INIT INFO
 
 IPMIDETECTD=/usr/sbin/ipmidetectd
@@ -24,20 +24,20 @@ if [ -f /etc/rc.d/init.d/functions ] ; then
         daemon $IPMIDETECTD
         RETVAL=$?
         echo
-        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/ipmidetectd
+        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/freeipmi-ipmidetectd
     }
     Xstop() {
         killproc ipmidetectd -TERM
         RETVAL=$?
         echo
-        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/ipmidetectd
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/freeipmi-ipmidetectd
     }
     Xstatus() {
         status ipmidetectd
 	RETVAL=$?
     }
     Xcondrestart() {
-        if test -e /var/lock/subsys/ipmidetectd; then
+        if test -e /var/lock/subsys/freeipmi-ipmidetectd; then
 	    $0 stop
 	    $0 start
    	    RETVAL=$?
