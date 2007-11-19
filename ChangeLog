@@ -1,3 +1,8 @@
+2007-11-19  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Remove ipmimonitoring subpackage.  Move into
+	core package.
+	
 2007-11-19  Phil Knirsch <pknirsch@redhat.com>
 
 	* bmc-watchdog/freeipmi-bmc-watchdog.sysconfig: Added missing -d

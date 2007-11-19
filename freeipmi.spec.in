@@ -47,13 +47,6 @@ Requires: logrotate
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
 
-%package ipmimonitoring
-Summary: Ipmimonitoring library
-Group: Applications/System
-Requires: freeipmi = %{version}-%{release}
-%description ipmimonitoring
-Provides library for IPMI host monitoring.
-
 %package ipmidetectd
 Summary: IPMI node detection monitoring daemon
 Group: Applications/System
@@ -143,10 +136,6 @@ if [ "$1" = 0 ]; then
     fi
 fi
 
-%post ipmimonitoring -p /sbin/ldconfig
-
-%postun ipmimonitoring -p /sbin/ldconfig
-
 %post ipmidetectd
 if [ "$1" = 1 ]; then
    if [ -x %{_initrddir}/freeipmi-ipmidetectd ]; then
@@ -179,6 +168,7 @@ fi
 
 %files
 %defattr(-,root,root)
+%attr(0444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
 %doc %{_datadir}/doc/%{name}/AUTHORS
 %doc %{_datadir}/doc/%{name}/COPYING
 %doc %{_datadir}/doc/%{name}/ChangeLog
@@ -192,6 +182,7 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ipmipower
 %doc %{_datadir}/doc/%{name}/COPYING.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
+%doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/COPYING.pstdout
 %doc %{_datadir}/doc/%{name}/COPYING.ipmidetect
 %doc %{_datadir}/doc/%{name}/COPYING.ipmi-fru
@@ -200,6 +191,7 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru
@@ -207,6 +199,7 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru.UC
@@ -217,6 +210,7 @@ fi
 %{_libdir}/libipmiconsole*so.*
 %{_libdir}/libfreeipmi*so.*
 %{_libdir}/libipmidetect*so.*
+%{_libdir}/libipmimonitoring.so.*
 %{_localstatedir}/lib/*
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
@@ -230,6 +224,7 @@ fi
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
 %{_sbindir}/ipmiconsole
+%{_sbindir}/ipmimonitoring
 %{_sbindir}/ipmi-chassis
 %{_sbindir}/ipmidetect
 %{_mandir}/man8/bmc-config.8*
@@ -247,10 +242,12 @@ fi
 %{_mandir}/man8/rmcpping.8*
 %{_mandir}/man8/ipmiconsole.8*
 %{_mandir}/man5/ipmiconsole.conf.5*
+%{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man8/ipmi-chassis.8*
 %{_mandir}/man3/libipmidetect.3*
 %{_mandir}/man8/ipmidetect.8*
 %{_mandir}/man5/ipmidetect.conf.5*
+%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
 
 %files devel
 %defattr(-,root,root)
@@ -279,17 +276,6 @@ fi
 %{_mandir}/man8/bmc-watchdog.8*
 %dir %{_localstatedir}/log/freeipmi
 
-%files ipmimonitoring
-%defattr(-,root,root)
-%doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring.UC
-%attr(0444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
-%{_libdir}/libipmimonitoring.so.*
-%{_sbindir}/ipmimonitoring
-%{_mandir}/man8/ipmimonitoring.8*
-%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
-
 %files ipmidetectd
 %defattr(-,root,root)
 %config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
@@ -298,6 +284,9 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Wed Nov 19 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
+- Remove ipmimonitoring subpackage.  Merge into head package.
+
 * Wed Nov 19 2007 Phil Knirsch <pknirsch@redhat.com> 0.5.0
 - More fixes for Fedora Review:
  o Added ExclusiveArch due to missing lopl (#368541)
