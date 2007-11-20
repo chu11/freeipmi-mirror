@@ -41,4 +41,4 @@
 #
 # For the remaining options, consult man bmc-watchdog
 #
-OPTIONS="-u 4 -p 0 -a 1 -F -P -L -S -O -i 900 -e 60"
+OPTIONS="-d -u 4 -p 0 -a 1 -F -P -L -S -O -i 900 -e 60"

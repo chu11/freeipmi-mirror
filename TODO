@@ -24,6 +24,7 @@ split off and install sdr parsing/caching lib?
 - add error logging wrappers to all drivers/locate/ctx related
   code.
 - re-org locate/drivers/udm/core into separate dirs
+- remove fiid-ness from udm lib, use pointers for returns?
 
 Autoconf/Portability
 --------------------

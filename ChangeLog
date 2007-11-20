@@ -1,3 +1,63 @@
+2007-11-20  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-coding.txt: Fix ipmi-pef typo.
+	
+2007-11-20  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_5_0_beta1.
+
+2007-11-20  Dmitry Frolov <frol@nov.net>
+
+	* libfreeipmi/src/ipmi-kcs-api.c (ipmi_kcs_ctx_io_init): Fix
+	FreeBSD port bug.
+	
+2007-11-19  Albert Chu <chu11@llnl.gov>
+
+	AUTHORS: Add Phil Knirsch.
+
+	NEWS: Various tweaks.
+	
+2007-11-19  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Remove ipmimonitoring subpackage.  Move into
+	core package.
+
+	* libfreeipmi/include/freeipmi/ipmi-ssif-api.h: Add
+	IPMI_SSIF_CTX_ERR_SYSTEM_ERROR error code.
+
+	* libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c:
+	Adjust INTERNAL errors to SYSTEM errors appropriately.
+	
+	* configure.ac: Prepare for beta release.
+
+	* NEWS: Update
+
+	* Tagged Release-0_5_0_beta0.
+
+2007-11-19  Phil Knirsch <pknirsch@redhat.com>
+
+	* bmc-watchdog/freeipmi-bmc-watchdog.sysconfig: Added missing -d
+	command option.
+
+	* bmc-config/src/bmc-config-argp.c (bmc_config_args_validate),
+	pef-config/src/pef-config-argp.c (pef_config_args_validate): Fix
+	incorrect use of open with O_CREATE and without mode.
+
+	* ipmidetect/freeipmi-ipmidetectd.init: Do not start by default
+	after installation.  Added a Short Description and made the
+	Description more meaningful.  Use correct lock file in
+	/var/lock/subsys/.
+
+	* freeipmi.spec: Use a valid Fedora license.  Fix the groups for
+	all [sub]packages.  Add necessary prereqs where necessary (due
+	to scripts).  Limit build to ix86, x86_64, ia64 and alpha (due
+	to iopl missing on other archs).  Disable build of static libs
+	(Fedora guideline).  Use absolute path for ldconfig.  Add
+	/sbin/ldconfig post and postun scripts due to libs.  Move all
+	development libs to the -devel package ( libipmimonitoring.so).
+	
 2007-11-02  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Minor updates.

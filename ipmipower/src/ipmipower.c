@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.33 2007-10-30 22:15:13 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.33.2.1 2007-11-20 19:17:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
@@ -304,14 +304,17 @@ _poll_loop(int non_interactive)
       else
         timeout = powercmd_timeout; 
       
-      /* XXX: This poll() loop could be done far more elegantly
-       * without all this crazy indexing.  The best way would be
-       * through some callback mechanism that would do the callback
-       * based on POLLIN, POLLOUT, POLLERR, etc.
-       *
-       * However, given the relative complexity of this code, I don't
-       * think the callback architecture is worth the effort.  Come
-       * back to this later if its worthwhile.
+      /* achu: I always wonder if this poll() loop could be done far
+       * more elegantly and efficiently without all this crazy
+       * indexing, perhaps through a callback/event mechanism.  It'd
+       * probably be more efficient, since most callback/event based
+       * models have min-heap like structures inside for determining
+       * what things timed out. Overall though, I don't think the O(n)
+       * (n being hosts/fds) processing is really that inefficient for
+       * this particular application and is not worth going back and
+       * changing.  By going to a callback/event mechanism, there will
+       * still be some O(n) activities within the code, so I am only
+       * going to create a more efficient O(n) poll loop.
        */
 
       /* Has the number of hosts changed? */

@@ -368,7 +368,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else
-	ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+	ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 #else  /* !USE_IOPERM */
@@ -379,9 +379,9 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else if (errno == ENOENT)
-        ctx->errnum = IPMI_KCS_CTX_ERR_UNAVAILABLE;
+        ctx->errnum = IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND;
       else
-        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 #endif /* !USE_IOPERM */
@@ -391,7 +391,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else
-        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+        ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 #endif/* !__FreeBSD__ */
@@ -650,7 +650,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
           if (errno == EINTR || errno == EAGAIN)
             ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
           else
-            ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+            ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
           goto cleanup;
         }
     }
@@ -872,7 +872,7 @@ _ipmi_kcs_cmd_write(ipmi_kcs_ctx_t ctx,
   
   if (ipmi_kcs_write (ctx, pkt, pkt_len) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -937,7 +937,7 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
 				 pkt,
 				 pkt_len)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
+      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   

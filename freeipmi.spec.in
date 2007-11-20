@@ -13,12 +13,16 @@
 Name: %{name}
 Version: %{version}
 Release: %{release}
-License: GPL
-Group: Development/System
+License: GPLv2+
+Group: Applications/System
 URL: http://www.gnu.org/software/freeipmi/
 Source: ftp://ftp.zresearch.com/pub/freeipmi/@VERSION@/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libgcrypt-devel texinfo
+Requires(post): info
+Requires(preun): info
+# Necessary as only those archs implement iopl and friends (#368541)
+ExclusiveArch: %{ix86} x86_64 ia64 alpha
 Summary: FreeIPMI
 %description
 The FreeIPMI project provides "Remote-Console" (out-of-band) and
@@ -37,23 +41,18 @@ header files and static libraries.
 Summary: FreeIPMI BMC watchdog
 Group: Applications/System
 Requires: freeipmi = %{version}-%{release}
-Requires: chkconfig
+Requires(post): chkconfig
+Requires(preun): chkconfig
 Requires: logrotate
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
 
-%package ipmimonitoring
-Summary: Ipmimonitoring library
-Group: Development/System
-Requires: freeipmi = %{version}-%{release}
-%description ipmimonitoring
-Provides library for IPMI host monitoring.
-
 %package ipmidetectd
-Summary: Development/System
+Summary: IPMI node detection monitoring daemon
 Group: Applications/System
 Requires: freeipmi = %{version}-%{release}
-Requires: chkconfig
+Requires(post): chkconfig
+Requires(preun): chkconfig
 %description ipmidetectd
 IPMI node detection daemon.
 
@@ -66,7 +65,7 @@ IPMI node detection daemon.
 
 %build
 %configure --program-prefix=%{?_program_prefix:%{_program_prefix}} \
-           %{?_enable_debug}
+           %{?_enable_debug} --disable-static
 CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
 
 %install
@@ -84,6 +83,8 @@ fi
 rm -f %{buildroot}%{_infodir}/dir
 # kludge to get around rpmlint complaining about 0 length semephore file
 echo freeipmi > %{buildroot}%{_localstatedir}/lib/freeipmi/ipckey
+# Remove .la files
+rm -rf $RPM_BUILD_ROOT/%{_libdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -93,7 +94,7 @@ if [ -x /sbin/install-info ]; then
    #/sbin/install-info %{_infodir}/freeipmi.info.gz %{_infodir}/dir
    /sbin/install-info %{_infodir}/freeipmi-faq.info.gz %{_infodir}/dir
 fi
-ldconfig
+/sbin/ldconfig
 
 %preun
 if [ $1 = 0 ]; then
@@ -167,6 +168,7 @@ fi
 
 %files
 %defattr(-,root,root)
+%attr(0444,root,root) %config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
 %doc %{_datadir}/doc/%{name}/AUTHORS
 %doc %{_datadir}/doc/%{name}/COPYING
 %doc %{_datadir}/doc/%{name}/ChangeLog
@@ -180,6 +182,7 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.ipmipower
 %doc %{_datadir}/doc/%{name}/COPYING.rmcpping
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiconsole
+%doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/COPYING.pstdout
 %doc %{_datadir}/doc/%{name}/COPYING.ipmidetect
 %doc %{_datadir}/doc/%{name}/COPYING.ipmi-fru
@@ -188,6 +191,7 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru
@@ -195,15 +199,18 @@ fi
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiconsole.UC
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.pstdout.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmidetect.UC
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmi-fru.UC
 %doc %{_datadir}/doc/%{name}/freeipmi-coding.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-hostrange.txt
 %doc %{_datadir}/doc/%{name}/freeipmi-libraries.txt
-%{_libdir}/libipmiconsole*so*
-%{_libdir}/libfreeipmi*so*
-%{_libdir}/libipmidetect*so*
+%dir %{_datadir}/doc/%{name}
+%{_libdir}/libipmiconsole*so.*
+%{_libdir}/libfreeipmi*so.*
+%{_libdir}/libipmidetect*so.*
+%{_libdir}/libipmimonitoring.so.*
 %{_localstatedir}/lib/*
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
@@ -217,6 +224,7 @@ fi
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
 %{_sbindir}/ipmiconsole
+%{_sbindir}/ipmimonitoring
 %{_sbindir}/ipmi-chassis
 %{_sbindir}/ipmidetect
 %{_mandir}/man8/bmc-config.8*
@@ -234,23 +242,24 @@ fi
 %{_mandir}/man8/rmcpping.8*
 %{_mandir}/man8/ipmiconsole.8*
 %{_mandir}/man5/ipmiconsole.conf.5*
+%{_mandir}/man8/ipmimonitoring.8*
 %{_mandir}/man8/ipmi-chassis.8*
 %{_mandir}/man3/libipmidetect.3*
 %{_mandir}/man8/ipmidetect.8*
 %{_mandir}/man5/ipmidetect.conf.5*
+%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
 
 %files devel
 %defattr(-,root,root)
-%{_libdir}/libipmiconsole.a
-%{_libdir}/libfreeipmi.a
-%{_libdir}/libipmiconsole.la
-%{_libdir}/libfreeipmi.la
-%{_libdir}/libipmidetect.a
-%{_libdir}/libipmidetect.la
+%{_libdir}/libipmiconsole.so
+%{_libdir}/libfreeipmi.so
+%{_libdir}/libipmidetect.so
+%{_libdir}/libipmimonitoring.so
 %dir %{_includedir}/freeipmi
 %dir %{_includedir}/freeipmi/udm
 %{_includedir}/ipmiconsole.h
 %{_includedir}/ipmidetect.h
+%{_includedir}/ipmi_monitoring.h
 %{_includedir}/freeipmi/*.h
 %{_includedir}/freeipmi/udm/*.h
 %{_mandir}/man3/*
@@ -267,18 +276,6 @@ fi
 %{_mandir}/man8/bmc-watchdog.8*
 %dir %{_localstatedir}/log/freeipmi
 
-%files ipmimonitoring
-%defattr(-,root,root)
-%doc %{_datadir}/doc/%{name}/COPYING.ipmimonitoring
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring
-%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmimonitoring.UC
-%config(noreplace) %{_sysconfdir}/ipmi_monitoring_sensors.conf
-%{_includedir}/ipmi_monitoring.h
-%{_libdir}/libipmimonitoring*
-%{_sbindir}/ipmimonitoring
-%{_mandir}/man8/ipmimonitoring.8*
-%dir %{_localstatedir}/cache/ipmimonitoringsdrcache
-
 %files ipmidetectd
 %defattr(-,root,root)
 %config(noreplace) %{_initrddir}/freeipmi-ipmidetectd
@@ -287,15 +284,36 @@ fi
 %{_mandir}/man8/ipmidetectd.8*
 
 %changelog
+* Wed Nov 19 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
+- Remove ipmimonitoring subpackage.  Merge into head package.
+
+* Wed Nov 19 2007 Phil Knirsch <pknirsch@redhat.com> 0.5.0
+- More fixes for Fedora Review:
+ o Added ExclusiveArch due to missing lopl (#368541)
+- Several fixes due to Fedora package review:
+ o Fixed Group for all subpackages
+ o Added missng Requires(Post|Preun) for several packages
+ o Removed static libraries and .la files
+ o Fixed open bug (missing mode for O_CREATE)
+ o Fixed incorrect options for bmc-watchdog daemon
+- Specfile cleanup for Fedora inclusion
+- Fixed several rpmlint warnings and errors:
+ o Moved all devel libs to proper package
+
 * Wed Aug 01 2007 Troy Telford <ttelford@lnxi.com> 0.4.0
 - Some package cleanup so it builds on SLES
+
 * Wed Jun 13 2007 Phil Knirsch <pknirsch@redhat.com> 0.4.beta0-1
 - Some package cleanup and split of configuration and initscript
+
 * Fri Feb 28 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
 - Add ipmidetectd subpackage.
+
 * Fri Feb 16 2007 Albert Chu <chu11@llnl.gov> 0.4.beta0-1
 - Add ipmimonitoring subpackage.
+
 * Sun Jul 30 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0-1
 - Re-architect for 0.3.X
+
 * Mon May 15 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0-1
 - Fixed up spec file to pass rpmlint
