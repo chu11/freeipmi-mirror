@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.68 2007-11-15 02:07:10 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.69 2007-11-20 17:51:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -837,6 +837,19 @@ _ipmiconsole_engine(void *arg)
           goto continue_loop;
         }
       poll_data.ctxs_len = ctxs_count;
+
+      /* achu: I always wonder if this poll() loop could be done far
+       * more elegantly and efficiently without all this crazy
+       * indexing, perhaps through a callback/event mechanism.  It'd
+       * probably be more efficient, since most callback/event based
+       * models have min-heap like structures inside for determining
+       * what things timed out. Overall though, I don't think the O(n)
+       * (n being hosts/fds) processing is really that inefficient for
+       * this particular application and is not worth going back and
+       * changing.  By going to a callback/event mechanism, there will
+       * still be some O(n) activities within the code, so I am only
+       * going to create a more efficient O(n) poll loop.
+       */
 
       /* 
        * There are 3 pfds per ctx.  One for 'ipmi_fd', 'asynccomm[0]', and 'ipmiconsole_fd'.
