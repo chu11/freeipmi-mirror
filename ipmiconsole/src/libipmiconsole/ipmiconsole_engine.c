@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiconsole_engine.c,v 1.68 2007-11-15 02:07:10 chu11 Exp $
+ *  $Id: ipmiconsole_engine.c,v 1.67 2007-10-18 16:18:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
@@ -837,6 +837,16 @@ _ipmiconsole_engine(void *arg)
           goto continue_loop;
         }
       poll_data.ctxs_len = ctxs_count;
+
+      /* XXX: This poll() loop could be done far more elegantly
+       * without all this crazy indexing.  The best way would be
+       * through some callback mechanism that would do the callback
+       * based on POLLIN, POLLOUT, POLLERR, etc.
+       *
+       * However, given the relative complexity of this code, I don't
+       * think the callback architecture is worth the effort.  Come
+       * back to this later if its worthwhile.
+       */
 
       /* 
        * There are 3 pfds per ctx.  One for 'ipmi_fd', 'asynccomm[0]', and 'ipmiconsole_fd'.
