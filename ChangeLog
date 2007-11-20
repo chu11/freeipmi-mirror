@@ -1,3 +1,8 @@
+2007-11-20  Dmitry Frolov <frol@nov.net>
+
+	* libfreeipmi/src/ipmi-kcs-api.c (ipmi_kcs_ctx_io_init): Fix
+	FreeBSD port bug.
+	
 2007-11-19  Albert Chu <chu11@llnl.gov>
 
 	AUTHORS: Add Phil Knirsch.

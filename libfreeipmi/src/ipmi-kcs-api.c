@@ -379,7 +379,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
       else if (errno == ENOENT)
-        ctx->errnum = IPMI_KCS_CTX_ERR_UNAVAILABLE;
+        ctx->errnum = IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND;
       else
         ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
       return (-1);
