@@ -9,6 +9,12 @@
 	* libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c:
 	Adjust INTERNAL errors to SYSTEM errors appropriately.
 	
+	* configure.ac: Prepare for beta release.
+
+	* NEWS: Update
+
+	* Tagged Release-0_5_0_beta0.
+
 2007-11-19  Phil Knirsch <pknirsch@redhat.com>
 
 	* bmc-watchdog/freeipmi-bmc-watchdog.sysconfig: Added missing -d
