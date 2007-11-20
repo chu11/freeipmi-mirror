@@ -3,6 +3,10 @@
 	* libfreeipmi/src/ipmi-kcs-api.c (ipmi_kcs_ctx_io_init): Fix
 	FreeBSD port bug.
 	
+	* configure.ac: Prepare for beta release.
+
+	* Tagged Release-0_5_0_beta1.
+
 2007-11-19  Albert Chu <chu11@llnl.gov>
 
 	AUTHORS: Add Phil Knirsch.
