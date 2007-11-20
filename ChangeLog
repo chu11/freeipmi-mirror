@@ -1,5 +1,9 @@
 2007-11-19  Albert Chu <chu11@llnl.gov>
 
+	AUTHORS: Add Phil Knirsch.
+	
+2007-11-19  Albert Chu <chu11@llnl.gov>
+
 	* freeipmi.spec.in: Remove ipmimonitoring subpackage.  Move into
 	core package.
 
