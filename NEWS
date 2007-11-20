@@ -23,7 +23,7 @@ o Added keypair command line support to pef-config.
 o Removed bmc-autoconfig tool.
 o Added more details comments and instructions to bmc-config checkout.
 o Converted ipmiconsole, ipmipower, and ipmimonitoring to use argp
-  instead of getopt of consistency of usage output.
+  instead of getopt for consistency of usage output.
 o Re-word "ASUS 2.0" workaround into generic "IGNORE SOL PAYLOAD SIZE"
   workaround.
 o Support new "IGNORE SOL PORT" workaround.
@@ -63,7 +63,6 @@ For Developers
 o Added IPMI 2.0 into UDM.
 o Added workaround support into UDM for IPMI 1.5 and IPMI 2.0.
 o Added IPMI 2.0 into the libipmimonitoring API.
-o Modified libipmiconsole API for use in Conman.
 o Added scalability fixes into libipmiconsole for Conman.
 o Fix various library variable names and macros for consistency.
   Notable changes.
