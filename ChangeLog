@@ -2,6 +2,12 @@
 
 	* freeipmi.spec.in: Remove ipmimonitoring subpackage.  Move into
 	core package.
+
+	* libfreeipmi/include/freeipmi/ipmi-ssif-api.h: Add
+	IPMI_SSIF_CTX_ERR_SYSTEM_ERROR error code.
+
+	* libfreeipmi/src/ipmi-kcs-api.c, libfreeipmi/src/ipmi-ssif-api.c:
+	Adjust INTERNAL errors to SYSTEM errors appropriately.
 	
 2007-11-19  Phil Knirsch <pknirsch@redhat.com>
 
