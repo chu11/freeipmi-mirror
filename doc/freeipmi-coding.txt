@@ -553,8 +553,8 @@ In the end, the authors have felt the overall benefits provided by the
 checking of these values provides more than the cost.  Changes in the
 overall industry implementation could change this viewpoint later.
 
-9) Bmc-Config/Ipmi-Pef callback design
---------------------------------------
+9) Bmc-Config/Pef-config callback design
+----------------------------------------
 
 Bmc-config and Pef-config (henceforce together just called Bmc-config)
 are coded with a archicture that reads/writes each configurable field
