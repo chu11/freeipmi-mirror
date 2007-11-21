@@ -623,6 +623,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 {
   uint8_t *p=buf;
   int32_t count = 0;
+  int lock_flag = 0;
 
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1); 
@@ -654,23 +655,24 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
           goto cleanup;
         }
     }
+  lock_flag++;
   
   if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   ipmi_kcs_clear_obf (ctx);
   ipmi_kcs_start_write (ctx);
   if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   ipmi_kcs_clear_obf (ctx);
 
@@ -682,12 +684,12 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
+      goto cleanup;
     }
       if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
         {
           ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
-          goto cleanup_unlock;
+          goto cleanup;
         }
       ipmi_kcs_clear_obf (ctx);
       p++;
@@ -697,12 +699,12 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   ipmi_kcs_clear_obf (ctx);
   ipmi_kcs_write_byte (ctx, *p);
@@ -719,9 +721,9 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (count);
 
- cleanup_unlock:
-  IPMI_MUTEX_UNLOCK (ctx->semid);
  cleanup:
+  if (lock_flag)
+    IPMI_MUTEX_UNLOCK (ctx->semid);
   return (-1);
 }
 
@@ -738,29 +740,29 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   int32_t rv = -1;
 
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    goto cleanup_unlock;
+    goto cleanup;
   
   if (!buf || !buf_len)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
-      goto cleanup_unlock;
+      goto cleanup;
     }
   
   if (!ctx->io_init)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;
-      goto cleanup_unlock;
+      goto cleanup;
     }
 
   if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   if (!ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ)) 
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   while (ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_READ))
     {
@@ -768,7 +770,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       if (ipmi_kcs_wait_for_obf_set (ctx) < 0)
         {
           ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-          goto cleanup_unlock;
+          goto cleanup;
         }
       c = ipmi_kcs_read_byte (ctx);
       if (count < buf_len)
@@ -777,11 +779,11 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
 	  count++;
 	}
       ipmi_kcs_read_next (ctx);
-  if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-    {
-      ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
-    }
+      if (ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
+        {
+          ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
+          goto cleanup;
+        }
     }
   if (ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_IDLE))
     {
@@ -789,14 +791,14 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       if (ipmi_kcs_wait_for_obf_set (ctx) < 0)
         {
           ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR);
-          goto cleanup_unlock;
+          goto cleanup;
         }
       ipmi_kcs_read_byte (ctx); /* toss it, ACK */
     }
   else
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
-      goto cleanup_unlock;
+      goto cleanup;
     }
 
   if (count >= buf_len)
@@ -804,7 +806,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   else
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   rv = count;
- cleanup_unlock:
+ cleanup:
   IPMI_MUTEX_UNLOCK (ctx->semid);
   return (rv);
 }
@@ -906,13 +908,13 @@ _ipmi_kcs_cmd_read(ipmi_kcs_ctx_t ctx,
       return -1;
     }
   
-  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
+  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
-      goto cleanup;
+      return -1;
     }
 
-  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
+  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
