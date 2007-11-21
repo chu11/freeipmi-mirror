@@ -3,7 +3,10 @@ XXXX-XX-XX  Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/src/ipmi-kcs-aci.c,
 	libfreeipmi/src/ipmi-openipmi-api.c,
 	libfreeipmi/src/ipmi-ssif-api.c: Use error logging routines.
-	
+
+	* common/src/udm-err-wrappers.h: Update error logging routines
+	with more details.
+		
 2007-11-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-openipmi-api.c: Adjust INTERNAL errors to

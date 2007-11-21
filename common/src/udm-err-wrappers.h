@@ -46,54 +46,59 @@ extern "C" {
 #include "err-wrappers.h"
 
 #if defined (IPMI_SYSLOG)
-#define __KCS_SYSLOG                                                    \
-do {                                                                    \
-  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
-  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
-            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
-            __LINE__, __PRETTY_FUNCTION__,                              \
-	    ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx));               \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+#define __KCS_SYSLOG                                                         \
+do {                                                                         \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
+  int __errnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx);                \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_kcs_ctx_strerror(__errnum), __errnum);                      \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
 } while (0)
 
-#define __SSIF_SYSLOG                                                   \
-do {                                                                    \
-  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
-  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
-            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
-            __LINE__, __PRETTY_FUNCTION__,                              \
-	    ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx));             \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+#define __SSIF_SYSLOG                                                        \
+do {                                                                         \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
+  int __errnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx);              \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_ssif_ctx_strerror(__errnum), __errnum);                     \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
 } while (0)
 
-#define __OPENIPMI_SYSLOG                                               \
-do {                                                                    \
-  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
-  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
-            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
-            __LINE__, __PRETTY_FUNCTION__,                              \
-	    ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx));     \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+#define __OPENIPMI_SYSLOG                                                    \
+do {                                                                         \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
+  int __errnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx);      \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_openipmi_ctx_strerror(__errnum), __errnum);                 \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
 } while (0)
 
-#define __UDM_SYSLOG                                                    \
-do {                                                                    \
-  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
-  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
-            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
-            __LINE__, __PRETTY_FUNCTION__,                              \
-	    dev->errnum);                                               \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+#define __UDM_SYSLOG                                                         \
+do {                                                                         \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
+  int __errnum = dev->errnum;                                                \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_device_strerror(__errnum), __errnum);                       \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
 } while (0)
 
-#define __ERR_UDM_SYSLOG                                                \
-do {                                                                    \
-  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
-  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
-            "%s: %d: %s: errnum (%d): expression failed", __FILE__,     \
-            __LINE__, __PRETTY_FUNCTION__,                              \
-	    ipmi_device_errnum(dev));                                   \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
+#define __ERR_UDM_SYSLOG                                                     \
+do {                                                                         \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
+  int __errnum = ipmi_device_errnum(dev);                                    \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                               \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_device_strerror(__errnum), __errnum);                       \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);            \
 } while (0)
 #else
 #define __KCS_SYSLOG
@@ -104,64 +109,69 @@ do {                                                                    \
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
-#define __KCS_TRACE                                                     \
-do {                                                                    \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
-           __LINE__, __PRETTY_FUNCTION__,                               \
-	   ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx));                \
-  fflush (stderr);                                                      \
+#define __KCS_TRACE                                                          \
+do {                                                                         \
+  int __errnum = ipmi_kcs_ctx_errnum(dev->io.inband.kcs_ctx);                \
+  fprintf (stderr,                                                           \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_kcs_ctx_strerror(__errnum), __errnum);                      \
+  fflush (stderr);                                                           \
 } while (0)
 
-#define __SSIF_TRACE                                                    \
-do {                                                                    \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
-           __LINE__, __PRETTY_FUNCTION__,                               \
-	   ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx));              \
-  fflush (stderr);                                                      \
+#define __SSIF_TRACE                                                         \
+do {                                                                         \
+  int __errnum = ipmi_ssif_ctx_errnum(dev->io.inband.ssif_ctx);              \
+  fprintf (stderr,                                                           \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_ssif_ctx_strerror(__errnum), __errnum);                     \
+  fflush (stderr);                                                           \
 } while (0)
 
-#define __OPENIPMI_TRACE                                                \
-do {                                                                    \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
-           __LINE__, __PRETTY_FUNCTION__,                               \
-	   ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx));      \
-  fflush (stderr);                                                      \
+#define __OPENIPMI_TRACE                                                     \
+do {                                                                         \
+  int __errnum = ipmi_openipmi_ctx_errnum(dev->io.inband.openipmi_ctx);      \
+  fprintf (stderr,                                                           \
+            "%s: %d: %s: error %s (%d): expression failed",                  \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                         \
+            ipmi_openipmi_ctx_strerror(__errnum), __errnum);                 \
+  fflush (stderr);                                                           \
 } while (0)
 
-#define __UDM_TRACE                                                     \
-do {                                                                    \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
-           __LINE__, __PRETTY_FUNCTION__,                               \
-	   dev->errnum);                                                \
-  fflush (stderr);                                                      \
+#define __UDM_TRACE                                                          \
+do {                                                                         \
+  int __errnum = dev->errnum;                                                \
+  fprintf (stderr,                                                           \
+           "%s: %d: %s: error %s (%d): expression failed",                   \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                          \
+           ipmi_device_strerror(__errnum), __errnum);                        \
+  fflush (stderr);                                                           \
 } while (0)
 
-#define __ERR_UDM_TRACE                                                 \
-do {                                                                    \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errnum (%d): expression failed\n", __FILE__,    \
-           __LINE__, __PRETTY_FUNCTION__,                               \
-	   ipmi_device_errnum(dev));                                    \
-  fflush (stderr);                                                      \
+#define __ERR_UDM_TRACE                                                      \
+do {                                                                         \
+  int __errnum = ipmi_device_errnum(dev);                                    \
+  fprintf (stderr,                                                           \
+           "%s: %d: %s: error %s (%d): expression failed",                   \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                          \
+           ipmi_device_strerror(__errnum), __errnum);                        \
+  fflush (stderr);                                                           \
 } while (0)
 
-#define __UDM_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                       \
-do {                                                                    \
-  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
-  memset(errstr, '\0', IPMI_ERR_STR_MAX_LEN);                           \
-  if (!ipmi_strerror_cmd_r ((___rs),                                    \
-		      	    (___dev)->net_fn,                           \
-			    errstr,                                     \
-			    IPMI_ERR_STR_MAX_LEN))                      \
-    fprintf (stderr,                                                    \
-	     "%s: %d: %s: errmsg = %s\n", __FILE__,                     \
-	     __LINE__, __PRETTY_FUNCTION__, errstr);                    \
-  fflush(stderr);                                                       \
-  goto cleanup;                                                         \
+#define __UDM_TRACE_ERRMSG_CLEANUP(___dev, ___rs)                            \
+do {                                                                         \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                                    \
+  memset(__errstr, '\0', IPMI_ERR_STR_MAX_LEN);                              \
+  if (!ipmi_strerror_cmd_r ((___rs),                                         \
+		      	    (___dev)->net_fn,                                \
+			    __errstr,                                        \
+			    IPMI_ERR_STR_MAX_LEN))                           \
+    fprintf (stderr,                                                         \
+	     "%s: %d: %s: errmsg = %s\n", __FILE__,                          \
+	     __LINE__, __PRETTY_FUNCTION__, __errstr);                       \
+  fflush(stderr);                                                            \
+  goto cleanup;                                                              \
 } while (0) 
 #else
 #define __KCS_TRACE
@@ -169,9 +179,9 @@ do {                                                                    \
 #define __OPENIPMI_TRACE
 #define __UDM_TRACE
 #define __ERR_UDM_TRACE
-#define __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs)                         \
-do {                                                                    \
-  goto cleanup;                                                         \
+#define __UDM_TRACE_ERRMSG_CLEANUP(__dev, __rs)                              \
+do {                                                                         \
+  goto cleanup;                                                              \
 } while (0) 
 #endif /* IPMI_TRACE */
 
