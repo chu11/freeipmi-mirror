@@ -1,3 +1,11 @@
+2007-11-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-openipmi-api.c: Adjust INTERNAL errors to
+	SYSTEM errors appropriately.
+
+	* libfreeipmi/src/ipmi-ssif-api.c, libfreeipmi/src/ipmi-kcs-api.c:
+	General code cleanup/fixes.
+	
 2007-11-20  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-coding.txt: Fix ipmi-pef typo.

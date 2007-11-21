@@ -316,7 +316,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       else if (errno == ENOENT)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;
       else
-        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
   
@@ -325,7 +325,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
       else
-        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
@@ -395,7 +395,7 @@ _openipmi_write(ipmi_openipmi_ctx_t ctx,
 
   if (ioctl(ctx->device_fd, IPMICTL_SEND_COMMAND, &rq_packet) < 0) 
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -431,7 +431,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
                   NULL,
                   &tv)) < 0)
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
@@ -444,14 +444,14 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
 
   if (ioctl(ctx->device_fd, IPMICTL_RECEIVE_MSG_TRUNC, &rs_packet) < 0) 
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
   /* achu: atleast the completion code should be returned */
   if (!rs_packet.msg.data_len)
     {
-      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_INTERNAL_ERROR);
+      ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       return (-1);
     }
 

@@ -560,6 +560,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 		 uint32_t buf_len)
 {
   int32_t count;
+  int lock_flag = 0;
 
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
@@ -591,6 +592,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
           goto cleanup;
         }
     }
+  lock_flag++;
   
   if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
     {
@@ -611,15 +613,15 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
+      goto cleanup;
     }
 
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (count);
 
- cleanup_unlock:
-  IPMI_MUTEX_UNLOCK (ctx->semid);
  cleanup:
+  if (lock_flag)
+    IPMI_MUTEX_UNLOCK (ctx->semid);
   return (-1);
 }
 
@@ -632,18 +634,18 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   int32_t rv = -1;
 
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
-    goto cleanup_unlock;
+    goto cleanup;
 
   if (!buf || !buf_len)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      goto cleanup_unlock;
+      goto cleanup;
     }
 
   if (!ctx->io_init)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_IO_NOT_INITIALIZED;
-      goto cleanup_unlock;
+      goto cleanup;
     }
   
   if (buf_len > IPMI_I2C_SMBUS_BLOCK_MAX)
@@ -657,12 +659,12 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
-      goto cleanup_unlock;
+      goto cleanup;
     }
   
   rv = count;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
- cleanup_unlock:
+ cleanup:
   IPMI_MUTEX_UNLOCK (ctx->semid);
   return (rv);
 }
@@ -764,13 +766,13 @@ _ipmi_ssif_cmd_read(ipmi_ssif_ctx_t ctx,
       return -1;
     }
   
-  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
+  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
-      goto cleanup;
+      return -1;
     }
 
-  if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
+  if (!(tmpl = fiid_obj_template(obj_cmd_rs)) < 0)
     {
       ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_INTERNAL_ERROR);
       goto cleanup;
