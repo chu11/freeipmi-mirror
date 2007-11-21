@@ -202,8 +202,7 @@ ipmi_kcs_ctx_create(void)
 int8_t
 ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   ctx->magic = ~IPMI_KCS_CTX_MAGIC;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -239,8 +238,7 @@ ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx)
 int8_t 
 ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   if (!driver_address)
     {
@@ -256,8 +254,7 @@ ipmi_kcs_ctx_get_driver_address(ipmi_kcs_ctx_t ctx, uint16_t *driver_address)
 int8_t 
 ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   if (!register_spacing)
     {
@@ -273,8 +270,7 @@ ipmi_kcs_ctx_get_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t *register_spacing)
 int8_t 
 ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   if (!poll_interval)
     {
@@ -290,8 +286,7 @@ ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval)
 int8_t 
 ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   if (!flags)
     {
@@ -307,8 +302,7 @@ ipmi_kcs_ctx_get_flags(ipmi_kcs_ctx_t ctx, uint32_t *flags)
 int8_t 
 ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t driver_address)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   ctx->driver_address = driver_address;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -318,8 +312,7 @@ ipmi_kcs_ctx_set_driver_address(ipmi_kcs_ctx_t ctx, uint16_t driver_address)
 int8_t 
 ipmi_kcs_ctx_set_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t register_spacing)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   ctx->register_spacing = register_spacing;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -329,8 +322,7 @@ ipmi_kcs_ctx_set_register_spacing(ipmi_kcs_ctx_t ctx, uint8_t register_spacing)
 int8_t 
 ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   ctx->poll_interval = poll_interval;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
@@ -340,8 +332,7 @@ ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval)
 int8_t 
 ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
   if (flags & ~IPMI_KCS_FLAGS_MASK)
     {
@@ -357,8 +348,7 @@ ipmi_kcs_ctx_set_flags(ipmi_kcs_ctx_t ctx, uint32_t flags)
 int8_t
 ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
 #ifdef __FreeBSD__
 #ifdef USE_IOPERM
@@ -625,8 +615,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   int32_t count = 0;
   int lock_flag = 0;
 
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1); 
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
  
   if (!buf || !buf_len)
     {
@@ -739,8 +728,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   int32_t count = 0;
   int32_t rv = -1;
 
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    goto cleanup;
+  ERR_CLEANUP(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
   
   if (!buf || !buf_len)
     {
@@ -968,8 +956,7 @@ ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
               fiid_obj_t obj_cmd_rq,
               fiid_obj_t obj_cmd_rs)
 {
-  if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    return (-1); 
+  ERR(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
  
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)

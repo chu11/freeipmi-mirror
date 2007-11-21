@@ -183,8 +183,7 @@ ipmi_openipmi_ctx_create(void)
 int8_t
 ipmi_openipmi_ctx_destroy(ipmi_openipmi_ctx_t ctx)
 {
-  if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
   ctx->magic = ~IPMI_OPENIPMI_CTX_MAGIC;
   ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SUCCESS;
@@ -221,8 +220,7 @@ ipmi_openipmi_ctx_errnum(ipmi_openipmi_ctx_t ctx)
 int8_t 
 ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_device)
 {
-  if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
   if (!driver_device)
     {
@@ -238,8 +236,7 @@ ipmi_openipmi_ctx_get_driver_device(ipmi_openipmi_ctx_t ctx, char **driver_devic
 int8_t 
 ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags)
 {
-  if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
   if (!flags)
     {
@@ -255,8 +252,7 @@ ipmi_openipmi_ctx_get_flags(ipmi_openipmi_ctx_t ctx, uint32_t *flags)
 int8_t 
 ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 {
-  if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
   if (ctx->driver_device)
     {
@@ -280,8 +276,7 @@ ipmi_openipmi_ctx_set_driver_device(ipmi_openipmi_ctx_t ctx, char *device)
 int8_t 
 ipmi_openipmi_ctx_set_flags(ipmi_openipmi_ctx_t ctx, uint32_t flags)
 {
-  if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
   if (flags & ~IPMI_OPENIPMI_FLAGS_MASK)
     {
@@ -300,8 +295,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   unsigned int addr = IPMI_LAN_SLAVE_ADDRESS_BMC;
   char *device;
 
-  if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
-    return (-1);
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
 
   if (ctx->driver_device)
     device = ctx->driver_device;
@@ -476,8 +470,7 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
                    fiid_obj_t obj_cmd_rq,
                    fiid_obj_t obj_cmd_rs)
 {
-  if (!(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC))
-    return (-1); 
+  ERR(ctx && ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
  
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)
