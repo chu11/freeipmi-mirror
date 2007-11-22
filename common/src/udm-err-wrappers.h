@@ -208,9 +208,9 @@ do {                                                              \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
       __KCS_SYSLOG;                                                     \
       __KCS_TRACE;                                                      \
-      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -219,9 +219,9 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
       __KCS_SYSLOG;                                                     \
       __KCS_TRACE;                                                      \
-      __KCS_ERRNUM_TO_UDM_ERRNUM;                                       \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -247,9 +247,9 @@ do {                                                                \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
       __SSIF_SYSLOG;                                                    \
       __SSIF_TRACE;                                                     \
-      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -258,9 +258,9 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
       __SSIF_SYSLOG;                                                    \
       __SSIF_TRACE;                                                     \
-      __SSIF_ERRNUM_TO_UDM_ERRNUM;                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -288,9 +288,9 @@ do {                                                                        \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
       __OPENIPMI_SYSLOG;                                                \
       __OPENIPMI_TRACE;                                                 \
-      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -299,9 +299,9 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
       __OPENIPMI_SYSLOG;                                                \
       __OPENIPMI_TRACE;                                                 \
-      __OPENIPMI_ERRNUM_TO_UDM_ERRNUM;                                  \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -363,9 +363,9 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __ERRNO_TO_UDM_ERRNUM;                                            \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
-      __ERRNO_TO_UDM_ERRNUM;                                            \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -374,9 +374,9 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      __ERRNO_TO_UDM_ERRNUM;                                            \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
-      __ERRNO_TO_UDM_ERRNUM;                                            \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)

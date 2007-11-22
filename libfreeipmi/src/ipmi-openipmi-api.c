@@ -306,9 +306,9 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   if (ctx->device_fd < 0)
     {
       if (errno == EPERM || errno == EACCES)
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION);
       else if (errno == ENOENT)
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND;
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_DEVICE_NOT_FOUND);
       else
         ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
@@ -317,7 +317,7 @@ ipmi_openipmi_ctx_io_init(ipmi_openipmi_ctx_t ctx)
   if (ioctl(ctx->device_fd, IPMICTL_SET_MY_ADDRESS_CMD, &addr) < 0) 
     {
       if (errno == EPERM || errno == EACCES)
-        ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION;
+        ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PERMISSION);
       else
         ERR_LOG(ctx->errnum = IPMI_OPENIPMI_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
@@ -475,7 +475,8 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)
       || !fiid_obj_valid(obj_cmd_rq)
-      || !fiid_obj_valid(obj_cmd_rs))
+      || !fiid_obj_valid(obj_cmd_rs)
+      || !fiid_obj_packet_valid(obj_cmd_rq))
     {
       ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;
       return (-1); 
@@ -487,12 +488,6 @@ ipmi_openipmi_cmd (ipmi_openipmi_ctx_t ctx,
       return (-1); 
     }
 
-  if (!fiid_obj_packet_valid(obj_cmd_rq))
-    {
-      ctx->errnum = IPMI_OPENIPMI_CTX_ERR_PARAMETERS;
-      return (-1); 
-    }
- 
   if (_openipmi_write(ctx,
                       lun,
                       net_fn,

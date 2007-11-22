@@ -522,11 +522,11 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
   if ((ctx->device_fd = open (ctx->driver_device, O_RDWR)) < 0)
     {
       if (errno == EACCES || errno == EPERM)
-	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
       else if (errno == ENOENT 
 	       || errno == ENOTDIR 
 	       || errno == ENAMETOOLONG)
-	ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_DEVICE_NOT_FOUND);
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
       return (-1);
@@ -535,7 +535,7 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
   if (ioctl (ctx->device_fd, IPMI_I2C_SLAVE, ctx->driver_address) < 0)
     {
       if (errno == EACCES || errno == EPERM)
-	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
       return (-1);
@@ -601,7 +601,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   if (count < 0)
     {
       if (errno == EACCES || errno == EPERM)
-	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
@@ -646,7 +646,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 				buf_len)) < 0)
     {
       if (errno == EACCES || errno == EPERM)
-	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
+	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION);
       else
 	ERR_LOG(ctx->errnum = IPMI_SSIF_CTX_ERR_SYSTEM_ERROR);
       goto cleanup;
@@ -821,7 +821,8 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_RQ_VALID(net_fn)
       || !fiid_obj_valid(obj_cmd_rq)
-      || !fiid_obj_valid(obj_cmd_rs))
+      || !fiid_obj_valid(obj_cmd_rs)
+      || !fiid_obj_packet_valid(obj_cmd_rq))
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
       return (-1); 
@@ -833,12 +834,6 @@ ipmi_ssif_cmd (ipmi_ssif_ctx_t ctx,
       return (-1); 
     }
 
-  if (!fiid_obj_packet_valid(obj_cmd_rq))
-    {
-      ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      return (-1); 
-    }
- 
   if (_ipmi_ssif_cmd_write(ctx, lun, net_fn, obj_cmd_rq) < 0)
     return -1;
 

@@ -43,33 +43,152 @@ extern "C" {
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 
 #if defined (IPMI_SYSLOG)
+#define __KCS_SYSLOG                                                    \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  int __errnum = ipmi_kcs_ctx_errnum(ctx);                              \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
+            "%s: %d: %s: errno %s (%d), error %s (%d)",                 \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
+            __errmsg, __save_errno,                                     \
+            ipmi_kcs_ctx_strerror(__errnum), __errnum);                 \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
+  errno = __save_errno;                                                 \
+} while (0)
+
+#define __SSIF_SYSLOG                                                   \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  int __errnum = ipmi_ssif_ctx_errnum(ctx);                             \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
+            "%s: %d: %s: errno %s (%d), error %s (%d)",                 \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
+            __errmsg, __save_errno,                                     \
+            ipmi_ssif_ctx_strerror(__errnum), __errnum);                \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
+  errno = __save_errno;                                                 \
+} while (0)
+
+#define __OPENIPMI_SYSLOG                                               \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  int __errnum = ipmi_openipmi_ctx_errnum(ctx);                         \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
+            "%s: %d: %s: errno %s (%d), error %s (%d)",                 \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
+            __errmsg, __save_errno,                                     \
+            ipmi_openipmi_ctx_strerror(__errnum), __errnum);            \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
+  errno = __save_errno;                                                 \
+} while (0)
+
 #define __IPMI_SYSLOG                                                   \
 do {                                                                    \
   extern int errno;                                                     \
-  int save_errno = errno;                                               \
-  char errstr[ERR_WRAPPER_STR_MAX_LEN];                                 \
-  snprintf (errstr, ERR_WRAPPER_STR_MAX_LEN,                            \
-            "%s: %d: %s: errno (%d): expression failed", __FILE__,      \
-            __LINE__, __PRETTY_FUNCTION__, save_errno);                 \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);         \
-  errno = save_errno;                                                   \
+  int __save_errno = errno;                                             \
+  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
+            "%s: %d: %s: errno %s (%d)\n",                              \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
+            __errmsg, __save_errno);                                    \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
+  errno = __save_errno;                                                 \
 } while (0)
 #else
+#define __KCS_SYSLOG
+#define __SSIF_SYSLOG
+#define __OPENIPMI_SYSLOG
 #define __IPMI_SYSLOG
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
+#define __KCS_TRACE                                                     \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  int __errnum = ipmi_kcs_ctx_errnum(ctx);                              \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errno %s (%d), error %s (%d)",                  \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __errmsg, __save_errno,                                      \
+           ipmi_kcs_ctx_strerror(__errnum), __errnum);                  \
+  fflush (stderr);                                                      \
+  errno = __save_errno;                                                 \
+} while (0)
+
+#define __SSIF_TRACE                                                    \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  int __errnum = ipmi_ssif_ctx_errnum(ctx);                             \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errno %s (%d), error %s (%d)",                  \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __errmsg, __save_errno,                                      \
+           ipmi_ssif_ctx_strerror(__errnum), __errnum);                 \
+  fflush (stderr);                                                      \
+  errno = __save_errno;                                                 \
+} while (0)
+
+#define __OPENIPMI_TRACE                                                \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  int __errnum = ipmi_openipmi_ctx_errnum(ctx);                         \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errno %s (%d), error %s (%d)",                  \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __errmsg, __save_errno,                                      \
+           ipmi_openipmi_ctx_strerror(__errnum), __errnum);             \
+  fflush (stderr);                                                      \
+  errno = __save_errno;                                                 \
+} while (0)
+
 #define __IPMI_TRACE                                                    \
 do {                                                                    \
   extern int errno;                                                     \
-  int save_errno = errno;                                               \
+  int __save_errno = errno;                                             \
+  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
+  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
+  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
   fprintf (stderr,                                                      \
-           "%s: %d: %s: errno (%d): expression failed\n", __FILE__,     \
-           __LINE__, __PRETTY_FUNCTION__, save_errno);                  \
+           "%s: %d: %s: errno %s (%d)\n",                               \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __errmsg, __save_errno);                                     \
   fflush (stderr);                                                      \
-  errno = save_errno;                                                   \
+  errno = __save_errno;                                                 \
 } while (0)
 #else
+#define __KCS_TRACE
+#define __SSIF_TRACE
+#define __OPENIPMI_TRACE
 #define __IPMI_TRACE
 #endif /* IPMI_TRACE */
 
@@ -248,6 +367,199 @@ do {                                                                    \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
+
+#define __KCS_ERRNO_TO_UDM_ERRNUM                                       \
+do {                                                                    \
+  if (errno == 0)                                                       \
+    ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;                             \
+  else if (errno == EINTR)                                              \
+    ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                                \
+  else if (errno == EAGAIN)                                             \
+    ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                                \
+  else if (errno == EPERM)                                              \
+    ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;                          \
+  else if (errno == EACCES)                                             \
+    ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;                          \
+  else if (errno == ENOENT)                                             \
+    ctx->errnum = IPMI_KCS_CTX_ERR_DEVICE_NOT_FOUND;                    \
+  else if (errno == ENOMEM)                                             \
+    ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                       \
+  else if (errno == EINVAL)                                             \
+    ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                      \
+  else                                                                  \
+    ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                        \
+} while (0)
+
+#define KCS_ERR(expr)                                                   \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __KCS_ERRNO_TO_UDM_ERRNUM;                                      \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_CLEANUP(expr)                                           \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        __KCS_ERRNO_TO_UDM_ERRNUM;                                      \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_LOG(expr)                                                   \
+  do {                                                                  \
+    expr;                                                               \
+    __KCS_SYSLOG;                                                       \
+    __KCS_TRACE;                                                        \
+  } while (0)
+
+#define KCS_LOG_CLEANUP(expr)                                           \
+  do {                                                                  \
+    expr;                                                               \
+    __KCS_SYSLOG;                                                       \
+    __KCS_TRACE;                                                        \
+    goto cleanup;                                                       \
+  } while (0)
+
+#define KCS_ERRNO
+
+#define KCS_ERR_PARAMETERS(expr)                                        \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;                      \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_PARAMETERS_CLEANUP(expr)                                \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;                      \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_IO_NOT_INITIALIZED(expr)                                \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;              \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_IO_NOT_INITIALIZED_CLEANUP(expr)                        \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_IO_NOT_INITIALIZED;              \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_BUSY(expr)                                              \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                            \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_BUSY_CLEANUP(expr)                                      \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;                            \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_OUT_OF_MEMORY(expr)                                     \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                   \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_OUT_OF_MEMORY_CLEANUP(expr)                             \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_OUT_OF_MEMORY;                   \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_SYSTEM_ERROR(expr)                                      \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                    \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_SYSTEM_ERROR_CLEANUP(expr)                              \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_SYSTEM_ERROR;                    \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_INTERNAL_ERROR(expr)                                    \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                  \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        return (-1);                                                    \
+      }                                                                 \
+  } while (0)
+
+#define KCS_ERR_INTERNAL_ERROR_CLEANUP(expr)                            \
+  do {                                                                  \
+    if (!(expr))                                                        \
+      {                                                                 \
+        ctx->errnum = IPMI_KCS_CTX_ERR_INTERNAL_ERROR;                  \
+        __KCS_SYSLOG;                                                   \
+        __KCS_TRACE;                                                    \
+        goto cleanup;                                                   \
+      }                                                                 \
+  } while (0)
 
 #ifdef __cplusplus
 }
