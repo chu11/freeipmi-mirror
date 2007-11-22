@@ -43,159 +43,142 @@ extern "C" {
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 
 #if defined (IPMI_SYSLOG)
-#define __KCS_SYSLOG                                                    \
+
+#define __SYSLOG_OUTPUT                                                 \
 do {                                                                    \
   extern int errno;                                                     \
   int __save_errno = errno;                                             \
-  int __errnum = ipmi_kcs_ctx_errnum(ctx);                              \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
+  char __errbuf[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
+  snprintf (__errbuf, ERR_WRAPPER_STR_MAX_LEN,                          \
+            "%s: %d: %s: errno %s (%d)\n",                              \
+            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
+            __errnostr, __save_errno);                                  \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errbuf);       \
+  errno = __save_errno;                                                 \
+} while (0)
+
+#define __SYSLOG_CTX_OUTPUT                                             \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  char __errbuf[ERR_WRAPPER_STR_MAX_LEN];                               \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
+  snprintf (__errbuf, ERR_WRAPPER_STR_MAX_LEN,                          \
             "%s: %d: %s: errno %s (%d), error %s (%d)",                 \
             __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
-            __errmsg, __save_errno,                                     \
-            ipmi_kcs_ctx_strerror(__errnum), __errnum);                 \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
+            __errnostr, __save_errno,                                   \
+            __ctxerrstr, __ctxerrnum);                                  \
+  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errbuf);       \
   errno = __save_errno;                                                 \
+} while (0)
+
+#define __ERR_SYSLOG                                                    \
+do {                                                                    \
+  __SYSLOG_OUTPUT;                                                      \
+} while (0)
+
+#define __KCS_SYSLOG                                                    \
+do {                                                                    \
+  int __ctxerrnum = ctx->errnum;                                        \
+  char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);               \
+  __SYSLOG_CTX_OUTPUT;                                                  \
 } while (0)
 
 #define __SSIF_SYSLOG                                                   \
 do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  int __errnum = ipmi_ssif_ctx_errnum(ctx);                             \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
-            "%s: %d: %s: errno %s (%d), error %s (%d)",                 \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
-            __errmsg, __save_errno,                                     \
-            ipmi_ssif_ctx_strerror(__errnum), __errnum);                \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
-  errno = __save_errno;                                                 \
+  int __ctxerrnum = ctx->errnum;                                        \
+  char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);              \
+  __SYSLOG_CTX_OUTPUT;                                                  \
 } while (0)
 
 #define __OPENIPMI_SYSLOG                                               \
 do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  int __errnum = ipmi_openipmi_ctx_errnum(ctx);                         \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
-            "%s: %d: %s: errno %s (%d), error %s (%d)",                 \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
-            __errmsg, __save_errno,                                     \
-            ipmi_openipmi_ctx_strerror(__errnum), __errnum);            \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
-  errno = __save_errno;                                                 \
-} while (0)
-
-#define __IPMI_SYSLOG                                                   \
-do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  char __errstr[ERR_WRAPPER_STR_MAX_LEN];                               \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
-  snprintf (__errstr, ERR_WRAPPER_STR_MAX_LEN,                          \
-            "%s: %d: %s: errno %s (%d)\n",                              \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__,                    \
-            __errmsg, __save_errno);                                    \
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), __errstr);       \
-  errno = __save_errno;                                                 \
+  int __ctxerrnum = ctx->errnum;                                        \
+  char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);          \
+  __SYSLOG_CTX_OUTPUT;                                                  \
 } while (0)
 #else
+#define __ERR_SYSLOG
 #define __KCS_SYSLOG
 #define __SSIF_SYSLOG
 #define __OPENIPMI_SYSLOG
-#define __IPMI_SYSLOG
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
-#define __KCS_TRACE                                                     \
+
+#define __TRACE_OUTPUT                                                  \
 do {                                                                    \
   extern int errno;                                                     \
   int __save_errno = errno;                                             \
-  int __errnum = ipmi_kcs_ctx_errnum(ctx);                              \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
   fprintf (stderr,                                                      \
-           "%s: %d: %s: errno %s (%d), error %s (%d)",                  \
+           "%s: %d: %s: errno %s (%d)\n",                               \
            __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
-           __errmsg, __save_errno,                                      \
-           ipmi_kcs_ctx_strerror(__errnum), __errnum);                  \
+           __errnostr, __save_errno);                                   \
   fflush (stderr);                                                      \
   errno = __save_errno;                                                 \
+} while (0)
+
+#define __TRACE_CTX_OUTPUT                                              \
+do {                                                                    \
+  extern int errno;                                                     \
+  int __save_errno = errno;                                             \
+  char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                             \
+  memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                   \
+  strerror_r(__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);        \
+  fprintf (stderr,                                                      \
+           "%s: %d: %s: errno %s (%d), error %s (%d)\n",                \
+           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
+           __errnostr, __save_errno,                                    \
+           __ctxerrstr, __ctxerrnum);                                   \
+  fflush (stderr);                                                      \
+  errno = __save_errno;                                                 \
+} while (0)
+
+#define __ERR_TRACE                                                     \
+do {                                                                    \
+  __TRACE_OUTPUT;                                                       \
+} while (0)
+
+#define __KCS_TRACE                                                     \
+do {                                                                    \
+  int __ctxerrnum = ipmi_kcs_ctx_errnum(ctx);                           \
+  char *__ctxerrstr = ipmi_kcs_ctx_strerror(__ctxerrnum);               \
+  __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
 
 #define __SSIF_TRACE                                                    \
 do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  int __errnum = ipmi_ssif_ctx_errnum(ctx);                             \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errno %s (%d), error %s (%d)",                  \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
-           __errmsg, __save_errno,                                      \
-           ipmi_ssif_ctx_strerror(__errnum), __errnum);                 \
-  fflush (stderr);                                                      \
-  errno = __save_errno;                                                 \
+  int __ctxerrnum = ipmi_ssif_ctx_errnum(ctx);                          \
+  char *__ctxerrstr = ipmi_ssif_ctx_strerror(__ctxerrnum);              \
+  __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
 
 #define __OPENIPMI_TRACE                                                \
 do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  int __errnum = ipmi_openipmi_ctx_errnum(ctx);                         \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errno %s (%d), error %s (%d)",                  \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
-           __errmsg, __save_errno,                                      \
-           ipmi_openipmi_ctx_strerror(__errnum), __errnum);             \
-  fflush (stderr);                                                      \
-  errno = __save_errno;                                                 \
+  int __ctxerrnum = ipmi_openipmi_ctx_errnum(ctx);                      \
+  char *__ctxerrstr = ipmi_openipmi_ctx_strerror(__ctxerrnum);          \
+  __TRACE_CTX_OUTPUT;                                                   \
 } while (0)
 
-#define __IPMI_TRACE                                                    \
-do {                                                                    \
-  extern int errno;                                                     \
-  int __save_errno = errno;                                             \
-  char __errmsg[ERR_WRAPPER_STR_MAX_LEN];                               \
-  memset (__errmsg, '\0', ERR_WRAPPER_STR_MAX_LEN);                     \
-  strerror_r(__save_errno, __errmsg, ERR_WRAPPER_STR_MAX_LEN);          \
-  fprintf (stderr,                                                      \
-           "%s: %d: %s: errno %s (%d)\n",                               \
-           __FILE__, __LINE__, __PRETTY_FUNCTION__,                     \
-           __errmsg, __save_errno);                                     \
-  fflush (stderr);                                                      \
-  errno = __save_errno;                                                 \
-} while (0)
 #else
+#define __ERR_TRACE
 #define __KCS_TRACE
 #define __SSIF_TRACE
 #define __OPENIPMI_TRACE
-#define __IPMI_TRACE
 #endif /* IPMI_TRACE */
 
 #define ERR_LOG(expr)                                                   \
 do {                                                                    \
-  __IPMI_SYSLOG;                                                        \
-  __IPMI_TRACE;                                                         \
+  __ERR_SYSLOG;                                                         \
+  __ERR_TRACE;                                                          \
   expr;                                                                 \
 } while (0)   
 
@@ -203,8 +186,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -213,8 +196,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -223,8 +206,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       exit(1);                                                          \
     }                                                                   \
 } while (0)
@@ -233,8 +216,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -243,8 +226,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return;                                                           \
     }                                                                   \
 } while (0)
@@ -253,8 +236,8 @@ do {                                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
     }                                                                   \
 } while (0)
 
@@ -263,8 +246,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -274,8 +257,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -285,8 +268,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (NULL);                                                    \
     }                                                                   \
 } while (0)
@@ -296,8 +279,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return;                                                           \
     }                                                                   \
 } while (0)
@@ -307,8 +290,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -318,8 +301,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENOSPC;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -329,8 +312,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENODEV;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -340,8 +323,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = ENODEV;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
@@ -351,8 +334,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -362,8 +345,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EMSGSIZE;                                                 \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)

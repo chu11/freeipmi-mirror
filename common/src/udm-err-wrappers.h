@@ -325,8 +325,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       errno = EINVAL;                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -364,8 +364,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __ERRNO_TO_UDM_ERRNUM;                                            \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
@@ -375,8 +375,8 @@ do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       __ERRNO_TO_UDM_ERRNUM;                                            \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
+      __ERR_SYSLOG;                                                     \
+      __ERR_TRACE;                                                      \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
