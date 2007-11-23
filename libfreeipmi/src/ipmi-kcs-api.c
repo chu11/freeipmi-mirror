@@ -688,12 +688,12 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     }
   else
     {
-      KCS_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_BUSY);
+      KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_BUSY);
       goto cleanup;
     }
 
   if (count >= buf_len)
-    KCS_LOG(ctx->errnum = IPMI_KCS_CTX_ERR_OVERFLOW);
+    KCS_ERRNUM_SET(IPMI_KCS_CTX_ERR_OVERFLOW);
   else
     ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   rv = count;
